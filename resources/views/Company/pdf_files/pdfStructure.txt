@@ -1,0 +1,63 @@
+Date: [Date]
+
+FTAO: [CustomerName]
+
+RE: [ProjectName]
+
+Our Ref: [QuotationGenerationId]
+
+Dear [UserName],
+
+We thank you for the valued enquiry and the opportunity to quote on this project. The attached quotation is for the supply and delivery only of Doorsets and Ironmongery as detailed on the summary page. The quotation is based on our interpretation of the requirements as detailed in your enquiry and anything quoted outside the specification is noted on the schedule. We trust this offer meets your approval and we look forward to contacting you soon to discuss this further.
+
+Yours Sincerely
+
+
+
+[UserName]
+
+[Designation]
+
+E: [UserEmail]
+
+M: [UserMobile]
+
+
+
+<-----------------------------------------One End----------------------------------------------->
+
+
+
+
+
+
+
+
+This offer is for: Doorsets and Ironmongery
+
+Total no. of Doorsets: [TotalDoorSet]
+
+Total no. of Ironmongery sets: [TotalIronmongery]
+
+Total Doorset Value: £[TotalDoorValue]
+
+Total Ironmongery figure: £[TotalIronmongeryValue]
+
+Net Subtotal: £[NetSubTotal]
+
+Net Total: £[NetTotal]
+
+Prices fixed for 3 months from date of this quote.
+
+Number of deliveries included is: 20
+
+Payment terms: Immediate
+
+Payment Estimator: Richard Maxted
+
+
+
+
+
+<-----------------------------------------------------Two End------------------------------------------------------->
+

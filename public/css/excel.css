@@ -1,0 +1,65 @@
+.background {
+	
+	right: 0;	
+}
+
+.grid-container {
+	display: flex;
+	position: absolute;
+	top: 12%;
+	left: 50%;
+	width: 100%;
+	height: auto;
+	transform: translate(-50%, 0);
+	margin-bottom: 8%;
+	background-color: #3d3d4a;
+	border-radius: 5px;
+	cursor: pointer;
+	box-shadow: 0px 0px 14px -1px rgba(0,0,0,0.75);
+}
+
+.grid-container__grid {
+	width: 100%;
+	height: auto;
+	border: 0.5px solid #2d2d39;
+	border-left: none;
+	border-radius: 3px;
+}
+
+.cell-input-container {
+	
+	position: absolute;
+	top: 30px;
+	left: 100px;
+	width: max-content;
+	padding: 0 0.5rem;
+	background-color: #6a777f;
+	border: 2px solid #2bcbba;
+	transition: box-shadow 0.1s ease;
+}
+
+.cell-input-container--active {
+	box-shadow: 0px 0px 8px 2px rgba(0,0,0,0.5);
+}
+
+.cell-input-container__input {
+	width: 81px;
+	height: 26px;
+	background-color: transparent;
+	border: none;
+	outline: none;
+	color: white;
+}
+
+
+.cell-highlight {
+	position: absolute;
+	display: none;
+	top: 0px;
+	left: 100px;
+	width: 97px;
+	height: 28px;
+	background-color: rgba(208, 251, 249, 0.3);
+	border: 2px solid #2bcbba;
+	transition: box-shadow 0.1s ease;
+}

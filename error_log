@@ -1,0 +1,14 @@
+[07-Dec-2024 06:16:53 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Please provide a valid cache path. in /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php:36
+Stack trace:
+#0 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/ViewServiceProvider.php(88): Illuminate\View\Compilers\Compiler->__construct(Object(Illuminate\Filesystem\Filesystem), false)
+#1 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Container/Container.php(873): Illuminate\View\ViewServiceProvider->Illuminate\View\{closure}(Object(Illuminate\Foundation\Application), Array)
+#2 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build(Object(Closure))
+#3 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\Container\Container->resolve('blade.compiler', Array, true)
+#4 /home/jfdsco/p in /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php on line 36
+[07-Dec-2024 06:17:11 UTC] PHP Fatal error:  Uncaught InvalidArgumentException: Please provide a valid cache path. in /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php:36
+Stack trace:
+#0 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/ViewServiceProvider.php(88): Illuminate\View\Compilers\Compiler->__construct(Object(Illuminate\Filesystem\Filesystem), false)
+#1 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Container/Container.php(873): Illuminate\View\ViewServiceProvider->Illuminate\View\{closure}(Object(Illuminate\Foundation\Application), Array)
+#2 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Container/Container.php(758): Illuminate\Container\Container->build(Object(Closure))
+#3 /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/Foundation/Application.php(841): Illuminate\Container\Container->resolve('blade.compiler', Array, true)
+#4 /home/jfdsco/p in /home/jfdsco/public_html/portal.jfds.co.uk/vendor/laravel/framework/src/Illuminate/View/Compilers/Compiler.php on line 36
