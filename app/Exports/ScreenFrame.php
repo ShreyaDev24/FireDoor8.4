@@ -23,9 +23,19 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -68,6 +78,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $screenDim,
                 ];
             }
+            
             if(!empty($value->TransomQuantity) && ($value->TransomQuantity != 0)){
                 $TransomQuantity = $value->TransomQuantity;
                 for ($i = 1; $i <= $TransomQuantity; $i++) {
@@ -77,7 +88,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $screenDim = $value->TransomWidth1.' x '.$value->TransomDepth.' x '.$value->$TransomThickness;
                     $FrameMF = lippingName($value->TransomMaterial);
 
-                    $data[] = array(
+                    $data[] = [
                         $j,
                         $screenNumber,
                         $ScreenType,
@@ -87,10 +98,11 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $Qty,
                         1,
                         $screenDim
-                    );
+                    ];
                     $j++;
                 }
             }
+            
             if(!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)){
                 $MullionQuantity = $value->MullionQuantity;
                 for ($i = 1; $i <= $MullionQuantity; $i++) {
@@ -100,7 +112,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $screenDim = $value->MullionHeight1.' x '.$value->FrameDepth.' x '.$value->$MullionThickness;
                     $FrameMF = lippingName($value->MullionMaterial);
 
-                    $data[] = array(
+                    $data[] = [
                         $j,
                         $screenNumber,
                         $ScreenType,
@@ -110,16 +122,17 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $Qty,
                         1,
                         $screenDim
-                    );
+                    ];
                     $j++;
                 }
             }
+            
             if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
                 $FrameLocation = 'SubFrame Bottom';
                 $FrameMF = lippingName($value->SubFrameMaterial);
                 $screenDim = $value->FrameWidth.' x '.$value->FrameDepth.' x '.$value->SubFrameBottomThickness;
 
-                $data[] = array(
+                $data[] = [
                     $j,
                     $screenNumber,
                     $ScreenType,
@@ -129,7 +142,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $Qty,
                     1,
                     $screenDim
-                );
+                ];
                 $j++;
             }
 
@@ -143,6 +156,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -161,12 +175,13 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
         $d = [$b,$a];
         return $d;
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:I1';
                 $cellRange = 'A2:I2';
                 $styleArray = [

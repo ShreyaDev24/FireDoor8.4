@@ -25,7 +25,7 @@ class ConfigurableDoorFormulaController extends Controller
     public function editConfigurableDoorFormula()
     {
         $ConfigurableDoorFormula = ConfigurableDoorFormula::where('status',1)->get();
-        return view('Setting.ConfigurableDoorFormula',compact('ConfigurableDoorFormula'));
+        return view('Setting.ConfigurableDoorFormula',['ConfigurableDoorFormula' => $ConfigurableDoorFormula]);
     }
 
     public function saveConfigurableDoorFormula(Request $request){

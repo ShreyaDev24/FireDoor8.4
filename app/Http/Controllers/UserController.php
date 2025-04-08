@@ -23,18 +23,15 @@ class UserController extends Controller
     public function list()
     {
 
-        if(Auth::user()->UserType=='2' ){
-        // $data = User::whereIn('UserType',[2,3])->where('CreatedBy',Auth::user()->id)->orderBy('id','desc')->get();
-        $myCreatedUser = myCreatedUser();
-
-        $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
-
-        return view('Users.UserList',compact('data'));
-        }else if(Auth::user()->UserType=='1'){
+        if (Auth::user()->UserType=='2') {
+            // $data = User::whereIn('UserType',[2,3])->where('CreatedBy',Auth::user()->id)->orderBy('id','desc')->get();
+            $myCreatedUser = myCreatedUser();
+            $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+            return view('Users.UserList',['data' => $data]);
+        } elseif (Auth::user()->UserType=='1') {
             $data = User::join('companies','companies.UserId','users.CreatedBy')->where('users.UserType',3)->orderBy('users.id','desc')->select('users.*','companies.CompanyName','companies.id as comId')->get();
-            return view('Users.UserList',compact('data'));
-        }
-        else{
+            return view('Users.UserList',['data' => $data]);
+        } else{
             return redirect()->route('users/details');
         }
     }
@@ -44,6 +41,8 @@ class UserController extends Controller
         if(Auth::user()->UserType=='2'){
             return view('Users.AddUser');
         }
+
+        return null;
     }
 
     public function details($id)
@@ -54,7 +53,7 @@ class UserController extends Controller
             $data = User::where('id',$id)->first();
             // echo"212";
             // die();
-           return view('Users.UserDetails',compact('data'));
+           return view('Users.UserDetails',['data' => $data]);
 
         }
         else{
@@ -65,6 +64,7 @@ class UserController extends Controller
         return redirect()->route('user/details');
     }
     }
+    
     public function profile()
     {
         if(Auth::user()->UserType=='3'){
@@ -73,7 +73,7 @@ class UserController extends Controller
             $data = User::where('id',$id)->first();
             // echo"212";
             // die();
-           return view('Users.UserDetails',compact('data'));
+           return view('Users.UserDetails',['data' => $data]);
 
         }
         else{
@@ -89,7 +89,7 @@ class UserController extends Controller
 
     public function store(request $request)
     {
-        if(isset($request->update)){
+        if(property_exists($request, 'update') && $request->update !== null){
         $user = User::where('id',$request->update)->first();
         $flash = "updated";
         }
@@ -130,14 +130,15 @@ class UserController extends Controller
         $user->UserPhone = $request->UserPhone;
         $user->UserJobtitle = $request->UserJobtitle;
         $user->CreatedBy = Auth::user()->id;
-        $user->parent_id = Auth::user()->parent_id ? Auth::user()->parent_id : Auth::user()->CreatedBy;
+        $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
         $user->UserType = 3;
-        if(!isset($request->update)){
+        if(!property_exists($request, 'update') || $request->update === null){
         $user->password =  Hash::make($request->password);
         }
+        
         $user->CreatedBy = Auth::user()->id;
-        $user->parent_id = Auth::user()->parent_id ? Auth::user()->parent_id : Auth::user()->CreatedBy;
+        $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
         $user->save();
         //sending_mail_credential($user->UserEmail, $request->password);
@@ -161,7 +162,7 @@ class UserController extends Controller
         if(Auth::user()->UserType=='2' || Auth::user()->UserType=='3'){
             if(isset($id)){
                 $editdata = User::where('id',$id)->first();
-                return view('Users.AddUser',compact('editdata'));
+                return view('Users.AddUser',['editdata' => $editdata]);
                 }else{
                 return redirect()->route('user/list');
              }
@@ -175,9 +176,9 @@ class UserController extends Controller
     public function delete(request $request){
 //
         if (Auth::user()->UserType == '2') {
-            if (isset($request->id)) {
+            if (property_exists($request, 'id') && $request->id !== null) {
                 User::where('id', $request->id)->delete();
-                return json_encode(array("status" => "ok", "msg" => "User Deleted!"));
+                return json_encode(["status" => "ok", "msg" => "User Deleted!"]);
 
             } else {
                 return redirect()->route('user/list');

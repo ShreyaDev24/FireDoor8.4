@@ -24,9 +24,19 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -40,6 +50,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
             }
+            
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
@@ -78,14 +89,15 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                     if (isset($glassPaneMap[$glasspane])) {
                         $GlassPaneWidth = $value->{$glassPaneMap[$glasspane]['width']};
                         $GlassPaneHeight = $value->{$glassPaneMap[$glasspane]['height']};
-                    }else{
-                        $GlassPaneWidth = $GlassPaneHeight = 0;
+                    }else {
+                        $GlassPaneWidth = 0;
+                        $GlassPaneHeight = 0;
                     }
 
                     $screenQty = 1;
                     $screenNumber = $value->screenNumber;
 
-                    $data[] = array(
+                    $data[] = [
                         $k,
                         $screenNumber,
                         $ScreenType,
@@ -94,7 +106,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $GlassPaneWidth,
                         $GlassPaneHeight,
                         $screenQty,
-                    );
+                    ];
                     $k++;
                 }
             }
@@ -108,6 +120,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -125,12 +138,13 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         $d = [$b,$a];
         return $d;
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:H1';
                 $cellRange = 'A2:H2';
                 $styleArray = [

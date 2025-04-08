@@ -34,18 +34,19 @@ class NonConfiguralItems extends Controller
     {
         $uIds = CompanyUsers();
         $item = NonConfigurableItems::wherein('userId',$uIds)->where('status', 1)->get();
-        return view('NonConfigurableItem.index', compact('item'));
+        return view('NonConfigurableItem.index', ['item' => $item]);
     }
 
     public function create()
     {
         return view('NonConfigurableItem.CreateNonConfigurableItem');
     }
+    
     public function edit($id)
     {
         if (!empty($id)) {
             $editdata = NonConfigurableItems::where('id', $id)->where('status', 1)->first();
-            return view('NonConfigurableItem.CreateNonConfigurableItem', compact('editdata'));
+            return view('NonConfigurableItem.CreateNonConfigurableItem', ['editdata' => $editdata]);
         } else {
             return redirect()->route('NonConfigurableItem/list');
         }
@@ -79,9 +80,10 @@ class NonConfiguralItems extends Controller
                 $filedata = file_get_contents($path);
                 $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
                 $file->move($filepath, $imageName);
-                if (isset($request->id)) {
+                if (property_exists($request, 'id') && $request->id !== null) {
                     File::delete($filepath . $data->NonconfiBase64);
                 }
+                
                 $data->NonconfiBase64 = $base64;
                 $data->image = $imageName;
             }
@@ -131,6 +133,7 @@ class NonConfiguralItems extends Controller
             $price = ($margin > 0)? ($price + $QuoteSummaryDiscountValue): ($price - $QuoteSummaryDiscountValue);
 
         }
+        
         $total_price = $quantity * $price;
         $currencyPrice = getCurrencyRate($quotationId);
 
@@ -155,6 +158,7 @@ class NonConfiguralItems extends Controller
                 'msg'=> 'something went wrong!'
             ];
         }
+        
         return response()->json($response, 200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
@@ -169,6 +173,7 @@ class NonConfiguralItems extends Controller
                 $data->price = ($margin > 0)? ($NonConfigurableItems->price + $QuoteSummaryDiscountValue): ($NonConfigurableItems->price - $QuoteSummaryDiscountValue);
 
             }
+            
             $data->total_price = $data->price * $request->quantity;
             $data->save();
             if (!empty($data->id)) {
@@ -192,7 +197,7 @@ class NonConfiguralItems extends Controller
         return response()->json($response, 200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
-    public function nonConfigDelete(Request $request){
+    public function nonConfigDelete(Request $request): string{
         $data = NonConfigurableItemStore::find($request->id);
         $data->delete();
         return 'success';

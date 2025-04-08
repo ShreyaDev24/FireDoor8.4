@@ -16,8 +16,13 @@ use DB;
 
 class pdf6 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -35,7 +40,7 @@ class pdf6 implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', '0');
@@ -48,22 +53,15 @@ class pdf6 implements ShouldQueue
         }else{
             $id = Auth::user()->id;
         }
+        
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
-        $contractorName = $contractorName ? $contractorName : '';
+        $contractorName = $contractorName ?: '';
 
-        if (!empty($quotaion->ProjectId)) {
-            $project = Project::where('id', $quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
-        if (!empty($quotaion->UserId)) {
-            $user = User::where('id', $quotaion->CompanyUserId)->first();
-        } else {
-            $user = '';
-        }
+        $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
@@ -71,7 +69,7 @@ class pdf6 implements ShouldQueue
         // Elevation Drawing
         $elevTbl = '';
         // $ed = Item::where('QuotationId',$quatationId)->get();
-        $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join){
+        $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
             $join->on("quotation_version_items.itemID","=","items.itemId")
                 ->on("quotation_version_items.itemmasterID","=","item_master.id");
         })
@@ -102,6 +100,7 @@ class pdf6 implements ShouldQueue
             }else{
                 $FireRatingActualValue  =  $tt->FireRating;
             }
+            
            // sidelight
             if($tt->FireRating == 'FD30s'){
                 $tt->FireRating = 'FD30';
@@ -155,26 +154,20 @@ class pdf6 implements ShouldQueue
             foreach ($DoorNumber as $bb) {
                 $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
             }
+            
             $species = LippingSpecies::where('id', $tt->FrameMaterial)->first();
             if ($species != '') {
                 $frameMaterial = $species->SpeciesName;
                 $GlazingBeadSpecies = $species->SpeciesName;
             } else {
-                if (!empty($tt->FrameMaterial)) {
-                    $frameMaterial = $tt->FrameMaterial;
-                } else {
-                    $frameMaterial = 'N/A';
-                }
+                $frameMaterial = empty($tt->FrameMaterial) ? 'N/A' : $tt->FrameMaterial;
+
                 $GlazingBeadSpecies = 'N/A';
             }
 
             // Overpanel/Fanlight Section :- OP Glazing Bead Species
             $OPspecies = LippingSpecies::where('id', $tt->OPGlazingBeadSpecies)->first();
-            if ($OPspecies != '') {
-                $OPGlazingBeadSpecies = $OPspecies->SpeciesName;
-            } else {
-                $OPGlazingBeadSpecies = 'N/A';
-            }
+            $OPGlazingBeadSpecies = $OPspecies != '' ? $OPspecies->SpeciesName : 'N/A';
 
             $DoorFrameImage = "";
             $VisionPanelGlazingImage = "";
@@ -218,17 +211,15 @@ class pdf6 implements ShouldQueue
                 $FrameTypeLeft = \Config::get('constants.base64Images.FramePlantOnStopLeft');
                 $FrameTypeRight = \Config::get('constants.base64Images.FramePlantOnStopRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FramePlantOnStopCommon');
-
-            } else if (!empty($tt->FrameType) && ($tt->FrameType == "Rebated_Frame")) {
+            } elseif (!empty($tt->FrameType) && ($tt->FrameType == "Rebated_Frame")) {
                 $FrameTypeLeft = \Config::get('constants.base64Images.FrameRebatedLeft');
                 $FrameTypeRight = \Config::get('constants.base64Images.FrameRebatedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-
-            } else if(!empty($tt->FrameType) && $tt->FrameType == "Scalloped"){
+            } elseif (!empty($tt->FrameType) && $tt->FrameType == "Scalloped") {
                 // if (!empty($tt->FrameType) && $tt->FrameType != "Scalloped") {
-                    $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
-                    $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
-                    $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
+                $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
+                $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
                 // }
             }
 
@@ -243,85 +234,78 @@ class pdf6 implements ShouldQueue
 
             $remainingWidth = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
 
-            if(!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
+            if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedLeft;
-                } else if ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
+                } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
                 } else {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
                 }
-            }else{
-            if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
+            } elseif ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                 $FrameImageStructureLeft = $FixedSpaceBlock;
                 $FrameImageStructureRight = $RemainingSpaceBlock;
-            } else if ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
+            } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                 $FrameImageStructureLeft = $RemainingSpaceBlock;
                 $FrameImageStructureRight = $FixedSpaceBlock;
             } else {
                 $FrameImageStructureLeft = $RemainingSpaceBlock;
                 $FrameImageStructureRight = $RemainingSpaceBlock;
             }
-        }
+            
             $leaf1RemainingWidth = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
 
-            if(!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
+            if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
                     $FullBlock = $FixedSpaceBlockScallopedLeft;
-
-                } else if ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
+                } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
                     // $FullBlock =$FixedSpaceBlockScallopedLeft;
                     $FullBlock =$FixedSpaceBlockScallopedRight;
-
                 } else {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
                     $FullBlock =$FixedSpaceBlockScallopedRight;
                 }
-            }else{
-                if ($tt->DistanceFromTheEdgeOfDoor > $leaf1RemainingWidth) {
-                    $FrameImageStructureLeftLeaf1 = $FixedSpaceBlock;
-                    $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
-                } else if ($tt->DistanceFromTheEdgeOfDoor < $leaf1RemainingWidth) {
-                    $FrameImageStructureLeftLeaf1 = $RemainingSpaceBlock;
-                    $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
-                } else {
-                    $FrameImageStructureLeftLeaf1 = $RemainingSpaceBlock;
-                    $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
-                }
-        }
+            } elseif ($tt->DistanceFromTheEdgeOfDoor > $leaf1RemainingWidth) {
+                $FrameImageStructureLeftLeaf1 = $FixedSpaceBlock;
+                $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
+            } elseif ($tt->DistanceFromTheEdgeOfDoor < $leaf1RemainingWidth) {
+                $FrameImageStructureLeftLeaf1 = $RemainingSpaceBlock;
+                $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
+            } else {
+                $FrameImageStructureLeftLeaf1 = $RemainingSpaceBlock;
+                $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
+            }
 
             $leaf2RemainingWidth = $tt->LeafWidth2 - ($tt->Leaf2VPWidth + $tt->DistanceFromTheEdgeOfDoorforLeaf2);
 
-            if(!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
+            if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
                 if ($tt->DistanceFromTheEdgeOfDoorforLeaf2 > $leaf2RemainingWidth) {
                     $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
                     $FrameImageStructureRightLeaf2 = $FixedSpaceBlock;
-                } else if ($tt->DistanceFromTheEdgeOfDoorforLeaf2 < $leaf2RemainingWidth) {
+                } elseif ($tt->DistanceFromTheEdgeOfDoorforLeaf2 < $leaf2RemainingWidth) {
                     $FrameImageStructureLeftLeaf2 = $FixedSpaceBlock;
                     $FrameImageStructureRightLeaf2 = $RemainingSpaceBlockScallopedRight;
                 } else {
                     $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
                     $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
                 }
-            }else{
-                if ($tt->DistanceFromTheEdgeOfDoorforLeaf2 > $leaf2RemainingWidth) {
-                    $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
-                    $FrameImageStructureRightLeaf2 = $FixedSpaceBlock;
-                } else if ($tt->DistanceFromTheEdgeOfDoorforLeaf2 < $leaf2RemainingWidth) {
-                    $FrameImageStructureLeftLeaf2 = $FixedSpaceBlock;
-                    $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
-                } else {
-                    $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
-                    $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
-                }
+            } elseif ($tt->DistanceFromTheEdgeOfDoorforLeaf2 > $leaf2RemainingWidth) {
+                $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
+                $FrameImageStructureRightLeaf2 = $FixedSpaceBlock;
+            } elseif ($tt->DistanceFromTheEdgeOfDoorforLeaf2 < $leaf2RemainingWidth) {
+                $FrameImageStructureLeftLeaf2 = $FixedSpaceBlock;
+                $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
+            } else {
+                $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
+                $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
             }
 
 // dd($tt->Leaf2VisionPanel != 'Yes');
@@ -337,7 +321,7 @@ class pdf6 implements ShouldQueue
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-// dd("972");class="'.$redstripLeftCommonClass.'"
+                            // dd("972");class="'.$redstripLeftCommonClass.'"
                             $DoorFrameImage .= '<div  style="border: 0.5px solid black;
                                     background-color: red;
                                     z-index: 999;
@@ -348,8 +332,7 @@ class pdf6 implements ShouldQueue
                                     margin-left:'. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door'? '15' : '3')) .'px;
                                     margin-top: 25px;"></div>';
-
-                        } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                        } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // dd("985");
                             $DoorFrameImage .= '<div  style="border: 0.5px solid black;
                                     background-color: red;
@@ -376,7 +359,7 @@ class pdf6 implements ShouldQueue
                     }
 
 
-                    if($sidelight != "" && $tt->SideLight1 == 'Yes'){
+                    if($sidelight !== "" && $tt->SideLight1 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="
                         width: 0px;
@@ -555,7 +538,6 @@ class pdf6 implements ShouldQueue
 
 
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-
                             $DoorFrameImage .= '<div style="border: 0.5px solid black;
                                         background-color: red;
                                         z-index: 999;
@@ -566,7 +548,7 @@ class pdf6 implements ShouldQueue
                                         margin-left: '. (
                                             !empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : '-35.5') : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
                                         margin-top: 40px;"></div>';
-                        } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                        } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             $DoorFrameImage .= '<div  style="border: 0.5px solid black;
                                         background-color: red;
                                         z-index: 999;
@@ -590,6 +572,7 @@ class pdf6 implements ShouldQueue
                                         margin-top: 57px;"></div>';
                         }
                     }
+                    
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
@@ -602,7 +585,7 @@ class pdf6 implements ShouldQueue
                                 </div>
                             ';
 
-                    if($sidelight != "" && $tt->SideLight2 == 'Yes'){
+                    if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="position: absolute;top: 23px;left: 912px;">
                         <div style="
@@ -691,10 +674,8 @@ class pdf6 implements ShouldQueue
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-
                             $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 18px;"></div>';
-                        } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-
+                        } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 10px;"></div>
                                     <div class="'.$redstripLeftCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 25px;"></div>';
                         }
@@ -704,7 +685,7 @@ class pdf6 implements ShouldQueue
 
                     // ----------------Left-------------------
 
-                    if($sidelight != "" && $tt->SideLight1 == 'Yes'){
+                    if($sidelight !== "" && $tt->SideLight1 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="
                                 width: 0px;
@@ -857,14 +838,12 @@ class pdf6 implements ShouldQueue
                         if ($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') {
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-
                                 $DoorFrameImage .= '<div style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;
                                 margin-left:'. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '53') .'px;
                                                 margin-top: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') .'px;"></div>';
-                            } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-
+                            } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                                 $DoorFrameImage .= '<div class=""  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? (($tt->Leaf2VisionPanel == 'Yes')? '31':'140'):'132') : '53') .'px;margin-top: 23px;"></div>
                                             <div style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
@@ -885,10 +864,8 @@ class pdf6 implements ShouldQueue
                         if ($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') {
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-
                                 $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 18px;"></div>';
-                            } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-
+                            } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                                 $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 13px;"></div>
                                             <div class="'.$redstripRightCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 24px;"></div>';
                             }
@@ -1008,40 +985,37 @@ class pdf6 implements ShouldQueue
 
 
 
-                            if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
+                            if (($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') && in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                                if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-
-                                    $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):'-51').'px;margin-top: 24px;"></div>
+                                $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):'-51').'px;margin-top: 24px;"></div>
                                             <div class="'.$redstripLeftCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):'-51').'px;margin-top: 37px;"></div>';
-                                }
                             }
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-
                             if($tt->Leaf2VisionPanel == 'Yes'){
                             $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-64':'-73') : '-50') .'px;
                                                 margin-top: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '33') .'px;"></div>';
                             }
-                        } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                                if($tt->Leaf2VisionPanel =! 'Yes'){
+                        } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            if($tt->Leaf2VisionPanel =! 'Yes'){
 
 
-                            $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
-                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 23px;"></div>
+                        $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 23px;"></div>
                                     <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
-                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 40px;"></div>';
-                                    }
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 40px;"></div>';
+                                }
                         }
                     }
 
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
+                    
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
@@ -1052,7 +1026,7 @@ class pdf6 implements ShouldQueue
 
                     // ----------------Right-------------------
 
-                    if($sidelight != "" && $tt->SideLight2 == 'Yes'){
+                    if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="position:relative; right:-191px; bottom:-14px;"><div style="
                                 width: 0px;
@@ -1128,21 +1102,26 @@ class pdf6 implements ShouldQueue
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
             }
+            
             $configurationItem = $quotaion->configurableitems;
             if (!empty($quotaion->configurableitems)) {
                 $configurationItem = $quotaion->configurableitems;
             }
+            
             $ProjectName = null;
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
+            
             if (!empty($version)) {
                 $version = $version;
             }
+            
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
+            
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
@@ -1160,14 +1139,11 @@ class pdf6 implements ShouldQueue
             }
 
             if (!empty($tt->SvgImage)) {
-                if (strpos($tt->SvgImage, '.png') !== false) {
-                    $svgFile = URL('/') . '/uploads/files/' . $tt->SvgImage;
-                } else {
-                    $svgFile = $tt->SvgImage;
-                }
+                $svgFile = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
             }
+            
             $elevTbl .=
                 '
                 <div id="headText">
@@ -1189,6 +1165,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
+            
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -1226,6 +1203,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
+            
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -1299,11 +1277,7 @@ class pdf6 implements ShouldQueue
                                 </td>';
             }
 
-            if ($tt->Leaf1VisionPanel == "Yes") {
-                $IsLeafEnabled = 'style="width:80%;"';
-            } else {
-                $IsLeafEnabled = 'colspan="2"';
-            }
+            $IsLeafEnabled = $tt->Leaf1VisionPanel == "Yes" ? 'style="width:80%;"' : 'colspan="2"';
 
             $elevTbl .= '<td ' . $IsLeafEnabled . '>
                 <div class="doorImgBox">
@@ -1315,18 +1289,16 @@ class pdf6 implements ShouldQueue
             if (isset($DoorFrameImage)) :
                 $FrameMaterial = 'N/A';
 
-                if (!empty($tt->FrameMaterial)) {
-                    if (!in_array($tt->FrameMaterial, ["MDF", "Softwood", "Hardwood"])) {
-                        $SelectedFrameMaterial = LippingSpecies::find($tt->FrameMaterial);
+                if (!empty($tt->FrameMaterial) && !in_array($tt->FrameMaterial, ["MDF", "Softwood", "Hardwood"])) {
+                    $SelectedFrameMaterial = LippingSpecies::find($tt->FrameMaterial);
+                    if ($SelectedFrameMaterial != null) {
+                        $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
+                        $FrameMaterial .= "<br>-" . (($SelectedFrameMaterial->MinValue > 0) ? $SelectedFrameMaterial->MinValue . "x" : "") . $SelectedFrameMaterial->MaxValues . " Kg/m3";
+                    } else {
+                        $SelectedFrameMaterial = LippingSpecies::where("SpeciesName", $tt->FrameMaterial)->first();
                         if ($SelectedFrameMaterial != null) {
                             $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
                             $FrameMaterial .= "<br>-" . (($SelectedFrameMaterial->MinValue > 0) ? $SelectedFrameMaterial->MinValue . "x" : "") . $SelectedFrameMaterial->MaxValues . " Kg/m3";
-                        } else {
-                            $SelectedFrameMaterial = LippingSpecies::where("SpeciesName", $tt->FrameMaterial)->first();
-                            if ($SelectedFrameMaterial != null) {
-                                $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
-                                $FrameMaterial .= "<br>-" . (($SelectedFrameMaterial->MinValue > 0) ? $SelectedFrameMaterial->MinValue . "x" : "") . $SelectedFrameMaterial->MaxValues . " Kg/m3";
-                            }
                         }
                     }
                 }
@@ -1357,6 +1329,7 @@ class pdf6 implements ShouldQueue
                                     <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
+                        
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
                                         <p class="frame_sd_t1">-' . $FrameMaterial . '</p>
                                         <div class="arrow-strat"></div>
@@ -1387,6 +1360,7 @@ class pdf6 implements ShouldQueue
                                     <p class="frame_dd_t4 frame_dd_t4_' . $tt->FrameType . ' '.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5 frame_dd_t5_' . $tt->FrameType . ' '.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
+                        
                         $elevTbl .= '<!-- <div class="arrow-strat"></div>  <p class="frame_sd_t1">' . $tt->FrameDepth . '</p>
                                         <p class="frame_sd_t2">' . $tt->FrameThickness . '</p>
                                         <p class="frame_dd_t1">-' . $FrameMaterial . '</p>
@@ -1410,6 +1384,7 @@ class pdf6 implements ShouldQueue
                         break;
                 }
             endif;
+            
             // }
 
 
@@ -1419,18 +1394,19 @@ class pdf6 implements ShouldQueue
             if (!empty($tt->ExtLinerValue)) {
                 $ExtLinerValue = $tt->ExtLinerValue;
             }
+            
             $ExtLinerThickness = '';
             if (!empty($tt->ExtLinerThickness)) {
                 $ExtLinerThickness = $tt->ExtLinerThickness . "mm";
             }
 
-            if (empty($ExtLinerValue) && empty($ExtLinerThickness)) {
+            if (empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = "N/A";
-            } else if (empty($ExtLinerValue) && !empty($ExtLinerThickness)) {
+            } elseif (empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
                 $ExtLinerSizeForDoorDetailsTable = 'N/A x ' . $ExtLinerThickness;
-            } else if (!empty($ExtLinerValue) && empty($ExtLinerThickness)) {
+            } elseif (!empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = $ExtLinerValue . ' x N/A';
-            } else if (!empty($ExtLinerValue) && !empty($ExtLinerThickness)) {
+            } elseif (!empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
                 $ExtLinerSizeForDoorDetailsTable = $ExtLinerValue . ' x ' . $ExtLinerThickness;
             }
 
@@ -1439,6 +1415,7 @@ class pdf6 implements ShouldQueue
                 $ls = LippingSpecies::where('id', $tt->LippingSpecies)->first();
                 $SpeciesName = $ls->SpeciesName;
             }
+            
             $intumescentSealType = 'N/A';
             if (!empty($tt->IntumescentLeapingSealType)) {
                 $intumescentSealType = IntumescentSealType($configurationItem, $tt->IntumescentLeapingSealType);
@@ -1447,16 +1424,14 @@ class pdf6 implements ShouldQueue
             $DoorLeafFinish = "N/A";
             if (!empty($tt->DoorLeafFinish)) {
                 $dlf = DoorLeafFinish($configurationItem, $tt->DoorLeafFinish);
-                if (!empty($tt->SheenLevel)) {
-                    $DoorLeafFinish = $dlf . ' - ' . $tt->SheenLevel . ' Sheen';
-                } else {
-                    $DoorLeafFinish = $dlf;
-                }
+                $DoorLeafFinish = empty($tt->SheenLevel) ? $dlf : $dlf . ' - ' . $tt->SheenLevel . ' Sheen';
             }
+            
             $DoorLeafFinishColor = '';
             if (!empty($tt->DoorLeafFinishColor)) {
                 $DoorLeafFinishColor = ' + ' . $tt->DoorLeafFinishColor;
             }
+            
             $DoorLeafFacing = "N/A";
             if (!empty($tt->DoorLeafFacing)) {
                 $DoorLeafFacing = DoorLeafFacing($configurationItem, $tt->DoorLeafFacing, $tt->DoorLeafFacingValue);
@@ -1487,10 +1462,12 @@ class pdf6 implements ShouldQueue
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
+            
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
                 $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem, $FireRatingActualValue, $tt->OPGlassType);
             }
+            
             $ArchitraveFinishForDoorDetailsTable = "N/A";
             if (!empty($tt->ArchitraveFinish)) {
                 $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem, $tt->ArchitraveFinish, $tt->FrameFinishColor);
@@ -1509,8 +1486,10 @@ class pdf6 implements ShouldQueue
                     ->where("OptionSlug", "Glass_Integrity")
                     ->where("OptionKey", $tt->GlassIntegrity)->first();
                 }
+                
                 $GlassIntegrity = $gi->OptionValue;
             }
+            
             $OPGlazingBeads = 'N/A';
             if (!empty($tt->OPGlazingBeads)) {
                 $opgb = Option::where("configurableitems", $configurationItem)
@@ -1541,7 +1520,7 @@ class pdf6 implements ShouldQueue
 
             if ($tt->SwingType == 'SA') {
                 $SwingType = 'Single Acting';
-            } else if ($tt->SwingType == 'DA') {
+            } elseif ($tt->SwingType == 'DA') {
                 $SwingType = 'Double Acting';
             } else {
                 $SwingType = '';
@@ -1549,57 +1528,25 @@ class pdf6 implements ShouldQueue
 
             // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
             if (!empty($tt->DecorativeGroves)) {
-                if (!empty($tt->GrooveWidth)) {
-                    $GrooveWidth = $tt->GrooveWidth . 'mm wide';
-                } else {
-                    $GrooveWidth = 'N/A';
-                }
-                if (!empty($tt->GrooveDepth)) {
-                    $GrooveDepth = $tt->GrooveDepth . 'mm deep';
-                } else {
-                    $GrooveDepth = 'N/A';
-                }
-                if (empty($tt->GrooveWidth) && empty($tt->GrooveDepth)) {
-                    $DecorativeGroves = 'N/A';
-                } else {
-                    $DecorativeGroves = $GrooveWidth . ' x ' . $GrooveDepth;
-                }
+                $GrooveWidth = empty($tt->GrooveWidth) ? 'N/A' : $tt->GrooveWidth . 'mm wide';
+
+                $GrooveDepth = empty($tt->GrooveDepth) ? 'N/A' : $tt->GrooveDepth . 'mm deep';
+
+                $DecorativeGroves = empty($tt->GrooveWidth) && empty($tt->GrooveDepth) ? 'N/A' : $GrooveWidth . ' x ' . $GrooveDepth;
             } else {
                 $DecorativeGroves = 'N/A';
             }
 
-            if (!empty($tt->LeafWidth1)) {
-                $leafWidth1 = $tt->LeafWidth1;
-            } else {
-                $leafWidth1 = 'N/A';
-            }
-            if (!empty($tt->LeafWidth2)) {
-                $leafWidth2 = $tt->LeafWidth2;
-            } else {
-                $leafWidth2 = 'N/A';
-            }
-            if (!empty($tt->LeafHeight)) {
-                $LeafHeight = $tt->LeafHeight;
-            } else {
-                $LeafHeight = 'N/A';
-            }
-            if (!empty($tt->LeafThickness)) {
-                $LeafThickness = $tt->LeafThickness;
-            } else {
-                $LeafThickness = 'N/A';
-            }
-            if (!empty($tt->FrameDepth)) {
-                $FrameDepth = $tt->FrameDepth;
-            } else {
-                $FrameDepth = 'N/A';
-            }
+            $leafWidth1 = empty($tt->LeafWidth1) ? 'N/A' : $tt->LeafWidth1;
 
-            if(!empty($tt->IronmongeryID)){
-                $IronmongerySet = IronmongerySetName($tt->IronmongeryID);
-            }
-            else{
-                $IronmongerySet = 'N/A';
-            }
+            $leafWidth2 = empty($tt->LeafWidth2) ? 'N/A' : $tt->LeafWidth2;
+
+            $LeafHeight = empty($tt->LeafHeight) ? 'N/A' : $tt->LeafHeight;
+
+            $LeafThickness = empty($tt->LeafThickness) ? 'N/A' : $tt->LeafThickness;
+
+            $FrameDepth = empty($tt->FrameDepth) ? 'N/A' : $tt->FrameDepth;
+            $IronmongerySet = empty($tt->IronmongeryID) ? 'N/A' : IronmongerySetName($tt->IronmongeryID);
 
             $rWdBRating = 'N/A';
             if (!empty($tt->rWdBRating)) {
@@ -1630,18 +1577,22 @@ class pdf6 implements ShouldQueue
                     $ArchitraveMaterial = $ls->SpeciesName;
                 }
             }
+            
             $ArchitraveSetQty = 'N/A';
             if (!empty($tt->ArchitraveSetQty)) {
                 $ArchitraveSetQty = $tt->ArchitraveSetQty;
             }
+            
             $ArchitraveWidth = 'N/A';
             if (!empty($tt->ArchitraveWidth)) {
                 $ArchitraveWidth = $tt->ArchitraveWidth;
             }
+            
             $ArchitraveDepth = 'N/A';
             if (!empty($tt->ArchitraveDepth)) {
                 $ArchitraveDepth = $tt->ArchitraveDepth;
             }
+            
             $ArchitraveHeight = 'N/A';
             if (!empty($tt->ArchitraveHeight)) {
                 $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -1652,7 +1603,7 @@ class pdf6 implements ShouldQueue
             // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
             $sl1glasstype = 'N/A';
             if (!empty($tt->SideLight1GlassType)) {
-                $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id) {
+                $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
                     $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
                         ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
                 })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
@@ -1751,6 +1702,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_blank">' . $tt->SOWallThick . '</td>
                                 </tr>';
             }
+            
             $elevTbl .=  '  <tr>
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
@@ -1778,6 +1730,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
+        
             $elevTbl .=         '
                                 <tr>
                                     <td class="dicription_grey">Door Leaf Width 1</td>
@@ -1838,6 +1791,7 @@ class pdf6 implements ShouldQueue
                                 </tbody>
                             </table>';
             }
+            
             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -1959,6 +1913,7 @@ class pdf6 implements ShouldQueue
                             </tbody>
                         </table>';
                         }
+                
                         $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -1983,6 +1938,7 @@ class pdf6 implements ShouldQueue
                             </tbody>
                         </table>';
                         }
+                        
                         $elevTbl .=  '</div></div>
                     <div id="footer">
                         <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
@@ -2013,6 +1969,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
+            
             $elevTbl .= '</span>
                                     </td>
                                     <td class="tbl_color"><span>Ref</span></td>
@@ -2084,6 +2041,7 @@ class pdf6 implements ShouldQueue
                         <td></td>
                     </tr>';
                 }
+                
                 $elevTbl .= '</tbody>
             </table>
             </div>
@@ -2095,9 +2053,10 @@ class pdf6 implements ShouldQueue
             $PageBreakCounts++;
 
         }
+        
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
-        $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', compact('elevTbl'));
+        $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
         $path6 = public_path() . '/allpdfFile';
         $fileName6 = $id . '6' . '.' . 'pdf';
         // return $pdf6->download('elevation.pdf');

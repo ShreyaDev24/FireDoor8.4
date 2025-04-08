@@ -15,6 +15,7 @@ class QuotationVersion extends Model
      * @var array
      */
     protected $table = 'quotation_versions';
+    
     protected $fillable = [
         'quotation_id','version','status','is_deleted',
     ];

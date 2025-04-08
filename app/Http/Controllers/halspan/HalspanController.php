@@ -133,6 +133,7 @@ class HalspanController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
+                            
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }
@@ -156,12 +157,12 @@ class HalspanController extends Controller
             $ids = Auth::user()->id;
         }
 
-        $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids) {
+        $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
             $query->where('default_type', 'custom')
                   ->where('UserId', $ids)
                   ->where('projectId', $quotation->ProjectId);
         })
-        ->with(['defaultItems' => function ($query) use ($quotation,$ids) {
+        ->with(['defaultItems' => function ($query) use ($quotation,$ids): void {
             $query->where('default_type', 'custom')
                   ->where('UserId', $ids)
                   ->where('projectId', $quotation->ProjectId);
@@ -213,6 +214,7 @@ class HalspanController extends Controller
         if($item === null){
             return abort(404);
         }
+        
         $item = $item->toArray();
 
         // below code to get lipping name and to show on edit page---
@@ -307,6 +309,7 @@ class HalspanController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
+                            
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }

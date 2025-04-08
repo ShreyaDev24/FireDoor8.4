@@ -15,8 +15,13 @@ use DB;
 
 class pdf1 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -34,7 +39,7 @@ class pdf1 implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', '0');
@@ -47,10 +52,11 @@ class pdf1 implements ShouldQueue
         }else{
             $id = Auth::user()->id;
         }
+        
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
-        $contractorName = $contractorName ? $contractorName : '';
+        $contractorName = $contractorName ?: '';
 
         // $configurationItem = 1;
         $configurationItem = $quotaion->configurableitems;
@@ -58,11 +64,8 @@ class pdf1 implements ShouldQueue
             $configurationItem = $quotaion->configurableitems;
         }
 
-        if (!empty($quotaion->ProjectId)) {
-            $project = Project::where('id', $quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
+        
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
         $SalesContact = 'N/A';
@@ -95,14 +98,10 @@ class pdf1 implements ShouldQueue
         }
 
 
-        if (!empty($quotaion->UserId)) {
-            $user = User::where('id', $quotaion->CompanyUserId)->first();
-        } else {
-            $user = '';
-        }
+        $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $pdf1 = SettingPDF1::where('UserId', $id)->first();
-        $pdf = PDF::loadView('Company.pdf_files.introductionpdf', compact('pdf1', 'pdf_footer', 'comapnyDetail', 'quotaion', 'customerContact', 'project', 'user', 'customer','contactfirstandlastname', 'contractorName'));
+        $pdf = PDF::loadView('Company.pdf_files.introductionpdf', ['pdf1' => $pdf1, 'pdf_footer' => $pdf_footer, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'customerContact' => $customerContact, 'project' => $project, 'user' => $user, 'customer' => $customer, 'contactfirstandlastname' => $contactfirstandlastname, 'contractorName' => $contractorName]);
         // return $pdf->download('file.pdf');
         $path1 = public_path() . '/allpdfFile';
         $fileName1 = $id . '1' . '.' . 'pdf';

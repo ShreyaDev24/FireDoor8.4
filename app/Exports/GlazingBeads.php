@@ -24,9 +24,19 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -35,21 +45,21 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
     public function collection()
     {
 
-        $total = $GTSell = 0;
-
+        $total = 0;
+        $GTSell = 0;
         $j = 1;
         $data = [];
         foreach($this->result['data'] as $value){
             if($value->Category=='GlazingBeads'){
-                $total = $total + $value->TotalCost;
-                $GTSell = $GTSell + $value->GTSellPrice;
+                $total += $value->TotalCost;
+                $GTSell += $value->GTSellPrice;
                 $words = explode("|", $value->Description);
-                $doortype = isset($words[0])? $words[0] : "";
-                $words1 = isset($words[1])? $words[1] : "";
-                $words2 = isset($words[2])? $words[2] : "";
-                $words3 = isset($words[3])? $words[3] : "";
-                $words4 = isset($words[4])? $words[4] : "";
-                $words5 = isset($words[5])? $words[5] : "";
+                $doortype = $words[0] ?? "";
+                $words1 = $words[1] ?? "";
+                $words2 = $words[2] ?? "";
+                $words3 = $words[3] ?? "";
+                $words4 = $words[4] ?? "";
+                $words5 = $words[5] ?? "";
                 $LMPerDoorType = $value->LMPerDoorType;
                 $QuantityOfDoorTypes = $value->QuantityOfDoorTypes;
                 $Unit = $value->Unit;
@@ -59,7 +69,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
                 $GTSellPrice = $value->GTSellPrice;
                 $Margin = $value->Margin.'%';
 
-                $data[] = array(
+                $data[] = [
                     $j,
                     $doortype,
                     $words1,
@@ -75,7 +85,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
                     $UnitPriceSell,
                     $GTSellPrice,
                     $Margin
-                );
+                ];
                 $j++;
             }
         }
@@ -88,6 +98,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -108,18 +119,20 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
         foreach($this->result['data'] as $value){
             $MarginMarkup = $value->MarginMarkup;
         }
-        array_push($a,$MarginMarkup);
+
+        $a[] = $MarginMarkup;
         $b = ['Glazing Beads ',];
 
         $d = [$b,$a];
         return $d;
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:O1';
                 $cellRange = 'A2:O2';
                 $styleArray = [

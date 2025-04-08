@@ -10,5 +10,6 @@ class DoorFrameConstruction extends Model
     use HasFactory;
 
     protected $table = 'door_frame_construction';
+    
     protected $fillable = ['DoorFrameConstruction','Width','Height','UserId','hingeCenterCheck'];
 }

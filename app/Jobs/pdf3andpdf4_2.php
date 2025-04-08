@@ -16,8 +16,13 @@ use DB;
 
 class pdf3andpdf4_2 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -35,7 +40,7 @@ class pdf3andpdf4_2 implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', '0');
@@ -53,22 +58,21 @@ class pdf3andpdf4_2 implements ShouldQueue
         $version = $qv->version;
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
-        if (!empty($quotaion->ProjectId)) {
-            $project = Project::where('id', $quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
+        
         if (!empty($quotaion->MainContractorId)) {
             $customerContact = Users::where('id', $quotaion->MainContractorId)->first();
         } else {
             $customerContact = '';
         }
+        
         $customer = '';
         $CstCompanyAddressLine1 = '';
         if (!empty($customerContact)) {
             $customer = Customer::where(['UserId' => $quotaion->MainContractorId])->first();
             $CstCompanyAddressLine1 = $customer->CstCompanyAddressLine1;
         }
+        
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
@@ -80,6 +84,7 @@ class pdf3andpdf4_2 implements ShouldQueue
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
+            
             $a2 .=
                 '<tr>
             <td>' . $show->doorNumber . '</td>
@@ -91,7 +96,8 @@ class pdf3andpdf4_2 implements ShouldQueue
             </tr>';
             $i++;
         }
-        $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', compact('a2', 'comapnyDetail', 'quotaion', 'project', 'version'));
+        
+        $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version]);
         // return $pdf3->download('file3.pdf');
         $path3 = public_path() . '/allpdfFile';
         $fileName3 = $id . '3' . '.' . 'pdf';
@@ -101,7 +107,7 @@ class pdf3andpdf4_2 implements ShouldQueue
         //Non Configurable Item
         $nonConfigData = nonConfigurableItem($quatationId,$versionID,CompanyUsers());
 
-        $pdf4_2 = PDF::loadView('Company.pdf_files.nonconfigdoor', compact('nonConfigData', 'comapnyDetail','quotaion', 'project', 'customerContact', 'version', 'customer'));
+        $pdf4_2 = PDF::loadView('Company.pdf_files.nonconfigdoor', ['nonConfigData' => $nonConfigData, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
         // return $pdf4->download('file4.pdf');
         $path4_2 = public_path() . '/allpdfFile';
         $fileName4_2 = $id . '4_2' . '.' . 'pdf';

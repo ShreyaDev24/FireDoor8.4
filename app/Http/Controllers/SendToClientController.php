@@ -30,7 +30,8 @@ class SendToClientController extends Controller
     {
         $this->middleware('auth')->except(['quotationApproval','quotaionAccept','quotaionReject']);
     }
-    public function sendToClientUrl(Request $request)
+    
+    public function sendToClientUrl(Request $request): void
     {
 
 
@@ -53,6 +54,7 @@ class SendToClientController extends Controller
                 exit;
             }
         }
+        
         $QuotationGenerationId = $q->QuotationGenerationId;
         $SalesCon =  $q->SalesContact;
         // $cc = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->select('customer_contacts.FirstName','customer_contacts.LastName','customer_contacts.ContactEmail')->where('customers.UserId',$CustomerContactId)->first();
@@ -73,6 +75,7 @@ class SendToClientController extends Controller
                 ]);
                 exit;
             }
+            
         // Check quotation file is exist or not in folder
             $file = public_path().'/quotationFiles'.'/'.$QuotationGenerationId.'_'.$version.'.pdf';
             if(!file_exists($file)){
@@ -82,9 +85,10 @@ class SendToClientController extends Controller
                 ]);
                 exit;
             }
+            
         if(!empty($QuotationContactInformation->Email)){
             $to = $QuotationContactInformation->Email;
-            $subject = "Order process | Quotation $q->QuotationGenerationId";
+            $subject = 'Order process | Quotation ' . $q->QuotationGenerationId;
             $qId = encrypt($quotationId);
             $vId = encrypt($currentVersion);
             $url = route('quotationApproval',[ $qId , $vId ]);
@@ -98,20 +102,16 @@ class SendToClientController extends Controller
             $emailTo = $QuotationContactInformation->Email;
             $emailFrom = 'noreply@jfds.co.uk';
 
-            if(isset($com->CompanyName)){
-                $emailFromName = $com->CompanyName;
-            }else{
-                $emailFromName = 'noreply@jfds.co.uk';
-            }
+            $emailFromName = $com->CompanyName ?? 'noreply@jfds.co.uk';
 
             $usermname = $cc->FirstName.' '.$cc->LastName;
             $data_set = ['usermname'=>$usermname,'CompanyName'=>$com->CompanyName, 'url'=>$url, 'SalesCon'=>$SalesCon];
 
             ini_set('display_errors', 1);
             try{
-                Mail::send(['html' => 'Mail.SendToClient'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom, &$emailFromName) {
+                Mail::send(['html' => 'Mail.SendToClient'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom, &$emailFromName): void {
                     $message->to($emailTo, $emailTo)->subject($subject);
-                    if($emailFrom){
+                    if($emailFrom !== ''){
                         $message->from($emailFrom, $emailFromName);
                     }
                 });
@@ -146,7 +146,7 @@ class SendToClientController extends Controller
         $qGId = str_replace('#','%23',$QuotationGenerationId);
         $filename = $qGId.'_'.$version.'.pdf';
         $pdf_file_name =  str_replace("%23", '', $filename);
-        return view('sendToClient.quotationApproval',compact('quotation','pdf_file_name','filename','vId'));
+        return view('sendToClient.quotationApproval',['quotation' => $quotation, 'pdf_file_name' => $pdf_file_name, 'filename' => $filename, 'vId' => $vId]);
     }
 
     public function quotaionAccept(Request $request)
@@ -172,6 +172,7 @@ class SendToClientController extends Controller
             $file->move($filepath,$ImageName);
             $q->fileByClient = $ImageName;
         }
+        
         if($q->save()){
             $projectId  = $q->ProjectId;
 
@@ -215,6 +216,7 @@ class SendToClientController extends Controller
                 foreach($QuotationVersionItems as  $QuotationVersionItem){
                     $itemmasterID[] = $QuotationVersionItem->itemmasterID;
                 }
+                
                 $ItemMasters = ItemMaster::wherein('id',$itemmasterID)->select('floor')->groupBy('floor')->get();
                 // dd($ItemMasters);
                 foreach($ItemMasters as  $ItemMaster){
@@ -229,8 +231,10 @@ class SendToClientController extends Controller
                 }
             }
         }
+        
         return redirect()->back()->with('success', 'Thank you for accepting quotation!');
     }
+    
     public function quotaionReject(Request $request)
     {
         $id = $request->id;

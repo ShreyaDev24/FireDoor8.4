@@ -22,6 +22,7 @@ class IntumescentController extends Controller
         }else{
             $UserId = ['1'];
         }
+        
         $intumesecentSeal = SettingIntumescentSeals2::where('configurableitems',$pageId)->wherein('editBy',$UserId)->groupBy('brand', 'intumescentSeals', 'firerating')->orderBy('id','desc')->get();
         $i = 1;
         $tbl = '';
@@ -46,6 +47,7 @@ class IntumescentController extends Controller
             }else{
                 $action = '<td></td>';
             }
+            
             $tbl .=
             '
                 <tr>
@@ -61,10 +63,12 @@ class IntumescentController extends Controller
             ';
             $i++;
         }
+        
         $firerating = Option::where(['configurableitems'=>$pageId,'OptionSlug'=>'fire_rating'])->get();
         $ConfigurableItems = ConfigurableItems::get();
-        return view('Setting.intumescentseals',compact('firerating','tbl','ConfigurableItems','pageId'));
+        return view('Setting.intumescentseals',['firerating' => $firerating, 'tbl' => $tbl, 'ConfigurableItems' => $ConfigurableItems, 'pageId' => $pageId]);
     }
+    
     public function submitintumescentseals(Request $request)
     {
 
@@ -88,12 +92,14 @@ class IntumescentController extends Controller
                 // If no checkboxes are selected, store an empty string
                 $leafTypesString = '';
             }
+            
         if(!is_null($update_val)){
             $a = SettingIntumescentSeals2::find($update_val);
             $selectedOption = SelectedIntumescentSeals2::where('intumescentseals2_id',$update_val)->where('selected_intumescentseals2_user_id',Auth::user()->id)->first();
             if(empty($selectedOption)){
                 $selectedOption = new SelectedIntumescentSeals2();
             }
+            
             $a->configurableitems = $request->configurableitems;
             $a->firerating = $request->firerating;
             $a->tag = $request->tag;
@@ -178,6 +184,7 @@ class IntumescentController extends Controller
             return redirect('options/selected/intumescentSealArrangement')->with('success', 'The Intumescent Seals added successfully!');
         }
     }
+    
     public function deleteintumescentseals(Request $request)
     {
         $id = $request->delete;
@@ -185,6 +192,7 @@ class IntumescentController extends Controller
         $del = SettingIntumescentSeals2::where('tag',$a->tag)->limit(6)->delete();
         return redirect()->back()->with('success', 'The Intumescent Seals deleted successfully!');
     }
+    
     public function updintumescentseals(Request $request)
     {
         $id = $request->upd;

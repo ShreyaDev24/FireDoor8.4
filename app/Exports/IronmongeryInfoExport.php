@@ -49,7 +49,7 @@ class IronmongeryInfoExport implements FromCollection,WithHeadings,WithEvents
             $Supplier = $value->Supplier;
             $Price = $value->Price;
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $id,
                 $FireRating,
@@ -60,7 +60,7 @@ class IronmongeryInfoExport implements FromCollection,WithHeadings,WithEvents
                 $Description,
                 $Supplier,
                 $Price
-            );
+            ];
             $j++;
         }
 
@@ -68,6 +68,7 @@ class IronmongeryInfoExport implements FromCollection,WithHeadings,WithEvents
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -90,7 +91,7 @@ class IronmongeryInfoExport implements FromCollection,WithHeadings,WithEvents
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange = 'A1:J1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);

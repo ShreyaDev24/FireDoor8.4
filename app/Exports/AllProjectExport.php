@@ -50,12 +50,8 @@ class AllProjectExport implements FromCollection,WithHeadings,WithMapping
         $custCompanyName = Customer::where('id',$projectList->MainContractorId)->first();
         $projectFilesCount = ProjectFiles::where('projectId',$projectList->ProjectId)->count();
         $countIronmongerySet = AddIronmongery::where(['ProjectId' => $projectList->ProjectId])->count();
-        if($projectList->Status == 1){
-            $status = "Activate Project";
-        }
-        else{
-            $status = "Deactivate";
-        }
+        $status = $projectList->Status == 1 ? "Activate Project" : "Deactivate";
+        
         return [
            $this->rowNumber++,
            $projectList->ProjectName,

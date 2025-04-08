@@ -19,6 +19,7 @@ class ItemCategory extends Model
     public function Item(){
         return $this->belongsTo(Item::class,'ItemId','id');
     }
+    
      public function ItemField(){
         return $this->hasMany(ItemField::class,'CategoryId')->orderBy('FieldOrder','asc');;
     }

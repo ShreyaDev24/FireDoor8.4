@@ -23,9 +23,14 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid;
+    protected $id;
 
-    function __construct($id,$vid) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    public function __construct($id,$vid) {
         $this->id = $id;
         $this->vid = $vid;
     }
@@ -40,6 +45,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
         if(!empty($quotaion->configurableitems)){
             $configurationItem = $quotaion->configurableitems;
         }
+        
         $shows = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
         ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
         ->where('quotation_version_items.version_id',$versionId)->get();
@@ -57,6 +63,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
                 $AI = AddIronmongery::select('discountprice')->where('id',$item->IronmongeryID)->first();
                 $IronmongaryPrice = $AI->discountprice;
             }
+            
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
 
@@ -67,6 +74,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
             if(!empty($item->DoorLeafFinish)){
                 $DoorLeafFinish = DoorLeafFinish($configurationItem,$item->DoorLeafFinish);
             }
+            
             $DoorLeafFinishColor = '';
             if(!empty($item->DoorLeafFinishColor)){
                 $DoorLeafFinishColor = ' + '.$item->DoorLeafFinishColor;
@@ -98,7 +106,8 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
                 }
             }
 
-            $Leaf1VisionPanel = $Leaf2VisionPanel = "N/A";
+            $Leaf1VisionPanel = "N/A";
+            $Leaf2VisionPanel = "N/A";
 
             if($item->Leaf1VisionPanel == "Yes"){
                 $Leaf1VisionPanel = $item->Leaf1VisionPanelShape." (".$item->VisionPanelQuantity.") ".$item->Leaf1VPWidth."x".$item->Leaf1VPHeight1." (".$item->VisionPanelQuantity.") ";
@@ -128,17 +137,15 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
 
             $FrameMaterialForDoorDetailsTable = "";
 
-            if(!empty($item->FrameMaterial)){
-                if(!in_array($item->FrameMaterial,["MDF","Softwood","Hardwood"])){
-                        $SelectedFrameMaterialForDoorDetailsTable = LippingSpecies::find($item->FrameMaterial);
-                        if($SelectedFrameMaterialForDoorDetailsTable != null){
-                            $FrameMaterialForDoorDetailsTable = $SelectedFrameMaterialForDoorDetailsTable->SpeciesName;
-                        }else{
-                            $SelectedFrameMaterialForDoorDetailsTable = LippingSpecies::where("SpeciesName",$item->FrameMaterial)->where('Status',1)->first();
-                            if($SelectedFrameMaterialForDoorDetailsTable != null){
-                                $FrameMaterialForDoorDetailsTable = $SelectedFrameMaterialForDoorDetailsTable->SpeciesName;
-                            }
-                        }
+            if (!empty($item->FrameMaterial) && !in_array($item->FrameMaterial,["MDF","Softwood","Hardwood"])) {
+                $SelectedFrameMaterialForDoorDetailsTable = LippingSpecies::find($item->FrameMaterial);
+                if($SelectedFrameMaterialForDoorDetailsTable != null){
+                    $FrameMaterialForDoorDetailsTable = $SelectedFrameMaterialForDoorDetailsTable->SpeciesName;
+                }else{
+                    $SelectedFrameMaterialForDoorDetailsTable = LippingSpecies::where("SpeciesName",$item->FrameMaterial)->where('Status',1)->first();
+                    if($SelectedFrameMaterialForDoorDetailsTable != null){
+                        $FrameMaterialForDoorDetailsTable = $SelectedFrameMaterialForDoorDetailsTable->SpeciesName;
+                    }
                 }
             }
 
@@ -152,6 +159,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
             if(!empty($item->FrameDepth)){
                 $FrameSizeForDoorDetailsTable .= $item->FrameDepth."x";
             }
+            
             $FrameSizeForDoorDetailsTable .= $item->FrameThickness."mm";
 
             $FrameFinishForDoorDetailsTable = 'N/A';
@@ -172,10 +180,14 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
                 if(!empty($item->extLinerSize)){
                     $ExtLinerSizeForDoorDetailsTable .= "x";
                 }
+                
                 $ExtLinerSizeForDoorDetailsTable .= $item->ExtLinerThickness.'mm';
             }
 
-            $ArchitraveMaterialForDoorDetailsTable = $ArchitraveTypeForDoorDetailsTable = $ArchitraveSizeForDoorDetailsTable = $ArchitraveFinishForDoorDetailsTable = "N/A";
+            $ArchitraveMaterialForDoorDetailsTable = "N/A";
+            $ArchitraveTypeForDoorDetailsTable = "N/A";
+            $ArchitraveSizeForDoorDetailsTable = "N/A";
+            $ArchitraveFinishForDoorDetailsTable = "N/A";
 
             if($item->Architrave == "Yes"){
                 $ArchitraveMaterialForDoorDetailsTable = $item->ArchitraveMaterial;
@@ -222,10 +234,12 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
                     $intumescentSeal = $intum->intumescentSeals;
                 }
             }
+            
             $DoorDescription = '';
             if(!empty($item->DoorsetType)){
                 $DoorDescription = DoorDescription($item->DoorsetType);
             }
+            
             $LippingSpecies = '';
             if($item->LippingSpecies){
                 $SelectedLippingSpecies = LippingSpecies::find($item->LippingSpecies);
@@ -291,7 +305,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
             $IronmongaryPrice = round($IronmongaryPrice,2);
             $totalpriceperdoorset = round($totalpriceperdoorset,2);
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $Floor,
                 $DoorNumber,
@@ -344,10 +358,11 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
                 $totalpriceperdoorset,
 
 
-            );
+            ];
             $i++;
             $j++;
         }
+        
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -364,6 +379,7 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -445,13 +461,14 @@ class InvoiceInExcelVicaima implements FromCollection,WithHeadings,WithEvents
 
 
     }
+    
     public function registerEvents(): array
     {
 
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $versionId = $this->vid;
                 $count = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
                 ->join('item_master','quotation_version_items.itemmasterID','item_master.id')

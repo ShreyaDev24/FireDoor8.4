@@ -15,6 +15,7 @@ class Architect extends Model
         'ArcCompanyName','ArcCompanyWebsite','ArcCompanyEmail', 'ArcCompanyPhone','ArcCompanyAddressLine1',
         'ArcCompanyCountry','ArcCompanyState','ArcCompanyCity','ArcCompanyPostalCode','ArcCompanyMoreInfo','UserId'
     ];
+    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -23,6 +24,7 @@ class Architect extends Model
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
     //To add user table relationship
 
     public function users(){

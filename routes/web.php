@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-Route::get('/clear-cache', function() {
+Route::get('/clear-cache', function(): void {
 
 	Artisan::call('config:clear');
 	Artisan::call('cache:clear');
@@ -28,6 +28,7 @@ Route::get('/clear-cache', function() {
 
 Route::get('/', function () {
     if(Auth::check()){return Redirect::to('/');}
+    
     return view('auth.login');
 });
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
@@ -64,12 +65,12 @@ Route::get('quotationApproval/{qId}/{vId}', [App\Http\Controllers\SendToClientCo
 Route::post('quotaionAccept', [App\Http\Controllers\SendToClientController::class,'quotaionAccept'])->name('quotaionAccept');
 Route::post('quotaionReject', [App\Http\Controllers\SendToClientController::class,'quotaionReject'])->name('quotaionReject');
 
-Route::middleware('auth:web')->group(function(){
+Route::middleware('auth:web')->group(function(): void{
 
 Route::get('Admin/Profile', [App\Http\Controllers\ResetPasswordController::class,'admin_profile'])->name('admin/profile');
 
  ///create multiple admins
-Route::prefix('admins')->group(function () {
+Route::prefix('admins')->group(function (): void {
     Route::get('/add',[App\Http\Controllers\AdminController::class,'add'])->name('admins/add');
     Route::get('/list', [App\Http\Controllers\AdminController::class,'list'])->name('admins/list');
     Route::get('/details/{id}', [App\Http\Controllers\AdminController::class,'details'])->name('admins/details');
@@ -81,7 +82,7 @@ Route::prefix('admins')->group(function () {
 });
 
   ///architect
- Route::prefix('Architect')->group(function () {
+ Route::prefix('Architect')->group(function (): void {
     Route::get('/add',[App\Http\Controllers\ArchitectController::class,'add'])->name('Architect/add');
     Route::get('/list', [App\Http\Controllers\ArchitectController::class,'list'])->name('Architect/list');
     Route::get('/details/{id}', [App\Http\Controllers\ArchitectController::class,'details'])->name('Architect/details');
@@ -93,7 +94,7 @@ Route::prefix('admins')->group(function () {
     });
 
 
-Route::prefix('customer')->group(function () {
+Route::prefix('customer')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\CustomerController::class,'add'])->name('customer/add');
     Route::get('/list', [App\Http\Controllers\CustomerController::class,'list'])->name('customer/list');
     // Route::match(['get','post'],'/edit', [App\Http\Controllers\CustomerController::class,'edit'])->name('customer/edit');
@@ -104,7 +105,7 @@ Route::prefix('customer')->group(function () {
 });
 
 
-Route::prefix('contractor')->group(function () {
+Route::prefix('contractor')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\ContractorController::class,'add'])->name('contractor/add');
     Route::get('/list', [App\Http\Controllers\ContractorController::class,'list'])->name('contractor/list');
     // Route::match(['get','post'],'/edit', [App\Http\Controllers\ContractorController::class,'edit'])->name('customer/edit');
@@ -117,7 +118,7 @@ Route::prefix('contractor')->group(function () {
 });
 
 
-Route::prefix('company')->group(function () {
+Route::prefix('company')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\CompanyController::class,'add'])->name('company/add');
     Route::get('/list', [App\Http\Controllers\CompanyController::class,'list'])->name('company/list');
     Route::get('/assign-form', [App\Http\Controllers\CompanyController::class,'assign_form'])->name('assign-form');
@@ -135,7 +136,7 @@ Route::prefix('company')->group(function () {
 });
 
 
-Route::prefix('user')->group(function () {
+Route::prefix('user')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\UserController::class,'add'])->name('user/add');
     Route::get('/list', [App\Http\Controllers\UserController::class,'list'])->name('user/list');
     Route::get('/details/{id}', [App\Http\Controllers\UserController::class,'details'])->name('user/details');
@@ -147,7 +148,7 @@ Route::prefix('user')->group(function () {
     Route::post('/delete', [App\Http\Controllers\UserController::class,'delete'])->name('user/delete');
 });
 
-Route::prefix('items')->group(function () {
+Route::prefix('items')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\ItemListController::class,'index'])->name('items/add');
     Route::get('/tab', [App\Http\Controllers\ItemListController::class,'tab'])->name('items/tab');
     Route::post('/fire-rating-filter',[App\Http\Controllers\ItemListController::class,'filterFireRating'])->name('items/fire-rating-filter');
@@ -199,7 +200,7 @@ Route::prefix('items')->group(function () {
 Route::post('/item/remove', [App\Http\Controllers\ItemFormController::class,'item_remove'])->name('item/remove');
 Route::post('/item/remove-screen', [App\Http\Controllers\ItemFormController::class,'screen_remove'])->name('item/remove-screen');
 
-Route::prefix('options')->group(function () {
+Route::prefix('options')->group(function (): void {
     Route::get('/add/{id}', [App\Http\Controllers\OptionController::class,'index'])->name('options/add');
     Route::get('/add1/{id}/{optionType}', [App\Http\Controllers\OptionController::class,'index1'])->name('options/add1');
     Route::post('/store', [App\Http\Controllers\OptionController::class,'store'])->name('options/store');
@@ -251,7 +252,7 @@ Route::prefix('options')->group(function () {
     Route::post('filter-leaf-type',[App\Http\Controllers\OptionController::class,'filter_leaf_type'])->name('filter-leaf-type');
 });
 
-Route::prefix('quotation')->group(function () {
+Route::prefix('quotation')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
     Route::post('/store', [App\Http\Controllers\DoorScheduleController::class,'store'])->name('quotation/store');
     Route::get('/list', [App\Http\Controllers\DoorScheduleController::class,'quotationList'])->name('quotation/list');
@@ -444,7 +445,7 @@ Route::prefix('quotation')->group(function () {
 });
 
 ///architect
-Route::prefix('Architect')->group(function () {
+Route::prefix('Architect')->group(function (): void {
     Route::get('/add',[App\Http\Controllers\ArchitectController::class,'add'])->name('Architect/add');
     Route::get('/list', [App\Http\Controllers\ArchitectController::class,'list'])->name('Architect/list');
     Route::get('/details/{id}', [App\Http\Controllers\ArchitectController::class,'details'])->name('Architect/details');
@@ -457,7 +458,7 @@ Route::prefix('Architect')->group(function () {
 
     Route::get('generate/quotation/{id}', [App\Http\Controllers\ArchitectPdfGenerateController::class,'generate'])->name('generate/quotation');
 
-Route::prefix('file')->group(function () {
+Route::prefix('file')->group(function (): void {
     Route::get('/ceate-quatation-file', [App\Http\Controllers\ArchitectureController::class,'index'])->name('file/ceate-quatation-file');
     Route::post('/store-filename', [App\Http\Controllers\ArchitectureController::class,'storeFileName'])->name('file/store-filename');
     Route::get('/choose-add-data-option/{id}', [App\Http\Controllers\ArchitectureController::class,'chooseAddDataOption'])->name('file/choose-add-data-option');
@@ -467,7 +468,7 @@ Route::prefix('file')->group(function () {
     Route::get('/delete/{id}', [App\Http\Controllers\ArchitectureController::class,'delete'])->name('file/delete');
 });
 
-Route::prefix('form')->group(function () {
+Route::prefix('form')->group(function (): void {
     Route::get('/item', [App\Http\Controllers\ItemFormController::class,'index'])->name('form/item');
     Route::post('/store-filename', [App\Http\Controllers\ItemFormController::class,'storeFileName'])->name('form/store-filename');
     Route::get('/configuration-file-list', [App\Http\Controllers\ItemFormController::class,'configurationFormList'])->name('form/configuration-file-list');
@@ -475,7 +476,7 @@ Route::prefix('form')->group(function () {
 
 });
 
-Route::prefix('project')->group(function () {
+Route::prefix('project')->group(function (): void {
     Route::get('/create', [App\Http\Controllers\ProjectController::class,'index'])->name('project/create');
     Route::get('/update/{id}', [App\Http\Controllers\ProjectController::class,'index'])->name('project/update/');
     Route::post('/store', [App\Http\Controllers\ProjectController::class,'store'])->name('project/store');
@@ -535,7 +536,7 @@ Route::prefix('project')->group(function () {
 
 });
 
-Route::prefix('ironmongery-info')->group(function (){
+Route::prefix('ironmongery-info')->group(function (): void{
 
     Route::get('/create', [App\Http\Controllers\IronmongeryInfo::class,'index'])->name('ironmongery-info/create');
     Route::post('/store', [App\Http\Controllers\IronmongeryInfo::class,'store'])->name('ironmongery-info/store');
@@ -552,7 +553,7 @@ Route::prefix('ironmongery-info')->group(function (){
 });
 
 
-Route::prefix('non-configural-items')->group(function (){
+Route::prefix('non-configural-items')->group(function (): void{
     Route::get('/create', [App\Http\Controllers\NonConfiguralItems::class,'create'])->name('non-configural-items/create');
     Route::post('/store', [App\Http\Controllers\NonConfiguralItems::class,'store'])->name('non-configural-items/store');
     Route::get('/list', [App\Http\Controllers\NonConfiguralItems::class,'index'])->name('non-configural-items/list');
@@ -564,7 +565,7 @@ Route::prefix('non-configural-items')->group(function (){
 });
 
 //setting section
-Route::prefix('setting')->group(function (){
+Route::prefix('setting')->group(function (): void{
     Route::get('/generalSetting', [App\Http\Controllers\setting\GeneralSettingController::class,'generalSetting'])->name('generalSetting');
     Route::post('/subgeneralSetting',[App\Http\Controllers\setting\GeneralSettingController::class,'subgeneralSetting'])->name('subgeneralSetting');
     Route::get('/DoorFrameConstruction',[App\Http\Controllers\setting\GeneralSettingController::class,'DoorFrameConstruction'])->name('DoorFrameConstruction');
@@ -625,7 +626,7 @@ Route::prefix('setting')->group(function (){
 
 
 // Order
-Route::prefix('order')->group(function (){
+Route::prefix('order')->group(function (): void{
     Route::get('/orderlist', [App\Http\Controllers\order\OrderController::class,'orderlist'])->name('orderlist');
     Route::match(['get','post'],'/suborderlist', [App\Http\Controllers\order\OrderController::class,'suborderlist'])->name('suborderlist');
     Route::get('/ommanual/{id}/{vid}', [App\Http\Controllers\order\OMMAnualController::class,'ommanual'])->name('ommanual');
@@ -645,7 +646,7 @@ Route::post('/door-dimension-list/store-custome', [App\Http\Controllers\DoorDime
 Route::post('/door-dimension/edit/{id}', [App\Http\Controllers\DoorDimensionController::class,'edit'])->name('DoorDimension/edit');
 Route::post('/door-dimension/delete', [App\Http\Controllers\DoorDimensionController::class,'dimension_delete'])->name('DoorDimension/delete');
 // Color
-Route::prefix('colors')->group(function (){
+Route::prefix('colors')->group(function (): void{
     Route::get('/create-color', [App\Http\Controllers\ColorController::class,'createColor'])->name('create-color');
     Route::post('/store-color', [App\Http\Controllers\ColorController::class,'storeColor'])->name('store-color');
     // Route::get('/edit-color/{pageId}/{id}', [App\Http\Controllers\ColorController::class,'createColor'])->name('edit-color');
@@ -664,7 +665,7 @@ Route::get('/phpmailer', [App\Http\Controllers\PhpMailerController::class,'index
 
 Route::post('/notification/markRead', [App\Http\Controllers\DashboardController::class,'notificationMarkRead'])->name('notification/markRead');
 
-Route::prefix('survey')->group(function () {
+Route::prefix('survey')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\SurveyController::class,'add'])->name('survey/add');
     Route::get('/list', [App\Http\Controllers\SurveyController::class,'list'])->name('survey/list');
     Route::post('/store', [App\Http\Controllers\SurveyController::class,'store'])->name('survey/store');

@@ -13,13 +13,13 @@ class QuotationPrefixController extends Controller
     public function QuotationPrefix()
     {
         $ComQuotCounter = CompanyQuotationCounter::where('UserId',Auth::user()->id)->first();
-        return view('Setting.quotationprefix',compact('ComQuotCounter'));
+        return view('Setting.quotationprefix',['ComQuotCounter' => $ComQuotCounter]);
     }
 
     public function OrderPrefix()
     {
         $ComOrdCounter = CompanyOrderCounter::where('UserId',Auth::user()->id)->first();
-        return view('Setting.orderprefix',compact('ComOrdCounter'));
+        return view('Setting.orderprefix',['ComOrdCounter' => $ComOrdCounter]);
     }
 
     public function setprefix(Request $request)
@@ -37,6 +37,7 @@ class QuotationPrefixController extends Controller
         }else{
             $users = [Auth::user()->id];
         }
+        
         foreach ($users as $key => $usr) {
             $update_val = $request->updval;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -45,6 +46,7 @@ class QuotationPrefixController extends Controller
                 $a = new CompanyQuotationCounter;
                 $a->created_at = date('Y-m-d H:i:s');
             }
+            
             $a->UserId = $usr;
             $a->quotation_prefix = $request->quotation_prefix;
             $a->order_prefix = $request->order_prefix;
@@ -77,6 +79,7 @@ class QuotationPrefixController extends Controller
             $a = new CompanyOrderCounter;
             $a->created_at = date('Y-m-d H:i:s');
         }
+        
         $a->UserId = Auth::user()->id;
         $a->order_prefix = $request->order_prefix;
         $a->order_counter = 100001;

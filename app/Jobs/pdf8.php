@@ -16,8 +16,13 @@ use DB;
 
 class pdf8 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -35,7 +40,7 @@ class pdf8 implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', '0');
@@ -48,22 +53,15 @@ class pdf8 implements ShouldQueue
         }else{
             $id = Auth::user()->id;
         }
+        
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
-        $contractorName = $contractorName ? $contractorName : '';
+        $contractorName = $contractorName ?: '';
 
-        if (!empty($quotaion->ProjectId)) {
-            $project = Project::where('id', $quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
-        if (!empty($quotaion->UserId)) {
-            $user = User::where('id', $quotaion->CompanyUserId)->first();
-        } else {
-            $user = '';
-        }
+        $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
@@ -88,6 +86,7 @@ class pdf8 implements ShouldQueue
             foreach ($DoorNumberS as $bb) {
                 $doorNoS .= '<span style="padding-left:5px;">' . $bb->screenNumber . '</span>';
             }
+            
             $QuotationGenerationId = null;
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
@@ -97,6 +96,7 @@ class pdf8 implements ShouldQueue
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
+            
             if (!empty($version)) {
                 $version = $version;
             }
@@ -105,20 +105,18 @@ class pdf8 implements ShouldQueue
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
+            
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
             }
 
             if (!empty($tt->SvgImage)) {
-                if (strpos($tt->SvgImage, '.png') !== false) {
-                    $svgFileS = URL('/') . '/uploads/files/' . $tt->SvgImage;
-                } else {
-                    $svgFileS = $tt->SvgImage;
-                }
+                $svgFileS = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFileS = URL('/') . '/uploads/files/no_image_prod.jpg';
             }
+            
             $CstCompanyAddressLine1 = '';
             if (!empty($customerContact)) {
                 $customer = Customer::where(['UserId' => $quotaion->MainContractorId])->first();
@@ -152,6 +150,7 @@ class pdf8 implements ShouldQueue
             } else {
                 $elevSideScreenTbl .= Base64Image('defaultImg');
             }
+            
             $elevSideScreenTbl .=
                 '</span>
                                                 </td>
@@ -190,12 +189,8 @@ class pdf8 implements ShouldQueue
             $SelectedFrameMaterial = LippingSpecies::where("id", $tt->FrameMaterial)->first();
             // dd($tt->FrameMaterial);
             // dd($SelectedFrameMaterial);
-                            if ($SelectedFrameMaterial != null) {
-                                $FrameMaterials = $SelectedFrameMaterial->SpeciesName;
-                            }
-                            else{
-                                $FrameMaterials = 'N/A';
-                            }
+            $FrameMaterials = $SelectedFrameMaterial != null ? $SelectedFrameMaterial->SpeciesName : 'N/A';
+            
             if($tt->GlazingBeadShape == 'Square'){
                 $elevSideScreenTbl .= '<td style=" width:300px;margin: 0 auto;position: relative;">
                 <div class="">
@@ -417,7 +412,7 @@ class pdf8 implements ShouldQueue
 
         //  return $elevSideScreenTbl;
         // return view('Company.pdf_files.elevationDrawingSideScreen', compact('elevSideScreenTbl'));
-        $pdf8 = PDF::loadView('Company.pdf_files.elevationDrawingSideScreen',compact('elevSideScreenTbl'));
+        $pdf8 = PDF::loadView('Company.pdf_files.elevationDrawingSideScreen',['elevSideScreenTbl' => $elevSideScreenTbl]);
         $path8 = public_path() . '/allpdfFile';
         $fileName8 = $id . '8' . '.' . 'pdf';
         $pdf8->save($path8 . '/' . $fileName8);
@@ -426,7 +421,7 @@ class pdf8 implements ShouldQueue
 
         // Document PDF
         $pdf_document = SettingPDFDocument::where('UserId', $id)->first();
-        $pdf5 = PDF::loadView('Company.pdf_files.documentpdf', compact('pdf_document'));
+        $pdf5 = PDF::loadView('Company.pdf_files.documentpdf', ['pdf_document' => $pdf_document]);
         $path5 = public_path() . '/allpdfFile';
         $fileName5 = $id . '5' . '.' . 'pdf';
         $pdf5->save($path5 . '/' . $fileName5);

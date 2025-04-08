@@ -28,8 +28,9 @@ class SurveyController extends Controller
             $userIds = getMyCreatedAdmins();
             $data = User::where('UserType', 6)->wherein('CreatedBy', $userIds)->orderBy('id', 'desc')->get();
 
-            return view('Survey.SurveyList', compact('data'));
+            return view('Survey.SurveyList', ['data' => $data]);
         }
+        
         // }else if(Auth::user()->UserType=='1'){
         //     $data = User::where('UserType',3)->orderBy('id','desc')->get();
         //     return view('Users.UserList',compact('data'));
@@ -37,6 +38,7 @@ class SurveyController extends Controller
         // else{
         //     return redirect()->route('users/details');
         // }
+        return null;
     }
 
     public function add()
@@ -44,6 +46,8 @@ class SurveyController extends Controller
         if (Auth::user()->UserType == '2') {
             return view('Survey.AddSurvey');
         }
+
+        return null;
     }
 
     public function details($id)
@@ -51,7 +55,7 @@ class SurveyController extends Controller
         if (Auth::user()->UserType == '2') {
             if (isset($id)) {
                 $data = User::where('id', $id)->first();
-                return view('Survey.SurveyDetails', compact('data'));
+                return view('Survey.SurveyDetails', ['data' => $data]);
             } else {
                 return redirect()->route('survey/details');
             }
@@ -59,6 +63,7 @@ class SurveyController extends Controller
             return redirect()->route('survey/details');
         }
     }
+    
     // public function profile()
     // {
     //     if(Auth::user()->UserType=='3'){
@@ -83,7 +88,7 @@ class SurveyController extends Controller
 
     public function store(request $request)
     {
-        if (isset($request->update)) {
+        if (property_exists($request, 'update') && $request->update !== null) {
             $user = User::where('id', $request->update)->first();
             $flash = "updated";
         } else {
@@ -129,8 +134,8 @@ class SurveyController extends Controller
 
         $user->CreatedBy = Auth::user()->id;
 
-        if (!isset($request->update)) {
-            $password = rand(100000,1000000);
+        if (!property_exists($request, 'update') || $request->update === null) {
+            $password = random_int(100000,1000000);
             $user->password = Hash::make($password);
             $emailTo = $request->UserEmail;
             $subject = 'Login Password';
@@ -140,10 +145,10 @@ class SurveyController extends Controller
 
             ini_set('display_errors', 1);
             try{
-                Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom) {
+                Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
 
                     $message->to($emailTo, $emailTo)->subject($subject);
-                    if($emailFrom){
+                    if($emailFrom !== ''){
                         $message->from($emailFrom, $emailFrom);
                     }
 
@@ -153,6 +158,7 @@ class SurveyController extends Controller
                     echo $e->getMessage();
             }
         }
+        
         $user->save();
         // sending_mail_credential($user->UserEmail, $request->password);
         $request->session()->flash($flash, 'data');
@@ -169,7 +175,7 @@ class SurveyController extends Controller
         if (Auth::user()->UserType == '2') {
             if (isset($id)) {
                 $editdata = User::where('id', $id)->first();
-                return view('Survey.AddSurvey', compact('editdata'));
+                return view('Survey.AddSurvey', ['editdata' => $editdata]);
             } else {
                 return redirect()->route('survey/list');
             }
@@ -181,9 +187,9 @@ class SurveyController extends Controller
     public function delete(request $request){
 
         if (Auth::user()->UserType == '2') {
-            if (isset($request->id)) {
+            if (property_exists($request, 'id') && $request->id !== null) {
                 User::where('id', $request->id)->delete();
-                return json_encode(array("status" => "ok", "msg" => "Survey User Deleted!"));
+                return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
 
             } else {
                 return redirect()->route('survey/list');
@@ -196,19 +202,22 @@ class SurveyController extends Controller
     public function statusChange(request $request){
 
         if (Auth::user()->UserType == '2') {
-            if (isset($request->id)) {
+            if (property_exists($request, 'id') && $request->id !== null) {
                 if($request->status == 1){
                     User::where('id', $request->id)->update(['status' => 0]);
-                    return json_encode(array("status" => "ok", "msg" => "Survey User Deleted!"));
+                    return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
                 }
                 else{
                     User::where('id', $request->id)->update(['status' => 1]);
-                    return json_encode(array("status" => "ok", "msg" => "Survey User Deleted!"));
+                    return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
                 }
+                
                 return redirect()->route('survey/list');
             } else {
                 return redirect()->route('survey/list');
             }
         }
+
+        return null;
     }
 }

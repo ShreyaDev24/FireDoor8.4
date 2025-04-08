@@ -25,8 +25,9 @@ class PdfsettingController extends Controller
         $pdf2 = SettingPDF2::wherein('UserId',$ids)->first();
         $pdf_footer = SettingPDFfooter::wherein('UserId',$ids)->first();
         $pdf_document = SettingPDFDocument::wherein('UserId',$ids)->first();
-        return view('Setting.settingpdf1',compact('pdf1','pdf2','pdf_footer','pdf_document'));
+        return view('Setting.settingpdf1',['pdf1' => $pdf1, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'pdf_document' => $pdf_document]);
     }
+    
     public function submitpdf1(Request $request)
     {
         $id = Auth::user()->id;
@@ -43,6 +44,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
+        
         foreach ($users as $key => $usr) {
             $update_val = $request->updval;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -50,6 +52,7 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDF1;
             }
+            
             $a->UserId = $usr;
             $a->msg = $request->editor1;
             $a->created_at = date('Y-m-d H:i:s');
@@ -65,6 +68,7 @@ class PdfsettingController extends Controller
             return redirect()->back()->with('success', 'PDF Format One added successfully!');
         }
     }
+    
     public function submitpdf2(Request $request)
     {
         $id = Auth::user()->id;
@@ -81,6 +85,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
+        
         foreach ($users as $key => $usr) {
             $update_val = $request->updval2;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -88,12 +93,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDF2;
             }
+            
             $a->UserId = $usr;
             $a->msg = $request->editor2;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
+        
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF Format Two update successfully!');
         }
@@ -119,6 +126,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
+        
         foreach ($users as $key => $usr) {
             $update_val = $request->updval3;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -126,12 +134,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDFfooter;
             }
+            
             $a->UserId = $usr;
             $a->msg = $request->editor3;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
+        
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF footer update successfully!');
         }
@@ -140,6 +150,7 @@ class PdfsettingController extends Controller
             return redirect()->back()->with('success', 'PDF footer added successfully!');
         }
     }
+    
     public function submitpdf4(Request $request)
     {
         $id = Auth::user()->id;
@@ -156,6 +167,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
+        
         foreach ($users as $key => $usr) {
             $update_val = $request->updval4;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -163,12 +175,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDFDocument;
             }
+            
             $a->UserId = $usr;
             $a->msg = $request->editor4;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
+        
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF document update successfully!');
         }
@@ -178,7 +192,7 @@ class PdfsettingController extends Controller
         }
     }
 
-    public function upload(Request $request)
+    public function upload(Request $request): void
     {
         if($request->hasFile('upload')) {
             $originName = $request->file('upload')->getClientOriginalName();
@@ -191,7 +205,7 @@ class PdfsettingController extends Controller
             $CKEditorFuncNum = $request->input('CKEditorFuncNum');
             $url = asset('images/pdf/'.$fileName);
             $msg = 'Image uploaded successfully';
-            $response = "<script>window.parent.CKEDITOR.tools.callFunction($CKEditorFuncNum, '$url', '$msg')</script>";
+            $response = sprintf("<script>window.parent.CKEDITOR.tools.callFunction(%s, '%s', '%s')</script>", $CKEditorFuncNum, $url, $msg);
 
             @header('Content-type: text/html; charset=utf-8');
             echo $response;

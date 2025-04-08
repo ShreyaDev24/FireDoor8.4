@@ -31,13 +31,13 @@ class CustomerController extends Controller
     }
 
     public function list(request $request){
-        if(Auth::user()->UserType=='2'){
+        if (Auth::user()->UserType=='2') {
             $data = Customer::where('UserId',Auth::user()->id)
                             ->orderBy('CstCompanyName','asc')->get()->toArray();
-        } else if(Auth::user()->UserType=='3'){
+        } elseif (Auth::user()->UserType=='3') {
             $data = Customer::where('UserId',Auth::user()->id)
                             ->orderBy('CstCompanyName','asc')->get()->toArray();
-        }else if(Auth::user()->UserType=='1'){
+        } elseif (Auth::user()->UserType=='1') {
             $data = Customer::orderBy('CstCompanyName','asc')->get()->toArray();
         }
 
@@ -72,23 +72,21 @@ class CustomerController extends Controller
                     <td>'.$ContactPhone.'</td>
                     <td>'.$row['CstCompanyAddressLine1'].'</td>
                     <td><a href="'.url('customer/edit/'.$row['id']).'" class="btn btn-success"><i class="fa fa-pencil"></i></a></td>';
-                if(!empty($user)){
+                if(!empty($user) && Auth::user()->UserType == '1'){
 
-                if(Auth::user()->UserType=='1'){
-                    if($user->UserType==2){
-                    $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (Company) </td>';
-                    }
-
-                    elseif($user->UserType==3){
-                        $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (User) </td>';
-                    }
-
-                    elseif($user->UserType==4){
-                        $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (Architect) </td>';
-                    }
-
-                    }
+                if($user->UserType==2){
+                $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (Company) </td>';
                 }
+
+                elseif($user->UserType==3){
+                    $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (User) </td>';
+                }
+
+                elseif($user->UserType==4){
+                    $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (Architect) </td>';
+                }
+                }
+                
                 $tbl .= '</tr>';
             }
         }else{
@@ -98,10 +96,11 @@ class CustomerController extends Controller
             }else{
                 $tbl .= '<td colspan="5">No record found.</td>';
             }
+            
             $tbl .= '</tr>';
         }
 
-        return view('Customer.CustomerList',compact('tbl'));
+        return view('Customer.CustomerList',['tbl' => $tbl]);
     }
 
 
@@ -113,7 +112,7 @@ class CustomerController extends Controller
             return redirect()->back();
         }
 
-        if(isset($request->update)){
+        if(property_exists($request, 'update') && $request->update !== null){
             $data = Customer::find($request->update);
         }else{
 
@@ -178,8 +177,9 @@ class CustomerController extends Controller
         $data->UserId = Auth::user()->id;
         $data->save();
 
-        if(!empty($request->FirstName)){
-            for($i = 0; $i < count($request->FirstName); $i++){
+        if (!empty($request->FirstName)) {
+            $counter = count($request->FirstName);
+            for($i = 0; $i < $counter; $i++){
                 if($request->Id[$i] > 0){
                     $customer_contact = CustomerContact::find($request->Id[$i]);
                 }else{
@@ -212,9 +212,9 @@ class CustomerController extends Controller
             if(isset($id)){
                 $data = Customer::where('id',$id)->first();
                 $customer_contact = CustomerContact::where('CustomerId',$data->id)->get();
-                if(!empty($data) && count((array)$data)>0){
+                if(!empty($data) && (array)$data !== []){
                     $data['auth']=Auth::user()->UserType;
-                    return view('Customer.CustomerDetails',compact('data','customer_contact'));
+                    return view('Customer.CustomerDetails',['data' => $data, 'customer_contact' => $customer_contact]);
                 }else{
                     return redirect('customer/details');
                 }
@@ -226,6 +226,8 @@ class CustomerController extends Controller
 
             }
         }
+
+        return null;
     }
 
 
@@ -235,14 +237,14 @@ class CustomerController extends Controller
 
                 $editdata = Customer::where('customers.id',$id)->first();
 
-                if(!empty( $editdata) && count((array)$editdata)>0){
+                if(!empty( $editdata) && (array)$editdata !== []){
                     $DDvalue=explode(",",$editdata->CstCertification);
 
                     json_encode(in_array("LEED", $DDvalue));
 
                     $CustomerContactDetails = CustomerContact::where('CustomerId',$id)->orderBy('id','asc')->get();
 
-                    return view('Customer.AddCustomer',compact('editdata','CustomerContactDetails'));
+                    return view('Customer.AddCustomer',['editdata' => $editdata, 'CustomerContactDetails' => $CustomerContactDetails]);
                 }else{
                     return redirect()->route('contractor/list');
                 }

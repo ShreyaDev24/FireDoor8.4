@@ -38,19 +38,21 @@ class OrderController extends Controller
     {
         $this->middleware('auth');
     }
+    
     public function orderlist()
     {
         $LoginUserId = Auth::user()->id;
-        return view('Order.orderlist',compact('LoginUserId'));
+        return view('Order.orderlist',['LoginUserId' => $LoginUserId]);
     }
 
-    public function suborderlist(Request $request)
+    public function suborderlist(Request $request): void
     {
         //dd($request->all());
         if ($request->input('isStatus') == 11) {
             $orderData = json_decode($request->input('orders'), true);
             $request->merge(['orders' => $orderData]);
         }
+        
         if($request->ajaxCall == 1){
             $from = $request->from;
             $limit = $request->limit;
@@ -67,6 +69,7 @@ class OrderController extends Controller
             for($i = 0 ; $i <= count($filters)-1; $i++){
                 $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
             }
+            
             $orders = $request->orders;
             $column = $orders[0]["column"];
             $dir = $orders[0]["dir"];
@@ -81,6 +84,7 @@ class OrderController extends Controller
                 if(!empty($request->id)){
                     $filters[] = ['quotation.UserId', "=", $request->id];
                 }
+                
                 $filters[] = ['quotation.CompanyId', "!=", 1];
                 break;
             case 2:
@@ -91,6 +95,7 @@ class OrderController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.CompanyId', "=", $login_company_id];
                 }
+                
                 break;
             case 3:
                 $login_company_id = get_company_id(Auth::user()->CreatedBy)->id;
@@ -100,13 +105,14 @@ class OrderController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.CompanyId', "=", $login_company_id];
                 }
+                
                 break;
             default:
             $filters[] = ['quotation.UserId', "=", $loginUserId];
         }
 
         if($UserType == 1){
-            $Quotations = Quotation::join("quotation_versions",function($join){
+            $Quotations = Quotation::join("quotation_versions",function($join): void{
                     $join->on("quotation_versions.id","=","quotation.VersionId")
                         ->on("quotation.id","quotation_versions.quotation_id");
                 })
@@ -115,7 +121,7 @@ class OrderController extends Controller
                 ->select('quotation.*', 'quotation.id as QuotationId','quotation_versions.version', 'companies.CompanyName', 'project.*')
                 ->where('quotation.QuotationStatus','=','Ordered')
                 ->where($filters)
-                ->where(function($query) use ($filters) {
+                ->where(function($query) use ($filters): void {
                     $query->orWhere($filters)
                     ->orWhere('quotation.QuotationName','LIKE',$filters[0][2])
                     ->orWhere('quotation.FollowUpDate','LIKE',$filters[0][2])
@@ -124,14 +130,14 @@ class OrderController extends Controller
                 });
                 //->get();
                 if($request->listType=='dataListType'){
-                    $Quotations = $Quotations->orderBy("$column", "$dir")->get();
+                    $Quotations = $Quotations->orderBy($column, $dir)->get();
                 }else{
 
-                    $Quotations = $Quotations->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+                    $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
                 }
 
 
-            $QuotationsCount = Quotation::join("quotation_versions",function($join){
+            $QuotationsCount = Quotation::join("quotation_versions",function($join): void{
                     $join->on("quotation_versions.id","=","quotation.VersionId")
                         ->on("quotation.id","quotation_versions.quotation_id");
                 })
@@ -143,7 +149,7 @@ class OrderController extends Controller
                 ->count();
         } else {
 
-            $Quotations = Quotation::join("quotation_versions",function($join){
+            $Quotations = Quotation::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","quotation.VersionId")
                     ->on("quotation.id","quotation_versions.quotation_id");
             })
@@ -152,7 +158,7 @@ class OrderController extends Controller
             ->leftJoin('customers','customers.id','quotation.CustomerId')
             ->select('quotation.*', 'quotation.editBy as QuotEditBy','quotation.updated_at as QuotUpdatedAt','quotation.id as QuotationId','quotation_versions.version', 'companies.CompanyName', 'project.*','quotation_versions.id as QVID','customers.CstCompanyName')
             ->where('quotation.QuotationStatus','=','Ordered')
-            ->where(function($query) use ($filters) {
+            ->where(function($query) use ($filters): void {
                 $query->orWhere($filters)
                 ->orWhere('quotation.QuotationName','LIKE',$filters[0][2])
                 ->orWhere('quotation.FollowUpDate','LIKE',$filters[0][2])
@@ -167,14 +173,14 @@ class OrderController extends Controller
             // ->get();
 
             if($request->listType=='dataListType'){
-                $Quotations = $Quotations->orderBy("$column", "$dir")->get();
+                $Quotations = $Quotations->orderBy($column, $dir)->get();
             }else{
 
-                $Quotations = $Quotations->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+                $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
             }
 
 
-            $QuotationsCount = Quotation::join("quotation_versions",function($join){
+            $QuotationsCount = Quotation::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","quotation.VersionId")
                     ->on("quotation.id","quotation_versions.quotation_id");
                 })
@@ -186,6 +192,7 @@ class OrderController extends Controller
 
             ->count();
         }
+        
         if($Quotations !== null){
             $htmlData = '';
 
@@ -211,12 +218,11 @@ class OrderController extends Controller
            foreach($Quotations as $val){
 
             if($val['QuotationStatus'] != ''){
-                if($val['QuotationStatus'] == 'Open'){
+                if ($val['QuotationStatus'] == 'Open') {
                     $quotation_status = '<strong class="QuotationStatus" style="background: #69e4a6;">'.$val['QuotationStatus'].'</strong>';
-                }
-                else if($val['QuotationStatus'] == 'Ordered' || $val['QuotationStatus'] == 'Accept'){
+                } elseif ($val['QuotationStatus'] == 'Ordered' || $val['QuotationStatus'] == 'Accept') {
                     $quotation_status = '<strong class="QuotationStatus" style="background: #47a91f;">'.$val['QuotationStatus'].'</strong>';
-                } else if($val['QuotationStatus'] == 'All'){
+                } elseif ($val['QuotationStatus'] == 'All') {
                     $quotation_status = '<strong class="QuotationStatus" style="background:#808080;">'.$val['QuotationStatus'].'</strong>';
                 } else {
                     $quotation_status = '<strong class="QuotationStatus" style="background:red;">'.$val['QuotationStatus'].'</strong>';
@@ -229,77 +235,49 @@ class OrderController extends Controller
             $QVID = $val['QVID'] != ""?$val['QVID']:0;
             $bomTag = $val['bomTag'] != ""?$val['bomTag']:0;
 
-            if($val['CstCompanyName'] != ''){
-                $CstCompanyName = $val['CstCompanyName'];
-            } else {
-                $CstCompanyName = '-----------';
-            }
+            $CstCompanyName = $val['CstCompanyName'] != '' ? $val['CstCompanyName'] : '-----------';
 
-            if($val['QuotationName'] != ''){
-                $QuotationName = $val['QuotationName'];
-            } else {
-                $QuotationName = '-----------';
-            }
+            $QuotationName = $val['QuotationName'] != '' ? $val['QuotationName'] : '-----------';
 
-            if($val['ProjectName'] != ''){
-                $ProjectName = $val['ProjectName'];
-            } else {
-                $ProjectName = '-----------';
-            }
+            $ProjectName = $val['ProjectName'] != '' ? $val['ProjectName'] : '-----------';
 
-            if($val['ExpiryDate'] != ''){
-                $ExpiryDate = $val['ExpiryDate'];
-            } else {
-                $ExpiryDate = '-----------';
-            }
+            $ExpiryDate = $val['ExpiryDate'] != '' ? $val['ExpiryDate'] : '-----------';
 
             // if($version > 0){
                 $NumberOfDoorSets = NumberOfDoorSets($QVID,$val['QuotationId']);
             // }
 
-            if($val['PONumber'] != ''){
-                $PONumber = $val['PONumber'];
-            } else {
-                $PONumber = '-----------';
-            }
+            $PONumber = $val['PONumber'] != '' ? $val['PONumber'] : '-----------';
 
-            if($val['ProjectId'] != ''){
-                $ProjectId = $val['ProjectId'];
-            } else {
-                $ProjectId = 0;
-            }
+            $ProjectId = $val['ProjectId'] != '' ? $val['ProjectId'] : 0;
 
             if($val['QuotEditBy'] != ''){
                 $us = User::where('id',$val['QuotEditBy'])->first();
-                if($us['FirstName'] != ''){
-                    $lastModifyName = $us['FirstName'].' '.$us['LastName'];
-                } else {
-                    $lastModifyName = '-----------';
-                }
+                $lastModifyName = $us['FirstName'] != '' ? $us['FirstName'].' '.$us['LastName'] : '-----------';
             } else {
                 $lastModifyName = '-----------';
             }
 
             $DoorsetPrice = 0;
             $Item = Item::join('item_master','item_master.itemID','=','items.itemId')->join('quotation','quotation.id','=','items.QuotationId')->
-            join("quotation_version_items",function($join){
+            join("quotation_version_items",function($join): void{
                 $join->on("quotation_version_items.itemID","=","items.itemId")
                     ->on("quotation_version_items.itemmasterID","=","item_master.id");
             })->where('quotation.QuotationGenerationId',$val->QuotationGenerationId)->where('quotation_version_items.version_id',$QVID)->where('items.VersionId',$QVID)->get();
             if(!empty($Item)){
                 foreach($Item as $value){
-                    $DoorsetPrice = $DoorsetPrice + ((($value->AdjustPrice)?floatval($value->AdjustPrice) :floatval($value->DoorsetPrice)) + $value->IronmongaryPrice);
+                    $DoorsetPrice += (($value->AdjustPrice)?floatval($value->AdjustPrice) :floatval($value->DoorsetPrice)) + $value->IronmongaryPrice;
                 }
             }
 
             $discountPrice = ($DoorsetPrice + nonConfigurableItem($val->QuotationId,$QVID,CompanyUsers(),'',true)) * $val->QuoteSummaryDiscount/100;
             $DoorsetPrice = ($DoorsetPrice + nonConfigurableItem($val->QuotationId,$QVID,CompanyUsers(),'',true)) - $discountPrice;
             if(!empty($val->projectCurrency)){
-                if($val->projectCurrency == '£_GBP'){
+                if ($val->projectCurrency == '£_GBP') {
                     $Currency = "£";
-                } else if($val->projectCurrency == '€_EURO'){
+                } elseif ($val->projectCurrency == '€_EURO') {
                     $Currency = "€";
-                } else if($val->projectCurrency == '$_US_DOLLAR'){
+                } elseif ($val->projectCurrency == '$_US_DOLLAR') {
                     $Currency = "$";
                 }
             }else{
@@ -333,18 +311,18 @@ $sn++;
 
                 // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
             }
+           
             $htmlData .= '</tbody>
             </table>';
 
         }else{
             foreach($Quotations as $val){
                 if($val['QuotationStatus'] != ''){
-                    if($val['QuotationStatus'] == 'Open'){
+                    if ($val['QuotationStatus'] == 'Open') {
                         $quotation_status = '<strong class="QuotationStatus" style="background: #69e4a6;">'.$val['QuotationStatus'].'</strong>';
-                    }
-                    else if($val['QuotationStatus'] == 'Ordered' || $val['QuotationStatus'] == 'Accept'){
+                    } elseif ($val['QuotationStatus'] == 'Ordered' || $val['QuotationStatus'] == 'Accept') {
                         $quotation_status = '<strong class="QuotationStatus" style="background: #47a91f;">'.$val['QuotationStatus'].'</strong>';
-                    } else if($val['QuotationStatus'] == 'All'){
+                    } elseif ($val['QuotationStatus'] == 'All') {
                         $quotation_status = '<strong class="QuotationStatus" style="background:#808080;">'.$val['QuotationStatus'].'</strong>';
                     } else {
                         $quotation_status = '<strong class="QuotationStatus" style="background:red;">'.$val['QuotationStatus'].'</strong>';
@@ -357,82 +335,55 @@ $sn++;
                 $QVID = $val['QVID'] != ""?$val['QVID']:0;
                 $bomTag = $val['bomTag'] != ""?$val['bomTag']:0;
 
-                if($val['CstCompanyName'] != ''){
-                    $CstCompanyName = $val['CstCompanyName'];
-                } else {
-                    $CstCompanyName = '-----------';
-                }
+                $CstCompanyName = $val['CstCompanyName'] != '' ? $val['CstCompanyName'] : '-----------';
 
-                if($val['QuotationName'] != ''){
-                    $QuotationName = $val['QuotationName'];
-                } else {
-                    $QuotationName = '-----------';
-                }
+                $QuotationName = $val['QuotationName'] != '' ? $val['QuotationName'] : '-----------';
 
-                if($val['ProjectName'] != ''){
-                    $ProjectName = $val['ProjectName'];
-                } else {
-                    $ProjectName = '-----------';
-                }
+                $ProjectName = $val['ProjectName'] != '' ? $val['ProjectName'] : '-----------';
 
-                if($val['ExpiryDate'] != ''){
-                    $ExpiryDate = $val['ExpiryDate'];
-                } else {
-                    $ExpiryDate = '-----------';
-                }
+                $ExpiryDate = $val['ExpiryDate'] != '' ? $val['ExpiryDate'] : '-----------';
 
                 // if($version > 0){
                     $NumberOfDoorSets = NumberOfDoorSets($QVID,$val['QuotationId']);
                 // }
 
-                if($val['PONumber'] != ''){
-                    $PONumber = $val['PONumber'];
-                } else {
-                    $PONumber = '-----------';
-                }
+                $PONumber = $val['PONumber'] != '' ? $val['PONumber'] : '-----------';
 
-                if($val['ProjectId'] != ''){
-                    $ProjectId = $val['ProjectId'];
-                } else {
-                    $ProjectId = 0;
-                }
+                $ProjectId = $val['ProjectId'] != '' ? $val['ProjectId'] : 0;
 
                 if($val['QuotEditBy'] != ''){
                     $us = User::where('id',$val['QuotEditBy'])->first();
-                    if($us['FirstName'] != ''){
-                        $lastModifyName = $us['FirstName'].' '.$us['LastName'];
-                    } else {
-                        $lastModifyName = '-----------';
-                    }
+                    $lastModifyName = $us['FirstName'] != '' ? $us['FirstName'].' '.$us['LastName'] : '-----------';
                 } else {
                     $lastModifyName = '-----------';
                 }
 
                 $DoorsetPrice = 0;
                 $Item = Item::join('item_master','item_master.itemID','=','items.itemId')->join('quotation','quotation.id','=','items.QuotationId')->
-                join("quotation_version_items",function($join){
+                join("quotation_version_items",function($join): void{
                     $join->on("quotation_version_items.itemID","=","items.itemId")
                         ->on("quotation_version_items.itemmasterID","=","item_master.id");
                 })->where('quotation.QuotationGenerationId',$val->QuotationGenerationId)->where('quotation_version_items.version_id',$QVID)->where('items.VersionId',$QVID)->get();
                 if(!empty($Item)){
                     foreach($Item as $value){
-                        $DoorsetPrice = $DoorsetPrice + ((($value->AdjustPrice)?floatval($value->AdjustPrice) :floatval($value->DoorsetPrice)) + $value->IronmongaryPrice);
+                        $DoorsetPrice += (($value->AdjustPrice)?floatval($value->AdjustPrice) :floatval($value->DoorsetPrice)) + $value->IronmongaryPrice;
                     }
                 }
 
                 $discountPrice = ($DoorsetPrice + nonConfigurableItem($val->QuotationId,$QVID,CompanyUsers(),'',true)) * $val->QuoteSummaryDiscount/100;
                 $DoorsetPrice = ($DoorsetPrice + nonConfigurableItem($val->QuotationId,$QVID,CompanyUsers(),'',true)) - $discountPrice;
                 if(!empty($val->projectCurrency)){
-                    if($val->projectCurrency == '£_GBP'){
+                    if ($val->projectCurrency == '£_GBP') {
                         $Currency = "£";
-                    } else if($val->projectCurrency == '€_EURO'){
+                    } elseif ($val->projectCurrency == '€_EURO') {
                         $Currency = "€";
-                    } else if($val->projectCurrency == '$_US_DOLLAR'){
+                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
                         $Currency = "$";
                     }
                 }else{
                     $Currency = "£";
                 }
+                
                 $htmlData .=
                 '
                 <div class="col-sm-3 mb-3">
@@ -478,41 +429,42 @@ $sn++;
                 </div>';
             }
         }
+            
             // $Quotations = $Quotations->toArray();
 
             if(!empty($Quotations)){
 
                 // $htmlData = View::make('Order.Ajax.Ajaxorderlist',compact('Quotations'))->render();
 
-                ms(array(
+                ms([
                     'st' => "success",
                     'txt' => 'Data found.',
                     'total' => $QuotationsCount,
                     'html' => $htmlData,
 
-                ));
+                ]);
             }else{
-                ms(array(
+                ms([
                     'st' => "error",
                     'txt' => 'Data not found.',
                     'total' => 0,
                     'html' => "",
-                ));
+                ]);
             }
 
         }else{
-            ms(array(
+            ms([
                 'st' => "error",
                 'txt' => 'Data not found.',
                 'total' => 0,
                 'html' => "",
-            ));
+            ]);
 
         }
 
     }
 
-    public function OrderDetails($Id,$vId,$pId=null,$cId=null){
+    public function OrderDetails(string $Id,$vId,$pId=null,$cId=null){
         // return (explode("/",$_SERVER['REQUEST_URI']));
         if($Id == 0 && $vId == 0){
             $qidFromhelper = GenerateQuotationFirstTime($pId,$cId);
@@ -527,6 +479,7 @@ $sn++;
         if($Quotation === null){
             return abort(404);
         }
+        
         // $ProjectTable = '<option value="">Select Project</option>';
 
         if($Quotation->CustomerId != ''){
@@ -575,6 +528,7 @@ $sn++;
                 // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
                 $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
             }
+            
             $TotalDoorSetPrice = itemAdjustCount($Id,$vId);
             $nonConfigData = nonConfigurableItem($Id,$vId,CompanyUsers());
             $nonConfigDataPrice = nonConfigurableItem($Id,$vId,CompanyUsers(),'',true);
@@ -655,6 +609,7 @@ $sn++;
                 <td><a href="javascript:void(0);" data-type="strebord" onclick="nonConfigStore('.$Id.','.$vId.','.$value->id.','.$value->price.');" class="configure_btn">Add</a></td>
             </tr>';
             }
+            
             $NonConfig .= '</tbody></table></div></div></div>';
 
             // hide or disabled 'Add Item' button from GenerateQuotation.blade page
@@ -694,6 +649,7 @@ $sn++;
                         Additional <br> Door Type</a>
                     ';
                 }
+                
                 $configItem .=
                 '
                 <div class="col-sm-6 p-0 pr-1">
@@ -730,6 +686,7 @@ $sn++;
                         </a>
                     </div>';
                 }
+                
                 $DA .= '
                 <input type="hidden" name="quotation_sitedeliveryaddressID[]" value="'.$xxs->id.'">
                 <div class="col-sm-12">
@@ -780,6 +737,7 @@ $sn++;
                 ';
                 $loop++;
             }
+            
             $quotation_data = Quotation::where('id',$Id)->first();
             $currency = SettingCurrency::where('companyId',Auth::user()->CompanyId)->first();
             return view('DoorSchedule.Ordered',[

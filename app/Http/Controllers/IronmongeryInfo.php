@@ -35,10 +35,11 @@ class IronmongeryInfo extends Controller
         $this->middleware('auth');
         $this->middleware(function ($request, $next) {
             $loginUser = auth()->user();
-            if(!in_array($loginUser->UserType,array("1","2"))){
+            if(!in_array($loginUser->UserType,["1","2"])){
 
                    return redirect("/");
             }
+            
             return $next($request);
 
         });
@@ -97,14 +98,15 @@ class IronmongeryInfo extends Controller
             if(isset($IronmongeryInfo->CategoryFieldsJSON)){
                 $categoryFieldsArray = json_decode($IronmongeryInfo->CategoryFieldsJSON);
             }
-            if(!empty($IronmongeryInfo) && count((array)$IronmongeryInfo)>0){
-                return view('IronmongeryInfo.CreateIronmongeryInfo',compact('IronmongeryInfo','option'));
+            
+            if(!empty($IronmongeryInfo) && (array)$IronmongeryInfo !== []){
+                return view('IronmongeryInfo.CreateIronmongeryInfo',['IronmongeryInfo' => $IronmongeryInfo, 'option' => $option]);
             } else {
                 return redirect()->route('ironmongery-info/reports');
             }
         } else {
 
-            return view('IronmongeryInfo.CreateIronmongeryInfo',compact('option'));
+            return view('IronmongeryInfo.CreateIronmongeryInfo',['option' => $option]);
         }
 
     }
@@ -117,7 +119,7 @@ class IronmongeryInfo extends Controller
         $useId = CompanyUsers();
         if(!empty($request->FireRating[0]) && !empty($request->Category) && !empty($request->Name) && !empty($request->Code) && !empty($request->Description) && !empty($request->Price) && !empty($request->Supplier)){
 
-            if(isset($request->update)){
+            if(property_exists($request, 'update') && $request->update !== null){
                 if(Auth::user()->id==1){
                     $IronmongeryInfo = IronmongeryInfoModel::where([ 'GeneratedKey' => $request->update ])->first();
                 }
@@ -140,6 +142,7 @@ class IronmongeryInfo extends Controller
                         } else {
                             $Finishes .= $request->Finishes[$j].",";
                         }
+                        
                     $j++;
                     }
 
@@ -183,9 +186,10 @@ class IronmongeryInfo extends Controller
                             $ImageName = rando().$file->getClientOriginalName();
                             $filepath = public_path('uploads/IronmongeryInfo/');
                             $ImageExtension = $file->getClientOriginalExtension();
-                            if(!in_array($ImageExtension,array("jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"))){
+                            if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
                                 return redirect('IronmongeryInfo/update/'.$request->update);die;
                             }
+                            
                             $file->move($filepath,$ImageName);
                             $IronmongeryInfo->Image = $ImageName;
                         }
@@ -195,10 +199,11 @@ class IronmongeryInfo extends Controller
                             $PdfSpecificationName = rando().$file->getClientOriginalName();
                             $filepath = public_path('uploads/IronmongeryInfo/');
                             $PdfSpecificationExtension = $file->getClientOriginalExtension();
-                            if(!in_array($PdfSpecificationExtension,array("pdf", "PDF"))){
+                            if(!in_array($PdfSpecificationExtension,["pdf", "PDF"])){
                                 File::delete($filepath.$IronmongeryInfo->Image);
                                 return redirect('ironmongery-info/update/'.$request->update);die;
                             }
+                            
                             $file->move($filepath,$PdfSpecificationName);
                             File::delete($filepath.$IronmongeryInfo->PdfSpecification);
                             File::delete($filepath.$IronmongeryInfo->Image);
@@ -295,9 +300,10 @@ class IronmongeryInfo extends Controller
                     $ImageName = rando().$file->getClientOriginalName();
                     $filepath = public_path('uploads/IronmongeryInfo/');
                     $ImageExtension = $file->getClientOriginalExtension();
-                    if(!in_array($ImageExtension,array("jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"))){
+                    if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
                         return redirect('ironmongery-info/create');die;
                     }
+                    
                     $file->move($filepath,$ImageName);
                 }
 
@@ -306,9 +312,10 @@ class IronmongeryInfo extends Controller
                     $PdfSpecificationName = rando().$file->getClientOriginalName();
                     $filepath = public_path('uploads/IronmongeryInfo/');
                     $PdfSpecificationExtension = $file->getClientOriginalExtension();
-                    if(!in_array($PdfSpecificationExtension,array("pdf", "PDF"))){
+                    if(!in_array($PdfSpecificationExtension,["pdf", "PDF"])){
                         return redirect('ironmongery-info/create');die;
                     }
+                    
                     $file->move($filepath,$PdfSpecificationName);
                 }
 
@@ -327,6 +334,7 @@ class IronmongeryInfo extends Controller
                         } else {
                             $Finishes .= $request->Finishes[$j].",";
                         }
+                        
                     $j++;
                     }
 
@@ -395,6 +403,8 @@ class IronmongeryInfo extends Controller
         }else{
             return redirect()->back()->with('error', 'Please fill required field!');
         }
+
+        return null;
     }
 
 
@@ -410,15 +420,12 @@ class IronmongeryInfo extends Controller
         }else{
             $data = IronmongeryInfoModel::whereIn('UserId', $UserId )->where(['GeneratedKey' => $GeneratedKey])->orderBy('Category','ASC')->orderBy('id','desc')->get();
         }
+        
         if(Auth::user()->id==1){
             $currency = '';
         }else{
             $SettingCurrency = SettingCurrency::whereIn('UserId',$UserId)->get()->first();
-            if(!empty($SettingCurrency)){
-                $currency = QuotationCurrency($SettingCurrency['currency']);
-            }else{
-                $currency = "£";
-            }
+            $currency = empty($SettingCurrency) ? "£" : QuotationCurrency($SettingCurrency['currency']);
         }
 
         $IronmongeryName = IronmongeryName::where('status',1)->orderby('category','asc')->get();
@@ -426,14 +433,14 @@ class IronmongeryInfo extends Controller
             $categoryArray[$val->name] = $val->field_list;
         }
 
-        return view('IronmongeryInfo.IronmongeryInfoList',compact('data','ConfigurableItems','currency','categoryArray'));
+        return view('IronmongeryInfo.IronmongeryInfoList',['data' => $data, 'ConfigurableItems' => $ConfigurableItems, 'currency' => $currency, 'categoryArray' => $categoryArray]);
     }
 
     public function IronmongeryExport(Request $request){
         return Excel::download(new IronmongeryInfoExport(), 'Ironmongery-List.xlsx');
     }
 
-    public function IronmongeryTableInsert(Request $request){
+    public function IronmongeryTableInsert(Request $request): void{
         $data = IronmongeryInfoModel::whereNull('IronmongeryId')->get();
         foreach($data as $val){
             $save = IronmongeryInfoModel::find($val->id);
@@ -452,6 +459,7 @@ class IronmongeryInfo extends Controller
                 $i++;
                 continue;
             }
+            
             $j = 0;
             $sno = trim($row[$j++]);
             $id = trim($row[$j++]);
@@ -473,6 +481,7 @@ class IronmongeryInfo extends Controller
                 $IronmongeryInfoModel->save();
             }
         }
+        
         $msg = '<p>Excel file is imported successfully.</p>';
         return redirect()->back()->with('success', $msg);
     }
@@ -486,13 +495,10 @@ class IronmongeryInfo extends Controller
         }else{
             $data = IronmongeryInfoModel::wherein('UserId' , [1])->orderBy('id','desc')->get();
             $SettingCurrency = SettingCurrency::where('UserId',Auth::user()->id)->get()->first();
-            if(!empty($SettingCurrency)){
-                $currency = QuotationCurrency($SettingCurrency['currency']);
-            }else{
-                $currency = "£";
-            }
+            $currency = empty($SettingCurrency) ? "£" : QuotationCurrency($SettingCurrency['currency']);
 
         }
+        
         $list = '';
         $ConfigurableItems = ConfigurableItems::get();
 
@@ -535,7 +541,7 @@ class IronmongeryInfo extends Controller
         }
 
 
-        foreach($categoryArray as $categoryIndex => $categoryVal){
+        foreach(array_keys($categoryArray) as $categoryIndex){
             $categoryIndexWithoutSpace = preg_replace('/\s+/', '', $categoryIndex);
             $list .= '<div class="question">
                 <header>
@@ -545,31 +551,34 @@ class IronmongeryInfo extends Controller
             }else{
                 $list .= $categoryIndex;
             }
+            
             if($categoryIndex == 'Air Transfer Grill'){
                 $categoryIndexWithoutSpace = "Airtransfergrills";
             }
+            
             if($categoryIndex == 'Keyhole Escutche'){
                 $categoryIndexWithoutSpace = "KeyholeEscutcheon";
             }
+            
             if($categoryIndex == 'Locks And Latches'){
                 $categoryIndexWithoutSpace = "LocksandLatches";
             }
+            
             if($categoryIndex == 'Face Fixed Door Closer'){
                 $categoryIndexWithoutSpace = "FaceFixedDoorClosers";
             }
+            
             if($categoryIndex == 'Push Plates'){
                 $categoryIndexWithoutSpace = "PushHandles";
             }
+            
             $list .='</h3><i class="fa fa-chevron-down"></i></header><main><ul class="accordian_list"><div class="row">';
-            if(!empty($data) && count((array)$data)>0){
+            if(!empty($data) && (array)$data !== []){
                 foreach($data as $row){
                     if($row->Category == $categoryIndexWithoutSpace){
                         $select = SelectedIronmongery::where(['UserId' => auth()->user()->id, 'ironmongery_id' => $row->id])->count();
-                        if($select > 0){
-                            $selected = 'border-success';
-                        } else {
-                            $selected = null;
-                        }
+                        $selected = $select > 0 ? 'border-success' : null;
+                        
                         $list .= '<div class="col-md-3 col-sm-6 col-6" onClick="selectMe('.$row->id.')">
                                     <div class="product_holder '.$selected.' select_class_'.$row->id.'">
                                         <div class="product_img">
@@ -586,14 +595,15 @@ class IronmongeryInfo extends Controller
                     }
                 }
             }
+            
             $list .=   '</div></ul></main></div>';
 
         }
 
-        return view('IronmongeryInfo.SelectedIronmongeryList',compact('list','currency'));
+        return view('IronmongeryInfo.SelectedIronmongeryList',['list' => $list, 'currency' => $currency]);
     }
 
-    public function select(request $request){
+    public function select(request $request): void{
         $pageId = $request->pageId;
         if(!empty($request->iron_id)){
             $isExist = SelectedIronmongery::where(['UserId' => auth()->user()->id])
@@ -601,7 +611,7 @@ class IronmongeryInfo extends Controller
             ->orderBy('id','desc')
             ->first();
 
-            if(sizeof((array)$isExist)==0){
+            if(count((array)$isExist)==0){
                 $selectedIronMongry = new SelectedIronmongery();
                 $selectedIronMongry->ironmongery_id = $request->iron_id;
                 $selectedIronMongry->UserId = auth()->user()->id;
@@ -641,9 +651,9 @@ class IronmongeryInfo extends Controller
 
                 $selectedIronMongryId = $selectedIronMongry->id;
                 if(!empty($selectedIronMongryId)){
-                   echo json_encode(array('status'=>'ok','msg'=>'records is selected'));
+                   echo json_encode(['status'=>'ok','msg'=>'records is selected']);
                 }else{
-                    echo json_encode(array('status'=>'error','msg'=>''));
+                    echo json_encode(['status'=>'error','msg'=>'']);
                 }
             }else{
                 $selectedIronMongryId = SelectedIronmongery::where([ 'ironmongery_id' => $request->iron_id])
@@ -653,9 +663,9 @@ class IronmongeryInfo extends Controller
                 ->where('UserId', auth()->user()->id)
                 ->delete();
                 if(!empty($selectedIronMongryId)){
-                   echo json_encode(array('status'=>'deleted','msg'=>'records is deleted'));
+                   echo json_encode(['status'=>'deleted','msg'=>'records is deleted']);
                 }else{
-                    echo json_encode(array('status'=>'error','msg'=>''));
+                    echo json_encode(['status'=>'error','msg'=>'']);
                 }
             }
 
@@ -663,7 +673,7 @@ class IronmongeryInfo extends Controller
 
     }
 
-    public function filterIronMongeryFilter(request $request){
+    public function filterIronMongeryFilter(request $request): void{
 
         // if (Auth::user()->UserType == 2) {
         // $myAdminGroup = getMyCreatedAdmins();
@@ -698,17 +708,18 @@ class IronmongeryInfo extends Controller
             }
 
         }
-        if(sizeof((array)$data)!="0"){
-            echo json_encode(array("status"=>"ok","data"=>$data,"currency"=>$currency));
+        
+        if(count((array)$data)!="0"){
+            echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency]);
         }else{
-            echo json_encode(array("status"=>"error","data"=>''));
+            echo json_encode(["status"=>"error","data"=>'']);
         }
     }
 
 
 
 
-        public function delete(request $request, $id){
+        public function delete(request $request, $id): string{
             if (Auth::user()->UserType == 2) {
                 $myAdminGroup = getMyCreatedAdmins();
                 $useTbl = $myAdminGroup;
@@ -719,12 +730,13 @@ class IronmongeryInfo extends Controller
 
                     $useTbl = [$user->id];
                 }
+            
             $iron_mongery_info = IronmongeryInfoModel::where('id',$id)->first();
             $selected_iron_mongery = SelectedIronmongery::where('ironmongery_id',$id)->get();
             $selected_iron_mongery_id = [];
             if($selected_iron_mongery){
             foreach($selected_iron_mongery as $value){
-                array_push($selected_iron_mongery_id,$value->id);
+                $selected_iron_mongery_id[] = $value->id;
             }
 
             $count = count($selected_iron_mongery_id);

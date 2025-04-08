@@ -15,6 +15,7 @@ class Users extends Model
         'FirstName','LastName','UserEmail','UserImage', 'UserPhone','UserCompanyPhone','UserCompanyExtension',
         'UserJobtitle','UserMoreInfo','password','UserType','remember_token'
     ];
+    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -23,6 +24,7 @@ class Users extends Model
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
     //To add user table relationship
 
     public function users(){

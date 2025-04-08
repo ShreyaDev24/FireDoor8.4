@@ -19,6 +19,7 @@ class BuildOfMaterialController extends Controller
     {
         $this->middleware('auth');
     }
+    
     public function settingbuildofmaterial()
     {
         if(Auth::user()->UserType== 2){
@@ -26,9 +27,11 @@ class BuildOfMaterialController extends Controller
         }else{
             $cid = [Auth::user()->id];
         }
+        
         $set = BOMSetting::wherein('UserId',$cid)->orderBy('id','desc')->first();
-        return view('Setting.settingbuildofmaterial',compact('set'));
+        return view('Setting.settingbuildofmaterial',['set' => $set]);
     }
+    
     public function subsettingbuildofmaterial(Request $request)
     {
         if(Auth::user()->UserType== 2){
@@ -37,6 +40,7 @@ class BuildOfMaterialController extends Controller
         }else{
             $cid = [Auth::user()->id];
         }
+        
         $update_val = $request->updval;
         foreach ($cid as $key => $usr) {
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -45,6 +49,7 @@ class BuildOfMaterialController extends Controller
                 $a = new BOMSetting;
                 $a->created_at = date('Y-m-d H:i:s');
             }
+            
             // $cid = Auth::user()->id;
 
             $a->UserId = $usr;
@@ -65,6 +70,7 @@ class BuildOfMaterialController extends Controller
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
+        
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'The general setting update successfully!');
         }
@@ -111,7 +117,8 @@ class BuildOfMaterialController extends Controller
             ';
             $i++;
         }
-        return view('Setting.costsetting',compact('tbl'));
+        
+        return view('Setting.costsetting',['tbl' => $tbl]);
     }
 
     public function general_labour_cost_setting()
@@ -123,8 +130,9 @@ class BuildOfMaterialController extends Controller
 
         $bomSetting = BOMSetting::wherein('UserId',$cid)->orderBy('id','desc')->first();
 
-        return view('Setting.generalLabourcost',compact('set','bomSetting'));
+        return view('Setting.generalLabourcost',['set' => $set, 'bomSetting' => $bomSetting]);
     }
+    
     public function general_labour_cost_sub_setting(Request $request)
     {
         if(Auth::user()->UserType== 2){
@@ -138,6 +146,7 @@ class BuildOfMaterialController extends Controller
         }else{
             $cid = [Auth::user()->id];
         }
+        
         // dd($$request);
         $update_val = $request->updval;
         $selectedgeneralId = $request->selectedgeneralId;
@@ -155,14 +164,11 @@ class BuildOfMaterialController extends Controller
             $checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight', 'SideLightGlazing','SideLight2', 'SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame', 'FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','VGroves','LabourProcessForScallopedFrame','LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOf','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry'];
 
             $data = '';
+            $counter = count($checkId);
 
-            for($i = 0; $i < count($checkId); $i++){
+            for($i = 0; $i < $counter; $i++){
                 $data = $checkId[$i];
-                if(is_null($request->$data)){
-                    $b->$data = 0;
-                }else{
-                    $b->$data = $request->$data;
-                }
+                $b->$data = is_null($request->$data) ? 0 : $request->$data;
 
             }
 
@@ -449,6 +455,7 @@ class BuildOfMaterialController extends Controller
             $a->UserId = Auth::user()->id;
             $a->created_at = date('Y-m-d H:i:s');
         }
+        
         $a->name = $request->name;
         $a->parent = $request->parent;
         $a->width = $request->width;
@@ -465,17 +472,19 @@ class BuildOfMaterialController extends Controller
             return redirect()->back()->withInput()->with('success', 'Cost setting of `'.$request->name.'` added successfully!');
         }
     }
+    
     public function deletecostsetting(Request $request)
     {
         $id = $request->delete;
         SettingBOMCost::where('id',$id)->delete();
         return redirect()->back()->with('success', 'Cost setting deleted successfully!');
     }
+    
     public function updcostsetting(Request $request)
     {
         $id = $request->upd;
         $upd = SettingBOMCost::find($id);
-         return redirect()->back()->with('upd',$upd,'success', 'Cost setting updated successfully!');
+         return redirect()->back()->with('upd',$upd);
         // return redirect()->back()->with('success', 'Cost setting updated successfully!');
     }
 }

@@ -15,8 +15,13 @@ use DB;
 
 class pdf2 implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -34,7 +39,7 @@ class pdf2 implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         ini_set('memory_limit', '2048M');
         ini_set('max_execution_time', '0');
@@ -58,6 +63,7 @@ class pdf2 implements ShouldQueue
         } else {
             $customerContact = '';
         }
+         
         $customer = '';
         $CstCompanyAddressLine1 = '';
         if (!empty($customerContact)) {
@@ -96,22 +102,15 @@ class pdf2 implements ShouldQueue
          $nettot = itemAdjustCount($quatationId,$versionID) + $totIronmongaryPrice + $nonConfigDataPrice + $screenDataprice;
          $QSTI = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
          $comapnyDetail = Company::where('UserId', $id)->first();
-         if (!empty($quotaion->ProjectId)) {
-            $project = Project::where('id', $quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
-        if (!empty($quotaion->UserId)) {
-            $user = User::where('id', $quotaion->CompanyUserId)->first();
-        } else {
-            $user = '';
-        }
+         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
+
+         $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
-        $contractorName = $contractorName ? $contractorName : '';
+        $contractorName = $contractorName ?: '';
 
 
-         $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', compact('comapnyDetail', 'project', 'quotaion', 'pdf2', 'pdf_footer', 'totDoorsetType', 'totIronmongerySet', 'totDoorsetPrice', 'totIronmongaryPrice','nonConfigDataPrice', 'nettot', 'QSTI', 'customerContact', 'customer', 'user','nonConfigDataCount',  'contractorName','ScreenSetQty','screenDataprice'));
+         $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice]);
 
          // return $pdf2->download('file2.pdf');
          $path2 = public_path() . '/allpdfFile';

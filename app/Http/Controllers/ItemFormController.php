@@ -53,7 +53,7 @@ class ItemFormController extends Controller
 
     }
 
-    public function storeFileName(Request $request){
+    public function storeFileName(Request $request): void{
 
             $companyDetails = Company::where('UserId',$request->UserId)->first();
 
@@ -63,7 +63,7 @@ class ItemFormController extends Controller
                 $CompanyName = str_replace(" ","",$companyDetails['CompanyName']);
             }
 
-            $rand = rand();
+            $rand = random_int(0, mt_getrandmax());
             // // die();
             $fieldsValue =json_encode($request->form_value);
 
@@ -80,10 +80,10 @@ class ItemFormController extends Controller
 
             if($inseted){
 
-              echo json_encode(array("status"=>'success',"msg"=>'door assigned successfully'));
+              echo json_encode(["status"=>'success',"msg"=>'door assigned successfully']);
 
             }else{
-                echo json_encode(array("status"=>'failed',"msg"=>'there is some technical problem please try again later'));
+                echo json_encode(["status"=>'failed',"msg"=>'there is some technical problem please try again later']);
             }
 
 
@@ -152,7 +152,8 @@ class ItemFormController extends Controller
             ';
             $i++;
         }
-        return view('Items.NonConfigurableItems',compact('tbl'));
+        
+        return view('Items.NonConfigurableItems',['tbl' => $tbl]);
     }
 
     public function saveNonConfigurableItems(Request $request){
@@ -173,12 +174,14 @@ class ItemFormController extends Controller
         } else {
             $NonConfigurableItems = new NonConfigurableItems();
         }
+        
         $NonConfigurableItems->name = $request->item_name;
         $NonConfigurableItems->price = $request->price;
         $NonConfigurableItems->description = $request->description;
         if(isset($name)){
             $NonConfigurableItems->image = $name;
         }
+        
         $NonConfigurableItems->save();
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'Update Non Configurable Item successfully!');
@@ -195,7 +198,7 @@ class ItemFormController extends Controller
     }
 
 
-    public function item_remove(request $request){
+    public function item_remove(request $request): string{
 
         $items = ItemMaster::select('items.*')
         ->join('items', 'items.itemId', '=', 'item_master.itemID')
@@ -223,7 +226,7 @@ class ItemFormController extends Controller
         return 'success';
     }
 
-    public function screen_remove(request $request){
+    public function screen_remove(request $request): string{
 
         $items = SideScreenItemMaster::select('side_screen_items.*')
         ->join('side_screen_items', 'side_screen_items.id', '=', 'side_screen_item_master.ScreenId')

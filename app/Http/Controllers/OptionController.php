@@ -67,12 +67,10 @@ class OptionController extends Controller
             $ConfigurableItems = ConfigurableItems::get();
             $upd = Option::where('id', $id)->first();
         }
-        if ($id > 0) {
-            $ci = ConfigurableItems::where('id', $upd->configurableitems)->first();
-        } else {
-            $ci = '';
-        }
-        return view('option/addOption', compact('option', 'firerating', 'id', 'upd', 'ConfigurableItems', 'ci'));
+
+        $ci = $id > 0 ? ConfigurableItems::where('id', $upd->configurableitems)->first() : '';
+        
+        return view('option/addOption', ['option' => $option, 'firerating' => $firerating, 'id' => $id, 'upd' => $upd, 'ConfigurableItems' => $ConfigurableItems, 'ci' => $ci]);
     }
 
     public function index1($id, $optionType)
@@ -82,6 +80,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
+        
         if (Auth::user()->UserType == 2) {
             $slug = [$optionType];
             // $slug = ['door_leaf_facing_value','Glass_Integrity','leaf1_glass_type','leaf1_glazing_systems','Accoustics','Intumescent_Seal_Color'];
@@ -90,21 +89,20 @@ class OptionController extends Controller
             $ConfigurableItems = ConfigurableItems::get();
             $upd = Option::where('id', $id)->first();
         }
-        if ($id > 0) {
-            $ci = ConfigurableItems::where('id', $upd->configurableitems)->first();
-        } else {
-            $ci = '';
-        }
-        return view('option/addOption1', compact('option', 'firerating', 'id', 'upd', 'ConfigurableItems', 'ci', 'optionType'));
+
+        $ci = $id > 0 ? ConfigurableItems::where('id', $upd->configurableitems)->first() : '';
+        
+        return view('option/addOption1', ['option' => $option, 'firerating' => $firerating, 'id' => $id, 'upd' => $upd, 'ConfigurableItems' => $ConfigurableItems, 'ci' => $ci, 'optionType' => $optionType]);
     }
 
-    public function filterConfiguretype(Request $request)
+    public function filterConfiguretype(Request $request): string
     {
         if (Auth::user()->UserType == 2) {
             $UserId = ['1', Auth::user()->id];
         } else {
             $UserId = ['1'];
         }
+        
         $value = ['FD30s', 'FD60s'];
         $pageId = $request->pageId;
         $option = Option::where(['configurableitems' => $pageId, 'OptionSlug' => 'fire_rating'])->wherein('editBy', $UserId)->whereNotIn('OptionKey', $value)->get();
@@ -112,6 +110,7 @@ class OptionController extends Controller
         foreach ($option as $rr) {
             $tbl .= '<option value="' . $rr->OptionKey . '">' . $rr->OptionKey . '</option>';
         }
+        
         return $tbl;
         // echo json_encode([
         //     'status'=>'success',
@@ -119,46 +118,46 @@ class OptionController extends Controller
         // ]);
     }
 
-    public function get(request $request)
+    public function get(request $request): void
     {
         $where = $request->where;
         $where = explode(",", $where);
-        if (!empty($where)) {
+        if ($where !== []) {
 
             $option = Option::where([$where])->get();
 
             if (!empty($option) && count($option) > 0) {
 
-                ms(array(
+                ms([
                     'st' => "1",
                     'txt' => 'Data found',
                     'data' => $option,
-                ));
+                ]);
             } else {
 
-                ms(array(
+                ms([
                     'st' => "0",
                     'txt' => 'Data not found!!',
                     'data' => "",
-                ));
+                ]);
             }
         } else {
 
             $option = Option::get();
             if (!empty($option) && count($option) > 0) {
 
-                ms(array(
+                ms([
                     'st' => "0",
                     'txt' => 'Data not found',
                     'data' => $option,
-                ));
+                ]);
             } else {
 
-                ms(array(
+                ms([
                     'st' => "0",
                     'txt' => 'Data not found!!',
                     'data' => "",
-                ));
+                ]);
             }
         }
     }
@@ -189,6 +188,7 @@ class OptionController extends Controller
                 $data->file = $imageName;
                 $image->move(public_path('uploads/Options'), $imageName);
             }
+            
             $data->save();
         } else {
             $valid = $request->validate(
@@ -212,10 +212,10 @@ class OptionController extends Controller
                 $opt = Option::where('id', $optionID)->first();
                 if ($opt->OptionSlug == 'Accoustics') {
                     $UnderAttribute = $opt->UnderAttribute;
-                } else if ($opt->OptionSlug == 'Glass_Integrity') {
+                } elseif ($opt->OptionSlug == 'Glass_Integrity') {
                     $UnderAttribute = $firerating;
                     $UnderParent2 = $opt->OptionKey;
-                } else if ($opt->OptionSlug == 'door_leaf_facing_value') {
+                } elseif ($opt->OptionSlug == 'door_leaf_facing_value') {
                     $UnderAttribute = $opt->UnderAttribute;
                 } else {
                     $UnderAttribute = $opt->OptionKey;
@@ -227,17 +227,9 @@ class OptionController extends Controller
             $op = Option::where('OptionSlug', $selectOptionName)->get();
             $optVal = '';
             foreach ($op as $tt) {
-                if (!empty($tt->UnderAttribute)) {
-                    $optValue = $tt->UnderAttribute . ' | ' . $tt->OptionValue;
-                } else {
-                    $optValue = $tt->OptionValue;
-                }
+                $optValue = empty($tt->UnderAttribute) ? $tt->OptionValue : $tt->UnderAttribute . ' | ' . $tt->OptionValue;
+                $select = $optionID == $tt->id ? 'selected' : null;
 
-                if ($optionID == $tt->id) {
-                    $select = 'selected';
-                } else {
-                    $select = null;
-                }
                 $optVal .= '<option value="' . $tt->id . '" ' . $select . '>' . $optValue . '</option>';
             }
 
@@ -264,11 +256,7 @@ class OptionController extends Controller
             while ($count > $i) {
                 $data = new Option();
                 $file = $_FILES['image']['name'][$i];
-                if (!empty($file)) {
-                    $data->file = time() . '-' . $file;
-                } else {
-                    $data->file = null;
-                }
+                $data->file = empty($file) ? null : time() . '-' . $file;
 
                 $data->configurableitems = $configurableitems;
                 $data->firerating = $firerating;
@@ -301,27 +289,29 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
+        
         $data = Option::where(['configurableitems' => $pageId, 'is_deleted' => 0])->wherein('editBy', $UserId)->orderBy('id', 'desc')->get();
-        return view('option.OptionList', compact('data', 'pageId'));
+        return view('option.OptionList', ['data' => $data, 'pageId' => $pageId]);
     }
 
     public function edit(request $request)
     {
-        if (isset($request->edit)) {
+        if (property_exists($request, 'edit') && $request->edit !== null) {
             Session::put('edit_option', $request->edit);
             return redirect()->route('options/edit');
         } else {
             $id = Session::get('edit_option');
             $editdata = Option::where('id', $id)->first();
-            return view('option.addOption', compact('editdata'));
+            return view('option.addOption', ['editdata' => $editdata]);
         }
     }
 
-    public function delete(request $request)
+    public function delete(request $request): string
     {
         $data = Option::where('id', $request->id)->first();
         $data->is_deleted = 1;
         $data->save();
+        
         $flash = "deleted";
         return 'success';
         // $request->session()->flash($flash, 'data');
@@ -330,7 +320,7 @@ class OptionController extends Controller
         // return redirect()->route('options/list',$data->configurableitems);
     }
 
-    public function deleteGlassType(request $request)
+    public function deleteGlassType(request $request): string
     {
         switch($request->optionType){
             case 'GlassGlazingSystem':
@@ -442,49 +432,41 @@ class OptionController extends Controller
         return 'success';
     }
 
-    public function get_option_value(request $request)
+    public function get_option_value(request $request): string
     {
         if (Auth::user()->UserType == 2) {
             $UserId = ['1', Auth::user()->id];
         } else {
             $UserId = ['1'];
         }
+        
         $pageId = $request->pageId;
         $data = Option::where(['configurableitems' => $pageId, 'OptionSlug' => $request->id])->wherein('editBy', $UserId)->get();
         $optVal = '';
         foreach ($data as $tt) {
-            if (!empty($tt->UnderAttribute)) {
-                $optValue = $tt->UnderAttribute . ' | ' . $tt->OptionValue;
-            } else {
-                $optValue = $tt->OptionValue;
-            }
+            $optValue = empty($tt->UnderAttribute) ? $tt->OptionValue : $tt->UnderAttribute . ' | ' . $tt->OptionValue;
+
             $optVal .= '<option value="' . $tt->id . '">' . $optValue . '</option>';
         }
+        
         return $optVal;
     }
 
 
-    public function selectOption($pageId, $optionType)
+    public function selectOption($pageId, string $optionType)
     {
 
         $pageId = $pageId;
         $authdata = Auth::user();
         $ConfigurableItems = ConfigurableItems::get();
-        if (Auth::user()->UserType == 2) {
-            $UserId = ['1', $authdata->id];
-        } else {
-            $UserId = ['1'];
-        }
+        $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
 
         switch ($optionType) {
             case 'intumescentSealArrangement':
-                if (Auth::user()->UserType == 2) {
-                    $UserId = ['1', $authdata->id];
-                } else {
-                    $UserId = ['1'];
-                }
+                $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+
                 $allDataStmt = SettingIntumescentSeals2::where(['setting_intumescentseals2.configurableitems' => $pageId])
-                    ->leftJoin('selected_intumescentseals2', function ($join) use ($authdata) {
+                    ->leftJoin('selected_intumescentseals2', function ($join) use ($authdata): void {
                         $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id')
                             ->where('selected_intumescentseals2.selected_intumescentseals2_user_id', '=', $authdata->id);
                     })->wherein('setting_intumescentseals2.editBy', $UserId)
@@ -547,11 +529,7 @@ class OptionController extends Controller
 
                     // $selectedOption = SelectedIntumescentSeals2::where(['selected_configurableitems'=>$pageId,'intumescentseals2_id'=>$row->id,'selected_intumescentseals2_user_id'=>$authdata->id])->count();
                     // if($selectedOption > 0){
-                    if ($row->selected_intumescentseals2_id) {
-                        $select = 'checked';
-                    } else {
-                        $select = '';
-                    }
+                    $select = $row->selected_intumescentseals2_id ? 'checked' : '';
 
                     $tbl1 .= '
                         <li>
@@ -576,6 +554,7 @@ class OptionController extends Controller
 
                                     ';
                     }
+                    
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -591,17 +570,14 @@ class OptionController extends Controller
 
 
                 $tbl1 .= '</ul>
-                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                 </main>
             </div>';
             break;
 
             case 'lippingSpecies':
-                if (Auth::user()->UserType == 2) {
-                    $UserId = ['1', $authdata->id];
-                } else {
-                    $UserId = ['1'];
-                }
+                $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+
                 $allDataStmt = GetOptions(['lipping_species.Status' => 1], "leftJoin", "lippingSpecies", "query");
                 // dd($allDataStmt->get()->toArray());
                 $allData = $allDataStmt->wherein('lipping_species.editBy', $UserId)->get();
@@ -624,12 +600,9 @@ class OptionController extends Controller
                     if (!empty($row->lipping_species_items->toArray())) {
                         foreach ($row->lipping_species_items as $row_item) {
 
-                            if (@$row_item->selected_lipping_species_items[0]->id) {
-                                $select = 'checked';
-                            } else {
-                                $select = '';
-                            }
+                            $select = @$row_item->selected_lipping_species_items[0]->id ? 'checked' : '';
                         }
+                        
                         $tbl1 .= '<div class="question">
 
                             <header>
@@ -676,11 +649,8 @@ class OptionController extends Controller
                             ';
                     foreach ($row->lipping_species_items as $row_item) {
 
-                        if (@$row_item->selected_lipping_species_items[0]->id) {
-                            $select = 'checked';
-                        } else {
-                            $select = '';
-                        }
+                        $select = @$row_item->selected_lipping_species_items[0]->id ? 'checked' : '';
+
                         if ($row_item->thickness <= 4) {
 
 
@@ -727,26 +697,24 @@ class OptionController extends Controller
                     }
 
                     $tbl1 .= '</ul>
-                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
 
                             </main>
                         </div>';
                 }
-                $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>';
+                
+                $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>';
 
                 break;
 
             case 'door_leaf_facing_value':
-                if (Auth::user()->UserType == 2) {
-                    $UserId = ['1', $authdata->id];
-                } else {
-                    $UserId = ['1'];
-                }
+                $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+
                 $aa_value = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => $optionType])->wherein('options.editBy', $UserId)
                     ->select('options.UnderAttribute')->orderBy('options.UnderAttribute', 'ASC')->groupBy('options.UnderAttribute')->get();
 
                 $aa = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => $optionType ,'options.is_deleted' => 0])->wherein('options.editBy', $UserId)
-                    ->leftJoin('selected_option', function ($join) use ($authdata) {
+                    ->leftJoin('selected_option', function ($join) use ($authdata): void {
                         $join->on('options.id', '=', 'selected_option.optionId')
                             ->where('selected_option.SelectedUserId', '=', $authdata->id);
                     })
@@ -801,6 +769,7 @@ class OptionController extends Controller
                             margin-left: 68px;
                         ">PRICE PER SHEET</div><div class="col-md-2 col-sm-2 font-weight-bolder">ACTION</div><div class="col-md-2 col-sm-2 text-center font-weight-bolder"></div></div></li>';
                     }
+                    
                     if ($data->UnderAttribute == 'Veneer') {
                         $tbl1 .= '<li>
                         <div class="row">
@@ -816,11 +785,7 @@ class OptionController extends Controller
                     foreach ($aa as $row) {
 
                         $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $row->id, 'SelectedUserId' => $authdata->id])->count();
-                        if ($selectedOption > 0) {
-                            $select = 'checked';
-                        } else {
-                            $select = '';
-                        }
+                        $select = $selectedOption > 0 ? 'checked' : '';
 
                         if ($row->UnderAttribute == $data->UnderAttribute) {
                             $tbl1 .= '
@@ -845,6 +810,7 @@ class OptionController extends Controller
 
                                         ';
                             }
+                            
                             $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success " style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -852,6 +818,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12 text-center">
                             ' . $action . '
                             </div><div class="col-md-2 col-sm-12">
@@ -869,7 +836,7 @@ class OptionController extends Controller
                     }
 
                     $tbl1 .= '</ul>
-                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                     </main>
                     </div>';
 
@@ -878,28 +845,21 @@ class OptionController extends Controller
                         ->select('OptionName', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey')
                         ->get();
 
-                    if (!empty($electedOption) && count((array)$electedOption) > 0) {
+                    if (!empty($electedOption) && (array)$electedOption !== []) {
                         foreach ($electedOption as $row) {
                             $selectedOption = SelectedOption::where([['SelectedOptionKey', $row->OptionKey], ['SelectedUserId', $authdata->id]])->first();
-                            if (!empty($selectedOption) &&  count((array)$selectedOption) > 0) {
-                                $row->selected = 1;
-                            } else {
-                                $row->selected = 0;
-                            }
+                            $row->selected = !empty($selectedOption) && (array)$selectedOption !== [] ? 1 : 0;
                         }
                     }
                 }
 
                 break;
             case 'color_list':
-                if (Auth::user()->UserType == 2) {
-                    $UserId = ['1', $authdata->id];
-                } else {
-                    $UserId = ['1'];
-                }
+                $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+
                 $aa_value = Color::wherein('editBy',$UserId)->groupBy('DoorLeafFacing')->get();
 
-                $aa = Color::leftJoin('selected_color', function ($join) use ($authdata) {
+                $aa = Color::leftJoin('selected_color', function ($join) use ($authdata): void {
                         $join->on('color.id', '=', 'selected_color.SelectedColorId')
                             ->where('selected_color.SelectedUserId', '=', $authdata->id);
                     })->wherein('color.editBy', $UserId)
@@ -958,11 +918,7 @@ class OptionController extends Controller
                     foreach ($aa as $row) {
 
                         $selectedOption = SelectedColor::where(['SelectedColorId'=>$row->id,'SelectedUserId'=>$authdata->id])->count();
-                        if ($selectedOption > 0) {
-                            $select = 'checked';
-                        } else {
-                            $select = '';
-                        }
+                        $select = $selectedOption > 0 ? 'checked' : '';
 
                         if ($row->DoorLeafFacing == $data->DoorLeafFacing) {
                             $tbl1 .= '
@@ -985,6 +941,7 @@ class OptionController extends Controller
                                                 </div>
                                             </div>';
                             }
+                            
                             $action = '';
 
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
@@ -999,6 +956,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12 text-center d-flex">
                             ' . $action . '
                             </div><div class="col-md-1 col-sm-12">
@@ -1016,7 +974,7 @@ class OptionController extends Controller
                     }
 
                     $tbl1 .= '</ul>
-                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                     </main>
                     </div>';
 
@@ -1044,7 +1002,7 @@ class OptionController extends Controller
                     ->select('options.UnderAttribute')->orderBy('options.UnderAttribute', 'ASC')->groupBy('options.UnderAttribute')->get();
 
                 $aa = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => $optionType,'options.is_deleted' => 0])->wherein('options.editBy', $UserId)
-                    ->leftJoin('selected_option', function ($join) use ($authdata) {
+                    ->leftJoin('selected_option', function ($join) use ($authdata): void {
                         $join->on('options.id', '=', 'selected_option.optionId')
                             ->where('selected_option.SelectedUserId', '=', $authdata->id);
                     })
@@ -1124,11 +1082,7 @@ class OptionController extends Controller
                     foreach ($aa as $row) {
 
                         $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $row->id, 'SelectedUserId' => $authdata->id])->count();
-                        if ($selectedOption > 0) {
-                            $select = 'checked';
-                        } else {
-                            $select = '';
-                        }
+                        $select = $selectedOption > 0 ? 'checked' : '';
 
                         if ($row->UnderAttribute == $data->UnderAttribute) {
                             $tbl1 .= '
@@ -1153,6 +1107,7 @@ class OptionController extends Controller
 
                                         ';
                             }
+                            
                             $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1160,6 +1115,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                             ' . $action . '
                             </div><div class="col-md-2 col-sm-12">
@@ -1176,7 +1132,7 @@ class OptionController extends Controller
                     }
 
                     $tbl1 .= '</ul>
-                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                        <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                     </main>
                     </div>';
 
@@ -1185,14 +1141,10 @@ class OptionController extends Controller
                         ->select('OptionName', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey')
                         ->get();
 
-                    if (!empty($electedOption) && count((array)$electedOption) > 0) {
+                    if (!empty($electedOption) && (array)$electedOption !== []) {
                         foreach ($electedOption as $row) {
                             $selectedOption = SelectedOption::where([['SelectedOptionKey', $row->OptionKey], ['SelectedUserId', $authdata->id]])->first();
-                            if (!empty($selectedOption) &&  count((array)$selectedOption) > 0) {
-                                $row->selected = 1;
-                            } else {
-                                $row->selected = 0;
-                            }
+                            $row->selected = !empty($selectedOption) && (array)$selectedOption !== [] ? 1 : 0;
                         }
                     }
                 }
@@ -1204,7 +1156,7 @@ class OptionController extends Controller
                     ->select('options.UnderAttribute')->orderBy('options.UnderAttribute', 'ASC')->groupBy('options.UnderAttribute')->get();
 
                 $aa = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => $optionType,'options.is_deleted' => 0])->wherein('options.editBy', $UserId)
-                    ->leftJoin('selected_option', function ($join) use ($authdata) {
+                    ->leftJoin('selected_option', function ($join) use ($authdata): void {
                         $join->on('options.id', '=', 'selected_option.optionId')
                             ->where('selected_option.SelectedUserId', '=', $authdata->id);
                     })
@@ -1215,21 +1167,17 @@ class OptionController extends Controller
                 $tbl1 = '';
                 foreach ($aa_value as $data) {
                     $i = 0;
-                    if($data->UnderAttribute == 'Kraft_Paper' && $i == 0){
+                    if($data->UnderAttribute == 'Kraft_Paper' && $i === 0){
                         $i++;
                         $aa_doorLeafFace = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => 'Door_Leaf_Facing' ,'options.OptionKey' => 'Kraft_Paper' ,'options.is_deleted' => 0])
-                                ->leftJoin('selected_option', function ($join) use ($authdata) {
+                                ->leftJoin('selected_option', function ($join) use ($authdata): void {
                                     $join->on('options.id', '=', 'selected_option.optionId')
                                         ->where('selected_option.SelectedUserId', '=', $authdata->id);
                                 })->wherein('options.editBy', $UserId)
                                 ->select('options.id', 'options.OptionName', 'options.OptionSlug', 'options.OptionValue', 'options.UnderAttribute', 'options.editBy', 'options.OptionKey', 'selected_option.id as SelectedOptionId', 'selected_option.SelectedOptionCost')->orderBy('options.firerating', 'ASC')->orderBy('options.UnderAttribute', 'ASC')->orderBy('options.OptionValue', 'ASC')->first();
 
                         $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $aa_doorLeafFace->id, 'SelectedUserId' => $authdata->id])->count();
-                        if ($selectedOption > 0) {
-                            $selected = 'checked';
-                        } else {
-                            $selected = '';
-                        }
+                        $selected = $selectedOption > 0 ? 'checked' : '';
 
                         $tbl1 .= '
                                     <div class="row">
@@ -1251,6 +1199,7 @@ class OptionController extends Controller
 
                                             ';
                                 }
+                                
                                 $optionTypeFace = "Door_Leaf_Facing";
                                 $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                             <div class="control-group">
@@ -1261,7 +1210,7 @@ class OptionController extends Controller
                                             </div>
                                         </div>
 
-                                        <div class="col-md-2 col-sm-12"><button type="button" class="btn btn-success" onclick="updateMe(\'' . $optionTypeFace . '\',' . $pageId . ')">Update</button></div>
+                                        <div class="col-md-2 col-sm-12"><button type="button" class="btn btn-success" onclick="updateMe(\'' . $optionTypeFace . "'," . $pageId . ')">Update</button></div>
                                     </div>
                                 ';
                     }
@@ -1313,11 +1262,7 @@ class OptionController extends Controller
                     foreach ($aa as $row) {
 
                         $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $row->id, 'SelectedUserId' => $authdata->id])->count();
-                        if ($selectedOption > 0) {
-                            $select = 'checked';
-                        } else {
-                            $select = '';
-                        }
+                        $select = $selectedOption > 0 ? 'checked' : '';
 
                         if ($row->UnderAttribute == $data->UnderAttribute) {
 
@@ -1345,6 +1290,7 @@ class OptionController extends Controller
 
                                             ';
                             }
+                            
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                             <div class="control-group">
                                                 <label class="control control-checkbox">
@@ -1360,7 +1306,7 @@ class OptionController extends Controller
                     }
 
                     $tbl1 .= '</ul>
-                            <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                            <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                         </main>
                         </div>';
 
@@ -1369,14 +1315,10 @@ class OptionController extends Controller
                         ->select('OptionName', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey')
                         ->get();
 
-                    if (!empty($electedOption) && count((array)$electedOption) > 0) {
+                    if (!empty($electedOption) && (array)$electedOption !== []) {
                         foreach ($electedOption as $row) {
                             $selectedOption = SelectedOption::where([['SelectedOptionKey', $row->OptionKey], ['SelectedUserId', $authdata->id]])->first();
-                            if (!empty($selectedOption) &&  count((array)$selectedOption) > 0) {
-                                $row->selected = 1;
-                            } else {
-                                $row->selected = 0;
-                            }
+                            $row->selected = !empty($selectedOption) && (array)$selectedOption !== [] ? 1 : 0;
                         }
                     }
                 }
@@ -1384,13 +1326,10 @@ class OptionController extends Controller
                 break;
 
             case 'door_dimension':
-                if (Auth::user()->UserType == 2) {
-                    $UserId = ['1', $authdata->id];
-                } else {
-                    $UserId = ['1'];
-                }
+                $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+
                 $allDataStmt = DoorDimension::where(['door_dimension.configurableitems' => $pageId])
-                    ->leftJoin('selected_doordimension', function ($join) use ($authdata) {
+                    ->leftJoin('selected_doordimension', function ($join) use ($authdata): void {
                         $join->on('door_dimension.id', '=', 'selected_doordimension.doordimension_id')
                             ->where('selected_doordimension.doordimension_user_id', '=', $authdata->id);
                     })
@@ -1438,7 +1377,7 @@ class OptionController extends Controller
                 <main style="display: block;">
                     <ul class="accordian_list">';
 
-                if ($optionType == "door_dimension") {
+                if ($optionType === "door_dimension") {
                     $tbl1 .= '<li>
                         <div class="row">
                             <div class="col-md-1 col-sm-12 font-weight-bolder">
@@ -1457,11 +1396,7 @@ class OptionController extends Controller
 
                     // $selectedOption = SelectedIntumescentSeals2::where(['selected_configurableitems'=>$pageId,'intumescentseals2_id'=>$row->id,'selected_intumescentseals2_user_id'=>$authdata->id])->count();
                     // if($selectedOption > 0){
-                    if ($row->doordimension_id) {
-                        $select = 'checked';
-                    } else {
-                        $select = '';
-                    }
+                    $select = $row->doordimension_id ? 'checked' : '';
 
                     $tbl1 .= '
                         <li>
@@ -1486,11 +1421,13 @@ class OptionController extends Controller
 
                                     ';
                     }
+                    
                     $action = '';
                     if (($row->edit != 1 || Auth::user()->UserType == 1)) {
                         $action = '<a href="' . route('DoorDimension/edit', $row->door_dimension_id) . '" class="btn btn-success"><i class="fa fa-pencil" style="color: #fff; font-size:13px"></i></a>
                         <button onClick="dimension_delete(' . $row->door_dimension_id . ')" class="btn btn-danger"><i class="fa fa-trash" style="color: #fff; font-size:13px"></i></button>';
                     }
+                    
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                 ' . $action . '
                                 </div><div class="col-md-1 col-sm-12">
@@ -1508,7 +1445,7 @@ class OptionController extends Controller
 
 
                 $tbl1 .= '</ul>
-                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                 </main>
             </div>';
 
@@ -1516,7 +1453,7 @@ class OptionController extends Controller
 
             default:
                 $aa = Option::where(['options.configurableitems' => $pageId, 'options.OptionSlug' => $optionType ,'options.is_deleted' => 0])
-                    ->leftJoin('selected_option', function ($join) use ($authdata) {
+                    ->leftJoin('selected_option', function ($join) use ($authdata): void {
                         $join->on('options.id', '=', 'selected_option.optionId')
                             ->where('selected_option.SelectedUserId', '=', $authdata->id);
                     })->wherein('options.editBy', $UserId)
@@ -1579,7 +1516,7 @@ class OptionController extends Controller
                 <main style="display: block;">
                     <ul class="accordian_list">';
 
-                if ($optionType == 'leaf1_glass_type') {
+                if ($optionType === 'leaf1_glass_type') {
                     $tbl1 .= '<li>
                         <div class="row">
                         <div class="col-md-2 col-sm-12 font-weight-bolder">
@@ -1591,7 +1528,8 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
-                if ($optionType == 'Architrave_Type') {
+                
+                if ($optionType === 'Architrave_Type') {
                     $tbl1 .= '<li>
                         <div class="row">
                         <div class="col-md-6 col-sm-12 font-weight-bolder text-center">
@@ -1600,7 +1538,8 @@ class OptionController extends Controller
 
                         <div class="col-md-6 col-sm-12 text-center font-weight-bolder">PRICE PER M3</div></div></li>';
                 }
-                if ($optionType == 'leaf1_glazing_systems') {
+                
+                if ($optionType === 'leaf1_glazing_systems') {
                     $tbl1 .= '<li>
                         <div class="row">
                         <div class="col-md-2 col-sm-12 font-weight-bolder">
@@ -1614,7 +1553,8 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
-                if ($optionType == 'Intumescent_Seal_Color') {
+                
+                if ($optionType === 'Intumescent_Seal_Color') {
                     $tbl1 .= '<li>
                         <div class="row">
                         <div class="col-md-4 col-sm-12 font-weight-bolder">
@@ -1625,17 +1565,14 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
+                
                 foreach ($aa as $row) {
 
                     $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $row->id, 'SelectedUserId' => $authdata->id])->count();
-                    if ($selectedOption > 0) {
-                        $select = 'checked';
-                    } else {
-                        $select = '';
-                    }
+                    $select = $selectedOption > 0 ? 'checked' : '';
 
 
-                    if ($optionType == 'leaf1_glazing_systems') {
+                    if ($optionType === 'leaf1_glazing_systems') {
                         $tbl1 .= '
                         <li>
                             <div class="row">
@@ -1658,6 +1595,7 @@ class OptionController extends Controller
 
                                     ';
                     }
+                    
                     $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1665,6 +1603,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1676,7 +1615,7 @@ class OptionController extends Controller
                             </div>
                         </li>
                         ';
-                    }elseif ($optionType == 'Intumescent_Seal_Color') {
+                    }elseif ($optionType === 'Intumescent_Seal_Color') {
                         $tbl1 .= '
                         <li>
                             <div class="row">
@@ -1697,6 +1636,7 @@ class OptionController extends Controller
 
                                     ';
                     }
+                    
                     $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1704,6 +1644,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1715,7 +1656,7 @@ class OptionController extends Controller
                             </div>
                         </li>
                         ';
-                    }elseif($optionType == 'leaf1_glass_type'){
+                    }elseif($optionType === 'leaf1_glass_type'){
                         $tbl1 .= '
                         <li>
                             <div class="row">
@@ -1738,6 +1679,7 @@ class OptionController extends Controller
 
                                     ';
                         }
+                        
                         $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1745,6 +1687,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
+                            
                         $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1780,6 +1723,7 @@ class OptionController extends Controller
 
                                     ';
                         }
+                        
                         $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1796,7 +1740,7 @@ class OptionController extends Controller
                 }
 
                 $tbl1 .= '</ul>
-                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . '\',' . $pageId . ')">Update</button>
+                    <button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>
                 </main>
             </div>';
 
@@ -1805,14 +1749,10 @@ class OptionController extends Controller
                     ->select('OptionName', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey')
                     ->get();
 
-                if (!empty($electedOption) && count((array)$electedOption) > 0) {
+                if (!empty($electedOption) && (array)$electedOption !== []) {
                     foreach ($electedOption as $row) {
                         $selectedOption = SelectedOption::where([['SelectedOptionKey', $row->OptionKey], ['SelectedUserId', $authdata->id]])->first();
-                        if (!empty($selectedOption) &&  count((array)$selectedOption) > 0) {
-                            $row->selected = 1;
-                        } else {
-                            $row->selected = 0;
-                        }
+                        $row->selected = !empty($selectedOption) && (array)$selectedOption !== [] ? 1 : 0;
                     }
                 }
 
@@ -1821,10 +1761,10 @@ class OptionController extends Controller
 
         //  dd($optionType);
         // return view('option/ChooseOptions',compact('electedOption','ConfigurableItems','pageId','tbl1'));
-        return view('option/ChooseOptions', compact('ConfigurableItems', 'pageId', 'tbl1', 'optionType'));
+        return view('option/ChooseOptions', ['ConfigurableItems' => $ConfigurableItems, 'pageId' => $pageId, 'tbl1' => $tbl1, 'optionType' => $optionType]);
     }
 
-    public function updateSelectOption(request $request)
+    public function updateSelectOption(request $request): void
     {
         // dd($request->all());
         $pageId = $request->pageId;
@@ -1833,6 +1773,7 @@ class OptionController extends Controller
             }else{
                 $keys = $request->selectedValue;
             }
+        
         $className = $request->className;
         $UserId = Auth::user()->id;
         if (!empty($keys) && count($keys)) {
@@ -1860,11 +1801,11 @@ class OptionController extends Controller
                 case 'doordimension':
                     SelectedDoordimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [1,2,7,8])->whereNotIn('doordimension_id', $keys)->delete();
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = DoorDimension::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedDoordimension::where(['doordimension_user_id' => $UserId, 'doordimension_id' => $key])->first();
                         // dd($electedOption);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedDoordimension();
                             // $selectedOption->selected_configurableitems = $pageId;
                             $selectedOption->doordimension_id = $electedOption->id;
@@ -1903,13 +1844,13 @@ class OptionController extends Controller
                     // SelectedIntumescentSeals2::where(['selected_configurableitems' => $pageId, 'selected_intumescentseals2_user_id' => $UserId])->whereNotIn('intumescentseals2_id', $delete_id)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = SettingIntumescentSeals2::Where('id', $key)->select('*')->first();
 
                         // $electedOptionids = SettingIntumescentSeals2::Where('intumescentSeals', $electedOption->intumescentSeals)->Where('brand', $electedOption->brand)->Where('firerating', $electedOption->firerating)->select('*')->get();
 
                         $selectedOptionExist = SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId, 'intumescentseals2_id' => $key])->first();
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             // foreach ($electedOptionids as $value) {
                                 $selectedOption = new SelectedIntumescentSeals2();
                                 $selectedOption->selected_configurableitems = $electedOption->configurableitems;
@@ -1938,10 +1879,10 @@ class OptionController extends Controller
                     SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('intumescentseals2_id', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = SettingIntumescentSeals2::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId, 'intumescentseals2_id' => $key])->first();
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 // foreach ($electedOptionids as $value) {
                                     $selectedOption = new SelectedIntumescentSeals2();
                                     $selectedOption->selected_configurableitems = $electedOption->configurableitems;
@@ -1971,11 +1912,11 @@ class OptionController extends Controller
                     SelectedLippingSpeciesItems::where(['selected_user_id' => $UserId])->whereNotIn('selected_lipping_species_items_id', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = LippingSpeciesItems::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedLippingSpeciesItems::where(['selected_user_id' => $UserId, 'selected_lipping_species_items_id' => $key])->first();
                         // dd($key);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedLippingSpeciesItems();
                             $selectedOption->selected_lipping_species_id = $electedOption->lipping_species_id;
                             $selectedOption->selected_lipping_species_items_id = $electedOption->id;
@@ -1991,7 +1932,7 @@ class OptionController extends Controller
                     break;
 
                 case 'leaf1_glass_type':
-                    $customGlassTypeIds = GlassType::where(function ($query) {
+                    $customGlassTypeIds = GlassType::where(function ($query): void {
                         $query->whereNotNull('VicaimaDoorCore')
                               ->orWhereNotNull('Seadec')
                               ->orWhereNotNull('Deanta');
@@ -2000,11 +1941,11 @@ class OptionController extends Controller
                   SelectedGlassType::where(['editBy' => $UserId])->whereIn('glass_id', $customGlassTypeIds)->whereNotIn('glass_id', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = GlassType::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedGlassType::where(['editBy' => $UserId, 'glass_id' => $key])->first();
                         // dd($key);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedGlassType();
                             $selectedOption->glass_id = $electedOption->id;
                             $selectedOption->editBy = Auth::user()->id;
@@ -2016,7 +1957,7 @@ class OptionController extends Controller
                     break;
 
                     case 'leaf1_glass_type_custome':
-                        $customGlassTypeIds = GlassType::where(function ($query) {
+                        $customGlassTypeIds = GlassType::where(function ($query): void {
                             $query->whereNotNull('Streboard')
                           ->orWhereNotNull('Halspan')
                           ->orWhereNotNull('Stredor')
@@ -2027,10 +1968,10 @@ class OptionController extends Controller
                         SelectedGlassType::where(['editBy' => $UserId])->whereIn('glass_id', $customGlassTypeIds)->whereNotIn('glass_id', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = GlassType::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedGlassType::where(['editBy' => $UserId, 'glass_id' => $key])->first();
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 $selectedOption = new SelectedGlassType();
                                 $selectedOption->glass_id = $electedOption->id;
                                 $selectedOption->editBy = Auth::user()->id;
@@ -2041,7 +1982,7 @@ class OptionController extends Controller
                         break;
 
                 case 'leaf1_glazing_systems':
-                    $customGlassTypeIds = GlazingSystem::where(function ($query) {
+                    $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                         $query->whereNotNull('VicaimaDoorCore')
                         ->orWhereNotNull('Seadec')
                         ->orWhereNotNull('Deanta');
@@ -2050,11 +1991,11 @@ class OptionController extends Controller
                     SelectedGlazingSystem::where(['userId' => $UserId])->whereIn('glazingId', $customGlassTypeIds)->whereNotIn('glazingId', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = GlazingSystem::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedGlazingSystem::where(['userId' => $UserId, 'glazingId' => $key])->first();
                         // dd($key);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedGlazingSystem();
                             $selectedOption->glazingId = $electedOption->id;
                             $selectedOption->userId = Auth::user()->id;
@@ -2066,7 +2007,7 @@ class OptionController extends Controller
                     break;
 
                 case 'leaf1_glazing_systems_custome':
-                    $customGlassTypeIds = GlazingSystem::where(function ($query) {
+                    $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                         $query->whereNotNull('Streboard')
                               ->orWhereNotNull('Halspan')
                               ->orWhereNotNull('Stredor')
@@ -2075,11 +2016,11 @@ class OptionController extends Controller
                     SelectedGlazingSystem::where(['userId' => $UserId])->whereIn('glazingId', $customGlassTypeIds)->whereNotIn('glazingId', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = GlazingSystem::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedGlazingSystem::where(['userId' => $UserId, 'glazingId' => $key])->first();
                             // dd($key);
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 $selectedOption = new SelectedGlazingSystem();
                                 $selectedOption->glazingId = $electedOption->id;
                                 $selectedOption->userId = Auth::user()->id;
@@ -2095,11 +2036,11 @@ class OptionController extends Controller
                     SelectedIntumescentSealColor::where(['userId' => $UserId])->whereNotIn('intumescentSealColorId', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = IntumescentSealColor::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedIntumescentSealColor::where(['userId' => $UserId, 'intumescentSealColorId' => $key])->first();
                         // dd($key);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedIntumescentSealColor();
                             $selectedOption->intumescentSealColorId = $electedOption->id;
                             $selectedOption->userId = Auth::user()->id;
@@ -2115,10 +2056,10 @@ class OptionController extends Controller
                     SelectedAccoustics::where(['userId' => $UserId])->whereNotIn('accousticsId', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = Accoustics::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedAccoustics::where(['userId' => $UserId, 'accousticsId' => $key])->first();
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedAccoustics();
                             $selectedOption->accousticsId = $electedOption->id;
                             $selectedOption->userId = Auth::user()->id;
@@ -2133,10 +2074,10 @@ class OptionController extends Controller
                     SelectedArchitraveType::where(['userId' => $UserId])->whereNotIn('architraveTypeId', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = ArchitraveType::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedArchitraveType::where(['userId' => $UserId, 'architraveTypeId' => $key])->first();
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedArchitraveType();
                             $selectedOption->architraveTypeId = $electedOption->id;
                             $selectedOption->userId = Auth::user()->id;
@@ -2150,10 +2091,10 @@ class OptionController extends Controller
                     SelectedColor::where(['SelectedUserId' => $UserId])->whereNotIn('SelectedColorId', $keys)->where('DoorLeafFacingName',$request->colorType)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = Color::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedColor::where(['SelectedUserId' => $UserId, 'SelectedColorId' => $key])->first();
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedColor();
                             $selectedOption->SelectedColorId = $electedOption->id;
                             $selectedOption->DoorLeafFacingName = $electedOption->DoorLeafFacing;
@@ -2168,10 +2109,10 @@ class OptionController extends Controller
                     SelectedDoorLeafFacing::where(['userId' => $UserId])->whereNotIn('doorLeafFacingId', $keys)->delete();
 
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = DoorLeafFacing::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedDoorLeafFacing::where(['userId' => $UserId, 'doorLeafFacingId' => $key])->first();
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedDoorLeafFacing();
                             $selectedOption->doorLeafFacingId = $electedOption->id;
                             $selectedOption->userId = Auth::user()->id;
@@ -2186,11 +2127,11 @@ class OptionController extends Controller
                         SelectedLeafType::where(['editBy' => $UserId])->whereNotIn('leaf_id', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = LeafType::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedLeafType::where(['editBy' => $UserId, 'leaf_id' => $key])->first();
                             // dd($key);
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 $selectedOption = new SelectedLeafType();
                                 $selectedOption->leaf_id = $electedOption->id;
                                 $selectedOption->editBy = Auth::user()->id;
@@ -2205,11 +2146,11 @@ class OptionController extends Controller
                             SelectedOverpanelGlassGlazing::where(['editBy' => $UserId])->whereNotIn('glass_glazing_id', $keys)->delete();
 
                             foreach ($keys as $key) {
-                                $electedOption = array();
+                                $electedOption = [];
                                 $electedOption = OverpanelGlassGlazing::Where('id', $key)->select('*')->first();
                                 $selectedOptionExist = SelectedOverpanelGlassGlazing::where(['editBy' => $UserId, 'glass_glazing_id' => $key])->first();
                                 // dd($key);
-                                if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                                if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                     $selectedOption = new SelectedOverpanelGlassGlazing();
                                     $selectedOption->glass_glazing_id = $electedOption->id;
                                     $selectedOption->editBy = Auth::user()->id;
@@ -2224,11 +2165,11 @@ class OptionController extends Controller
                                 SelectedOverpanelGlassGlazing::where(['editBy' => $UserId])->whereNotIn('glass_glazing_id', $keys)->delete();
 
                                 foreach ($keys as $key) {
-                                    $electedOption = array();
+                                    $electedOption = [];
                                     $electedOption = OverpanelGlassGlazing::Where('id', $key)->select('*')->first();
                                     $selectedOptionExist = SelectedOverpanelGlassGlazing::where(['editBy' => $UserId, 'glass_glazing_id' => $key])->first();
                                     // dd($key);
-                                    if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                                    if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                         $selectedOption = new SelectedOverpanelGlassGlazing();
                                         $selectedOption->glass_glazing_id = $electedOption->id;
                                         $selectedOption->editBy = Auth::user()->id;
@@ -2244,11 +2185,11 @@ class OptionController extends Controller
                         SelectedScreenGlass::where(['editBy' => $UserId])->whereNotIn('glass_id', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = ScreenGlassType::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedScreenGlass::where(['editBy' => $UserId, 'glass_id' => $key])->first();
                             // dd($key);
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 $selectedOption = new SelectedScreenGlass();
                                 $selectedOption->glass_id = $electedOption->id;
                                 $selectedOption->editBy = Auth::user()->id;
@@ -2263,11 +2204,11 @@ class OptionController extends Controller
                         SelectedScreenGlazing::where(['editBy' => $UserId])->whereNotIn('glazing_id', $keys)->delete();
 
                         foreach ($keys as $key) {
-                            $electedOption = array();
+                            $electedOption = [];
                             $electedOption = ScreenGlazingType::Where('id', $key)->select('*')->first();
                             $selectedOptionExist = SelectedScreenGlazing::where(['editBy' => $UserId, 'glazing_id' => $key])->first();
                             // dd($key);
-                            if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                            if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                                 $selectedOption = new SelectedScreenGlazing();
                                 $selectedOption->glazing_id = $electedOption->id;
                                 $selectedOption->editBy = Auth::user()->id;
@@ -2281,11 +2222,11 @@ class OptionController extends Controller
                 default:
                     SelectedOption::where(['SelectedUserId' => $UserId, 'SelectedOptionSlug' => $optionKey])->whereNotIn('optionId', $keys)->delete();
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = Option::Where('id', $key)->select('id', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey','configurableitems')->first();
                         $selectedOptionExist = SelectedOption::where(['SelectedUserId' => $UserId, 'SelectedOptionSlug' => $optionKey, 'optionId' => $key])->first();
 
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedOption();
                             $selectedOption->configurableitems = $electedOption->configurableitems;
                             $selectedOption->optionId = $electedOption->id;
@@ -2299,41 +2240,51 @@ class OptionController extends Controller
                             // dd($selectedOption);
                         }
                     }
+                    
                     break;
             }
 
-            echo json_encode(array("status" => "ok", "msg" => "options are updated"));
+            echo json_encode(["status" => "ok", "msg" => "options are updated"]);
         } else {
             if ($className == 'lippingSpecies') {
                 SelectedLippingSpeciesItems::where(['selected_user_id' => $UserId])->delete();
             }
+            
             if ($className == 'doordimension') {
                 SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [1,2,7,8])->delete();
             }
+            
             if ($className == 'intumescentSealArrangement') {
                 SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [3,4,5,6])->delete();
             }
+            
             if ($className == 'intumescentSealArrangementCustome') {
                 SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [1, 2, 7, 8])->delete();
             }
+            
             if ($className == "door_leaf_facing_value") {
                 SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'doorleaffacingvalue'])->delete();
             }
+            
             if ($className == "Accoustics") {
                 SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'Accoustics'])->delete();
             }
+            
             if ($className == "door_leaf_finish") {
                 SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'door_leaf_finish'])->delete();
             }
+            
             if ($className == "color_list") {
                 SelectedColor::where(['SelectedUserId' => $UserId])->where('DoorLeafFacingName',$request->colorType)->delete();
             }
+            
             if ($className == "leaf_type") {
                 SelectedLeafType::where(['editBy' => $UserId])->delete();
             }
+            
             if ($className == "leaf1_glass_type") {
                 // SelectedGlassType::where(['editBy' => $UserId])->delete();
-                $customGlassTypeIds = GlassType::where(function ($query) {
+                $customGlassTypeIds = GlassType::where(function ($query): void {
                     $query->whereNotNull('VicaimaDoorCore')
                           ->orWhereNotNull('Seadec')
                           ->orWhereNotNull('Deanta');
@@ -2345,8 +2296,9 @@ class OptionController extends Controller
                 ->whereIn('glass_id', $customGlassTypeIds)
                 ->delete();
             }
+            
             if ($className == "leaf1_glass_type_custome") {
-                $customGlassTypeIds = GlassType::where(function ($query) {
+                $customGlassTypeIds = GlassType::where(function ($query): void {
                     $query->whereNotNull('Streboard')
                           ->orWhereNotNull('Halspan')
                           ->orWhereNotNull('Stredor')
@@ -2360,8 +2312,9 @@ class OptionController extends Controller
                 ->delete();
                 // SelectedGlassType::where(['editBy' => $UserId])->delete();
             }
+            
             if ($className == "leaf1_glazing_systems") {
-                $customGlassTypeIds = GlazingSystem::where(function ($query) {
+                $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                     $query->whereNotNull('VicaimaDoorCore')
                     ->orWhereNotNull('Seadec')
                     ->orWhereNotNull('Deanta');
@@ -2371,8 +2324,9 @@ class OptionController extends Controller
                     ->whereIn('glazingId', $customGlassTypeIds)
                     ->delete();
             }
+            
             if ($className == "leaf1_glazing_systems_custome") {
-                $customGlassTypeIds = GlazingSystem::where(function ($query) {
+                $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                     $query->whereNotNull('Streboard')
                           ->orWhereNotNull('Halspan')
                           ->orWhereNotNull('Stredor')
@@ -2383,34 +2337,41 @@ class OptionController extends Controller
                     ->whereIn('glazingId', $customGlassTypeIds)
                     ->delete();
             }
+            
             if ($className == "Intumescent_Seal_Color") {
                 SelectedIntumescentSealColor::where(['userId' => $UserId])->delete();
             }
+            
             if ($className == "Accoustics") {
                 SelectedAccoustics::where(['userId' => $UserId])->delete();
             }
+            
             if ($className == "door_leaf_facing_value") {
                 SelectedDoorLeafFacing::where(['userId' => $UserId])->delete();
             }
+            
             if ($className == "Architrave_Type") {
                 SelectedArchitraveType::where(['userId' => $UserId])->delete();
             }
+            
             if ($className == "Overpanel_Glazing_System" || $className == "Overpanel_Glass_Type") {
                 SelectedOverpanelGlassGlazing::where(['editBy' => $UserId])->delete();
             }
+            
             if ($className == "SideScreen_Glass_Type") {
                 SelectedScreenGlass::where(['editBy' => $UserId])->delete();
             }
+            
             if ($className == "SideScreen_Glazing_System") {
                 SelectedScreenGlazing::where(['editBy' => $UserId])->delete();
             }
 
             SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => $className])->delete();
-            echo json_encode(array("status" => "ok", "msg" => "please check options"));
+            echo json_encode(["status" => "ok", "msg" => "please check options"]);
         }
     }
 
-    public function updateSelectOptionCustome(request $request)
+    public function updateSelectOptionCustome(request $request): void
     {
 
         $pageId = $request->pageId;
@@ -2420,6 +2381,7 @@ class OptionController extends Controller
         }else{
                 $keys = $request->selectedValue;
             }
+        
         $UserId = Auth::user()->id;
         if (!empty($keys) && count($keys)) {
             $optionKey = $className;
@@ -2432,15 +2394,16 @@ class OptionController extends Controller
                     $className = $className;
                     break;
             }
+            
             switch ($className) {
                 case 'door_dimension_custome':
                     SelectedDoordimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('doordimension_id', $keys)->delete();
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = DoorDimension::Where('id', $key)->select('*')->first();
                         $selectedOptionExist = SelectedDoordimension::where(['doordimension_user_id' => $UserId, 'doordimension_id' => $key])->first();
                         // dd($electedOption);
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedDoordimension();
                             // $selectedOption->selected_configurableitems = $pageId;
                             $selectedOption->doordimension_id = $electedOption->id;
@@ -2461,11 +2424,11 @@ class OptionController extends Controller
                 default:
                     SelectedOption::where(['SelectedUserId' => $UserId, 'SelectedOptionSlug' => $optionKey])->whereNotIn('optionId', $keys)->delete();
                     foreach ($keys as $key) {
-                        $electedOption = array();
+                        $electedOption = [];
                         $electedOption = Option::Where('id', $key)->select('id', 'OptionSlug', 'OptionValue', 'UnderAttribute', 'OptionKey','configurableitems')->first();
                         $selectedOptionExist = SelectedOption::where(['SelectedUserId' => $UserId, 'SelectedOptionSlug' => $optionKey, 'optionId' => $key])->first();
 
-                        if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                        if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                             $selectedOption = new SelectedOption();
                             $selectedOption->configurableitems = $electedOption->configurableitems;
                             $selectedOption->optionId = $electedOption->id;
@@ -2479,19 +2442,21 @@ class OptionController extends Controller
                             // dd($selectedOption);
                         }
                     }
+                    
                     break;
             }
 
-            echo json_encode(array("status" => "ok", "msg" => "options are updated"));
+            echo json_encode(["status" => "ok", "msg" => "options are updated"]);
         } else {
             if ($className == 'door_dimension_custome') {
                 SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->delete();
             }
-            echo json_encode(array("status" => "ok", "msg" => "please check options"));
+            
+            echo json_encode(["status" => "ok", "msg" => "please check options"]);
         }
     }
 
-    public function updateSelectOptionCost(request $request)
+    public function updateSelectOptionCost(request $request): void
     {
         $SelectedOptionId = $request->SelectedOptionId;
         $SelectedOptionCost = $request->SelectedOptionCost;
@@ -2510,10 +2475,11 @@ class OptionController extends Controller
 
                     $selectedOption->selected_price = $SelectedOptionCost;
                     $selectedOption->save();
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'intumescentSealArrangement':
@@ -2527,10 +2493,11 @@ class OptionController extends Controller
                         $selectedOption->save();
                     // }
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
             case 'intumescentSealArrangementCustome':
                 $selectedOption = SelectedIntumescentSeals2::where(['id' => $request->selectedId])->first();
@@ -2543,10 +2510,11 @@ class OptionController extends Controller
                         $selectedOption->save();
                     // }
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'door_dimension':
@@ -2555,10 +2523,11 @@ class OptionController extends Controller
                     $selectedOption->selected_cost = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
                 case 'door_dimension_custome':
                     // dd($request->all());
@@ -2567,10 +2536,11 @@ class OptionController extends Controller
                         $selectedOption->selected_cost = $request->price;
                         $selectedOption->save();
 
-                        echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                        echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                     } else {
-                        echo json_encode(array("status" => "error", "msg" => "option not found"));
+                        echo json_encode(["status" => "error", "msg" => "option not found"]);
                     }
+                    
                     break;
             case 'leaf1_glass_type':
                 $selectedOption = SelectedGlassType::where(['id' => $request->selectedId])->first();
@@ -2578,10 +2548,11 @@ class OptionController extends Controller
                     $selectedOption->SelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
             case 'leaf1_glass_type_custome':
                 $selectedOption = SelectedGlassType::where(['id' => $request->selectedId])->first();
@@ -2589,10 +2560,11 @@ class OptionController extends Controller
                     $selectedOption->SelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 // dd($selectedOption);
                 break;
             case 'leaf_type':
@@ -2601,10 +2573,11 @@ class OptionController extends Controller
                     $selectedOption->SelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'leaf1_glazing_systems':
@@ -2613,10 +2586,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
             case 'leaf1_glazing_systems_custome':
                 $selectedOption = SelectedGlazingSystem::where(['id' => $request->selectedId])->first();
@@ -2624,10 +2598,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'Intumescent_Seal_Color':
@@ -2636,10 +2611,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'Architrave_Type':
@@ -2648,10 +2624,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'color_list':
@@ -2660,10 +2637,11 @@ class OptionController extends Controller
                     $selectedOption->SelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'Accoustics':
@@ -2672,10 +2650,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
             case 'door_leaf_facing_value':
                 $selectedOption = SelectedDoorLeafFacing::where(['id' => $request->selectedId])->first();
@@ -2683,10 +2662,11 @@ class OptionController extends Controller
                     $selectedOption->selectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
 
             case 'door_leaf_finish':
@@ -2695,10 +2675,11 @@ class OptionController extends Controller
 
                     $selectedOption->SelectedOptionCost = $request->price;
                     $selectedOption->save();
-                    echo json_encode(array("status" => "ok", "msg" => "option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
             break;
             case 'Overpanel_Glass_Type':
                 $selectedOption = SelectedOverpanelGlassGlazing::where(['id' => $request->selectedId])->first();
@@ -2706,10 +2687,11 @@ class OptionController extends Controller
                     $selectedOption->glassSelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
             break;
             case 'Overpanel_Glazing_System':
                 $selectedOption = SelectedOverpanelGlassGlazing::where(['id' => $request->selectedId])->first();
@@ -2717,10 +2699,11 @@ class OptionController extends Controller
                     $selectedOption->glazingSelectedPrice = $request->price;
                     $selectedOption->save();
 
-                    echo json_encode(array("status" => "ok", "msg" => "Option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "Option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
             break;
             case 'SideScreen_Glass_Type':
                 $selectedOption = SelectedScreenGlass::where(['id' => $request->selectedId])->first();
@@ -2728,10 +2711,11 @@ class OptionController extends Controller
 
                     $selectedOption->glassSelectedPrice = $request->price;
                     $selectedOption->save();
-                    echo json_encode(array("status" => "ok", "msg" => "option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
             break;
             case 'SideScreen_Glazing_System':
                 $selectedOption = SelectedScreenGlazing::where(['id' => $request->selectedId])->first();
@@ -2739,10 +2723,11 @@ class OptionController extends Controller
 
                     $selectedOption->glazingSelectedPrice = $request->price;
                     $selectedOption->save();
-                    echo json_encode(array("status" => "ok", "msg" => "option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
             break;
 
             default:
@@ -2751,10 +2736,11 @@ class OptionController extends Controller
 
                     $selectedOption->SelectedOptionCost = $request->price;
                     $selectedOption->save();
-                    echo json_encode(array("status" => "ok", "msg" => "option cost updated"));
+                    echo json_encode(["status" => "ok", "msg" => "option cost updated"]);
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "option not found"));
+                    echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
+                
                 break;
         }
     }
@@ -2788,6 +2774,7 @@ class OptionController extends Controller
                 } else {
                     return response()->json(["status" => "error", "msg" => "Option not found"]);
                 }
+                
                 break;
 
             default:
@@ -2803,6 +2790,7 @@ class OptionController extends Controller
                 } else {
                     return response()->json(["status" => "error", "msg" => "Option not found"]);
                 }
+                
                 break;
         }
     }
@@ -2821,6 +2809,7 @@ class OptionController extends Controller
                 ->where('OptionKey', 'SA')
                 ->first();
         }
+        
         return $data;
     }
 
@@ -2837,10 +2826,11 @@ class OptionController extends Controller
             } else {
                 $data = DoorDimension::where('leaf_type', $request->leaf_type)->where('door_leaf_finish', $request->door_leaf_finish)->get();
             }
+            
             return $data;
-        } elseif (isset($request->page_id) && ($request->page_id == 4 || $request->page_id == 5) && $request->door_leaf_facing && $request->leaf_type && $request->firerating) {
+        } elseif (property_exists($request, 'page_id') && $request->page_id !== null && ($request->page_id == 4 || $request->page_id == 5) && $request->door_leaf_facing && $request->leaf_type && $request->firerating) {
             $fireRating = fireRatingDoor($request->firerating);
-            $data = $fireRating != 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing], "join","DoorDimension");
+            $data = $fireRating !== 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing], "join","DoorDimension");
             return $data;
         } else {
             if ($request->door_leaf_facing && $request->door_leaf_finish) {
@@ -2855,19 +2845,22 @@ class OptionController extends Controller
             } else {
                 $data = DoorDimension::where('leaf_type', '!=', 'Flush')->where('door_leaf_finish', $request->door_leaf_finish)->get();
             }
+            
             return $data;
         }
     }
 
     public function filter_door_dimensions_leaf(request $request)
     {
-        if (isset($request->page_id) && ($request->page_id == 4 || $request->page_id == 5 || $request->page_id == 6) && $request->door_leaf_facing && $request->leaf_type && $request->firerating && $request->DoorDimensionId) {
+        if (property_exists($request, 'page_id') && $request->page_id !== null && ($request->page_id == 4 || $request->page_id == 5 || $request->page_id == 6) && $request->door_leaf_facing && $request->leaf_type && $request->firerating && $request->DoorDimensionId) {
             $fireRating = fireRatingDoor($request->firerating);
 
             $mm_height = DoorDimension::where('id',$request->DoorDimensionId)->first();
-            $data = $fireRating != 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating,'door_dimension.mm_height' => $mm_height->mm_height], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.mm_height' => $mm_height->mm_height], "join","DoorDimension");
+            $data = $fireRating !== 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating,'door_dimension.mm_height' => $mm_height->mm_height], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.mm_height' => $mm_height->mm_height], "join","DoorDimension");
             return $data;
         }
+
+        return null;
     }
 
     public function filter_latch_type(request $request)
@@ -2879,20 +2872,23 @@ class OptionController extends Controller
                 ->where('OptionKey', 'L')
                 ->get();
         }
+        
         if ($door_set_type == "DD" && $swing_type == "SA") {
             $data = Option::where('configurableitems', 3)
                 ->where('OptionSlug', 'door_configuration_latch_type')
                 ->get();
         }
+        
         if ($door_set_type == "leaf_and_a_half" && $swing_type == "SA") {
             $data = Option::where('configurableitems', 3)
                 ->where('OptionSlug', 'door_configuration_latch_type')
                 ->get();
         }
+        
         return $data;
     }
 
-    public function checkSelectOption(request $request)
+    public function checkSelectOption(request $request): void
     {
         $option = $request->optionname;
         switch ($option) {
@@ -2919,18 +2915,19 @@ class OptionController extends Controller
 
                     if (!empty($optionSelection)) {
                         if (!empty($selectedOption) && !empty($optionSelection)) {
-                            echo json_encode(array("status" => "ok", "id" => $optionSelection->id, "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'option'));
+                            echo json_encode(["status" => "ok", "id" => $optionSelection->id, "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'option']);
                         } elseif (empty($selectedOption)) {
-                            echo json_encode(array("status" => "ok", "id" => $optionSelection->id, "optionType" => 'option'));
+                            echo json_encode(["status" => "ok", "id" => $optionSelection->id, "optionType" => 'option']);
                         } else {
-                            echo json_encode(array("status" => "ok", "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'option'));
+                            echo json_encode(["status" => "ok", "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'option']);
                         }
                     } else {
-                        echo json_encode(array("status" => "error", "msg" => "Id not found"));
+                        echo json_encode(["status" => "error", "msg" => "Id not found"]);
                     }
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "Id not found"));
+                    echo json_encode(["status" => "error", "msg" => "Id not found"]);
                 }
+                
                 break;
 
             case 'intumescentSealArrangement':
@@ -2956,18 +2953,19 @@ class OptionController extends Controller
 
                     if (!empty($optionSelection)) {
                         if (!empty($selectedOption) && !empty($optionSelection)) {
-                            echo json_encode(array("status" => "ok", "id" => $optionSelection->id, "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'intumescentSealArrangement', "brand" => $selectedOption->brand, "intumescentSeals" => $selectedOption->selected_intumescentSeals));
+                            echo json_encode(["status" => "ok", "id" => $optionSelection->id, "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'intumescentSealArrangement', "brand" => $selectedOption->brand, "intumescentSeals" => $selectedOption->selected_intumescentSeals]);
                         } elseif (empty($selectedOption)) {
-                            echo json_encode(array("status" => "ok", "id" => $optionSelection->id, "optionType" => 'intumescentSealArrangement'));
+                            echo json_encode(["status" => "ok", "id" => $optionSelection->id, "optionType" => 'intumescentSealArrangement']);
                         } else {
-                            echo json_encode(array("status" => "ok", "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'intumescentSealArrangement', "brand" => $selectedOption->brand, "intumescentSeals" => $selectedOption->selected_intumescentSeals));
+                            echo json_encode(["status" => "ok", "SelectedOptionId" => $selectedOption->SelectedOptionId, "optionType" => 'intumescentSealArrangement', "brand" => $selectedOption->brand, "intumescentSeals" => $selectedOption->selected_intumescentSeals]);
                         }
                     } else {
-                        echo json_encode(array("status" => "error", "msg" => "Id not found"));
+                        echo json_encode(["status" => "error", "msg" => "Id not found"]);
                     }
                 } else {
-                    echo json_encode(array("status" => "error", "msg" => "Id not found"));
+                    echo json_encode(["status" => "error", "msg" => "Id not found"]);
                 }
+                
                 break;
         }
     }
@@ -2988,7 +2986,7 @@ class OptionController extends Controller
                 $glasstype = trim($row[$j++]);
                 $glazing = trim($row[$j++]);
                 $vpareasize = trim($row[$j++]);
-                if($vpareasize != "N/A"){
+                if($vpareasize !== "N/A"){
                     $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('Flamebreak',7)->first();
                     $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('Flamebreak',7)->first();
                     if(!empty($GlassType) && !empty($GlazingSystem)){
@@ -3004,9 +3002,13 @@ class OptionController extends Controller
                     }
                 }
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
+    
     public function importglasstype(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3035,24 +3037,29 @@ class OptionController extends Controller
                 $data = new GlassType();
 
                 $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;
-                if($configurable == '1'){
+                if($configurable === '1'){
                     $data->Streboard = 1;
                 }
-                if($configurable == '2'){
+                
+                if($configurable === '2'){
                     $data->Halspan = 2;
                 }
-                if($configurable == '7'){
+                
+                if($configurable === '7'){
                     $data->Flamebreak = 7;
                 }
-                if($configurable == '8'){
+                
+                if($configurable === '8'){
                     $data->Stredor = 8;
                 }
+                
                 $data->NFR = NULL;
 
-                if($FireRating == 'FD30'){
+                if($FireRating === 'FD30'){
                     $data->FD30 = 'FD30';
                 }
-                if($FireRating == 'FD60'){
+                
+                if($FireRating === 'FD60'){
                     $data->FD60 = 'FD60';
                 }
 
@@ -3065,9 +3072,13 @@ class OptionController extends Controller
                 $data->EditBy = Auth::user()->id;
                 $data->save();
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
+    
     public function importglazingsystem(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3093,25 +3104,29 @@ class OptionController extends Controller
                 $data = new GlazingSystem();
                 $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Stredor = NULL;
 
-                if($configurable == '1'){
+                if($configurable === '1'){
                     $data->Streboard = 1;
                 }
-                if($configurable == '2'){
+                
+                if($configurable === '2'){
                     $data->Halspan = 2;
                 }
-                if($configurable == '7'){
+                
+                if($configurable === '7'){
                     $data->Flamebreak = 7;
                 }
-                if($configurable == '8'){
+                
+                if($configurable === '8'){
                     $data->Stredor = 8;
                 }
 
                 $data->NFR = NULL;
 
-                if($FireRating == 'FD30'){
+                if($FireRating === 'FD30'){
                     $data->FD30 = 'FD30';
                 }
-                if($FireRating == 'FD60'){
+                
+                if($FireRating === 'FD60'){
                     $data->FD60 = 'FD60';
                 }
 
@@ -3123,8 +3138,11 @@ class OptionController extends Controller
                 $data->editBy = Auth::user()->id;
                 $data->save();
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
 
     public function updateintumescentSealArrangement(Request $request){
@@ -3175,29 +3193,34 @@ class OptionController extends Controller
                 }
 
                 $leafType = [];
-                if(!empty($leaftype1)){
+                if($leaftype1 !== '' && $leaftype1 !== '0'){
                     $IntumescentSealLeafType1 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype1 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType1))?$IntumescentSealLeafType1->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType1))?'':$IntumescentSealLeafType1->id;
                 }
-                if(!empty($leaftype2)){
+                
+                if($leaftype2 !== '' && $leaftype2 !== '0'){
                     $IntumescentSealLeafType2 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype2 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType2))?$IntumescentSealLeafType2->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType2))?'':$IntumescentSealLeafType2->id;
                 }
+                
                 if(!empty($leaftype3)){
                     $IntumescentSealLeafType3 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype3 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType3))?$IntumescentSealLeafType3->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType3))?'':$IntumescentSealLeafType3->id;
                 }
+                
                 if(!empty($leaftype4)){
                     $IntumescentSealLeafType4 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype4 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType4))?$IntumescentSealLeafType4->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType4))?'':$IntumescentSealLeafType4->id;
                 }
+                
                 if(!empty($leaftype5)){
                     $IntumescentSealLeafType5 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype5 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType5))?$IntumescentSealLeafType5->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType5))?'':$IntumescentSealLeafType5->id;
                 }
+                
                 if(!empty($leaftype6)){
                     $IntumescentSealLeafType6 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype6 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
-                    $leafType[] = (!empty($IntumescentSealLeafType6))?$IntumescentSealLeafType6->id:'';
+                    $leafType[] = (empty($IntumescentSealLeafType6))?'':$IntumescentSealLeafType6->id;
                 }
 
                 $fireRating = "";
@@ -3247,9 +3270,13 @@ class OptionController extends Controller
                 $selectedOption->selected_cost = ($request->IntumescentSealPrice) ?? 0;
                 $selectedOption->save();
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
+    
      public function updateOverpanelGlassGlazing(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3301,31 +3328,40 @@ class OptionController extends Controller
                 $a->FixingDetails = $FixingDetails;
                 $a->Streboard = NULL;$a->Halspan = NULL;$a->Flamebreak = NULL;
 
-                if($DoorType == 'Streboard'){
+                if($DoorType === 'Streboard'){
                     $a->Streboard = 1;
                 }
-                if($DoorType == 'Halspan'){
+                
+                if($DoorType === 'Halspan'){
                     $a->Halspan = 2;
                 }
-                if($DoorType == 'Flamebreak'){
+                
+                if($DoorType === 'Flamebreak'){
                     $a->Flamebreak = 7;
                 }
-                if($DoorType == 'Stredor'){
+                
+                if($DoorType === 'Stredor'){
                     $a->Stredor = 8;
                 }
+                
                 $a->NFR = NULL;
-                if($FireRating == 'FD30'){
+                if($FireRating === 'FD30'){
                     $a->FD30 = 'FD30';
                 }
-                if($FireRating == 'FD60'){
+                
+                if($FireRating === 'FD60'){
                     $a->FD60 = 'FD60';
                 }
+                
                 $a->updated_at = date('Y-m-d H:i:s');
                 $a->editBy = Auth::user()->id;
                 $a->save();
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
 
     public function updatesidescreen(Request $request){
@@ -3386,8 +3422,11 @@ class OptionController extends Controller
                 $b->EditBy = Auth::user()->id;
                 $b->save();
             }
+            
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
+
+        return null;
     }
 
     public function updateGlassType(Request $request){
@@ -3400,7 +3439,7 @@ class OptionController extends Controller
                 $leafType = $request->leafType;
                 $leafPrice = $request->leafPrice;
                 $key = str_replace(' ', '_', $leafType);
-                if((isset($request->vicaimaDoorCore) || isset($request->normaDoorCore) || isset($request->seadecDoorCore) || isset($request->deantaDoorCore)) &&  !empty($leafType)){
+                if((property_exists($request, 'vicaimaDoorCore') && $request->vicaimaDoorCore !== null || property_exists($request, 'normaDoorCore') && $request->normaDoorCore !== null || property_exists($request, 'seadecDoorCore') && $request->seadecDoorCore !== null || property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null) &&  !empty($leafType)){
 
                     if(!empty($request->id)){
                         $data = LeafType::find($request->id);
@@ -3414,20 +3453,25 @@ class OptionController extends Controller
                         $data = new LeafType();
                         $selectedOption = new SelectedLeafType();
                     }
+                    
                     $data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;
 
-                    if(isset($request->normaDoorCore)){
+                    if(property_exists($request, 'normaDoorCore') && $request->normaDoorCore !== null){
                         $data->NormaDoorCore = 3;
                     }
-                     if(isset($request->vicaimaDoorCore)){
+                    
+                     if(property_exists($request, 'vicaimaDoorCore') && $request->vicaimaDoorCore !== null){
                         $data->VicaimaDoorCore = 4;
                     }
-                    if(isset($request->seadecDoorCore)){
+                     
+                    if(property_exists($request, 'seadecDoorCore') && $request->seadecDoorCore !== null){
                         $data->Seadec = 5;
                     }
-                    if(isset($request->deantaDoorCore)){
+                    
+                    if(property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null){
                         $data->Deanta = 6;
                     }
+                    
                     $data->Key = $key;
                     $data->UnderAttribute = $key;
                     $data->LeafType = $leafType;
@@ -3439,6 +3483,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->leaf_id = $request->id;
                         }
+                        
                         $selectedOption->selectedPrice = $leafPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -3458,8 +3503,7 @@ class OptionController extends Controller
                 $glassThickness = $request->glassThickness;
                 $glassPrice = $request->glassPrice;
                 $key = str_replace(' ', '_', $glassType);
-                if(!empty($config[0]) && !empty($firerating[0]) &&  !empty($integrity)  &&  !empty($glassType) && !empty($glassThickness)){
-
+                if (!empty($config[0]) && !empty($firerating[0]) &&  !empty($integrity)  &&  !empty($glassType) && !empty($glassThickness)) {
                     if(!empty($request->id)){
                         $data = GlassType::find($request->id);
                         if(!empty($request->selectId)){
@@ -3472,45 +3516,68 @@ class OptionController extends Controller
                         $data = new GlassType();
                         $selectedOption = new SelectedGlassType();
                     }
-                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-                    for($m = 0; $m < count($config); $m++){
+
+                    $data->Streboard = NULL;
+                    $data->Halspan = NULL;
+                    $data->NormaDoorCore = NULL;
+                    $data->VicaimaDoorCore = NULL;
+                    $data->Seadec = NULL;
+                    $data->Deanta = NULL;
+                    $data->Flamebreak = NULL;
+                    $data->Stredor = NULL;
+                    $counter = count($config);
+                    for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
+                        
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
+                        
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
+                        
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
+                        
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
+                        
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
+                        
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
+                        
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
                     }
-                    $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
-                    for($n = 0; $n < count($firerating); $n++){
+
+                    $data->NFR = NULL;
+                    $data->FD30 = NULL;
+                    $data->FD60 = NULL;
+                    $counter = count($firerating);
+                    for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
+                        
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
+                        
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
                     }
+
                     $glazingBeads = json_encode($request->glazingBeads);
                     $data->Key = $key;
                     $data->GlassType = $glassType;
@@ -3520,26 +3587,17 @@ class OptionController extends Controller
                     $data->GlazingBeads = $glazingBeads;
                     $data->EditBy = Auth::user()->id;
                     $data->save();
-
                     if(Auth::user()->id != 1){ //admin will not add selected price
                         $selectedOption->glass_id = $data->id;
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_id = $request->id;
                         }
+                        
                         $selectedOption->selectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
                     }
-                    if($request->glassTypeurl == 'leaf1_glass_type_custome'){
-                        $request->session()->flash('success',"Glass Type added successfully!");
-                        return redirect('options/selected/leaf1_glass_type_custome')->with('success', 'Glass Type added successfully!');
-                    }
-                    else{
-                        $request->session()->flash('success',"Glass Type added successfully!");
-                        return redirect('options/selected/leaf1_glass_type')->with('success', 'Glass Type added successfully!');
-                    }
 
-                }else{
                     if($request->glassTypeurl == 'leaf1_glass_type_custome'){
                         $request->session()->flash('success',"Glass Type added successfully!");
                         return redirect('options/selected/leaf1_glass_type_custome')->with('success', 'Glass Type added successfully!');
@@ -3548,6 +3606,12 @@ class OptionController extends Controller
                         $request->session()->flash('success',"Glass Type added successfully!");
                         return redirect('options/selected/leaf1_glass_type')->with('success', 'Glass Type added successfully!');
                     }
+                } elseif ($request->glassTypeurl == 'leaf1_glass_type_custome') {
+                    $request->session()->flash('success',"Glass Type added successfully!");
+                    return redirect('options/selected/leaf1_glass_type_custome')->with('success', 'Glass Type added successfully!');
+                } else{
+                    $request->session()->flash('success',"Glass Type added successfully!");
+                    return redirect('options/selected/leaf1_glass_type')->with('success', 'Glass Type added successfully!');
                 }
 
             break;
@@ -3571,41 +3635,54 @@ class OptionController extends Controller
                         //insert into selectedglazingsystem table
                         $selectedOption = new SelectedGlazingSystem();
                     }
+                    
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-                    for($m = 0; $m < count($config); $m++){
+                    $counter = count($config);
+                    for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
+                        
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
+                        
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
+                        
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
+                        
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
+                        
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
+                        
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
+                        
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
                     }
+                    
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
-                    for($n = 0; $n < count($firerating); $n++){
+                    $counter = count($firerating);
+                    for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
+                        
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
+                        
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -3624,10 +3701,12 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glazingId = $request->id;
                         }
+                        
                         $selectedOption->selectedPrice = $glazingPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
                     }
+                    
                     if($request->glassTypeurl == 'leaf1_glazing_systems_custome'){
                         $request->session()->flash('success',"Glazing System added successfully!");
                         return redirect('options/selected/leaf1_glazing_systems_custome')->with('success', 'Glazing System added successfully!');
@@ -3655,6 +3734,7 @@ class OptionController extends Controller
                         //insert data in glazing system table
                         $data = new GlassGlazingSystem();
                     }
+                    
                     $GlassTypeId = GlassType::where('status',1)->where('GlassType',$GlassType)->first();
                     $GlazingSystemId = GlazingSystem::where('status',1)->where('GlazingSystem',$glazingSystem)->first();
 
@@ -3697,26 +3777,34 @@ class OptionController extends Controller
                             //insert into SelectedIntumescentSealColor table
                             $selectedOption = new SelectedIntumescentSealColor();
                         }
+                        
                         $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-                        for($m = 0; $m < count($config); $m++){
+                        $counter = count($config);
+                        for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
                                 $data->Streboard = 1;
                             }
+                            
                             if($config[$m] == '2'){
                                 $data->Halspan = 2;
                             }
+                            
                             if($config[$m] == '3'){
                                 $data->NormaDoorCore = 3;
                             }
+                            
                              if($config[$m] == '5'){
                                 $data->Seadec = 5;
                             }
+                             
                             if($config[$m] == '6'){
                                 $data->Deanta = 6;
                             }
+                            
                             if($config[$m] == '7'){
                                 $data->Flamebreak = 7;
                             }
+                            
                             if($config[$m] == '8'){
                                 $data->Stredor = 8;
                             }
@@ -3732,6 +3820,7 @@ class OptionController extends Controller
                             if(empty($data->id) && empty($request->selectId)){
                                 $selectedOption->intumescentSealColorId = $request->id;
                             }
+                            
                             $selectedOption->selectedPrice = $IntumescentSealColorPrice;
                             $selectedOption->userId = Auth::user()->id;
                             $selectedOption->save();
@@ -3766,29 +3855,38 @@ class OptionController extends Controller
                             //insert into SelectedArchitraveType table
                             $selectedOption = new SelectedArchitraveType();
                         }
+                        
                         $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-                        for($m = 0; $m < count($config); $m++){
+                        $counter = count($config);
+                        for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
                                 $data->Streboard = 1;
                             }
+                            
                             if($config[$m] == '2'){
                                 $data->Halspan = 2;
                             }
+                            
                             if($config[$m] == '3'){
                                 $data->NormaDoorCore = 3;
                             }
+                            
                             if($config[$m] == '4'){
                                 $data->VicaimaDoorCore = 4;
                             }
+                            
                             if($config[$m] == '5'){
                                 $data->Seadec = 5;
                             }
+                            
                             if($config[$m] == '6'){
                                 $data->Deanta = 6;
                             }
+                            
                             if($config[$m] == '7'){
                                 $data->Flamebreak = 7;
                             }
+                            
                             if($config[$m] == '8'){
                                 $data->Stredor = 8;
                             }
@@ -3804,6 +3902,7 @@ class OptionController extends Controller
                             if(empty($data->id) && empty($request->selectId)){
                                 $selectedOption->architraveTypeId = $request->id;
                             }
+                            
                             $selectedOption->selectedPrice = $ArchitraveTypePrice;
                             $selectedOption->userId = Auth::user()->id;
                             $selectedOption->save();
@@ -3845,29 +3944,38 @@ class OptionController extends Controller
                         //insert into SelectedAccoustics table
                         $selectedOption = new SelectedAccoustics();
                     }
+                    
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-                    for($m = 0; $m < count($config); $m++){
+                    $counter = count($config);
+                    for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
+                        
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
+                        
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
+                        
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
+                        
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
+                        
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
+                        
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
+                        
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
@@ -3876,9 +3984,10 @@ class OptionController extends Controller
                     $data->Key = $key;
                     $data->UnderAttribute = $AccousticsOption;
                     $data->Accoustics = $AccousticsName;
-                    if(!empty($imageName)){
+                    if($imageName !== '' && $imageName !== '0'){
                         $data->file = $imageName;
                     }
+                    
                     $data->editBy = Auth::user()->id;
                     $data->save();
 
@@ -3887,10 +3996,12 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->accousticsId = $request->id;
                         }
+                        
                         $selectedOption->selectedPrice = $AccousticsPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
                     }
+                    
                     $request->session()->flash('success',"Accoustics added successfully!");
                     return redirect('options/selected/Accoustics')->with('success', 'Accoustics added successfully!');
                 }else{
@@ -3907,7 +4018,7 @@ class OptionController extends Controller
                 $DoorLeafFacingPrice = $request->DoorLeafFacingPrice;
                 $key = str_replace(' ', '_', $DoorLeafFacingName);
 
-                if( !empty($request->Streboard || $request->Halspan || $request->NormaDoorCore || $request->VicaimaDoorCore || $request->SeadecDoorCore || $request->deantaDoorCore || $request->Flamebreak || $request->Stredor) && !empty($DoorLeafOption)  &&  !empty($DoorLeafFacingName)){
+                if( ($request->Streboard || $request->Halspan || $request->NormaDoorCore || $request->VicaimaDoorCore || $request->SeadecDoorCore || $request->deantaDoorCore || $request->Flamebreak || $request->Stredor) && !empty($DoorLeafOption)  &&  !empty($DoorLeafFacingName)){
                     if(!empty($request->id)){
                         //update in DoorLeafFacing and SelectedDoorLeafFacing table
                         $data = DoorLeafFacing::find($request->id);
@@ -3923,30 +4034,38 @@ class OptionController extends Controller
                         //insert into SelectedDoorLeafFacing table
                         $selectedOption = new SelectedDoorLeafFacing();
                     }
+                    
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
 
-                    if(isset($request->Streboard)){
+                    if(property_exists($request, 'Streboard') && $request->Streboard !== null){
                         $data->Streboard = 1;
                     }
-                     if(isset($request->Halspan)){
+                    
+                     if(property_exists($request, 'Halspan') && $request->Halspan !== null){
                         $data->Halspan = 2;
                     }
-                    if(isset($request->NormaDoorCore)){
+                     
+                    if(property_exists($request, 'NormaDoorCore') && $request->NormaDoorCore !== null){
                         $data->NormaDoorCore = 3;
                     }
-                    if(isset($request->VicaimaDoorCore)){
+                    
+                    if(property_exists($request, 'VicaimaDoorCore') && $request->VicaimaDoorCore !== null){
                         $data->VicaimaDoorCore = 4;
                     }
-                    if(isset($request->SeadecDoorCore)){
+                    
+                    if(property_exists($request, 'SeadecDoorCore') && $request->SeadecDoorCore !== null){
                         $data->Seadec = 5;
                     }
-                    if(isset($request->deantaDoorCore)){
+                    
+                    if(property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null){
                         $data->Deanta = 6;
                     }
-                    if(isset($request->Flamebreak)){
+                    
+                    if(property_exists($request, 'Flamebreak') && $request->Flamebreak !== null){
                         $data->Flamebreak = 7;
                     }
-                    if(isset($request->Stredor)){
+                    
+                    if(property_exists($request, 'Stredor') && $request->Stredor !== null){
                         $data->Stredor = 8;
                     }
 
@@ -3961,6 +4080,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->doorLeafFacingId = $request->id;
                         }
+                        
                         $selectedOption->selectedPrice = $DoorLeafFacingPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
@@ -4002,6 +4122,7 @@ class OptionController extends Controller
                     if(!empty($request->DoorLeafFacingval)){
                         $data->DoorLeafFacingValue = $request->DoorLeafFacingval;
                     }
+                    
                     $data->Hex = $Hex;
                     $data->editBy = Auth::user()->id;
                     $data->save();
@@ -4010,6 +4131,7 @@ class OptionController extends Controller
                     if(empty($data->id) && empty($request->selectId)){
                         $selectedOption->SelectedColorId = $request->id;
                     }
+                    
                     $selectedOption->SelectedPrice = $colorPrice;
                     $selectedOption->DoorLeafFacingName = $DoorLeafFacing;
                     $selectedOption->SelectedUserId = Auth::user()->id;
@@ -4049,29 +4171,38 @@ class OptionController extends Controller
                         $data = new OverpanelGlassGlazing();
                         $selectedOption = new SelectedOverpanelGlassGlazing();
                     }
+                    
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;
-                    for($m = 0; $m < count($config); $m++){
+                    $counter = count($config);
+                    for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
+                        
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
+                        
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
+                        
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
                     }
+                    
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
-                    for($n = 0; $n < count($firerating); $n++){
+                    $counter = count($firerating);
+                    for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
+                        
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
+                        
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -4096,6 +4227,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_glazing_id = $request->id;
                         }
+                        
                         $selectedOption->glassSelectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4108,6 +4240,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/Overpanel_Glass_Type')->with('error', 'Something went wrong!');
                 }
+                
             break;
 
             case 'Overpanel_Glazing_System':
@@ -4121,40 +4254,45 @@ class OptionController extends Controller
                 $FixingDetails = $request->FixingDetails;
                 $key = str_replace(' ', '_', $GlassType);
                 if(!empty($config[0]) && !empty($firerating[0]) &&  !empty($GlazingSystem)){
-                    if(!empty($request->id)){
+                    if (!empty($request->id)) {
                         $data = OverpanelGlassGlazing::find($request->id);
                         if(!empty($request->selectId)){
                             $selectedOption = SelectedOverpanelGlassGlazing::find($request->selectId);
                         }else{
                             $selectedOption = new SelectedOverpanelGlassGlazing();
                         }
-
-                    }else{
-                        if($GlassType){
-                            $data = OverpanelGlassGlazing::where('key',$key)->first();
-                            $selectedOption = SelectedOverpanelGlassGlazing::where('glass_glazing_id',$data->id)->first();
-                        }
+                    } elseif ($GlassType) {
+                        $data = OverpanelGlassGlazing::where('key',$key)->first();
+                        $selectedOption = SelectedOverpanelGlassGlazing::where('glass_glazing_id',$data->id)->first();
                     }
+                    
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;
-                    for($m = 0; $m < count($config); $m++){
+                    $counter = count($config);
+                    for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
+                        
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
+                        
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
                     }
+                    
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
-                    for($n = 0; $n < count($firerating); $n++){
+                    $counter = count($firerating);
+                    for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
+                        
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
+                        
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -4176,6 +4314,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_glazing_id = $request->id;
                         }
+                        
                         $selectedOption->glazingSelectedPrice = $glazingPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4188,6 +4327,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/Overpanel_Glazing_System')->with('error', 'Something went wrong!');
                 }
+                
             break;
             case 'SideScreen_Glass_Type':
                 $GlassType = $request->GlassType;
@@ -4216,6 +4356,7 @@ class OptionController extends Controller
                         $data = new ScreenGlassType();
                         $selectedOption = new SelectedScreenGlass();
                     }
+                    
                     $data->GlassType = $GlassType;
                     $data->DFRating = $DFRating;
                     $data->FireRating = $FireRating;
@@ -4236,6 +4377,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_id = $request->id;
                         }
+                        
                         $selectedOption->glassSelectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4248,6 +4390,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/SideScreen_Glass_Type')->with('error', 'Something went wrong!');
                 }
+                
             break;
 
             case 'SideScreen_Glazing_System':
@@ -4262,20 +4405,18 @@ class OptionController extends Controller
                 $Beading = $request->Beading;
                 $key = str_replace(' ', '_', $GlassType);
                 if(!empty($GlazingSystem)){
-                    if(!empty($request->id)){
+                    if (!empty($request->id)) {
                         $data = ScreenGlazingType::find($request->id);
                         if(!empty($request->selectId)){
                             $selectedOption = SelectedScreenGlazing::find($request->selectId);
                         }else{
                             $selectedOption = new SelectedScreenGlazing();
                         }
-
-                    }else{
-                        if($GlassType){
-                            $data = new ScreenGlazingType();
-                            $selectedOption = new SelectedScreenGlazing();
-                        }
+                    } elseif ($GlassType) {
+                        $data = new ScreenGlazingType();
+                        $selectedOption = new SelectedScreenGlazing();
                     }
+                    
                     $data->FireRating = $FireRating;
                     $data->ScreenGlassId = $GlassType;
                     $data->GlazingThickness = $GlazingThickness;
@@ -4293,6 +4434,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glazing_id = $request->id;
                         }
+                        
                         $selectedOption->glazingSelectedPrice = $glazingPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4305,19 +4447,19 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/SideScreen_Glazing_System')->with('error', 'Something went wrong!');
                 }
+                
             break;
         }
+
+        return null;
 
     }
 
     public function filterGlazingSystem($optionType,$configurableItem)
     {
         $authdata = Auth::user();
-        if (Auth::user()->UserType == 2) {
-            $UserId = CompanyUsers();
-        } else {
-            $UserId = ['1'];
-        }
+        $UserId = Auth::user()->UserType == 2 ? CompanyUsers() : ['1'];
+        
         if($configurableItem == 'Halspan'){
             $doorValue = 2;
         }
@@ -4339,10 +4481,10 @@ class OptionController extends Controller
         $GlassType = GlassType::where('status',1)->where($configurableItem,$doorValue)->get();
         $GlazingSystem = GlazingSystem::where('status',1)->where($configurableItem,$doorValue)->get();
         $intumenseLeafType = IntumescentSealLeafType::where('status',1)->get();
-        return view('option/ChooseOptionNew', compact('optionType','tbl1','option_data','IntumescentSealsConfiguration','leaftype','leaftype2','GlassType','GlazingSystem','configurableItem','intumenseLeafType'));
+        return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'leaftype2' => $leaftype2, 'GlassType' => $GlassType, 'GlazingSystem' => $GlazingSystem, 'configurableItem' => $configurableItem, 'intumenseLeafType' => $intumenseLeafType]);
     }
 
-    public function selectOptionNew($optionType){
+    public function selectOptionNew(string $optionType){
 
         $authdata = Auth::user();
         $ConfigurableItems = ConfigurableItems::get();
@@ -4447,10 +4589,11 @@ class OptionController extends Controller
                 $tbl1 = SideScreen_Glazing_System($authdata,$optionType,$UserId);
 
         }
-        return view('option/ChooseOptionNew', compact('optionType','tbl1','option_data','IntumescentSealsConfiguration','leaftype','leaftype2','intumenseLeafType','GlassType','GlazingSystem','screenGlassType'));
+        
+        return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'leaftype2' => $leaftype2, 'intumenseLeafType' => $intumenseLeafType, 'GlassType' => $GlassType, 'GlazingSystem' => $GlazingSystem, 'screenGlassType' => $screenGlassType]);
     }
 
-    public function colorOptionNew($optionType,$colorType){
+    public function colorOptionNew(string $optionType,$colorType){
         $authdata = Auth::user();
         if (Auth::user()->UserType == 2) {
             $UserId = ['1', $authdata->id];
@@ -4459,6 +4602,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
+        
         $leaftype = GetOptions(['leaf_type.Status' => 1], "join","leaf_type");
         $IntumescentSealsConfiguration = SettingIntumescentSeals2::wherein('editBy', $UserId)->groupBy('configuration')->get();
         $intumenseLeafType = IntumescentSealLeafType::where('status',1)->get();
@@ -4470,15 +4614,13 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
+        
         $tbl1 = '';
-        switch ($optionType) {
-
-            case 'color_list';
-                $tbl1 = color($authdata,$optionType,$UserId,$colorType);
-            break;
-
+        if ($optionType === 'color_list') {
+            $tbl1 = color($authdata,$optionType,$UserId,$colorType);
         }
-        return view('option/ChooseOptionNew', compact('optionType','tbl1','colorType','option_data','IntumescentSealsConfiguration','leaftype','intumenseLeafType'));
+        
+        return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'colorType' => $colorType, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'intumenseLeafType' => $intumenseLeafType]);
     }
 
     public function getGlazingBeads(Request $request)
@@ -4527,12 +4669,13 @@ class OptionController extends Controller
         ->where('firerating', $firerating)
         ->where('OptionSlug', 'fan_light_glazing_beads')
         ->get();
-        return json_encode(array('status'=>'ok','data'=> $data));
+        return json_encode(['status'=>'ok','data'=> $data]);
     }
+    
     public function filterSideLightBeading(Request $request){
         $configurationDoor = $request->pageId;
         $firerating = fireRatingDoor($request->fireRating);
         $data = Option::where('configurableitems',$configurationDoor)->where('firerating',$firerating)->where('OptionSlug','side_light_glazing_beads')->get();
-        return json_encode(array('status'=>'ok','data'=> $data));
+        return json_encode(['status'=>'ok','data'=> $data]);
     }
 }

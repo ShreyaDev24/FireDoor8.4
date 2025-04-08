@@ -13,8 +13,9 @@ class tooltipController extends Controller
     public function tooltip()
     {
         $tooltip = Tooltip::first();
-        return view('Setting.tooltip',compact('tooltip'));
+        return view('Setting.tooltip',['tooltip' => $tooltip]);
     }
+    
     public function submittooltip(Request $request)
     {
         $update_val = $request->updval;
@@ -24,6 +25,7 @@ class tooltipController extends Controller
             $ee = new Tooltip;
             $ee->created_at = date('Y-m-d H:i:s'); 
         }
+        
         // Main Options
             $ee->leafConstruction = $request->leafConstruction;
             $ee->doorType = $request->doorType;

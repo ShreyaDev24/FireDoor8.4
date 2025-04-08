@@ -26,6 +26,7 @@ class OverRideParent
                 auth()->user()->id = $parent;
             }
         }
+        
         return $next($request);
     }
 }

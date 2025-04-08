@@ -23,9 +23,19 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -37,19 +47,21 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
         $vid = $this->vid;
 
         $result = BOMCAlculationExport($id,$vid);
-        $total = $GTSell = 0;
+        $total = 0;
+        $GTSell = 0;
 
         $j = 1;
         $total=0; $GTSellPrice=0; $Margin = 0;
         foreach($result['data'] as $value){
             if($value->Category != 'Ironmongery&MachiningCosts'){
-                $total = $total + $value->TotalCost;
-                $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
-                $Margin = $Margin + $value->Margin;
+                $total += $value->TotalCost;
+                $GTSellPrice += $value->GTSellPrice;
+                $Margin += $value->Margin;
             }
         }
+        
         $data = [];
-        $data[0] = array(
+        $data[0] = [
             'Ref',
             $result['quotation']['QuotationGenerationId'],
             '',
@@ -60,8 +72,8 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
             '',
             'Prepared By',
             $result['userName']
-        );
-        $data[1] = array(
+        ];
+        $data[1] = [
             'Revision',
             $result['data'][0]['VersionId'],
             'Date',
@@ -72,33 +84,33 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
             '',
             'Sales Contact',
             $result['quotation']['SalesContact']
-        );
-        $data[2] = array(
+        ];
+        $data[2] = [
             ''
-        );
-        $data[3] = array(
+        ];
+        $data[3] = [
             ''
-        );
-        $data[4] = array(
+        ];
+        $data[4] = [
             'Doorsets',
             $result['totDoorsetType'],
-        );
-        $data[5] = array(
+        ];
+        $data[5] = [
             'Ironmongery Sets',
             $result['totIronmongerySet'],
-        );
-        $data[6] = array(
+        ];
+        $data[6] = [
             'Total Cost',
             $total,
-        );
-        $data[7] = array(
+        ];
+        $data[7] = [
             'Calculated Sale Price',
             $GTSellPrice,
-        );
-        $data[8] = array(
+        ];
+        $data[8] = [
             'Any Prices OverRidden',
             '0',
-        );
+        ];
 
 
         $allData = [$data];
@@ -111,7 +123,7 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:N1';
                 $cellRange = 'A1:A9';
                 $styleArray = [

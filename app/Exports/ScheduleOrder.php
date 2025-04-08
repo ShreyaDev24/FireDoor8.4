@@ -20,9 +20,14 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid;
+    protected $id;
 
-    function __construct($id,$vid) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    public function __construct($id,$vid) {
         $this->id = $id;
         $this->vid = $vid;
     }
@@ -93,7 +98,7 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $Floor,
                 $DoorNumber,
@@ -146,10 +151,11 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                 $totalpriceperdoorset,
 
 
-            );
+            ];
             $i++;
             $j++;
         }
+        
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -168,6 +174,7 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -258,12 +265,13 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
 
 
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange = 'A10:AR10'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
@@ -290,22 +298,20 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                 $quotationId = $this->id;
                 $quotaion = Quotation::where('id',$quotationId)->first();
                 // $project = Project::first();
-                if(!empty($quotaion->ProjectId)){
-                    $project = Project::where('id',$quotaion->ProjectId)->first();
-                } else {
-                    $project = '';
-                }
+                $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
 
                 if(!empty($quotaion->MainContractorId)){
                     $customerContact = CustomerContact::where('MainContractorId',$quotaion->MainContractorId)->first();
                 } else {
                     $customerContact = '';
                 }
+                
                 $cust_FirstName = '';
                 $cust_LastName = '';
                 if(!empty($customerContact->FirstName)){
                     $cust_FirstName = $customerContact->FirstName;
                 }
+                
                 if(!empty($customerContact->LastName)){
                     $cust_LastName = $customerContact->LastName;
                 }
@@ -320,6 +326,7 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                     else{
                         $event->sheet->setCellValue('D1', '');
                     }
+                
                 $event->sheet->setCellValue('D2', $cust_FirstName.' '.$cust_LastName);
                 $event->sheet->setCellValue('D3', 'Sales Doorset Schedule');
                 $event->sheet->setCellValue('D4', $date);

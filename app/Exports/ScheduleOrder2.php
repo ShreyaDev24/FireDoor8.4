@@ -71,7 +71,7 @@ class ScheduleOrder2 implements FromCollection,WithHeadings,WithEvents
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $item[$i]->totalpriceperdoorset;
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $Floor,
                 $DoorNumber,
@@ -124,12 +124,14 @@ class ScheduleOrder2 implements FromCollection,WithHeadings,WithEvents
                 $totalpriceperdoorset,
 
                 $count
-            );
+            ];
             $i++;
             $j++;
         }
+        
         return collect($data);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -190,10 +192,11 @@ class ScheduleOrder2 implements FromCollection,WithHeadings,WithEvents
 
         return $a;
     }
+    
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange = 'A1:AS1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);

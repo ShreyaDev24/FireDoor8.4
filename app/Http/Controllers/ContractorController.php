@@ -117,10 +117,11 @@ class ContractorController extends Controller
             } else {
                 $tbl .= '<td colspan="5">No record found.</td>';
             }
+            
             $tbl .= '</tr>';
         }
 
-        return view('Contractor.ContractorList', compact('tbl'));
+        return view('Contractor.ContractorList', ['tbl' => $tbl]);
     }
 
 
@@ -129,15 +130,15 @@ class ContractorController extends Controller
     {
 
         if (!empty($request->CstCompanyName) && !empty($request->CstCompanyEmail) && !empty($request->CstCompanyPhone) && !empty($request->CstCompanyAddressLine1) && !empty($request->CstCompanyCity) && !empty($request->CstCompanyState) && !empty($request->CstCompanyCountry) && !empty($request->CstCompanyPostalCode) && !empty($request->FirstName[0]) && !empty($request->LastName[0]) && !empty($request->ContactEmail[0]) && !empty($request->ContactJobTitle[0]) && !empty($request->ContactPhone[0]) && !empty($request->count[0])) {
-
-            for($x = 0; $x < count($request->count); $x++){
+            $counter = count($request->count);
+            for($x = 0; $x < $counter; $x++){
                 if(empty($request->FirstName[$x]) || empty($request->LastName[$x]) || empty($request->ContactEmail[$x]) || empty($request->ContactJobTitle[$x]) || empty($request->ContactPhone[$x])){
                     $request->session()->flash('contacterror', 'Please fill required field!');
                     return redirect()->back();
                 }
             }
 
-            if (isset($request->update)) {
+            if (property_exists($request, 'update') && $request->update !== null) {
                 $data = Customer::find($request->update);
                 $user = User::where('id', $data->UserId)->first();
             } else {
@@ -167,7 +168,7 @@ class ContractorController extends Controller
             $user->CreatedBy = Auth::user()->id;
             $user->UserEmail = $request->CstCompanyEmail;
             if (Auth::user()->UserType != '5') {
-                $password = rand(10000, 100000);
+                $password = random_int(10000, 100000);
                 $user->password = Hash::make($password);
                 if ($request->sendMail == 1) {
                     $emailTo = $request->CstCompanyEmail;
@@ -178,10 +179,10 @@ class ContractorController extends Controller
 
                     ini_set('display_errors', 1);
                     try {
-                        Mail::send(['html' => 'Mail.Password'], $data_set, function ($message) use (&$emailTo, &$subject, &$emailFrom) {
+                        Mail::send(['html' => 'Mail.Password'], $data_set, function ($message) use (&$emailTo, &$subject, &$emailFrom): void {
 
                             $message->to($emailTo, $emailTo)->subject($subject);
-                            if ($emailFrom) {
+                            if ($emailFrom !== '') {
                                 $message->from($emailFrom, $emailFrom);
                             }
                         });
@@ -190,9 +191,9 @@ class ContractorController extends Controller
                     }
                 }
             }
+
             $user->save();
             // sending_mail_credential($user->UserEmail, $request->password);
-
             if ($request->hasFile('CstCompanyPhoto')) {
                 $file = $request->file('CstCompanyPhoto');
                 $name = time() . $file->getClientOriginalName();
@@ -221,10 +222,8 @@ class ContractorController extends Controller
             $data->CstSiteCountry = $request->CstSiteCountry;
             $data->CstSitePostalCode = $request->CstSitePostalCode;
             $data->CstMoreInfo = $request->CstMoreInfo;
-
             $data->CstLat = $request->CstLat;
             $data->CstLong = $request->CstLong;
-
             if ($request->CstCertification != null) {
                 $data->CstCertification = implode(",", $request->CstCertification);
             }
@@ -244,16 +243,16 @@ class ContractorController extends Controller
             $data->CstDeliveryPaymentType = $request->CstDeliveryPaymentType;
             $data->CstDeliveryPaymentType = $request->CstDeliveryPaymentType;
             $data->UserId = $user->id;
-
             $data->save();
-
             if (!empty($request->FirstName)) {
-                for ($i = 0; $i < count($request->FirstName); $i++) {
+                $counter = count($request->FirstName);
+                for ($i = 0; $i < $counter; $i++) {
                     if ($request->Id[$i] > 0) {
                         $contractor_contact = CustomerContact::find($request->Id[$i]);
                     } else {
                         $contractor_contact = new CustomerContact();
                     }
+                    
                     if (!empty($request->FirstName[$i]) || !empty($request->LastName[$i]) || !empty($request->ContactEmail[$i]) || !empty($request->ContactJobTitle[$i]) || !empty($request->ContactPhone[$i])) {
                         $contractor_contact->FirstName = $request->FirstName[$i];
                         $contractor_contact->LastName = $request->LastName[$i];
@@ -269,9 +268,6 @@ class ContractorController extends Controller
             } else {
                 $request->session()->flash('error', "Please Fill Company's Other Contact");
             }
-
-
-
 
             $request->session()->flash('success', 'Contractor Added Successfully');
             if (Auth::user()->UserType == '5') {
@@ -294,9 +290,9 @@ class ContractorController extends Controller
             if (isset($id)) {
                 $data = Customer::where('id', $id)->first();
                 $customer_contact = CustomerContact::where('MainContractorId', $data->id)->get();
-                if (!empty($data) && count((array)$data) > 0) {
+                if (!empty($data) && (array)$data !== []) {
                     $data['auth'] = Auth::user()->UserType;
-                    return view('Contractor.ContractorDetails', compact('data', 'customer_contact'));
+                    return view('Contractor.ContractorDetails', ['data' => $data, 'customer_contact' => $customer_contact]);
                 } else {
                     return redirect('contractor/details');
                 }
@@ -304,6 +300,8 @@ class ContractorController extends Controller
                 return redirect('contractor/details');
             }
         }
+
+        return null;
     }
 
 
@@ -314,20 +312,15 @@ class ContractorController extends Controller
 
                 $editdata = Customer::where('customers.id', $id)->first();
 
-                if (!empty($editdata) && count((array)$editdata) > 0) {
+                if (!empty($editdata) && (array)$editdata !== []) {
                     $DDvalue = explode(",", $editdata->CstCertification);
-
                     json_encode(in_array("LEED", $DDvalue));
-
                     $ContractorContactDetails = CustomerContact::where('MainContractorId', $id)->orderBy('id', 'asc')->get();
-
-                    return view('Contractor.AddContractor', compact('editdata', 'ContractorContactDetails'));
+                    return view('Contractor.AddContractor', ['editdata' => $editdata, 'ContractorContactDetails' => $ContractorContactDetails]);
+                } elseif (Auth::user()->UserType == '5') {
+                    return redirect()->route('contractor/profile');
                 } else {
-                    if (Auth::user()->UserType == '5') {
-                        return redirect()->route('contractor/profile');
-                    } else {
-                        return redirect()->route('contractor/list');
-                    }
+                    return redirect()->route('contractor/list');
                 }
             } else {
                 return redirect()->route('contractor/list');
@@ -343,21 +336,23 @@ class ContractorController extends Controller
 
             $editdata = Users::where('id', Auth::user()->id)->first();
 
-            if (!empty($editdata) && count((array)$editdata) > 0) {
+            if (!empty($editdata) && (array)$editdata !== []) {
 
                 $customer = Users::join('customers', 'customers.CstCompanyEmail', '=', 'users.UserEmail')->join('customer_contacts', 'customer_contacts.MainContractorId', '=', 'customers.id')->where('users.id', Auth::user()->id)->where('customers.UserId', Auth::user()->id)->select('customers.*')->get()->first();
 
                 $data = Customer::where('id', $customer->id)->first();
                 $customer_contact = CustomerContact::where('MainContractorId', $data->id)->get();
 
-                if (!empty($data) && count((array)$data) > 0) {
+                if (!empty($data) && (array)$data !== []) {
                     $data['auth'] = Auth::user()->UserType;
-                    return view('Contractor.ContractorDetails', compact('data', 'customer_contact'));
+                    return view('Contractor.ContractorDetails', ['data' => $data, 'customer_contact' => $customer_contact]);
                 } else {
                     return redirect('contractor/details');
                 }
             }
         }
+
+        return null;
     }
 
     public function deleteContractor(Request $request)
@@ -370,9 +365,12 @@ class ContractorController extends Controller
             foreach ($CustomerContact as $val) {
                 CustomerContact::where('id', $val->id)->delete();
             }
+            
             $Customer->delete();
             $Users->delete();
             return redirect()->back()->with('successed', 'The Main Contractor deleted successfully!');
         }
+
+        return null;
     }
 }

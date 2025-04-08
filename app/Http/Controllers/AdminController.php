@@ -38,7 +38,7 @@ class AdminController extends Controller
 
     public function store(request $request)
     {
-        if (isset($request->update)) {
+        if (property_exists($request, 'update') && $request->update !== null) {
             $user = User::where('id', $request->update)->first();
             $flash = "updated";
         } else {
@@ -81,16 +81,16 @@ class AdminController extends Controller
             $user->UserJobtitle = $request->UserJobtitle;
             $user->CreatedBy = Auth::user()->id;
             $user->UserType = 2;
-            $user->parent_id = Auth::user()->parent_id ? Auth::user()->parent_id : Auth::user()->CreatedBy;
+            $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
 
             // $user->CreatedBy = Auth::user()->id;
-            if (!isset($request->update)) {
+            if (!property_exists($request, 'update') || $request->update === null) {
                 if($_SERVER['SERVER_NAME'] == '127.0.0.1'){
                     $password = '123456';
                     $user->password = Hash::make($password);
                 }else{
-                    $password = rand(100000,1000000);
+                    $password = random_int(100000,1000000);
                     $user->password = Hash::make($password);
                     $emailTo = $request->UserEmail;
                     $subject = 'Login Password';
@@ -100,10 +100,10 @@ class AdminController extends Controller
 
                     ini_set('display_errors', 1);
                     try{
-                        Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom) {
+                        Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
 
                             $message->to($emailTo, $emailTo)->subject($subject);
-                            if($emailFrom){
+                            if($emailFrom !== ''){
                                 $message->from($emailFrom, $emailFrom);
                             }
 
@@ -114,15 +114,17 @@ class AdminController extends Controller
                     }
                 }
             }
+            
             $user->save();
             // sending_mail_credential($user->UserEmail, $request->password);
-            if (!isset($request->update)) {
+            if (!property_exists($request, 'update') || $request->update === null) {
                 $comp = get_company_id(Auth::user()->id);
                 if($comp){
                     $val = $comp->id;
                 }else{
                     $val = DB::table('user_data')->where(['type'=>'company', 'user_id'=>Auth::user()->id])->first()->value;
                 }
+                
                 DB::table('user_data')->insert([
                     'user_id'=>$user->id,
                     'type' => 'company',
@@ -144,6 +146,7 @@ class AdminController extends Controller
                     ]);
                 }
             }
+            
             $request->session()->flash($flash, 'data');
             return redirect()->route('user/list');
         }else{
@@ -158,8 +161,10 @@ class AdminController extends Controller
         if (Auth::user()->UserType == '2') {
             $data = User::where('UserType', 2)->where('CreatedBy', Auth::user()->id)->orderBy('id', 'desc')->get();
 
-            return view('Admins.list', compact('data'));
+            return view('Admins.list', ['data' => $data]);
         }
+
+        return null;
     }
 
     public function details($id)
@@ -167,7 +172,7 @@ class AdminController extends Controller
         if (Auth::user()->UserType == '2') {
             if (isset($id)) {
                 $data = User::where('id', $id)->first();
-                return view('Admins.details', compact('data'));
+                return view('Admins.details', ['data' => $data]);
             } else {
                 return redirect()->route('user/list');
             }
@@ -181,7 +186,7 @@ class AdminController extends Controller
         if (Auth::user()->UserType == '2') {
             if (isset($id)) {
                 $editdata = User::where('id', $id)->first();
-                return view('Admins.add', compact('editdata'));
+                return view('Admins.add', ['editdata' => $editdata]);
             } else {
                 return redirect()->route('user/list');
             }
@@ -193,9 +198,9 @@ class AdminController extends Controller
     public function delete(request $request){
 
         if (Auth::user()->UserType == '2') {
-            if (isset($request->id)) {
+            if (property_exists($request, 'id') && $request->id !== null) {
                 User::where('id', $request->id)->delete();
-                return json_encode(array("status" => "ok", "msg" => "Admin Deleted!"));
+                return json_encode(["status" => "ok", "msg" => "Admin Deleted!"]);
 
             } else {
                 return redirect()->route('user/list');

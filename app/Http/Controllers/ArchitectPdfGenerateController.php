@@ -71,11 +71,8 @@ class ArchitectPdfGenerateController extends Controller
             $configurationItem = $quotaion->configurableitems;
         }
 
-        if(!empty($quotaion->ProjectId)){
-            $project = Project::where('id',$quotaion->ProjectId)->first();
-        } else {
-            $project = '';
-        }
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
+        
         $pdf_footer = SettingPDFfooter::where('UserId',$id)->first();
 
         $SalesContact = 'N/A';
@@ -110,24 +107,16 @@ class ArchitectPdfGenerateController extends Controller
                 $frameMaterial = $species->SpeciesName;
                 $GlazingBeadSpecies = $species->SpeciesName;
 
-            } else  {
-                if(!empty($tt->FrameMaterial)){
-                    $frameMaterial = $tt->FrameMaterial;
-                } else {
-                    $frameMaterial = 'N/A';
-                }
-                $GlazingBeadSpecies = 'N/A';
+            } else {
+                $frameMaterial = empty($tt->FrameMaterial) ? 'N/A' : $tt->FrameMaterial;
 
+                $GlazingBeadSpecies = 'N/A';
             }
 
             // Overpanel/Fanlight Section :- OP Glazing Bead Species
             $OPspecies = LippingSpecies::where('id',$tt->OPGlazingBeadSpecies)->first();
 
-            if($OPspecies != ''){
-                $OPGlazingBeadSpecies = $OPspecies->SpeciesName;
-            } else {
-                $OPGlazingBeadSpecies = 'N/A';
-            }
+            $OPGlazingBeadSpecies = $OPspecies != '' ? $OPspecies->SpeciesName : 'N/A';
 
 
             $DoorFrameImage = "";
@@ -147,6 +136,7 @@ class ArchitectPdfGenerateController extends Controller
                             $DoorFrameImage = Base64Image('FD30DoubleDoorsetwithVP');
                             break;
                     }
+                    
                     break;
                 case "FD60":
                     switch($tt->DoorsetType){
@@ -159,6 +149,7 @@ class ArchitectPdfGenerateController extends Controller
                             $DoorFrameImage = Base64Image('FD60DoubleDoorsetwithVP');
                             break;
                     }
+                    
                     break;
             }
 
@@ -196,7 +187,7 @@ class ArchitectPdfGenerateController extends Controller
                     case "FD60":
 
                         switch($GlazingSystems){
-                            case in_array($GlazingSystems,["Firestrip_60"]):
+                            case $GlazingSystems == "Firestrip_60":
                                 // $VisionPanelGlazingImage = "fd60/Firestrip 60.png";
                                 $VisionPanelGlazingImage = Base64Image('Firestrip60');
                                 break;
@@ -204,19 +195,19 @@ class ArchitectPdfGenerateController extends Controller
                                 // $VisionPanelGlazingImage = "fd60/Norsound Vision 60 & Norsound Universal 60.png";
                                 $VisionPanelGlazingImage = Base64Image('NorsoundVision60NorsoundUniversal60');
                                 break;
-                            case in_array($GlazingSystems,["Pyroglaze_60"]):
+                            case $GlazingSystems == "Pyroglaze_60":
                                 // $VisionPanelGlazingImage = "fd60/Pyroglaze 60.png";
                                 $VisionPanelGlazingImage = Base64Image('Pyroglaze60');
                                 break;
-                            case in_array($GlazingSystems,["ST105GT"]):
+                            case $GlazingSystems == "ST105GT":
                                 // $VisionPanelGlazingImage = "fd60/ST105GT.png";
                                 $VisionPanelGlazingImage = Base64Image('ST105GT');
                                 break;
-                            case in_array($GlazingSystems,["System_36_Plus"]):
+                            case $GlazingSystems == "System_36_Plus":
                                 // $VisionPanelGlazingImage = "fd60/System 36 plus.png";
                                 $VisionPanelGlazingImage = Base64Image('System36plus');
                                 break;
-                            case in_array($GlazingSystems,["System_63"]):
+                            case $GlazingSystems == "System_63":
                                 // $VisionPanelGlazingImage = "fd60/System 63.png";
                                 $VisionPanelGlazingImage = Base64Image('System63');
                                 break;
@@ -238,28 +229,28 @@ class ArchitectPdfGenerateController extends Controller
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
 
             }
+            
             $ProjectName = null;
             if(!empty($project->ProjectName)){
                 $ProjectName = $project->ProjectName;
             }
+            
             if(!empty($version)) {
                 $version = $version;
             }
+            
             $CompanyAddressLine1 = null;
             if(!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
+            
             $Username = null;
             if(!empty($user->FirstName) && !empty($user->LastName)){
                 $Username = $user->FirstName.' '.$user->LastName;
             }
 
-            if(!empty($tt->SvgImage)){
-                if(strpos($tt->SvgImage,'.png') !== false){
-                    $svgFile = URL('/').'/uploads/files/'.$tt->SvgImage;
-                }else{
-                    $svgFile = $tt->SvgImage;
-                }
+            if (!empty($tt->SvgImage)) {
+                $svgFile = strpos($tt->SvgImage,'.png') !== false ? URL('/').'/uploads/files/'.$tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFile = URL('/').'/uploads/files/door.jpg';
             }
@@ -367,11 +358,7 @@ class ArchitectPdfGenerateController extends Controller
             }
 
 
-           if($tt->Leaf1VisionPanel == "Yes"){
-               $IsLeafEnabled = 'style="width:70%;"';
-           }else{
-               $IsLeafEnabled = 'colspan="2"';
-           }
+           $IsLeafEnabled = $tt->Leaf1VisionPanel == "Yes" ? 'style="width:70%;"' : 'colspan="2"';
 
            $elevTbl .= '<td '. $IsLeafEnabled .'>
                <div class="doorImgBox">
@@ -381,36 +368,29 @@ class ArchitectPdfGenerateController extends Controller
            </td>
         </tr>';
         // return $elevTbl;
-            if($tt->Leaf1VisionPanel == "Yes"){
-                if(isset($DoorFrameImage)):
+            if ($tt->Leaf1VisionPanel == "Yes" && isset($DoorFrameImage)) {
+                $FrameMaterial = 'N/A';
+                if (!empty($tt->FrameMaterial) && !in_array($tt->FrameMaterial,["MDF","Softwood","Hardwood"])) {
+                    $SelectedFrameMaterial = LippingSpecies::find($tt->FrameMaterial);
+                    if($SelectedFrameMaterial != null){
+                        $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
 
-                    $FrameMaterial = 'N/A';
+                        $FrameMaterial .= "<br>-".(($SelectedFrameMaterial->MinValue > 0)?$SelectedFrameMaterial->MinValue."x":"").$SelectedFrameMaterial->MaxValues." Kg/m3";
 
-                    if(!empty($tt->FrameMaterial)){
-                        if(!in_array($tt->FrameMaterial,["MDF","Softwood","Hardwood"])){
-                                $SelectedFrameMaterial = LippingSpecies::find($tt->FrameMaterial);
-
-                                if($SelectedFrameMaterial != null){
-                                    $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
-
-                                    $FrameMaterial .= "<br>-".(($SelectedFrameMaterial->MinValue > 0)?$SelectedFrameMaterial->MinValue."x":"").$SelectedFrameMaterial->MaxValues." Kg/m3";
-
-                                }else{
-                                    $SelectedFrameMaterial = LippingSpecies::where("SpeciesName",$tt->FrameMaterial)->first();
-                                    if($SelectedFrameMaterial != null){
-                                        $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
-                                        $FrameMaterial .= "<br>-".(($SelectedFrameMaterial->MinValue > 0)?$SelectedFrameMaterial->MinValue."x":"").$SelectedFrameMaterial->MaxValues." Kg/m3";
-                                    }
-                                }
+                    }else{
+                        $SelectedFrameMaterial = LippingSpecies::where("SpeciesName",$tt->FrameMaterial)->first();
+                        if($SelectedFrameMaterial != null){
+                            $FrameMaterial = $SelectedFrameMaterial->SpeciesName;
+                            $FrameMaterial .= "<br>-".(($SelectedFrameMaterial->MinValue > 0)?$SelectedFrameMaterial->MinValue."x":"").$SelectedFrameMaterial->MaxValues." Kg/m3";
                         }
                     }
+                }
 
-                    $maxIN = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
+                $maxIN = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
+                switch($tt->DoorsetType){
 
-                    switch($tt->DoorsetType){
-
-                        case "SD":
-                            $elevTbl .= '<tr>
+                    case "SD":
+                        $elevTbl .= '<tr>
                                     <td colspan="2" style="">
                                         <p class="frame_sd_t1">-'.$FrameMaterial.'</p>
                                         <p class="frame_sd_t2">-'.$ConfigurableItems.'<br>-'.$tt->LeafThickness.'mm</p>
@@ -425,10 +405,10 @@ class ArchitectPdfGenerateController extends Controller
                                     </td>
                                 </tr>';
 
-                            break;
+                        break;
 
-                        case "DD":
-                            $elevTbl .= '<tr>
+                    case "DD":
+                        $elevTbl .= '<tr>
                                     <td colspan="2" style="">
                                         <p class="frame_dd_t1">-'.$FrameMaterial.'</p>
                                         <p class="frame_dd_t2">-'.$ConfigurableItems.'<br>-'.$tt->LeafThickness.'mm</p>
@@ -444,10 +424,9 @@ class ArchitectPdfGenerateController extends Controller
                                         '.$DoorFrameImage.'
                                     </td>
                                 </tr>';
-                            break;
+                        break;
 
-                    }
-                endif;
+                }
             }
 
 
@@ -455,18 +434,19 @@ class ArchitectPdfGenerateController extends Controller
             if(!empty($tt->ExtLinerValue)){
                 $ExtLinerValue = $tt->ExtLinerValue;
             }
+            
             $ExtLinerThickness = '';
             if(!empty($tt->ExtLinerThickness)){
                 $ExtLinerThickness = $tt->ExtLinerThickness."mm";
             }
 
-            if(empty($ExtLinerValue) && empty($ExtLinerThickness)){
+            if (empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = "N/A";
-            } else if(empty($ExtLinerValue) && !empty($ExtLinerThickness)){
+            } elseif (empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
                 $ExtLinerSizeForDoorDetailsTable = 'N/A x '.$ExtLinerThickness;
-            } else if(!empty($ExtLinerValue) && empty($ExtLinerThickness)){
+            } elseif (!empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = $ExtLinerValue.' x N/A';
-            } else if(!empty($ExtLinerValue) && !empty($ExtLinerThickness)){
+            } elseif (!empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
                 $ExtLinerSizeForDoorDetailsTable = $ExtLinerValue.' x '.$ExtLinerThickness;
             }
 
@@ -491,11 +471,7 @@ class ArchitectPdfGenerateController extends Controller
             $DoorLeafFinish = "N/A";
             if(!empty($tt->DoorLeafFinish)){
                 $dlf = DoorLeafFinish($configurationItem,$tt->DoorLeafFinish);
-                if(!empty($tt->SheenLevel)){
-                    $DoorLeafFinish = $dlf.' - '.$tt->SheenLevel.' Sheen';
-                } else {
-                    $DoorLeafFinish = $dlf;
-                }
+                $DoorLeafFinish = empty($tt->SheenLevel) ? $dlf : $dlf.' - '.$tt->SheenLevel.' Sheen';
             }
 
             $DoorLeafFinishColor = '';
@@ -533,10 +509,12 @@ class ArchitectPdfGenerateController extends Controller
             if(!empty($tt->GlassType)){
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem,$tt->FireRating,$tt->GlassType,$tt->GlassThickness);
             }
+            
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if(!empty($tt->OPGlassType)){
                 $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem,$tt->FireRating,$tt->OPGlassType);
             }
+            
             $ArchitraveFinishForDoorDetailsTable = "N/A";
             if(!empty($tt->ArchitraveFinish)){
                 $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem,$tt->ArchitraveFinish,$tt->FrameFinishColor);
@@ -551,6 +529,7 @@ class ArchitectPdfGenerateController extends Controller
                 ->where("OptionKey",$tt->GlassIntegrity)->first();
                 $GlassIntegrity = $gi->OptionValue;
             }
+            
             $OPGlazingBeads = 'N/A';
             if(!empty($tt->OPGlazingBeads)){
                 $opgb = Option::where("configurableitems",$configurationItem)
@@ -559,6 +538,7 @@ class ArchitectPdfGenerateController extends Controller
                 ->where("OptionKey",$tt->OPGlazingBeads)->first();
                 $OPGlazingBeads = $opgb->OptionValue;
             }
+            
             $SLBeadingType = 'N/A';
             if(!empty($tt->BeadingType)){
                 $bt = Option::where("configurableitems",$configurationItem)
@@ -574,10 +554,11 @@ class ArchitectPdfGenerateController extends Controller
                 ->where('OptionSlug','leaf1_glazing_systems')->first();
                 $glazingSystems = $gs->OptionValue;
             }
+            
             if($tt->SwingType==''){
-            if($tt->SwingType == 'SA'){
+            if ($tt->SwingType == 'SA') {
                 $SwingType = 'Single Acting';
-            } else if($tt->SwingType == 'DA') {
+            } elseif ($tt->SwingType == 'DA') {
                 $SwingType = 'Double Acting';
             }
         }
@@ -586,65 +567,38 @@ class ArchitectPdfGenerateController extends Controller
         }
 
             // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
-            if(!empty($tt->DecorativeGroves)){
-                if(!empty($tt->GrooveWidth)){
-                    $GrooveWidth = $tt->GrooveWidth .'mm wide';
-                } else {
-                    $GrooveWidth = 'N/A';
-                }
-                if(!empty($tt->GrooveDepth)){
-                    $GrooveDepth = $tt->GrooveDepth .'mm deep';
-                } else {
-                    $GrooveDepth = 'N/A';
-                }
-                if(empty($tt->GrooveWidth) && empty($tt->GrooveDepth)){
-                    $DecorativeGroves = 'N/A';
-                } else {
-                    $DecorativeGroves = $GrooveWidth .' x '. $GrooveDepth;
-                }
+            if (!empty($tt->DecorativeGroves)) {
+                $GrooveWidth = empty($tt->GrooveWidth) ? 'N/A' : $tt->GrooveWidth .'mm wide';
+
+                $GrooveDepth = empty($tt->GrooveDepth) ? 'N/A' : $tt->GrooveDepth .'mm deep';
+
+                $DecorativeGroves = empty($tt->GrooveWidth) && empty($tt->GrooveDepth) ? 'N/A' : $GrooveWidth .' x '. $GrooveDepth;
             } else {
                 $DecorativeGroves = 'N/A';
             }
 
-            if(!empty($tt->LeafWidth1)){
-                $leafWidth1 = $tt->LeafWidth1;
-            } else {
-                $leafWidth1 = 'N/A';
-            }
-            if(!empty($tt->LeafWidth2)){
-                $leafWidth2 = $tt->LeafWidth2;
-            } else {
-                $leafWidth2 = 'N/A';
-            }
-            if(!empty($tt->LeafHeight)){
-                $LeafHeight = $tt->LeafHeight;
-            } else {
-                $LeafHeight = 'N/A';
-            }
-            if(!empty($tt->LeafThickness)){
-                $LeafThickness = $tt->LeafThickness;
-            } else {
-                $LeafThickness = 'N/A';
-            }
-            if(!empty($tt->FrameDepth)){
-                $FrameDepth = $tt->FrameDepth;
-            } else {
-                $FrameDepth = 'N/A';
-            }
+            $leafWidth1 = empty($tt->LeafWidth1) ? 'N/A' : $tt->LeafWidth1;
+
+            $leafWidth2 = empty($tt->LeafWidth2) ? 'N/A' : $tt->LeafWidth2;
+
+            $LeafHeight = empty($tt->LeafHeight) ? 'N/A' : $tt->LeafHeight;
+
+            $LeafThickness = empty($tt->LeafThickness) ? 'N/A' : $tt->LeafThickness;
+
+            $FrameDepth = empty($tt->FrameDepth) ? 'N/A' : $tt->FrameDepth;
 
             if(!empty($tt->IronmongerySet)){
-                if($tt->IronmongerySet == 'No'){
+                if ($tt->IronmongerySet == 'No') {
                     $IronmongerySet = 'N/A';
+                } elseif (!empty($tt->IronmongeryID)) {
+                    $IronmongerySet = IronmongerySetName($tt->IronmongeryID);
                 } else {
-                    if(!empty($tt->IronmongeryID)){
-                        $IronmongerySet = IronmongerySetName($tt->IronmongeryID);
-                    } else {
-                        $IronmongerySet = 'N/A';
-                    }
+                    $IronmongerySet = 'N/A';
                 }
             } else {
                 $IronmongerySet = 'N/A';
             }
+            
             $rWdBRating = 'N/A';
             if(!empty($tt->rWdBRating)){
                 $rWdBRating = $tt->rWdBRating;
@@ -672,18 +626,22 @@ class ArchitectPdfGenerateController extends Controller
                     $ArchitraveMaterial = $ls->SpeciesName;
                 }
             }
+            
             $ArchitraveSetQty = 'N/A';
             if(!empty($tt->ArchitraveSetQty)){
                 $ArchitraveSetQty = $tt->ArchitraveSetQty;
             }
+            
             $ArchitraveWidth = 'N/A';
             if(!empty($tt->ArchitraveWidth)){
                 $ArchitraveWidth = $tt->ArchitraveWidth;
             }
+            
             $ArchitraveDepth = 'N/A';
             if(!empty($tt->ArchitraveDepth)){
                 $ArchitraveDepth = $tt->ArchitraveDepth;
             }
+            
             $ArchitraveHeight = 'N/A';
             if(!empty($tt->ArchitraveHeight)){
                 $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -1029,22 +987,22 @@ class ArchitectPdfGenerateController extends Controller
                 ];
 
                 foreach($val as $EDkey => $EDval){
-                    array_push($ElavationDetails["DoorName"],isset($EDval['doorNumber'])?$EDval['doorNumber']:'');
-                    array_push($ElavationDetails["Elevation"],isset($EDval['SvgImage'])?$EDval['SvgImage']:'');
-                    array_push($ElavationDetails["Plan"],"");
-                    array_push($ElavationDetails["Type"],isset($EDval['DoorType'])?$EDval['DoorType']:'');
-                    array_push($ElavationDetails["StructuralOpening"],$EDval['SOWidth'].'mm (w) X '.$EDval['SOHeight'].'(h)');
-                    array_push($ElavationDetails["DoorSize"],$EDval['SOWidth'].'mm (w) X '.$EDval['SOHeight'].'(h)');
-                    array_push($ElavationDetails["FireRating"],isset($EDval['FireRating'])?$EDval['FireRating']:'');
-                    array_push($ElavationDetails["Frame"],isset($EDval['FrameMaterial'])?$EDval['FrameMaterial']:'');
-                    array_push($ElavationDetails["VisionPanel"],isset($EDval['GlassIntegrity'])?$EDval['GlassIntegrity']:'');
-                    array_push($ElavationDetails["FinishColour"],isset($EDval['DoorLeafFinish'])?$EDval['DoorLeafFinish']:'');
-                    array_push($ElavationDetails["Quantity"],"");
-                    array_push($ElavationDetails["Notes"],"");
-                    array_push($ElavationDetails["NBSRef"],"");
+                    $ElavationDetails["DoorName"][] = $EDval['doorNumber'] ?? '';
+                    $ElavationDetails["Elevation"][] = $EDval['SvgImage'] ?? '';
+                    $ElavationDetails["Plan"][] = "";
+                    $ElavationDetails["Type"][] = $EDval['DoorType'] ?? '';
+                    $ElavationDetails["StructuralOpening"][] = $EDval['SOWidth'].'mm (w) X '.$EDval['SOHeight'].'(h)';
+                    $ElavationDetails["DoorSize"][] = $EDval['SOWidth'].'mm (w) X '.$EDval['SOHeight'].'(h)';
+                    $ElavationDetails["FireRating"][] = $EDval['FireRating'] ?? '';
+                    $ElavationDetails["Frame"][] = $EDval['FrameMaterial'] ?? '';
+                    $ElavationDetails["VisionPanel"][] = $EDval['GlassIntegrity'] ?? '';
+                    $ElavationDetails["FinishColour"][] = $EDval['DoorLeafFinish'] ?? '';
+                    $ElavationDetails["Quantity"][] = "";
+                    $ElavationDetails["Notes"][] = "";
+                    $ElavationDetails["NBSRef"][] = "";
                 }
 
-                array_push( $FinalElavationDetails,$ElavationDetails);
+                $FinalElavationDetails[] = $ElavationDetails;
             }
         }
 
@@ -1056,7 +1014,7 @@ class ArchitectPdfGenerateController extends Controller
         //    $pdf->save($path . '/' . $fileName);
 
 
-           $pdf2 = PDF::loadView('Quote.NewQuatation',compact('ed'));
+           $pdf2 = PDF::loadView('Quote.NewQuatation',['ed' => $ed]);
                 return $pdf2->stream('ArchitectQuotation.pdf');
            $path2 = public_path().'/pdf';
            $fileName2 = $id.'2' . '.' . 'pdf' ;

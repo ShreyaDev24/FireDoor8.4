@@ -18,6 +18,7 @@ class Items extends Model
     //     'ItemName','ItemPhoto','ItemStatus','ItemType',
     // ];
     protected $table = 'items';
+    
     // protected $fillable = [
     //     'LineNumber',
     //     'Floor',
@@ -203,6 +204,7 @@ class Items extends Model
         'QuotationId',
         'DoorScheduleId',
     ];
+    
     /**
      * The attributes that should be hidden for arrays.
      *

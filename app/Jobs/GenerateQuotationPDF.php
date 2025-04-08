@@ -17,8 +17,13 @@ use DB;
 
 class GenerateQuotationPDF implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    public  $quatationId, $versionID;
+    use Dispatchable;
+    use InteractsWithQueue;
+    use Queueable;
+    use SerializesModels;
+    public  $quatationId;
+
+    public  $versionID;
 
     /**
      * Create a new job instance.
@@ -37,7 +42,7 @@ class GenerateQuotationPDF implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(): void
     {
         // $id = $this->id;
         ini_set('memory_limit', '2048M');
@@ -69,13 +74,15 @@ class GenerateQuotationPDF implements ShouldQueue
                     if ($PageBreakCount < count($GetIronmongerySet)) {
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
+                    
                     $PageBreakCount++;
                 }
             }
         }
+        
         $fileName7 = '';
-        if(!empty($IronmongeryData)){
-            $pdf7 = PDF::loadView('Company.pdf_files.IronmongeryData', compact('IronmongeryData'));
+        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
+            $pdf7 = PDF::loadView('Company.pdf_files.IronmongeryData', ['IronmongeryData' => $IronmongeryData]);
             $path7 = public_path() . '/allpdfFile';
             $fileName7 = $id . '7' . '.' . 'pdf';
             // return $pdf7->download('IronmongeryData.pdf');
@@ -93,7 +100,7 @@ class GenerateQuotationPDF implements ShouldQueue
         $fileName8 = $id . '8' . '.' . 'pdf';
         $fileName5 = $id . '5' . '.' . 'pdf';
 
-        if(!empty($IronmongeryData)){
+        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
@@ -126,6 +133,7 @@ class GenerateQuotationPDF implements ShouldQueue
             foreach ($pdfFiles as $pdfFile) {
                 $pdfMerger->addPDF($pdfFile, 'all');
             }
+            
             $mergedFilePath = public_path() . '/allpdfFile/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);

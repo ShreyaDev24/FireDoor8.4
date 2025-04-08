@@ -15,9 +15,11 @@ class QuotationVersionItems extends Model
      * @var array
      */
     protected $table = 'quotation_version_items';
+    
     protected $fillable = [
         'QuotationId','itemID','Version','Status','IsDeleted',
     ];
+    
       /**
      * The attributes that should be hidden for arrays.
      *

@@ -17,6 +17,7 @@ class Color extends Authenticatable
      * @var array
      */
     protected $table = 'color';
+    
     protected $fillable = [
         'ColorName','RGB','Hex','EnglishName','status','UserId'
     ];

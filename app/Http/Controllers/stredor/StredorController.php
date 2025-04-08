@@ -118,6 +118,7 @@ class StredorController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
+                        
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -136,12 +137,13 @@ class StredorController extends Controller
     }else{
         $ids = Auth::user()->id;
     }
-    $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids) {
+    
+    $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'custom')
               ->where('UserId', $ids)
               ->where('projectId', $quotation->ProjectId);
     })
-    ->with(['defaultItems' => function ($query) use ($quotation,$ids) {
+    ->with(['defaultItems' => function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'custom')
               ->where('UserId', $ids)
               ->where('projectId', $quotation->ProjectId);
@@ -198,6 +200,7 @@ class StredorController extends Controller
         if ($item === null) {
             return abort(404);
         }
+        
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -252,6 +255,7 @@ class StredorController extends Controller
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
         }
+        
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -303,6 +307,7 @@ class StredorController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
+                        
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }

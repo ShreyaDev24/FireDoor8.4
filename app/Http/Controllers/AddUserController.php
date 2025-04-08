@@ -34,11 +34,12 @@ class AddUserController extends Controller
 
    	public function index(Request $data,$CompanyId,$UserId=null)
     {
-        $User=array();
+        $User=[];
         if(isset($UserId)){
             $UserId      =Crypt::decrypt($UserId);
             $User        =User::findorfail($UserId);
         }
+        
         $CompanyId=Crypt::decrypt($CompanyId);
         $Company=Company::findorfail($CompanyId);
     	if($data->has('UserEmail')){
@@ -59,11 +60,12 @@ class AddUserController extends Controller
             }else{
                 $data['UserPhotoName']=null;
             }
+            
     		$data= array_merge_recursive($data->all(),
-                                        array(
+                                        [
                                         'CompanyId'    =>$CompanyId,
                                         'UserId'       =>$UserId,
-    					                   )
+    					                   ]
                                         );
 
     		/* validating form data by calling validator method */
@@ -91,18 +93,21 @@ class AddUserController extends Controller
                 return redirect($url)->with('success' , 'User updated successfully');
             }
         }
+        
         if(isset($UserId)){
      	  return view('adduser',['company'=>$Company],['user'=>$User]);
         }
+        
         return view('adduser',['company'=>$Company]);
  	}
+       
  	/**
      * Get a validator for an incoming add user data.
      *
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
-    protected function validator(array $data,$UserId)
+    protected function validator(array $data,string $UserId)
     {
         return Validator::make($data, [
             'FirstName'     => 'required|string|max:255',
@@ -114,6 +119,7 @@ class AddUserController extends Controller
             'MoreInfo'      => 'nullable|string|max:500',
         ])->validate();
     }
+    
      /**
      * Create a new user instance.
      *

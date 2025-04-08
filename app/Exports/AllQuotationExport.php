@@ -17,7 +17,7 @@ class AllQuotationExport implements FromCollection,WithHeadings,WithMapping
     public function collection()
     {
         $UserId =  myCreatedUser();
-        $Quotations = Quotation::leftJoin("quotation_versions", function ($join) {
+        $Quotations = Quotation::leftJoin("quotation_versions", function ($join): void {
             $join->on("quotation.id", "quotation_versions.quotation_id")
                 ->orOn("quotation_versions.id", "=", "quotation.VersionId");
             })

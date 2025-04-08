@@ -33,10 +33,12 @@ class User extends Authenticatable
     public function Company(){
         return $this->belongsTo(Company::class,'UserId','id');
     }
+    
     public static function UserList($UserId){
         $user=User::where('id',$UserId)->get();
         return $user;
     }
+    
     public static function GetCompanyAdmin($UserId,$UserType){
         $user=User::where('id',$UserId)->where('UserType',$UserType)->first();
         return $user;

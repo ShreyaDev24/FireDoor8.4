@@ -18,8 +18,9 @@ class OMmanualSEttingController extends Controller
         $pdf1 = SettingOMmanualIntro::where('UserId',$id)->first();
         $pdf2 = SettingOMmanualArchIron::where('UserId',$id)->first();
         $pdf3 = SettingOMmanualDoorFurniture::where('UserId',$id)->first();
-        return view('Setting.settingOMmanual',compact('pdf1','pdf2','pdf3'));
+        return view('Setting.settingOMmanual',['pdf1' => $pdf1, 'pdf2' => $pdf2, 'pdf3' => $pdf3]);
     }
+    
     public function submitIntroductionPDF(Request $request)
     {
         $valid = $request->validate([
@@ -31,6 +32,7 @@ class OMmanualSEttingController extends Controller
         } else {
             $data = new SettingOMmanualIntro;
         }
+        
         $UserId = Auth::user()->id;
         if($request->hasFile('backgroundImage')){
             $this->validate( $request,[
@@ -47,12 +49,14 @@ class OMmanualSEttingController extends Controller
 
             $file->move($filepath,$name);
 
-            if(isset($request->update)){
+            if(property_exists($request, 'update') && $request->update !== null){
                 File::delete($filepath.$data->backgroundImage);
             }
+            
             $data->backgroundImagebase64 = $base64;
             $data->backgroundImage = $name;
         }
+        
         $data->UserId = $UserId;
         $data->content = $request->editor1;
         $data->created_at = date('Y-m-d H:i:s'); 
@@ -65,6 +69,7 @@ class OMmanualSEttingController extends Controller
             return redirect()->back()->with('success', 'Introduction PDF Format added successfully!');	
         }
     }
+    
     public function submitArchitecIronmon(Request $request)
     {
         $valid = $request->validate([
@@ -76,6 +81,7 @@ class OMmanualSEttingController extends Controller
         } else {
             $data = new SettingOMmanualArchIron;
         }
+        
         $UserId = Auth::user()->id;
         $data->UserId = $UserId;
         $data->content = $request->editor2;
@@ -101,6 +107,7 @@ class OMmanualSEttingController extends Controller
         } else {
             $data = new SettingOMmanualDoorFurniture;
         }
+        
         $UserId = Auth::user()->id;
         $data->UserId = $UserId;
         $data->content = $request->editor3;

@@ -23,9 +23,19 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -39,9 +49,11 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
             }
+            
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
+            
             $TransomQuantity = $value->TransomQuantity + 1;
             $MullionQuantity = $value->MullionQuantity + 1;
             $alphabet = range('A', 'D'); // For row labels (A, B, C)
@@ -80,15 +92,16 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                     if (isset($glassPaneMap[$glasspane])) {
                         $GlassPaneWidth = $value->{$glassPaneMap[$glasspane]['width']};
                         $GlassPaneHeight = $value->{$glassPaneMap[$glasspane]['height']};
-                    }else{
-                        $GlassPaneWidth = $GlassPaneHeight = 0;
+                    }else {
+                        $GlassPaneWidth = 0;
+                        $GlassPaneHeight = 0;
                     }
 
                     $screenQty = 1;
                     $Qty = 1;
                     $screenNumber = $value->screenNumber;
 
-                    $data[] = array(
+                    $data[] = [
                         $k,
                         $screenNumber,
                         $ScreenType,
@@ -101,9 +114,9 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                         $GlassPaneWidth,
                         $Qty,
                         $screenQty,
-                    );
+                    ];
                     $k++;
-                    $data[] = array(
+                    $data[] = [
                         $k,
                         $screenNumber,
                         $ScreenType,
@@ -116,7 +129,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                         $GlassPaneHeight,
                         $Qty,
                         $screenQty,
-                    );
+                    ];
                     $k++;
                 }
             }
@@ -130,6 +143,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -151,10 +165,11 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
         $d = [$b,$a];
         return $d;
     }
+    
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:L1';
                 $cellRange = 'A2:L2';
                 $styleArray = [

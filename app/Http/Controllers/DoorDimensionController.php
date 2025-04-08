@@ -23,11 +23,11 @@ class DoorDimensionController extends Controller
     public function index(){
         $editdata=DoorDimension::get();
         $option_data = Option::where('configurableitems',3)->get();
-        return view('DoorDimension.addDoorDimension' ,compact('editdata','option_data'));
+        return view('DoorDimension.addDoorDimension' ,['editdata' => $editdata, 'option_data' => $option_data]);
     }
 
     public function store(request $request){
-        if(isset($request->id)){
+        if(property_exists($request, 'id') && $request->id !== null){
             $dimensiondata = DoorDimension::find($request->id);
             $selectedOption = SelectedDoordimension::where('doordimension_id',$request->id)->where('doordimension_user_id',Auth::user()->id)->first();
         }else{
@@ -36,15 +36,14 @@ class DoorDimensionController extends Controller
             $dimensiondata = new DoorDimension();
             $selectedOption = new SelectedDoordimension();
         }
+        
         $doorCore = doorcorename($request->configurableitems);
-        if($request->configurableitems == 3){
-            if($request->hasFile('image')){
-                $file = $request->file('image');
-                $name = time().$file->getClientOriginalName();
-                $filepath = public_path('DoorDimension');
-                $file->move($filepath,$name);
-                $dimensiondata->image = $name;
-            }
+        if ($request->configurableitems == 3 && $request->hasFile('image')) {
+            $file = $request->file('image');
+            $name = time().$file->getClientOriginalName();
+            $filepath = public_path('DoorDimension');
+            $file->move($filepath,$name);
+            $dimensiondata->image = $name;
         }
 
         // if($request->configurableitems == 1 || $request->configurableitems == 2){
@@ -95,15 +94,17 @@ class DoorDimensionController extends Controller
     }
 
     }
+    
     public function storeCustome(request $request){
     // dd($request->all());
-        if(isset($request->id)){
+        if(property_exists($request, 'id') && $request->id !== null){
             $dimensiondata = DoorDimension::find($request->id);
             $selectedOption = SelectedDoordimension::where('doordimension_id',$request->id)->where('doordimension_user_id',Auth::user()->id)->first();
         }else{
             $dimensiondata = new DoorDimension();
             $selectedOption = new SelectedDoordimension();
         }
+        
         $prices = $request->input('prices');
         $pricesJson = json_encode($prices);
         $dimensiondata->configurableitems = $request->configurableitems;
@@ -153,14 +154,15 @@ class DoorDimensionController extends Controller
         }else{
             $UserId = ['1'];
         }
+        
         $doorDimension=DoorDimension::where('is_deleted', 0)->wherein('editBy',$UserId)->where('configurableitems',$pageId)->orderBy('id', 'DESC')->get();
-        return view('DoorDimension.DoorDimensionList',compact('doorDimension' ,'pageId'));
+        return view('DoorDimension.DoorDimensionList',['doorDimension' => $doorDimension, 'pageId' => $pageId]);
     }
 
     public function edit($id){
         $editdata=DoorDimension::where('id',$id)->first();
         $option_data = Option::where('configurableitems',3)->get();
-        return view('DoorDimension.addDoorDimension',compact('editdata','option_data'));
+        return view('DoorDimension.addDoorDimension',['editdata' => $editdata, 'option_data' => $option_data]);
 
     }
 

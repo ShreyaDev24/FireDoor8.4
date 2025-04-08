@@ -23,9 +23,19 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid,$result) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $result;
+
+    public function __construct($id,$vid,$result) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -34,21 +44,22 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
     public function collection()
     {
         $currency = $this->result['currency'];
-        $total = $GTSell = 0;
+        $total = 0;
+        $GTSell = 0;
 
         $j = 1;
         $data = [];
         foreach($this->result['data'] as $value){
             if($value->Category=='LeafSetBesPoke'){
-                $total = $total + $value->TotalCost;
-                $GTSell = $GTSell + $value->GTSellPrice;
+                $total += $value->TotalCost;
+                $GTSell += $value->GTSellPrice;
                 $words = explode("|", $value->Description);
-                $doortype = isset($words[0])? $words[0] : "";
-                $words1 = isset($words[1])? $words[1] : "";
-                $words2 = isset($words[2])? $words[2] : "";
-                $words3 = isset($words[3])? $words[3] : "";
-                $words4 = isset($words[4])? $words[4] : "";
-                $words5 = isset($words[5])? $words[5] : "";
+                $doortype = $words[0] ?? "";
+                $words1 = $words[1] ?? "";
+                $words2 = $words[2] ?? "";
+                $words3 = $words[3] ?? "";
+                $words4 = $words[4] ?? "";
+                $words5 = $words[5] ?? "";
                 $QuantityOfDoorTypes = $value->QuantityOfDoorTypes;
                 $Unit = $value->Unit;
                 $UnitCost = $value->UnitCost;
@@ -57,7 +68,7 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $GTSellPrice = $value->GTSellPrice;
                 $Margin = $value->Margin.'%';
 
-                $data[] = array(
+                $data[] = [
                     $j,
                     $doortype,
                     $words1,
@@ -72,7 +83,7 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $UnitPriceSell,
                     $GTSellPrice,
                     $Margin
-                );
+                ];
                 $j++;
             }
         }
@@ -85,6 +96,7 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return collect($allData);
     }
+    
     public function headings(): array
     {
         if($this->result['quotation']->configurableitems == 4 || $this->result['quotation']->configurableitems == 5 || $this->result['quotation']->configurableitems == 6 || $this->result['quotation']->configurableitems == 5){
@@ -124,17 +136,19 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
         foreach($this->result['data'] as $value){
             $MarginMarkup = $value->MarginMarkup;
         }
+        
         $b  = ['Door Details'];
 
         $d = [$b,$a];
         return $d;
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange1 = 'A1:N1';
                 $cellRange = 'A2:N2';
                 $styleArray = [

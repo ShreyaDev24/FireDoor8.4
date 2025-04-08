@@ -8,6 +8,7 @@ class Project extends Model
 {
 
     protected $table = 'project';
+    
     protected $fillable = [
         'ProjectName','UserId','Status'
     ];

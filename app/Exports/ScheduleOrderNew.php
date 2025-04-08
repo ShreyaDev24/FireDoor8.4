@@ -21,9 +21,14 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid;
+    protected $id;
 
-    function __construct($id,$vid) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    public function __construct($id,$vid) {
         $this->id = $id;
         $this->vid = $vid;
     }
@@ -290,7 +295,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $configurableitems,
                 $IntumescentLeafType,
@@ -489,10 +494,11 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $DoorsetPrice,
                 $IronmongaryPrice,
                 $totalpriceperdoorset
-            );
+            ];
             $i++;
             $j++;
         }
+        
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -514,6 +520,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -736,12 +743,13 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
 
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange = 'A1:GJ1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);

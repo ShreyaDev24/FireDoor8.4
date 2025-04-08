@@ -40,9 +40,10 @@ class ProjectController extends Controller
         $this->middleware(function ($request, $next) {
 
             $loginUser = auth()->user();
-            if (!in_array($loginUser->UserType, array("2", "3", "1", "4"))) {
+            if (!in_array($loginUser->UserType, ["2", "3", "1", "4"])) {
                 return redirect("/");
             }
+            
             return $next($request);
         });
     }
@@ -71,7 +72,7 @@ class ProjectController extends Controller
         switch ($loginUserType) {
             case '3':
                 $created_by_my_cmpny_admin_user = User::where('CreatedBy', Auth::user()->CreatedBy)->where('UserType', 3)->pluck('id')->toArray();
-                array_push($created_by_my_cmpny_admin_user, intval(Auth::user()->CreatedBy));
+                $created_by_my_cmpny_admin_user[] = intval(Auth::user()->CreatedBy);
                 $companykacustomer = Customer::join('users', 'users.id', 'customers.UserId')
                     ->whereIn('users.CreatedBy', $created_by_my_cmpny_admin_user)
                     ->orderBy('customers.id', 'desc')->get();
@@ -116,17 +117,18 @@ class ProjectController extends Controller
                         ['UserId', '=', $loginUserId]
                     ])->first();
             }
+            
             $projects = Project::where('GeneratedKey', $id)->first();
             $ProjectFiles = ProjectFiles::where('projectId', $projects->id)->get();
             $ProjectBuildingDetails = ProjectBuildingDetails::where('projectId', $projects->id)->get();
 
-            if (!empty($projects) && count((array)$projects) > 0) {
-                return view('Project.CreateProject', compact('projects', 'companykacustomer', 'ProjectFiles', 'currency', 'loginUserType', 'ProjectBuildingDetails', 'OptionsData'));
+            if (!empty($projects) && (array)$projects !== []) {
+                return view('Project.CreateProject', ['projects' => $projects, 'companykacustomer' => $companykacustomer, 'ProjectFiles' => $ProjectFiles, 'currency' => $currency, 'loginUserType' => $loginUserType, 'ProjectBuildingDetails' => $ProjectBuildingDetails, 'OptionsData' => $OptionsData]);
             } else {
                 return redirect()->route('project/list');
             }
         } else {
-            return view('Project.CreateProject', compact('projects', 'companykacustomer', 'ProjectFiles', 'currency', 'loginUserType', 'OptionsData'));
+            return view('Project.CreateProject', ['projects' => $projects, 'companykacustomer' => $companykacustomer, 'ProjectFiles' => $ProjectFiles, 'currency' => $currency, 'loginUserType' => $loginUserType, 'OptionsData' => $OptionsData]);
         }
     }
 
@@ -177,6 +179,7 @@ class ProjectController extends Controller
                             ['UserId', '=', $loginUserId]
                         ])->first();
                 }
+                
                 ProjectBuildingDetails::where('projectId', $project->id)->delete();
             } else {
                 $project = new Project();
@@ -193,8 +196,10 @@ class ProjectController extends Controller
                     $project->ProjectStatus = 'Created';
                     $project->ArchitectId = $get_architect_id->id;
                 }
+                
                 $project->created_at = date('Y-m-d H:i:s');
             }
+            
             if (!empty($project)) {
                 $returnTenderDate = date('Y-m-d', strtotime($request->returnTenderDate));
                 if ($request->hasFile('ProjectImage')) {
@@ -215,6 +220,7 @@ class ProjectController extends Controller
                         $project->ProjectImage = $ImageName;
                     }
                 }
+                
                 // if(Auth::user()->UserType=='4'){
                 //     customerId ==null;
                 // }
@@ -270,7 +276,8 @@ class ProjectController extends Controller
 
 
                 if ($request->building_type == 'House') {
-                    for ($i = 0; $i < count($request->houseType); $i++) {
+                    $counter = count($request->houseType);
+                    for ($i = 0; $i < $counter; $i++) {
                         $ProjectBuildingDetails = new ProjectBuildingDetails();
                         $ProjectBuildingDetails->projectId = $project->id;
                         $ProjectBuildingDetails->buildingType = $request->building_type;
@@ -298,16 +305,12 @@ class ProjectController extends Controller
                 foreach ($projectFilesArray as $projectFileIndex => $projectFileVal) {
                     $filename = preg_replace('/\s+/', '', $projectFileVal);
 
-                    if ($filename == 'BOQ(BillofQuantities)') {
-                        $altername = 'BOQ';
-                    } else {
-                        $altername = $filename;
-                    }
+                    $altername = $filename == 'BOQ(BillofQuantities)' ? 'BOQ' : $filename;
 
                     if ($request->hasfile($altername)) {
                         $i = 1;
                         foreach ($request->file($altername) as $file) {
-                            $name = rand(1000, 10000) . '_' . $file->getClientOriginalName();
+                            $name = random_int(1000, 10000) . '_' . $file->getClientOriginalName();
                             $file->move(public_path() . '/uploads/Project/', $name);
                             $projectfiles = new ProjectFiles();
                             $projectfiles->projectId = $project->id;
@@ -348,8 +351,9 @@ class ProjectController extends Controller
             $projects = Project::where('GeneratedKey', $id)->first();
             $quotationToTheseProject = Quotation::whereNull('ProjectId')->where(['CustomerId' => $projects->customerId])->orderBy('id', 'desc')->get();
         }
-        if (!empty($projects) && count((array)$projects) > 0) {
-            return view('DoorSchedule.AddQuotation', compact('quotationWithNoProject', 'quotationToTheseProject', 'projects', 'customer'));
+        
+        if (!empty($projects) && (array)$projects !== []) {
+            return view('DoorSchedule.AddQuotation', ['quotationWithNoProject' => $quotationWithNoProject, 'quotationToTheseProject' => $quotationToTheseProject, 'projects' => $projects, 'customer' => $customer]);
         } else {
             return redirect()->route('project/create');
         }
@@ -363,10 +367,10 @@ class ProjectController extends Controller
 
         $data = Project::leftJoin('quotation', 'quotation.ProjectId', 'project.id')->leftJoin('companies', 'companies.id', 'quotation.CompanyId')->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')->where('project.GeneratedKey', $id)->get();
 
-        return view('Project.ProjectQuotationList', compact('data'));
+        return view('Project.ProjectQuotationList', ['data' => $data]);
     }
 
-    public function quotationListAjax(request $request)
+    public function quotationListAjax(request $request): void
     {
 
         //echo $request->ajaxCall;die;
@@ -384,10 +388,12 @@ class ProjectController extends Controller
             if ($request->filters == "") {
                 $filters = [];
             }
+            
             for ($i = 0; $i <= count($filters) - 1; $i++) {
 
                 $filters[$i] = [$filters[$i][0], $filters[$i][1], $filters[$i][2]];
             }
+            
             $orders = $request->orders;
             $column = $orders[0]["column"];
             $dir = $orders[0]["dir"];
@@ -395,27 +401,27 @@ class ProjectController extends Controller
 
 
         //        $data = Project::leftJoin('quotation','quotation.ProjectId','project.id')->leftJoin('companies','companies.id','quotation.CompanyId')->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')->where('project.GeneratedKey',$id)->get();
-        $data = Project::leftJoin('quotation', 'quotation.ProjectId', 'project.id')->leftJoin('companies', 'companies.id', 'quotation.CompanyId')->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')->where($filters)->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+        $data = Project::leftJoin('quotation', 'quotation.ProjectId', 'project.id')->leftJoin('companies', 'companies.id', 'quotation.CompanyId')->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')->where($filters)->skip($from)->take($limit)->orderBy($column, $dir)->get();
 
 
 
-        if (count((array)$data->toArray()) > 0) {
+        if ((array)$data->toArray() !== []) {
 
-            $htmlData = View::make('Project.Ajax.ProjectQuotationListAjax', compact('data'))->render();
+            $htmlData = View::make('Project.Ajax.ProjectQuotationListAjax', ['data' => $data])->render();
 
-            ms(array(
+            ms([
                 'st' => "1",
                 'txt' => 'data found.',
                 'total' => count((array)$data),
                 'html' => $htmlData,
-            ));
+            ]);
         } else {
-            ms(array(
+            ms([
                 'st' => "0",
                 'txt' => 'data not found.',
                 'total' => count((array)$data),
                 'html' => "",
-            ));
+            ]);
         }
     }
 
@@ -423,29 +429,32 @@ class ProjectController extends Controller
     public function edit(request $request)
     {
         if (Auth::user()->UserType == '2') {
-            if (isset($request->edit)) {
+            if (property_exists($request, 'edit') && $request->edit !== null) {
                 Session::put('edit', $request->edit);
                 return redirect()->route('user/edit');
             } else {
                 $id = Session::get('edit');
                 if (isset($id)) {
                     $editdata = User::where('id', $id)->first();
-                    return view('Users.AddUser', compact('editdata'));
+                    return view('Users.AddUser', ['editdata' => $editdata]);
                 } else {
                     return redirect()->route('user/list');
                 }
             }
         }
+
+        return null;
     }
 
 
-    function RandomString()
+    public function RandomString(): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randstring = '';
         for ($i = 0; $i < 10; $i++) {
-            $randstring .= $characters[rand(0, strlen($characters) - 1)];
+            $randstring .= $characters[random_int(0, strlen($characters) - 1)];
         }
+        
         return $randstring;
     }
 
@@ -471,6 +480,7 @@ class ProjectController extends Controller
                         ['UserId', '=', $request->id]
                     ])->orderBy('project.id', 'desc')->get();
                 }
+                
                 break;
 
             case 2:
@@ -510,10 +520,10 @@ class ProjectController extends Controller
         //print_r($data);
         //die;
 
-        return view('Project.ProjectList', compact('data'));
+        return view('Project.ProjectList', ['data' => $data]);
     }
 
-    public function fileUpload(request $request)
+    public function fileUpload(request $request): void
     {
         $filepath = $request->upload_path;
         $oldfile = $request->oldfile;
@@ -532,38 +542,37 @@ class ProjectController extends Controller
 
             $fileExtension = $file->getClientOriginalExtension();
 
-            if (!empty($acceptExtensions)) {
-                if (!in_array($fileExtension, $acceptExtensions)) {
-                    ms(array(
-                        'st' => "0",
-                        'txt' => 'Invalid file type',
-                    ));
-                }
+            if (!empty($acceptExtensions) && !in_array($fileExtension, $acceptExtensions)) {
+                ms([
+                    'st' => "0",
+                    'txt' => 'Invalid file type',
+                ]);
             }
+            
             $uploaded = $file->move($filepath, $fileName);
             if ($uploaded) {
                 if ($oldfile != "") {
                     File::delete($filepath . $oldfile);
                 }
 
-                ms(array(
+                ms([
                     'st' => "1",
                     'txt' => 'File uploaded successfully.',
                     'fileName' => $fileName,
-                ));
+                ]);
             } else {
-                ms(array(
+                ms([
                     'st' => "0",
                     'txt' => 'Upload error',
                     'field' => ""
-                ));
+                ]);
             }
         } else {
-            ms(array(
+            ms([
                 'st' => "0",
                 'txt' => 'Select any file.',
                 'field' => []
-            ));
+            ]);
         }
     }
 
@@ -595,6 +604,7 @@ class ProjectController extends Controller
         //     $quo->flag = 0;
         // }
         $quo->save();
+        
         $url = url('quotation/generate/' . $id . '/' . $version);
         return redirect()->to($url);
     }
@@ -616,6 +626,7 @@ class ProjectController extends Controller
         } else {
             $version = 0;
         }
+        
         $quo = Quotation::find($id);
         $quo->ProjectId = $request->ProjectId;
         $quo->editBy = Auth::user()->id;
@@ -626,6 +637,7 @@ class ProjectController extends Controller
         //     $quo->flag = 0;
         // }
         $quo->save();
+        
         $url = url('quotation/generate/' . $id . '/' . $version);
         return redirect()->to($url);
     }
@@ -639,14 +651,15 @@ class ProjectController extends Controller
             $quotaionUpdate = Quotation::where('ProjectId', $projectId)->orderBy('id', 'desc')->first();
             $quotaionUpdate->MainContractorId = $customerId;
             $quotaionUpdate->editBy = Auth::user()->id;
-            $quotaionUpdate->CompanyUserId = (!empty(Auth::user()->main_id))?Auth::user()->main_id:Auth::user()->id;
+            $quotaionUpdate->CompanyUserId = (empty(Auth::user()->main_id))?Auth::user()->id:Auth::user()->main_id;
             $quotaionUpdate->updated_at = date('Y-m-d H:i:s');
             $quotaionUpdate->save();
         }
+        
         return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
     }
 
-    public function deleteProjectFile(Request $request)
+    public function deleteProjectFile(Request $request): int
     {
         $projectFileID = $request->projectFileID;
         $filename = $request->filename;

@@ -15,6 +15,7 @@ class ArchtectureItemForms extends Model
      * @var array
      */
     protected $table = 'archtecture_item_forms';
+    
     protected $fillable = [
         'UserId','FormName','FileName','Status','FieldValue','Status'
     ];

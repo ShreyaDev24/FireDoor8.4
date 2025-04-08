@@ -21,11 +21,13 @@ class GeneralSettingController extends Controller
         }else{
             $users = [Auth::user()->id];
         }
+        
         $currency = SettingCurrency::wherein('UserId',$users)->first();
         $ComQuotCounter = CompanyQuotationCounter::wherein('UserId',$users)->first();
         $ComOrdCounter = CompanyOrderCounter::wherein('UserId',$users)->first();
-        return view('Setting.generalsetting',compact('currency','ComQuotCounter','ComOrdCounter'));
+        return view('Setting.generalsetting',['currency' => $currency, 'ComQuotCounter' => $ComQuotCounter, 'ComOrdCounter' => $ComOrdCounter]);
     }
+    
     public function DoorFrameConstruction(Request $request)
     {
         $users = Auth::user()->id;
@@ -35,7 +37,7 @@ class GeneralSettingController extends Controller
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $hinge_location = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-        return view('Setting.DoorFramConstruction', compact('users','half_lap_joint','mitre_joint','mortice_tenon_joint','butt_joint','hinge_location'));
+        return view('Setting.DoorFramConstruction', ['users' => $users, 'half_lap_joint' => $half_lap_joint, 'mitre_joint' => $mitre_joint, 'mortice_tenon_joint' => $mortice_tenon_joint, 'butt_joint' => $butt_joint, 'hinge_location' => $hinge_location]);
     }
 
     public function storeDoorFrameConstruction(Request $request)
@@ -48,14 +50,15 @@ class GeneralSettingController extends Controller
             'Butt_Joint' => ['width' => $request->input('width_butt'), 'height' => $request->input('height_butt')],
             'Hinge_Location' => ['hinge1Location' => $request->input('hinge1Location'), 'hinge2Location' => $request->input('hinge2Location'),'hinge3Location' => $request->input('hinge3Location'),'hingeCenterCheck' => $request->input('hingeCenterCheck')],
         ];
-        $existDoorFrameConst = $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)->get();
+        $existDoorFrameConst = DoorFrameConstruction::where('UserId', $userId)->get();
+        $doorFrameConst = $existDoorFrameConst;
         foreach ($doorFrames as $door => $dimensions){
             $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
             ->where('DoorFrameConstruction', $door)
             ->first();
 
             if ($doorFrameConst) {
-                if($door == 'Hinge_Location'){
+                if($door === 'Hinge_Location'){
                     $doorFrameConst->update([
                         'hinge1Location' => $dimensions['hinge1Location'],
                         'hinge2Location' => $dimensions['hinge2Location'],
@@ -71,7 +74,7 @@ class GeneralSettingController extends Controller
                 }
             }else{
                 $doorFrame = new DoorFrameConstruction;
-                if($door == 'Hinge_Location'){
+                if($door === 'Hinge_Location'){
                     $doorFrame->hinge1Location = $dimensions['hinge1Location'];
                     $doorFrame->hinge2Location = $dimensions['hinge2Location'];
                     $doorFrame->hinge3Location = $dimensions['hinge3Location'];
@@ -81,11 +84,13 @@ class GeneralSettingController extends Controller
                     $doorFrame->Width = $dimensions['width'];
                     $doorFrame->Height = $dimensions['height'];
                 }
+                
                 $doorFrame->DoorFrameConstruction = $door;
                 $doorFrame->UserId = $userId;
                 $doorFrame->save();
             }
         }
+        
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
         }else{
@@ -115,9 +120,9 @@ class GeneralSettingController extends Controller
             $users = [Auth::user()->id];
         }
 
-        foreach ($users as $key => $usr) {
-            if(isset($request->currencyUpdate) && isset($request->quotation_prefixUpdval) && isset($request->order_prefixUpdval)){
-                if(isset($request->currencyUpdate)){
+        foreach (array_keys($users) as $key) {
+            if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null && (property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null) && (property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null)){
+                if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null){
                     $currency = SettingCurrency::find($request->currencyUpdate);
                     $currency->UserId = Auth::user()->id;
                     $currency->currency = $request->currency;
@@ -126,7 +131,8 @@ class GeneralSettingController extends Controller
                     $currency->updated_at = date('Y-m-d H:i:s');
                     $currency->update();
                 }
-                if(isset($request->quotation_prefixUpdval)){
+                
+                if(property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null){
                     $quotation_prefix = CompanyQuotationCounter::find($request->quotation_prefixUpdval);
                     $quotation_prefix->UserId = Auth::user()->id;
                     $quotation_prefix->quotation_prefix = $request->quotation_prefix;
@@ -136,7 +142,7 @@ class GeneralSettingController extends Controller
                     $quotation_prefix->update();
                 }
 
-                if(isset($request->order_prefixUpdval)){
+                if(property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null){
                     $order_prefix = CompanyOrderCounter::find($request->order_prefixUpdval);
                     $order_prefix->UserId = Auth::user()->id;
                     $order_prefix->order_prefix = $request->order_prefix;
@@ -149,7 +155,7 @@ class GeneralSettingController extends Controller
                 return redirect()->back()->with('success', 'Update Successfully!');
             }else{
 
-                if(isset($request->currency)){
+                if(property_exists($request, 'currency') && $request->currency !== null){
                     $a = new SettingCurrency;
                     $a->created_at = date('Y-m-d H:i:s');
                     $a->UserId = Auth::user()->id;
@@ -157,7 +163,7 @@ class GeneralSettingController extends Controller
                     $a->save();
                 }
 
-                if(isset($request->quotation_prefix)){
+                if(property_exists($request, 'quotation_prefix') && $request->quotation_prefix !== null){
                     $b = new CompanyQuotationCounter;
                     $b->created_at = date('Y-m-d H:i:s');
                     $b->UserId = Auth::user()->id;
@@ -167,7 +173,7 @@ class GeneralSettingController extends Controller
                     $b->save();
                 }
 
-                if(isset($request->order_prefix)){
+                if(property_exists($request, 'order_prefix') && $request->order_prefix !== null){
                     $c = new CompanyOrderCounter;
                     $c->created_at = date('Y-m-d H:i:s');
                     $c->UserId = Auth::user()->id;
@@ -177,11 +183,13 @@ class GeneralSettingController extends Controller
                     $c->save();
                 }
             }
-            if(isset($request->currencyUpdate) && isset($request->quotation_prefixUpdval) && isset($request->order_prefixUpdval)){
+            
+            if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null && (property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null) && (property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null)){
                 return redirect()->back()->with('success', 'Update Successfully!');
             }else{
                 return redirect()->back()->with('success', 'Added Successfully!');
             }
+            
         // if(!is_null($update_val)){
         //     return redirect()->back()->with('success', 'The currency update successfully!');
         // }
@@ -191,5 +199,7 @@ class GeneralSettingController extends Controller
         // }
 
         }
+
+        return null;
     }
 }

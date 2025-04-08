@@ -56,7 +56,7 @@ class ResetPasswordController extends Controller
 
     public function change_password(request $request){
 
-        if(in_array(Auth::user()->UserType, array("2")) && !empty($request->id)){
+        if(Auth::user()->UserType == "2" && !empty($request->id)){
 
             $id = $request->id;
 
@@ -120,6 +120,8 @@ class ResetPasswordController extends Controller
     	if(Auth::user()->UserType=='1'){
     	return view('Admin.Profile');
     	}
+
+        return null;
 
     	}
     }

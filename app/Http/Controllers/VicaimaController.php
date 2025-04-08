@@ -179,6 +179,7 @@ class VicaimaController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
+                        
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -189,6 +190,7 @@ class VicaimaController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
+        
         $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -200,12 +202,13 @@ class VicaimaController extends Controller
     }else{
         $ids = Auth::user()->id;
     }
-    $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids) {
+    
+    $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'standard')
               ->where('UserId', $ids)
               ->where('projectId', $quotation->ProjectId);
     })
-    ->with(['defaultItems' => function ($query) use ($quotation,$ids) {
+    ->with(['defaultItems' => function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'standard')
               ->where('UserId', $ids)
               ->where('projectId', $quotation->ProjectId);
@@ -220,6 +223,7 @@ class VicaimaController extends Controller
     } else {
         $defaultItemsstandard = [];
     }
+    
     $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
 
         return view('Items/Vicaima/VicaimaConfigurableItem',[
@@ -257,6 +261,7 @@ class VicaimaController extends Controller
         if($item === null){
             return abort(404);
         }
+        
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -307,6 +312,7 @@ class VicaimaController extends Controller
         if($quotation != ''){
             $CompanyId = $quotation->CompanyId;
         }
+        
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -400,11 +406,8 @@ class VicaimaController extends Controller
             $pageId = $request->pageId;
 
             $authdata = Auth::user();
-            if (Auth::user()->UserType == 2) {
-                $UserId = ['1', $authdata->id];
-            } else {
-                $UserId = ['1'];
-            }
+            $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+            
             $colorType = 'Kraft_Paper';
             $configurationDoor = configurationDoor($pageId);
             // $doorleafFacingOption = Option::orderBy('OptionValue', 'ASC')
@@ -428,7 +431,7 @@ class VicaimaController extends Controller
                 //    ->select('color.*','selected_color.selectedPrice','selected_color.id as selectedId','selected_color.SelectedUserId')
                 //    ->orderBy('color.DoorLeafFacing', 'ASC')->orderBy('color.ColorName', 'ASC')->get();
 
-                   $doorleafFinishOption = Color::Join('selected_color', function($join) {
+                   $doorleafFinishOption = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                   })
                   ->where('color.DoorLeafFacingValue','=',$colorType)
@@ -456,6 +459,7 @@ class VicaimaController extends Controller
             return response()->json(['status' => 'error', 'data' => '']);
         }
     }
+    
      public function IntumescentSealArrangementValue(Request $request){
 
         if(auth()->user()->UserType == 2){
@@ -502,18 +506,19 @@ class VicaimaController extends Controller
         }
     }
 
-    public function getDoorFacing(Request $request){
+    public function getDoorFacing(Request $request): void{
 
         try {
             $leafTypeFacing = DB::table('door_leaf_facing')->where('doorLeafFacing', $request->leaftypeValue)->where('Status',1)->get();
 
             $res = json_encode(['status' => 'ok', 'leafTypeFacing' => $leafTypeFacing]);
             print_r($res);
-        } catch (\Exception $e) {
+        } catch (\Exception $exception) {
             // Handle the exception here
-            $res = json_encode(['status' => 'error', 'message' => $e->getMessage()]);
+            $res = json_encode(['status' => 'error', 'message' => $exception->getMessage()]);
             print_r($res);
         }
+        
         die;
     }
 
@@ -527,11 +532,13 @@ class VicaimaController extends Controller
         }else{
             $userId = [];
         }
+       
        $UserIds = CompanyUsers();
        $item = Item::where('itemId',$id)->first();
        if($item === null){
            return abort(404);
        }
+       
        $item = $item->toArray();
         $UserIds = CompanyUsers();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
@@ -614,6 +621,7 @@ class VicaimaController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
+                        
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -624,6 +632,7 @@ class VicaimaController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
+        
         $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
@@ -651,7 +660,7 @@ class VicaimaController extends Controller
         ]);
     }
 
-    function ralcolorinsert() {
+    public function ralcolorinsert(): void {
         // $getRalColor = DB::table('color')->where(['DoorLeafFacing'=>'Kraft_Paper', 'editBy'=>1])->get();
         // $colorsType = ['Primed 2 Go', 'Paint Sanded', 'Factory Industrial Primed'];
         // foreach ($colorsType as $value) {

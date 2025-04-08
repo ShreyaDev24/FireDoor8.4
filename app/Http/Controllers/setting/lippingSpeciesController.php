@@ -20,6 +20,7 @@ class lippingSpeciesController extends Controller
         }else{
             $UserId = ['1'];
         }
+        
         $ls = LippingSpecies::with('lipping_species_items')->wherein('editBy',$UserId)->where('Status',1)->orderBy('id','desc')->orderBy('id','desc')->get();
         $i = 1;
         $tbl = '';
@@ -44,11 +45,13 @@ class lippingSpeciesController extends Controller
             }else{
                 $action = '<td></td>';
             }
+            
             if(!empty($tt->file)){
                 $img = '<img src="'.url('/').'/uploads/Options/'.$tt->file.'" style="width:50px;height:50px;">';
             } else {
                 $img = 'No Image';
             }
+            
             // $lipping_species_items_html = '';
             // foreach($tt->lipping_species_items as $lipping_species_items){
             //     $lipping_species_items_html.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">'.$lipping_species_items->thickness.'</button>
@@ -72,8 +75,10 @@ class lippingSpeciesController extends Controller
             ';
             $i++;
         }
-        return view('Setting.lippingSpecies',compact('tbl'));
+        
+        return view('Setting.lippingSpecies',['tbl' => $tbl]);
     }
+    
     public function sublippingSpecies(Request $request)
     {
 
@@ -93,6 +98,7 @@ class lippingSpeciesController extends Controller
             $a = new LippingSpecies;
             $a->created_at = date('Y-m-d H:i:s');
         }
+        
         $image = $request->file;
         if(!empty($image)){
             $valid = $request->validate([
@@ -102,6 +108,7 @@ class lippingSpeciesController extends Controller
             $a->file = $imageName;
             $image->move(public_path('uploads/Options'), $imageName);
         }
+        
         $a->SpeciesName = $request->SpeciesName;
         $a->MinValue = $request->MinValue;
         $a->MaxValues = $request->MaxValues;
@@ -131,6 +138,8 @@ class lippingSpeciesController extends Controller
                 return redirect()->back()->with('success', 'The Lipping Species added successfully!');
             }
         }
+
+        return null;
 
 
     }

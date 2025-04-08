@@ -36,6 +36,7 @@ class ArchitectureController extends Controller
 
 
     }
+    
     public function storeFileName(Request $request){
 
         if($request->id=="0"){
@@ -45,9 +46,9 @@ class ArchitectureController extends Controller
              $extention = $uploadedfile->getClientOriginalExtension();
 
 
-            $valid=array(
+            $valid=[
                 'csv','xls','xlsx' // add your extensions here.
-            );
+            ];
             if(in_array($extention,$valid) ){
 
                 $uploadedfileName = time().'.'.$uploadedfile->getClientOriginalName();
@@ -60,7 +61,7 @@ class ArchitectureController extends Controller
                 $createFileName = new ArchitectureQuatationFile();
                 $createFileName->filename = $request->filename ;
                 $createFileName->filepath = $uploadedfilepath ;
-                $createFileName->generated_id = rand();
+                $createFileName->generated_id = random_int(0, mt_getrandmax());
                 // $createFileName->created_at = time();
                 // $createFileName->updated_at = time();
                 $createFileName->status = 0;

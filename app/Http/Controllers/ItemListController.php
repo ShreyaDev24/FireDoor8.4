@@ -65,6 +65,7 @@ class ItemListController extends Controller
         $item=Item::all();
         return view('itemlist',['itemlist'=>$item]);
     }
+    
     public function changeStatus(Request $request)
     {
         if($request->id){
@@ -77,6 +78,7 @@ class ItemListController extends Controller
                 $statuscode='fail';
             }
         }
+        
         return response()->json(['success'=>$statuscode,'item'=>$Item]);
     }
 
@@ -89,7 +91,7 @@ class ItemListController extends Controller
     }
 
 
-    public function filterFireRating(Request $request){
+    public function filterFireRating(Request $request): void{
 
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
@@ -104,80 +106,80 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
-        if(!empty($integrityValue)){
+        if (!empty($integrityValue)) {
             $integrity = $integrityValue;
-        } else if(!empty($integrityValue2)){
+        } elseif (!empty($integrityValue2)) {
             $integrity = $integrityValue2;
         }
+        
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
         $userType = Auth::user()->UserType;
         if(empty($request->isIntegrity)) {
-            echo json_encode(array('status' => 'error','message' => 'Something went wrong.', 'data' => ''));
+            echo json_encode(['status' => 'error','message' => 'Something went wrong.', 'data' => '']);
             die();
         }
+        
         if($request->isIntegrity === true && $request->integrity == ""){
-            echo json_encode(array('status' => 'error','message' => "Integrity is required.", 'data' => ''));
+            echo json_encode(['status' => 'error','message' => "Integrity is required.", 'data' => '']);
             die();
         }
+        
         if($userType=="1" || $userType=="4"){
-            if($fireRating=="NFR"){
+            if ($fireRating=="NFR") {
                 $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
                 // ->where('glass_type.'.$fireRatingDoor, $fireRating)
                 ->wherein('EditBy',$userIds)
                 ->get();
-            }else{
-                if($request->isIntegrity === true){
-                    if($leaf1VpAreaSizeM2Value != ''){
-                        $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
+            } elseif ($request->isIntegrity === true) {
+                if($leaf1VpAreaSizeM2Value != ''){
+                    $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
+                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                    ->where('GlassIntegrity',$integrity)
+                    ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                    ->wherein('EditBy',$userIds)
+                    ->distinct('id')
+                    ->get();
+                } else {
+                    $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
                         ->where('glass_type.'.$fireRatingDoor, $fireRating)
                         ->where('GlassIntegrity',$integrity)
-                        ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
                         ->wherein('EditBy',$userIds)
                         ->distinct('id')
                         ->get();
-                    } else {
-                        $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->where('GlassIntegrity',$integrity)
-                            ->wherein('EditBy',$userIds)
-                            ->distinct('id')
-                            ->get();
-                    }
-                }else{
-                    if($leaf1VpAreaSizeM2Value != ''){
-                        if($integrity != ""){
-                            $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->where('GlassIntegrity',$integrity)
-                            ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
-                            ->wherein('EditBy',$userIds)
-                            ->distinct('id')
-                            ->get();
-                        }else{
-                            $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
-                            ->wherein('EditBy',$userIds)
-                            ->distinct('id')
-                            ->get();
-                        }
-                    } else {
-                        $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->wherein('EditBy',$userIds)
-                            ->distinct('id')
-                            ->get();
-                    }
                 }
+            } elseif ($leaf1VpAreaSizeM2Value != '') {
+                if($integrity != ""){
+                    $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
+                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                    ->where('GlassIntegrity',$integrity)
+                    ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                    ->wherein('EditBy',$userIds)
+                    ->distinct('id')
+                    ->get();
+                }else{
+                    $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
+                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                    ->where('VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                    ->wherein('EditBy',$userIds)
+                    ->distinct('id')
+                    ->get();
+                }
+            } else {
+                $glassType = GlassType::where('glass_type.'.$configurationDoor, $pageId)
+                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                    ->wherein('EditBy',$userIds)
+                    ->distinct('id')
+                    ->get();
             }
 
         } else {
             $UserId = CompanyUsers();
-            if($fireRating=="NFR"){
-                if((string)$request->isIntegrity == "true"){
-                    $glassType = GlassType::Join('selected_glass_type', function($join) {
+            if ($fireRating=="NFR") {
+                if((string)$request->isIntegrity === "true"){
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
                     })
                         ->where('glass_type.'.$configurationDoor, $pageId)
@@ -190,7 +192,7 @@ class ItemListController extends Controller
                         ->get(['glass_type.*']);
 
                 }else{
-                    $glassType = GlassType::Join('selected_glass_type', function($join) {
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
                     })
                         ->where('glass_type.'.$configurationDoor, $pageId)
@@ -201,89 +203,84 @@ class ItemListController extends Controller
                         ->groupBy('glass_type.Key')
                         ->get(['glass_type.*']);
                 }
-            } else {
-                if((string)$request->isIntegrity == "true"){
-                    if($leaf1VpAreaSizeM2Value != ''){
-                        $glassType = GlassType::Join('selected_glass_type', function($join) {
-                            $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                        })
-                            ->where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->where('glass_type.GlassIntegrity',$integrity)
-                            ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
-                            ->wherein('selected_glass_type.editBy',$UserId)
-                            ->wherein('glass_type.EditBy',$userIds)
-                            ->distinct('glass_type.id')
-                            ->groupBy('glass_type.Key')
-                            ->get(['glass_type.*']);
-                    } else {
-                        $glassType = GlassType::Join('selected_glass_type', function($join) {
-                            $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                        })
-                            ->where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->where('glass_type.GlassIntegrity',$integrity)
-                            ->wherein('selected_glass_type.editBy',$UserId)
-                            ->wherein('glass_type.EditBy',$userIds)
-                            ->distinct('glass_type.id')
-                            ->groupBy('glass_type.Key')
-                            ->get(['glass_type.*']);
-                    }
+            } elseif ((string)$request->isIntegrity === "true") {
+                if($leaf1VpAreaSizeM2Value != ''){
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                    })
+                        ->where('glass_type.'.$configurationDoor, $pageId)
+                        ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                        ->where('glass_type.GlassIntegrity',$integrity)
+                        ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                        ->wherein('selected_glass_type.editBy',$UserId)
+                        ->wherein('glass_type.EditBy',$userIds)
+                        ->distinct('glass_type.id')
+                        ->groupBy('glass_type.Key')
+                        ->get(['glass_type.*']);
                 } else {
-                    if($leaf1VpAreaSizeM2Value != ''){
-
-                        if($integrity != ""){
-                            $glassType = GlassType::Join('selected_glass_type', function($join) {
-                                $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                            })
-                                ->where('glass_type.'.$configurationDoor, $pageId)
-                                ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                                ->where('glass_type.GlassIntegrity',$integrity)
-                                ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
-                                ->wherein('selected_glass_type.editBy',$UserId)
-                                ->wherein('glass_type.EditBy',$userIds)
-                                ->distinct('glass_type.id')
-                                ->groupBy('glass_type.Key')
-                                ->get(['glass_type.*']);
-                        }else{
-                            $glassType = GlassType::Join('selected_glass_type', function($join) {
-                                $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                            })
-                                ->where('glass_type.'.$configurationDoor, $pageId)
-                                ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                                ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
-                                ->wherein('selected_glass_type.editBy',$UserId)
-                                ->distinct('glass_type.id')
-                                ->groupBy('glass_type.Key')
-                                ->wherein('glass_type.EditBy',$userIds)
-                                ->get(['glass_type.*']);
-                        }
-                    } else {
-                        $glassType = GlassType::Join('selected_glass_type', function($join) {
-                            $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                        })
-                            ->where('glass_type.'.$configurationDoor, $pageId)
-                            ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                            ->wherein('selected_glass_type.editBy',$UserId)
-                            ->wherein('glass_type.EditBy',$userIds)
-                            ->distinct('glass_type.id')
-                            ->groupBy('glass_type.Key')
-                            ->get(['glass_type.*']);
-                    }
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                    })
+                        ->where('glass_type.'.$configurationDoor, $pageId)
+                        ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                        ->where('glass_type.GlassIntegrity',$integrity)
+                        ->wherein('selected_glass_type.editBy',$UserId)
+                        ->wherein('glass_type.EditBy',$userIds)
+                        ->distinct('glass_type.id')
+                        ->groupBy('glass_type.Key')
+                        ->get(['glass_type.*']);
                 }
+            } elseif ($leaf1VpAreaSizeM2Value != '') {
+                if($integrity != ""){
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                    })
+                        ->where('glass_type.'.$configurationDoor, $pageId)
+                        ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                        ->where('glass_type.GlassIntegrity',$integrity)
+                        ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                        ->wherein('selected_glass_type.editBy',$UserId)
+                        ->wherein('glass_type.EditBy',$userIds)
+                        ->distinct('glass_type.id')
+                        ->groupBy('glass_type.Key')
+                        ->get(['glass_type.*']);
+                }else{
+                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                    })
+                        ->where('glass_type.'.$configurationDoor, $pageId)
+                        ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                        ->where('glass_type.VpAreaSize','>=',$leaf1VpAreaSizeM2Value)
+                        ->wherein('selected_glass_type.editBy',$UserId)
+                        ->distinct('glass_type.id')
+                        ->groupBy('glass_type.Key')
+                        ->wherein('glass_type.EditBy',$userIds)
+                        ->get(['glass_type.*']);
+                }
+            } else {
+                $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                    $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                })
+                    ->where('glass_type.'.$configurationDoor, $pageId)
+                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                    ->wherein('selected_glass_type.editBy',$UserId)
+                    ->wherein('glass_type.EditBy',$userIds)
+                    ->distinct('glass_type.id')
+                    ->groupBy('glass_type.Key')
+                    ->get(['glass_type.*']);
             }
         }
 
         if(!empty($glassType) && count( $glassType)){
-            echo json_encode(array('status'=>'ok','data'=> $glassType));
+            echo json_encode(['status'=>'ok','data'=> $glassType]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
 
 
-    public function glassTypeFilter(Request $request){
+    public function glassTypeFilter(Request $request): void{
         $userIds = CompanyUsers();
         $pageId = $request->pageId;
         $glassType = $request->glassType;
@@ -294,32 +291,32 @@ class ItemListController extends Controller
         }elseif($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
             $request->fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($request->fireRating);
-        if($userType=="1" ||$userType=="4"){
+        if ($userType=="1" ||$userType=="4") {
             $glassThikness = GlassType::where($configurationDoor,$pageId)->where('Key',$glassType)->where($fireRatingDoor,$request->fireRating)->where('glass_type.EditBy',1)->get();
-        } else {
-            if($request->fireRating == 'NFR'){
-                $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
-                ->where('glass_type.Key',$glassType)
-                ->wherein('glass_type.EditBy',$userIds)
-                // ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
-                ->groupBy('glass_type.Key')
-                ->get(['glass_type.*']);
-            }else{
+        } elseif ($request->fireRating == 'NFR') {
+            $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
+            ->where('glass_type.Key',$glassType)
+            ->wherein('glass_type.EditBy',$userIds)
+            // ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
+            ->groupBy('glass_type.Key')
+            ->get(['glass_type.*']);
+        } else{
 
 
-                $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
-                ->where('glass_type.Key',$glassType)
-                ->wherein('glass_type.EditBy',$userIds)
-                ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
-                ->get(['glass_type.*']);
-            }
+            $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
+            ->where('glass_type.Key',$glassType)
+            ->wherein('glass_type.EditBy',$userIds)
+            ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
+            ->get(['glass_type.*']);
         }
+        
         if(!empty($glassThikness) && count( $glassThikness)){
-            echo json_encode(array('status'=>'ok','data'=> $glassThikness));
+            echo json_encode(['status'=>'ok','data'=> $glassThikness]);
         } else {
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
@@ -403,7 +400,7 @@ class ItemListController extends Controller
     // }
 
 
-    public function fileterGlazingSystem(Request $request){
+    public function fileterGlazingSystem(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -419,47 +416,44 @@ class ItemListController extends Controller
 
         if($authdata->UserType=="1" ||$authdata->UserType=="4"){
 
-            if(empty($leaf1VpAreaSizeM2Value)){
+            if (empty($leaf1VpAreaSizeM2Value)) {
                 if($fireRating == 'NFR'){
                     $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1], "","glazing_systems");
                 } else {
                     $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating], "","glazing_systems");
                 }
-            }else{
-                if($fireRating == 'NFR'){
-                    $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1, ["VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "","glazing_systems");
-                } else {
-                    $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating, ["VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "","glazing_systems");
-                }
+            } elseif ($fireRating == 'NFR') {
+                $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1, ["VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "","glazing_systems");
+            } else {
+                $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating, ["VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "","glazing_systems");
             }
 
         }else{
             $UserId = CompanyUsers();
-            if(empty($leaf1VpAreaSizeM2Value)){
+            if (empty($leaf1VpAreaSizeM2Value)) {
                 if($fireRating == 'NFR'){
                     $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1], "join","glazing_systems");
                 } else {
                     $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating], "join","glazing_systems");
                 }
-            }else{
-                if($fireRating == 'NFR'){
-                    $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1], "join","glazing_systems");
-                } else {
-                    $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating, ["glazing_system.VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "join","glazing_systems");
-                }
+            } elseif ($fireRating == 'NFR') {
+                $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1], "join","glazing_systems");
+            } else {
+                $glaszingSystem = GetOptions(['glazing_system.'.$configurationDoor => $pageId ,'glazing_system.Status' => 1,'glazing_system.'.$fireRatingDoor => $fireRating, ["glazing_system.VPAreaSize", ">=", $leaf1VpAreaSizeM2Value]], "join","glazing_systems");
             }
         }
+        
         //getting Timber Species
         $lippingSpecies = filterTimberSpecies($pageId,$fireRating,"Other");
 
         if(!empty($lippingSpecies) && count( $lippingSpecies) >0){
-            echo json_encode(array('status'=>'ok','data'=> $glaszingSystem,'lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'ok','data'=> $glaszingSystem,'lippingSpecies'=>$lippingSpecies]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> '','lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'error','data'=> '','lippingSpecies'=>$lippingSpecies]);
         }
     }
 
-    public function LipingGlazingSystem(Request $request){
+    public function LipingGlazingSystem(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -472,26 +466,26 @@ class ItemListController extends Controller
         $OnlylippingSpecies = filterOnlyLippingSpecies($pageId,$fireRating,"Lipping");
 
         if(!empty($OnlylippingSpecies) && count( $OnlylippingSpecies)){
-            echo json_encode(array('status'=>'ok','OnlylippingSpecies'=>$OnlylippingSpecies));
+            echo json_encode(['status'=>'ok','OnlylippingSpecies'=>$OnlylippingSpecies]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> '','OnlylippingSpecies'=>$OnlylippingSpecies));
+            echo json_encode(['status'=>'error','data'=> '','OnlylippingSpecies'=>$OnlylippingSpecies]);
         }
     }
 
 
-    public function fileterArchitraveSystem(Request $request){
+    public function fileterArchitraveSystem(Request $request): void{
 
         $lippingSpecies = filterTimberSpecies("","","Architrave");
 
         if(!empty($lippingSpecies) && count( $lippingSpecies) >0){
-            echo json_encode(array('status'=>'ok','lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'ok','lippingSpecies'=>$lippingSpecies]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> '','lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'error','data'=> '','lippingSpecies'=>$lippingSpecies]);
         }
     }
 
 
-    public function fileterGlazingThikness(Request $request){
+    public function fileterGlazingThikness(Request $request): void{
         $pageId = $request->pageId;
         $userIds = CompanyUsers();
         $glazingSystem = $request->glazingSystems;
@@ -499,35 +493,37 @@ class ItemListController extends Controller
         $glaszingSystemThickness = GlazingSystem::where($configurationDoor,$pageId)->where('Key',$glazingSystem)->wherein('editBy',$userIds)->where('Status',1)->first();
         // $GlazingBeadFixingDetail  = Option::where('configurableitems',$pageId)->where(['GlazingSystem' => $glazingSystem , 'OptionSlug' => 'Fixing_Detail' ])->first();
         if(!empty($glaszingSystemThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $glaszingSystemThickness));
+            echo json_encode(['status'=>'ok','data'=> $glaszingSystemThickness]);
         } else {
-            echo json_encode(array('status'=>'error','data'=> '','data2'=>''));
+            echo json_encode(['status'=>'error','data'=> '','data2'=>'']);
         }
     }
 
 
 
-    public function fileterGlazingBeads(Request $request){
+    public function fileterGlazingBeads(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($request->fireRating=='NFR'){
             $fireRating = 'FD30';
         }
+        
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
             $fireRating = 'FD30';
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $glaszingBeads = Option::where('configurableitems',$pageId)->where('UnderAttribute',$fireRating)->where('OptionSlug','leaf1_glazing_beads')->get();
         if(!empty($glaszingBeads) && count( $glaszingBeads)){
-            echo json_encode(array('status'=>'ok','data'=> $glaszingBeads));
+            echo json_encode(['status'=>'ok','data'=> $glaszingBeads]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
 
-    public function filterFrameMaterial(Request $request){
+    public function filterFrameMaterial(Request $request): void{
 
         $pageId = $request->pageId;
         $foursided = $request->framesided;
@@ -535,10 +531,10 @@ class ItemListController extends Controller
 
         $lippingSpecies = filterTimberSpecies($pageId,$fireRating,"Frame",$foursided);
 
-        echo json_encode(array('status'=>'ok','data'=> '','leepingSpecies'=>$lippingSpecies));
+        echo json_encode(['status'=>'ok','data'=> '','leepingSpecies'=>$lippingSpecies]);
     }
 
-    public function scalloppedLippingThickness(Request $request){
+    public function scalloppedLippingThickness(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -546,15 +542,16 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $scalloppedLippingThickness = Option::where('configurableitems',$pageId)->where('UnderAttribute',$fireRating)->where('OptionSlug','scalloped_lipping_thickness')->get();
         if(!empty($scalloppedLippingThickness) && count( $scalloppedLippingThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $scalloppedLippingThickness));
+            echo json_encode(['status'=>'ok','data'=> $scalloppedLippingThickness]);
         } else {
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function flatLippingThickness(Request $request){
+    public function flatLippingThickness(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -562,15 +559,16 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $flatLippingThickness = Option::where('configurableitems',$pageId)->where('UnderAttribute',$fireRating)->where('OptionSlug','flat_lipping_thickness')->get();
         if(!empty($flatLippingThickness) && count( $flatLippingThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $flatLippingThickness));
+            echo json_encode(['status'=>'ok','data'=> $flatLippingThickness]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function rebatedLippingThickness(Request $request){
+    public function rebatedLippingThickness(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -578,26 +576,27 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $rebatedLippingThickness = Option::where('configurableitems',$pageId)->where('UnderAttribute',$fireRating)->where('OptionSlug','rebeated_lipping_thickness')->get();
         if(!empty($rebatedLippingThickness) && count( $rebatedLippingThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $rebatedLippingThickness));
+            echo json_encode(['status'=>'ok','data'=> $rebatedLippingThickness]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function glassTypeNFR(Request $request){
+    public function glassTypeNFR(Request $request): void{
         $pageId = $request->pageId;
         $configurationDoor = configurationDoor($pageId);
         $glassTypeNFR = GlassType::where($configurationDoor,$pageId)->groupBy('Key')->get();
         if(!empty($glassTypeNFR) && count( $glassTypeNFR)){
-            echo json_encode(array('status'=>'ok','data'=> $glassTypeNFR));
+            echo json_encode(['status'=>'ok','data'=> $glassTypeNFR]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function filterDoorThickness(Request $request){
+    public function filterDoorThickness(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -605,17 +604,18 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $doorThickness = Option::where(['configurableitems' => $pageId , 'OptionSlug'=>'Glass_Integrity'])
                                 ->orWhere(['configurableitems' => $pageId ,'OptionSlug'=>'Door_Thickness'])->get();
         if(!empty($doorThickness) && count( $doorThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $doorThickness));
+            echo json_encode(['status'=>'ok','data'=> $doorThickness]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
 
     }
 
-    public function filterDoorleafFacingValue(Request $request){
+    public function filterDoorleafFacingValue(Request $request): void{
         $userIds = CompanyUsers();
         $pageId = $request->pageId;
         $doorLeafFacing = $request->doorLeafFacing;
@@ -636,30 +636,30 @@ class ItemListController extends Controller
         if(!empty($doorfacingValue) && count( $doorfacingValue)){
             if($doorLeafFacing=="Laminate"){
                 // $color = Color::where('DoorLeafFacing',$doorLeafFacing)->get();
-                $color = Color::Join('selected_color', function($join) {
+                $color = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                     })
                     ->where('color.DoorLeafFacing',$doorLeafFacing)
                     ->where('color.DoorLeafFacingValue',$request->doorLeafFacingValue)
                     ->wherein('selected_color.SelectedUserId',$userIds)
                     ->get(['color.*']);
-                echo json_encode(array('status'=>'ok','data'=> $doorfacingValue,'color'=>$color));
+                echo json_encode(['status'=>'ok','data'=> $doorfacingValue,'color'=>$color]);
             }elseif($doorLeafFacing=="PVC"){
-                $color = Color::Join('selected_color', function($join) {
+                $color = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                     })
                     ->where('color.DoorLeafFacing',$doorLeafFacing)
                     ->wherein('selected_color.SelectedUserId',$userIds)
                     ->get(['color.*']);
-                echo json_encode(array('status'=>'ok','data'=> $doorfacingValue,'color'=>$color));
+                echo json_encode(['status'=>'ok','data'=> $doorfacingValue,'color'=>$color]);
             }else{
                 $color = GetOptions(['options.configurableitems'=> $pageId ,'options.is_deleted' => 0,'options.OptionSlug' => 'door_leaf_finish','options.UnderAttribute' => $doorLeafFacing], "join");
-                echo json_encode(array('status'=>'ok','data'=> $doorfacingValue,'color'=>$color));
+                echo json_encode(['status'=>'ok','data'=> $doorfacingValue,'color'=>$color]);
             }
 
         }else{
             $color = GetOptions(['options.configurableitems'=> $pageId ,'options.is_deleted' => 0,'options.OptionSlug' => 'door_leaf_finish','options.UnderAttribute' => $doorLeafFacing], "join");
-            echo json_encode(array('status'=>'ok','data'=> $doorfacingValue,'color'=>$color));
+            echo json_encode(['status'=>'ok','data'=> $doorfacingValue,'color'=>$color]);
 
         }
 
@@ -668,7 +668,7 @@ class ItemListController extends Controller
 
 
 
-    public function filterRalColor(Request $request){
+    public function filterRalColor(Request $request): void{
         $doorLeafFinish = $request->doorLeafFinish;
         $userType = Auth::user()->UserType;
         if($userType=="1" ||$userType=="4"){
@@ -676,24 +676,25 @@ class ItemListController extends Controller
         }else{
             $UserId = CompanyUsers();
             if($doorLeafFinish == 'Painted' || $doorLeafFinish == 'Paint_Finish'){
-                $colors = Color::Join('selected_color', function($join) {
+                $colors = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                   })
                   ->where('color.DoorLeafFacingValue','Painted')
                   ->wherein('selected_color.SelectedUserId',$UserId)
                   ->get(['color.*']);
             }else {
-                $colors = Color::Join('selected_color', function($join) {
+                $colors = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                   })
                   ->where('color.DoorLeafFacing',$doorLeafFinish)
                   ->wherein('selected_color.SelectedUserId',$UserId)
                   ->get(['color.*']);
             }
+            
             if($request->pageType == 4 && $request->leafConstruction == 'Primed' && $userType == 2 && ($request->doorLeafFacing == 'Factory Industrial Primed' || $request->doorLeafFacing == 'Paint Sanded' || $request->doorLeafFacing == 'Primed 2 Go')){
 
                 $UserId = CompanyUsers();
-                $colors = Color::Join('selected_color', function($join) {
+                $colors = Color::Join('selected_color', function($join): void {
                     $join->on('color.id', '=', 'selected_color.SelectedColorId');
                   })
                   ->where('selected_color.DoorLeafFacingName', $request->doorLeafFacing)
@@ -701,24 +702,25 @@ class ItemListController extends Controller
                   ->get(['color.*']);
             }
         }
+        
         if(!empty($colors) && count( $colors)){
-            echo json_encode(array('status'=>'ok','data'=> $colors));
+            echo json_encode(['status'=>'ok','data'=> $colors]);
         } else {
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function faceGrooveImage(Request $request){
+    public function faceGrooveImage(Request $request): void{
         if($request->decorativeGroves == 'Yes' && ($request->pageId == 4 || $request->pageId == 5 || $request->pageId == 6)){
             $face_grooves = DB::table('face_grooves')->get();
            // dd($face_grooves);
             if(!empty($face_grooves) && count( $face_grooves)){
-                echo json_encode(array('status'=>'ok','face_grooves'=> $face_grooves));
+                echo json_encode(['status'=>'ok','face_grooves'=> $face_grooves]);
             } else {
-                echo json_encode(array('status'=>'error','data'=> ''));
+                echo json_encode(['status'=>'error','data'=> '']);
             }
         }else {
-            echo json_encode(array('status'=>'error','data'=> 'Something Went Wrong...'));
+            echo json_encode(['status'=>'error','data'=> 'Something Went Wrong...']);
         }
     }
 
@@ -749,27 +751,24 @@ class ItemListController extends Controller
         $id = $request->itemID;
         if(!empty($id)){
             $doorset =  Item::where(['itemId'=>$id])->get()->first();
-            if(empty($doorset)){
+            if (empty($doorset)) {
                 $errorlist = 'Door Not Found';
                 \Session::flash('errors', __('validate'.$id));
                 return response()->json(['status'=>'error','errors'=>$errorlist]);
-            }else{
-                if(!empty($request->SvgImage)){
-                    $updateDetails['SvgImage'] = $request->SvgImage;
-                    $updateDetails['LeafWidth1'] = $request->leafWidth1;
-                    $updateDetails['LeafHeight'] = $request->calculationOfLeafHeight;
-                    $item = Item::where('itemId',$id)->update($updateDetails);
-                    $successmsg = 'Updated configure door '.$id.' successfully.';
-                    $url = 'quotation/excel-upload/'.$request->QuotationId.'/'.$request->versionId;
-                    \Session::flash('successes', __('validate'.$id));
-                    return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
-                }else{
-                    $successmsg = 'Something went wrong.';
-                    $url = 'quotation/excel-upload/'.$request->QuotationId.'/'.$request->versionId;
-                    \Session::flash('errors', __('validate'.$id));
-                    return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
-                }
-
+            } elseif (!empty($request->SvgImage)) {
+                $updateDetails['SvgImage'] = $request->SvgImage;
+                $updateDetails['LeafWidth1'] = $request->leafWidth1;
+                $updateDetails['LeafHeight'] = $request->calculationOfLeafHeight;
+                $item = Item::where('itemId',$id)->update($updateDetails);
+                $successmsg = 'Updated configure door '.$id.' successfully.';
+                $url = 'quotation/excel-upload/'.$request->QuotationId.'/'.$request->versionId;
+                \Session::flash('successes', __('validate'.$id));
+                return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
+            } else{
+                $successmsg = 'Something went wrong.';
+                $url = 'quotation/excel-upload/'.$request->QuotationId.'/'.$request->versionId;
+                \Session::flash('errors', __('validate'.$id));
+                return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
             }
         }else{
             $successmsg = 'Something went wrong.';
@@ -903,6 +902,7 @@ class ItemListController extends Controller
             // Create the SideScreenItem entry
             $sideScreenItem = new SideScreenItem();
         }
+        
         $sideScreenItem->fill($validated);
         $sideScreenItem->UserId = Auth::user()->id;
         $sideScreenItem->SvgImage = $request->SvgImage;
@@ -920,9 +920,10 @@ class ItemListController extends Controller
             $GTSellPriceTotal = 0;
             if(!empty($ScreenBOMCalculation)){
                 foreach($ScreenBOMCalculation as $value){
-                    $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+                    $GTSellPrice += $value->GTSellPrice;
 
                 }
+                
                 $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
                 $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
             }
@@ -953,7 +954,7 @@ class ItemListController extends Controller
             $GTSellPrice = 0;
             if(!empty($ScreenBOMCalculation)){
                 foreach($ScreenBOMCalculation as $value1){
-                    $GTSellPrice = $GTSellPrice + $value1->GTSellPrice;
+                    $GTSellPrice += $value1->GTSellPrice;
                 }
             }
 
@@ -961,7 +962,7 @@ class ItemListController extends Controller
                 'ScreenPrice' => $GTSellPrice
             ]);
 
-            $successmsg = 'Side Screen Created Successfully, now please add Screen\'s.';
+            $successmsg = "Side Screen Created Successfully, now please add Screen's.";
             $url = 'quotation/add-new-screens/'.$request->QuotationId.'/'.$VersionId;
             \Session::flash('success', __($successmsg));
             return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
@@ -1014,6 +1015,7 @@ class ItemListController extends Controller
         $qq->editBy = Auth::user()->id;
         $qq->updated_at = date('Y-m-d H:i:s');
         $qq->save();
+        
         $Quotation = Quotation::where("id",$QuotationId)->first();
 
         $IronmongaryPrice = 0;
@@ -1028,8 +1030,9 @@ class ItemListController extends Controller
             $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
             $marginDiscount = discountQuotationValue($request->QuotationId,$request->version_id);
             if($marginDiscount != 0){
-                $margin = $margin + $marginDiscount;
+                $margin += $marginDiscount;
             }
+            
             $marginwithcal = 100 - $margin;
             $testvar = $marginwithcal/100;
             $totalcost = $AI->discountprice / $testvar;
@@ -1059,12 +1062,14 @@ class ItemListController extends Controller
             if(!empty($BOMCalculation)){
                 foreach($BOMCalculation as $value){
                     if($value->Category != 'Ironmongery&MachiningCosts'){
-                        $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+                        $GTSellPrice += $value->GTSellPrice;
                     }
                 }
+                
                 $ItemMaster = ItemMaster::where('itemID',$request->itemID)->get()->count();
                 $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
             }
+            
             $Item = Item::where('itemId', $id)->update([
                 'DoorsetPrice' => $GTSellPriceTotal
              ]);
@@ -1628,10 +1633,11 @@ class ItemListController extends Controller
                     if(!empty($BOMCalculation)){
                         foreach($BOMCalculation as $value1){
                             if($value1->Category != 'Ironmongery&MachiningCosts'){
-                                $GTSellPrice = $GTSellPrice + $value1->GTSellPrice;
+                                $GTSellPrice += $value1->GTSellPrice;
                             }
                         }
                     }
+                    
                     // $itemGTSellPrice = countTotalPrice($request->QuotationId, $versionId, $Item->itemId);
 
                     $Item = Item::where('itemId', $Item->itemId)->update([
@@ -1650,7 +1656,7 @@ class ItemListController extends Controller
                 //     fclose($fp);
                 //     Item::where('itemId',$item->id)->update(["SvgImage" => $SvgImage]);
                 // }
-                $successmsg = 'Configure door successfully, now please add door\'s.';
+                $successmsg = "Configure door successfully, now please add door's.";
                 $url = 'quotation/add-new-doors/'.$request->QuotationId.'/'.$versionId;
                 \Session::flash('success', __($successmsg));
                 return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
@@ -1659,21 +1665,21 @@ class ItemListController extends Controller
     }
 
 
-    public function getHandingOptions(request $request){
+    public function getHandingOptions(request $request): void{
         if(empty($request->doorsetType)){
-            ms(array(
+            ms([
                 'st' => "0",
                 'txt' => '',
                 'html' => "",
-            ));
+            ]);
         }
 
         if(empty($request->doorsetType)){
-            ms(array(
+            ms([
                 'st' => "0",
                 'txt' => '',
                 'html' => "",
-            ));
+            ]);
         }
 
         $pageId = $request->pageId;
@@ -1681,14 +1687,14 @@ class ItemListController extends Controller
         $swingType = $request->swingType;
         $optionResponse = Option::where('configurableitems', $pageId)->where('OptionSlug','Handing')->Where('UnderAttribute',$swingType)->where('UnderParent2',$doorsetType)->get()->toArray();
         if($optionResponse!='' && count($optionResponse)>0){
-            echo json_encode(array('status'=>'ok', 'data'=>$optionResponse));
+            echo json_encode(['status'=>'ok', 'data'=>$optionResponse]);
         }else{
-            echo json_encode(array('status'=>'error', 'data'=>''));
+            echo json_encode(['status'=>'error', 'data'=>'']);
         }
     }
 
 
-    public function Filterintumescentseals(Request $request)
+    public function Filterintumescentseals(Request $request): void
     {
 
         $pageId = $request->pageId;
@@ -1698,6 +1704,7 @@ class ItemListController extends Controller
         }elseif($fireRatingValue == 'FD60' || $fireRatingValue == 'FD60s'){
             $fireRatingValue = 'FD60';
         }
+        
         $intumescentseals = $request->intumescentseals;
         $leafWidth1Value = (float)$request->leafWidth1Value;
         $leafHeightNoOPValue = (float)$request->leafHeightNoOPValue;
@@ -1710,7 +1717,8 @@ class ItemListController extends Controller
 
             $data = '';
             $configuration = '';
-            $width = $height = 0;
+            $width = 0;
+            $height = 0;
 
             $width = (int)$request->leafWidth1Value;
             $height = (int)$request->leafHeightNoOPValue;
@@ -1733,54 +1741,41 @@ class ItemListController extends Controller
                     ['intumescentseals2.configuration', $intumescentseals]
                 ];
 
-                if($fireRatingValue == 'NFR'){
+                if ($fireRatingValue == 'NFR') {
                     // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals])->get();
                     // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `configuration` = '$intumescentseals'";
-
+                } elseif ($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD30' || $fireRatingValue == 'FD30s')) {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId  && `configuration` = '$intumescentseals' && `firerating` = '$fireRatingValue' && `tag` = 'FD30AcrovynFaced'  && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced'], ['intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
+                } elseif ($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD60' || $fireRatingValue == 'FD60s')) {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60AcrovynFaced' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced'], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
+                } elseif ($frameMaterialNew == 'MDF') {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60MDFFrames'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60MDFFrames' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60MDFFrames']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60MDFFrames'], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
                 } else {
-                    if($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD30' || $fireRatingValue == 'FD30s')){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId  && `configuration` = '$intumescentseals' && `firerating` = '$fireRatingValue' && `tag` = 'FD30AcrovynFaced'  && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => $fireRatingValue])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = '$fireRatingValue' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
 
-                        $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced'], ['intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
+                    $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', $fireRatingValue]]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', $fireRatingValue], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
 
-
-                    } else if($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD60' || $fireRatingValue == 'FD60s')){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60AcrovynFaced' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60AcrovynFaced'], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
-
-
-                    } else if($frameMaterialNew == 'MDF'){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60MDFFrames'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60MDFFrames' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60MDFFrames']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', 'FD60MDFFrames'], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
-
-
-
-                    } else {
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => $fireRatingValue])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = '$fireRatingValue' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', $fireRatingValue]]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', $fireRatingValue], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
-
-                    }
                 }
 
-                $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join) {
+                $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'intumescentseals2.id');
                 })
                 ->where($getConditions)
                 ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
                 ->get();
 
-                $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join) {
+                $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'intumescentseals2.intumescentseals2_id');
                 })
                 ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
@@ -1788,30 +1783,30 @@ class ItemListController extends Controller
 
                 foreach($IntumescentSeals_A as $content){
                     $selected = "";
-                    if($fireRatingValue == 'NFR'){
+                    if ($fireRatingValue == 'NFR') {
                         if($request->SelectedValue == $content["intumescentseals2_id"]){
                             $selected = "selected";
                         }
+
                         $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
-                    } else {
-                        if( checkValid($height, $width, $content) ){
-                            if($request->SelectedValue == $content["intumescentseals2_id"]){
-                                $selected = "selected";
-                            }
-                            // echo "id: " . $content["id"] . "&nbsp;&nbsp;&nbsp;" . "\tintumescentSeals: &nbsp;" . $content["intumescentSeals"] . "<br>";
-                            // $data .=  "id: " . $content["id"] . "\t" . "configuration: " . $content["configuration"]. "\t" . "intumescentSeals: " . $content["intumescentSeals"] . "\t". $content["widthPoint1"] . "\t" . $content["widthPoint2"] . "\t" . $content["heightPoint1"] . "\t" . $content["heightPoint2"] . "<br>";
-                            $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
+                    } elseif (checkValid($height, $width, $content)) {
+                        if($request->SelectedValue == $content["intumescentseals2_id"]){
+                            $selected = "selected";
                         }
+
+                        // echo "id: " . $content["id"] . "&nbsp;&nbsp;&nbsp;" . "\tintumescentSeals: &nbsp;" . $content["intumescentSeals"] . "<br>";
+                        // $data .=  "id: " . $content["id"] . "\t" . "configuration: " . $content["configuration"]. "\t" . "intumescentSeals: " . $content["intumescentSeals"] . "\t". $content["widthPoint1"] . "\t" . $content["widthPoint2"] . "\t" . $content["heightPoint1"] . "\t" . $content["heightPoint2"] . "<br>";
+                        $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
                     }
                 }
 
-                if($data != ''){
+                if($data !== ''){
                     $IS = '<option value="">Select Intumescent Seal Arrangement</option>'.$data;
-                    echo json_encode(array('status'=>'ok','data'=> $IS , 'c'=>$IntumescentSeals_A,'allValue'=>$allValue ,'sql'=> $sql,'msg'=>'null'));
+                    echo json_encode(['status'=>'ok','data'=> $IS , 'c'=>$IntumescentSeals_A,'allValue'=>$allValue ,'sql'=> $sql,'msg'=>'null']);
                 } else {
                     // $msg = "In $fireRatingValue, Leaf Width 1 = $leafWidth1Value and Leaf Height = $leafHeightNoOPValue for `$intumescentseals` is not possible.";
-                    $msg = "It’s not possible to make this door with these configurations. Fire Rating = $fireRatingValue | Leaf Width 1 = $leafWidth1Value | Leaf Height = $leafHeightNoOPValue | Configuration = $intumescentseals ";
-                    echo json_encode(array('status'=>'error2','data'=> $data, 'c'=>$IntumescentSeals_A,'allValue'=>$allValue,'sql'=> $sql,'msg'=>$msg));
+                    $msg = sprintf('It’s not possible to make this door with these configurations. Fire Rating = %s | Leaf Width 1 = %s | Leaf Height = %s | Configuration = %s ', $fireRatingValue, $leafWidth1Value, $leafHeightNoOPValue, $intumescentseals);
+                    echo json_encode(['status'=>'error2','data'=> $data, 'c'=>$IntumescentSeals_A,'allValue'=>$allValue,'sql'=> $sql,'msg'=>$msg]);
                 }
 
 
@@ -1829,47 +1824,34 @@ class ItemListController extends Controller
                     // ['selected_intumescentseals2.selected_intumescentseals2_user_id',Auth::user()->id]
                 ];
 
-                if($fireRatingValue == 'NFR'){
+                if ($fireRatingValue == 'NFR') {
                     // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals])->get();
                     // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `configuration` = '$intumescentseals'";
-
+                } elseif ($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD30' || $fireRatingValue == 'FD30s')) {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId  && `configuration` = '$intumescentseals' && `firerating` = '$fireRatingValue' && `tag` = 'FD30AcrovynFaced'  && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced'], ['selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
+                } elseif ($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD60' || $fireRatingValue == 'FD60s')) {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60AcrovynFaced' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced'], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
+                } elseif ($frameMaterialNew == 'MDF') {
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60MDFFrames'])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60MDFFrames' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60MDFFrames']]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60MDFFrames'], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
                 } else {
-                    if($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD30' || $fireRatingValue == 'FD30s')){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId  && `configuration` = '$intumescentseals' && `firerating` = '$fireRatingValue' && `tag` = 'FD30AcrovynFaced'  && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
+                    // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => $fireRatingValue])->get();
+                    // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = '$fireRatingValue' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
 
-                        $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced'], ['selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
+                    $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', $fireRatingValue]]);
+                    $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', $fireRatingValue], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
 
-
-                    } else if($doorLeafFacingValueNew == 'CS_acrovyn' && ($fireRatingValue == 'FD60' || $fireRatingValue == 'FD60s')){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60AcrovynFaced'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60AcrovynFaced' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60AcrovynFaced'], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
-
-
-                    } else if($frameMaterialNew == 'MDF'){
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => 'FD60MDFFrames'])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = 'FD60MDFFrames' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60MDFFrames']]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', 'FD60MDFFrames'], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
-
-
-
-                    } else {
-                        // $IntumescentSeals_A = SettingIntumescentSeals2::where(['configurableitems' => $pageId , 'configuration' => $intumescentseals,'firerating' => $fireRatingValue,'tag' => $fireRatingValue])->get();
-                        // $sql = "SELECT * FROM `setting_intumescentseals` WHERE `configurableitems` = $pageId && `firerating` = '$fireRatingValue' && `tag` = '$fireRatingValue' && `configuration` = '$intumescentseals' && $leafHeightNoOPValue <= `height_max` && $leafWidth1Value<= `width_max`";
-
-                        $getConditions = array_merge($getConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', $fireRatingValue]]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', $fireRatingValue], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
-
-                    }
                 }
 
-                $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join) {
+                $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
                 })
                 ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)->where($getConditions)
@@ -1877,7 +1859,7 @@ class ItemListController extends Controller
                 ->orderBy('setting_intumescentseals2.brand','ASC')->get();
                 // ->where($getConditions)->orderBy('setting_intumescentseals2.brand','ASC')->get();
 
-                $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join) {
+                $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
                     $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
                 })
                 ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)
@@ -1889,32 +1871,33 @@ class ItemListController extends Controller
                 foreach($IntumescentSeals_A as $content){
 
                     $selected = "";
-                    if($fireRatingValue == 'NFR'){
+                    if ($fireRatingValue == 'NFR') {
                         if($request->SelectedValue == $content["intumescentseals2_id"]){
                             $selected = "selected";
                         }
+
                         $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
-                    } else {
-                        if( checkValid($height, $width, $content) ){
-                            if($request->SelectedValue == $content["intumescentseals2_id"]){
-                                $selected = "selected";
-                            }
-                            // echo "id: " . $content["id"] . "&nbsp;&nbsp;&nbsp;" . "\tintumescentSeals: &nbsp;" . $content["intumescentSeals"] . "<br>";
-                            // $data .=  "id: " . $content["id"] . "\t" . "configuration: " . $content["configuration"]. "\t" . "intumescentSeals: " . $content["intumescentSeals"] . "\t". $content["widthPoint1"] . "\t" . $content["widthPoint2"] . "\t" . $content["heightPoint1"] . "\t" . $content["heightPoint2"] . "<br>";
-                            $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
+                    } elseif (checkValid($height, $width, $content)) {
+                        if($request->SelectedValue == $content["intumescentseals2_id"]){
+                            $selected = "selected";
                         }
+
+                        // echo "id: " . $content["id"] . "&nbsp;&nbsp;&nbsp;" . "\tintumescentSeals: &nbsp;" . $content["intumescentSeals"] . "<br>";
+                        // $data .=  "id: " . $content["id"] . "\t" . "configuration: " . $content["configuration"]. "\t" . "intumescentSeals: " . $content["intumescentSeals"] . "\t". $content["widthPoint1"] . "\t" . $content["widthPoint2"] . "\t" . $content["heightPoint1"] . "\t" . $content["heightPoint2"] . "<br>";
+                        $data .= '<option value="'.$content["intumescentseals2_id"].'" '.$selected.'>'.$content["brand"].' - '.$content["intumescentSeals"].'</option>';
                     }
                 }
+                
                 // echo "<pre>";
                 // print_r($data);die;
 
-                if($data != ''){
+                if($data !== ''){
                     $IS = '<option value="">Select Intumescent Seal Arrangement</option>'.$data;
-                    echo json_encode(array('status'=>'ok','data'=> $IS , 'c'=>$IntumescentSeals_A,'allValue'=>$allValue ,'sql'=> $sql,'msg'=>'null'));
+                    echo json_encode(['status'=>'ok','data'=> $IS , 'c'=>$IntumescentSeals_A,'allValue'=>$allValue ,'sql'=> $sql,'msg'=>'null']);
                 } else {
                     // $msg = "In $fireRatingValue, Leaf Width 1 = $leafWidth1Value and Leaf Height = $leafHeightNoOPValue for `$intumescentseals` is not possible.";
-                    $msg = "It’s not possible to make this door with these configurations. Fire Rating = $request->fireRatingValue | Leaf Width 1 = $leafWidth1Value | Leaf Height = $leafHeightNoOPValue | Configuration = $intumescentseals ";
-                    echo json_encode(array('status'=>'error2','data'=> $data, 'c'=>$IntumescentSeals_A,'allValue'=>$allValue,'sql'=> $sql,'msg'=>$msg));
+                    $msg = sprintf('It’s not possible to make this door with these configurations. Fire Rating = %s | Leaf Width 1 = %s | Leaf Height = %s | Configuration = %s ', $request->fireRatingValue, $leafWidth1Value, $leafHeightNoOPValue, $intumescentseals);
+                    echo json_encode(['status'=>'error2','data'=> $data, 'c'=>$IntumescentSeals_A,'allValue'=>$allValue,'sql'=> $sql,'msg'=>$msg]);
                 }
 
 
@@ -1934,12 +1917,12 @@ class ItemListController extends Controller
 
         } else {
             $msg = "Leaf Width 1 and Leaf Height is never be null.";
-            echo json_encode(array('status'=>'error2','data'=> 'null', 'c'=>'null','allValue'=>'null','sql'=> 'null','msg'=>$msg));
+            echo json_encode(['status'=>'error2','data'=> 'null', 'c'=>'null','allValue'=>'null','sql'=> 'null','msg'=>$msg]);
         }
     }
 
 
-    public function opGlassTypeFilterUrl(Request $request)
+    public function opGlassTypeFilterUrl(Request $request): void
     {
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
@@ -1948,6 +1931,7 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
         $opGlassIntegrity = $request->opGlassIntegrity;
@@ -1965,7 +1949,7 @@ class ItemListController extends Controller
         } else {
             $userIds = CompanyUsers();
             if($fireRating=="NFR"){
-                $opglassType = GlassType::Join('selected_glass_type', function($join) {
+                $opglassType = GlassType::Join('selected_glass_type', function($join): void {
                     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
                 })
                     ->where('glass_type.'.$configurationDoor,$pageId)
@@ -1976,7 +1960,7 @@ class ItemListController extends Controller
                     ->get(['glass_type.*']);
             } else {
 
-                $opglassType = GlassType::Join('selected_glass_type', function($join) {
+                $opglassType = GlassType::Join('selected_glass_type', function($join): void {
                     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
                 })
                     ->where('glass_type.'.$configurationDoor,$pageId)
@@ -1987,14 +1971,15 @@ class ItemListController extends Controller
                     ->get(['glass_type.*']);
             }
         }
+        
         if(!empty($opglassType) && count( $opglassType)){
-            echo json_encode(array('status'=>'ok','data'=> $opglassType));
+            echo json_encode(['status'=>'ok','data'=> $opglassType]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function filterOverpanelGlass(Request $request){
+    public function filterOverpanelGlass(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         $type = $request->type;
@@ -2020,6 +2005,7 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
         $userType = Auth::user()->UserType;
@@ -2038,14 +2024,14 @@ class ItemListController extends Controller
         ->get();
 
         if(!empty($data) && count( $data)){
-            echo json_encode(array('status'=>'ok','data'=> $data));
+            echo json_encode(['status'=>'ok','data'=> $data]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
 
     }
 
-    public function overpanelglassTypeFilter(Request $request){
+    public function overpanelglassTypeFilter(Request $request): void{
         $userIds = CompanyUsers();
         $pageId = $request->pageId;
         $glassType = $request->glassType;
@@ -2056,36 +2042,33 @@ class ItemListController extends Controller
         }elseif($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
             $request->fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($request->fireRating);
-        if($userType=="1" ||$userType=="4"){
+        if ($userType=="1" ||$userType=="4") {
             $OverpanelGlassGlazing = OverpanelGlassGlazing::where($configurationDoor,$pageId)->where('Key',$glassType)->where($fireRatingDoor,$request->fireRating)->where('overpanel_glass_glazing.EditBy',1)->first();
-        } else {
-            if($request->fireRating == 'NFR'){
-                $OverpanelGlassGlazing = OverpanelGlassGlazing::where('overpanel_glass_glazing.'.$configurationDoor,$pageId)
-                ->where('overpanel_glass_glazing.Key',$glassType)
-                ->wherein('overpanel_glass_glazing.EditBy',$userIds)
-                ->groupBy('overpanel_glass_glazing.Key')
-                ->first(['overpanel_glass_glazing.*']);
-            }else{
-                $OverpanelGlassGlazing = OverpanelGlassGlazing::where('overpanel_glass_glazing.'.$configurationDoor,$pageId)
-                ->where('overpanel_glass_glazing.Key',$glassType)
-                ->wherein('overpanel_glass_glazing.EditBy',$userIds)
-                ->where('overpanel_glass_glazing.'.$fireRatingDoor,$request->fireRating)
-                ->first(['overpanel_glass_glazing.*']);
-            }
+        } elseif ($request->fireRating == 'NFR') {
+            $OverpanelGlassGlazing = OverpanelGlassGlazing::where('overpanel_glass_glazing.'.$configurationDoor,$pageId)
+            ->where('overpanel_glass_glazing.Key',$glassType)
+            ->wherein('overpanel_glass_glazing.EditBy',$userIds)
+            ->groupBy('overpanel_glass_glazing.Key')
+            ->first(['overpanel_glass_glazing.*']);
+        } else{
+            $OverpanelGlassGlazing = OverpanelGlassGlazing::where('overpanel_glass_glazing.'.$configurationDoor,$pageId)
+            ->where('overpanel_glass_glazing.Key',$glassType)
+            ->wherein('overpanel_glass_glazing.EditBy',$userIds)
+            ->where('overpanel_glass_glazing.'.$fireRatingDoor,$request->fireRating)
+            ->first(['overpanel_glass_glazing.*']);
         }
 
         $authdata = Auth::user();
-        $lippingSpecies=array();
+        $lippingSpecies=[];
 
         $SelectedLippingSpecies = SelectedLippingSpeciesItems::wherein('selected_lipping_species_items.selected_user_id', $userIds)->groupBy("selected_lipping_species_id")->get();
         $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
-        if(!empty($OverpanelGlassGlazing)){
-            if($fireRating=="FD30" || $fireRating=="FD30s" || $fireRating=="FD60" || $fireRating=="FD60s"){
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", $OverpanelGlassGlazing->Beading ]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", $OverpanelGlassGlazing->Beading], ["lipping_species.MaxValues", ">=", $OverpanelGlassGlazing->Beading]]);
-            }
+        if(!empty($OverpanelGlassGlazing) && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
+            $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", $OverpanelGlassGlazing->Beading ]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", $OverpanelGlassGlazing->Beading], ["lipping_species.MaxValues", ">=", $OverpanelGlassGlazing->Beading]]);
         }
 
         if($fireRating=="NFR"){
@@ -2100,13 +2083,13 @@ class ItemListController extends Controller
         }
 
         if(!empty($OverpanelGlassGlazing)){
-            echo json_encode(array('status'=>'ok','data'=> $OverpanelGlassGlazing,'lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'ok','data'=> $OverpanelGlassGlazing,'lippingSpecies'=>$lippingSpecies]);
         } else {
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function lippingThickness(Request $request){
+    public function lippingThickness(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         if($fireRating == 'FD30' || $fireRating == 'FD30s'){
@@ -2114,15 +2097,16 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $lippingThickness = Option::where('configurableitems',$pageId)->where('UnderAttribute',$fireRating)->where('OptionSlug','lipping_thickness')->get();
         if(!empty($lippingThickness) && count( $lippingThickness)){
-            echo json_encode(array('status'=>'ok','data'=> $lippingThickness));
+            echo json_encode(['status'=>'ok','data'=> $lippingThickness]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function getGlassOptions(Request $request){
+    public function getGlassOptions(Request $request): void{
         $FireRating = $request->FireRating;
         if($FireRating == 'IGU 0-0'){
             $FireRating = '0-0';
@@ -2131,6 +2115,7 @@ class ItemListController extends Controller
         }elseif($FireRating == 'IGU 30-30'){
             $FireRating = '30-30';
         }
+        
         $UserId = CompanyUsers(true);
 
         if(!empty($FireRating)){
@@ -2155,13 +2140,13 @@ class ItemListController extends Controller
         }
 
         if(!empty($glassData) && count( $glassData)){
-            echo json_encode(array('status'=>'ok','data'=> $glassData,'dataNFR' => $NFRGlassData,'dataSelected' => $glassDataSelectedOption));
+            echo json_encode(['status'=>'ok','data'=> $glassData,'dataNFR' => $NFRGlassData,'dataSelected' => $glassDataSelectedOption]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function glazingFilterScreen(Request $request){
+    public function glazingFilterScreen(Request $request): void{
         $FireRating = $request->FireRating;
         $SinglePane = $request->SinglePane;
         $frameWidth = $request->frameWidth;
@@ -2179,7 +2164,8 @@ class ItemListController extends Controller
 
             $data = '';
             $configuration = '';
-            $width = $height = 0;
+            $width = 0;
+            $height = 0;
 
             $width = (int)$request->frameWidth;
             $height = (int)$request->frameHeight;
@@ -2253,38 +2239,39 @@ class ItemListController extends Controller
                 foreach($ScreenGlassType as $content){
 
                     $selected = "";
-                    if($FireRating == '0-0'){
+                    if ($FireRating == '0-0') {
                         if($request->SelectedValue == $content["GlazingSystem"]){
                             $selected = "selected";
                         }
+
                         $data .= '<option value="'.$content["GlazingSystem"].'" '.$selected.'>'.$content["GlazingSystem"].'</option>';
-                    } else {
-                        if(checkValidScreen($height, $width, $content) ){
-                            if($request->SelectedValue == $content["GlazingSystem"]){
-                                $selected = "selected";
-                            }
-                            $data .= '<option value="'.$content["GlazingSystem"].'" '.$selected.'>'.$content["GlazingSystem"].'</option>';
+                    } elseif (checkValidScreen($height, $width, $content)) {
+                        if($request->SelectedValue == $content["GlazingSystem"]){
+                            $selected = "selected";
                         }
+
+                        $data .= '<option value="'.$content["GlazingSystem"].'" '.$selected.'>'.$content["GlazingSystem"].'</option>';
                     }
                 }
+                
                 // echo "<pre>";
                 // print_r($data);die;
 
-                if($data != ''){
+                if($data !== ''){
                     $IS = '<option value="">Select Glazing System</option>'.$data;
-                    echo json_encode(array('status'=>'ok','data'=> $IS , 'c'=>$ScreenGlassType,'allValue'=>$allValue ,'msg'=>'null'));
+                    echo json_encode(['status'=>'ok','data'=> $IS , 'c'=>$ScreenGlassType,'allValue'=>$allValue ,'msg'=>'null']);
                 } else {
                     $msg = "It’s not possible to make this screen with these configurations.";
-                    echo json_encode(array('status'=>'error2','data'=> $data, 'c'=>$ScreenGlassType,'allValue'=>$allValue,'msg'=>$msg));
+                    echo json_encode(['status'=>'error2','data'=> $data, 'c'=>$ScreenGlassType,'allValue'=>$allValue,'msg'=>$msg]);
                 }
             }
         } else {
             $msg = "Frame Width and Frame Height is never be null.";
-            echo json_encode(array('status'=>'error2','data'=> 'null', 'c'=>'null','allValue'=>'null','msg'=>$msg));
+            echo json_encode(['status'=>'error2','data'=> 'null', 'c'=>'null','allValue'=>'null','msg'=>$msg]);
         }
     }
 
-    public function screenGlassGlazing(Request $request){
+    public function screenGlassGlazing(Request $request): void{
         $FireRating = $request->FireRating;
         $glassType = $request->glassType;
         if($FireRating == 'IGU 0-0'){
@@ -2302,7 +2289,7 @@ class ItemListController extends Controller
             ->first();
 
             $authdata = Auth::user();
-            $lippingSpecies=array();
+            $lippingSpecies=[];
 
             $SelectedLippingSpecies = SelectedLippingSpeciesItems::wherein('selected_lipping_species_items.selected_user_id', CompanyUsers())->groupBy("selected_lipping_species_id")->get();
             $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
@@ -2325,13 +2312,13 @@ class ItemListController extends Controller
         }
 
         if(!empty($glassData)){
-            echo json_encode(array('status'=>'ok','data'=> $glassData,'lippingSpecies'=>$lippingSpecies));
+            echo json_encode(['status'=>'ok','data'=> $glassData,'lippingSpecies'=>$lippingSpecies]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
 
-    public function screenGlazingThickness(Request $request){
+    public function screenGlazingThickness(Request $request): void{
         $FireRating = $request->FireRating;
         $GlazingSystem = $request->GlazingSystem;
         if($FireRating == 'IGU 0-0'){
@@ -2351,12 +2338,13 @@ class ItemListController extends Controller
         }
 
         if(!empty($GlazingSystem)){
-            echo json_encode(array('status'=>'ok','data'=> $GlazingSystem));
+            echo json_encode(['status'=>'ok','data'=> $GlazingSystem]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
-    public function glassGlazingFilter(Request $request){
+    
+    public function glassGlazingFilter(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         $integrity = $request->integrity;
@@ -2367,6 +2355,7 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
 
@@ -2403,12 +2392,13 @@ class ItemListController extends Controller
 
 
         if(!empty($data) && count( $data)){
-            echo json_encode(array('status'=>'ok','data'=> $data));
+            echo json_encode(['status'=>'ok','data'=> $data]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> ''));
+            echo json_encode(['status'=>'error','data'=> '']);
         }
     }
-    public function GlazingFilter(Request $request){
+    
+    public function GlazingFilter(Request $request): void{
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         $integrity = $request->integrity;
@@ -2421,13 +2411,14 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
+        
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
 
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
         $userType = Auth::user()->UserType;
 
-        if(!empty($glassType)){
+        if (!empty($glassType)) {
             if($fireRating == 'NFR'){
                 $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
                 ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
@@ -2455,53 +2446,50 @@ class ItemListController extends Controller
                 ->get();
             }
 
-
             $glazingBeads = DB::table('options')->where('configurableitems', $pageId)->where('OptionSlug', 'leaf1_glazing_beads')->get(['id', 'OptionKey', 'OptionValue']);
             $beads = [];
             foreach($glazingBeads as $val){
                 $beads[] = $val->OptionKey;
             }
+
             $glazing = json_encode($beads);
-        }else{
-            if(!empty($glassType)){
-                if($fireRating == 'NFR'){
-                    $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                    ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                    ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
-                    ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                    ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                    ->where('glazing_system.'.$configurationDoor, $pageId)
-                    ->groupBy('glass_glazing_system.glazing_system')
-                    ->orderBy('glazing_system.Key','ASC')
-                    ->where('selected_glazing_system.userId',Auth::user()->id)
-                    ->get();
+        } elseif (!empty($glassType)) {
+            if($fireRating == 'NFR'){
+                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
+                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
+                ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
+                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
+                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
+                ->where('glazing_system.'.$configurationDoor, $pageId)
+                ->groupBy('glass_glazing_system.glazing_system')
+                ->orderBy('glazing_system.Key','ASC')
+                ->where('selected_glazing_system.userId',Auth::user()->id)
+                ->get();
 
-                }
-                else{
-                    $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                    ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                    ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
-                    ->where('glazing_system.'.$fireRatingDoor, $fireRating)
-                    ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                    ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                    ->where('glazing_system.'.$configurationDoor, $pageId)
-                    ->groupBy('glass_glazing_system.glazing_system')
-                    ->orderBy('glazing_system.Key','ASC')
-                    ->where('selected_glazing_system.userId',Auth::user()->id)
-                    ->get();
-
-                }
-
-                $GlassType = GlassType::where('Key',$glassType)->first();
-
-                $glazing = $GlassType->GlazingBeads;
             }
+            else{
+                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
+                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
+                ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
+                ->where('glazing_system.'.$fireRatingDoor, $fireRating)
+                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
+                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
+                ->where('glazing_system.'.$configurationDoor, $pageId)
+                ->groupBy('glass_glazing_system.glazing_system')
+                ->orderBy('glazing_system.Key','ASC')
+                ->where('selected_glazing_system.userId',Auth::user()->id)
+                ->get();
+
+            }
+
+            $GlassType = GlassType::where('Key',$glassType)->first();
+            $glazing = $GlassType->GlazingBeads;
         }
 
         if(!empty($GlazingData) && count( $GlazingData)){
-            echo json_encode(array('status'=>'ok','data'=> $GlazingData,'GlazingBeads' => $glazing));
+            echo json_encode(['status'=>'ok','data'=> $GlazingData,'GlazingBeads' => $glazing]);
         }else{
-            echo json_encode(array('status'=>'error','data'=> '','GlazingBeads' => $glazing));
+            echo json_encode(['status'=>'error','data'=> '','GlazingBeads' => $glazing]);
         }
     }
 

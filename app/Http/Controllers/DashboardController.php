@@ -77,11 +77,7 @@ class DashboardController extends Controller
                 foreach ($recentUsers as $val) {
                     $image = $val->UserImage;
                     if (!empty($image)) {
-                        if (file_exists(public_path('UserImage/' . $image))) {
-                            $imagepath = asset('UserImage/' . $image);
-                        } else {
-                            $imagepath = asset('images/user.jpg');
-                        }
+                        $imagepath = file_exists(public_path('UserImage/' . $image)) ? asset('UserImage/' . $image) : asset('images/user.jpg');
                     } else {
                         $imagepath = asset('images/user.jpg');
                     }
@@ -116,11 +112,7 @@ class DashboardController extends Controller
                     $index = 0;
                     $image = $val->UserImage;
                     if (!empty($image)) {
-                        if (file_exists(public_path('UserImage/' . $image))) {
-                            $imagepath = asset('UserImage/' . $image);
-                        } else {
-                            $imagepath = asset('images/user.jpg');
-                        }
+                        $imagepath = file_exists(public_path('UserImage/' . $image)) ? asset('UserImage/' . $image) : asset('images/user.jpg');
                     } else {
                         $imagepath = asset('images/user.jpg');
                     }
@@ -340,25 +332,7 @@ class DashboardController extends Controller
 
 
 
-        return view('Dashboard.Index', compact(
-            'authdata',
-            'customer_count',
-            'quotation_count',
-            'user_count',
-            'project_count',
-            'order_count',
-            'company_count',
-            'quotation_count_status_wise',
-            'recentUsers',
-            'recentCompanies',
-            'recentCustomers',
-            'recentProjects',
-            'recentQuotations',
-            'recentQuotations',
-            'recentOrders',
-            'RecentUserDetails',
-            'aboutCompanyDetail'
-        ));
+        return view('Dashboard.Index', ['authdata' => $authdata, 'customer_count' => $customer_count, 'quotation_count' => $quotation_count, 'user_count' => $user_count, 'project_count' => $project_count, 'order_count' => $order_count, 'company_count' => $company_count, 'quotation_count_status_wise' => $quotation_count_status_wise, 'recentUsers' => $recentUsers, 'recentCompanies' => $recentCompanies, 'recentCustomers' => $recentCustomers, 'recentProjects' => $recentProjects, 'recentQuotations' => $recentQuotations, 'recentQuotations' => $recentQuotations, 'recentOrders' => $recentOrders, 'RecentUserDetails' => $RecentUserDetails, 'aboutCompanyDetail' => $aboutCompanyDetail]);
     }
 
     public function notificationShow()
@@ -366,31 +340,32 @@ class DashboardController extends Controller
 
         $myCreatedUser = myCreatedUser();
         $myCreatedUser = array_diff($myCreatedUser, [Auth::user()->id]);
+        
         $u_type = Auth::user()->UserType;
 
         $uId = Auth::user()->id;
         $notifications = [];
 
         // GET PROJECT DATA
-        $projects = Project::whereIn('project.UserId', $myCreatedUser)->whereRaw("NOT find_in_set($uId, project.read_by)")->join('users as u', 'u.id', '=', 'project.UserId')->select('project.*', 'u.FirstName', 'u.UserImage', 'u.UserType', DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'project' ELSE 'project' END) as notificationType"))->get()->toArray();
+        $projects = Project::whereIn('project.UserId', $myCreatedUser)->whereRaw(sprintf('NOT find_in_set(%s, project.read_by)', $uId))->join('users as u', 'u.id', '=', 'project.UserId')->select('project.*', 'u.FirstName', 'u.UserImage', 'u.UserType', DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'project' ELSE 'project' END) as notificationType"))->get()->toArray();
         $notifications = array_merge($notifications, $projects);
 
 
         // GET QUOTE DATA
-        $quotes = Quotation::wherein('quotation.UserId',$myCreatedUser)->leftJoin("quotation_versions",function($join){
+        $quotes = Quotation::wherein('quotation.UserId',$myCreatedUser)->leftJoin("quotation_versions",function($join): void{
             $join->on("quotation.id","quotation_versions.quotation_id")
             ->orOn("quotation_versions.id","=","quotation.VersionId");
-        })->whereRaw("NOT find_in_set($uId, quotation.read_by)")->join('users as u', 'u.id','=','quotation.UserId')->select('quotation.*', 'u.FirstName', 'u.UserImage', 'u.UserType','quotation_versions.id as QVID',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'quote' ELSE 'quote' END) as notificationType"))->groupBy('quotation.id')->get()->toArray();
+        })->whereRaw(sprintf('NOT find_in_set(%s, quotation.read_by)', $uId))->join('users as u', 'u.id','=','quotation.UserId')->select('quotation.*', 'u.FirstName', 'u.UserImage', 'u.UserType','quotation_versions.id as QVID',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'quote' ELSE 'quote' END) as notificationType"))->groupBy('quotation.id')->get()->toArray();
         $notifications = array_merge($notifications, $quotes);
 
 
         // GET CONTRACTOR DATA
-        $contractor = Customer::wherein('uc.CreatedBy',$myCreatedUser)->where(['uc.UserType'=> 5])->whereRaw("NOT find_in_set($uId, customers.read_by)")->join('users as uc', 'uc.id','=','customers.UserId')->join('users as u', 'u.id','=','uc.CreatedBy')->select('customers.*', 'uc.FirstName as ContractorName', 'u.FirstName', 'u.UserImage', 'u.UserType',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'contractor' ELSE 'contractor' END) as notificationType"))->get()->toArray();
+        $contractor = Customer::wherein('uc.CreatedBy',$myCreatedUser)->where(['uc.UserType'=> 5])->whereRaw(sprintf('NOT find_in_set(%s, customers.read_by)', $uId))->join('users as uc', 'uc.id','=','customers.UserId')->join('users as u', 'u.id','=','uc.CreatedBy')->select('customers.*', 'uc.FirstName as ContractorName', 'u.FirstName', 'u.UserImage', 'u.UserType',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'contractor' ELSE 'contractor' END) as notificationType"))->get()->toArray();
         $notifications = array_merge($notifications, $contractor);
 
         if($u_type != 3){
             // GET USER DATA
-            $users = User::wherein('users.CreatedBy',$myCreatedUser)->wherein('users.UserType',[2,3])->whereRaw("NOT find_in_set($uId, users.read_by)")->join('users as u', 'u.id','=','users.CreatedBy')->select('users.id','users.FirstName as childName', 'users.UserType as childType','users.UserJobtitle','users.created_at', 'u.FirstName', 'u.UserImage', 'u.UserType',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'user' ELSE 'user' END) as notificationType"))->get()->toArray();
+            $users = User::wherein('users.CreatedBy',$myCreatedUser)->wherein('users.UserType',[2,3])->whereRaw(sprintf('NOT find_in_set(%s, users.read_by)', $uId))->join('users as u', 'u.id','=','users.CreatedBy')->select('users.id','users.FirstName as childName', 'users.UserType as childType','users.UserJobtitle','users.created_at', 'u.FirstName', 'u.UserImage', 'u.UserType',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'user' ELSE 'user' END) as notificationType"))->get()->toArray();
             $notifications = array_merge($notifications, $users);
         }
 
@@ -404,26 +379,26 @@ class DashboardController extends Controller
 
 
         // GET QUOTE ACCEPT/REJECT DATA
-        $quotesStats = Quotation::wherein('quotation.UserId',$myCreatedUser)->wherein('quotation.QuotationStatus', ['Accept', 'Reject'])->leftJoin("quotation_versions",function($join){
+        $quotesStats = Quotation::wherein('quotation.UserId',$myCreatedUser)->wherein('quotation.QuotationStatus', ['Accept', 'Reject'])->leftJoin("quotation_versions",function($join): void{
             $join->on("quotation.id","quotation_versions.quotation_id")
             ->orOn("quotation_versions.id","=","quotation.VersionId");
-        })->whereRaw("NOT find_in_set($uId, quotation.status_read_by)")->join('users as u', 'u.id','=','quotation.UserId')->select('quotation.*', 'u.FirstName', 'u.UserImage', 'u.UserType','quotation_versions.id as QVID',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'quoteStatus' ELSE 'quoteStatus' END) as notificationType"))->groupBy('quotation.id')->get()->toArray();
+        })->whereRaw(sprintf('NOT find_in_set(%s, quotation.status_read_by)', $uId))->join('users as u', 'u.id','=','quotation.UserId')->select('quotation.*', 'u.FirstName', 'u.UserImage', 'u.UserType','quotation_versions.id as QVID',  DB::raw("(CASE WHEN u.id IS NOT NULL THEN 'quoteStatus' ELSE 'quoteStatus' END) as notificationType"))->groupBy('quotation.id')->get()->toArray();
         $notifications = array_merge($notifications, $quotesStats);
 
 
         // SORT NOTIFICATION BY CREATED_AT
-        usort($notifications, function ($a, $b) {
+        usort($notifications, function (array $a, array $b): int {
             $dateA = strtotime($a['created_at']);
             $dateB = strtotime($b['created_at']);
             return $dateB - $dateA;
         });
 
-        $html =  view('Notification.showNotification', compact('notifications'))->render();
+        $html =  view('Notification.showNotification', ['notifications' => $notifications])->render();
 
         return $html;
     }
 
-    public function notificationMarkRead(Request $request) {
+    public function notificationMarkRead(Request $request): void {
         markAsRead($request->p_id, 'teamBoardMsg');
         print_r(['succes' => true]); die;
     }

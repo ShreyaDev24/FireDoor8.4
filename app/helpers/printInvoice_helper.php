@@ -46,7 +46,7 @@ use App\Models\SelectedDoorLeafFacing;
 use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 
-function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating){
+function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating): array{
     $VisionPanelGlazingImageStructure = '';
     $VisionPanelGlazingImageRight = '';
     $VisionPanelGlazingImageLeft  = '';
@@ -107,7 +107,7 @@ function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating){
                     $GlazingBeadsPadding = 1;
                     break;
 
-                case in_array($GlazingBeads, ["Square_Flush"]):
+                case $GlazingBeads == "Square_Flush":
 
                         $VisionPanelGlazingImageRight = \Config::get('constants.base64Images.SquareFlushFD30');
                         // $VisionPanelGlazingImageLeft = \Config::get('constants.base64Images.SplayedFlushFD60Left');
@@ -181,7 +181,7 @@ function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating){
                     $VisionPanelGlazingImageStructure_Frame=\Config::get('constants.base64Images.ChamferedBolectionFD60sectiondrawing');
                     $GlazingBeadsPadding = 1;
                     break;
-                case in_array($GlazingBeads, ["Chamfered_Boleaction"]):
+                case $GlazingBeads == "Chamfered_Boleaction":
                     $VisionPanelGlazingImageRight = \Config::get('constants.base64Images.ChamferedBolectionFD60');
                     // $VisionPanelGlazingImageLeft = \Config::get('constants.base64Images.SplayedBolectionFD60Left');
                     $VisionPanelGlazingImageStructure_Frame=\Config::get('constants.base64Images.ChamferedBolectionFD60sectiondrawing');
@@ -195,7 +195,7 @@ function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating){
                     $GlazingBeadsPadding = 0;
                     break;
 
-                case in_array($GlazingBeads, ["Square_Boleaction"]):
+                case $GlazingBeads == "Square_Boleaction":
 
                         $VisionPanelGlazingImageRight = \Config::get('constants.base64Images.SquareBolectionFD60');
                         // $VisionPanelGlazingImageLeft = \Config::get('constants.base64Images.SplayedFlushFD30Left');
@@ -214,7 +214,7 @@ function GlazingSystemsImage($GlazingSystems,$GlazingBeads,$FireRating){
 
             break;
 
-        case in_array($FireRating, ["NFR"]):
+        case $FireRating == "NFR":
 
             // switch ($GlazingSystems) {
             //     case in_array($GlazingSystems, ["fireglaze30", "Therm-A-Strip_30"]):

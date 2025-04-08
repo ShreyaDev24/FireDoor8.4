@@ -15,6 +15,7 @@ class Company extends Model
         'CompanyName','CompanyWebsite','CompanyPhoto','CompanyEmail', 'CompanyPhone','CompanyVatNumber','CompanyAddressLine1','UserId',
         'CompanyAddressLine2','CompanyAddressLine3','CompanyCountry','CompanyState','CompanyCity','CompanyPostalCode','CompanyMoreInfo'
     ];
+    
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -23,6 +24,7 @@ class Company extends Model
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
     //To add user table relationship
 
     public function users(){

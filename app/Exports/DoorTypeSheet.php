@@ -15,7 +15,9 @@ use App\Models\Quotation;
 class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatting,WithColumnWidths
 {
     protected $sections;
+    
     protected $DoorType;
+    
     protected $QId;
 
     public function __construct($sections,$DoorType,$QId)
@@ -37,8 +39,10 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             foreach ($section['data'] as $dataRow) {
                 $rows[] = $dataRow; // Section content
             }
+            
             $rows[] = ['']; // Blank row for spacing
         }
+        
         return $rows;
     }
 
@@ -64,12 +68,12 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function (AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event): void {
                 $currentRow = 1;
                 foreach ($this->sections as $section) {
                     // Bold the title
-                    $event->sheet->mergeCells("A{$currentRow}:O{$currentRow}");
-                    $event->sheet->getStyle("A{$currentRow}")->applyFromArray([
+                    $event->sheet->mergeCells(sprintf('A%s:O%s', $currentRow, $currentRow));
+                    $event->sheet->getStyle('A' . $currentRow)->applyFromArray([
                         'font' => [
                             'bold' => true,
                             'size' => 14,
@@ -80,7 +84,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                     $currentRow++;
 
                     // Bold the headings
-                    $event->sheet->getStyle("A{$currentRow}:O{$currentRow}")->applyFromArray([
+                    $event->sheet->getStyle(sprintf('A%s:O%s', $currentRow, $currentRow))->applyFromArray([
                         'font' => [
                             'bold' => true,
                         ],
@@ -117,7 +121,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
         // Apply the appropriate format based on the currency
         $format = $currencyFormats[$currency] ?? NumberFormat::FORMAT_CURRENCY_EUR_SIMPLE;
 
-        if ($currency == '$') {
+        if ($currency === '$') {
             return [
                 'J' => $currencyFormats['$'],
                 'K' => $currencyFormats['$'],
@@ -125,7 +129,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                 'M' => $currencyFormats['$'],
                 'N' => $currencyFormats['$'],
             ];
-        } elseif ($currency == '£') {
+        } elseif ($currency === '£') {
             return [
                 'J' => $currencyFormats['£'],
                 'K' => $currencyFormats['£'],

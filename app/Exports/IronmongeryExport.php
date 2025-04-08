@@ -22,9 +22,13 @@ class IronmongeryExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $id,$vid,$result;
+    protected $id;
 
-    function __construct($id,$vid) {
+    protected $vid;
+
+    protected $result;
+
+    public function __construct($id,$vid) {
         $this->result = BOMCAlculationExport($id,$vid);
     }
 

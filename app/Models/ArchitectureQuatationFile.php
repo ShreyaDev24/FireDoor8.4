@@ -15,6 +15,7 @@ class ArchitectureQuatationFile extends Model
      * @var array
      */
     protected $table = 'architecture_quatation_file';
+    
     protected $fillable = [
         'filename','generated_id','status'
     ];

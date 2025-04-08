@@ -42,7 +42,7 @@ class ColorController extends Controller
         // } else {
         //     $Color = '';
         // }
-        return view('color/CreateColor',compact('doorLeafFacing'));
+        return view('color/CreateColor',['doorLeafFacing' => $doorLeafFacing]);
     }
 
 
@@ -67,6 +67,7 @@ class ColorController extends Controller
         if(Auth::user()->id == 2){
             $color->Status == 1;
         }
+        
         // $color->configurableitems = $request->configurableitems;
         $color->DoorLeafFacing = $request->DoorLeafFacing;
         // $color->DoorLeafFacingValue = $request->DoorLeafFacingValue;
@@ -79,11 +80,7 @@ class ColorController extends Controller
         $color->editBy = Auth::user()->id;
         $color->save();
 
-        if(!is_null($update_val)){
-            $selectedId = $update_val;
-        }else{
-            $selectedId = $color->id;
-        }
+        $selectedId = is_null($update_val) ? $color->id : $update_val;
 
 
         $SelectedColor->SelectedCompanyId = Auth::user()->id;
@@ -106,12 +103,8 @@ class ColorController extends Controller
         // $ConfigurableItems = ConfigurableItems::get();
         $authdata = Auth::user();
         // $Color = Color::leftJoin('options','options.OptionKey','color.DoorLeafFacingValue')->select('color.*', 'options.OptionValue')->get();
-
-        if(Auth::user()->UserType == 2){
-            $UserId = ['1', $authdata->id];
-        }else{
-            $UserId = ['1'];
-        }
+        $UserId = Auth::user()->UserType == 2 ? ['1', $authdata->id] : ['1'];
+        
         $tt = Color::where(['DoorLeafFacing' => 'Kraft_Paper'])->wherein('editBy',$UserId)->get();
         $countColor = Color::where(['DoorLeafFacing' => 'Kraft_Paper'])->wherein('editBy',$UserId)->count();
         $countSelectedColor = SelectedColor::where(['SelectedUserId' => $authdata->id , 'DoorLeafFacing' => 'Kraft_Paper'])->count();
@@ -119,6 +112,7 @@ class ColorController extends Controller
         if($countColor == $countSelectedColor){
             $checkall = 'checked';
         }
+        
         $Kraft_Paper = '';
         if(Auth::user()->UserType != 1){
             $Kraft_Paper .= '
@@ -136,6 +130,7 @@ class ColorController extends Controller
                 </div>
             </li>';
         }
+        
         foreach($tt as $row){
            $Kraft_Paper .=  ColorList($row,);
         }
@@ -147,6 +142,7 @@ class ColorController extends Controller
         if($countColor2 == $countSelectedColor2){
             $checkall2 = 'checked';
         }
+        
         $Laminate = '';
         if(Auth::user()->UserType != 1){
             $Laminate .= '
@@ -164,6 +160,7 @@ class ColorController extends Controller
                 </div>
             </li>';
         }
+        
         foreach($tt2 as $row){
             $Laminate .=  ColorList($row);
         }
@@ -175,6 +172,7 @@ class ColorController extends Controller
         if($countColor3 == $countSelectedColor3){
             $checkall3 = 'checked';
         }
+        
         $PVC = '';
         if(Auth::user()->UserType != 1){
             $PVC .= '
@@ -192,6 +190,7 @@ class ColorController extends Controller
                 </div>
             </li>';
         }
+        
         foreach($tt3 as $row){
             $PVC .=  ColorList($row);
         }
@@ -203,6 +202,7 @@ class ColorController extends Controller
         if($countColor4 == $countSelectedColor4){
             $checkall4 = 'checked';
         }
+        
         $Veneer = '';
         if(Auth::user()->UserType != 1){
             $Veneer .= '
@@ -220,6 +220,7 @@ class ColorController extends Controller
                 </div>
             </li>';
         }
+        
         foreach($tt4 as $row){
             $Veneer .=  ColorList($row);
         }
@@ -231,6 +232,7 @@ class ColorController extends Controller
         if($countColor4 == $countSelectedColor4){
             $checkall4 = 'checked';
         }
+        
         $other = '';
         if(Auth::user()->UserType != 1){
             $other .= '
@@ -248,6 +250,7 @@ class ColorController extends Controller
                 </div>
             </li>';
         }
+        
         foreach($tt4 as $row){
             $DoorLeafFacing = $row->DoorLeafFacing;
             if($DoorLeafFacing !=  'Kraft_Paper' && $DoorLeafFacing !=  'Laminate' && $DoorLeafFacing !=  'PVC'  && $DoorLeafFacing !=  'Veneer'){
@@ -256,7 +259,7 @@ class ColorController extends Controller
         }
 
 
-        return view('color/ColorList',compact('Kraft_Paper','Laminate','PVC','Veneer','other'));
+        return view('color/ColorList',['Kraft_Paper' => $Kraft_Paper, 'Laminate' => $Laminate, 'PVC' => $PVC, 'Veneer' => $Veneer, 'other' => $other]);
     }
 
     public function colorListCompany(){
@@ -299,11 +302,13 @@ class ColorController extends Controller
             }
 
 
-            return view('color/ColorList',compact('Kraft_Paper','Laminate','PVC','Veneer','other'));
+            return view('color/ColorList',['Kraft_Paper' => $Kraft_Paper, 'Laminate' => $Laminate, 'PVC' => $PVC, 'Veneer' => $Veneer, 'other' => $other]);
         }
+
+        return null;
     }
 
-    public function updateSelectedColorOption(request $request){
+    public function updateSelectedColorOption(request $request): void{
         $ids = $request->selectedId;
         $className = $request->className;
         $UserId = Auth::user()->id;
@@ -312,9 +317,9 @@ class ColorController extends Controller
                 $optionKey ="Painted";
                 SelectedColor::where(['SelectedUserId'=>$UserId ,'DoorLeafFacing'=>$optionKey])->delete();
                 foreach($ids as $id){
-                    $electedOption= array();
+                    $electedOption= [];
                     $electedOption = Color::where('id',$id)->first();
-                    if(!empty( $electedOption ) && count((array) $electedOption )>0){
+                    if(!empty( $electedOption ) && (array) $electedOption !== []){
                         $selectedOption = new SelectedColor();
                         // $selectedOption->configurableitems = $electedOption->configurableitems;
                         $selectedOption->SelectedColorId = $electedOption->id;
@@ -324,13 +329,14 @@ class ColorController extends Controller
                     }
                 }
             }
+            
             if($className == "Kraft_Paper"){
                 $optionKey ="Kraft_Paper";
                 SelectedColor::where(['SelectedUserId'=>$UserId ,'DoorLeafFacing'=>$optionKey])->delete();
                 foreach($ids as $id){
-                    $electedOption= array();
+                    $electedOption= [];
                     $electedOption = Color::where('id',$id)->first();
-                    if(!empty( $electedOption ) && count((array) $electedOption )>0){
+                    if(!empty( $electedOption ) && (array) $electedOption !== []){
                         $selectedOption = new SelectedColor();
                         // $selectedOption->configurableitems = $electedOption->configurableitems;
                         $selectedOption->SelectedColorId = $electedOption->id;
@@ -340,13 +346,14 @@ class ColorController extends Controller
                     }
                 }
             }
+            
             if($className == "Laminate"){
                 $optionKey ="Laminate";
                 SelectedColor::where(['SelectedUserId'=>$UserId ,'DoorLeafFacing'=>$optionKey])->delete();
                 foreach($ids as $id){
-                    $electedOption= array();
+                    $electedOption= [];
                     $electedOption = Color::where('id',$id)->first();
-                    if(!empty( $electedOption ) && count((array) $electedOption )>0){
+                    if(!empty( $electedOption ) && (array) $electedOption !== []){
                         $selectedOption = new SelectedColor();
                         // $selectedOption->configurableitems = $electedOption->configurableitems;
                         $selectedOption->SelectedColorId = $electedOption->id;
@@ -356,13 +363,14 @@ class ColorController extends Controller
                     }
                 }
             }
+            
             if($className == "PVC"){
                 $optionKey ="PVC";
                 SelectedColor::where(['SelectedUserId'=>$UserId,'DoorLeafFacing'=>$optionKey])->delete();
                 foreach($ids as $id){
-                    $electedOption= array();
+                    $electedOption= [];
                     $electedOption = Color::where('id',$id)->first();
-                    if(!empty( $electedOption ) && count((array) $electedOption )>0){
+                    if(!empty( $electedOption ) && (array) $electedOption !== []){
                         $selectedOption = new SelectedColor();
                         // $selectedOption->configurableitems = $electedOption->configurableitems;
                         $selectedOption->SelectedColorId = $electedOption->id;
@@ -372,13 +380,14 @@ class ColorController extends Controller
                     }
                 }
             }
+            
             if($className == "Veneer"){
                 $optionKey ="Veneer";
                 SelectedColor::where(['SelectedUserId'=>$UserId,'DoorLeafFacing'=>$optionKey])->delete();
                 foreach($ids as $id){
-                    $electedOption= array();
+                    $electedOption= [];
                     $electedOption = Color::where('id',$id)->first();
-                    if(!empty( $electedOption ) && count((array) $electedOption )>0){
+                    if(!empty( $electedOption ) && (array) $electedOption !== []){
                         $selectedOption = new SelectedColor();
                         // $selectedOption->configurableitems = $electedOption->configurableitems;
                         $selectedOption->SelectedColorId = $electedOption->id;
@@ -388,39 +397,36 @@ class ColorController extends Controller
                     }
                 }
             }
-            echo json_encode(array("status"=>"ok","msg"=>"options are updated"));
+            
+            echo json_encode(["status"=>"ok","msg"=>"options are updated"]);
         } else {
-            echo json_encode(array("status"=>"errror","msg"=>"please check options"));
+            echo json_encode(["status"=>"errror","msg"=>"please check options"]);
         }
     }
 
     public function selectColorOption(){
         $authdata = Auth::user();
         $electedColorOption = Color::all();
-        if(!empty($electedColorOption) && count((array)$electedColorOption)>0 ){
+        if(!empty($electedColorOption) && (array)$electedColorOption !== [] ){
             foreach($electedColorOption as $row){
                 $selectedOption = SelectedColor::where([['SelectedColorId',$row->id],['SelectedUserId',$authdata->id]])->first();
 
-                if(!empty($selectedOption) &&  count((array)$selectedOption)>0 ){
-
-                    $row->selected=1;
-                }else{
-                    $row->selected=0;
-                }
+                $row->selected = !empty($selectedOption) && (array)$selectedOption !== [] ? 1 : 0;
 
 
             }
 
         }
+        
         // print_r( $electedColorOption);
         // die();
 
-         return view('option/SelectedColorOption',compact('electedColorOption'));
+         return view('option/SelectedColorOption',['electedColorOption' => $electedColorOption]);
 
 
     }
 
-    public function ColorDoorLeafFacing(Request $request)
+    public function ColorDoorLeafFacing(Request $request): string
     {
         $UnderAttribute = $request->UnderAttribute;
         // $tt = Option::distinct()->where(['UnderAttribute' => $UnderAttribute])->get(['OptionKey','OptionValue']);
@@ -438,6 +444,7 @@ class ColorController extends Controller
                 // }
             }
         }
+        
         return $innerHtml;
     }
 
@@ -450,7 +457,7 @@ class ColorController extends Controller
         return redirect()->route('create-color',$pageId)->with('upd',$upd);
     }
 
-    public function deletecolor(Request $request)
+    public function deletecolor(Request $request): string
     {
         Color::where('id', $request->id)->delete();
         $flash = "deleted";

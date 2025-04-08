@@ -17,6 +17,7 @@ class Item extends Model
     protected $fillable = [
         'ItemName','ItemPhoto','ItemStatus','ItemType'
     ];
+    
       /**
      * The attributes that should be hidden for arrays.
      *

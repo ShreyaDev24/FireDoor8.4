@@ -7,6 +7,7 @@ class IronmongeryInfoModel extends Model
 {
     
     protected $table = 'ironmongery_info';
+    
     protected $fillable = [
         'Name','Code','Status','UserId'
     ];

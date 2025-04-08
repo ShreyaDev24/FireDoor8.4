@@ -21,9 +21,14 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid;
+    protected $id;
 
-    function __construct($id,$vid) {
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    protected $vid;
+
+    public function __construct($id,$vid) {
         $this->id = $id;
         $this->vid = $vid;
     }
@@ -54,9 +59,11 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             if($item[$i]->configurableitems == 4){
                 $configurableitems = 'Vicaima';
             }
+            
             if($item[$i]->configurableitems == 5){
                 $configurableitems = 'Seadec';
             }
+            
             if($item[$i]->configurableitems == 6){
                 $configurableitems = 'Deanta';
             }
@@ -295,7 +302,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
-            $data[] = array(
+            $data[] = [
                 $j,
                 $configurableitems,
                 $FrameOnOff,
@@ -498,10 +505,11 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $DoorsetPrice,
                 $IronmongaryPrice,
                 $totalpriceperdoorset
-            );
+            ];
             $i++;
             $j++;
         }
+        
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -522,6 +530,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
+    
     public function headings(): array
     {
         $a = [
@@ -747,12 +756,13 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
 
     }
+    
     public function registerEvents(): array
     {
 
 
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
+            AfterSheet::class    => function(AfterSheet $event): void {
                 $cellRange = 'A1:GO1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);

@@ -56,7 +56,7 @@ use Carbon\Carbon;
 use App\Models\{NonConfigurableItems,NonConfigurableItemStore};
 
 function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'){
-    $NonConfigurableItems = NonConfigurableItemStore::join('non_configurable_items','non_configurable_item_store.nonConfigurableId','non_configurable_items.id')->join('quotation','non_configurable_item_store.quotationId','quotation.id')->leftJoin("quotation_versions",function($join) use ($vId){
+    $NonConfigurableItems = NonConfigurableItemStore::join('non_configurable_items','non_configurable_item_store.nonConfigurableId','non_configurable_items.id')->join('quotation','non_configurable_item_store.quotationId','quotation.id')->leftJoin("quotation_versions",function($join) use ($vId): void{
         $join->on("quotation.id","quotation_versions.quotation_id")
             ->On("quotation_versions.id","=","quotation.VersionId")
             ->where("quotation_versions.id","=",$vId);
@@ -95,10 +95,11 @@ function itemAdjustCount($Id,$vId){
             $TotalDoorSetPrice += (($row->AdjustPrice)?floatval($row->AdjustPrice):floatval($row->DoorsetPrice));
         }
     }
+
     return $TotalDoorSetPrice;
 }
 
-function countTotalPrice($Id,$vId,$itemId=0, $type=null){
+function countTotalPrice($Id,$vId,$itemId=0, $type=null): array{
     if($vId > 0){
         $QV = QuotationVersion::where('id',$vId)->first();
         $vId = $QV->version;
@@ -124,6 +125,7 @@ function countTotalPrice($Id,$vId,$itemId=0, $type=null){
 
         $laborCost = BOMCalculation::join('items','items.itemId','bom_calculations.itemId')->join('item_master','item_master.itemID','items.itemId')->select('bom_calculations.*',DB::raw('count(*) as count'),DB::raw('sum(QuantityOfDoorTypes) as sum'),DB::raw('sum(UnitCost) as sum_UnitCost'),DB::raw('sum(TotalCost) as sum_TotalCost'),DB::raw('sum(UnitPriceSell) as sum_UnitPriceSell'),DB::raw('sum(GTSellPrice) as sum_GTSellPrice'))->where('bom_calculations.QuotationId',$Id)->where('bom_calculations.VersionId',$vId)->where('bom_calculations.itemId', $itemId)->where('bom_calculations.Category','GeneralLabourCosts')->whereNotNull('bom_calculations.itemId')->groupBy('bom_calculations.Description')->get();
     }
+
     $IntumescentSealData = collect($data)->where("Category", "IntumescentSeal")->groupBy('Description');
 
     $total=0; $GTSellPrice=0; $Margin = 0;
@@ -131,16 +133,17 @@ function countTotalPrice($Id,$vId,$itemId=0, $type=null){
     foreach($data as $value){
         $arr = ['GlazingBeads', 'Frame', 'Accoustics', 'Architrave', 'Glass', 'GlazingSystem', 'LeafSetBesPoke', 'MachiningCosts'];
         if(in_array($value->Category, $arr)){
-            $total = $total + $value->TotalCost;
-            $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
-            $Margin = $Margin + $value->Margin;
+            $total += $value->TotalCost;
+            $GTSellPrice += $value->GTSellPrice;
+            $Margin += $value->Margin;
         }
     }
+
     foreach($laborCost as $value){
         if($value->Category == 'GeneralLabourCosts'){
-            $total = $total + $value->sum_TotalCost;
-            $GTSellPrice = $GTSellPrice + $value->sum_GTSellPrice;
-            $Margin = $Margin + $value->Margin;
+            $total += $value->sum_TotalCost;
+            $GTSellPrice += $value->sum_GTSellPrice;
+            $Margin += $value->Margin;
         }
     }
 
@@ -158,9 +161,9 @@ function countTotalPrice($Id,$vId,$itemId=0, $type=null){
     }
 
 
-    $total = $total + $intumescentTotal;
-    $GTSellPrice = $GTSellPrice + $intumescentGTSell;
-    $Margin = $Margin + $intumescentMargin;
+    $total += $intumescentTotal;
+    $GTSellPrice += $intumescentGTSell;
+    $Margin += $intumescentMargin;
 
     $res = [];
     $res['totalCost'] = $total;
@@ -170,58 +173,52 @@ function countTotalPrice($Id,$vId,$itemId=0, $type=null){
 }
 
 
-function filterTimberSpecies($configurationDoor="",$fireRating="",$type,$foursided=""){
+function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursided=""){
     $UserId = CompanyUsers();
     $authdata = Auth::user();
-    $lippingSpecies=array();
+    $lippingSpecies=[];
 
     $SelectedLippingSpecies = SelectedLippingSpeciesItems::wherein('selected_lipping_species_items.selected_user_id', $UserId)->groupBy("selected_lipping_species_id")->get();
     $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
     if($type == "Frame"){
         if($configurationDoor == 2 || $configurationDoor == 3 || $configurationDoor == 4 || $configurationDoor == 5 || $configurationDoor == 6){
-            if($fireRating=="FD30" || $fireRating=="FD30s"){
+            if ($fireRating=="FD30" || $fireRating=="FD30s") {
                 $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "510"]]);
-
-            }else if($fireRating=="FD60" || $fireRating=="FD60s"){
+            } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
                 $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
             }
         }elseif($configurationDoor == 7){
-            if($foursided == 1){
-                if($fireRating=="FD30" || $fireRating=="FD30s"){
+            if ($foursided == 1) {
+                if ($fireRating=="FD30" || $fireRating=="FD30s") {
                     // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "510"], ["lipping_species.MaxValues", ">=", "510"]]);
                     $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
-
-                }else if($fireRating=="FD60" || $fireRating=="FD60s"){
+                } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
                     // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
                     $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue",  "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
                 }
-            }
-            else{
-                if($fireRating=="FD30" || $fireRating=="FD30s"){
-                    // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "510"], ["lipping_species.MaxValues", ">=", "510"]]);
-                    $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "510"]]);
-
-                }else if($fireRating=="FD60" || $fireRating=="FD60s"){
-                    // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
-                    $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
-                }
+            } elseif ($fireRating=="FD30" || $fireRating=="FD30s") {
+                // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "510"], ["lipping_species.MaxValues", ">=", "510"]]);
+                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "510"]]);
+            } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
+                // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
+                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
             }
 
         }
         elseif($configurationDoor == 1 || $configurationDoor == 8){
-            if($fireRating=="FD30" || $fireRating=="FD30s"){
+            if ($fireRating=="FD30" || $fireRating=="FD30s") {
                 $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "450"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "450"]]);
-            }else if($fireRating=="FD60" || $fireRating=="FD60s"){
+            } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
                 $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
             }
         }
     }
-    if($type == "Other"){
-        if($fireRating=="FD30" || $fireRating=="FD30s" || $fireRating=="FD60" || $fireRating=="FD60s"){
-            $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
-        }
+
+    if($type == "Other" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
+        $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
     }
+
     if($fireRating=="NFR" || $type == "Architrave"){
         $lippingSpecies = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
     }
@@ -232,23 +229,23 @@ function filterTimberSpecies($configurationDoor="",$fireRating="",$type,$foursid
     }else{
         $lippingSpecies = $lippingSpecies->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
     }
+
     return $lippingSpecies;
 }
 
-function filterOnlyLippingSpecies($configurationDoor="",$fireRating="",$type,$foursided=""){
+function filterOnlyLippingSpecies($type,$configurationDoor="",$fireRating="",$foursided=""){
     $UserId = CompanyUsers();
     $authdata = Auth::user();
-    $OnlylippingSpecies=array();
+    $OnlylippingSpecies=[];
 
     $SelectedLippingSpecies = SelectedLippingSpeciesItems::wherein('selected_lipping_species_items.selected_user_id', $UserId)->groupBy("selected_lipping_species_id")->get();
     $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
-    if($type == "Lipping"){
-        if($fireRating=="FD30" || $fireRating=="FD30s" || $fireRating=="FD60" || $fireRating=="FD60s" || $fireRating=="NFR"){
-            // $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "Lipping", "query",[],[]);
-            $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
-        }
+    if($type == "Lipping" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s" || $fireRating == "NFR")){
+        // $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "Lipping", "query",[],[]);
+        $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
     }
+
     if(in_array($authdata->UserType, [1,4])){
         $OnlylippingSpecies = $OnlylippingSpecies->get();
 
@@ -266,18 +263,21 @@ function GetlippingSpeciesName($LippingSpeciesNames){
             return $LippingSpeciesName->id ?? '';
         }
     }
+
+    return null;
 }
 
 ///halspan bom calculation
-function HalspanBomCalculation($request){
+function HalspanBomCalculation($request): void{
     $userIds = CompanyUsers();
-    if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
+    if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
-    }else if($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
+    } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
         $fireRatingVal = 'FD60';
-    }else{
+    } else{
         $fireRatingVal = 'NFR';
     }
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -287,19 +287,20 @@ function HalspanBomCalculation($request){
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
-        if($BOMCalculation->VersionId == 0){
-            BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
-        }
+
+    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
+        BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
     if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
@@ -327,6 +328,7 @@ function HalspanBomCalculation($request){
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -369,122 +371,95 @@ function HalspanBomCalculation($request){
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
     }
 
-        if($request->overpanel=='Fan_Light'){
+        if ($request->overpanel == 'Fan_Light' && (!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
+            // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
+            $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
+            if(in_array(Auth::user()->UserType, [1,4])){
 
-            if(!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies)){
+                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
+            }else{
+                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
 
-                $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
-                // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-
-
-                $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-                $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
-                if(in_array(Auth::user()->UserType, [1,4])){
-
-                    $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
-                }else{
-                    $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
-
-                }
-                if(isset($unitcost->id)){
-
-                    $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                    $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                    $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
-                    $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                    $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-
-                    if($request->doorsetType == 'DD'){
-                        $quantity_of_door_type = 2;
-                    }elseif($request->doorsetType == 'SD'){
-                        $quantity_of_door_type = 1;
-                    }else{
-                        $quantity_of_door_type = 1;
-                    }
-                    $total_cost = $unit_cost*$quantity_of_door_type;
-
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
-
-                }
             }
 
+            if(isset($unitcost->id)){
 
-
-         }
-
-        if($request->sideLight1=='Yes'){
-
-            if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies)){
-
-                $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
-
-                $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-
-                $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
-                if(!empty($unitcost)){
-                    $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                }else{
-                    $unitcost_selected_price = 0;
-                }
-
-                $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+                $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
+                $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
 
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-                if($request->sideLight2=='Yes'){
-                    $unit_cost = $unit_cost * 2;
+
+                if($request->doorsetType == 'DD'){
                     $quantity_of_door_type = 2;
+                }elseif($request->doorsetType == 'SD'){
+                    $quantity_of_door_type = 1;
                 }else{
                     $quantity_of_door_type = 1;
                 }
 
                 $total_cost = $unit_cost*$quantity_of_door_type;
+
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+
             }
         }
 
-        if($request->sideLight2=='Yes'){
-
-            if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies)){
-
-                $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
-
-                $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
-
-                $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-
-                $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
-
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
-                $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-                if($request->sideLight1=='Yes'){
-                    $unit_cost = $unit_cost * 2;
-                    $quantity_of_door_type = 2;
-                }else{
-                    $quantity_of_door_type = 1;
-                }
-                $total_cost = $unit_cost*$quantity_of_door_type;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        if ($request->sideLight1 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
+            $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
+            if(!empty($unitcost)){
+                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            }else{
+                $unitcost_selected_price = 0;
             }
+
+            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+            $LMOfGlazingSystem = $LMOfGlazing/1000;
+            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+            if($request->sideLight2=='Yes'){
+                $unit_cost *= 2;
+                $quantity_of_door_type = 2;
+            }else{
+                $quantity_of_door_type = 1;
+            }
+
+            $total_cost = $unit_cost*$quantity_of_door_type;
+            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        }
+
+        if ($request->sideLight2 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
+            $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
+            $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
+            $LMOfGlazingSystem = $LMOfGlazing/1000;
+            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+            if($request->sideLight1=='Yes'){
+                $unit_cost *= 2;
+                $quantity_of_door_type = 2;
+            }else{
+                $quantity_of_door_type = 1;
+            }
+
+            $total_cost = $unit_cost*$quantity_of_door_type;
+            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
         }
 
 
@@ -571,31 +546,27 @@ function HalspanBomCalculation($request){
         if (!empty($door_core_size)) {
             foreach ($door_core_size as $door_core) {
                 // For leafWidth1 and leafHeightNoOP
-                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
-                        $minWidth1 = $door_core->selected_mm_width;
-                        $minHeight1 = $door_core->selected_mm_height;
-                        // $minCost = $door_core->selected_cost; // Track the cost with the minimum dimensions
-                        $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
-                        $intumescentLeafType = $request->intumescentLeafType;
-                        if (isset($pricesArray[$intumescentLeafType])) {
-                            $minCost = $pricesArray[$intumescentLeafType];
-                            // $minCost = $door_core->selected_cost;
-                        }
+                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1)) {
+                    $minWidth1 = $door_core->selected_mm_width;
+                    $minHeight1 = $door_core->selected_mm_height;
+                    // $minCost = $door_core->selected_cost; // Track the cost with the minimum dimensions
+                    $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                    $intumescentLeafType = $request->intumescentLeafType;
+                    if (isset($pricesArray[$intumescentLeafType])) {
+                        $minCost = $pricesArray[$intumescentLeafType];
+                        // $minCost = $door_core->selected_cost;
                     }
                 }
 
                 // For leafWidth2 and leafHeightNoOP (Leaf and a half)
-                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    if ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2) {
-                        $minWidth2 = $door_core->selected_mm_width;
-                        $minHeight2 = $door_core->selected_mm_height;
-                        $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
-                        $intumescentLeafType2 = $request->intumescentLeafType;
-                        if (isset($pricesArray2[$intumescentLeafType2])) {
-                            $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
-                            // $minCost = $door_core->selected_cost;
-                        }
+                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
+                    $minWidth2 = $door_core->selected_mm_width;
+                    $minHeight2 = $door_core->selected_mm_height;
+                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $intumescentLeafType2 = $request->intumescentLeafType;
+                    if (isset($pricesArray2[$intumescentLeafType2])) {
+                        $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
+                        // $minCost = $door_core->selected_cost;
                     }
                 }
             }
@@ -603,7 +574,7 @@ function HalspanBomCalculation($request){
 
         $door_core1 = $minCost;
         $door_core2 = $minCostLeafAndAHalf;
-        $unitcost1 = (!empty($unitcost))?$unitcost->selected_price:0;
+        $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
 
         $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
         $thickness_cost = ($request->lippingThickness * $request->doorThickness * $unitcost1)/1000000;
@@ -625,6 +596,7 @@ function HalspanBomCalculation($request){
             if(!empty($doorLeafFacing)){
                 $selectedPrice = $doorLeafFacing->selectedPrice;
             }
+
             $doorLeafFacingCost = $painted_cost * $selectedPrice;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
@@ -637,6 +609,7 @@ function HalspanBomCalculation($request){
             if(!empty($doorLeafFacing)){
                 $selectedPrice = $doorLeafFacing->selectedPrice;
             }
+
             $doorLeafFacingCost = $painted_cost * $selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -652,6 +625,7 @@ function HalspanBomCalculation($request){
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -667,10 +641,12 @@ function HalspanBomCalculation($request){
         if($door_core1 == 'NaN'){
             $door_core1 = 0;
         }
+
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         if($request->doorsetType == 'leaf_and_a_half'){
-            $unit_cost = $unit_cost + (($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost));
+            $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
+
         // dd($door_core_size,$minWidth1,$minHeight1,$door_core1);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
@@ -683,15 +659,16 @@ function HalspanBomCalculation($request){
 }
 
 ///flamebreak bom calculation
-function FlamebreakBomCalculation($request){
+function FlamebreakBomCalculation($request): void{
     $userIds = CompanyUsers();
-    if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
+    if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
-    }else if($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
+    } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
         $fireRatingVal = 'FD60';
-    }else{
+    } else{
         $fireRatingVal = 'NFR';
     }
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -701,19 +678,20 @@ function FlamebreakBomCalculation($request){
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
-        if($BOMCalculation->VersionId == 0){
-            BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
-        }
+
+    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
+        BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
     if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
@@ -741,6 +719,7 @@ function FlamebreakBomCalculation($request){
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -783,122 +762,95 @@ function FlamebreakBomCalculation($request){
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
     }
 
-        if($request->overpanel=='Fan_Light'){
+        if ($request->overpanel == 'Fan_Light' && (!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
+            // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
+            $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
+            if(in_array(Auth::user()->UserType, [1,4])){
 
-            if(!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies)){
+                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
+            }else{
+                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
 
-                $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
-                // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-
-
-                $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-                $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
-                if(in_array(Auth::user()->UserType, [1,4])){
-
-                    $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
-                }else{
-                    $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
-
-                }
-                if(isset($unitcost->id)){
-
-                    $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                    $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                    $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
-                    $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                    $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-
-                    if($request->doorsetType == 'DD'){
-                        $quantity_of_door_type = 2;
-                    }elseif($request->doorsetType == 'SD'){
-                        $quantity_of_door_type = 1;
-                    }else{
-                        $quantity_of_door_type = 1;
-                    }
-                    $total_cost = $unit_cost*$quantity_of_door_type;
-
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
-
-                }
             }
 
+            if(isset($unitcost->id)){
 
-
-         }
-
-        if($request->sideLight1=='Yes'){
-
-            if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies)){
-
-                $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
-
-                $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-
-                $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
-                if(!empty($unitcost)){
-                    $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                }else{
-                    $unitcost_selected_price = 0;
-                }
-
-                $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+                $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
+                $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
 
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-                if($request->sideLight2=='Yes'){
-                    $unit_cost = $unit_cost * 2;
+
+                if($request->doorsetType == 'DD'){
                     $quantity_of_door_type = 2;
+                }elseif($request->doorsetType == 'SD'){
+                    $quantity_of_door_type = 1;
                 }else{
                     $quantity_of_door_type = 1;
                 }
 
                 $total_cost = $unit_cost*$quantity_of_door_type;
+
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+
             }
         }
 
-        if($request->sideLight2=='Yes'){
-
-            if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies)){
-
-                $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
-
-                $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
-
-                $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
-                $category = 'GlazingBeads';
-                $frame_unit = 'Each';
-
-
-                $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
-
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
-                $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-                if($request->sideLight1=='Yes'){
-                    $unit_cost = $unit_cost * 2;
-                    $quantity_of_door_type = 2;
-                }else{
-                    $quantity_of_door_type = 1;
-                }
-                $total_cost = $unit_cost*$quantity_of_door_type;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        if ($request->sideLight1 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
+            $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
+            if(!empty($unitcost)){
+                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            }else{
+                $unitcost_selected_price = 0;
             }
+
+            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+            $LMOfGlazingSystem = $LMOfGlazing/1000;
+            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+            if($request->sideLight2=='Yes'){
+                $unit_cost *= 2;
+                $quantity_of_door_type = 2;
+            }else{
+                $quantity_of_door_type = 1;
+            }
+
+            $total_cost = $unit_cost*$quantity_of_door_type;
+            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        }
+
+        if ($request->sideLight2 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
+            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
+            $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
+            $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
+            $category = 'GlazingBeads';
+            $frame_unit = 'Each';
+            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
+            $LMOfGlazingSystem = $LMOfGlazing/1000;
+            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+            if($request->sideLight1=='Yes'){
+                $unit_cost *= 2;
+                $quantity_of_door_type = 2;
+            }else{
+                $quantity_of_door_type = 1;
+            }
+
+            $total_cost = $unit_cost*$quantity_of_door_type;
+            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
         }
 
 
@@ -985,30 +937,26 @@ function FlamebreakBomCalculation($request){
         if (!empty($door_core_size)) {
             foreach ($door_core_size as $door_core) {
                 // For leafWidth1 and leafHeightNoOP
-                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
-                        $minWidth1 = $door_core->selected_mm_width;
-                        $minHeight1 = $door_core->selected_mm_height;
-                        $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
-                        $intumescentLeafType = $request->intumescentLeafType;
-                        if (isset($pricesArray[$intumescentLeafType])) {
-                            $minCost = $pricesArray[$intumescentLeafType];
-                            // $minCost = $door_core->selected_cost;
-                        }
+                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1)) {
+                    $minWidth1 = $door_core->selected_mm_width;
+                    $minHeight1 = $door_core->selected_mm_height;
+                    $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                    $intumescentLeafType = $request->intumescentLeafType;
+                    if (isset($pricesArray[$intumescentLeafType])) {
+                        $minCost = $pricesArray[$intumescentLeafType];
+                        // $minCost = $door_core->selected_cost;
                     }
                 }
 
                 // For leafWidth2 and leafHeightNoOP (Leaf and a half)
-                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    if ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2) {
-                        $minWidth2 = $door_core->selected_mm_width;
-                        $minHeight2 = $door_core->selected_mm_height;
-                        $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
-                        $intumescentLeafType2 = $request->intumescentLeafType;
-                        if (isset($pricesArray2[$intumescentLeafType2])) {
-                            $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
-                            // $minCost = $door_core->selected_cost;
-                        }
+                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
+                    $minWidth2 = $door_core->selected_mm_width;
+                    $minHeight2 = $door_core->selected_mm_height;
+                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $intumescentLeafType2 = $request->intumescentLeafType;
+                    if (isset($pricesArray2[$intumescentLeafType2])) {
+                        $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
+                        // $minCost = $door_core->selected_cost;
                     }
                 }
             }
@@ -1016,7 +964,7 @@ function FlamebreakBomCalculation($request){
 
         $door_core1 = $minCost;
         $door_core2 = $minCostLeafAndAHalf;
-        $unitcost1 = (!empty($unitcost))?$unitcost->selected_price:0;
+        $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
 
         $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
         $thickness_cost = ($request->lippingThickness * $request->doorThickness * $unitcost1)/1000000;
@@ -1038,6 +986,7 @@ function FlamebreakBomCalculation($request){
             if(!empty($doorLeafFacing)){
                 $selectedPrice = $doorLeafFacing->selectedPrice;
             }
+
             $doorLeafFacingCost = $painted_cost * $selectedPrice;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
@@ -1050,6 +999,7 @@ function FlamebreakBomCalculation($request){
             if(!empty($doorLeafFacing)){
                 $selectedPrice = $doorLeafFacing->selectedPrice;
             }
+
             $doorLeafFacingCost = $painted_cost * $selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -1065,6 +1015,7 @@ function FlamebreakBomCalculation($request){
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -1079,8 +1030,9 @@ function FlamebreakBomCalculation($request){
         $frame_unit = 'Each';
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         if($request->doorsetType == 'leaf_and_a_half'){
-            $unit_cost = $unit_cost + (($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost));
+            $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
+
         // dd($door_core_size,$minWidth1,$minHeight1,$door_core1);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
@@ -1092,7 +1044,7 @@ function FlamebreakBomCalculation($request){
     commonGeneralLabourCost($request,$userIds);
 }
 
-function BOMCAlculationExport($id,$version){
+function BOMCAlculationExport($id,$version): array{
     $vid = ['selectVersionID'=>0,'selectVersion'=>0];
     if($vid > 0){
         $QV = QuotationVersion::where('id',$version)->first();
@@ -1121,11 +1073,14 @@ function BOMCAlculationExport($id,$version){
     $version = $bomVersion->VersionId;
     $item_details = Item::where(['QuotationId'=>$id])->get();
 
-    $result = array('data'=>$data,'quotation'=>$quotation,'currency'=>$currency,'laborCost'=>$laborCost,'today'=>$today,'userName'=>$userName,'version'=>$version,'totDoorsetType'=>$totDoorsetType,'totIronmongerySet'=>$totIronmongerySet,'item_details'=>$item_details);
+    $result = ['data'=>$data,'quotation'=>$quotation,'currency'=>$currency,'laborCost'=>$laborCost,'today'=>$today,'userName'=>$userName,'version'=>$version,'totDoorsetType'=>$totDoorsetType,'totIronmongerySet'=>$totIronmongerySet,'item_details'=>$item_details];
     return $result;
 }
 
-function getBomDoorTypeDetails($id, $version, $doorType, $category) {
+/**
+ * @return \list<\non-empty-list>
+ */
+function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
     $vid = QuotationVersion::where('id', $version)->value('version') ?? 0;
 
     BOMCalculation::where('QuotationId', $id)->whereNull('itemId')->delete();
@@ -1161,27 +1116,22 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category) {
             if (is_int($field)) {
                 // Cache $words[$field] to avoid repetitive access
                 $wordValue = $words[$field] ?? '';
-
                 if (in_array($category, ['MachiningCosts', 'GeneralLabourCosts'])) {
-                    if (in_array($field, [2, 3, 4, 5])) {
-                        $row[] = round(floatval($wordValue), 2);
-                    } else {
-                        $row[] = $wordValue;
-                    }
+                    $row[] = in_array($field, [2, 3, 4, 5]) ? round(floatval($wordValue), 2) : $wordValue;
                 } else {
                     $row[] = $wordValue;
                 }
+
                 // $row[] = $words[$field] ?? '';
+            } elseif ($field === 'TotalCost') {
+                $row[] = round($value->$field, 2);
+            } elseif ($field === 'Margin') {
+                $row[] = number_format($value->$field) . '%';
             } else {
-                if ($field === 'TotalCost') {
-                    $row[] = round($value->$field, 2);
-                } elseif ($field === 'Margin') {
-                    $row[] = number_format($value->$field) . '%';
-                } else {
-                    $row[] = $value->$field ?? '';
-                }
+                $row[] = $value->$field ?? '';
             }
         }
+
         // dd($row);
 
         // Prepend the row index if not 'Ironmongery&MachiningCosts'
@@ -1212,7 +1162,7 @@ function lippingName($id){
     return $lipping_species->SpeciesName ?? '';
 }
 
-function ironmongeryGetCodeName($id){
+function ironmongeryGetCodeName($id): array{
     $data = explode(',',$id);
     $name = [];
     $price = [];
@@ -1227,20 +1177,21 @@ function ironmongeryGetCodeName($id){
         }
     }
 
-    $result = array('name'=>$name,'price'=>$price);
+    $result = ['name'=>$name,'price'=>$price];
     return $result;
 }
 
 //Sreadec bom calculation
-function BomCalculationSeadec($request){
+function BomCalculationSeadec($request): void{
     $userIds = CompanyUsers();
-    if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
+    if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
-    }else if($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
+    } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
         $fireRatingVal = 'FD60';
-    }else{
+    } else{
         $fireRatingVal = 'NFR';
     }
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -1250,19 +1201,20 @@ function BomCalculationSeadec($request){
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
-        if($BOMCalculation->VersionId == 0){
-            BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
-        }
+
+    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
+        BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
     if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
@@ -1289,6 +1241,7 @@ function BomCalculationSeadec($request){
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -1326,122 +1279,95 @@ function BomCalculationSeadec($request){
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
     }
 
-    if($request->overpanel=='Fan_Light'){
+    if ($request->overpanel == 'Fan_Light' && (!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
+        // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
+        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
+        if(in_array(Auth::user()->UserType, [1,4])){
 
-        if(!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
-            // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-
-
-            $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-            $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
-            if(in_array(Auth::user()->UserType, [1,4])){
-
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
-            }else{
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
-
-            }
-            if(isset($unitcost->id)){
-
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
-                $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-
-                if($request->doorsetType == 'DD'){
-                    $quantity_of_door_type = 2;
-                }elseif($request->doorsetType == 'SD'){
-                    $quantity_of_door_type = 1;
-                }else{
-                    $quantity_of_door_type = 1;
-                }
-                $total_cost = $unit_cost*$quantity_of_door_type;
-
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
-
-            }
-        }
-
-
+            $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
+        }else{
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
 
         }
 
-    if($request->sideLight1=='Yes'){
+        if(isset($unitcost->id)){
 
-        if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
-
-            $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-
-            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
-            if(!empty($unitcost)){
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-            }else{
-                $unitcost_selected_price = 0;
-            }
-
-            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-            $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
             $LMOfGlazingSystem = $LMOfGlazing/1000;
 
             $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-            if($request->sideLight2=='Yes'){
-                $unit_cost = $unit_cost * 2;
+
+            if($request->doorsetType == 'DD'){
                 $quantity_of_door_type = 2;
+            }elseif($request->doorsetType == 'SD'){
+                $quantity_of_door_type = 1;
             }else{
                 $quantity_of_door_type = 1;
             }
 
             $total_cost = $unit_cost*$quantity_of_door_type;
+
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+
         }
     }
 
-    if($request->sideLight2=='Yes'){
-
-        if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
-
-            $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
-
-            $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-
-            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
-
-            $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-            $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
-            $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-            if($request->sideLight1=='Yes'){
-                $unit_cost = $unit_cost * 2;
-                $quantity_of_door_type = 2;
-            }else{
-                $quantity_of_door_type = 1;
-            }
-            $total_cost = $unit_cost*$quantity_of_door_type;
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+    if ($request->sideLight1 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
+        $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
+        if(!empty($unitcost)){
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+        }else{
+            $unitcost_selected_price = 0;
         }
+
+        $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+        $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+        $LMOfGlazingSystem = $LMOfGlazing/1000;
+        $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+        if($request->sideLight2=='Yes'){
+            $unit_cost *= 2;
+            $quantity_of_door_type = 2;
+        }else{
+            $quantity_of_door_type = 1;
+        }
+
+        $total_cost = $unit_cost*$quantity_of_door_type;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+    }
+
+    if ($request->sideLight2 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
+        $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
+        $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
+        $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+        $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+        $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
+        $LMOfGlazingSystem = $LMOfGlazing/1000;
+        $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+        if($request->sideLight1=='Yes'){
+            $unit_cost *= 2;
+            $quantity_of_door_type = 2;
+        }else{
+            $quantity_of_door_type = 1;
+        }
+
+        $total_cost = $unit_cost*$quantity_of_door_type;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
     }
 
     //frame
@@ -1463,13 +1389,12 @@ function BomCalculationSeadec($request){
     MachiningCostExport($request);
 
     //Leaf Set BesPoke
-    if(!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)){
+    if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
         if($request->issingleconfiguration == 5){
             $doorConfiguration = "Seadec";
         }
 
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
         $selected_lipping_species = LippingSpecies::where('id', $request->lippingSpecies)->get()->first();
         if($selected_lipping_species->SpeciesName == ''){
             $selected_lipping_species->SpeciesName = 0;
@@ -1482,23 +1407,13 @@ function BomCalculationSeadec($request){
         }
 
         $description = $doorConfiguration.'| '.$lipping_type.'| '.$request->lippingThickness.'mm /'.$selected_lipping_species->SpeciesName. '| '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
         $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
-
         $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
-
         $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
-
         $door_core1 =  $door_core_size->selected_cost ?? 0;
-
-        if(empty($unitcost)){
-            $unitcost1 = 0;
-        }else{
-            $unitcost1 = $unitcost->selected_price;
-        }
-
+        $unitcost1 = empty($unitcost) ? 0 : $unitcost->selected_price;
         $lm = 0;
-        if($request->doorsetType == 'DD'){
+        if ($request->doorsetType == 'DD') {
             if(!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)){
                 $lm = (($request->leafWidth1 / 1000)*  2) + (($request->leafHeightNoOP / 1000) * 2);
             }elseif(!empty($request->adjustmentLeafWidth1)){
@@ -1506,17 +1421,15 @@ function BomCalculationSeadec($request){
             }elseif(!empty($request->adjustmentLeafHeightNoOP)){
                 $lm = (($request->leafWidth1 / 1000) * 2);
             }
-        }else{
-            if(!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)){
-                $lm = ($request->leafWidth1 / 1000) + ($request->leafHeightNoOP / 1000);
-            }elseif(!empty($request->adjustmentLeafWidth1)){
-                $lm = ($request->leafHeightNoOP / 1000);
-            }elseif(!empty($request->adjustmentLeafHeightNoOP)){
-                $lm = ($request->leafWidth1 / 1000);
-            }
+        } elseif (!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)) {
+            $lm = ($request->leafWidth1 / 1000) + ($request->leafHeightNoOP / 1000);
+        } elseif(!empty($request->adjustmentLeafWidth1)){
+            $lm = ($request->leafHeightNoOP / 1000);
+        } elseif(!empty($request->adjustmentLeafHeightNoOP)){
+            $lm = ($request->leafWidth1 / 1000);
         }
-        $thickness_cost = ($request->lippingThickness *  $request->doorThickness * $unitcost1)/1000000;
 
+        $thickness_cost = ($request->lippingThickness *  $request->doorThickness * $unitcost1)/1000000;
         $door_core2 = 0;
         $lm2 = 0;
         $leafandhalfunitcost = 0;
@@ -1544,39 +1457,33 @@ function BomCalculationSeadec($request){
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-    }else{
-        if($request->issingleconfiguration == 5){
-            $doorConfiguration = "Seadec";
-
-            $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
-            if($request->decorativeGroves == 'Yes'){
-                $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
-            }else{
-                $groves = '.';
-            }
-
-            $description = $doorConfiguration. '| - | - |'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
-            $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
-
-            $door_core1 =  $door_core_size->selected_cost ?? 0;
-            $door_core2 = 0;
-            if($request->doorsetType == 'leaf_and_a_half'){
-                $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
-
-                $door_core2 =  $door_core_size2->selected_cost ?? 0;
-
-                $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
-            }else{
-                $description .= '| ' .$request->DoorDimensionsCode;
-            }
-
-            $category = 'LeafSetBesPoke';
-            $frame_unit = 'Each';
-            $unit_cost = $door_core1 + $door_core2;
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+    } elseif ($request->issingleconfiguration == 5) {
+        $doorConfiguration = "Seadec";
+        $lipping_type = str_replace('_', ' ',  $request->lippingType);
+        if($request->decorativeGroves == 'Yes'){
+            $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
+        }else{
+            $groves = '.';
         }
+
+        $description = $doorConfiguration. '| - | - |'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
+        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
+        $door_core1 =  $door_core_size->selected_cost ?? 0;
+        $door_core2 = 0;
+        if($request->doorsetType == 'leaf_and_a_half'){
+            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
+
+            $door_core2 =  $door_core_size2->selected_cost ?? 0;
+
+            $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
+        }else{
+            $description .= '| ' .$request->DoorDimensionsCode;
+        }
+
+        $category = 'LeafSetBesPoke';
+        $frame_unit = 'Each';
+        $unit_cost = $door_core1 + $door_core2;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
 
 
@@ -1587,7 +1494,7 @@ function BomCalculationSeadec($request){
     commonGeneralLabourCost($request,$userIds);
 }
 
-function BOMUpdate($data, $configurableitems){
+function BOMUpdate($data, $configurableitems): void{
     $item = new Item();
     $item->itemID = $data->itemId;
     $item->QuotationId = $data->QuotationId;
@@ -1857,15 +1764,16 @@ function BOMUpdate($data, $configurableitems){
 
 }
 
-function BomCalculationDeanta($request){
+function BomCalculationDeanta($request): void{
     $userIds = CompanyUsers();
-    if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
+    if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
-    }else if($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
+    } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
         $fireRatingVal = 'FD60';
-    }else{
+    } else{
         $fireRatingVal = 'NFR';
     }
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -1875,19 +1783,20 @@ function BomCalculationDeanta($request){
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
-        if($BOMCalculation->VersionId == 0){
-            BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
-        }
+
+    if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
+        BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
     if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
@@ -1914,6 +1823,7 @@ function BomCalculationDeanta($request){
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -1951,122 +1861,95 @@ function BomCalculationDeanta($request){
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
     }
 
-    if($request->overpanel=='Fan_Light'){
+    if ($request->overpanel == 'Fan_Light' && (!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
+        // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
+        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
+        if(in_array(Auth::user()->UserType, [1,4])){
 
-        if(!empty($request->lippingSpecies) && !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
-            // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-
-
-            $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-            $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
-            if(in_array(Auth::user()->UserType, [1,4])){
-
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
-            }else{
-                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
-
-            }
-            if(isset($unitcost->id)){
-
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-                $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
-                $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-                $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-
-                if($request->doorsetType == 'DD'){
-                    $quantity_of_door_type = 2;
-                }elseif($request->doorsetType == 'SD'){
-                    $quantity_of_door_type = 1;
-                }else{
-                    $quantity_of_door_type = 1;
-                }
-                $total_cost = $unit_cost*$quantity_of_door_type;
-
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
-
-            }
-        }
-
-
+            $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->lippingSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
+        }else{
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
 
         }
 
-    if($request->sideLight1=='Yes'){
+        if(isset($unitcost->id)){
 
-        if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
-
-            $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-
-            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
-            if(!empty($unitcost)){
-                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-            }else{
-                $unitcost_selected_price = 0;
-            }
-
-            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-            $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
+            $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
             $LMOfGlazingSystem = $LMOfGlazing/1000;
 
             $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-            if($request->sideLight2=='Yes'){
-                $unit_cost = $unit_cost * 2;
+
+            if($request->doorsetType == 'DD'){
                 $quantity_of_door_type = 2;
+            }elseif($request->doorsetType == 'SD'){
+                $quantity_of_door_type = 1;
             }else{
                 $quantity_of_door_type = 1;
             }
 
             $total_cost = $unit_cost*$quantity_of_door_type;
+
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+
         }
     }
 
-    if($request->sideLight2=='Yes'){
-
-        if(!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies)){
-
-            $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
-
-            $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
-
-            $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
-            $category = 'GlazingBeads';
-            $frame_unit = 'Each';
-
-
-            $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
-
-            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
-
-            $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
-            $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
-            $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
-            $LMOfGlazingSystem = $LMOfGlazing/1000;
-
-            $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-            if($request->sideLight1=='Yes'){
-                $unit_cost = $unit_cost * 2;
-                $quantity_of_door_type = 2;
-            }else{
-                $quantity_of_door_type = 1;
-            }
-            $total_cost = $unit_cost*$quantity_of_door_type;
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+    if ($request->sideLight1 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
+        $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight1GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->first();
+        if(!empty($unitcost)){
+            $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+        }else{
+            $unitcost_selected_price = 0;
         }
+
+        $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+        $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
+        $LMOfGlazingSystem = $LMOfGlazing/1000;
+        $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+        if($request->sideLight2=='Yes'){
+            $unit_cost *= 2;
+            $quantity_of_door_type = 2;
+        }else{
+            $quantity_of_door_type = 1;
+        }
+
+        $total_cost = $unit_cost*$quantity_of_door_type;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+    }
+
+    if ($request->sideLight2 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
+        $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
+        $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
+        $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
+        $category = 'GlazingBeads';
+        $frame_unit = 'Each';
+        $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
+        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
+        $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+        $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
+        $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
+        $LMOfGlazingSystem = $LMOfGlazing/1000;
+        $unit_cost = $pricePerLM*$LMOfGlazingSystem;
+        if($request->sideLight1=='Yes'){
+            $unit_cost *= 2;
+            $quantity_of_door_type = 2;
+        }else{
+            $quantity_of_door_type = 1;
+        }
+
+        $total_cost = $unit_cost*$quantity_of_door_type;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
     }
 
     //frame
@@ -2088,13 +1971,12 @@ function BomCalculationDeanta($request){
     MachiningCostExport($request);
 
     //Leaf Set BesPoke
-    if(!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)){
+    if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
         if($request->issingleconfiguration == 6){
             $doorConfiguration = "Deanta";
         }
 
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
         $selected_lipping_species = LippingSpecies::where('id', $request->lippingSpecies)->get()->first();
         if($selected_lipping_species->SpeciesName == ''){
             $selected_lipping_species->SpeciesName = 0;
@@ -2107,23 +1989,13 @@ function BomCalculationDeanta($request){
         }
 
         $description = $doorConfiguration.'| '.$lipping_type.'| '.$request->lippingThickness.'mm /'.$selected_lipping_species->SpeciesName. '| '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
         $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
-
         $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
-
         $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
-
         $door_core1 =  $door_core_size->selected_cost ?? 0;
-
-        if(empty($unitcost)){
-            $unitcost1 = 0;
-        }else{
-            $unitcost1 = $unitcost->selected_price;
-        }
-
+        $unitcost1 = empty($unitcost) ? 0 : $unitcost->selected_price;
         $lm = 0;
-        if($request->doorsetType == 'DD'){
+        if ($request->doorsetType == 'DD') {
             if(!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)){
                 $lm = (($request->leafWidth1 / 1000)*  2) + (($request->leafHeightNoOP / 1000) * 2);
             }elseif(!empty($request->adjustmentLeafWidth1)){
@@ -2131,17 +2003,15 @@ function BomCalculationDeanta($request){
             }elseif(!empty($request->adjustmentLeafHeightNoOP)){
                 $lm = (($request->leafWidth1 / 1000) * 2);
             }
-        }else{
-            if(!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)){
-                $lm = ($request->leafWidth1 / 1000) + ($request->leafHeightNoOP / 1000);
-            }elseif(!empty($request->adjustmentLeafWidth1)){
-                $lm = ($request->leafHeightNoOP / 1000);
-            }elseif(!empty($request->adjustmentLeafHeightNoOP)){
-                $lm = ($request->leafWidth1 / 1000);
-            }
+        } elseif (!empty($request->adjustmentLeafWidth1) && !empty($request->adjustmentLeafHeightNoOP)) {
+            $lm = ($request->leafWidth1 / 1000) + ($request->leafHeightNoOP / 1000);
+        } elseif(!empty($request->adjustmentLeafWidth1)){
+            $lm = ($request->leafHeightNoOP / 1000);
+        } elseif(!empty($request->adjustmentLeafHeightNoOP)){
+            $lm = ($request->leafWidth1 / 1000);
         }
-        $thickness_cost = ($request->lippingThickness *  $request->doorThickness * $unitcost1)/1000000;
 
+        $thickness_cost = ($request->lippingThickness *  $request->doorThickness * $unitcost1)/1000000;
         $door_core2 = 0;
         $lm2 = 0;
         $leafandhalfunitcost = 0;
@@ -2169,39 +2039,33 @@ function BomCalculationDeanta($request){
         $frame_unit = 'Each';
         $unit_cost = (floatval($door_core1) + (floatval($lm) * floatval($thickness_cost))) + floatval($leafandhalfunitcost);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-    }else{
-        if($request->issingleconfiguration == 6){
-            $doorConfiguration = "Deanta";
-
-            $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
-            if($request->decorativeGroves == 'Yes'){
-                $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
-            }else{
-                $groves = '.';
-            }
-
-            $description = $doorConfiguration. '| - | - |'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
-            $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
-
-            $door_core1 = (float) ($door_core_size->selected_cost ?? 0);
-            $door_core2 = 0;
-            if($request->doorsetType == 'leaf_and_a_half'){
-                $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
-
-                $door_core2 = (float) ($door_core_size2->selected_cost ?? 0);
-
-                $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
-            }else{
-                $description .= '| ' .$request->DoorDimensionsCode;
-            }
-
-            $category = 'LeafSetBesPoke';
-            $frame_unit = 'Each';
-            $unit_cost = $door_core1 + $door_core2;
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+    } elseif ($request->issingleconfiguration == 6) {
+        $doorConfiguration = "Deanta";
+        $lipping_type = str_replace('_', ' ',  $request->lippingType);
+        if($request->decorativeGroves == 'Yes'){
+            $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
+        }else{
+            $groves = '.';
         }
+
+        $description = $doorConfiguration. '| - | - |'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
+        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
+        $door_core1 = (float) ($door_core_size->selected_cost ?? 0);
+        $door_core2 = 0;
+        if($request->doorsetType == 'leaf_and_a_half'){
+            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
+
+            $door_core2 = (float) ($door_core_size2->selected_cost ?? 0);
+
+            $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
+        }else{
+            $description .= '| ' .$request->DoorDimensionsCode;
+        }
+
+        $category = 'LeafSetBesPoke';
+        $frame_unit = 'Each';
+        $unit_cost = $door_core1 + $door_core2;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
 
 
@@ -2212,7 +2076,7 @@ function BomCalculationDeanta($request){
     commonGeneralLabourCost($request,$userIds);
 }
 
-function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$unit,$unit_cost,$total_cost,$category){
+function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$unit,$unit_cost,$total_cost,$category): void{
     $userIds = CompanyUsers();
 
     $version_id = QuotationVersion::where('quotation_id', $request->QuotationId)->where('id', $request->VersionId)->value('version');
@@ -2239,7 +2103,7 @@ function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$u
 
     $marginDiscount = discountQuotationValue($request->QuotationId,$request->VersionId);
     if($marginDiscount != 0){
-        $margin = $margin + $marginDiscount;
+        $margin += $marginDiscount;
     }
 
     $bom_calculation = new ScreenBOMCalculation();
@@ -2261,7 +2125,7 @@ function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$u
     $bom_calculation->save();
 }
 
-function sideScreenBOM($request){
+function sideScreenBOM($request): void{
     $userIds = CompanyUsers(true);
     $FireRating = $request->FireRating;
     if($FireRating == 'IGU 0-0'){
@@ -2282,26 +2146,29 @@ function sideScreenBOM($request){
     if(!empty($ScreenBOMCalculation->ScreenId) && !empty($ScreenBOMCalculation->QuotationId)){
         ScreenBOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('ScreenId',$request->id)->delete();
     }
+
     $ScreenBOMCalculation = '';
     if(!empty($request->id)){
         $ScreenBOMCalculation = ScreenBOMCalculation::where('QuotationId',$request->QuotationId)->where('ScreenId',$request->id)->first();
     }
-    if(!empty($ScreenBOMCalculation->ScreenId) && !empty($ScreenBOMCalculation->QuotationId)){
-        if($ScreenBOMCalculation->VersionId == 0){
-            ScreenBOMCalculation::where('QuotationId',$request->QuotationId)->where('ScreenId',$request->id)->delete();
-        }
+
+    if(!empty($ScreenBOMCalculation->ScreenId) && !empty($ScreenBOMCalculation->QuotationId) && $ScreenBOMCalculation->VersionId == 0){
+        ScreenBOMCalculation::where('QuotationId',$request->QuotationId)->where('ScreenId',$request->id)->delete();
     }
 
     $QTYOfScreenType = SideScreenItemMaster::where('ScreenId',$request->id)->get()->count();
     if(empty($QTYOfScreenType)){
         $QTYOfScreenType = 1;
     }
+
     if(empty($request->TransomQuantity)){
         $request->TransomQuantity = 0;
     }
+
     if(empty($request->MullionQuantity)){
         $request->MullionQuantity = 0;
     }
+
     //screen glazing beads
     if(!empty($request->GlazingBeadShape) && !empty($request->GlazingBeadMaterial) && !empty($request->Finish) &&  !empty($request->GlazingBeadWidth) &&  !empty($request->GlazingBeadHeight)){
         $TransomQuantity = $request->TransomQuantity + 1;
@@ -2343,11 +2210,12 @@ function sideScreenBOM($request){
                 if (isset($glassPaneMap[$glasspane])) {
                     $GlassPaneWidth = $request->{$glassPaneMap[$glasspane]['width']};
                     $GlassPaneHeight = $request->{$glassPaneMap[$glasspane]['height']};
-                }else{
-                    $GlassPaneWidth = $GlassPaneHeight = 0;
+                }else {
+                    $GlassPaneWidth = 0;
+                    $GlassPaneHeight = 0;
                 }
 
-                $description = "{$ScreenType}|{$glasspane}| {$GlazingBeadShape}| {$GlazingBeadMaterial}| {$Finish}| {$GlazingBeadWidth}| {$GlazingBeadHeight}| {$GlassPaneWidth}| {$GlassPaneHeight}";
+                $description = sprintf('%s|%s| %s| %s| %s| %s| %s| %s| %s', $ScreenType, $glasspane, $GlazingBeadShape, $GlazingBeadMaterial, $Finish, $GlazingBeadWidth, $GlazingBeadHeight, $GlassPaneWidth, $GlassPaneHeight);
 
                 $screenQty = 1;
                 $Qty = 1;
@@ -2395,7 +2263,7 @@ function sideScreenBOM($request){
             $screenDim = $FrameDimensions[$FrameLocation];
             $LMData = $LM[$FrameLocation];
 
-            $description = "{$ScreenType} | {$FrameLocation} | {$FrameMF} | {$Finish} | {$screenDim} | {$Qty}";
+            $description = sprintf('%s | %s | %s | %s | %s | %s', $ScreenType, $FrameLocation, $FrameMF, $Finish, $screenDim, $Qty);
 
             $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->FrameMaterial)->get()->first();
 
@@ -2405,6 +2273,7 @@ function sideScreenBOM($request){
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
 
         }
+
         if(!empty($request->TransomQuantity) && ($request->TransomQuantity != 0)){
             $TransomQuantity = $request->TransomQuantity;
             for ($i = 1; $i <= $TransomQuantity; $i++) {
@@ -2416,7 +2285,7 @@ function sideScreenBOM($request){
 
                 $LMData = $request->TransomWidth1 / 1000;
 
-                $description = "{$ScreenType} | {$FrameLocation} | {$FrameMF} | {$Finish} | {$screenDim} | {$Qty}";
+                $description = sprintf('%s | %s | %s | %s | %s | %d', $ScreenType, $FrameLocation, $FrameMF, $Finish, $screenDim, $Qty);
 
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->TransomMaterial)->get()->first();
 
@@ -2426,6 +2295,7 @@ function sideScreenBOM($request){
                 saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
             }
         }
+
         if(!empty($request->MullionQuantity) && ($request->MullionQuantity != 0)){
             $MullionQuantity = $request->MullionQuantity;
             for ($i = 1; $i <= $MullionQuantity; $i++) {
@@ -2436,7 +2306,7 @@ function sideScreenBOM($request){
                 $FrameMF = lippingName($request->MullionMaterial);
                 $LMData = $request->MullionHeight1 / 1000;
 
-                $description = "{$ScreenType} | {$FrameLocation} | {$FrameMF} | {$Finish} | {$screenDim} | {$Qty}";
+                $description = sprintf('%s | %s | %s | %s | %s | %d', $ScreenType, $FrameLocation, $FrameMF, $Finish, $screenDim, $Qty);
 
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->MullionMaterial)->get()->first();
 
@@ -2446,6 +2316,7 @@ function sideScreenBOM($request){
                 saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
             }
         }
+
         if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
             $FrameLocation = 'SubFrame Bottom';
             $FrameMF = lippingName($request->SubFrameMaterial);
@@ -2454,7 +2325,7 @@ function sideScreenBOM($request){
 
             $LMData = $request->SubFrameBottomWidth / 1000;
 
-            $description = "{$ScreenType} | {$FrameLocation} | {$FrameMF} | {$Finish} | {$screenDim} | {$Qty}";
+            $description = sprintf('%s | %s | %s | %s | %s | %d', $ScreenType, $FrameLocation, $FrameMF, $Finish, $screenDim, $Qty);
 
             $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SubFrameMaterial)->get()->first();
 
@@ -2500,13 +2371,14 @@ function sideScreenBOM($request){
             if (isset($glassPaneMap[$glasspane])) {
                 $GlassPaneWidth = $request->{$glassPaneMap[$glasspane]['width']};
                 $GlassPaneHeight = $request->{$glassPaneMap[$glasspane]['height']};
-            }else{
-                $GlassPaneWidth = $GlassPaneHeight = 0;
+            }else {
+                $GlassPaneWidth = 0;
+                $GlassPaneHeight = 0;
             }
 
             $LMData = ($GlassPaneWidth * $GlassPaneHeight) / 1000000;
 
-            $description = "{$ScreenType} | {$glasspane} | {$glassType} | {$GlassPaneWidth} | {$GlassPaneHeight}";
+            $description = sprintf('%s | %s | %s | %s | %s', $ScreenType, $glasspane, $glassType, $GlassPaneWidth, $GlassPaneHeight);
 
             $unitcost = ScreenGlassType::join('selected_screen_glass','screen_glass_type.id','selected_screen_glass.glass_id')
             ->where(['screen_glass_type.FireRating' => $FireRating,'screen_glass_type.GlassType' => $glassType,'screen_glass_type.status'=>1])
@@ -2514,7 +2386,7 @@ function sideScreenBOM($request){
             ->select('selected_screen_glass.*')
             ->first();
 
-            $unit_cost = (!empty($unitcost))?$unitcost->glassSelectedPrice:0;
+            $unit_cost = (empty($unitcost))?0:$unitcost->glassSelectedPrice;
 
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
@@ -2558,18 +2430,20 @@ function sideScreenBOM($request){
                 if (isset($glassPaneMap[$glasspane])) {
                     $GlassPaneWidth = $request->{$glassPaneMap[$glasspane]['width']};
                     $GlassPaneHeight = $request->{$glassPaneMap[$glasspane]['height']};
-                }else{
-                    $GlassPaneWidth = $GlassPaneHeight = 0;
+                }else {
+                    $GlassPaneWidth = 0;
+                    $GlassPaneHeight = 0;
                 }
+
                 $LMData += ($GlassPaneWidth * 4) + ($GlassPaneHeight * 4);
             }
         }
 
-        $LMData = $LMData / 1000;
+        $LMData /= 1000;
 
         $GlazingBead = $request->GlazingBeadHeight .' x '. $request->GlazingBeadWidth;
 
-        $description = "{$ScreenType} | {$GlazingSystem} | {$GlazingBead}";
+        $description = sprintf('%s | %s | %s', $ScreenType, $GlazingSystem, $GlazingBead);
 
         $unitcost = ScreenGlazingType::join('selected_screen_glazing','screen_glazing_type.id','selected_screen_glazing.glazing_id')
         ->where(['screen_glazing_type.FireRating' => $FireRating,'screen_glazing_type.GlazingSystem' => $GlazingSystem,'screen_glazing_type.status'=>1])
@@ -2577,7 +2451,7 @@ function sideScreenBOM($request){
         ->select('selected_screen_glazing.*','screen_glazing_type.*')
         ->first();
 
-        $unit_cost = (!empty($unitcost))?$unitcost->glazingSelectedPrice:0;
+        $unit_cost = (empty($unitcost))?0:$unitcost->glazingSelectedPrice;
 
         $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
@@ -2599,6 +2473,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->MachiningOfGlazingBead == 1){
             $data = getMyLaborCost('MachiningOfGlazingBead', $GeneralLabourCost->genLaborCost);
             $description = "SS - Machining of Glazing Bead |".($GeneralLabourCost->MachiningOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2607,24 +2482,22 @@ function sideScreenBOM($request){
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
-        if(!empty($request->TransomQuantity) && ($request->TransomQuantity != 0)){
-            if($GeneralLabourCost->MachiningOfTransom == 1){
-                $data = getMyLaborCost('MachiningOfTransom', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Machining of Transom |".($GeneralLabourCost->MachiningOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->MachiningOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+        if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->MachiningOfTransom == 1) {
+            $data = getMyLaborCost('MachiningOfTransom', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Machining of Transom |".($GeneralLabourCost->MachiningOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->MachiningOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-            if($GeneralLabourCost->MachiningOfSubFrame == 1){
-                $data = getMyLaborCost('MachiningOfSubFrame', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Machining of Sub Frame |".($GeneralLabourCost->MachiningOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->MachiningOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->MachiningOfSubFrame == 1) {
+            $data = getMyLaborCost('MachiningOfSubFrame', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Machining of Sub Frame |".($GeneralLabourCost->MachiningOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->MachiningOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->CuttingOfScreenframe == 1){
             $data = getMyLaborCost('CuttingOfScreenframe', $GeneralLabourCost->genLaborCost);
             $description = "SS - Cutting Of Screen frame |".($GeneralLabourCost->CuttingOfScreenframeManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfScreenframeMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2632,6 +2505,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->CuttingOfGlazingBead == 1){
             $data = getMyLaborCost('CuttingOfGlazingBead', $GeneralLabourCost->genLaborCost);
             $description = "SS - Cutting Of Glazing Bead |".($GeneralLabourCost->CuttingOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2639,24 +2513,23 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->TransomQuantity) && ($request->TransomQuantity != 0)){
-            if($GeneralLabourCost->CuttingOfTransom == 1){
-                $data = getMyLaborCost('CuttingOfTransom', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Cutting Of Transom |".($GeneralLabourCost->CuttingOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->CuttingOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->CuttingOfTransom == 1) {
+            $data = getMyLaborCost('CuttingOfTransom', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Cutting Of Transom |".($GeneralLabourCost->CuttingOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->CuttingOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-            if($GeneralLabourCost->CuttingOfSubFrame == 1){
-                $data = getMyLaborCost('CuttingOfSubFrame', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Cutting Of Sub Frame |".($GeneralLabourCost->CuttingOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->CuttingOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->CuttingOfSubFrame == 1) {
+            $data = getMyLaborCost('CuttingOfSubFrame', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Cutting Of Sub Frame |".($GeneralLabourCost->CuttingOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->CuttingOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->ScreenAssembley == 1){
             $data = getMyLaborCost('ScreenAssembley', $GeneralLabourCost->genLaborCost);
             $description = "SS - Screen Assembley |".($GeneralLabourCost->ScreenAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ScreenAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2664,24 +2537,23 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->TransomQuantity) && ($request->TransomQuantity != 0)){
-            if($GeneralLabourCost->TransomAssembley == 1){
-                $data = getMyLaborCost('TransomAssembley', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Transom Assembley |".($GeneralLabourCost->TransomAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->TransomAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->TransomAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->TransomAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->TransomAssembley == 1) {
+            $data = getMyLaborCost('TransomAssembley', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Transom Assembley |".($GeneralLabourCost->TransomAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->TransomAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->TransomAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->TransomAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-            if($GeneralLabourCost->SubFrameAssembley == 1){
-                $data = getMyLaborCost('SubFrameAssembley', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Sub Frame Assembley |".($GeneralLabourCost->SubFrameAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SubFrameAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->SubFrameAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SubFrameAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->SubFrameAssembley == 1) {
+            $data = getMyLaborCost('SubFrameAssembley', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Sub Frame Assembley |".($GeneralLabourCost->SubFrameAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SubFrameAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->SubFrameAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SubFrameAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->FittingOfGlass == 1){
             $data = getMyLaborCost('FittingOfGlass', $GeneralLabourCost->genLaborCost);
             $description = "SS -Fitting Of Glass |".($GeneralLabourCost->FittingOfGlassManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlassMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2689,6 +2561,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->FittingOfGlazingSystem == 1){
             $data = getMyLaborCost('FittingOfGlazingSystem', $GeneralLabourCost->genLaborCost);
             $description = "SS - Fitting Of Glazing System |".($GeneralLabourCost->FittingOfGlazingSystemManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlazingSystemMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2696,6 +2569,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->FittingOfGlazingBead == 1){
             $data = getMyLaborCost('FittingOfGlazingBead', $GeneralLabourCost->genLaborCost);
             $description = "SS - Fitting Of Glazing Bead |".($GeneralLabourCost->FittingOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2703,6 +2577,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->SprayFinishOf == 1){
             $data = getMyLaborCost('SprayFinishOf', $GeneralLabourCost->genLaborCost);
             $description = "SS - Spray Finish Of |".($GeneralLabourCost->SprayFinishOfManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2710,6 +2585,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->SprayFinishOfScreenframe == 1){
             $data = getMyLaborCost('SprayFinishOfScreenframe', $GeneralLabourCost->genLaborCost);
             $description = "SS - Spray Finish Of Screen frame |".($GeneralLabourCost->SprayFinishOfScreenframeManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfScreenframeMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2717,6 +2593,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->SprayFinishGlazingBead == 1){
             $data = getMyLaborCost('SprayFinishGlazingBead', $GeneralLabourCost->genLaborCost);
             $description = "SS - Spray Finish Glazing Bead |".($GeneralLabourCost->SprayFinishGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2724,24 +2601,23 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->TransomQuantity) && ($request->TransomQuantity != 0)){
-            if($GeneralLabourCost->SprayFinishOfTransom == 1){
-                $data = getMyLaborCost('SprayFinishOfTransom', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Spray Finish Of Transom |".($GeneralLabourCost->SprayFinishOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->SprayFinishOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->SprayFinishOfTransom == 1) {
+            $data = getMyLaborCost('SprayFinishOfTransom', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Spray Finish Of Transom |".($GeneralLabourCost->SprayFinishOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->SprayFinishOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
-        if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-            if($GeneralLabourCost->SprayFinishOfSubFrame == 1){
-                $data = getMyLaborCost('SprayFinishOfSubFrame', $GeneralLabourCost->genLaborCost);
-                $description = "SS - Spray Finish Of Sub Frame |".($GeneralLabourCost->SprayFinishOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->SprayFinishOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                $total_cost = $unit_cost * $QTYOfScreenType;
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-            }
+
+        if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->SprayFinishOfSubFrame == 1) {
+            $data = getMyLaborCost('SprayFinishOfSubFrame', $GeneralLabourCost->genLaborCost);
+            $description = "SS - Spray Finish Of Sub Frame |".($GeneralLabourCost->SprayFinishOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+            $unit_cost = ($GeneralLabourCost->SprayFinishOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
+            $total_cost = $unit_cost * $QTYOfScreenType;
+            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->PallettingPackaging == 1){
             $data = getMyLaborCost('PallettingPackaging', $GeneralLabourCost->genLaborCost);
             $description = "SS - Palletting Packaging |".($GeneralLabourCost->PallettingPackagingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->PallettingPackagingMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2749,6 +2625,7 @@ function sideScreenBOM($request){
             $total_cost = $unit_cost * $QTYOfScreenType;
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
+
         if($GeneralLabourCost->LoadingOfLorry == 1){
             $data = getMyLaborCost('LoadingOfLorry', $GeneralLabourCost->genLaborCost);
             $description = "SS - Loading Of Lorry |".($GeneralLabourCost->LoadingOfLorryManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LoadingOfLorryMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
@@ -2765,7 +2642,7 @@ function discountQuotationValue($quotationId,$versionId){
     return $QuotationVersion;
 }
 
-function discountQuote($quotationId,$versionId){
+function discountQuote($quotationId,$versionId): bool{
     $Items = Item::where(['items.QuotationId' => $quotationId, 'items.VersionId' => $versionId])->get();
 
     $quotation = Quotation::where('id',$quotationId)->first();
@@ -2781,8 +2658,9 @@ function discountQuote($quotationId,$versionId){
                 $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
                 $marginDiscount = discountQuotationValue($data->QuotationId,$data->VersionId);
                 if($marginDiscount != 0){
-                    $margin = $margin + $marginDiscount;
+                    $margin += $marginDiscount;
                 }
+
                 $marginwithcal = 100 - $margin;
                 $testvar = $marginwithcal/100;
                 $totalcost = $AI->discountprice / $testvar;
@@ -2797,18 +2675,21 @@ function discountQuote($quotationId,$versionId){
             if(!empty($BOMCalculation)){
                 foreach($BOMCalculation as $value){
                     if($value->Category != 'Ironmongery&MachiningCosts'){
-                        $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+                        $GTSellPrice += $value->GTSellPrice;
                     }
                 }
+
                 $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
                 $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
             }
+
             Item::where('itemId', $itemid)->update([
                 'DoorsetPrice' => $GTSellPriceTotal,
                 'IronmongaryPrice' => $IronmongaryPrice,
             ]);
         }
     }
+
     $NonConfigurableItemStore = NonConfigurableItemStore::where(['non_configurable_item_store.quotationId' => $quotationId, 'non_configurable_item_store.versionId' => $versionId])->get();
     $margin = discountQuotationValue($quotationId,$versionId);
     $currencyPrice = getCurrencyRate($quotationId);
@@ -2837,11 +2718,13 @@ function discountQuote($quotationId,$versionId){
             $GTSellPriceTotal = 0;
             if(!empty($ScreenBOMCalculation)){
                 foreach($ScreenBOMCalculation as $value){
-                    $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
+                    $GTSellPrice += $value->GTSellPrice;
                 }
+
                 $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
                 $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
             }
+
             SideScreenItem::where('id', $id)->update([
                 'ScreenPrice' => $GTSellPriceTotal
             ]);

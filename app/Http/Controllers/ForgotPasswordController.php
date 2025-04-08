@@ -25,7 +25,7 @@ class ForgotPasswordController extends Controller
             // Session::put('otp',$randomcode);
             // $data = ['OTP'=>$randomcode,'email'=>$request->Email];
 
-            $token = rand(000000,999999);
+            $token = random_int(000000,999999);
 
             DB::table('password_resets')->insert([
                 'email' => $request->UserEmail,
@@ -34,11 +34,12 @@ class ForgotPasswordController extends Controller
               ]);
             $emailFrom = 'noreply@jfds.co.uk';
             ini_set('display_errors', 1);
-            Mail::send('Mail.forgetPassword', ['token' => $token], function($message) use($request,$emailFrom){
+            Mail::send('Mail.forgetPassword', ['token' => $token], function($message) use($request,$emailFrom): void{
                 $message->to($request->UserEmail);
-                if($emailFrom){
+                if($emailFrom !== ''){
                     $message->from($emailFrom, $emailFrom);
                 }
+                
                 $message->subject('Reset Password');
             });
 

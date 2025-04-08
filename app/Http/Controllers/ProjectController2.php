@@ -80,6 +80,7 @@ class ProjectController2 extends Controller
                     ])->orderBy('project.id','desc')->get();
 
                 }
+                
                 break;
 
             case 2:
@@ -95,6 +96,7 @@ class ProjectController2 extends Controller
                     ])->orderBy('project.id','desc')->get();
 
                 }
+                
                 break;
 
                 default:
@@ -104,7 +106,7 @@ class ProjectController2 extends Controller
                 ])->orderBy('project.id','desc')->get();
             }
 
-        return view('Project.ProjectList',compact('data'));
+        return view('Project.ProjectList',['data' => $data]);
     }
 
 
@@ -130,6 +132,7 @@ class ProjectController2 extends Controller
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
+        
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -162,6 +165,7 @@ class ProjectController2 extends Controller
                     $filters[] = ['project.UserId', "=", $request->id];
                     $filters[] = ['project.CompanyId', "=", $login_company_id];
                 }
+                
                 break;
 
             case 3:
@@ -189,16 +193,13 @@ class ProjectController2 extends Controller
 
 
 
-        if($UserType == 3){
+        if ($UserType == 3) {
             $login_company_id = get_company_id(Auth::user()->CreatedBy)->id ?? null;
             $filters[] = ['project.CompanyId', "=", $login_company_id];
-
             $created_by_my_cmpny_admin_user = myCreatedUser();
             $todays = date('Y-m-d');
-
             // ✅ Find if a date filter exists in $filters
             $dateFilter = collect($filters)->firstWhere(0, 'project.created_at');
-
             $query = Project::leftJoin('companies', 'companies.id', '=', 'project.CompanyId')
                 ->select(
                     'project.*',
@@ -208,14 +209,14 @@ class ProjectController2 extends Controller
                     DB::raw("(SELECT count(*) FROM quotation WHERE project.id = quotation.ProjectId) as quotesCount"),
                     DB::raw("(SELECT count(*) FROM quotation WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) as ordersCount")
                 )
-                ->where(function ($q) use ($created_by_my_cmpny_admin_user, $filters) {
+                ->where(function ($q) use ($created_by_my_cmpny_admin_user, $filters): void {
                     // ✅ Apply all filters dynamically
                     foreach ($filters as $filter) {
                         $q->where($filter[0], $filter[1], $filter[2]);
                     }
+                    
                     $q->orWhereIn('project.UserId', $created_by_my_cmpny_admin_user);
                 });
-
             // ✅ Apply date filter only if it exists
             if ($dateFilter) {
                 $operator = $dateFilter[1];
@@ -232,14 +233,13 @@ class ProjectController2 extends Controller
 
             // ✅ Clone query for count
             $countProject = (clone $query)->count();
-           if($request->listType=='dataListType'){
-            $data = $query->orderBy("$column", "$dir")->get();
-        }else{
-
-            $data = $query->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
-        }
-
-        }else if($UserType == 2){
+            if($request->listType=='dataListType'){
+             $data = $query->orderBy($column, $dir)->get();
+         }else{
+ 
+             $data = $query->skip($from)->take($limit)->orderBy($column, $dir)->get();
+         }
+        } elseif ($UserType == 2) {
             $created_by_me_users = myCreatedUser();
             if (!empty($filters)) {
                 $todays = date('Y-m-d');
@@ -254,7 +254,7 @@ class ProjectController2 extends Controller
                         DB::raw("(SELECT count(*) FROM quotation WHERE project.id = quotation.ProjectId) as quotesCount"),
                         DB::raw("(SELECT count(*) FROM quotation WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) as ordersCount")
                     )
-                    ->where(function ($q) use ($created_by_me_users) {
+                    ->where(function ($q) use ($created_by_me_users): void {
                         $q->orWhereIn('project.UserId', $created_by_me_users);
                     });
 
@@ -273,6 +273,7 @@ class ProjectController2 extends Controller
                         }
                     }
                 }
+                
                 foreach ($filters as $filter) {
                     if ($filter[0] !== "project.created_at") {
                         $query->where($filter[0], $filter[1], $filter[2]);
@@ -283,14 +284,12 @@ class ProjectController2 extends Controller
             }
 
             if($request->listType=='dataListType'){
-                $data = $query->orderBy("$column", "$dir")->get();
+                $data = $query->orderBy($column, $dir)->get();
             }else{
 
-                $data = $query->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+                $data = $query->skip($from)->take($limit)->orderBy($column, $dir)->get();
             }
-
-        }
-        else{
+        } else{
             $countProject = Project::leftJoin('companies','companies.id','project.CompanyId')
             ->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))
             ->where($filters)->count();
@@ -301,15 +300,15 @@ class ProjectController2 extends Controller
             //->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
 
             if($request->listType=='dataListType'){
-                $data = $data->orderBy("$column", "$dir")->get();
+                $data = $data->orderBy($column, $dir)->get();
             }else{
 
-                $data = $data->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+                $data = $data->skip($from)->take($limit)->orderBy($column, $dir)->get();
             }
 
         }
 
-        if(count((array)$data->toArray()) > 0){
+        if((array)$data->toArray() !== []){
             $htmlData = '';
             $DoorsetPrice = 0;
             if ($request->input('listType') == 'dataListType') {
@@ -335,39 +334,17 @@ class ProjectController2 extends Controller
                 $us = User::where('id',$val->editBy)->first();
                 $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
                 $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
+                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
 
+                $BuildingType = $val->BuildingType != '' ? $val->BuildingType : '-----------';
 
-                if($custCompanyName != ''){
-                    $CompanyName = $custCompanyName->CstCompanyName;
-                } else {
-                    $CompanyName = '-----------';
-                }
-                if($val->BuildingType != ''){
-                    $BuildingType = $val->BuildingType;
-                } else {
-                    $BuildingType = '-----------';
-                }
-                if($val->quotesCount != ''){
-                    $quotesCount = $val->quotesCount;
-                } else {
-                    $quotesCount = 0;
-                }
-                if($val->ordersCount != ''){
-                    $ordersCount = $val->ordersCount;
-                } else {
-                    $ordersCount = 0;
-                }
-                if($val->returnTenderDate != ''){
-                    $returnTenderDate = $val->returnTenderDate;
-                } else {
-                    $returnTenderDate = '-----------';
-                }
+                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
 
-                if($us != '' ){
-                    $lastModifier = $us->FirstName.' '.$us->LastName;
-                } else {
-                    $lastModifier = '';
-                }
+                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
+
+                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
+                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
+                
                 //firedoor2_role_update
                 // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -383,15 +360,13 @@ class ProjectController2 extends Controller
 
                 // currency showing formate is changed accordingly(dynamically)
                 $Currency = '';
-                if($UserType != 4){
-                    if(!empty($val->projectCurrency)){
-                        if($val->projectCurrency == '£_GBP'){
-                            $Currency = "£";
-                        } else if($val->projectCurrency == '€_EURO'){
-                            $Currency = "€";
-                        } else if($val->projectCurrency == '$_US_DOLLAR'){
-                            $Currency = "$";
-                        }
+                if($UserType != 4 && !empty($val->projectCurrency)){
+                    if ($val->projectCurrency == '£_GBP') {
+                        $Currency = "£";
+                    } elseif ($val->projectCurrency == '€_EURO') {
+                        $Currency = "€";
+                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
+                        $Currency = "$";
                     }
                 }
 
@@ -427,6 +402,7 @@ $sn++;
 
                 // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
             }
+            
             $htmlData .= '</tbody>
             </table>';
         }else{
@@ -466,39 +442,17 @@ $sn++;
                 $us = User::where('id',$val->editBy)->first();
                 $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
                 $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
+                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
 
+                $BuildingType = $val->BuildingType != '' ? $val->BuildingType : '-----------';
 
-                if($custCompanyName != ''){
-                    $CompanyName = $custCompanyName->CstCompanyName;
-                } else {
-                    $CompanyName = '-----------';
-                }
-                if($val->BuildingType != ''){
-                    $BuildingType = $val->BuildingType;
-                } else {
-                    $BuildingType = '-----------';
-                }
-                if($val->quotesCount != ''){
-                    $quotesCount = $val->quotesCount;
-                } else {
-                    $quotesCount = 0;
-                }
-                if($val->ordersCount != ''){
-                    $ordersCount = $val->ordersCount;
-                } else {
-                    $ordersCount = 0;
-                }
-                if($val->returnTenderDate != ''){
-                    $returnTenderDate = $val->returnTenderDate;
-                } else {
-                    $returnTenderDate = '-----------';
-                }
+                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
 
-                if($us != '' ){
-                    $lastModifier = $us->FirstName.' '.$us->LastName;
-                } else {
-                    $lastModifier = '';
-                }
+                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
+
+                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
+                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
+                
                 //firedoor2_role_update
                 // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -514,15 +468,13 @@ $sn++;
 
                 // currency showing formate is changed accordingly(dynamically)
                 $Currency = '';
-                if($UserType != 4){
-                    if(!empty($val->projectCurrency)){
-                        if($val->projectCurrency == '£_GBP'){
-                            $Currency = "£";
-                        } else if($val->projectCurrency == '€_EURO'){
-                            $Currency = "€";
-                        } else if($val->projectCurrency == '$_US_DOLLAR'){
-                            $Currency = "$";
-                        }
+                if($UserType != 4 && !empty($val->projectCurrency)){
+                    if ($val->projectCurrency == '£_GBP') {
+                        $Currency = "£";
+                    } elseif ($val->projectCurrency == '€_EURO') {
+                        $Currency = "€";
+                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
+                        $Currency = "$";
                     }
                 }
 
@@ -580,22 +532,22 @@ $sn++;
             // <li><a href="'.route('addironmongery',[$val->ProjectId]).'"><i class="fa fa-shield"></i> Add Ironmongery Set</a></li>
 
             // return $htmlData;
-            return array(
+            return [
                 'st' => "success",
                 'txt' => 'data found.',
                 'total' => $countProject,
                 'html' => $htmlData,
-            );
+            ];
 
 
         } else {
             $htmlData = 'Data not found.';
-            return array(
+            return [
                 'st' => "error",
                 'txt' => 'Data not found.',
                 'total' => 0,
                 'html' => $htmlData,
-            );
+            ];
 
 
         }
@@ -669,7 +621,7 @@ $sn++;
 
         $main_contractor_name = Customer::where('id',$project->MainContractorId)->value('CstCompanyName');
         // dd($main_contractor_list);
-        return view('Project.ProjectQuotationList',compact('data','projectId','quotation_limit_for_arch','main_contractor_list', 'architect_list','company_list','company_name','architect_name','main_contractor_name','vid','qid','buildingType'));
+        return view('Project.ProjectQuotationList',['data' => $data, 'projectId' => $projectId, 'quotation_limit_for_arch' => $quotation_limit_for_arch, 'main_contractor_list' => $main_contractor_list, 'architect_list' => $architect_list, 'company_list' => $company_list, 'company_name' => $company_name, 'architect_name' => $architect_name, 'main_contractor_name' => $main_contractor_name, 'vid' => $vid, 'qid' => $qid, 'buildingType' => $buildingType]);
     }
 
     public function invite(Request $request)
@@ -705,9 +657,10 @@ $sn++;
             if ($createInvitation) {
                 return redirect()->back()->with('success', 'Invitation sent successfully! ');
             }
+            
             return redirect()->back()->with('error', 'Failed Invitation not sent. Please retry! ');
 
-        } catch (Exception $e) {
+        } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Server error, Invitation not sent. Please contact admin! ');
         }
     }
@@ -737,6 +690,7 @@ $sn++;
                     ])->orderBy('project.id','desc')->get();
 
                 }
+                
                 break;
 
             case 2:
@@ -752,6 +706,7 @@ $sn++;
                     ])->orderBy('project.id','desc')->get();
 
                 }
+                
                 break;
 
                 default:
@@ -785,6 +740,7 @@ $sn++;
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
+        
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -816,44 +772,25 @@ $sn++;
         ->where($filters)
         ->where('project_invitations.MainContractorId',$get_contractor_id)
         // ->whereIn('project.id', $invitedProjects)
-        ->skip($from)->take($limit)->orderBy("$column", "$dir")->distinct()->get();//->where($filters)->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+        ->skip($from)->take($limit)->orderBy($column, $dir)->distinct()->get();//->where($filters)->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
 
         $countProject = count(json_decode(json_encode($data), true));
-        if(count((array)$data->toArray()) > 0){
+        if((array)$data->toArray() !== []){
             $htmlData = '';
             foreach($data as $val)
             {
                 $us = User::where('id',$val->editBy)->first();
                 $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
                 $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
+                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
 
+                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
 
-                if($custCompanyName != ''){
-                    $CompanyName = $custCompanyName->CstCompanyName;
-                } else {
-                    $CompanyName = '-----------';
-                }
-                if($val->quotesCount != ''){
-                    $quotesCount = $val->quotesCount;
-                } else {
-                    $quotesCount = 0;
-                }
-                if($val->ordersCount != ''){
-                    $ordersCount = $val->ordersCount;
-                } else {
-                    $ordersCount = 0;
-                }
-                if($val->returnTenderDate != ''){
-                    $returnTenderDate = $val->returnTenderDate;
-                } else {
-                    $returnTenderDate = '-----------';
-                }
+                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
 
-                if($us != '' ){
-                    $lastModifier = $us->FirstName.' '.$us->LastName;
-                } else {
-                    $lastModifier = '';
-                }
+                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
+                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
+                
                 //firedoor2_role_update
 
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -870,14 +807,15 @@ $sn++;
                 // currency showing formate is changed accordingly(dynamically)
                 $Currency = '';
                 if(!empty($val->projectCurrency)){
-                    if($val->projectCurrency == '£_GBP'){
+                    if ($val->projectCurrency == '£_GBP') {
                         $Currency = "£ GBP";
-                    } else if($val->projectCurrency == '€_EURO'){
+                    } elseif ($val->projectCurrency == '€_EURO') {
                         $Currency = "€ EURO";
-                    } else if($val->projectCurrency == '$_US_DOLLAR'){
+                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
                         $Currency = "$ US DOLLAR";
                     }
                 }
+                
                 $htmlData .=
                 '<div class="col-sm-3 mb-3">
                     <div class="QuotationBox">
@@ -924,22 +862,22 @@ $sn++;
             }
 
             // return $htmlData;
-            return array(
+            return [
                 'st' => "success",
                 'txt' => 'data found.',
                 'total' => $countProject,
                 'html' => $htmlData,
-            );
+            ];
 
 
         } else {
             $htmlData = 'Data not found.';
-            return array(
+            return [
                 'st' => "error",
                 'txt' => 'Data not found.',
                 'total' => 0,
                 'html' => $htmlData,
-            );
+            ];
 
         }
 
@@ -978,8 +916,8 @@ $sn++;
             }
 
             ProjectInvitation::where('id', $projectId)->update($data);
-            return redirect()->back()->with('success', "Invitation $choice successfully! ");
-        } catch (Exception $e) {
+            return redirect()->back()->with('success', sprintf('Invitation %s successfully! ', $choice));
+        } catch (Exception $exception) {
             return redirect()->back()->with('error', 'Server error, while updating invitation status. Please contact admin! ');
         }
     }
@@ -1003,8 +941,8 @@ $sn++;
             Project::where('id', $projectId)->update($data);
 
             return redirect()->back()->with('success', "Project Assign successfully!");
-        } catch (Exception $e) {
-            return $e;
+        } catch (Exception $exception) {
+            return $exception;
             return redirect()->back()->with('error', 'Server error, while assigning project to main contractor. Please contact admin! ');
         }
     }
@@ -1036,6 +974,8 @@ $sn++;
             return response()->json(['status' => 'success',
                 'teamboards'=>$teamboards]);
         }
+
+        return null;
     }
 
 
@@ -1050,6 +990,7 @@ $sn++;
             foreach($users as $valUserId){
                 $user_ids[] = $valUserId;
             }
+            
             $user_ids[] = Auth::user()->id;
         }elseif(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -1089,7 +1030,7 @@ $sn++;
         //     ->where($filters)->skip($from)->take($limit)->orderBy("$column", "$dir")
         //     ->get();
 
-        $data = Quotation::leftJoin("quotation_versions",function($join){
+        $data = Quotation::leftJoin("quotation_versions",function($join): void{
             $join->on("quotation.id","quotation_versions.quotation_id")
                 ->orOn("quotation_versions.id","=","quotation.VersionId");
         })
@@ -1100,7 +1041,7 @@ $sn++;
         ->where($filters)
         ->skip($from)
         ->take($limit)
-        ->orderBy("$column", "$dir")
+        ->orderBy($column, $dir)
         ->get();
 
         $projectinfo = Project::where($filters)->first();
@@ -1137,6 +1078,7 @@ $sn++;
                 </tr>';
                 $i++;
             }
+            
             $tbl2 = '';
             if(!empty($projectinfo)){
                 $cc = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->where('customers.UserId',$projectinfo->customerId)->get();
@@ -1226,23 +1168,19 @@ $sn++;
                                         </div>
                                     </div>
                                 </div>';
-                if($check_award_someone==0){
-                    $tbl3 .= '<input type="hidden" name="invitationId" class="invitationId" value='.$row['invitationId'].'><a href="javascript:void(0);" class="btn btn-success assignproject"><i class="fa fa-check"></i></a><input type="hidden" value="'.$row['MainContractorId'].'"></td>';
-                }
-                else{
-                    $tbl3 .= '</td>';
-                }
-                } else if ($row['Status'] == 'rejected') {
+                    if($check_award_someone==0){
+                        $tbl3 .= '<input type="hidden" name="invitationId" class="invitationId" value='.$row['invitationId'].'><a href="javascript:void(0);" class="btn btn-success assignproject"><i class="fa fa-check"></i></a><input type="hidden" value="'.$row['MainContractorId'].'"></td>';
+                    }
+                    else{
+                        $tbl3 .= '</td>';
+                    }
+                } elseif ($row['Status'] == 'rejected') {
                     $tbl3 .= '<td class="text-danger">Rejected</td>';
                     // $tbl3 .= '<td><a href="'.url('contractor/edit/'.$row['id']).'" class="btn btn-success"><i class="fa fa-pencil"></i></a></td>';
-                }
-                else if ($row['Status'] == 'awarded') {
-
+                } elseif ($row['Status'] == 'awarded') {
                     $tbl3 .= '<td class="text-primary">Awarded</td>';
                     // $tbl3 .= '<td><a href="'.url('contractor/edit/'.$row['id']).'" class="btn btn-success"><i class="fa fa-pencil"></i></a></td>';
-                }
-
-                else {
+                } else {
                     $tbl3 .= '<td class="text-warning">Pending</td>';
                     // $tbl3 .= '<td><a href="'.url('contractor/edit/'.$row['id']).'" class="btn btn-success"><i class="fa fa-pencil"></i></a></td>';
                 }
@@ -1272,11 +1210,7 @@ $sn++;
                 $row = 1;
                 foreach($survey_user as $ccs){
                     $selectedOption = SurveyInfo::where(['userId' => $ccs->id,'projectId'=>$projectId])->wherein('companyId',$user_ids)->count();
-                    if ($selectedOption > 0) {
-                        $select = 'checked';
-                    } else {
-                        $select = '';
-                    }
+                    $select = $selectedOption > 0 ? 'checked' : '';
 
                     $survey_user_table .=
                     '<tr>
@@ -1288,6 +1222,7 @@ $sn++;
                         <td><input type="checkbox" class="survey_users" value="'.$ccs->id.'" '.$select.'/></td>
                     </tr>';
                 }
+                
                 $survey_user_table .=  '</tbody></table></div>';
                 $survey_user_table .= '<button type="button" onclick="updateMe()" class="btn btn-primary text-white checkupdate-btn">Select</button>';
 
@@ -1316,6 +1251,7 @@ $sn++;
                         $ccs->oldSOHeight = $ccs->oldestSOHeight;
                         $ccs->oldSODepth = $ccs->oldestSODepth;
                     }
+                    
                     $survey_change_request .=
                     '<tr>
                         <td>'.$row++.'</td>
@@ -1331,6 +1267,7 @@ $sn++;
                         <td><button type="button" onclick="ChangeRequest('.$data[0]->quotationId.','.$data[0]->versionId.','.$ccs->SOWidth.','.$ccs->SOHeight.','.$ccs->itemId.','.$ccs->itemMasterId.','.$ccs->oldSOWidth.','.$ccs->oldSOHeight.','.$ccs->oldSODepth.','.$ccs->SODepth.','.$ccs->id.')" class="btn btn-primary text-white" '.$disabled.'>Accept Request</button></td>
                     </tr>';
                 }
+                
                 $survey_change_request .=  '</tbody></table></div>';
             }else{
                 $survey_change_request .= '<p> No requests available </p>';
@@ -1362,9 +1299,10 @@ $sn++;
                     '<tr>
                         <td>'.$row++.'</td>
                         <td class="text-center"><p class="content_text showText">'.$ccs->tasks.'</p>'.$btn.'</td>
-                        <td><button type="button" onclick="taskUpdate(\''.$ccs->tasks.'\','.$ccs->id.')" class="btn btn-primary text-white float-right">Edit</button></td>
+                        <td><button type="button" onclick="taskUpdate(\''.$ccs->tasks."',".$ccs->id.')" class="btn btn-primary text-white float-right">Edit</button></td>
                     </tr>';
                 }
+                
                 $survey_tasks .=  '</tbody></table></div>';
             }else{
                 $survey_tasks .= '<p> No tasks available </p>';
@@ -1390,9 +1328,11 @@ $sn++;
                     if(isset($info->fromTime) && !empty($info->fromTime)){
                         $info->fromTime = date('Y-m-d\TH:i', strtotime($info->fromTime));
                     }
+                    
                     if(isset($info->toTime) && !empty($info->toTime)){
                         $info->toTime = date('Y-m-d\TH:i', strtotime($info->toTime));
                     }
+                    
                     $survey_info_table .=
                     '<tr>
                         <td>'.$row++.'</td>
@@ -1433,6 +1373,7 @@ $sn++;
                         <td><p class="float-right"><a href="'.url('Survey_attachment/'.$ccs->attachment).'" target="_blank" class="btn btn-primary"><i class="fas fa-eye"></i> View</a></p></td>
                     </tr>';
                 }
+                
                 $survey_attachments_table .=  '</tbody></table></div>';
             }else{
                 $survey_attachments_table .= '<p> No Attachments available </p>';
@@ -1442,7 +1383,7 @@ $sn++;
         //['john@gmail.com','lashn@gmail.com','pankaj@resiliencesoft.com','kunal@resiliencesoft.com','shailesh@resiliencesoft.com'];
 
         //survey Dashboard
-        $totalcount = Project::join("quotation_versions",function($join){
+        $totalcount = Project::join("quotation_versions",function($join): void{
             $join->on("quotation_versions.id","=","project.versionId")
                 ->on("quotation_versions.quotation_id","=","project.quotationId");
         })
@@ -1450,7 +1391,7 @@ $sn++;
         ->join('survey_status','quotation_version_items.itemmasterID','survey_status.itemMasterId')
         ->select('survey_status.*')->where('project.id',$projectId)->groupBy('survey_status.itemMasterId')->get()->count();
 
-        $pending = Project::join("quotation_versions",function($join){
+        $pending = Project::join("quotation_versions",function($join): void{
                         $join->on("quotation_versions.id","=","project.versionId")
                             ->on("quotation_versions.quotation_id","=","project.quotationId");
                     })
@@ -1458,7 +1399,7 @@ $sn++;
                     ->join('survey_status','quotation_version_items.itemmasterID','survey_status.itemMasterId')
                     ->select('survey_status.*')->where('survey_status.status',1)->where('project.id',$projectId)->groupBy('survey_status.itemMasterId')->get()->count();
 
-        $inProgress = Project::join("quotation_versions",function($join){
+        $inProgress = Project::join("quotation_versions",function($join): void{
                         $join->on("quotation_versions.id","=","project.versionId")
                             ->on("quotation_versions.quotation_id","=","project.quotationId");
                     })
@@ -1466,7 +1407,7 @@ $sn++;
                     ->join('survey_status','quotation_version_items.itemmasterID','survey_status.itemMasterId')
                     ->select('survey_status.*')->where('survey_status.status',2)->where('project.id',$projectId)->groupBy('survey_status.itemMasterId')->get()->count();
 
-        $completed = Project::join("quotation_versions",function($join){
+        $completed = Project::join("quotation_versions",function($join): void{
                     $join->on("quotation_versions.id","=","project.versionId")
                         ->on("quotation_versions.quotation_id","=","project.quotationId");
                 })
@@ -1474,7 +1415,7 @@ $sn++;
                 ->join('survey_status','quotation_version_items.itemmasterID','survey_status.itemMasterId')
                 ->select('survey_status.*')->where('survey_status.status',3)->where('project.id',$projectId)->groupBy('survey_status.itemMasterId')->get()->count();
 
-        $floorPlans = Project::join("quotation_versions",function($join){
+        $floorPlans = Project::join("quotation_versions",function($join): void{
             $join->on("quotation_versions.id","=","project.versionId")
                 ->on("quotation_versions.quotation_id","=","project.quotationId");
         })
@@ -1501,11 +1442,11 @@ $sn++;
             $ids = Auth::user()->id;
         }
 
-        $defaultItems = Project::with(['defaultItems' => function ($query) use ($projectId, $ids) {
+        $defaultItems = Project::with(['defaultItems' => function ($query) use ($projectId, $ids): void {
             $query->where('UserId',  $ids) // Simplified for Auth user
                   ->where('projectId', $projectId);
         }])
-        ->whereHas('defaultItems', function ($query) use ($projectId, $ids) {
+        ->whereHas('defaultItems', function ($query) use ($projectId, $ids): void {
             $query->where('UserId',  $ids) // Simplified for Auth user
                   ->where('projectId', $projectId);
         })
@@ -1517,6 +1458,7 @@ $sn++;
         if(!empty($defaultItems)){
             $defaultItemsCustom = $defaultItems->defaultItems->firstWhere('default_type', 'custom') ?? [];
         }
+        
         if(!empty($defaultItems)){
             $defaultItemsStandard = $defaultItems->defaultItems->firstWhere('default_type', 'standard') ?? [];
         }
@@ -1527,15 +1469,14 @@ $sn++;
         $selected_lipping_species = $lipping_species;
 
         // if(count((array)$data->toArray()) > 0){
-            $htmlData = view('Project.Ajax.ProjectQuotationListAjax',compact('data','tbl','tbl2','ProjectFiles',
-            'main_contractors','main_contractors_full','tbl3','projectId','user','teamboards','survey_user_table','survey_user','survey_user_count','survey_info_table','pending','inProgress','completed','totalcount','survey_tasks','survey_change_request', 'survey_attachments_table','floorPlans','buildingDetails', 'us','projectinfo','option_data','intumescentSealColor','ArchitraveType','selected_option_data','ConfigurableDoorFormula','defaultItemsCustom','defaultItemsStandard','color_data','lipping_species','selected_lipping_species'))->render();
+            $htmlData = view('Project.Ajax.ProjectQuotationListAjax',['data' => $data, 'tbl' => $tbl, 'tbl2' => $tbl2, 'ProjectFiles' => $ProjectFiles, 'main_contractors' => $main_contractors, 'main_contractors_full' => $main_contractors_full, 'tbl3' => $tbl3, 'projectId' => $projectId, 'user' => $user, 'teamboards' => $teamboards, 'survey_user_table' => $survey_user_table, 'survey_user' => $survey_user, 'survey_user_count' => $survey_user_count, 'survey_info_table' => $survey_info_table, 'pending' => $pending, 'inProgress' => $inProgress, 'completed' => $completed, 'totalcount' => $totalcount, 'survey_tasks' => $survey_tasks, 'survey_change_request' => $survey_change_request, 'survey_attachments_table' => $survey_attachments_table, 'floorPlans' => $floorPlans, 'buildingDetails' => $buildingDetails, 'us' => $us, 'projectinfo' => $projectinfo, 'option_data' => $option_data, 'intumescentSealColor' => $intumescentSealColor, 'ArchitraveType' => $ArchitraveType, 'selected_option_data' => $selected_option_data, 'ConfigurableDoorFormula' => $ConfigurableDoorFormula, 'defaultItemsCustom' => $defaultItemsCustom, 'defaultItemsStandard' => $defaultItemsStandard, 'color_data' => $color_data, 'lipping_species' => $lipping_species, 'selected_lipping_species' => $selected_lipping_species])->render();
             return $htmlData;
     }
 
-    public function getFloorPlanDoors(request $request){
+    public function getFloorPlanDoors(request $request): void{
 
         if($request->floorplan_category_text == ''){
-            $floorPlans = Project::join("quotation_versions",function($join){
+            $floorPlans = Project::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","project.versionId")
                     ->on("quotation_versions.quotation_id","=","project.quotationId");
             })
@@ -1545,7 +1486,7 @@ $sn++;
             ->leftJoin('floor_plan_doors','floor_plan_doors.itemId','item_master.id')
             ->select('item_master.doorNumber','item_master.id as itemMasterId', 'items.itemID', 'items.FireRating', 'items.DoorType',  'items.QuotationId','floor_plan_doors.*')->where('project.id',$request->projectId)->groupBy('item_master.id')->get();
         }else{
-            $floorPlans = Project::join("quotation_versions",function($join){
+            $floorPlans = Project::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","project.versionId")
                     ->on("quotation_versions.quotation_id","=","project.quotationId");
             })
@@ -1558,8 +1499,9 @@ $sn++;
 
 
         if($floorPlans){
-            echo json_encode(array("status" => "success", "data" => $floorPlans, "msg" => "Data found Successfully!"));
+            echo json_encode(["status" => "success", "data" => $floorPlans, "msg" => "Data found Successfully!"]);
         }
+        
         // else{
         //     echo json_encode(array("status" => "error", "data" => $floorPlans, "msg" => "Data not found!"));
 
@@ -1586,13 +1528,13 @@ $sn++;
             // ->join('item_master','item_master.itemID','items.itemId')
             // ->select('item_master.doorNumber', 'items.itemID', 'items.FireRating', 'items.DoorType',  'items.QuotationId','floor_plan_doors.*')->where('floor_plan_doors.id', $FloorPlanDoor->id)->first();
             if($floorPlan){
-                return response()->json(array("status" => "success", "data" => $floorPlan, "msg" => "Door added Successfully!"));
+                return response()->json(["status" => "success", "data" => $floorPlan, "msg" => "Door added Successfully!"]);
             }else{
-                return response()->json(array("status" => "error", "data" => $floorPlan, "msg" => "Something is wrong!"));
+                return response()->json(["status" => "error", "data" => $floorPlan, "msg" => "Something is wrong!"]);
             }
 
         }else{
-            return response()->json(array("status" => "error", "data" => [], "msg" => "Something is wrong!"));
+            return response()->json(["status" => "error", "data" => [], "msg" => "Something is wrong!"]);
         }
 
     }
@@ -1605,16 +1547,16 @@ $sn++;
         $FloorPlanDoor = FloorPlanDoor::where('itemId',$request->id);
 
         if($FloorPlanDoor->delete()){
-            return response()->json(array("status" => "success", "data" => [], "msg" => "Door removed Successfully!"));
+            return response()->json(["status" => "success", "data" => [], "msg" => "Door removed Successfully!"]);
         }else{
-            return response()->json(array("status" => "error", "data" => [], "msg" => "Something is wrong!"));
+            return response()->json(["status" => "error", "data" => [], "msg" => "Something is wrong!"]);
         }
 
     }
 
 
 
-    public function updateChangeRequest(request $request){
+    public function updateChangeRequest(request $request): void{
         $Items = Item::where(['itemId' => $request->itemId])->count();
         $itemCount = Item::join('item_master','item_master.itemID','items.itemId')->where('items.itemId',$request->itemId)->get()->count();
         if(!empty($request->id)){
@@ -1630,9 +1572,10 @@ $sn++;
                     $SurveyChangerequest->oldSODepth = $request->oldSODepth;
                     $SurveyChangerequest->save();
                 }
+                
                 \Session::flash('status', 'success');
                 \Session::flash('message', 'Change_request');
-                echo json_encode(array("status" => "success", "msg" => "Request Updated Successfully!"));
+                echo json_encode(["status" => "success", "msg" => "Request Updated Successfully!"]);
             }elseif($itemCount > 1){
                 $quotationId = $request->quotationId;
                 $VersionId = $request->versionId;
@@ -1649,13 +1592,12 @@ $sn++;
 
                             $door = $OldQuotationItems->DoorType.'/'.$ItemMasterOld->doorNumber;
                             $mm =  Item::where(['QuotationId' => $quotationId , 'DoorType' => $door])->get()->first();
-                            if(!empty($mm)){
-                                if($OldQuotationItems->DoorType.'/'.$ItemMasterOld->doorNumber == $mm->DoorType){
-                                    $errorlist = 'Door Type '.$mm->DoorType.' is already exist for these quotation.';
-                                    \Session::flash('status', 'success');
-                                    \Session::flash('message', 'Change_request');
-                                    echo json_encode(array("status" => "error", "msg" => $errorlist));exit();
-                                }
+                            if (!empty($mm) && $OldQuotationItems->DoorType . '/' . $ItemMasterOld->doorNumber == $mm->DoorType) {
+                                $errorlist = 'Door Type '.$mm->DoorType.' is already exist for these quotation.';
+                                \Session::flash('status', 'success');
+                                \Session::flash('message', 'Change_request');
+                                echo json_encode(["status" => "error", "msg" => $errorlist]);
+                                exit();
                             }
 
                             //insert into item table
@@ -1687,6 +1629,7 @@ $sn++;
                                 $qv->updated_at = date('Y-m-d H:i:s');
                                 $qv->save();
                             }
+                            
                             //get version id for check the version exist or not in bom calculation table
                             $version_id = QuotationVersion::where('quotation_id', $OldQuotationItems->QuotationId)->where('id', $VersionId)->value('version');
 
@@ -1695,6 +1638,7 @@ $sn++;
                             }else{
                                 $BOMCalculation = BOMCalculation::where('QuotationId',$OldQuotationItems->QuotationId)->where('itemId',$OldQuotationItems->itemId)->where('VersionId',$version_id)->get();
                             }
+                            
                             //insert into bom calculation table
                             if($BOMCalculation != null){
                                 foreach($BOMCalculation as $IKey => $IVal){
@@ -1705,6 +1649,7 @@ $sn++;
                                     $BOMCalculationItems->save();
                                 }
                             }
+                            
                             //insert into survey change request
                             $SurveyChangerequest = SurveyChangerequest::find($request->requestId);
                             if(!empty($SurveyChangerequest)){
@@ -1739,19 +1684,19 @@ $sn++;
 
                             \Session::flash('status', 'success');
                             \Session::flash('message', 'Change_request');
-                        echo json_encode(array("status" => "success", "msg" => "Request Updated Successfully!"));
+                        echo json_encode(["status" => "success", "msg" => "Request Updated Successfully!"]);
                     }else{
-                        echo json_encode(array("status" => "error", "msg" => "Something went wrong!"));
+                        echo json_encode(["status" => "error", "msg" => "Something went wrong!"]);
                     }
 
                 }else{
-                    echo json_encode(array("status" => "error", "msg" => "Something went wrong!"));
+                    echo json_encode(["status" => "error", "msg" => "Something went wrong!"]);
                 }
             }
         }
     }
 
-    public function updateTasks(request $request){
+    public function updateTasks(request $request): void{
 
         $SurveyTasks = SurveyTasks::where(['companyId' => Auth::user()->id, 'projectId' => $request->projectId])->count();
         if(!empty($request->id)){
@@ -1760,7 +1705,7 @@ $sn++;
                 if(!empty($updateSurveyTasks)){
                     $updateSurveyTasks->tasks = $request->task_input;
                     $updateSurveyTasks->save();
-                    echo json_encode(array("status" => "success", "msg" => "Task Updated Successfully!"));
+                    echo json_encode(["status" => "success", "msg" => "Task Updated Successfully!"]);
                 }
             }
         }else{
@@ -1769,14 +1714,15 @@ $sn++;
             $newSurveyTasks->projectId = $request->projectId;
             $newSurveyTasks->tasks = $request->task_input;
             $newSurveyTasks->save();
-            echo json_encode(array("status" => "success", "msg" => "Task Created Successfully!"));
+            echo json_encode(["status" => "success", "msg" => "Task Created Successfully!"]);
         }
+        
         \Session::flash('status', 'success');
         \Session::flash('message', 'Tasks');
     }
 
     // Create Attachment
-    public function updateAttachment(request $request){
+    public function updateAttachment(request $request): void{
 
         $newSurveyAttachment = new SurveyAttachment();
         $newSurveyAttachment->companyId = Auth::user()->id;
@@ -1794,17 +1740,17 @@ $sn++;
 
 
 
-        echo json_encode(array("status" => "success", "msg" => "Attachments Created Successfully!"));
+        echo json_encode(["status" => "success", "msg" => "Attachments Created Successfully!"]);
         }
         else{
-            echo json_encode(array("status" => "False", "msg" => "Attachments Failed to upload!"));
+            echo json_encode(["status" => "False", "msg" => "Attachments Failed to upload!"]);
         }
 
         \Session::flash('status', 'success');
         \Session::flash('message', 'Attachments');
     }
 
-    public function projectQuotationSurvey(request $request){
+    public function projectQuotationSurvey(request $request): void{
         // dd($request->all());
         $Project = Project::where(['UserId' => Auth::user()->id, 'id' => $request->projectId])->get()->first();
         $updateSurveyInfo = Project::find($Project->id);
@@ -1828,6 +1774,7 @@ $sn++;
                 foreach($QuotationVersionItems as  $QuotationVersionItem){
                     $itemmasterID[] = $QuotationVersionItem->itemmasterID;
                 }
+                
                 $ItemMasters = ItemMaster::wherein('id',$itemmasterID)->select('floor')->groupBy('floor')->get();
                 // dd($ItemMasters);
                 foreach($ItemMasters as  $ItemMaster){
@@ -1843,10 +1790,10 @@ $sn++;
                 }
             }
 
-        echo json_encode(array("status" => "success", "msg" => "Quotation updated successfully!"));
+        echo json_encode(["status" => "success", "msg" => "Quotation updated successfully!"]);
     }
 
-    public function updateCheckedOption(request $request)
+    public function updateCheckedOption(request $request): void
     {
         if(Auth::user()->UserType == 2){
             $users = User::where('UserType',3)->where('CreatedBy',Auth::user()->id)->pluck('id');
@@ -1854,6 +1801,7 @@ $sn++;
             foreach($users as $valUserId){
                 $user_ids[] = $valUserId;
             }
+            
             $user_ids[] = Auth::user()->id;
         }elseif(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -1862,6 +1810,7 @@ $sn++;
         }else{
             $user_ids = [Auth::user()->id];
         }
+        
         $keys = $request->selectedValue;
         if (!empty($keys) && count($keys)) {
             $data = SurveyInfo::wherein('companyId', $user_ids)->where('projectId',$request->projectId)->get();
@@ -1870,10 +1819,10 @@ $sn++;
             }
 
             foreach ($keys as $key) {
-                $electedOption = array();
+                $electedOption = [];
                 $electedOption = User::select('*')->Where('id', $key)->where('UserType',6)->wherein('CreatedBy',$user_ids)->where('status','1')->first();
                 $selectedOptionExist = SurveyInfo::where(['projectId'=> $request->projectId, 'userId' => $key])->wherein('companyId',$user_ids)->first();
-                if (!empty($electedOption) && count((array) $electedOption) > 0 && empty($selectedOptionExist)) {
+                if (!empty($electedOption) && (array) $electedOption !== [] && empty($selectedOptionExist)) {
                     $selectedOption = new SurveyInfo();
                     $selectedOption->userId = $electedOption->id;
                     $selectedOption->projectId = $request->projectId;
@@ -1909,14 +1858,15 @@ $sn++;
         else{
             SurveyInfo::wherein('companyId' , $user_ids)->where('projectId',$request->projectId)->delete();
         }
-        echo json_encode(array("status" => "ok", "msg" => "Survey User Updated!"));
+        
+        echo json_encode(["status" => "ok", "msg" => "Survey User Updated!"]);
 
         \Session::flash('status', 'success');
         \Session::flash('message', 'Users');
     }
 
 
-    public function updateFromToDate(request $request)
+    public function updateFromToDate(request $request): void
     {
         if (!empty($request->user_id) && !empty($request->projectId)) {
             $updateSurveyInfo = SurveyInfo::find($request->user_id);
@@ -1935,10 +1885,10 @@ $sn++;
 
                 ini_set('display_errors', 1);
                 try{
-                    Mail::send(['html' => 'Mail.Survey'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom) {
+                    Mail::send(['html' => 'Mail.Survey'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
 
                         $message->to($emailTo, $emailTo)->subject($subject);
-                        if($emailFrom){
+                        if($emailFrom !== ''){
                             $message->from($emailFrom, $emailFrom);
                         }
 
@@ -1949,10 +1899,11 @@ $sn++;
                 }
             }
         }
+        
         \Session::flash('status', 'success');
         \Session::flash('message', 'Schedule');
 
-        echo json_encode(array("status" => "success", "msg" => "Schedule Updated!"));
+        echo json_encode(["status" => "success", "msg" => "Schedule Updated!"]);
     }
 
     public function ironmongeryList(Request $request){
@@ -1965,6 +1916,7 @@ $sn++;
 
            $UserId = ['id' => $User->id];
         }
+        
         $addIronmongery = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
         $i = 1;
         $tbl = '';
@@ -1980,33 +1932,38 @@ $sn++;
             $i++;
         }
 
-        if(!empty($tbl)){
-            $htmlData = view('Project.IronmongeryList',compact('tbl'))->render();
+        if($tbl !== '' && $tbl !== '0'){
+            $htmlData = view('Project.IronmongeryList',['tbl' => $tbl])->render();
             return $htmlData;
         } else {
             $tbl .=  '<tr><td>Data not found</td></tr>';
-            $htmlData = view('Project.IronmongeryList',compact('tbl'))->render();
+            $htmlData = view('Project.IronmongeryList',['tbl' => $tbl])->render();
             return $htmlData;
         }
     }
 
     public function addironmongery($pid)
     {
-        $item = $hinge = $FloorSpring = null;
+        $item = null;
+        $hinge = null;
+        $FloorSpring = null;
         $tooltip = Tooltip::first();
-        return view('Project.addironmongery',compact('tooltip','pid','item','hinge','FloorSpring'));
+        return view('Project.addironmongery',['tooltip' => $tooltip, 'pid' => $pid, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring]);
     }
 
     //globle ironmongery set
     public function ironmongeryadd()
     {
-        $item = $hinge = $FloorSpring = null;
+        $item = null;
+        $hinge = null;
+        $FloorSpring = null;
         $tooltip = Tooltip::first();
         $list = IronmongeryName::where('status',1)->orderBy('name','ASC')->get();
         //dd($item, $tooltip, $hinge);
-        return view('Project.addIronmongeryNew',compact('tooltip','item','hinge','FloorSpring','list'));
+        return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list]);
         // return view('Project.addironmongery',compact('tooltip','pid','item','hinge' , 'FloorSpring','LocksAndLatches', 'FlushBolts' , 'ConcealedOverheadCloser' , 'PullHandles' , 'PushHandles' , 'KickPlates' ,'DoorSelectors' ,'PanicHardware', 'Doorsecurityviewer' , 'Morticeddropdownseals' , 'Facefixeddropseals' , 'ThresholdSeal' , 'AirTransferGrill' , 'Letterplates' , 'CableWays' , 'SafeHinge' , 'LeverHandle'  , 'DoorSinage'  , 'FaceFixedDoorCloser' , 'Thumbturn'  , 'KeyholeEscutchen'));
     }
+    
     public function subaddironmongery(Request $request)
     {
         if(!empty($request->Setname)){
@@ -2016,8 +1973,9 @@ $sn++;
             'discountprice' => 'required'
         ]);
         $useTbl = auth()->user();
-
-        $item = $hinge = $FloorSpring = null;
+        $item = null;
+        $hinge = null;
+        $FloorSpring = null;
         $update_val = $request->addironmongeryID;
         if(!is_null($update_val)){
             $item = AddIronmongery::find($update_val);
@@ -2025,6 +1983,7 @@ $sn++;
             $item = new AddIronmongery;
             $item->created_at = date('Y-m-d H:i:s');
         }
+        
         $item->configurableitems = $request->configurableitems;
         $item->UserId = Auth::user()->id;
         $item->ProjectId = $request->ProjectId;
@@ -2092,6 +2051,7 @@ $sn++;
             if(!empty($request->ProjectId)){
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery updated successfully!');
             }
+            
             return redirect('project/ironmongery-list')->with('success', 'Ironmongery updated successfully!');
         }
         else
@@ -2099,6 +2059,7 @@ $sn++;
             if(!empty($request->ProjectId)){
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery added successfully!');
             }
+            
             return redirect('project/ironmongery-list')->with('success', 'Ironmongery added successfully!');
 
         }
@@ -2130,6 +2091,7 @@ $sn++;
         else{
             $data->MainContractorId=$MainContractorId;
          }
+        
         // dd($data);
          $data->save();
          return redirect()->back();
@@ -2152,9 +2114,56 @@ $sn++;
         // $addIronmongery = IronmongeryInfoModel::select('Name','Code')->where('id',$selectironmongery->ironmongery_id)->first();
         // $hinge = $addIronmongery->Code.'-'.$addIronmongery->Name;
         $list = IronmongeryName::where('status',1)->orderBy('name','ASC')->get();
-
-        $Hinges = $FloorSpring = $LocksAndLatches = $FlushBolts = $ConcealedOverheadCloser = $PullHandles = $PushHandles = $KickPlates = $DoorSelectors = $PanicHardware = $Doorsecurityviewer = $Morticeddropdownseals = $Facefixeddropseals = $ThresholdSeal = $AirTransferGrill = $Letterplates = $CableWays = $SafeHinge = $LeverHandle = $DoorSinage = $FaceFixedDoorCloser = $Thumbturn = $KeyholeEscutchen = $DoorStops = $Cylinders = null;
-        $HingesPrice = $FloorSpringPrice = $LocksandLatchesPrice = $FlushBoltsPrice = $ConcealedOverheadCloserPrice = $PullHandlesPrice = $PushHandlesPrice = $KickPlatesPrice = $DoorSelectorsPrice = $PanicHardwarePrice = $DoorsecurityviewerPrice = $MorticeddropdownsealsPrice = $FacefixeddropsealsPrice = $ThresholdSealPrice = $AirTransferGrillPrice = $LetterplatesPrice = $CableWaysPrice = $SafeHingePrice = $LeverHandlePrice = $DoorSinagePrice = $FaceFixedDoorCloserPrice = $ThumbturnPrice = $KeyholeEscutchenPrice = $DoorStopsPrice = $CylindersPrice = null;
+        $Hinges = null;
+        $FloorSpring = null;
+        $LocksAndLatches = null;
+        $FlushBolts = null;
+        $ConcealedOverheadCloser = null;
+        $PullHandles = null;
+        $PushHandles = null;
+        $KickPlates = null;
+        $DoorSelectors = null;
+        $PanicHardware = null;
+        $Doorsecurityviewer = null;
+        $Morticeddropdownseals = null;
+        $Facefixeddropseals = null;
+        $ThresholdSeal = null;
+        $AirTransferGrill = null;
+        $Letterplates = null;
+        $CableWays = null;
+        $SafeHinge = null;
+        $LeverHandle = null;
+        $DoorSinage = null;
+        $FaceFixedDoorCloser = null;
+        $Thumbturn = null;
+        $KeyholeEscutchen = null;
+        $DoorStops = null;
+        $Cylinders = null;
+        $HingesPrice = null;
+        $FloorSpringPrice = null;
+        $LocksandLatchesPrice = null;
+        $FlushBoltsPrice = null;
+        $ConcealedOverheadCloserPrice = null;
+        $PullHandlesPrice = null;
+        $PushHandlesPrice = null;
+        $KickPlatesPrice = null;
+        $DoorSelectorsPrice = null;
+        $PanicHardwarePrice = null;
+        $DoorsecurityviewerPrice = null;
+        $MorticeddropdownsealsPrice = null;
+        $FacefixeddropsealsPrice = null;
+        $ThresholdSealPrice = null;
+        $AirTransferGrillPrice = null;
+        $LetterplatesPrice = null;
+        $CableWaysPrice = null;
+        $SafeHingePrice = null;
+        $LeverHandlePrice = null;
+        $DoorSinagePrice = null;
+        $FaceFixedDoorCloserPrice = null;
+        $ThumbturnPrice = null;
+        $KeyholeEscutchenPrice = null;
+        $DoorStopsPrice = null;
+        $CylindersPrice = null;
 
         if(!empty($item->Hinges)){
             $result = ironmongeryGetCodeName($item->Hinges);
@@ -2176,132 +2185,154 @@ $sn++;
             $LocksandLatchesPrice = $result['price'];
             $list = $this->setValue("LocksandLatchesKey", $list, $LocksAndLatches, $LocksandLatchesPrice);
         }
+        
         if(!empty($item->FlushBolts)){
             $result = ironmongeryGetCodeName($item->FlushBolts);
             $FlushBolts = $result['name'];
             $FlushBoltsPrice = $result['price'];
             $list = $this->setValue("flushBoltsKey", $list, $FlushBolts, $FlushBoltsPrice);
         }
+        
         if(!empty($item->ConcealedOverheadCloser)){
             $result = ironmongeryGetCodeName($item->ConcealedOverheadCloser);
             $ConcealedOverheadCloser = $result['name'];
             $ConcealedOverheadCloserPrice = $result['price'];
             $list = $this->setValue("concealedOverheadCloserKey", $list, $ConcealedOverheadCloser, $ConcealedOverheadCloserPrice);
         }
+        
         if(!empty($item->PullHandles)){
             $result = ironmongeryGetCodeName($item->PullHandles);
             $PullHandles = $result['name'];
             $PullHandlesPrice = $result['price'];
             $list = $this->setValue("pullHandlesKey", $list, $PullHandles, $PullHandlesPrice);
         }
+        
         if(!empty($item->PushHandles)){
             $result = ironmongeryGetCodeName($item->PushHandles);
             $PushHandles = $result['name'];
             $PushHandlesPrice = $result['price'];
             $list = $this->setValue("pushHandlesKey", $list, $PushHandles, $PushHandlesPrice);
         }
+        
         if(!empty($item->KickPlates)){
             $result = ironmongeryGetCodeName($item->KickPlates);
             $KickPlates = $result['name'];
             $KickPlatesPrice = $result['price'];
             $list = $this->setValue("kickPlatesKey", $list, $KickPlates, $KickPlatesPrice);
         }
+        
         if(!empty($item->DoorSelectors)){
             $result = ironmongeryGetCodeName($item->DoorSelectors);
             $DoorSelectors = $result['name'];
             $DoorSelectorsPrice = $result['price'];
             $list = $this->setValue("doorSelectorsKey", $list, $DoorSelectors, $DoorSelectorsPrice);
         }
+        
         if(!empty($item->PanicHardware)){
             $result = ironmongeryGetCodeName($item->PanicHardware);
             $PanicHardware = $result['name'];
             $PanicHardwarePrice = $result['price'];
             $list = $this->setValue("panicHardwareKey", $list, $PanicHardware, $PanicHardwarePrice);
         }
+        
         if(!empty($item->Doorsecurityviewer)){
             $result = ironmongeryGetCodeName($item->Doorsecurityviewer);
             $Doorsecurityviewer = $result['name'];
             $DoorsecurityviewerPrice = $result['price'];
             $list = $this->setValue("doorSecurityViewerKey", $list, $Doorsecurityviewer, $DoorsecurityviewerPrice);
         }
+        
         if(!empty($item->Morticeddropdownseals)){
             $result = ironmongeryGetCodeName($item->Morticeddropdownseals);
             $Morticeddropdownseals = $result['name'];
             $MorticeddropdownsealsPrice = $result['price'];
             $list = $this->setValue("morticeddropdownsealsKey", $list, $Morticeddropdownseals, $MorticeddropdownsealsPrice);
         }
+        
         if(!empty($item->Facefixeddropseals)){
             $result = ironmongeryGetCodeName($item->Facefixeddropseals);
             $Facefixeddropseals = $result['name'];
             $FacefixeddropsealsPrice = $result['price'];
             $list = $this->setValue("facefixeddropsealsKey", $list, $Facefixeddropseals, $FacefixeddropsealsPrice);
         }
+        
         if(!empty($item->ThresholdSeal)){
             $result = ironmongeryGetCodeName($item->ThresholdSeal);
             $ThresholdSeal = $result['name'];
             $ThresholdSealPrice = $result['price'];
             $list = $this->setValue("thresholdSealKey", $list, $ThresholdSeal, $ThresholdSealPrice);
         }
+        
         if(!empty($item->AirTransferGrill)){
             $result = ironmongeryGetCodeName($item->AirTransferGrill);
             $AirTransferGrill = $result['name'];
             $AirTransferGrillPrice = $result['price'];
             $list = $this->setValue("airtransfergrillsKey", $list, $AirTransferGrill, $AirTransferGrillPrice);
         }
+        
         if(!empty($item->Letterplates)){
             $result = ironmongeryGetCodeName($item->Letterplates);
             $Letterplates = $result['name'];
             $LetterplatesPrice = $result['price'];
             $list = $this->setValue("LetterplatesKey", $list, $Letterplates, $LetterplatesPrice);
         }
+        
         if(!empty($item->CableWays)){
             $result = ironmongeryGetCodeName($item->CableWays);
             $CableWays = $result['name'];
             $CableWaysPrice = $result['price'];
             $list = $this->setValue("cableWaysKey", $list, $CableWays, $CableWaysPrice);
         }
+        
         if(!empty($item->SafeHinge)){
             $result = ironmongeryGetCodeName($item->SafeHinge);
             $SafeHinge = $result['name'];
             $SafeHingePrice = $result['price'];
             $list = $this->setValue("safeHingeKey", $list, $SafeHinge, $SafeHingePrice);
         }
+        
         if(!empty($item->LeverHandle)){
             $result = ironmongeryGetCodeName($item->LeverHandle);
             $LeverHandle = $result['name'];
             $LeverHandlePrice = $result['price'];
             $list = $this->setValue("LeverHandleKey", $list, $LeverHandle, $LeverHandlePrice);
         }
+        
         if(!empty($item->DoorSinage)){
             $result = ironmongeryGetCodeName($item->DoorSinage);
             $DoorSinage = $result['name'];
             $DoorSinagePrice = $result['price'];
             $list = $this->setValue("DoorSignageKey", $list, $DoorSinage, $DoorSinagePrice);
         }
+        
         if(!empty($item->FaceFixedDoorCloser)){
             $result = ironmongeryGetCodeName($item->FaceFixedDoorCloser);
             $FaceFixedDoorCloser = $result['name'];
             $FaceFixedDoorCloserPrice = $result['price'];
             $list = $this->setValue("FaceFixedDoorClosersKey", $list, $FaceFixedDoorCloser, $FaceFixedDoorCloserPrice);
         }
+        
         if(!empty($item->Thumbturn)){
             $result = ironmongeryGetCodeName($item->Thumbturn);
             $Thumbturn = $result['name'];
             $ThumbturnPrice = $result['price'];
             $list = $this->setValue("thumbturnKey", $list, $Thumbturn, $ThumbturnPrice);
         }
+        
         if(!empty($item->KeyholeEscutchen)){
             $result = ironmongeryGetCodeName($item->KeyholeEscutchen);
             $KeyholeEscutchen = $result['name'];
             $KeyholeEscutchenPrice = $result['price'];
             $list = $this->setValue("keyholeEscutcheonKey", $list, $KeyholeEscutchen, $KeyholeEscutchenPrice);
         }
+        
         if(!empty($item->DoorStops)){
             $result = ironmongeryGetCodeName($item->DoorStops);
             $DoorStops = $result['name'];
             $DoorStopsPrice = $result['price'];
             $list = $this->setValue("DoorStopsKey", $list, $DoorStops, $DoorStopsPrice);
         }
+        
         if(!empty($item->Cylinders)){
             $result = ironmongeryGetCodeName($item->Cylinders);
             $Cylinders = $result['name'];
@@ -2344,7 +2375,7 @@ $sn++;
 
     }
 
-    public function setValue($key, $list, $name, $price)
+    public function setValue($key, array $list, $name, $price): array
     {
         foreach ($list as $k => $lst) {
             if($lst->key == $key){
@@ -2353,6 +2384,7 @@ $sn++;
                 break;
             }
         }
+        
         return $list;
     }
 
@@ -2379,16 +2411,20 @@ $sn++;
             if($tag == 'DoorSchedule'){
                 ProjectFilesDS::where('projectfileId',$projectFileID)->delete();
             }
+            
             ProjectFiles::where('id',$projectFileID)->delete();
         }
+        
         if($project->ProjectImage != ''){
             File::delete($filepath.$project->ProjectImage);
         }
+        
         Quotation::where('ProjectId',$projectId)->update(['ProjectId' => null]);
         AddIronmongery::where('ProjectId',$projectId)->delete();
         Project::where('id',$projectId)->delete();
         return redirect()->back()->with('success', 'Project deleted successfully!');
     }
+    
     public function deactivateproject(Request $request)
     {
         $projectId = $request->projectId;
@@ -2398,6 +2434,7 @@ $sn++;
         Quotation::where('ProjectId',$projectId)->update(['ProjectId' => null]);
         return redirect()->back()->with('success', 'Project deactivate successfully!');
     }
+    
     public function activateproject(Request $request)
     {
         $projectId = $request->projectId;
@@ -2436,6 +2473,7 @@ $sn++;
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
+        
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -2471,6 +2509,7 @@ $sn++;
                     $filters[] = ['project.UserId', "=", $request->id];
                     $filters[] = ['project.CompanyId', "=", $login_company_id];
                 }
+                
                 break;
 
             case 4:
@@ -2500,43 +2539,24 @@ $sn++;
         ->join('quotation','quotation.ProjectId','project.id')
         ->select('project.*', 'project.id as ProjectId', 'companies.*')
 
-        ->where($filters)->skip($from)->take($limit)->orderBy("$column", "$dir")->get();
+        ->where($filters)->skip($from)->take($limit)->orderBy($column, $dir)->get();
 
-        if(count((array)$data->toArray()) > 0){
+        if((array)$data->toArray() !== []){
             $htmlData = '';
             foreach($data as $val)
             {
                 $us = User::where('id',$val->editBy)->first();
                 $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
                 $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
+                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
 
+                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
 
-                if($custCompanyName != ''){
-                    $CompanyName = $custCompanyName->CstCompanyName;
-                } else {
-                    $CompanyName = '-----------';
-                }
-                if($val->quotesCount != ''){
-                    $quotesCount = $val->quotesCount;
-                } else {
-                    $quotesCount = 0;
-                }
-                if($val->ordersCount != ''){
-                    $ordersCount = $val->ordersCount;
-                } else {
-                    $ordersCount = 0;
-                }
-                if($val->returnTenderDate != ''){
-                    $returnTenderDate = $val->returnTenderDate;
-                } else {
-                    $returnTenderDate = '-----------';
-                }
+                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
 
-                if($us != '' ){
-                    $lastModifier = $us->FirstName.' '.$us->LastName;
-                } else {
-                    $lastModifier = '';
-                }
+                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
+                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
+                
                 //firedoor2_role_update
 
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -2553,14 +2573,15 @@ $sn++;
                 // currency showing formate is changed accordingly(dynamically)
                 $Currency = '';
                 if(!empty($val->projectCurrency)){
-                    if($val->projectCurrency == '£_GBP'){
+                    if ($val->projectCurrency == '£_GBP') {
                         $Currency = "£ GBP";
-                    } else if($val->projectCurrency == '€_EURO'){
+                    } elseif ($val->projectCurrency == '€_EURO') {
                         $Currency = "€ EURO";
-                    } else if($val->projectCurrency == '$_US_DOLLAR'){
+                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
                         $Currency = "$ US DOLLAR";
                     }
                 }
+                
                 $htmlData .=
                 '<div class="col-sm-3 mb-3">
                     <div class="QuotationBox">
@@ -2595,21 +2616,21 @@ $sn++;
             }
 
             // return $htmlData;
-            return array(
+            return [
                 'st' => "success",
                 'txt' => 'data found.',
                 'total' => $countProject,
                 'html' => $htmlData,
-            );
+            ];
 
         } else {
             $htmlData = 'Data not found.';
-            return array(
+            return [
                 'st' => "error",
                 'txt' => 'Data not found.',
                 'total' => 0,
                 'html' => $htmlData,
-            );
+            ];
 
 
         }
@@ -2625,10 +2646,10 @@ $sn++;
        return view('Mail.SendProjectInvitation');
    }
 
-   public function floorStore(request $request){
+   public function floorStore(request $request): void{
         $Project = ProjectBuildingDetails::find($request->id);
         if(!empty($Project)){
-            if(!empty($request->file('file'))){
+            if (!empty($request->file('file'))) {
                 if($request->hasFile('file')){
                     $file = $request->file('file');
                     $name = time().$file->getClientOriginalName();
@@ -2642,18 +2663,17 @@ $sn++;
                     $pdf->saveImage($out_file);
                     $Project->floorPlan = $imageName;
                 }
-            }else{
-                if(empty($request->floor_plan)){
-                    echo json_encode(array("status" => "error", "msg" => "Please select file!"));
-                    exit;
-                }
+            } elseif (empty($request->floor_plan)) {
+                echo json_encode(["status" => "error", "msg" => "Please select file!"]);
+                exit;
             }
 
             $Project->save();
-            echo json_encode(array("status" => "success", "msg" => "Floor Plan Updated!"));
+            echo json_encode(["status" => "success", "msg" => "Floor Plan Updated!"]);
         }else{
-            echo json_encode(array("status" => "error", "msg" => "Project Id not found!"));
+            echo json_encode(["status" => "error", "msg" => "Project Id not found!"]);
         }
+        
         \Session::flash('status', 'success');
         \Session::flash('message', 'Floor');
     }
@@ -2665,7 +2685,7 @@ $sn++;
         }else{
             $buildingDetails = ProjectBuildingDetails::Join('survey_info', 'project_building_details.projectId', 'survey_info.projectId')->where('survey_info.id',$surveyId)->select('project_building_details.*')->get();
 
-            $floorPlans = Project::join("quotation_versions",function($join){
+            $floorPlans = Project::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","project.versionId")
                     ->on("quotation_versions.quotation_id","=","project.quotationId");
             })
@@ -2675,17 +2695,19 @@ $sn++;
             ->Join('survey_info', 'project.id', 'survey_info.projectId')
             ->select('item_master.*','items.*')->where('survey_info.id',$surveyId)->groupBy('item_master.id')->get();
             if($buildingDetails->isNotEmpty()){
-                return view('Project.FloorPlan',compact('buildingDetails','floorPlans'));
+                return view('Project.FloorPlan',['buildingDetails' => $buildingDetails, 'floorPlans' => $floorPlans]);
             }else{
                 echo 'something went worng!';die;
             }
         }
+
+        return null;
     }
 
-    public function floorDoorList(Request $request){
+    public function floorDoorList(Request $request): void{
 
         if($request->floorplan_category_text == ''){
-            $floorPlans = Project::join("quotation_versions",function($join){
+            $floorPlans = Project::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","project.versionId")
                     ->on("quotation_versions.quotation_id","=","project.quotationId");
             })
@@ -2694,7 +2716,7 @@ $sn++;
             ->join('items','items.itemId','item_master.itemID')
             ->select('item_master.*','items.*')->where('project.id',$request->projectId)->groupBy('item_master.id')->get();
         }else{
-            $floorPlans = Project::join("quotation_versions",function($join){
+            $floorPlans = Project::join("quotation_versions",function($join): void{
                 $join->on("quotation_versions.id","=","project.versionId")
                     ->on("quotation_versions.quotation_id","=","project.quotationId");
             })
@@ -2737,10 +2759,10 @@ $sn++;
             $content = 'Data not found!';
         }
 
-        echo json_encode(array("status" => "success", "msg" => "Floor Plan Updated!", "floorPlans" => $content));
+        echo json_encode(["status" => "success", "msg" => "Floor Plan Updated!", "floorPlans" => $content]);
     }
 
-    public function instructionSave(Request $request){
+    public function instructionSave(Request $request): void{
         $projectId = $request->projectId;
         if(!empty($projectId) && !empty($request->instruction)){
             $project = Project::find($projectId);
@@ -2748,13 +2770,13 @@ $sn++;
             $project->save();
             \Session::flash('status', 'success');
             \Session::flash('message', 'Dashboard');
-            echo json_encode(array("status" => "success", "msg" => "Data Stored Successfully!"));
+            echo json_encode(["status" => "success", "msg" => "Data Stored Successfully!"]);
         }else{
-            echo json_encode(array("error" => "error", "msg" => "something went wrong"));
+            echo json_encode(["error" => "error", "msg" => "something went wrong"]);
         }
     }
 
-    public function testMail(Request $request){
+    public function testMail(Request $request): void{
         $emailTo = 'pankaj@pbinfosystems.com';
         $subject = 'Survey assigned';
         $emailFrom = 'noreply@jfds.co.uk';
@@ -2763,10 +2785,10 @@ $sn++;
 
         ini_set('display_errors', 1);
         try{
-            $mail = Mail::send(['html' => 'Mail.Survey'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom) {
+            $mail = Mail::send(['html' => 'Mail.Survey'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
 
                 $message->to($emailTo, $emailTo)->subject($subject);
-                if($emailFrom){
+                if($emailFrom !== ''){
                     $message->from($emailFrom, $emailFrom);
                 }
 
@@ -2777,8 +2799,8 @@ $sn++;
                 echo 'error';die;
             }
 
-        } catch (Exception $e) {
-                echo $e->getMessage();
+        } catch (Exception $exception) {
+                echo $exception->getMessage();
         }
     }
 
@@ -2789,11 +2811,7 @@ $sn++;
     public function defaultsStore(Request $request){
 
         $updateVal = $request->updateVal;
-        if (!empty($updateVal)) {
-            $data = ProjectDefaultItems::find($updateVal);
-        } else {
-            $data = new ProjectDefaultItems();
-        }
+        $data = empty($updateVal) ? new ProjectDefaultItems() : ProjectDefaultItems::find($updateVal);
 
         $data->projectId = $request->projectId;
         $data->default_type = $request->default_type;

@@ -22,16 +22,19 @@ public function __construct()
 {
     $this->middleware('auth');
 }
+
 public function add()
 {
     if(Auth::user()->UserType=='1' ){
         return view('Architects.AddArchitect');
     }
+
+    return null;
 }
 
     public function store(request $request)
     {
-        if(isset($request->update)){
+        if(property_exists($request, 'update') && $request->update !== null){
             $data = Architect::where('UserId',$request->update)->first();
             $user = User::where('id',$request->update)->first();
             $flash = "updated";
@@ -59,7 +62,7 @@ public function add()
             // $request->UserPassword !=="";
             // }
 
-            if(isset($request->UserPassword) && $request->UserPassword !='' && $request->UserPassword !=null)
+            if(property_exists($request, 'UserPassword') && $request->UserPassword !== null && $request->UserPassword !='' && $request->UserPassword !=null)
             {
             $user->password = Hash::make($request->UserPassword);
             }
@@ -87,7 +90,7 @@ public function add()
     
                 $file->move($filepath,$name);
     
-                if(isset($request->update)){
+                if(property_exists($request, 'update') && $request->update !== null){
                     File::delete($filepath.$data->ArcCompanylogo);
                 }
     
@@ -96,7 +99,7 @@ public function add()
                 $user->UserImage = $name;
             }
     
-            $pass = rand(10000,100000);
+            $pass = random_int(10000,100000);
     
             $data->ArcCompanyName = $request->CompanyName;
             $data->ArcCompanyWebsite = $request->CompanyWebsite;
@@ -137,30 +140,28 @@ public function add()
 
 public function list()
 {
-    if(Auth::user()->UserType=='1'){
+    if (Auth::user()->UserType=='1') {
         $data = Architect::join('users','users.id','architects.UserId')->select('users.FirstName','users.UserPhone','architects.*')->where('users.UserType','4')->OrderBy('users.id','desc')->get();
-
-        return view('Architects.Architectlist',compact('data'));
-    }else if(Auth::user()->UserType=='4'){
+        return view('Architects.Architectlist',['data' => $data]);
+    } elseif (Auth::user()->UserType=='4') {
         return redirect()->route('Architect/profile');
     } else {
         return redirect('Architects/details/'.Auth::user()->ArchitectId);
     }
 }
+
 public function details($id)
 {
-    if(Auth::user()->UserType=='1'){
-
+    if (Auth::user()->UserType=='1') {
         if(!empty($id)){
             $data = Architect::join('users','users.id','architects.UserId')
             ->select('users.FirstName','users.LastName','users.UserEmail','users.UserJobtitle' ,'users.UserPhone','architects.*')
             ->where('architects.id',$id)->first();
-            return view('Architects.ArchitectDetails',compact('data'));
+            return view('Architects.ArchitectDetails',['data' => $data]);
         } else {
             return redirect()->route('Architect/list');
         }
-    }
-    else if(Auth::user()->UserType=='4'){
+    } elseif (Auth::user()->UserType=='4') {
         $id = Auth::user()->id;
         //    Session::get('id');
         //    die();
@@ -168,9 +169,10 @@ public function details($id)
         ->select('users.FirstName','users.LastName','users.UserEmail','users.UserJobtitle' ,'users.UserPhone','architects.*')
         ->where('architects.UserId',$id)->first();
         $data['auth']=Auth::user()->UserType;
-
-        return view('Architects.ArchitectDetails',compact('data'));
+        return view('Architects.ArchitectDetails',['data' => $data]);
     }
+
+    return null;
 }
 
 public function profile()
@@ -180,17 +182,20 @@ public function profile()
         $data = Architect::join('users','users.id','architects.UserId')->select('users.FirstName','users.LastName','users.UserEmail','users.UserJobtitle','users.UserPhone','architects.*')->where('architects.UserId',Auth::user()->id)->first();
         $data['auth']=Auth::user()->UserType;
 
-        return view('Architects.ArchitectDetails',compact('data'));
+        return view('Architects.ArchitectDetails',['data' => $data]);
 }
+
+   return null;
 }
+
 public function edit($id)
 {
     if(Auth::user()->UserType=='1' || Auth::user()->UserType=='4'){
         if(isset($id)){
             $editdata = Architect::join('users','users.id','architects.UserId')->select('users.FirstName','users.LastName', 'users.UserEmail','users.UserPhone','users.UserJobtitle','architects.*')->where('architects.id',$id)->first();
-            if(!empty($editdata) && count((array)$editdata)>0)
+            if(!empty($editdata) && (array)$editdata !== [])
             {
-                return view('Architects.AddArchitect',compact('editdata'));
+                return view('Architects.AddArchitect',['editdata' => $editdata]);
             } else {
                 return redirect()->route('Architect/list');
             }
@@ -198,6 +203,8 @@ public function edit($id)
             return redirect()->route('Architect/list');
         }
     }
+
+    return null;
 }
 
 public function deleteArchitect(Request $request)
