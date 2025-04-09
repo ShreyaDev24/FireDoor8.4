@@ -388,8 +388,8 @@ class DashboardController extends Controller
 
         // SORT NOTIFICATION BY CREATED_AT
         usort($notifications, function (array $a, array $b): int {
-            $dateA = strtotime($a['created_at']);
-            $dateB = strtotime($b['created_at']);
+            $dateA = strtotime((string) $a['created_at']);
+            $dateB = strtotime((string) $b['created_at']);
             return $dateB - $dateA;
         });
 

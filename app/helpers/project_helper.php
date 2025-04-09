@@ -79,7 +79,7 @@ function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'
     return $NonConfigurableItems;
 }
 
-function itemAdjustCount($Id,$vId){
+function itemAdjustCount($Id,$vId): float|int{
     if($vId > 0){
         $Schedule = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
         ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
@@ -223,12 +223,16 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursid
         $lippingSpecies = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
     }
 
-    if(in_array($authdata->UserType, [1,4])){
-        $lippingSpecies = $lippingSpecies->get();
-
-    }else{
-        $lippingSpecies = $lippingSpecies->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+    if (!($lippingSpecies instanceof \Illuminate\Database\Eloquent\Builder)) {
+        $lippingSpecies = collect($lippingSpecies);
     }
+
+    if(in_array($authdata->UserType, [1,4])){
+        $lippingSpecies = $lippingSpecies->values(); // Return as collection
+    } else {
+        $lippingSpecies = $lippingSpecies->whereIn("id",  $SelectedLippingSpeciesIds)->values(); // Filtered
+    }
+
 
     return $lippingSpecies;
 }
@@ -550,7 +554,7 @@ function HalspanBomCalculation($request): void{
                     $minWidth1 = $door_core->selected_mm_width;
                     $minHeight1 = $door_core->selected_mm_height;
                     // $minCost = $door_core->selected_cost; // Track the cost with the minimum dimensions
-                    $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType = $request->intumescentLeafType;
                     if (isset($pricesArray[$intumescentLeafType])) {
                         $minCost = $pricesArray[$intumescentLeafType];
@@ -562,7 +566,7 @@ function HalspanBomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
                     $minWidth2 = $door_core->selected_mm_width;
                     $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType2 = $request->intumescentLeafType;
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
@@ -940,7 +944,7 @@ function FlamebreakBomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1)) {
                     $minWidth1 = $door_core->selected_mm_width;
                     $minHeight1 = $door_core->selected_mm_height;
-                    $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType = $request->intumescentLeafType;
                     if (isset($pricesArray[$intumescentLeafType])) {
                         $minCost = $pricesArray[$intumescentLeafType];
@@ -952,7 +956,7 @@ function FlamebreakBomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
                     $minWidth2 = $door_core->selected_mm_width;
                     $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType2 = $request->intumescentLeafType;
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
@@ -1109,7 +1113,7 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
     $fields = $mapping[$category] ?? $mapping['default'];
 
     foreach ($data as $index => $value) {
-        $words = explode("|", $value->Description);
+        $words = explode("|", (string) $value->Description);
         $row = [];
 
         foreach ($fields as $field) {
@@ -1163,7 +1167,7 @@ function lippingName($id){
 }
 
 function ironmongeryGetCodeName($id): array{
-    $data = explode(',',$id);
+    $data = explode(',',(string) $id);
     $name = [];
     $price = [];
     foreach($data as $val){
@@ -1737,30 +1741,22 @@ function BOMUpdate($data, $configurableitems): void{
     $item->FrameOnOff = $data->FrameOnOff;
     $item->issingleconfiguration = $configurableitems;
 
-    switch ($configurableitems) {
-        case '4': // VICAIMA DOOR
-            BomCalculationVicaima($item);
-            break;
-        case '5': // Seadec DOOR
-            BomCalculationSeadec($item);
-            break;
-        case '6': // Deanta DOOR
-            BomCalculationDeanta($item);
-            break;
-        case '2': // Halspan DOOR
-            HalspanBomCalculation($item);
-            break;
-        case '7': // Flamebreak DOOR
-            FlamebreakBomCalculation($item);
-            break;
-        case '8': // Stredor DOOR
-            StredorBomCalculation($item);
-            break;
-
-        default: // STAREBOARD AND ALL
-            BomCalculation($item);
-            break;
-    }
+    match ($configurableitems) {
+        // VICAIMA DOOR
+        '4' => BomCalculationVicaima($item),
+        // Seadec DOOR
+        '5' => BomCalculationSeadec($item),
+        // Deanta DOOR
+        '6' => BomCalculationDeanta($item),
+        // Halspan DOOR
+        '2' => HalspanBomCalculation($item),
+        // Flamebreak DOOR
+        '7' => FlamebreakBomCalculation($item),
+        // Stredor DOOR
+        '8' => StredorBomCalculation($item),
+        // STAREBOARD AND ALL
+        default => BomCalculation($item),
+    };
 
 }
 

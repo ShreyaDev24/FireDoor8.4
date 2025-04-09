@@ -107,7 +107,7 @@ class PrintInvoiceController extends Controller
 
         $quotaion_contact_info = QuotationContactInformation::where('QuotationId',$quatationId)->first();
         if($quotaion_contact_info->Contact){
-            $contactid = explode(',',$quotaion_contact_info->Contact);
+            $contactid = explode(',',(string) $quotaion_contact_info->Contact);
             $contact_persion = CustomerContact::where('id',$contactid[0])->first();
             $contactfirstandlastname = $contact_persion->FirstName . ' ' . $contact_persion->LastName;
         }
@@ -1930,7 +1930,7 @@ class PrintInvoiceController extends Controller
             }
 
             if (!empty($tt->SvgImage)) {
-                $svgFile = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
+                $svgFile = str_contains((string) $tt->SvgImage, '.png') ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 // $svgFile = URL('/') . '/uploads/files/door.jpg';
                 $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
@@ -2832,7 +2832,7 @@ class PrintInvoiceController extends Controller
                                     <td class="marImg" rowspan="2">
                                         <span>';
             if (!empty($comapnyDetail->ComplogoBase64)) {
-                $elevTbl .= '<img src="' . htmlspecialchars($comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
+                $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
@@ -2840,21 +2840,21 @@ class PrintInvoiceController extends Controller
             $elevTbl .= '</span>
                                     </td>
                                     <td class="tbl_color"><span>Ref</span></td>
-                                    <td colspan="3"><span>' . htmlspecialchars($QuotationGenerationId) . '</span></td>
+                                    <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
                                     <td class="tbl_color"><span>Project</span></td>
-                                    <td><span>' . htmlspecialchars($ProjectName) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
                                     <td class="tbl_color"><span>Prepared By</span></td>
-                                    <td><span>' . htmlspecialchars($Username) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
                                 </tr>
                                 <tr>
                                     <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
-                                    <td style="width:20px;"><span>' . htmlspecialchars($version) . '</span></td>
+                                    <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
                                     <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
                                     <td><span>' . date('Y-m-d') . '</span></td>
                                     <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
-                                    <td><span>' . htmlspecialchars($customer->CstCompanyName) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
                                     <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Sales Contact</span></td>
-                                    <td><span>' . htmlspecialchars($SalesContact) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2867,7 +2867,7 @@ class PrintInvoiceController extends Controller
                 <tbody>
                     <tr>
                         <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
-                        <td class="dicription_blank"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                        <td class="dicription_blank"><b>Type ' . htmlspecialchars((string) $tt->DoorType) . '</b></td>
                     </tr>
                 </tbody>
             </table>
@@ -2969,7 +2969,7 @@ class PrintInvoiceController extends Controller
             }
 
             if (!empty($tt->SvgImage)) {
-                $svgFileS = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
+                $svgFileS = str_contains((string) $tt->SvgImage, '.png') ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFileS = URL('/') . '/uploads/files/no_image_prod.jpg';
             }

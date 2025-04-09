@@ -94,9 +94,7 @@ class SurveyController extends Controller
         } else {
             $user = new User();
             $flash = "added";
-            Validator::extend('without_spaces', function($attr, $value){
-                return preg_match('/^\S*$/u', $value);
-            });
+            Validator::extend('without_spaces', fn($attr, $value): int|false => preg_match('/^\S*$/u', (string) $value));
             $this->validate(
                 $request,
                 [

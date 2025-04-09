@@ -20,19 +20,14 @@ class pdf6 implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    public  $quatationId;
-
-    public  $versionID;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($quatationId, $versionID)
+    public function __construct(public $quatationId, public $versionID)
     {
-        $this->quatationId = $quatationId;
-        $this->versionID = $versionID;
     }
 
     /**
@@ -1139,7 +1134,7 @@ class pdf6 implements ShouldQueue
             }
 
             if (!empty($tt->SvgImage)) {
-                $svgFile = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
+                $svgFile = str_contains((string) $tt->SvgImage, '.png') ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
             }
@@ -1965,7 +1960,7 @@ class pdf6 implements ShouldQueue
                                     <td class="marImg" rowspan="2">
                                         <span>';
             if (!empty($comapnyDetail->ComplogoBase64)) {
-                $elevTbl .= '<img src="' . htmlspecialchars($comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
+                $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
@@ -1973,21 +1968,21 @@ class pdf6 implements ShouldQueue
             $elevTbl .= '</span>
                                     </td>
                                     <td class="tbl_color"><span>Ref</span></td>
-                                    <td colspan="3"><span>' . htmlspecialchars($QuotationGenerationId) . '</span></td>
+                                    <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
                                     <td class="tbl_color"><span>Project</span></td>
-                                    <td><span>' . htmlspecialchars($ProjectName) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
                                     <td class="tbl_color"><span>Prepared By</span></td>
-                                    <td><span>' . htmlspecialchars($Username) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
                                 </tr>
                                 <tr>
                                     <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
-                                    <td style="width:20px;"><span>' . htmlspecialchars($version) . '</span></td>
+                                    <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
                                     <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
                                     <td><span>' . date('Y-m-d') . '</span></td>
                                     <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
                                     <td><span>' . htmlspecialchars($CstCompanyAddressLine1) . '</span></td>
                                     <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Sales Contact</span></td>
-                                    <td><span>' . htmlspecialchars($SalesContact) . '</span></td>
+                                    <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
                                 </tr>
                             </tbody>
                         </table>
@@ -2000,7 +1995,7 @@ class pdf6 implements ShouldQueue
                 <tbody>
                     <tr>
                         <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
-                        <td class="dicription_blank"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                        <td class="dicription_blank"><b>Type ' . htmlspecialchars((string) $tt->DoorType) . '</b></td>
                     </tr>
                 </tbody>
             </table>

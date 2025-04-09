@@ -1775,7 +1775,7 @@ class OMMAnualController extends Controller
                 }
 
                 if (!empty($tt->SvgImage)) {
-                    $svgFile = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
+                    $svgFile = str_contains((string) $tt->SvgImage, '.png') ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
                 } else {
                     // $svgFile = URL('/') . '/uploads/files/door.jpg';
                     $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';

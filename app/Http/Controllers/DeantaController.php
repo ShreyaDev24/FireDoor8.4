@@ -399,14 +399,14 @@ class DeantaController extends Controller
             }
 
             $j = 0;
-            $leaftype = trim($row[$j++]);
-            $doorleaffacing = trim($row[$j++]);
-            $width = trim($row[$j++]);
-            $length = trim($row[$j++]);
-            $depth = trim($row[$j++]);
-            $firerating = trim($row[$j++]);
-            $code = trim($row[$j++]);
-            $cost = trim($row[$j++]);
+            $leaftype = trim((string) $row[$j++]);
+            $doorleaffacing = trim((string) $row[$j++]);
+            $width = trim((string) $row[$j++]);
+            $length = trim((string) $row[$j++]);
+            $depth = trim((string) $row[$j++]);
+            $firerating = trim((string) $row[$j++]);
+            $code = trim((string) $row[$j++]);
+            $cost = trim((string) $row[$j++]);
 
             $leaftypedata = LeafType::where('LeafType',$leaftype)->count();
             if($leaftypedata == 0){

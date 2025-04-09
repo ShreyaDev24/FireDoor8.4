@@ -40,7 +40,7 @@ class SendToClientController extends Controller
         $CustomerContactId = $request->CustomerContactId;
 
         $QuotationContactInformation = QuotationContactInformation::where('QuotationId',$quotationId)->first();
-        $customer_contact_id = explode(',',$QuotationContactInformation->Contact);
+        $customer_contact_id = explode(',',(string) $QuotationContactInformation->Contact);
 
         $q = Quotation::select('QuotationGenerationId','quotTag','SalesContact','ProjectId')->where('id',$quotationId)->first();
 

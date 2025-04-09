@@ -1934,209 +1934,209 @@ class DoorScheduleController extends Controller
                     
                     // dd($row);
                     $j = 2;
-                    $IntumescentLeafType = trim($row[$j++]);
-                    $FrameOnOff = trim($row[$j++]);
-                    $floor = trim($row[$j++]);
-                    $doorNumber = trim($row[$j++]);
-                    $location = trim($row[$j++]);
-                    $DoorQuantity = trim($row[$j++]);
-                    $FourSidedFrame = trim($row[$j++]);
-                    $DoorType = trim($row[$j++]);
-                    $FireRating = trim($row[$j++]);
-                    $DoorsetType = trim($row[$j++]);
-                    $SwingType = trim($row[$j++]);
-                    $LatchType = trim($row[$j++]);
-                    $Handing = trim($row[$j++]);
-                    $OpensInwards = trim($row[$j++]);
-                    $COC = trim($row[$j++]);
-                    $Tollerance = trim($row[$j++]);
-                    $Dropseal = trim($row[$j++]);
-                    $Undercut = trim($row[$j++]);
-                    $FloorFinish = trim($row[$j++]);
-                    $GAP = trim($row[$j++]);
-                    $FrameThickness = trim($row[$j++]);
-                    $IronmongerySet = trim($row[$j++]);
-                    $IronmongeryID = trim($row[$j++]);
-                    $SOHeight = trim($row[$j++]);
-                    $SOWidth = trim($row[$j++]);
-                    $SOWallThick = trim($row[$j++]);
-                    $LeafWidth1 = trim($row[$j++]);
-                    $LeafWidth2 = trim($row[$j++]);
-                    $LeafHeight = trim($row[$j++]);
-                    $LeafThickness = trim($row[$j++]);
-                    $DoorLeafFacing = trim($row[$j++]);
-                    $DoorLeafFacingValue = trim($row[$j++]);
-                    $DoorLeafFinish = trim($row[$j++]);
-                    $DoorLeafFinishColor = trim($row[$j++]);
-                    $SheenLevel = trim($row[$j++]);
-                    $DecorativeGroves = trim($row[$j++]);
-                    $GrooveLocation = trim($row[$j++]);
-                    $GrooveWidth = trim($row[$j++]);
-                    $GrooveDepth = trim($row[$j++]);
-                    $MaxNumberOfGroove = trim($row[$j++]);
-                    $NumberOfGroove = trim($row[$j++]);
-                    $NumberOfVerticalGroove = trim($row[$j++]);
-                    $NumberOfHorizontalGroove = trim($row[$j++]);
-                    $DecorativeGrovesLeaf2 = trim($row[$j++]);
-                    $GrooveLocationLeaf2 = trim($row[$j++]);
-                    $IsSameAsDecorativeGroves1 = trim($row[$j++]);
-                    $GrooveWidthLeaf2 = trim($row[$j++]);
-                    $GrooveDepthLeaf2 = trim($row[$j++]);
-                    $MaxNumberOfGrooveLeaf2 = trim($row[$j++]);
-                    $NumberOfGrooveLeaf2 = trim($row[$j++]);
-                    $NumberOfVerticalGrooveLeaf2 = trim($row[$j++]);
-                    $NumberOfHorizontalGrooveLeaf2 = trim($row[$j++]);
-                    $Leaf1VisionPanel = trim($row[$j++]);
-                    $Leaf1VisionPanelShape = trim($row[$j++]);
-                    $VisionPanelQuantity = trim($row[$j++]);
-                    $AreVPsEqualSizesForLeaf1 = trim($row[$j++]);
-                    $DistanceFromtopOfDoor = trim($row[$j++]);
-                    $DistanceFromTheEdgeOfDoor = trim($row[$j++]);
-                    $DistanceBetweenVPs = trim($row[$j++]);
-                    $Leaf1VPWidth = trim($row[$j++]);
-                    $Leaf1VPHeight1 = trim($row[$j++]);
-                    $Leaf1VPHeight2 = trim($row[$j++]);
-                    $Leaf1VPHeight3 = trim($row[$j++]);
-                    $Leaf1VPHeight4 = trim($row[$j++]);
-                    $Leaf1VPHeight5 = trim($row[$j++]);
-                    $Leaf1VPAreaSizem2 = trim($row[$j++]);
-                    $Leaf2VisionPanel = trim($row[$j++]);
-                    $sVPSameAsLeaf1 = trim($row[$j++]);
-                    $Leaf2VisionPanelQuantity = trim($row[$j++]);
-                    $AreVPsEqualSizesForLeaf2 = trim($row[$j++]);
-                    $DistanceFromTopOfDoorForLeaf2 = trim($row[$j++]);
-                    $DistanceFromTheEdgeOfDoorforLeaf2 = trim($row[$j++]);
-                    $DistanceBetweenVp = trim($row[$j++]);
-                    $Leaf2VPWidth = trim($row[$j++]);
-                    $Leaf2VPHeight1 = trim($row[$j++]);
-                    $Leaf2VPHeight2 = trim($row[$j++]);
-                    $Leaf2VPHeight3 = trim($row[$j++]);
-                    $Leaf2VPHeight4 = trim($row[$j++]);
-                    $Leaf2VPHeight5 = trim($row[$j++]);
-                    $GlassIntegrity = trim($row[$j++]);
-                    $GlassType = trim($row[$j++]);
-                    $GlassThickness = trim($row[$j++]);
-                    $GlazingSystems = trim($row[$j++]);
-                    $GlazingSystemThickness = trim($row[$j++]);
-                    $GlazingBeads = trim($row[$j++]);
-                    $GlazingBeadsThickness = trim($row[$j++]);
-                    $glazingBeadsWidth = trim($row[$j++]);
-                    $glazingBeadsHeight = trim($row[$j++]);
-                    $glazingBeadsFixingDetail = trim($row[$j++]);
-                    $GlazingBeadSpecies = trim($row[$j++]);
-                    $FrameMaterial = trim($row[$j++]);
-                    $FrameType = trim($row[$j++]);
-                    $PlantonStopWidth = trim($row[$j++]);
-                    $PlantonStopHeight = trim($row[$j++]);
-                    $ScallopedWidth = trim($row[$j++]);
-                    $ScallopedHeight = trim($row[$j++]);
-                    $RebatedWidth = trim($row[$j++]);
-                    $RebatedHeight = trim($row[$j++]);
-                    $FrameWidth = trim($row[$j++]);
-                    $FrameHeight = trim($row[$j++]);
-                    $FrameDepth = trim($row[$j++]);
-                    $FrameFinish = trim($row[$j++]);
-                    $FrameFinishColor = trim($row[$j++]);
-                    $ExtLiner = trim($row[$j++]);
-                    $DoorFrameConstruction = trim($row[$j++]);
-                    $ExtLinerValue = trim($row[$j++]);
-                    $extLinerSize = trim($row[$j++]);
-                    $ExtLinerThickness = trim($row[$j++]);
-                    $SpecialFeatureRefs = trim($row[$j++]);
-                    $Overpanel = trim($row[$j++]);
-                    $OPWidth = trim($row[$j++]);
-                    $OPHeigth = trim($row[$j++]);
-                    $OpBeadThickness = trim($row[$j++]);
-                    $OpBeadHeight = trim($row[$j++]);
-                    $OPTransom = trim($row[$j++]);
-                    $TransomThickness = trim($row[$j++]);
-                    $opGlassIntegrity = trim($row[$j++]);
-                    $OPGlassType = trim($row[$j++]);
+                    $IntumescentLeafType = trim((string) $row[$j++]);
+                    $FrameOnOff = trim((string) $row[$j++]);
+                    $floor = trim((string) $row[$j++]);
+                    $doorNumber = trim((string) $row[$j++]);
+                    $location = trim((string) $row[$j++]);
+                    $DoorQuantity = trim((string) $row[$j++]);
+                    $FourSidedFrame = trim((string) $row[$j++]);
+                    $DoorType = trim((string) $row[$j++]);
+                    $FireRating = trim((string) $row[$j++]);
+                    $DoorsetType = trim((string) $row[$j++]);
+                    $SwingType = trim((string) $row[$j++]);
+                    $LatchType = trim((string) $row[$j++]);
+                    $Handing = trim((string) $row[$j++]);
+                    $OpensInwards = trim((string) $row[$j++]);
+                    $COC = trim((string) $row[$j++]);
+                    $Tollerance = trim((string) $row[$j++]);
+                    $Dropseal = trim((string) $row[$j++]);
+                    $Undercut = trim((string) $row[$j++]);
+                    $FloorFinish = trim((string) $row[$j++]);
+                    $GAP = trim((string) $row[$j++]);
+                    $FrameThickness = trim((string) $row[$j++]);
+                    $IronmongerySet = trim((string) $row[$j++]);
+                    $IronmongeryID = trim((string) $row[$j++]);
+                    $SOHeight = trim((string) $row[$j++]);
+                    $SOWidth = trim((string) $row[$j++]);
+                    $SOWallThick = trim((string) $row[$j++]);
+                    $LeafWidth1 = trim((string) $row[$j++]);
+                    $LeafWidth2 = trim((string) $row[$j++]);
+                    $LeafHeight = trim((string) $row[$j++]);
+                    $LeafThickness = trim((string) $row[$j++]);
+                    $DoorLeafFacing = trim((string) $row[$j++]);
+                    $DoorLeafFacingValue = trim((string) $row[$j++]);
+                    $DoorLeafFinish = trim((string) $row[$j++]);
+                    $DoorLeafFinishColor = trim((string) $row[$j++]);
+                    $SheenLevel = trim((string) $row[$j++]);
+                    $DecorativeGroves = trim((string) $row[$j++]);
+                    $GrooveLocation = trim((string) $row[$j++]);
+                    $GrooveWidth = trim((string) $row[$j++]);
+                    $GrooveDepth = trim((string) $row[$j++]);
+                    $MaxNumberOfGroove = trim((string) $row[$j++]);
+                    $NumberOfGroove = trim((string) $row[$j++]);
+                    $NumberOfVerticalGroove = trim((string) $row[$j++]);
+                    $NumberOfHorizontalGroove = trim((string) $row[$j++]);
+                    $DecorativeGrovesLeaf2 = trim((string) $row[$j++]);
+                    $GrooveLocationLeaf2 = trim((string) $row[$j++]);
+                    $IsSameAsDecorativeGroves1 = trim((string) $row[$j++]);
+                    $GrooveWidthLeaf2 = trim((string) $row[$j++]);
+                    $GrooveDepthLeaf2 = trim((string) $row[$j++]);
+                    $MaxNumberOfGrooveLeaf2 = trim((string) $row[$j++]);
+                    $NumberOfGrooveLeaf2 = trim((string) $row[$j++]);
+                    $NumberOfVerticalGrooveLeaf2 = trim((string) $row[$j++]);
+                    $NumberOfHorizontalGrooveLeaf2 = trim((string) $row[$j++]);
+                    $Leaf1VisionPanel = trim((string) $row[$j++]);
+                    $Leaf1VisionPanelShape = trim((string) $row[$j++]);
+                    $VisionPanelQuantity = trim((string) $row[$j++]);
+                    $AreVPsEqualSizesForLeaf1 = trim((string) $row[$j++]);
+                    $DistanceFromtopOfDoor = trim((string) $row[$j++]);
+                    $DistanceFromTheEdgeOfDoor = trim((string) $row[$j++]);
+                    $DistanceBetweenVPs = trim((string) $row[$j++]);
+                    $Leaf1VPWidth = trim((string) $row[$j++]);
+                    $Leaf1VPHeight1 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight2 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight3 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight4 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight5 = trim((string) $row[$j++]);
+                    $Leaf1VPAreaSizem2 = trim((string) $row[$j++]);
+                    $Leaf2VisionPanel = trim((string) $row[$j++]);
+                    $sVPSameAsLeaf1 = trim((string) $row[$j++]);
+                    $Leaf2VisionPanelQuantity = trim((string) $row[$j++]);
+                    $AreVPsEqualSizesForLeaf2 = trim((string) $row[$j++]);
+                    $DistanceFromTopOfDoorForLeaf2 = trim((string) $row[$j++]);
+                    $DistanceFromTheEdgeOfDoorforLeaf2 = trim((string) $row[$j++]);
+                    $DistanceBetweenVp = trim((string) $row[$j++]);
+                    $Leaf2VPWidth = trim((string) $row[$j++]);
+                    $Leaf2VPHeight1 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight2 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight3 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight4 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight5 = trim((string) $row[$j++]);
+                    $GlassIntegrity = trim((string) $row[$j++]);
+                    $GlassType = trim((string) $row[$j++]);
+                    $GlassThickness = trim((string) $row[$j++]);
+                    $GlazingSystems = trim((string) $row[$j++]);
+                    $GlazingSystemThickness = trim((string) $row[$j++]);
+                    $GlazingBeads = trim((string) $row[$j++]);
+                    $GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $glazingBeadsWidth = trim((string) $row[$j++]);
+                    $glazingBeadsHeight = trim((string) $row[$j++]);
+                    $glazingBeadsFixingDetail = trim((string) $row[$j++]);
+                    $GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $FrameMaterial = trim((string) $row[$j++]);
+                    $FrameType = trim((string) $row[$j++]);
+                    $PlantonStopWidth = trim((string) $row[$j++]);
+                    $PlantonStopHeight = trim((string) $row[$j++]);
+                    $ScallopedWidth = trim((string) $row[$j++]);
+                    $ScallopedHeight = trim((string) $row[$j++]);
+                    $RebatedWidth = trim((string) $row[$j++]);
+                    $RebatedHeight = trim((string) $row[$j++]);
+                    $FrameWidth = trim((string) $row[$j++]);
+                    $FrameHeight = trim((string) $row[$j++]);
+                    $FrameDepth = trim((string) $row[$j++]);
+                    $FrameFinish = trim((string) $row[$j++]);
+                    $FrameFinishColor = trim((string) $row[$j++]);
+                    $ExtLiner = trim((string) $row[$j++]);
+                    $DoorFrameConstruction = trim((string) $row[$j++]);
+                    $ExtLinerValue = trim((string) $row[$j++]);
+                    $extLinerSize = trim((string) $row[$j++]);
+                    $ExtLinerThickness = trim((string) $row[$j++]);
+                    $SpecialFeatureRefs = trim((string) $row[$j++]);
+                    $Overpanel = trim((string) $row[$j++]);
+                    $OPWidth = trim((string) $row[$j++]);
+                    $OPHeigth = trim((string) $row[$j++]);
+                    $OpBeadThickness = trim((string) $row[$j++]);
+                    $OpBeadHeight = trim((string) $row[$j++]);
+                    $OPTransom = trim((string) $row[$j++]);
+                    $TransomThickness = trim((string) $row[$j++]);
+                    $opGlassIntegrity = trim((string) $row[$j++]);
+                    $OPGlassType = trim((string) $row[$j++]);
                     //
-                    $OPGlassThickness = trim($row[$j++]);
-                    $opglazingSystemsvalue = trim($row[$j++]);
-                    $OPGlazingSystemsThickness = trim($row[$j++]);
+                    $OPGlassThickness = trim((string) $row[$j++]);
+                    $opglazingSystemsvalue = trim((string) $row[$j++]);
+                    $OPGlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeads = trim($row[$j++]);
+                    $OPGlazingBeads = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeadsThickness = trim($row[$j++]);
-                    $OPGlazingBeadsHeight = trim($row[$j++]);     // confusion
-                    $OPGlazingBeadsFixingDetail = trim($row[$j++]);
+                    $OPGlazingBeadsThickness = trim((string) $row[$j++]);
+                    $OPGlazingBeadsHeight = trim((string) $row[$j++]);     // confusion
+                    $OPGlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeadSpecies = trim($row[$j++]);
-                    $SideLight1 = trim($row[$j++]);
-                    $SideLight1GlassType = trim($row[$j++]);
+                    $OPGlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SideLight1 = trim((string) $row[$j++]);
+                    $SideLight1GlassType = trim((string) $row[$j++]);
                     //
-                    $SL1GlassThickness = trim($row[$j++]);
-                    $SL1GlazingSystems = trim($row[$j++]);
-                    $SL1GlazingSystemsThickness = trim($row[$j++]);
+                    $SL1GlassThickness = trim((string) $row[$j++]);
+                    $SL1GlazingSystems = trim((string) $row[$j++]);
+                    $SL1GlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $BeadingType = trim($row[$j++]);
+                    $BeadingType = trim((string) $row[$j++]);
                     //
-                    $SL1GlazingBeadsThickness = trim($row[$j++]);
-                    $SL1GlazingBeadsWidth = trim($row[$j++]);
-                    $SL1GlazingBeadsFixingDetail = trim($row[$j++]);
+                    $SL1GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $SL1GlazingBeadsWidth = trim((string) $row[$j++]);
+                    $SL1GlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $SL1GlazingBeadSpecies = trim($row[$j++]);
-                    $SL1Width = trim($row[$j++]);
-                    $SL1Height = trim($row[$j++]);
-                    $SlBeadThickness = trim($row[$j++]);
-                    $SlBeadHeight = trim($row[$j++]);
-                    $SL1Depth = trim($row[$j++]);
-                    $SL1Transom = trim($row[$j++]);
-                    $SideLight2 = trim($row[$j++]);
-                    $DoYouWantToCopySameAsSL1 = trim($row[$j++]);
-                    $SideLight2GlassType = trim($row[$j++]);
+                    $SL1GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SL1Width = trim((string) $row[$j++]);
+                    $SL1Height = trim((string) $row[$j++]);
+                    $SlBeadThickness = trim((string) $row[$j++]);
+                    $SlBeadHeight = trim((string) $row[$j++]);
+                    $SL1Depth = trim((string) $row[$j++]);
+                    $SL1Transom = trim((string) $row[$j++]);
+                    $SideLight2 = trim((string) $row[$j++]);
+                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
+                    $SideLight2GlassType = trim((string) $row[$j++]);
                     //
-                    $SL2GlassThickness = trim($row[$j++]);
-                    $SL2GlazingSystems = trim($row[$j++]);
-                    $SL2GlazingSystemsThickness = trim($row[$j++]);
+                    $SL2GlassThickness = trim((string) $row[$j++]);
+                    $SL2GlazingSystems = trim((string) $row[$j++]);
+                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $SideLight2BeadingType = trim($row[$j++]);
+                    $SideLight2BeadingType = trim((string) $row[$j++]);
                     //
-                    $SL2GlazingBeadsThickness = trim($row[$j++]);
-                    $SL2GlazingBeadsWidth = trim($row[$j++]);
-                    $SL2GlazingBeadsFixingDetail = trim($row[$j++]);
+                    $SL2GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsWidth = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $SideLight2GlazingBeadSpecies = trim($row[$j++]);
-                    $SL2Width = trim($row[$j++]);
-                    $SL2Height = trim($row[$j++]);
-                    $SL2Depth = trim($row[$j++]);
-                    $SL2Transom = trim($row[$j++]);
-                    $SLtransomHeightFromTop = trim($row[$j++]);
-                    $SLtransomThickness = trim($row[$j++]);
-                    $LippingType = trim($row[$j++]);
-                    $LippingThickness = trim($row[$j++]);
-                    $LippingSpecies = trim($row[$j++]);
-                    $MeetingStyle = trim($row[$j++]);
-                    $ScallopedLippingThickness = trim($row[$j++]);
-                    $FlatLippingThickness = trim($row[$j++]);
-                    $RebatedLippingThickness = trim($row[$j++]);
-                    $CoreWidth1 = trim($row[$j++]);
-                    $CoreWidth2 = trim($row[$j++]);
-                    $CoreHeight = trim($row[$j++]);
-                    $IntumescentLeapingSealType = trim($row[$j++]);
-                    $IntumescentLeapingSealLocation = trim($row[$j++]);
-                    $IntumescentLeapingSealColor = trim($row[$j++]);
-                    $IntumescentLeapingSealArrangement = trim($row[$j++]);
-                    $intumescentSealMeetingEdges = trim($row[$j++]);
-                    $Accoustics = trim($row[$j++]);
-                    $rWdBRating = trim($row[$j++]);
-                    $perimeterSeal1 = trim($row[$j++]);
-                    $perimeterSeal2 = trim($row[$j++]);
+                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SL2Width = trim((string) $row[$j++]);
+                    $SL2Height = trim((string) $row[$j++]);
+                    $SL2Depth = trim((string) $row[$j++]);
+                    $SL2Transom = trim((string) $row[$j++]);
+                    $SLtransomHeightFromTop = trim((string) $row[$j++]);
+                    $SLtransomThickness = trim((string) $row[$j++]);
+                    $LippingType = trim((string) $row[$j++]);
+                    $LippingThickness = trim((string) $row[$j++]);
+                    $LippingSpecies = trim((string) $row[$j++]);
+                    $MeetingStyle = trim((string) $row[$j++]);
+                    $ScallopedLippingThickness = trim((string) $row[$j++]);
+                    $FlatLippingThickness = trim((string) $row[$j++]);
+                    $RebatedLippingThickness = trim((string) $row[$j++]);
+                    $CoreWidth1 = trim((string) $row[$j++]);
+                    $CoreWidth2 = trim((string) $row[$j++]);
+                    $CoreHeight = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealType = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealLocation = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealColor = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealArrangement = trim((string) $row[$j++]);
+                    $intumescentSealMeetingEdges = trim((string) $row[$j++]);
+                    $Accoustics = trim((string) $row[$j++]);
+                    $rWdBRating = trim((string) $row[$j++]);
+                    $perimeterSeal1 = trim((string) $row[$j++]);
+                    $perimeterSeal2 = trim((string) $row[$j++]);
                     // $thresholdSeal1 = trim($row[$j++]);
                     // $thresholdSeal2 = trim($row[$j++]);
-                    $AccousticsMeetingStiles = trim($row[$j++]);
-                    $Architrave = trim($row[$j++]);
-                    $ArchitraveMaterial = trim($row[$j++]);
-                    $ArchitraveType = trim($row[$j++]);
-                    $ArchitraveWidth = trim($row[$j++]);
-                    $ArchitraveThickness = trim($row[$j++]);
-                    $ArchitraveFinish = trim($row[$j++]);
-                    $ArchitraveFinishColor = trim($row[$j++]);
-                    $ArchitraveSetQty = trim($row[$j++]);
-                    $DoorsetPrice = trim($row[$j++]);
-                    $IronmongaryPrice = trim($row[$j++]);
+                    $AccousticsMeetingStiles = trim((string) $row[$j++]);
+                    $Architrave = trim((string) $row[$j++]);
+                    $ArchitraveMaterial = trim((string) $row[$j++]);
+                    $ArchitraveType = trim((string) $row[$j++]);
+                    $ArchitraveWidth = trim((string) $row[$j++]);
+                    $ArchitraveThickness = trim((string) $row[$j++]);
+                    $ArchitraveFinish = trim((string) $row[$j++]);
+                    $ArchitraveFinishColor = trim((string) $row[$j++]);
+                    $ArchitraveSetQty = trim((string) $row[$j++]);
+                    $DoorsetPrice = trim((string) $row[$j++]);
+                    $IronmongaryPrice = trim((string) $row[$j++]);
 
                     $Checkingfirerating = Option::where(['OptionSlug' => 'fire_rating', 'OptionKey' => $FireRating])->count();
                     if ($Checkingfirerating == 0) {
@@ -2658,30 +2658,22 @@ class DoorScheduleController extends Controller
                                 }
                             }
 
-                            switch ($configurableitems) {
-                                case '4': // VICAIMA DOOR
-                                    BomCalculationVicaima($item);
-                                    break;
-                                case '5': // Seadec DOOR
-                                    BomCalculationSeadec($item);
-                                    break;
-                                case '6': // Deanta DOOR
-                                    BomCalculationDeanta($item);
-                                    break;
-                                case '2': // Halspan DOOR
-                                    HalspanBomCalculation($item);
-                                    break;
-                                case '7': // Flamebreak DOOR
-                                    FlamebreakBomCalculation($request);
-                                    break;
-                                case '8': // Stredor DOOR
-                                    StredorBomCalculation($request);
-                                    break;
-
-                                default: // STAREBOARD AND ALL
-                                    BomCalculation($item);
-                                    break;
-                            }
+                            match ($configurableitems) {
+                                // VICAIMA DOOR
+                                '4' => BomCalculationVicaima($item),
+                                // Seadec DOOR
+                                '5' => BomCalculationSeadec($item),
+                                // Deanta DOOR
+                                '6' => BomCalculationDeanta($item),
+                                // Halspan DOOR
+                                '2' => HalspanBomCalculation($item),
+                                // Flamebreak DOOR
+                                '7' => FlamebreakBomCalculation($request),
+                                // Stredor DOOR
+                                '8' => StredorBomCalculation($request),
+                                // STAREBOARD AND ALL
+                                default => BomCalculation($item),
+                            };
 
                             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId', $aa->QuotationId)->where('DoorType', $DoorType)->get();
                             $Item = Item::where(['QuotationId' => $aa->QuotationId, 'DoorType' => $DoorType])->get()->first();
@@ -2763,222 +2755,222 @@ class DoorScheduleController extends Controller
                     }
 
                     $j = 2;
-                    $FrameOnOff = trim($row[$j++]);
-                    $floor = trim($row[$j++]);
-                    $doorNumber = trim($row[$j++]);
-                    $location = trim($row[$j++]);
-                    $DoorQuantity = trim($row[$j++]);
-                    $FourSidedFrame = trim($row[$j++]);
-                    $LeafType = trim($row[$j++]);
-                    $DoorType = trim($row[$j++]);
-                    $FireRating = trim($row[$j++]);
-                    $DoorsetType = trim($row[$j++]);
-                    $SwingType = trim($row[$j++]);
-                    $LatchType = trim($row[$j++]);
-                    $Handing = trim($row[$j++]);
-                    $OpensInwards = trim($row[$j++]);
-                    $Tollerance = trim($row[$j++]);
-                    $Dropseal = trim($row[$j++]);
-                    $Undercut = trim($row[$j++]);
-                    $FloorFinish = trim($row[$j++]);
-                    $GAP = trim($row[$j++]);
-                    $FrameThickness = trim($row[$j++]);
-                    $IronmongerySet = trim($row[$j++]);
-                    $IronmongeryID = trim($row[$j++]);
-                    $DoorLeafFacing = trim($row[$j++]);
-                    $DoorLeafFinish = trim($row[$j++]);
-                    $DoorDimensionId = trim($row[$j++]);
-                    $DoorDimensionId2 = trim($row[$j++]);
-                    $DoorDimension = trim($row[$j++]);
-                    $SOHeight = trim($row[$j++]);
-                    $SOWidth = trim($row[$j++]);
-                    $SOWallThick = trim($row[$j++]);
-                    $LeafWidth1 = trim($row[$j++]);
-                    $LeafWidth1Adjustment = trim($row[$j++]);
-                    $LeafWidth2 = trim($row[$j++]);
-                    $LeafWidth2Adjustment = trim($row[$j++]);
-                    $LeafHeight = trim($row[$j++]);
-                    $LeafHeightAdjustment = trim($row[$j++]);
-                    $LeafThickness = trim($row[$j++]);
-                    $Hinge1Location = trim($row[$j++]);
-                    $Hinge2Location = trim($row[$j++]);
-                    $Hinge3Location = trim($row[$j++]);
-                    $Hinge4Location = trim($row[$j++]);
-                    $HingeCenterCheck = trim($row[$j++]);
+                    $FrameOnOff = trim((string) $row[$j++]);
+                    $floor = trim((string) $row[$j++]);
+                    $doorNumber = trim((string) $row[$j++]);
+                    $location = trim((string) $row[$j++]);
+                    $DoorQuantity = trim((string) $row[$j++]);
+                    $FourSidedFrame = trim((string) $row[$j++]);
+                    $LeafType = trim((string) $row[$j++]);
+                    $DoorType = trim((string) $row[$j++]);
+                    $FireRating = trim((string) $row[$j++]);
+                    $DoorsetType = trim((string) $row[$j++]);
+                    $SwingType = trim((string) $row[$j++]);
+                    $LatchType = trim((string) $row[$j++]);
+                    $Handing = trim((string) $row[$j++]);
+                    $OpensInwards = trim((string) $row[$j++]);
+                    $Tollerance = trim((string) $row[$j++]);
+                    $Dropseal = trim((string) $row[$j++]);
+                    $Undercut = trim((string) $row[$j++]);
+                    $FloorFinish = trim((string) $row[$j++]);
+                    $GAP = trim((string) $row[$j++]);
+                    $FrameThickness = trim((string) $row[$j++]);
+                    $IronmongerySet = trim((string) $row[$j++]);
+                    $IronmongeryID = trim((string) $row[$j++]);
+                    $DoorLeafFacing = trim((string) $row[$j++]);
+                    $DoorLeafFinish = trim((string) $row[$j++]);
+                    $DoorDimensionId = trim((string) $row[$j++]);
+                    $DoorDimensionId2 = trim((string) $row[$j++]);
+                    $DoorDimension = trim((string) $row[$j++]);
+                    $SOHeight = trim((string) $row[$j++]);
+                    $SOWidth = trim((string) $row[$j++]);
+                    $SOWallThick = trim((string) $row[$j++]);
+                    $LeafWidth1 = trim((string) $row[$j++]);
+                    $LeafWidth1Adjustment = trim((string) $row[$j++]);
+                    $LeafWidth2 = trim((string) $row[$j++]);
+                    $LeafWidth2Adjustment = trim((string) $row[$j++]);
+                    $LeafHeight = trim((string) $row[$j++]);
+                    $LeafHeightAdjustment = trim((string) $row[$j++]);
+                    $LeafThickness = trim((string) $row[$j++]);
+                    $Hinge1Location = trim((string) $row[$j++]);
+                    $Hinge2Location = trim((string) $row[$j++]);
+                    $Hinge3Location = trim((string) $row[$j++]);
+                    $Hinge4Location = trim((string) $row[$j++]);
+                    $HingeCenterCheck = trim((string) $row[$j++]);
                     // $DoorLeafFacing = trim($row[$j++]);
                     // $DoorLeafFacingValue = trim($row[$j++]);
                     // $DoorLeafFinish = trim($row[$j++]);
                     // $DoorLeafFinishColor = trim($row[$j++]);
                     // $SheenLevel = trim($row[$j++]);
-                    $DecorativeGroves = trim($row[$j++]);
-                    $DecorativeGrovesIcon = trim($row[$j++]);
+                    $DecorativeGroves = trim((string) $row[$j++]);
+                    $DecorativeGrovesIcon = trim((string) $row[$j++]);
                     // $GrooveLocation = trim($row[$j++]);
-                    $GrooveWidth = trim($row[$j++]);
-                    $GrooveDepth = trim($row[$j++]);
-                    $MaxNumberOfGroove = trim($row[$j++]);
-                    $NumberOfGroove = trim($row[$j++]);
-                    $DecorativeGrovesLeaf2  = trim($row[$j++]);
-                    $IsSameAsDecorativeGroves1  = trim($row[$j++]);
-                    $GroovesNumberLeaf2  = trim($row[$j++]);
-                    $GrooveWidthLeaf2 = trim($row[$j++]);
-                    $GrooveDepthLeaf2 = trim($row[$j++]);
-                    $MaxNumberOfGrooveLeaf2 = trim($row[$j++]);
-                    $NumberOfGrooveLeaf2 = trim($row[$j++]);
+                    $GrooveWidth = trim((string) $row[$j++]);
+                    $GrooveDepth = trim((string) $row[$j++]);
+                    $MaxNumberOfGroove = trim((string) $row[$j++]);
+                    $NumberOfGroove = trim((string) $row[$j++]);
+                    $DecorativeGrovesLeaf2  = trim((string) $row[$j++]);
+                    $IsSameAsDecorativeGroves1  = trim((string) $row[$j++]);
+                    $GroovesNumberLeaf2  = trim((string) $row[$j++]);
+                    $GrooveWidthLeaf2 = trim((string) $row[$j++]);
+                    $GrooveDepthLeaf2 = trim((string) $row[$j++]);
+                    $MaxNumberOfGrooveLeaf2 = trim((string) $row[$j++]);
+                    $NumberOfGrooveLeaf2 = trim((string) $row[$j++]);
                     // $NumberOfVerticalGroove = trim($row[$j++]);
                     // $NumberOfHorizontalGroove = trim($row[$j++]);
-                    $Leaf1VisionPanel = trim($row[$j++]);
-                    $Leaf1VisionPanelShape = trim($row[$j++]);
-                    $VisionPanelQuantity = trim($row[$j++]);
-                    $AreVPsEqualSizesForLeaf1 = trim($row[$j++]);
-                    $DistanceFromtopOfDoor = trim($row[$j++]);
-                    $DistanceFromTheEdgeOfDoor = trim($row[$j++]);
-                    $DistanceBetweenVPs = trim($row[$j++]);
+                    $Leaf1VisionPanel = trim((string) $row[$j++]);
+                    $Leaf1VisionPanelShape = trim((string) $row[$j++]);
+                    $VisionPanelQuantity = trim((string) $row[$j++]);
+                    $AreVPsEqualSizesForLeaf1 = trim((string) $row[$j++]);
+                    $DistanceFromtopOfDoor = trim((string) $row[$j++]);
+                    $DistanceFromTheEdgeOfDoor = trim((string) $row[$j++]);
+                    $DistanceBetweenVPs = trim((string) $row[$j++]);
 
-                    $Leaf1VPWidth = trim($row[$j++]);
-                    $Leaf1VPHeight1 = trim($row[$j++]);
-                    $Leaf1VPHeight2 = trim($row[$j++]);
-                    $Leaf1VPHeight3 = trim($row[$j++]);
-                    $Leaf1VPHeight4 = trim($row[$j++]);
-                    $Leaf1VPHeight5 = trim($row[$j++]);
-                    $Leaf1VPAreaSizem2 = trim($row[$j++]);
-                    $Leaf2VisionPanel = trim($row[$j++]);
-                    $sVPSameAsLeaf1 = trim($row[$j++]);
-                    $Leaf2VisionPanelQuantity = trim($row[$j++]);
-                    $AreVPsEqualSizesForLeaf2 = trim($row[$j++]);
-                    $DistanceFromTopOfDoorForLeaf2 = trim($row[$j++]);
-                    $DistanceFromTheEdgeOfDoorforLeaf2 = trim($row[$j++]);
-                    $DistanceBetweenVp = trim($row[$j++]);
-                    $Leaf2VPWidth = trim($row[$j++]);
-                    $Leaf2VPHeight1 = trim($row[$j++]);
-                    $Leaf2VPHeight2 = trim($row[$j++]);
-                    $Leaf2VPHeight3 = trim($row[$j++]);
-                    $Leaf2VPHeight4 = trim($row[$j++]);
-                    $Leaf2VPHeight5 = trim($row[$j++]);
-                    $GlassIntegrity = trim($row[$j++]);
-                    $GlassType = trim($row[$j++]);
-                    $GlassThickness = trim($row[$j++]);
-                    $GlazingSystems = trim($row[$j++]);
-                    $GlazingSystemThickness = trim($row[$j++]);
-                    $GlazingBeads = trim($row[$j++]);
-                    $GlazingBeadsThickness = trim($row[$j++]);
-                    $glazingBeadsWidth = trim($row[$j++]);
-                    $glazingBeadsHeight = trim($row[$j++]);
-                    $glazingBeadsFixingDetail = trim($row[$j++]);
-                    $GlazingBeadSpecies = trim($row[$j++]);
-                    $FrameMaterial = trim($row[$j++]);
-                    $FrameType = trim($row[$j++]);
-                    $PlantonStopWidth = trim($row[$j++]);
-                    $PlantonStopHeight = trim($row[$j++]);
-                    $RebatedWidth = trim($row[$j++]);
-                    $RebatedHeight = trim($row[$j++]);
-                    $ScallopedWidth = trim($row[$j++]);
-                    $ScallopedHeight = trim($row[$j++]);
-                    $FrameWidth = trim($row[$j++]);
-                    $FrameHeight = trim($row[$j++]);
-                    $FrameDepth = trim($row[$j++]);
-                    $FrameFinish = trim($row[$j++]);
-                    $FrameFinishColor = trim($row[$j++]);
-                    $ExtLiner = trim($row[$j++]);
-                    $DoorFrameConstruction = trim($row[$j++]);
-                    $ExtLinerValue = trim($row[$j++]);
-                    $extLinerSize = trim($row[$j++]);
-                    $ExtLinerThickness = trim($row[$j++]);
-                    $SpecialFeatureRefs = trim($row[$j++]);
-                    $Overpanel = trim($row[$j++]);
-                    $OPWidth = trim($row[$j++]);
-                    $OPHeigth = trim($row[$j++]);
-                    $OpBeadThickness = trim($row[$j++]);
-                    $OpBeadHeight = trim($row[$j++]);
-                    $OPTransom = trim($row[$j++]);
-                    $TransomThickness = trim($row[$j++]);
-                    $opGlassIntegrity = trim($row[$j++]);
-                    $OPGlassType = trim($row[$j++]);
+                    $Leaf1VPWidth = trim((string) $row[$j++]);
+                    $Leaf1VPHeight1 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight2 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight3 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight4 = trim((string) $row[$j++]);
+                    $Leaf1VPHeight5 = trim((string) $row[$j++]);
+                    $Leaf1VPAreaSizem2 = trim((string) $row[$j++]);
+                    $Leaf2VisionPanel = trim((string) $row[$j++]);
+                    $sVPSameAsLeaf1 = trim((string) $row[$j++]);
+                    $Leaf2VisionPanelQuantity = trim((string) $row[$j++]);
+                    $AreVPsEqualSizesForLeaf2 = trim((string) $row[$j++]);
+                    $DistanceFromTopOfDoorForLeaf2 = trim((string) $row[$j++]);
+                    $DistanceFromTheEdgeOfDoorforLeaf2 = trim((string) $row[$j++]);
+                    $DistanceBetweenVp = trim((string) $row[$j++]);
+                    $Leaf2VPWidth = trim((string) $row[$j++]);
+                    $Leaf2VPHeight1 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight2 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight3 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight4 = trim((string) $row[$j++]);
+                    $Leaf2VPHeight5 = trim((string) $row[$j++]);
+                    $GlassIntegrity = trim((string) $row[$j++]);
+                    $GlassType = trim((string) $row[$j++]);
+                    $GlassThickness = trim((string) $row[$j++]);
+                    $GlazingSystems = trim((string) $row[$j++]);
+                    $GlazingSystemThickness = trim((string) $row[$j++]);
+                    $GlazingBeads = trim((string) $row[$j++]);
+                    $GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $glazingBeadsWidth = trim((string) $row[$j++]);
+                    $glazingBeadsHeight = trim((string) $row[$j++]);
+                    $glazingBeadsFixingDetail = trim((string) $row[$j++]);
+                    $GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $FrameMaterial = trim((string) $row[$j++]);
+                    $FrameType = trim((string) $row[$j++]);
+                    $PlantonStopWidth = trim((string) $row[$j++]);
+                    $PlantonStopHeight = trim((string) $row[$j++]);
+                    $RebatedWidth = trim((string) $row[$j++]);
+                    $RebatedHeight = trim((string) $row[$j++]);
+                    $ScallopedWidth = trim((string) $row[$j++]);
+                    $ScallopedHeight = trim((string) $row[$j++]);
+                    $FrameWidth = trim((string) $row[$j++]);
+                    $FrameHeight = trim((string) $row[$j++]);
+                    $FrameDepth = trim((string) $row[$j++]);
+                    $FrameFinish = trim((string) $row[$j++]);
+                    $FrameFinishColor = trim((string) $row[$j++]);
+                    $ExtLiner = trim((string) $row[$j++]);
+                    $DoorFrameConstruction = trim((string) $row[$j++]);
+                    $ExtLinerValue = trim((string) $row[$j++]);
+                    $extLinerSize = trim((string) $row[$j++]);
+                    $ExtLinerThickness = trim((string) $row[$j++]);
+                    $SpecialFeatureRefs = trim((string) $row[$j++]);
+                    $Overpanel = trim((string) $row[$j++]);
+                    $OPWidth = trim((string) $row[$j++]);
+                    $OPHeigth = trim((string) $row[$j++]);
+                    $OpBeadThickness = trim((string) $row[$j++]);
+                    $OpBeadHeight = trim((string) $row[$j++]);
+                    $OPTransom = trim((string) $row[$j++]);
+                    $TransomThickness = trim((string) $row[$j++]);
+                    $opGlassIntegrity = trim((string) $row[$j++]);
+                    $OPGlassType = trim((string) $row[$j++]);
                     //
-                    $OPGlassThickness = trim($row[$j++]);
-                    $opglazingSystemsvalue = trim($row[$j++]);
-                    $OPGlazingSystemsThickness = trim($row[$j++]);
+                    $OPGlassThickness = trim((string) $row[$j++]);
+                    $opglazingSystemsvalue = trim((string) $row[$j++]);
+                    $OPGlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeads = trim($row[$j++]);
+                    $OPGlazingBeads = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeadsThickness = trim($row[$j++]);
-                    $OPGlazingBeadsHeight = trim($row[$j++]);     // confusion
-                    $OPGlazingBeadsFixingDetail = trim($row[$j++]);
+                    $OPGlazingBeadsThickness = trim((string) $row[$j++]);
+                    $OPGlazingBeadsHeight = trim((string) $row[$j++]);     // confusion
+                    $OPGlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $OPGlazingBeadSpecies = trim($row[$j++]);
-                    $SideLight1 = trim($row[$j++]);
-                    $SideLight1GlassType = trim($row[$j++]);
+                    $OPGlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SideLight1 = trim((string) $row[$j++]);
+                    $SideLight1GlassType = trim((string) $row[$j++]);
                     //
-                    $SL1GlassThickness = trim($row[$j++]);
-                    $SL1GlazingSystems = trim($row[$j++]);
-                    $SL1GlazingSystemsThickness = trim($row[$j++]);
+                    $SL1GlassThickness = trim((string) $row[$j++]);
+                    $SL1GlazingSystems = trim((string) $row[$j++]);
+                    $SL1GlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $BeadingType = trim($row[$j++]);
+                    $BeadingType = trim((string) $row[$j++]);
                     //
-                    $SL1GlazingBeadsThickness = trim($row[$j++]);
-                    $SL1GlazingBeadsWidth = trim($row[$j++]);
-                    $SL1GlazingBeadsFixingDetail = trim($row[$j++]);
+                    $SL1GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $SL1GlazingBeadsWidth = trim((string) $row[$j++]);
+                    $SL1GlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $SL1GlazingBeadSpecies = trim($row[$j++]);
-                    $SL1Width = trim($row[$j++]);
-                    $SL1Height = trim($row[$j++]);
-                    $SlBeadThickness = trim($row[$j++]);
-                    $SlBeadHeight = trim($row[$j++]);
-                    $SL1Depth = trim($row[$j++]);
-                    $SL1Transom = trim($row[$j++]);
-                    $SideLight2 = trim($row[$j++]);
-                    $DoYouWantToCopySameAsSL1 = trim($row[$j++]);
-                    $SideLight2GlassType = trim($row[$j++]);
+                    $SL1GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SL1Width = trim((string) $row[$j++]);
+                    $SL1Height = trim((string) $row[$j++]);
+                    $SlBeadThickness = trim((string) $row[$j++]);
+                    $SlBeadHeight = trim((string) $row[$j++]);
+                    $SL1Depth = trim((string) $row[$j++]);
+                    $SL1Transom = trim((string) $row[$j++]);
+                    $SideLight2 = trim((string) $row[$j++]);
+                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
+                    $SideLight2GlassType = trim((string) $row[$j++]);
                     //
-                    $SL2GlassThickness = trim($row[$j++]);
-                    $SL2GlazingSystems = trim($row[$j++]);
-                    $SL2GlazingSystemsThickness = trim($row[$j++]);
+                    $SL2GlassThickness = trim((string) $row[$j++]);
+                    $SL2GlazingSystems = trim((string) $row[$j++]);
+                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]);
                     //
-                    $SideLight2BeadingType = trim($row[$j++]);
+                    $SideLight2BeadingType = trim((string) $row[$j++]);
                     //
-                    $SL2GlazingBeadsThickness = trim($row[$j++]);
-                    $SL2GlazingBeadsWidth = trim($row[$j++]);
-                    $SL2GlazingBeadsFixingDetail = trim($row[$j++]);
+                    $SL2GlazingBeadsThickness = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsWidth = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
-                    $SideLight2GlazingBeadSpecies = trim($row[$j++]);
-                    $SL2Width = trim($row[$j++]);
-                    $SL2Height = trim($row[$j++]);
-                    $SL2Depth = trim($row[$j++]);
-                    $SL2Transom = trim($row[$j++]);
-                    $SLtransomHeightFromTop = trim($row[$j++]);
-                    $SLtransomThickness = trim($row[$j++]);
-                    $LippingType = trim($row[$j++]);
-                    $LippingThickness = trim($row[$j++]);
-                    $LippingSpecies = trim($row[$j++]);
-                    $MeetingStyle = trim($row[$j++]);
-                    $ScallopedLippingThickness = trim($row[$j++]);
-                    $FlatLippingThickness = trim($row[$j++]);
-                    $RebatedLippingThickness = trim($row[$j++]);
-                    $CoreWidth1 = trim($row[$j++]);
-                    $CoreWidth2 = trim($row[$j++]);
-                    $CoreHeight = trim($row[$j++]);
-                    $IntumescentLeapingSealType = trim($row[$j++]);
-                    $IntumescentLeapingSealLocation = trim($row[$j++]);
-                    $IntumescentLeapingSealColor = trim($row[$j++]);
-                    $IntumescentLeapingSealArrangement = trim($row[$j++]);
-                    $intumescentSealMeetingEdges = trim($row[$j++]);
-                    $Accoustics = trim($row[$j++]);
-                    $rWdBRating = trim($row[$j++]);
-                    $perimeterSeal1 = trim($row[$j++]);
-                    $perimeterSeal2 = trim($row[$j++]);
-                    $thresholdSeal1 = trim($row[$j++]);
-                    $thresholdSeal2 = trim($row[$j++]);
-                    $AccousticsMeetingStiles = trim($row[$j++]);
-                    $Architrave = trim($row[$j++]);
-                    $ArchitraveMaterial = trim($row[$j++]);
-                    $ArchitraveType = trim($row[$j++]);
-                    $ArchitraveWidth = trim($row[$j++]);
-                    $ArchitraveThickness = trim($row[$j++]);
-                    $ArchitraveFinish = trim($row[$j++]);
-                    $ArchitraveFinishColor = trim($row[$j++]);
-                    $ArchitraveSetQty = trim($row[$j++]);
-                    $DoorsetPrice = trim($row[$j++]);
-                    $IronmongaryPrice = trim($row[$j++]);
-                    $totalPricePerDoorSet = trim($row[$j++]);
+                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SL2Width = trim((string) $row[$j++]);
+                    $SL2Height = trim((string) $row[$j++]);
+                    $SL2Depth = trim((string) $row[$j++]);
+                    $SL2Transom = trim((string) $row[$j++]);
+                    $SLtransomHeightFromTop = trim((string) $row[$j++]);
+                    $SLtransomThickness = trim((string) $row[$j++]);
+                    $LippingType = trim((string) $row[$j++]);
+                    $LippingThickness = trim((string) $row[$j++]);
+                    $LippingSpecies = trim((string) $row[$j++]);
+                    $MeetingStyle = trim((string) $row[$j++]);
+                    $ScallopedLippingThickness = trim((string) $row[$j++]);
+                    $FlatLippingThickness = trim((string) $row[$j++]);
+                    $RebatedLippingThickness = trim((string) $row[$j++]);
+                    $CoreWidth1 = trim((string) $row[$j++]);
+                    $CoreWidth2 = trim((string) $row[$j++]);
+                    $CoreHeight = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealType = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealLocation = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealColor = trim((string) $row[$j++]);
+                    $IntumescentLeapingSealArrangement = trim((string) $row[$j++]);
+                    $intumescentSealMeetingEdges = trim((string) $row[$j++]);
+                    $Accoustics = trim((string) $row[$j++]);
+                    $rWdBRating = trim((string) $row[$j++]);
+                    $perimeterSeal1 = trim((string) $row[$j++]);
+                    $perimeterSeal2 = trim((string) $row[$j++]);
+                    $thresholdSeal1 = trim((string) $row[$j++]);
+                    $thresholdSeal2 = trim((string) $row[$j++]);
+                    $AccousticsMeetingStiles = trim((string) $row[$j++]);
+                    $Architrave = trim((string) $row[$j++]);
+                    $ArchitraveMaterial = trim((string) $row[$j++]);
+                    $ArchitraveType = trim((string) $row[$j++]);
+                    $ArchitraveWidth = trim((string) $row[$j++]);
+                    $ArchitraveThickness = trim((string) $row[$j++]);
+                    $ArchitraveFinish = trim((string) $row[$j++]);
+                    $ArchitraveFinishColor = trim((string) $row[$j++]);
+                    $ArchitraveSetQty = trim((string) $row[$j++]);
+                    $DoorsetPrice = trim((string) $row[$j++]);
+                    $IronmongaryPrice = trim((string) $row[$j++]);
+                    $totalPricePerDoorSet = trim((string) $row[$j++]);
 
                     $Checkingfirerating = Option::where(['OptionSlug' => 'fire_rating', 'OptionKey' => $FireRating])->count();
 
@@ -3539,30 +3531,22 @@ class DoorScheduleController extends Controller
                                 }
                             }
 
-                            switch ($configurableitems) {
-                                case '4': // VICAIMA DOOR
-                                    BomCalculationVicaima($item);
-                                    break;
-                                case '5': // Seadec DOOR
-                                    BomCalculationSeadec($item);
-                                    break;
-                                case '6': // Deanta DOOR
-                                    BomCalculationDeanta($item);
-                                    break;
-                                case '2': // Halspan DOOR
-                                    HalspanBomCalculation($item);
-                                    break;
-                                case '7': // Flamebreak DOOR
-                                    FlamebreakBomCalculation($request);
-                                    break;
-                                case '8': // Stredor DOOR
-                                    StredorBomCalculation($request);
-                                    break;
-
-                                default: // STAREBOARD AND ALL
-                                    BomCalculation($item);
-                                    break;
-                            }
+                            match ($configurableitems) {
+                                // VICAIMA DOOR
+                                '4' => BomCalculationVicaima($item),
+                                // Seadec DOOR
+                                '5' => BomCalculationSeadec($item),
+                                // Deanta DOOR
+                                '6' => BomCalculationDeanta($item),
+                                // Halspan DOOR
+                                '2' => HalspanBomCalculation($item),
+                                // Flamebreak DOOR
+                                '7' => FlamebreakBomCalculation($request),
+                                // Stredor DOOR
+                                '8' => StredorBomCalculation($request),
+                                // STAREBOARD AND ALL
+                                default => BomCalculation($item),
+                            };
 
                             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId', $aa->QuotationId)->where('DoorType', $DoorType)->get();
                             $Item = Item::where(['QuotationId' => $aa->QuotationId, 'DoorType' => $DoorType])->get()->first();
@@ -4299,7 +4283,7 @@ class DoorScheduleController extends Controller
         ini_set('memory_limit', '-1');
 
         if ($request->input('isStatus') == 11) {
-            $orderData = json_decode($request->input('orders'), true);
+            $orderData = json_decode((string) $request->input('orders'), true);
             $request->merge(['orders' => $orderData]);
         }
 
@@ -4977,7 +4961,7 @@ class DoorScheduleController extends Controller
             $vid = $QV->version;
         }
         
-        return Excel::download(new BomCalculationExport($quotationId,$versionID), "BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+        return Excel::download(new BomCalculationExport($quotationId,$versionID), "BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
     
     public function ExportSideScreen($quotationId,$versionID)
@@ -4989,7 +4973,7 @@ class DoorScheduleController extends Controller
             $vid = $QV->version;
         }
         
-        return Excel::download(new SideScreenExport($quotationId,$versionID), "SCREEN ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+        return Excel::download(new SideScreenExport($quotationId,$versionID), "SCREEN ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 
     public function ExportIronmongery($quotationId,$versionID)
@@ -5001,7 +4985,7 @@ class DoorScheduleController extends Controller
             $vid = $QV->version;
         }
         
-        return Excel::download(new IronmongeryExport($quotationId,$versionID), "Ironmongery ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+        return Excel::download(new IronmongeryExport($quotationId,$versionID), "Ironmongery ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 
     // Export in Vicama excel
@@ -7712,7 +7696,7 @@ class DoorScheduleController extends Controller
         $id = '';
         $site_contact = '';
         if (!empty($contact)) {
-            $id = explode(',', $contact->Contact);
+            $id = explode(',', (string) $contact->Contact);
             $site_contact = CustomerContact::where('id', $id[0])->first();
         }
 
@@ -7782,7 +7766,7 @@ class DoorScheduleController extends Controller
         $leafType = IntumescentSealLeafType::where('id', $leafTypeId)->first();
         if ($leafType && $leafType->fireratingid) {
             // Convert the comma-separated string of fire rating IDs to an array
-            $fireRatingIds = explode(',', $leafType->fireratingid);
+            $fireRatingIds = explode(',', (string) $leafType->fireratingid);
 
             // Fetch the corresponding fire ratings from the options table
             $fireRatings = Option::whereIn('id', $fireRatingIds)
@@ -7804,6 +7788,6 @@ class DoorScheduleController extends Controller
             $vid = $QV->version;
         }
         
-        return Excel::download(new BomDoorTypeExport($quotationId,$versionID), "DoorTypeBOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+        return Excel::download(new BomDoorTypeExport($quotationId,$versionID), "DoorTypeBOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 }

@@ -20,26 +20,21 @@ use Auth;
 
 class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColumnFormatting
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    protected $id;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $vid;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $result;
-
-    public function __construct($id,$vid,$result) {
-        $this->id = $id;
-        $this->vid = $vid;
-        $this->result = $result;
-
+    public function __construct(
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $id,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $vid,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $result
+    )
+    {
     }
 
     public function collection()
@@ -50,7 +45,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
 
         foreach($this->result['data'] as $value){
             if($value->Category=='Ironmongery&MachiningCosts'){
-                $words = explode("|", $value->Description);
+                $words = explode("|", (string) $value->Description);
                 $words1 = $words[1] ?? "";
                 $words2 = $words[2] ?? "";
                 $words3 = $words[3] ?? "";

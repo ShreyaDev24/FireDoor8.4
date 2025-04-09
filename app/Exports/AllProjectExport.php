@@ -15,7 +15,7 @@ class AllProjectExport implements FromCollection,WithHeadings,WithMapping
     /**
     * @return \Illuminate\Support\Collection
     */
-    private $rowNumber = 1;
+    private int $rowNumber = 1;
 
     public function collection()
     {
@@ -56,7 +56,7 @@ class AllProjectExport implements FromCollection,WithHeadings,WithMapping
            $this->rowNumber++,
            $projectList->ProjectName,
            $custCompanyName->CstCompanyName ?? '',
-           ucwords($projectList->BuildingType),
+           ucwords((string) $projectList->BuildingType),
            $projectFilesCount,
            $projectList->quotesCount,
            $projectList->ordersCount,

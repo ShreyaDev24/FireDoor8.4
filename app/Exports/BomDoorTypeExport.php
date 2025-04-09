@@ -10,17 +10,12 @@ use App\Models\ItemMaster;
 class BomDoorTypeExport implements WithMultipleSheets
 {
     use Exportable;
-    protected $id;
-
-    protected $vid;
 
     protected $result;
 
     protected $ironmongery_info;
 
-    public function __construct($id,$vid) {
-        $this->id = $id;
-        $this->vid = $vid;
+    public function __construct(protected $id,protected $vid) {
         // $this->result = BOMCAlculationExport($id,$vid);
     }
 

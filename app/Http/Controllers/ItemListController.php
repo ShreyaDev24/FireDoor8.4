@@ -974,30 +974,22 @@ class ItemListController extends Controller
         if(Auth::user()->UserType != 4){
             $pageType = $request->pageIdentity;
 
-            switch ($pageType) {
-                case '4': // VICAIMA DOOR
-                    BomCalculationVicaima($request);
-                    break;
-                case '5': // Seadec DOOR
-                    BomCalculationSeadec($request);
-                    break;
-                case '6': // Deanta DOOR
-                    BomCalculationDeanta($request);
-                    break;
-                case '2': // Halspan DOOR
-                    HalspanBomCalculation($request);
-                    break;
-                case '7': // Flamebreak DOOR
-                    FlamebreakBomCalculation($request);
-                    break;
-                case '8': // Stredor DOOR
-                    StredorBomCalculation($request);
-                    break;
-
-                default: // STAREBOARD AND ALL
-                    BomCalculation($request);
-                    break;
-            }
+            match ($pageType) {
+                // VICAIMA DOOR
+                '4' => BomCalculationVicaima($request),
+                // Seadec DOOR
+                '5' => BomCalculationSeadec($request),
+                // Deanta DOOR
+                '6' => BomCalculationDeanta($request),
+                // Halspan DOOR
+                '2' => HalspanBomCalculation($request),
+                // Flamebreak DOOR
+                '7' => FlamebreakBomCalculation($request),
+                // Stredor DOOR
+                '8' => StredorBomCalculation($request),
+                // STAREBOARD AND ALL
+                default => BomCalculation($request),
+            };
         }
 
 

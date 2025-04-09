@@ -14,17 +14,8 @@ use App\Models\Quotation;
 
 class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatting,WithColumnWidths
 {
-    protected $sections;
-    
-    protected $DoorType;
-    
-    protected $QId;
-
-    public function __construct($sections,$DoorType,$QId)
+    public function __construct(protected $sections, protected $DoorType, protected $QId)
     {
-        $this->sections = $sections;
-        $this->DoorType = $DoorType;
-        $this->QId = $QId;
     }
 
     /**

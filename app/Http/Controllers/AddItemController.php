@@ -47,7 +47,7 @@ class AddItemController extends Controller
     public function SaveItem(Request $request)
     {   //return($_POST['data']);exit;
 
-        $dataarray = json_decode($_POST['data']);
+        $dataarray = json_decode((string) $_POST['data']);
         $dataitem=[];
         $dataitem['StatusCode']=0;
         $dataitem['ItemId'] = null;

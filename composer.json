@@ -5,45 +5,43 @@
     "keywords": ["framework", "laravel"],
     "license": "MIT",
     "require": {
-        "php": "^7.3|^8.0",
-        "barryvdh/laravel-dompdf": "^0.9.0",
+        "php": "^8.1",
+        "barryvdh/laravel-dompdf": "^2.0",
         "clegginabox/pdf-merger": "dev-master",
         "daltcore/lara-pdf-merger": "^2.0",
-        "fruitcake/laravel-cors": "^2.0",
         "grofgraf/laravel-pdf-merger": "^1.0",
         "guzzlehttp/guzzle": "^7.0.1",
-        "laravel/framework": "^8.65",
-        "laravel/sanctum": "^2.11",
+        "laravel/framework": "^10.0",
+        "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.3",
+        "laravel/ui": "^4.6",
         "maatwebsite/excel": "^3.1",
         "setasign/fpdi-tcpdf": "^2.3",
         "spatie/pdf-to-image": "^1.2",
         "tecnickcom/tcpdf": "^6.7"
     },
     "require-dev": {
-        "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^5.10",
+        "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^9.5.10",
         "rector/rector": "^2.0"
     },
     "autoload": {
-        "files": [
-            "app/helpers/common_helper.php",
-            "app/helpers/project_helper.php",
-            "app/helpers/printInvoice_helper.php"
-        ],
-        "classmap": [
-            "vendor/spatie"
-        ],
         "psr-4": {
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "classmap": [
+            "vendor/spatie"
+        ],
+        "files": [
+            "app/helpers/common_helper.php",
+            "app/helpers/project_helper.php",
+            "app/helpers/printInvoice_helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -75,6 +73,6 @@
         "preferred-install": "dist",
         "sort-packages": true
     },
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "prefer-stable": true
 }

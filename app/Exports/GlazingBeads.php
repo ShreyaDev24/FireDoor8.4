@@ -21,25 +21,21 @@ use Auth;
 
 class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColumnFormatting
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    protected $id;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $vid;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $result;
-
-    public function __construct($id,$vid,$result) {
-        $this->id = $id;
-        $this->vid = $vid;
-        $this->result = $result;
+    public function __construct(
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $id,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $vid,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $result
+    )
+    {
     }
 
     public function collection()
@@ -53,7 +49,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
             if($value->Category=='GlazingBeads'){
                 $total += $value->TotalCost;
                 $GTSell += $value->GTSellPrice;
-                $words = explode("|", $value->Description);
+                $words = explode("|", (string) $value->Description);
                 $doortype = $words[0] ?? "";
                 $words1 = $words[1] ?? "";
                 $words2 = $words[2] ?? "";

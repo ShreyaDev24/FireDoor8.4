@@ -22,18 +22,12 @@ class BomCalculationExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $id;
-
-    protected $vid;
-
-    protected $result;
+    protected array $result;
 
     protected $ironmongery_info;
 
-    public function __construct($id,$vid) {
-        $this->id = $id;
-        $this->vid = $vid;
-        $this->result = BOMCAlculationExport($id,$vid);
+    public function __construct(protected $id,protected $vid) {
+        $this->result = BOMCAlculationExport($this->id,$this->vid);
     }
 
     /**

@@ -110,7 +110,7 @@ class ProjectController2 extends Controller
     }
 
 
-    public function getProjectList(Request $request)
+    public function getProjectList(Request $request): array
     {
 
   //dd($request->all());
@@ -222,7 +222,7 @@ class ProjectController2 extends Controller
                 $operator = $dateFilter[1];
                 $dateValue = $dateFilter[2];
 
-                if (!empty($dateValue) && strtotime($dateValue)) {
+                if (!empty($dateValue) && strtotime((string) $dateValue)) {
                     if ($dateValue == $todays) {
                         $query->whereDate('project.created_at', $todays);
                     } else {
@@ -265,7 +265,7 @@ class ProjectController2 extends Controller
                     $dateValue = $dateFilter[2];
 
                     // Apply date filter only if a valid date exists
-                    if (!empty($dateValue) && strtotime($dateValue)) {
+                    if (!empty($dateValue) && strtotime((string) $dateValue)) {
                         if ($dateValue == $todays) {
                             $query->whereDate('project.created_at', $todays);
                         } else {
@@ -377,7 +377,7 @@ class ProjectController2 extends Controller
                 <td>'.$sn.'</td>
                 <td>'.$projectname.'</td>
                 <td>'.$CompanyName.'</td>
-                <td>'.ucwords($BuildingType).'</td>
+                <td>'.ucwords((string) $BuildingType).'</td>
                 <td>'.$projectFilesCount.'</td>
                 <td>'.$quotesCount.'</td>
                 <td>'.$ordersCount.'</td>
@@ -488,9 +488,9 @@ $sn++;
 
                         <div class="QuotationListData">
                             <b>Building Type</b>
-                            <span>'.ucwords($BuildingType).'</span>
+                            <span>'.ucwords((string) $BuildingType).'</span>
                             <b>Project Name</b>
-                            <span>'.ucwords($val->ProjectName).'</span>
+                            <span>'.ucwords((string) $val->ProjectName).'</span>
                             <b>Files</b>
                             <span>'.$projectFilesCount.'</span>
                             <b>Quotes</b>
@@ -660,7 +660,7 @@ $sn++;
             
             return redirect()->back()->with('error', 'Failed Invitation not sent. Please retry! ');
 
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return redirect()->back()->with('error', 'Server error, Invitation not sent. Please contact admin! ');
         }
     }
@@ -720,7 +720,7 @@ $sn++;
     }
 
 
-    public function invitation_records(Request $request)
+    public function invitation_records(Request $request): array
     {
         $from = $request->from;
         $limit = $request->limit;
@@ -826,7 +826,7 @@ $sn++;
                         <div class="QuotationStatusNumber">'.$Currency.'</div>
                         <div class="QuotationListData">
                             <b>Project Name</b>
-                            <span>'.ucwords($val->ProjectName).'</span>
+                            <span>'.ucwords((string) $val->ProjectName).'</span>
                             <b>Files</b>
                             <span>'.$projectFilesCount.'</span>
                             <b>Quotes</b>
@@ -917,7 +917,7 @@ $sn++;
 
             ProjectInvitation::where('id', $projectId)->update($data);
             return redirect()->back()->with('success', sprintf('Invitation %s successfully! ', $choice));
-        } catch (Exception $exception) {
+        } catch (Exception) {
             return redirect()->back()->with('error', 'Server error, while updating invitation status. Please contact admin! ');
         }
     }
@@ -1289,7 +1289,7 @@ $sn++;
                 <tbody>';
                 $row = 1;
                 foreach($SurveyTasks as $ccs){
-                    $length = strlen($ccs->tasks);
+                    $length = strlen((string) $ccs->tasks);
                     $btn = '';
                     if($length >=  260){
                         $btn = '<button class="more_less">show more..</button>';
@@ -1326,11 +1326,11 @@ $sn++;
                 foreach($survey_user_info as $info){
                     $min_date = date('Y-m-d\TH:i');
                     if(isset($info->fromTime) && !empty($info->fromTime)){
-                        $info->fromTime = date('Y-m-d\TH:i', strtotime($info->fromTime));
+                        $info->fromTime = date('Y-m-d\TH:i', strtotime((string) $info->fromTime));
                     }
                     
                     if(isset($info->toTime) && !empty($info->toTime)){
-                        $info->toTime = date('Y-m-d\TH:i', strtotime($info->toTime));
+                        $info->toTime = date('Y-m-d\TH:i', strtotime((string) $info->toTime));
                     }
                     
                     $survey_info_table .=
@@ -2451,7 +2451,7 @@ $sn++;
 
 
 
-    public function getAssignedProjects(Request $request)
+    public function getAssignedProjects(Request $request): array
     {
 
 
@@ -2592,7 +2592,7 @@ $sn++;
                         <div class="QuotationStatusNumber">'.$Currency.'</div>
                         <div class="QuotationListData">
                             <b>Project Name</b>
-                            <span>'.ucwords($val->ProjectName).'</span>
+                            <span>'.ucwords((string) $val->ProjectName).'</span>
                             <b>Files</b>
                             <span>'.$projectFilesCount.'</span>
                             <b>Quotes</b>

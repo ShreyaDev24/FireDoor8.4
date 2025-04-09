@@ -20,25 +20,21 @@ use Auth;
 
 class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    protected $id;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $vid;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $result;
-
-    public function __construct($id,$vid,$result) {
-        $this->id = $id;
-        $this->vid = $vid;
-        $this->result = $result;
+    public function __construct(
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $id,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $vid,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $result
+    )
+    {
     }
 
     public function collection()

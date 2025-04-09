@@ -1464,23 +1464,12 @@ class OptionController extends Controller
                 // count option tbl for GlassType
                 $countOption = Option::where(['configurableitems' => $pageId, 'OptionSlug' => $optionType, 'options.is_deleted' => 0])->count();
 
-                switch ($optionType) {
-                    case 'leaf1_glass_type':
-                        $optionSelectedTag = "glasstype";
-                        break;
-
-                    case 'leaf1_glass_thickness':
-                        $optionSelectedTag = "glasstypethickness";
-                        break;
-
-                    case 'door_leaf_facing_value':
-                        $optionSelectedTag = "doorleaffacingvalue";
-                        break;
-
-                    default:
-                        $optionSelectedTag = $optionType;
-                        break;
-                }
+                $optionSelectedTag = match ($optionType) {
+                    'leaf1_glass_type' => "glasstype",
+                    'leaf1_glass_thickness' => "glasstypethickness",
+                    'door_leaf_facing_value' => "doorleaffacingvalue",
+                    default => $optionType,
+                };
 
                 // count SelectedOption tbl for GlassType
                 $countSelectedOption = SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $authdata->id, 'tag' => $optionSelectedTag])->count();
@@ -1779,23 +1768,12 @@ class OptionController extends Controller
         if (!empty($keys) && count($keys)) {
 
             $optionKey = $className;
-            switch ($className) {
-                case 'leaf1_glass_type':
-                    $className = "leaf1_glass_type";
-                    break;
-
-                case 'leaf1_glass_thickness':
-                    $className = "glasstypethickness";
-                    break;
-
-                case 'door_dimension':
-                    $className = "doordimension";
-                    break;
-
-                default:
-                    $className = $className;
-                    break;
-            }
+            $className = match ($className) {
+                'leaf1_glass_type' => "leaf1_glass_type",
+                'leaf1_glass_thickness' => "glasstypethickness",
+                'door_dimension' => "doordimension",
+                default => $className,
+            };
 
             switch ($className) {
                 case 'doordimension':
@@ -2385,15 +2363,10 @@ class OptionController extends Controller
         $UserId = Auth::user()->id;
         if (!empty($keys) && count($keys)) {
             $optionKey = $className;
-            switch ($className) {
-                case 'door_dimension_custome':
-                    $className = "door_dimension_custome";
-                    break;
-
-                default:
-                    $className = $className;
-                    break;
-            }
+            $className = match ($className) {
+                'door_dimension_custome' => "door_dimension_custome",
+                default => $className,
+            };
             
             switch ($className) {
                 case 'door_dimension_custome':
@@ -2761,7 +2734,7 @@ class OptionController extends Controller
 
                 if ($selectedOption) {
                     // Decode existing costs as an array (ensure it’s stored in JSON in the DB)
-                    $costs = $selectedOption->custome_door_selected_cost ? json_decode($selectedOption->custome_door_selected_cost, true) : [];
+                    $costs = $selectedOption->custome_door_selected_cost ? json_decode((string) $selectedOption->custome_door_selected_cost, true) : [];
 
                     // Update the specific leafid's price in the costs array
                     $costs[$request->leafid] = $request->price[$request->leafid];
@@ -2983,9 +2956,9 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $glasstype = trim($row[$j++]);
-                $glazing = trim($row[$j++]);
-                $vpareasize = trim($row[$j++]);
+                $glasstype = trim((string) $row[$j++]);
+                $glazing = trim((string) $row[$j++]);
+                $vpareasize = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
                     $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('Flamebreak',7)->first();
                     $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('Flamebreak',7)->first();
@@ -3022,13 +2995,13 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $glasstype = trim($row[$j++]);
-                $thickness = trim($row[$j++]);
-                $integrity = trim($row[$j++]);
-                $vpareasize = trim($row[$j++]);
-                $configurable = trim($row[$j++]);
-                $FireRating = trim($row[$j++]);
-                $glazingBead = trim($row[$j++]);
+                $glasstype = trim((string) $row[$j++]);
+                $thickness = trim((string) $row[$j++]);
+                $integrity = trim((string) $row[$j++]);
+                $vpareasize = trim((string) $row[$j++]);
+                $configurable = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
+                $glazingBead = trim((string) $row[$j++]);
 
                 $implode = json_encode(explode(',',$glazingBead));
 
@@ -3093,11 +3066,11 @@ class OptionController extends Controller
 
 
                 $j = 0;
-                $glazing = trim($row[$j++]);
-                $thickness = trim($row[$j++]);
-                $fixingDetails = trim($row[$j++]);
-                $FireRating = trim($row[$j++]);
-                $configurable = trim($row[$j++]);
+                $glazing = trim((string) $row[$j++]);
+                $thickness = trim((string) $row[$j++]);
+                $fixingDetails = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
+                $configurable = trim((string) $row[$j++]);
 
                 $key = str_replace(' ', '_', $glazing);
 
@@ -3158,19 +3131,19 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $DoorType = trim($row[$j++]);
-                $FireRating = trim($row[$j++]);
-                $Configuration = trim($row[$j++]);
-                $intumescentSeals = trim($row[$j++]);
-                $brand = trim($row[$j++]);
-                $firetested = trim($row[$j++]);
-                $Point1height = trim($row[$j++]);
-                $Point2height = trim($row[$j++]);
-                $Point1width = trim($row[$j++]);
-                $Point2width = trim($row[$j++]);
-                $MeetingEdges = trim($row[$j++]);
-                $leaftype1 = trim($row[$j++]);
-                $leaftype2 = trim($row[$j++]);
+                $DoorType = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
+                $Configuration = trim((string) $row[$j++]);
+                $intumescentSeals = trim((string) $row[$j++]);
+                $brand = trim((string) $row[$j++]);
+                $firetested = trim((string) $row[$j++]);
+                $Point1height = trim((string) $row[$j++]);
+                $Point2height = trim((string) $row[$j++]);
+                $Point1width = trim((string) $row[$j++]);
+                $Point2width = trim((string) $row[$j++]);
+                $MeetingEdges = trim((string) $row[$j++]);
+                $leaftype1 = trim((string) $row[$j++]);
+                $leaftype2 = trim((string) $row[$j++]);
 
                 $doorConfiguration = "";
                 if(strcasecmp($DoorType,"Streboard") == 0){
@@ -3290,23 +3263,23 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $GlassType = trim($row[$j++]);
-                $GlassThickness = trim($row[$j++]);
-                $Integrity = trim($row[$j++]);
-                $DoorType = trim($row[$j++]);
-                $FireRating = trim($row[$j++]);
-                $FLWidth = trim($row[$j++]);
-                $FLHeight = trim($row[$j++]);
-                $SSWidth = trim($row[$j++]);
-                $SSheight = trim($row[$j++]);
-                $TransomThickness = trim($row[$j++]);
-                $TransomDepth = trim($row[$j++]);
-                $GlazingSystem = trim($row[$j++]);
-                $GlazingThickness = trim($row[$j++]);
-                $Beading = trim($row[$j++]);
-                $BeadingHeight = trim($row[$j++]);
-                $BeadingWidth = trim($row[$j++]);
-                $FixingDetails = trim($row[$j++]);
+                $GlassType = trim((string) $row[$j++]);
+                $GlassThickness = trim((string) $row[$j++]);
+                $Integrity = trim((string) $row[$j++]);
+                $DoorType = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
+                $FLWidth = trim((string) $row[$j++]);
+                $FLHeight = trim((string) $row[$j++]);
+                $SSWidth = trim((string) $row[$j++]);
+                $SSheight = trim((string) $row[$j++]);
+                $TransomThickness = trim((string) $row[$j++]);
+                $TransomDepth = trim((string) $row[$j++]);
+                $GlazingSystem = trim((string) $row[$j++]);
+                $GlazingThickness = trim((string) $row[$j++]);
+                $Beading = trim((string) $row[$j++]);
+                $BeadingHeight = trim((string) $row[$j++]);
+                $BeadingWidth = trim((string) $row[$j++]);
+                $FixingDetails = trim((string) $row[$j++]);
 
                 $a = new OverpanelGlassGlazing;
                 $a->created_at = date('Y-m-d H:i:s');
@@ -3377,23 +3350,23 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $FireRating = trim($row[$j++]);
-                $db = trim($row[$j++]);
-                $glasstype = trim($row[$j++]);
-                $height1 = trim($row[$j++]);
-                $height2 = trim($row[$j++]);
-                $width1 = trim($row[$j++]);
-                $width2 = trim($row[$j++]);
-                $thickness = trim($row[$j++]);
-                $depth = trim($row[$j++]);
-                $area = trim($row[$j++]);
-                $glazing = trim($row[$j++]);
-                $glazingThickness = trim($row[$j++]);
-                $density = trim($row[$j++]);
-                $beading = trim($row[$j++]);
-                $beadingH = trim($row[$j++]);
-                $beadingW = trim($row[$j++]);
-                $fixing = trim($row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
+                $db = trim((string) $row[$j++]);
+                $glasstype = trim((string) $row[$j++]);
+                $height1 = trim((string) $row[$j++]);
+                $height2 = trim((string) $row[$j++]);
+                $width1 = trim((string) $row[$j++]);
+                $width2 = trim((string) $row[$j++]);
+                $thickness = trim((string) $row[$j++]);
+                $depth = trim((string) $row[$j++]);
+                $area = trim((string) $row[$j++]);
+                $glazing = trim((string) $row[$j++]);
+                $glazingThickness = trim((string) $row[$j++]);
+                $density = trim((string) $row[$j++]);
+                $beading = trim((string) $row[$j++]);
+                $beadingH = trim((string) $row[$j++]);
+                $beadingW = trim((string) $row[$j++]);
+                $fixing = trim((string) $row[$j++]);
 
                 $a = new ScreenGlassType;
                 $a->FireRating = $FireRating;

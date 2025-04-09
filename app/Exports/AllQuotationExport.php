@@ -12,7 +12,7 @@ class AllQuotationExport implements FromCollection,WithHeadings,WithMapping
     * @return \Illuminate\Support\Collection
     */
 
-    private $rowNumber = 1;
+    private int $rowNumber = 1;
 
     public function collection()
     {

@@ -461,16 +461,16 @@ class IronmongeryInfo extends Controller
             }
             
             $j = 0;
-            $sno = trim($row[$j++]);
-            $id = trim($row[$j++]);
-            $FireRating = trim($row[$j++]);
-            $Category = trim($row[$j++]);
-            $Name = trim($row[$j++]);
-            $Code = trim($row[$j++]);
+            $sno = trim((string) $row[$j++]);
+            $id = trim((string) $row[$j++]);
+            $FireRating = trim((string) $row[$j++]);
+            $Category = trim((string) $row[$j++]);
+            $Name = trim((string) $row[$j++]);
+            $Code = trim((string) $row[$j++]);
             // $Dimensions = trim($row[$j++]);
-            $Description = trim($row[$j++]);
-            $Supplier = trim($row[$j++]);
-            $Price = trim($row[$j++]);
+            $Description = trim((string) $row[$j++]);
+            $Supplier = trim((string) $row[$j++]);
+            $Price = trim((string) $row[$j++]);
             $i++;
 
             $ironmongeryData = IronmongeryInfoModel::where(['id' => $id,'FireRating' => $FireRating,'Category' => $Category,'Name' => $Name,'Code' => $Code,'UserId' => Auth::user()->id])->get()->first();
@@ -537,7 +537,7 @@ class IronmongeryInfo extends Controller
         // );
 
         if(isset($IronmongeryInfo->CategoryFieldsJSON)){
-            $categoryFieldsArray = json_decode($IronmongeryInfo->CategoryFieldsJSON);
+            $categoryFieldsArray = json_decode((string) $IronmongeryInfo->CategoryFieldsJSON);
         }
 
 

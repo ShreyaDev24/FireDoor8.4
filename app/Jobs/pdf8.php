@@ -20,19 +20,14 @@ class pdf8 implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    public  $quatationId;
-
-    public  $versionID;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($quatationId, $versionID)
+    public function __construct(public $quatationId, public $versionID)
     {
-        $this->quatationId = $quatationId;
-        $this->versionID = $versionID;
     }
 
     /**
@@ -112,7 +107,7 @@ class pdf8 implements ShouldQueue
             }
 
             if (!empty($tt->SvgImage)) {
-                $svgFileS = strpos($tt->SvgImage, '.png') !== false ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
+                $svgFileS = str_contains((string) $tt->SvgImage, '.png') ? URL('/') . '/uploads/files/' . $tt->SvgImage : $tt->SvgImage;
             } else {
                 $svgFileS = URL('/') . '/uploads/files/no_image_prod.jpg';
             }

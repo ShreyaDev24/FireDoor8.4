@@ -18,19 +18,17 @@ use Auth;
 
 class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    protected $id;
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    protected $vid;
-
-    public function __construct($id,$vid) {
-        $this->id = $id;
-        $this->vid = $vid;
+    public function __construct(
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $id,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $vid
+    )
+    {
     }
 
     public function collection()

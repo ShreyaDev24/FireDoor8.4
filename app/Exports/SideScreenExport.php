@@ -22,18 +22,12 @@ class SideScreenExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $id;
-
-    protected $vid;
-
     protected $result;
 
     protected $ironmongery_info;
 
-    public function __construct($id,$vid) {
-        $this->id = $id;
-        $this->vid = $vid;
-        $this->result = ExportSideScreen($id,$vid);
+    public function __construct(protected $id,protected $vid) {
+        $this->result = ExportSideScreen($this->id,$this->vid);
     }
 
     /**

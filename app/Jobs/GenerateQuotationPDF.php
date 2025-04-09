@@ -21,20 +21,14 @@ class GenerateQuotationPDF implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    public  $quatationId;
-
-    public  $versionID;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct( $quatationId, $versionID)
+    public function __construct(public $quatationId, public $versionID)
     {
-        // $this->id = $id;
-        $this->quatationId = $quatationId;
-        $this->versionID = $versionID;
     }
 
     /**

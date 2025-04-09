@@ -19,19 +19,14 @@ class pdf1 implements ShouldQueue
     use InteractsWithQueue;
     use Queueable;
     use SerializesModels;
-    public  $quatationId;
-
-    public  $versionID;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($quatationId, $versionID)
+    public function __construct(public $quatationId, public $versionID)
     {
-        $this->quatationId = $quatationId;
-        $this->versionID = $versionID;
     }
 
     /**
@@ -89,7 +84,7 @@ class pdf1 implements ShouldQueue
 
         $quotaion_contact_info = QuotationContactInformation::where('QuotationId',$quatationId)->first();
         if($quotaion_contact_info->Contact){
-            $contactid = explode(',',$quotaion_contact_info->Contact);
+            $contactid = explode(',',(string) $quotaion_contact_info->Contact);
             $contact_persion = CustomerContact::where('id',$contactid[0])->first();
             $contactfirstandlastname = $contact_persion->FirstName . ' ' . $contact_persion->LastName;
         }

@@ -177,7 +177,7 @@ if(!function_exists('markAsRead')){
 
         switch ($module) {
             case 'project':
-                $checkReadBy = explode(',', Project::where('GeneratedKey', $id)->value('read_by'));
+                $checkReadBy = explode(',', (string) Project::where('GeneratedKey', $id)->value('read_by'));
                 if (!in_array(auth()->user()->id, $checkReadBy)) {
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Project::where('GeneratedKey', $id)->update(['read_by' => implode(',', $checkReadBy)]);
@@ -186,13 +186,13 @@ if(!function_exists('markAsRead')){
                 break;
 
             case 'quote':
-                $checkReadBy = explode(',', Quotation::where('id', $id)->value('status_read_by'));
+                $checkReadBy = explode(',', (string) Quotation::where('id', $id)->value('status_read_by'));
                 if (!in_array(auth()->user()->id, $checkReadBy)) {
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Quotation::where('id', $id)->update(['status_read_by' => implode(',', $checkReadBy)]);
                 }
 
-                $checkReadBy = explode(',', Quotation::where('id', $id)->value('read_by'));
+                $checkReadBy = explode(',', (string) Quotation::where('id', $id)->value('read_by'));
                 if (!in_array(auth()->user()->id, $checkReadBy)) {
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Quotation::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
@@ -200,7 +200,7 @@ if(!function_exists('markAsRead')){
                 
                 break;
             case 'contractor':
-                $checkReadBy = explode(',', Customer::where('id', $id)->value('read_by'));
+                $checkReadBy = explode(',', (string) Customer::where('id', $id)->value('read_by'));
                 if (!in_array(auth()->user()->id, $checkReadBy)) {
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Customer::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
@@ -208,7 +208,7 @@ if(!function_exists('markAsRead')){
                 
                 break;
             case 'user':
-                $checkReadBy = explode(',', User::where('id', $id)->value('read_by'));
+                $checkReadBy = explode(',', (string) User::where('id', $id)->value('read_by'));
                 if (!in_array(auth()->user()->id, $checkReadBy)) {
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = User::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
@@ -303,7 +303,7 @@ if(!function_exists('myCreatedUser')){
         if (!empty($lipping_width1)) {
             $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_width_1")->first();
             if($ConfigurableDoorFormula !== null){
-                $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                 $LippingThicknessAdditional = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
             }
 
@@ -313,7 +313,7 @@ if(!function_exists('myCreatedUser')){
         } elseif (!empty($lipping_width2)) {
             $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_width_2")->first();
             if($ConfigurableDoorFormula !== null){
-                $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                 $LippingThicknessAdditional = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
             }
 
@@ -323,7 +323,7 @@ if(!function_exists('myCreatedUser')){
         } elseif (!empty($lipping_height)) {
             $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_height")->first();
             if($ConfigurableDoorFormula !== null){
-                $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                 $LippingThicknessAdditional = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
             }
 
@@ -920,11 +920,11 @@ function DoorDescription($DoorsetType): string{
 }
 
 function dateFormate($datetime): string{
-    return date('d-m-Y H:i:s' ,strtotime($datetime));
+    return date('d-m-Y H:i:s' ,strtotime((string) $datetime));
 }
 
 function date2Formate($datetime): string{
-    return date('d-m-Y' ,strtotime($datetime));
+    return date('d-m-Y' ,strtotime((string) $datetime));
 }
 
 
@@ -1248,7 +1248,7 @@ function QuotationList(array $val): string{
     return $htmlData;
 }
 
-function orderQuotationList(array $val){
+function orderQuotationList(array $val): float|int{
     $QVID = $val['QVID'] != ""?$val['QVID']:0;
     $DoorsetPrice = 0;
     $Item = Item::join('item_master','item_master.itemID','=','items.itemId')->join('quotation','quotation.id','=','items.QuotationId')->
@@ -1380,8 +1380,8 @@ function IronmongerySetData($IronmongeryID): string{
 
         if(!empty($IronmongeryInfo->$valIronmongey)){
 
-            $Ironmongey = explode(',',$IronmongeryInfo->$valIronmongey);
-            $IronmongeyQty = explode(',',$IronmongeryInfo->$valIronmongeyQty);
+            $Ironmongey = explode(',',(string) $IronmongeryInfo->$valIronmongey);
+            $IronmongeyQty = explode(',',(string) $IronmongeryInfo->$valIronmongeyQty);
             $count = count($Ironmongey);
 
             for($j = 0; $j < $count; $j++){
@@ -2016,9 +2016,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }
 
                 if (!empty($where) && !empty($orwhere)) {
-                    $Options->where( function ($q) use($where, $orwhere) {
-                        return $q->where($where)->orWhere($orwhere);
-                    });
+                    $Options->where( fn($q) => $q->where($where)->orWhere($orwhere));
                 } elseif (!empty($where)) {
                     $Options->where($where);
                 }
@@ -2087,9 +2085,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                     }
 
                     if (!empty($where) && !empty($orwhere)) {
-                        $Options->where( function ($q) use($where, $orwhere) {
-                            return $q->where($where)->orWhere($orwhere);
-                        });
+                        $Options->where( fn($q) => $q->where($where)->orWhere($orwhere));
                     } elseif (!empty($where)) {
                         $Options->where($where);
                     }
@@ -2660,7 +2656,7 @@ function BomCalculation($request): void{
                     if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                         $minWidth1 = $door_core->selected_mm_width;
                         $minHeight1 = $door_core->selected_mm_height;
-                        $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                        $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
                         $intumescentLeafType = $request->intumescentLeafType;
                         // dd($pricesArray);
                         if (isset($pricesArray[$intumescentLeafType])) {
@@ -2675,7 +2671,7 @@ function BomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
                     $minWidth2 = $door_core->selected_mm_width;
                     $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType2 = $request->intumescentLeafType;
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
@@ -3045,7 +3041,7 @@ function StredorBomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1)) {
                     $minWidth1 = $door_core->selected_mm_width;
                     $minHeight1 = $door_core->selected_mm_height;
-                    $pricesArray = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType = $request->intumescentLeafType;
                     if (isset($pricesArray[$intumescentLeafType])) {
                         $minCost = $pricesArray[$intumescentLeafType];
@@ -3059,7 +3055,7 @@ function StredorBomCalculation($request): void{
                 if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
                     $minWidth2 = $door_core->selected_mm_width;
                     $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode($door_core->custome_door_selected_cost, true);
+                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
                     $intumescentLeafType2 = $request->intumescentLeafType;
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
@@ -3215,8 +3211,8 @@ function IronmongeryCostExport($request,$version_id): void{
 
             if(isset($IronmongeryInfo->$valIronmongey) && $IronmongeryInfo->$valIronmongey != "" && $IronmongeryInfo->$valIronmongey != null && !empty($IronmongeryInfo->$valIronmongey)){
 
-                $Ironmongey = explode(',',$IronmongeryInfo->$valIronmongey);
-                $IronmongeyQty = explode(',',$IronmongeryInfo->$valIronmongeyQty);
+                $Ironmongey = explode(',',(string) $IronmongeryInfo->$valIronmongey);
+                $IronmongeyQty = explode(',',(string) $IronmongeryInfo->$valIronmongeyQty);
                 $count = count($Ironmongey);
                 for($j = 0; $j < $count; $j++){
 
@@ -4675,8 +4671,8 @@ function MachiningCostExport($request): void{
 
             if(isset($IronmongeryInfo->$valIronmongey) && $IronmongeryInfo->$valIronmongey != "" && $IronmongeryInfo->$valIronmongey != null && !empty($IronmongeryInfo->$valIronmongey)){
 
-                $Ironmongey = explode(',',$IronmongeryInfo->$valIronmongey);
-                $IronmongeyQty = explode(',',$IronmongeryInfo->$valIronmongeyQty);
+                $Ironmongey = explode(',',(string) $IronmongeryInfo->$valIronmongey);
+                $IronmongeyQty = explode(',',(string) $IronmongeryInfo->$valIronmongeyQty);
                 $count = count($Ironmongey);
                 for($j = 0; $j < $count; $j++){
 
@@ -7001,7 +6997,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                         $selectedOption = SelectedDoorDimension::where([ 'doordimension_id' => $value->id, 'doordimension_user_id' => $authdata->id])->count();
                         // Fetch cost data from the new door_dimension_costs table
         // $costData = \App\Models\NewDoorDimensionPrice::where('selected_doordimension_id', $value->id)->first();
-        $costs = $value->custome_door_selected_cost ? json_decode($value->custome_door_selected_cost , true) : [];
+        $costs = $value->custome_door_selected_cost ? json_decode((string) $value->custome_door_selected_cost , true) : [];
         // dd($costs);
 
         // Display cost input fields based on the leaf types
@@ -7201,32 +7197,17 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
 }
 
 function doorcorename($doorCore): string{
-    switch ($doorCore) {
-        case 1:
-            $doorCoreValue = 'streboard';
-            break;
-        case 2:
-            $doorCoreValue = 'halspan';
-            break;
-        case 3:
-            $doorCoreValue = 'norma';
-            break;
-        case 4:
-            $doorCoreValue = 'vicaima';
-            break;
-        case 5:
-            $doorCoreValue = 'seadec';
-            break;
-        case 6:
-            $doorCoreValue = 'Deanta';
-            break;
-        case 7:
-            $doorCoreValue = 'Flamebreak';
-            break;
-        case 8:
-            $doorCoreValue = 'Stredor';
-            break;
-    }
+    $doorCoreValue = match ($doorCore) {
+        1 => 'streboard',
+        2 => 'halspan',
+        3 => 'norma',
+        4 => 'vicaima',
+        5 => 'seadec',
+        6 => 'Deanta',
+        7 => 'Flamebreak',
+        8 => 'Stredor',
+        default => $doorCoreValue,
+    };
     
     return $doorCoreValue;
 }
@@ -7245,7 +7226,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
 
      $settingsWithLeafTypes = $aa->map(function ($a) {
         // Convert the comma-separated string to an array
-        $leafTypeIds = explode(',', $a->customeleafTypes);
+        $leafTypeIds = explode(',', (string) $a->customeleafTypes);
 
         // Fetch the corresponding leaf types from intumescent_seal_leaf_type
         $leafTypes = DB::table('intumescent_seal_leaf_type')
@@ -7410,7 +7391,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
 
      $settingsWithLeafTypes = $aa->map(function ($a) {
         // Convert the comma-separated string to an array
-        $leafTypeIds = explode(',', $a->customeleafTypes);
+        $leafTypeIds = explode(',', (string) $a->customeleafTypes);
 
         // Fetch the corresponding leaf types from intumescent_seal_leaf_type
         $leafTypes = DB::table('intumescent_seal_leaf_type')

@@ -26,7 +26,7 @@ class IronmongeryExport implements WithMultipleSheets
 
     protected $vid;
 
-    protected $result;
+    protected array $result;
 
     public function __construct($id,$vid) {
         $this->result = BOMCAlculationExport($id,$vid);

@@ -238,7 +238,7 @@ class CustomerController extends Controller
                 $editdata = Customer::where('customers.id',$id)->first();
 
                 if(!empty( $editdata) && (array)$editdata !== []){
-                    $DDvalue=explode(",",$editdata->CstCertification);
+                    $DDvalue=explode(",",(string) $editdata->CstCertification);
 
                     json_encode(in_array("LEED", $DDvalue));
 

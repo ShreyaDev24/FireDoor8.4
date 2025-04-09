@@ -146,7 +146,7 @@ class BOMController extends Controller
 
                     $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_width_1")->first();
                     if($ConfigurableDoorFormula !== null){
-                        $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                        $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                         $LippingThicknessAdditionalForWidth1 = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
                     }
 
@@ -159,7 +159,7 @@ class BOMController extends Controller
 
                     $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_width_2")->first();
                     if($ConfigurableDoorFormula !== null){
-                        $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                        $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                         $LippingThicknessAdditionalForWidth2 = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
                     }
 
@@ -172,7 +172,7 @@ class BOMController extends Controller
 
                     $ConfigurableDoorFormula = ConfigurableDoorFormula::where('slug',"core_height")->first();
                     if($ConfigurableDoorFormula !== null){
-                        $ConfigurableDoorFormulaDecoded = json_decode($ConfigurableDoorFormula->value,true);
+                        $ConfigurableDoorFormulaDecoded = json_decode((string) $ConfigurableDoorFormula->value,true);
                         $LippingThicknessAdditionalForHeight = $ConfigurableDoorFormulaDecoded["lipping_thickness"];
                     }
 
@@ -1264,7 +1264,7 @@ class BOMController extends Controller
         $pdf = PDF::loadView('DoorSchedule.BOM.BOM_pdf',['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'laborCost' => $laborCost, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum]);
 
 
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
     
     public function ScreenBomCalculation($id,string $vid,$version){
@@ -1296,7 +1296,7 @@ class BOMController extends Controller
         $pdf = PDF::loadView('DoorSchedule.ScreenBOM.Screen_BOM_pdf',['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum, 'TotalCostSum' => $TotalCostSum]);
 
 
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function DoorOrderSheet($id,string $vid,$version){
@@ -1313,7 +1313,7 @@ class BOMController extends Controller
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
 
         $pdf = PDF::loadView('DoorSchedule.DoorOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function FrameTransoms($id,string $vid,$version){
@@ -1338,7 +1338,7 @@ class BOMController extends Controller
         $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
 
         $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint]);
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function GlassOrderSheet($id,string $vid,$version){
@@ -1355,7 +1355,7 @@ class BOMController extends Controller
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
 
         $pdf = PDF::loadView('DoorSchedule.GlassOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function GlazingBeadsDoors($id,string $vid,$version){
@@ -1372,7 +1372,7 @@ class BOMController extends Controller
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
 
         $pdf = PDF::loadView('DoorSchedule.GlazingBeadsDoors',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
-        return $pdf->download("BOM ".trim($quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function QualityControlPrint($quatationId, string $versionID): void{
@@ -1425,7 +1425,7 @@ class BOMController extends Controller
 
         $quotaion_contact_info = QuotationContactInformation::where('QuotationId',$quatationId)->first();
         if($quotaion_contact_info->Contact){
-            $contactid = explode(',',$quotaion_contact_info->Contact);
+            $contactid = explode(',',(string) $quotaion_contact_info->Contact);
             $contact_persion = CustomerContact::where('id',$contactid[0])->first();
             $contactfirstandlastname = $contact_persion->FirstName . ' ' . $contact_persion->LastName;
         }
@@ -1538,7 +1538,7 @@ class BOMController extends Controller
 
     foreach ($data as $value) {
         if ($value->Category == 'Frame') {
-            $words = explode("|", $value->Description);
+            $words = explode("|", (string) $value->Description);
             $PageBreakCount++;
             $elevTbl .= '<tr>
                 <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
@@ -1650,7 +1650,7 @@ class BOMController extends Controller
 
                 foreach ($data as $value) {
                     if ($value->Category == 'GlazingBeads') {
-                        $words = explode("|", $value->Description);
+                        $words = explode("|", (string) $value->Description);
                         $PageBreakCount++;
                         $glazingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
@@ -1796,7 +1796,7 @@ class BOMController extends Controller
                 foreach ($data as $value) {
                     if ($value->Category == 'LeafSetBesPoke') {
 
-                        $words = explode("|", $value->Description);
+                        $words = explode("|", (string) $value->Description);
                         // dd($words);
                         $PageBreakCount++;
                         if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5){
@@ -1938,7 +1938,7 @@ class BOMController extends Controller
 
                 foreach ($data as $value) {
                     if ($value->Category == 'Glass') {
-                        $words = explode("|", $value->Description);
+                        $words = explode("|", (string) $value->Description);
                         $PageBreakCount++;
                         $glassTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' .$i++. '</td>
@@ -1995,7 +1995,7 @@ class BOMController extends Controller
                                 <tbody>';
                                     foreach ($data as $value) {
                                         if ($value->Category == 'Frame') {
-                                            $parts = explode("|", $value->Description);
+                                            $parts = explode("|", (string) $value->Description);
                                             $frameLocation = trim($parts[1]);
         $summaryTbl .=                      '<tr>
                                                 <td style="border: 1px solid black; padding: 5px;">' . $value->QuantityOfDoorTypes . '</td>
@@ -2027,7 +2027,7 @@ class BOMController extends Controller
                                 <tbody>';
                                     foreach ($data as $value) {
                                         if ($value->Category == 'LeafSetBesPoke') {
-                                            $parts = explode("|", $value->Description);
+                                            $parts = explode("|", (string) $value->Description);
                                             $doorCore = trim($parts[1]); // Door Core (e.g., Halspan)
                                             if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5){
                                                 $leafType =  $value->LeafConstruction;;
@@ -2066,7 +2066,7 @@ class BOMController extends Controller
                                 <tbody>';
                                     foreach ($data as $value) {
                                         if ($value->Category == 'Glass') {
-                                            $parts = explode('|', $value->Description);
+                                            $parts = explode('|', (string) $value->Description);
                                             if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
                                                 $wdth = 5;
                                             }elseif($value->FireRating == 'FD60s' || $value->FireRating == 'FD60'){

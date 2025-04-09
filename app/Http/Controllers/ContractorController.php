@@ -145,9 +145,7 @@ class ContractorController extends Controller
 
                 $data = new Customer();
                 $user = new User();
-                Validator::extend('without_spaces', function ($attr, $value) {
-                    return preg_match('/^\S*$/u', $value);
-                });
+                Validator::extend('without_spaces', fn($attr, $value): int|false => preg_match('/^\S*$/u', (string) $value));
                 $request->validate([
                     'CstCompanyName' => 'required',
                     'CstCompanyAddressLine1' => 'required',
@@ -313,7 +311,7 @@ class ContractorController extends Controller
                 $editdata = Customer::where('customers.id', $id)->first();
 
                 if (!empty($editdata) && (array)$editdata !== []) {
-                    $DDvalue = explode(",", $editdata->CstCertification);
+                    $DDvalue = explode(",", (string) $editdata->CstCertification);
                     json_encode(in_array("LEED", $DDvalue));
                     $ContractorContactDetails = CustomerContact::where('MainContractorId', $id)->orderBy('id', 'asc')->get();
                     return view('Contractor.AddContractor', ['editdata' => $editdata, 'ContractorContactDetails' => $ContractorContactDetails]);

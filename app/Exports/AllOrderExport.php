@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class AllOrderExport implements FromCollection,WithHeadings,WithMapping
 {
-    private $rowNumber = 1;
+    private int $rowNumber = 1;
     
     /**
     * @return \Illuminate\Support\Collection

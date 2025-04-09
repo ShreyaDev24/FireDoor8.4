@@ -49,7 +49,7 @@ class OrderController extends Controller
     {
         //dd($request->all());
         if ($request->input('isStatus') == 11) {
-            $orderData = json_decode($request->input('orders'), true);
+            $orderData = json_decode((string) $request->input('orders'), true);
             $request->merge(['orders' => $orderData]);
         }
         
