@@ -4830,9 +4830,8 @@ function architrave(isModal=0) {
         dataType: "Json",
         data: {  _token: $("#_token").val(), pageId: 1 },
         success: function (result) {
+            var innerHtml = '';
             if (result.status == "ok") {
-
-                var innerHtml = '';
                 var leepingSpecies = result.lippingSpecies;
 
                 if (leepingSpecies != '') {
@@ -4864,7 +4863,7 @@ function architrave(isModal=0) {
 
 
             } else {
-                innerHtmlPopUp += 'No Frame architrave Found';
+                innerHtml += 'No Frame architrave Found';
 
                 $("#architraveMaterial").empty().append(innerHtml);
             }

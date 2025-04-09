@@ -2709,10 +2709,23 @@ function filterSpecies(){
     setTimeout(() => {
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
-        $("#frameWidth").val(so_width - (parseInt(tollerance) * 2));
+        framewidth();
         $("#frameHeight").val(so_height - parseInt(tollerance));
     }, 500);
 };
+
+function framewidth(){
+    var DoorSetType = $('select[name="doorsetType"]').val();
+    var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
+    var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
+    if (DoorSetType == "SD"){
+        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    }else{
+        var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    }
+
+    $("#frameWidth").val(FrameWidth);
+}
 
 function filterHandling() {
     let pageId = pageIdentity();
@@ -5100,7 +5113,7 @@ $("#DoorDimensionsIcon").on("click", function () {
     setTimeout(() => {
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
-        $("#frameWidth").val(so_width - (parseInt(tollerance) * 2));
+        framewidth();
         $("#frameHeight").val(so_height - parseInt(tollerance));
     }, 500);
 
@@ -5274,7 +5287,7 @@ function doorDimensionCalculation(){
 
     $("#sOHeight").val(soHeight);
 
-    $("#frameWidth").val(so_width - (parseInt(tollerance) * 2));
+    framewidth();
 
     var so_height = parseInt($("#sOHeight").val());
     $("#frameHeight").val(so_height - (parseInt(tollerance)));

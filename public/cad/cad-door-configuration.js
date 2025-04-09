@@ -8735,6 +8735,17 @@ if(IsFlushBoltsEnable)
                                 .attr("marker-start", "url(#arrowLeft)")
                                 .attr("marker-end", "url(#arrowRight)");
 
+                                const here=$('input[name="vP1Height2"]').val()
+                        console.log(here,$('input[name="vP1Height2"]').val(),'kkkkkkkkkkkkk')
+                        svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x",  DistanceXForLeaf1VPShape - 15) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 ) // set y position of text
+                        .attr("transform", `rotate(-90, ${ DistanceXForLeaf1VPShape - 15}, ${DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 })`)
+                        .text(here);
+
                             svg.append("black")
                                 .style("fill", "black")
                                 .style("writing-mode", WritingMode) // set the writing mode
