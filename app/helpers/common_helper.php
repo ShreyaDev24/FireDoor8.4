@@ -67,7 +67,7 @@ function getMyLaborCost($type, $data) {
             }
         }
     }
-    
+
     return $res;
 }
 
@@ -75,7 +75,7 @@ function test(): void{
     if(Auth::user()->UserType==1){
         echo "admin";
     }
-    
+
     if(Auth::user()->UserType==2){
         echo "company";
     }
@@ -103,7 +103,7 @@ if (!function_exists("rando")) {
             $rand = mt_rand(0, $max);
             $str .= $characters[$rand];
         }
-        
+
         return $str;
     }
 }
@@ -152,7 +152,7 @@ if(!function_exists('time_elapsed_string')){
         if (!$full) {
             $string = array_slice($string, 0, 1);
         }
-        
+
         return $string !== [] ? implode(', ', $string) . ' ago' : 'just now';
     }
 
@@ -182,7 +182,7 @@ if(!function_exists('markAsRead')){
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Project::where('GeneratedKey', $id)->update(['read_by' => implode(',', $checkReadBy)]);
                 }
-                
+
                 break;
 
             case 'quote':
@@ -197,7 +197,7 @@ if(!function_exists('markAsRead')){
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Quotation::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
                 }
-                
+
                 break;
             case 'contractor':
                 $checkReadBy = explode(',', (string) Customer::where('id', $id)->value('read_by'));
@@ -205,7 +205,7 @@ if(!function_exists('markAsRead')){
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = Customer::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
                 }
-                
+
                 break;
             case 'user':
                 $checkReadBy = explode(',', (string) User::where('id', $id)->value('read_by'));
@@ -213,7 +213,7 @@ if(!function_exists('markAsRead')){
                     $checkReadBy[] = auth()->user()->id;
                     $checkReadBy = User::where('id', $id)->update(['read_by' => implode(',', $checkReadBy)]);
                 }
-                
+
                 break;
 
             case 'teamBoardMsg':
@@ -225,7 +225,7 @@ if(!function_exists('markAsRead')){
                         'typeId'=> $msgId
                     ]);
                 }
-                
+
                 break;
 
             default:
@@ -333,7 +333,7 @@ if(!function_exists('myCreatedUser')){
         } else {
             return 'error';
         }
-        
+
         $unitCost = $cost_of_lipping;
         $GrandTotalCost = round($unit*$unitCost,2);
         $markup = round($margin/100*$GrandTotalCost,2);
@@ -371,7 +371,7 @@ if(!function_exists('myCreatedUser')){
             // Leaf and Half  &&  Double Door
             $unit = $qty*2;
         }
-        
+
         $total_slabs_per_type = $qty*$unit;
         $GrandTotalCost = $qty*$unit*$unitCost;
         $markup = round($margin/100*$GrandTotalCost,2);
@@ -418,7 +418,7 @@ if(!function_exists('myCreatedUser')){
             $total_slabs_per_type = $qty*$unit;
             $GrandTotalCost = round($total_slabs_per_type*$unitCost,2);
         }
-        
+
         $markup = round($margin/100*$GrandTotalCost,2);
         $TotalPrice = round($markup + $GrandTotalCost,2);
         $minutes = $pressing_door*$qty/2;
@@ -458,7 +458,7 @@ if(!function_exists('myCreatedUser')){
             $z4 = $z3*$qty;
             $unit = $z4;
         }
-        
+
         $total_slabs_per_type = null;
         $GrandTotalCost = round($unit*$unitCost,2);
         $markup = round($margin/100*$GrandTotalCost,2);
@@ -639,7 +639,7 @@ function ColorList($row): string{
     $authdata = Auth::user();
     $selectedColor = SelectedColor::where(['SelectedColorId'=>$row->id,'SelectedUserId'=>$authdata->id])->count();
     $select3 = $selectedColor > 0 ? 'checked' : '';
-    
+
     if(Auth::user()->UserType=='1'){
         $edit =
         '<div class="col-md-1 col-sm-12">
@@ -785,7 +785,7 @@ function DoorLeafFacing($configurableitems,$DoorLeafFacing,?string $DoorLeafFaci
     if($SelectedDoorLeafFacing != null){
         $DoorLeafFacing = $SelectedDoorLeafFacing->OptionValue;
     }
-    
+
     $configurationDoor = configurationDoor($configurableitems);
     if ($DoorLeafFacing == "Veneer" && ($DoorLeafFacingValue !== null && $DoorLeafFacingValue !== '' && $DoorLeafFacingValue !== '0')) {
         $SelectedDoorLeafFacingValue = DoorLeafFacing::where([$configurationDoor => $configurableitems,'door_leaf_facing.Status' => 1])->where("Key",$DoorLeafFacingValue)->first();
@@ -804,7 +804,7 @@ function DoorLeafFacing($configurableitems,$DoorLeafFacing,?string $DoorLeafFaci
             $DoorLeafFacing .= " , ".$DoorLeafFacingValue;
         }
     }
-    
+
     return $DoorLeafFacing;
 }
 
@@ -833,12 +833,12 @@ function FrameFinish($configurableitems,$FrameFinish,$FrameFinishColor){
                 $color = Color::where('id',$FrameFinishColor)->first();
                 $ColorName = empty($color->ColorName) ? '' : ' , '.$color->ColorName;
             }
-            
+
             $FrameFinishForDoorDetailsTable = $SelectedFrameFinishForDoorDetailsTable->OptionValue . $ColorName;
         } else {
             $FrameFinishForDoorDetailsTable = $SelectedFrameFinishForDoorDetailsTable->OptionValue;
         }
-        
+
        return $FrameFinishForDoorDetailsTable;
     }
 
@@ -858,7 +858,7 @@ function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThic
         ->where($fireRatingDoor,$fireRatingDoor)
         ->where("Key",$GlassType)->first();
     }
-    
+
     if($SelectedGlassTypeForDoorDetailsTable != null){
         $GlassTypeForDoorDetailsTable = $SelectedGlassTypeForDoorDetailsTable->GlassType;
     }
@@ -866,7 +866,7 @@ function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThic
     if(!empty($GlassThickness) && $SelectedGlassTypeForDoorDetailsTable->GlassThickness != null){
         $GlassTypeForDoorDetailsTable .= " + ".$SelectedGlassTypeForDoorDetailsTable->GlassThickness;
     }
-    
+
     return $GlassTypeForDoorDetailsTable;
 }
 
@@ -895,12 +895,12 @@ function ArchitraveFinish($configurableitems,$ArchitraveFinish,$FrameFinishColor
                 $color = Color::where('id',$FrameFinishColor)->first();
                 $ColorName = ' + '.$color->ColorName;
             }
-            
+
             $ArchitraveFinishForDoorDetailsTable = $SelectedArchitraveFinishForDoorDetailsTable->OptionValue.$ColorName;
         } else {
             $ArchitraveFinishForDoorDetailsTable = $SelectedArchitraveFinishForDoorDetailsTable->OptionValue;
         }
-        
+
         return $ArchitraveFinishForDoorDetailsTable;
     }
 
@@ -915,7 +915,7 @@ function DoorDescription($DoorsetType): string{
     } elseif ($DoorsetType == 'leaf_and_a_half') {
         $DoorDescription = 'Leaf and a half';
     }
-    
+
     return $DoorDescription;
 }
 
@@ -936,7 +936,7 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
     }else{
         $userId = Auth::user()->id;
     }
-    
+
     //if counter exist will true when the company id wil have the record
     $QuotationCounter = CompanyQuotationCounter::wherein('UserId',$userIds)->first();
     $IsCounterExist = false;
@@ -994,7 +994,7 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
         if(Auth::user()->UserType == 2){
             $Quotation->CompanyId = $company_profile_id;
         }
-        
+
         //when the quotation generated from the project
         if($Quotation->ProjectId!=null){
             $project = Project::where('id',$Quotation->ProjectId)->first();
@@ -1024,7 +1024,7 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
         $UpdateQuotationCounter = CompanyQuotationCounter::where('id', $QuotationCounterId)
             ->update(['quotation_counter' => $NewQuotationCounter]);
     }
-        
+
         return $Quotation->id;
         // return redirect()->route('quotation/generate/',[$Quotation->id,0]);
     } else {
@@ -1060,7 +1060,7 @@ function ConfigurationURL($configurableitems,string $itemId,string $version_id){
 
         $url = url('quotation/edit-configuration-cad-item/'.$itemId.'/'.$version_id);
     }
-    
+
     return $url;
 }
 
@@ -1096,7 +1096,7 @@ function QuotationList(array $val): string{
     }else{
         $Currency = "£";
     }
-    
+
     if($val['QuotationStatus'] != ''){
         if ($val['QuotationStatus'] == 'Open') {
             $quotation_status = '<strong class="QuotationStatus" style="background: #69e4a6;">'.$val['QuotationStatus'].'</strong>';
@@ -1147,7 +1147,7 @@ function QuotationList(array $val): string{
     } else {
         $lastModifyName = '-----------';
     }
-    
+
     if($val['QuotationGenerationId']!=null || $val['QuotationGenerationId']!=''){
         $quotation_generation_id = '<a href="'.url('quotation/generate/'.$val['QuotationId']).'/'.$QVID.'" class="QuotationCode">'.$val['QuotationGenerationId'].'-'.$version.'</a>';
     }
@@ -1268,7 +1268,7 @@ function orderQuotationList(array $val): float|int{
 function IronmongerySetName($IronmongeryID){
     $addiron = AddIronmongery::select('Setname')->where('id',$IronmongeryID)->first();
     $IronmongerySet = empty($addiron->Setname) ? 'N/A' : $addiron->Setname;
-    
+
     return $IronmongerySet;
 }
 
@@ -1391,7 +1391,7 @@ function IronmongerySetData($IronmongeryID): string{
                 if(!empty($SelectedIronmongery)){
                     $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
                     $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
-                    
+
                     $QtyPerDoorType = intval($IronmongeyQty[$j]);
                     if(!empty($IronmongeryInfoModel))
                     {
@@ -1423,7 +1423,7 @@ function IronmongerySetData($IronmongeryID): string{
             }
         }
     }
-    
+
     // dd($table);
     return $table;
 }
@@ -1439,7 +1439,7 @@ function CurrencyBeautify($cur=''): string{
     } else{
         $currency = "£ GBP";
     }
-    
+
     return $currency;
 }
 
@@ -1454,7 +1454,7 @@ function QuotationCurrency($cur=''): string{
     } else{
         $currency = "£";
     }
-    
+
     return $currency;
 }
 
@@ -1466,7 +1466,7 @@ function IntumescentSealType($configurableitems,$key){
     if(!empty($OptionValue)){
         $data = $OptionValue;
     }
-    
+
     return $data;
 }
 
@@ -1477,7 +1477,7 @@ function VPBeadingType($configurableitems , $OptionSlug , $OptionKey){
     if(!empty($OptionValue)){
         $data = $OptionValue;
     }
-    
+
     return $data;
 }
 
@@ -1608,7 +1608,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('door_dimension.editBy',$userIds);
                 $Options->wherein('selected_doordimension.doordimension_user_id',$userIds);
                 $Options->orderBy('door_dimension.id','asc');
@@ -1626,11 +1626,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('id','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1652,7 +1652,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('accoustics.editBy',$userIds);
                 $Options->wherein('selected_accoustics.userId',$userIds);
                 $Options->orderBy('accoustics.Accoustics','asc');
@@ -1670,11 +1670,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('Accoustics','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1703,11 +1703,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('IntumescentSealColor','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1729,7 +1729,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('leaf_type.EditBy',$userIds);
                 $Options->wherein('selected_leaf_type.editBy',$userIds);
                 $Options->orderBy('leaf_type.LeafType','asc');
@@ -1747,14 +1747,14 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('EditBy',$userIds);
 
             }
-            
+
             $Options->orderBy('LeafType','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
-            
+
         break;
         case "architrave_type":
 
@@ -1773,7 +1773,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('architrave_type.editBy',$userIds);
                 $Options->wherein('selected_architrave_type.userId',$userIds);
                 $Options->orderBy('architrave_type.ArchitraveType','asc');
@@ -1791,11 +1791,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('ArchitraveType','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1817,7 +1817,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('glazing_system.editBy',$userIds);
                 $Options->wherein('selected_glazing_system.userId',$userIds);
                 $Options->orderBy('glazing_system.GlazingSystem','asc');
@@ -1835,11 +1835,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('GlazingSystem','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1861,7 +1861,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('door_leaf_facing.editBy',$userIds);
                 $Options->wherein('selected_door_leaf_facing.userId',$userIds);
                 $Options->orderBy('door_leaf_facing.doorLeafFacingValue','asc');
@@ -1879,11 +1879,11 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
-            
+
             $Options->orderBy('doorLeafFacingValue','asc');
             $result = $returnType == "query" ? $Options : $Options->$returnType();
 
@@ -1905,7 +1905,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('options.editBy',$userIds);
                 $Options->wherein('selected_option.SelectedUserId',$userIds);
                 $Options->orderBy('options.id','asc');
@@ -1923,7 +1923,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('editBy',$userIds);
 
             }
@@ -1947,7 +1947,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->where('selected_intumescentseals2.selected_intumescentseals2_user_id',Auth::user()->id);
                 // $Options->wherein('setting_intumescentseals2.editBy',$userIds);
             }else{
@@ -1956,7 +1956,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 if(!empty($where)){
                     $Options = $Options->where($where);
                 }
-                
+
                 // $result = $Options->select('setting_intumescentseals2.*')->get();
 
                 if(empty($selectFields)){
@@ -1965,7 +1965,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }else{
                     $Options->select($selectFields);
                 }
-                
+
                 $Options->wherein('setting_intumescentseals2.editBy',$userIds);
             }
 
@@ -2016,7 +2016,9 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 }
 
                 if (!empty($where) && !empty($orwhere)) {
-                    $Options->where( fn($q) => $q->where($where)->orWhere($orwhere));
+                    $Options->where(function($q) use ($where, $orwhere) {
+                        $q->where($where)->orWhere($orwhere);
+                    });
                 } elseif (!empty($where)) {
                     $Options->where($where);
                 }
@@ -2057,6 +2059,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                 $result = $returnType == "query" ? $Options : $Options->$returnType();
 
             }
+            break;
             case "Lipping":
 
                 // $JoinSelectedOption = "leftJoin";
@@ -2085,7 +2088,9 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                     }
 
                     if (!empty($where) && !empty($orwhere)) {
-                        $Options->where( fn($q) => $q->where($where)->orWhere($orwhere));
+                        $Options->where(function($q) use ($where, $orwhere) {
+                            $q->where($where)->orWhere($orwhere);
+                        });
                     } elseif (!empty($where)) {
                         $Options->where($where);
                     }
@@ -2191,7 +2196,7 @@ function BOMQuatityOfDoorUpdate($itemid,$QuotationId): void{
     if(empty($ItemMaster)){
         $ItemMaster = 1;
     }
-    
+
     $BOMCalculation = BOMCalculation::where('itemId',$itemid)->where('QuotationId',$QuotationId)->get();
     $Items = Item::where('itemId',$itemid)->where('QuotationId',$QuotationId)->get()->first();
 
@@ -2204,7 +2209,7 @@ function BOMQuatityOfDoorUpdate($itemid,$QuotationId): void{
                 $quantity = ($bom->QuantityOfDoorTypes / ($ItemMaster - 1));
                 $totalSum = ($bom->TotalCost / ($ItemMaster - 1));
             }
-            
+
             $update = BOMCalculation::find($bom->id);
             $total = round(($totalSum * $ItemMaster),2);
             if ($bom->Category == 'Ironmongery&MachiningCosts' || $bom->Category == 'MachiningCosts'){
@@ -2215,7 +2220,7 @@ function BOMQuatityOfDoorUpdate($itemid,$QuotationId): void{
                 $update->QuantityOfDoorTypes = round(($quantity * $ItemMaster),2);
                 $update->TotalCost = $total;
             }
-            
+
             $update->GTSellPrice = round(($total /(1 - ($bom->Margin/100))),2);
             $update->save();
         }
@@ -2254,7 +2259,7 @@ function getCurrencyRate($QuotationId){
             $currencyPrice = $currencyRate->SetCurrencyRate;
         }
     }
-    
+
     return $currencyPrice;
 }
 
@@ -2321,7 +2326,7 @@ function SaveBOMCalculation($request, $category, $frame_unit, string $descriptio
 
                 $lm_per_door_type = ($request->leaf1VisionPanel == 'Yes' && $request->leaf2VisionPanel == 'Yes')?4:2;
             }
-            
+
         break;
 
         case "LeafSetBesPoke":
@@ -2332,7 +2337,7 @@ function SaveBOMCalculation($request, $category, $frame_unit, string $descriptio
                 $quantity_of_door_type = 1 * $ItemMaster;
                 $qtyOfD = 1 * $ItemMaster;
             }
-            
+
             $isTotalCounted = true;
             $total_cost = $unit_cost * $qtyOfD;
             break;
@@ -2342,7 +2347,7 @@ function SaveBOMCalculation($request, $category, $frame_unit, string $descriptio
             $qtyOfD = 1 * $ItemMaster;
         break;
     }
-    
+
     if($category == 'Ironmongery&MachiningCosts' || $category == 'MachiningCosts' ){
         $quantity_of_door_type = $lm_per_door_type;
         $qtyOfD = $lm_per_door_type;
@@ -2350,7 +2355,7 @@ function SaveBOMCalculation($request, $category, $frame_unit, string $descriptio
         $isTotalCounted = true;
         $total_cost = $lm_per_door_type * $unit_cost;
     }
-    
+
     if($category == 'Architrave'){
         $total_cost *= $ItemMaster;
     }
@@ -2385,7 +2390,7 @@ function BomCalculation($request): void{
     } else{
         $fireRatingVal = 'NFR';
     }
-    
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -2395,18 +2400,18 @@ function BomCalculation($request): void{
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
-    
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
-    
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    
+
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
@@ -2435,7 +2440,7 @@ function BomCalculation($request): void{
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
-                
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -2509,7 +2514,7 @@ function BomCalculation($request): void{
             }else{
                 $quantity_of_door_type = 1;
             }
-            
+
             $total_cost = $unit_cost*$quantity_of_door_type;
 
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
@@ -2705,7 +2710,7 @@ function BomCalculation($request): void{
             if($doorLeafFacing->selectedPrice == NULL){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
@@ -2717,7 +2722,7 @@ function BomCalculation($request): void{
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -2733,7 +2738,7 @@ function BomCalculation($request): void{
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -2742,7 +2747,7 @@ function BomCalculation($request): void{
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
         }
-        
+
 // dd($lm,$thickness_cost,$doorLeafFacingCost,$door_cost);
 
         $category = 'LeafSetBesPoke';
@@ -2751,7 +2756,7 @@ function BomCalculation($request): void{
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
-        
+
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
 
@@ -2771,7 +2776,7 @@ function StredorBomCalculation($request): void{
     } else{
         $fireRatingVal = 'NFR';
     }
-    
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -2781,18 +2786,18 @@ function StredorBomCalculation($request): void{
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
-    
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
-    
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    
+
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
@@ -2821,7 +2826,7 @@ function StredorBomCalculation($request): void{
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
-                
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -2895,7 +2900,7 @@ function StredorBomCalculation($request): void{
             }else{
                 $quantity_of_door_type = 1;
             }
-            
+
             $total_cost = $unit_cost*$quantity_of_door_type;
 
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
@@ -3089,7 +3094,7 @@ function StredorBomCalculation($request): void{
             if($doorLeafFacing->selectedPrice == NULL){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
@@ -3101,7 +3106,7 @@ function StredorBomCalculation($request): void{
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -3117,7 +3122,7 @@ function StredorBomCalculation($request): void{
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
-            
+
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
@@ -3126,7 +3131,7 @@ function StredorBomCalculation($request): void{
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
         }
-        
+
 // dd($lm,$thickness_cost,$doorLeafFacingCost,$door_cost);
 
         $category = 'LeafSetBesPoke';
@@ -3135,7 +3140,7 @@ function StredorBomCalculation($request): void{
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
-        
+
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
 
@@ -3276,14 +3281,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingVaneerManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingVaneerMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->doorLeafFacing == "Kraft_Paper" && $GeneralLabourCost->DoorLeafFacingKraftPaper == 1) {
                     $data = getMyLaborCost('DoorLeafFacingKraftPaper', $GeneralLabourCost->genLaborCost);
                     $description = "Make door slab Kraft Paper |".($GeneralLabourCost->DoorLeafFacingKraftPaperManMinutes/ 60)."|".$data->labour_cost_per_man ."|".($GeneralLabourCost->DoorLeafFacingKraftPaperMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingKraftPaperManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingKraftPaperMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->doorLeafFacing == "Laminate" && $GeneralLabourCost->DoorLeafFacingLaminate == 1) {
                     $data = getMyLaborCost('DoorLeafFacingLaminate', $GeneralLabourCost->genLaborCost);
                     $description = "Make door slab, Laminate |".($GeneralLabourCost->DoorLeafFacingLaminateManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFacingLaminateMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3291,7 +3296,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->doorLeafFacing == "PVC" && $GeneralLabourCost->DoorLeafFacingPVC == 1) {
                     $data = getMyLaborCost('DoorLeafFacingPVC', $GeneralLabourCost->genLaborCost);
                     $description = "Make door slab PVC |".($GeneralLabourCost->DoorLeafFacingPVCManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFacingPVCMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3309,14 +3314,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if (($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted == 1) {
                     $data = getMyLaborCost('DoorLeafFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Paint of door slab |".($GeneralLabourCost->DoorLeafFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishPaintedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->doorLeafFinish == "Laqure_Finish" && $GeneralLabourCost->DoorLeafFinishLacquered == 1) {
                     $data = getMyLaborCost('DoorLeafFinishLacquered', $GeneralLabourCost->genLaborCost);
                     $description = "Lacquer of door slab |".($GeneralLabourCost->DoorLeafFinishLacqueredManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishLacqueredMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3375,14 +3380,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->extLiner == "Yes" && $request->frameFinish == "Clear_Lacquer" && $GeneralLabourCost->ExtLinerandFrameFinishLacqured == 1) {
                     $data = getMyLaborCost('ExtLinerandFrameFinishLacqured', $GeneralLabourCost->genLaborCost);
                     $description = "Lacquering liner |".($GeneralLabourCost->ExtLinerandFrameFinishLacquredManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerandFrameFinishLacquredMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishLacquredManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishLacquredMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->extLiner == "Yes" && $request->frameFinish == "Painted_Finish" && $GeneralLabourCost->ExtLinerandFrameFinishPainted == 1) {
                     $data = getMyLaborCost('ExtLinerandFrameFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Painting of liner |".($GeneralLabourCost->ExtLinerandFrameFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerandFrameFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3440,21 +3445,21 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
-            
+
             if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
-            
+
             if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
                 $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
-            
+
             if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3487,7 +3492,7 @@ function commonGeneralLabourCost($request,$userIds): void{
             $unit_cost = ($GeneralLabourCost->DecorativeGrovesManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesMachineMinutes * ($data->labour_cost_per_machine/ 60));
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
         }
-        
+
         //decorativeGrovesLeaf2
         if (!empty($request->DecorativeGrovesLeaf2) && $request->DecorativeGrovesLeaf2 == "Yes" && $GeneralLabourCost->DecorativeGrovesLeaf2 == 1) {
             $data = getMyLaborCost('DecorativeGrovesLeaf2', $GeneralLabourCost->genLaborCost);
@@ -3504,7 +3509,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->DoorsetTypeDDManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeDDMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->doorsetType == "SD" && $GeneralLabourCost->DoorsetTypeSD == 1) {
                     $data = getMyLaborCost('DoorsetTypeSD', $GeneralLabourCost->genLaborCost);
                     $description = "Assemble Single Door Leaf Into Frame |".($GeneralLabourCost->DoorsetTypeSDManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeSDMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3512,14 +3517,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
-            
+
             if ($request->doorsetType == "SD" && $GeneralLabourCost->DoorsetTypeSD2 == 1) {
                 $data = getMyLaborCost('DoorsetTypeSD2', $GeneralLabourCost->genLaborCost);
                 $description = "Doorset Delivery Single |".($GeneralLabourCost->DoorsetTypeSD2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeSD2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorsetTypeSD2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeSD2MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
-            
+
             if ($request->doorsetType == "DD" && $GeneralLabourCost->DoorsetTypeDD2 == 1) {
                 $data = getMyLaborCost('DoorsetTypeDD2', $GeneralLabourCost->genLaborCost);
                 $description = "Doorset Delivery Double |".($GeneralLabourCost->DoorsetTypeDD2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeDD2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3581,7 +3586,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->OverpanelFanlightManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->OverpanelFanlightMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->overpanel == "Fan_Light" && $GeneralLabourCost->OverpanelFanlightGlazing == 1) {
                     $data = getMyLaborCost('OverpanelFanlightGlazing', $GeneralLabourCost->genLaborCost);
                     $description = "Fanlight Glazing |".($GeneralLabourCost->OverpanelFanlightGlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->OverpanelFanlightGlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3598,7 +3603,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->SideLightManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLightMachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->sideLight1 == "Yes" && $GeneralLabourCost->SideLightGlazing == 1) {
                     $data = getMyLaborCost('SideLightGlazing', $GeneralLabourCost->genLaborCost);
                     $description = "Side Light Glazing |".($GeneralLabourCost->SideLightGlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLightGlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3606,7 +3611,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
-            
+
             //sidelight2
             if(!empty($request->sideLight2)){
                 if ($request->sideLight2 == "Yes" && $GeneralLabourCost->SideLight2 == 1) {
@@ -3615,7 +3620,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $unit_cost = ($GeneralLabourCost->SideLight2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLight2MachineMinutes * ($data->labour_cost_per_machine/ 60));
                     SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
                 }
-                
+
                 if ($request->sideLight2 == "Yes" && $GeneralLabourCost->SideLight2Glazing == 1) {
                     $data = getMyLaborCost('SideLight2Glazing', $GeneralLabourCost->genLaborCost);
                     $description = "Side Light 2 Glazing |".($GeneralLabourCost->SideLight2GlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLight2GlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3761,7 +3766,7 @@ function frameExport($request,$userIds): void{
 
             }
         }
-        
+
         // ADDED BY @UT 22-02-2024
 
         if($request->FourSidedFrame == 1){
@@ -3782,7 +3787,7 @@ function frameExport($request,$userIds): void{
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
             }
         }
-        
+
         if($request->frameType=='Plant_on_Stop'){
             $frameMaterial = LippingSpecies::where('id', $request->frameMaterial)->get();
             // $frameThickness = round($request->frameThickness/25.4,1);
@@ -3947,7 +3952,7 @@ function frameExport($request,$userIds): void{
                 if(empty($request->SL2Height)){
                     $request->SL2Height = 0;
                 }
-                
+
                 $QtyPerDoorType = (($request->SL1Height * 2) + ($request->SL2Height * 2))/1000;
 
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
@@ -3991,7 +3996,7 @@ function frameExport($request,$userIds): void{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness',1)->get()->first();
 
             }
-            
+
             if(isset($unitcost->id)){
 
                 $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
@@ -4021,7 +4026,7 @@ function frameExport($request,$userIds): void{
                 }else{
                     $u_id = [];
                 }
-            
+
             $archiTrave = LippingSpecies::where('id', $request->architraveMaterial)->first();
            // dd($request->all(), $archiTrave);
 
@@ -4074,7 +4079,7 @@ function BomCalculationVicaima($request): void{
     } else{
         $fireRatingVal = 'NFR';
     }
-    
+
     $configurationDoor = configurationDoor($request->issingleconfiguration);
     $fireRatingDoor = fireRatingDoor($fireRatingVal);
 
@@ -4084,18 +4089,18 @@ function BomCalculationVicaima($request): void{
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->where('VersionId',$version_id)->first();
     }
-    
+
     $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
 
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId)){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('VersionId',$version_id)->where('itemId',$request->itemID)->delete();
     }
-    
+
     $BOMCalculation = '';
     if(!empty($request->itemID)){
         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->first();
     }
-    
+
     if(!empty($BOMCalculation->itemId) && !empty($BOMCalculation->QuotationId) && $BOMCalculation->VersionId == 0){
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
@@ -4124,7 +4129,7 @@ function BomCalculationVicaima($request): void{
                 }elseif($request->visionPanelQuantity == '5'){
                     $LMOfGlazing = ($request->vP1Width*2)+($request->vP1Height1*2)+($request->vP1Width*2)+($request->vP1Height2*2)+($request->vP1Width*2)+($request->vP1Height3*2)+($request->vP1Width*2)+($request->vP1Height4*2)+($request->vP1Width*2)+($request->vP1Height5*2);
                 }
-                
+
                 $LMOfGlazingSystem = $LMOfGlazing/1000;
                 $unit_cost = $pricePerLM*$LMOfGlazingSystem;
             }else{
@@ -4193,7 +4198,7 @@ function BomCalculationVicaima($request): void{
                 }else{
                     $quantity_of_door_type = 1;
                 }
-                
+
                 $total_cost = $unit_cost*$quantity_of_door_type;
 
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
@@ -4396,7 +4401,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
             $description = $request->glassType.'| '.$request->vP1Width.'mm x '.$request->vP1Height1.'mm'.' & '.$request->vP1Width.'mm x '.$request->vP1Height2.'mm'.' & '.$request->vP1Width.'mm x '.$request->vP1Height3.'mm'.' & '.$request->vP1Width.'mm x '.$request->vP1Height4.'mm'.' & '.$request->vP1Width.'mm x '.$request->vP1Height5.'mm';
             $QtyPerDoorType = (($request->vP1Width/1000) * ($request->vP1Height1/1000)) + (($request->vP1Width/1000) * ($request->vP1Height2/1000))  + (($request->vP1Width/1000) * ($request->vP1Height3/1000))  + (($request->vP1Width/1000) * ($request->vP1Height4/1000))  + (($request->vP1Width/1000) * ($request->vP1Height5/1000));
         }
-        
+
         $request->visionPanelQuantityforLeaf2 = ($request->vpSameAsLeaf1 == "Yes")?$request->visionPanelQuantity:$request->visionPanelQuantityforLeaf2;
 
         if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2) && !empty($request->issingleconfiguration) && !empty($request->glassType)){
@@ -4417,7 +4422,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
                 $QtyPerDoorType += (($request->vP2Width/1000) * ($request->vP2Height1/1000)) + (($request->vP2Width/1000) * ($request->vP2Height2/1000))  + (($request->vP2Width/1000) * ($request->vP2Height3/1000))  + (($request->vP2Width/1000) * ($request->vP2Height4/1000))  + (($request->vP2Width/1000) * ($request->vP2Height5/1000));
             }
         }
-        
+
         // $frame_unit_cost = SelectedOption::where('SelectedUserId', Auth::user()->id)->where('configurableitems',$request->issingleconfiguration)->where('SelectedOptionKey',$request->glassType)->first();
         $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->glassType)->first();
         $category = 'Glass';
@@ -4426,7 +4431,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
     }
-    
+
     if ($request->overpanel == 'Fan_Light' && (!empty($request->opGlassType) && !empty($request->frameThickness))) {
         $description = '[Fan Light Glass] '.str_replace('_', ' ', $request->opGlassType).'| '. $request->oPWidth.'mm x '. $request->oPHeigth.'mm';
         $category = 'Glass';
@@ -4443,7 +4448,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $QtyPerDoorType = (($request->oPWidth - (2 * $request->frameThickness))/1000) * (($request->oPHeigth - (2 * $request->frameThickness))/1000);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
     }
-    
+
     if ($request->sideLight1 == 'Yes' && (!empty($request->SL1Width) && !empty($request->sideLight1GlassType) && !empty($request->frameThickness))) {
         $SL1Width  = $request->SL1Width - (2 * $request->frameThickness);
         $SL1Height  = $request->SL1Height - (2 * $request->frameThickness);
@@ -4485,7 +4490,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
                 $frame_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.Key',$sideLight2GlassType)->first();
                 $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->glassSelectedPrice;
             }
-            
+
             $QtyPerDoorType = (($request->SL2Width - (2 * $request->frameThickness))/1000) * (($request->SL2Height - (2 * $request->frameThickness))/1000);
 
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
@@ -4553,7 +4558,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
 
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
-    
+
     if ($request->sideLight1 == 'Yes' && (!empty($request->issingleconfiguration) && !empty($request->sideLight1GlazingSystems))) {
         if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
             $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->sideLight1GlazingSystems)->first();
@@ -4576,7 +4581,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
 
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
-    
+
     if($request->sideLight2 == 'Yes'){
         $sideLight2GlazingSystems = ($request->copyOfSideLite1 == "Yes")?$request->sideLight1GlazingSystems : $request->sideLight2GlazingSystems;
         if(!empty($request->issingleconfiguration) && !empty($sideLight2GlazingSystems)){
@@ -4741,7 +4746,7 @@ function IntumescentExport($request): void{
                 $unit_cost = $intumescentSealTypeDetails->selected_cost ?: 0;
                 $total_cost = $lm * $unit_cost;
             }
-            
+
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$lm);
         }
     }
@@ -4820,7 +4825,7 @@ function getParentId() {
         $uId = $prnt ?: Auth::user()->CreatedBy;
         return $uId;
     }
-    
+
     return null;
 }
 
@@ -4840,7 +4845,7 @@ function CompanyUsers($isstatus = false){
     } else{
         $UserId = ['1'];
     }
-    
+
     return $UserId;
 }
 
@@ -4862,7 +4867,7 @@ function CompanyMultiUsers(){
         $users = User::where('CreatedBy',auth()->user()->CreatedBy)->pluck('id')->toArray();
         // $users = [(string) $usersids->id,$usersids->CreatedBy];
     }
-    
+
     return $users;
 }
 
@@ -4887,7 +4892,7 @@ function configurationDoor($pageId): string{
     elseif($pageId == 8){
         $configurableitems = "Stredor";
     }
-    
+
     return $configurableitems;
 }
 
@@ -4900,7 +4905,7 @@ function fireRatingDoor($firerating): string{
     }elseif($firerating == 'FD60' || $firerating == 'FD60s'){
         $fireRatingValue = "FD60";
     }
-    
+
     return $fireRatingValue;
 }
 
@@ -4927,7 +4932,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -4984,7 +4989,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -4997,7 +5002,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -5008,7 +5013,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
             <div class="control_indicator"></div>
         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -5055,7 +5060,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -5118,7 +5123,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" '.$disable.' id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5131,7 +5136,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
         $costtext = '';
         $checkText = '<td class="text-center">'.$i++.'</td>';
         if($authdata->id != 1){
@@ -5143,7 +5148,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                 <div class="control_indicator"></div>
             </label></div></td>';
         }
-        
+
         $tbl1 .=        '<tr>
                             '.$checkText.'
                             <td class="text-center">'.$streboard.'</td>
@@ -5254,7 +5259,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5267,7 +5272,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -5278,7 +5283,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
             <div class="control_indicator"></div>
         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -5327,7 +5332,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -5400,7 +5405,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
         // $costtext = '<td>'.$cost.'</td>';
@@ -5410,7 +5415,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
             <div class="control_indicator"></div>
         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -5443,7 +5448,7 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
     }elseif($configurableItem == 'Stredor'){
         $configurableItemId = 8;
     }
-    
+
     $tbl1 = '';
     $aa = GlazingSystem::leftJoin('selected_glazing_system', function ($join) use ($authdata): void {
         $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
@@ -5542,7 +5547,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -5604,7 +5609,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5617,7 +5622,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
                     $costtext = '';
                     $checkText = '<td class="text-center">'.$i++.'</td>';
                     if($authdata->id != 1){
@@ -5628,7 +5633,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
                     }
-                    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
@@ -5684,7 +5689,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -5744,7 +5749,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5757,7 +5762,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
                             </button>
                         </div>';
                     }
-                    
+
                     $costtext = '';
                     $checkText = '<td class="text-center">'.$i++.'</td>';
                     if($authdata->id != 1){
@@ -5768,7 +5773,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
                             <div class="control_indicator"></div>
                         </label></div></td>';
                     }
-                    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -5816,7 +5821,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -5859,7 +5864,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5872,7 +5877,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -5883,7 +5888,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
@@ -5933,7 +5938,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -5986,7 +5991,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -5999,7 +6004,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -6010,7 +6015,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
@@ -6081,13 +6086,13 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
     }else{
         $countSelectedOption = SelectedGlassType::where(['editBy' => $authdata->id])->count();
     }
-    
+
     $optionCheckall = '';
     $priceText = '';
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -6139,7 +6144,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if ($value->EditBy != 1 || Auth::user()->UserType == 1) {
                         $GlassThickness = $value->GlassThickness ?: 0;
@@ -6154,7 +6159,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -6165,7 +6170,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -6197,11 +6202,11 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
     if($colorType == 'FactoryIndustrialPrimed'){
         $colorType = 'Factory Industrial Primed';
     }
-    
+
     if($colorType == 'PaintSanded'){
         $colorType = 'Paint Sanded';
     }
-    
+
     if($colorType == 'Primed2Go'){
         $colorType = 'Primed 2 Go';
     }
@@ -6231,12 +6236,12 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . "','" . $colorType . '\')">Update</button>';
         $priceText = $colorType == 'Laminate' ? '<th>PRICE PER Unit</th>' : '<th>PRICE PER M2</th>';
-        
+
         $check = '<th><div class="control-group">
                     <label class="control control-checkbox" style="float:left; margin-right:10px;margin-left:0px;">
                         <input type="checkbox" class="checkall color_list" value="color_list" ' . $optionCheckall . '/>
@@ -6244,7 +6249,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
                     </label>
                 </div></th>';
     }
-    
+
     $DoorLeafFacingText = '';
     if($colorType == 'Laminate')
     {
@@ -6272,7 +6277,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
                     {
                         $DoorLeafFacingValue = '<td>'.$value->DoorLeafFacingValue.'</td>';
                     }
-                    
+
                     // $selectedOption = SelectedColor::where([ 'SelectedColorId' => $value->id, 'SelectedUserId' => $authdata->id])->count();
                     // if (Auth::user()->UserType == 2) {
                     //     $selectedOption = SelectedColor::where([ 'SelectedColorId' => $value->id])->whereIn('SelectedUserId' , array_diff($UserId, ["1"]))->count();
@@ -6287,7 +6292,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -6300,7 +6305,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -6311,7 +6316,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td>'.$value->DoorLeafFacing.'</td>
@@ -6353,7 +6358,7 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
     }
@@ -6392,49 +6397,49 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                         $selectedOption = SelectedOption::where([ 'optionId' => $value->id, 'SelectedUserId' => $authdata->id])->count();
                         // }
                         $select = $selectedOption > 0 ? 'checked' : '';
-                        
+
                     if($value->configurableitems == 1){
                         $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 2){
                         $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 3){
                         $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 4){
                         $vicaima = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $vicaima = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 5){
                         $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 6){
                         $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 7){
                         $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 8){
                         $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -6496,7 +6501,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
         $tbl1 .= '<div class="">
@@ -6542,49 +6547,49 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
 
                     $selectedOption = SelectedOption::where([ 'optionId' => $value->id, 'SelectedUserId' => $authdata->id])->count();
                     $select = $selectedOption > 0 ? 'checked' : '';
-                    
+
                     if($value->configurableitems == 1){
                         $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 2){
                         $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 3){
                         $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 4){
                         $VicaimaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 5){
                         $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 6){
                         $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 7){
                         $flambreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $flambreak = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 8){
                         $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -6647,7 +6652,7 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
     }
@@ -6684,49 +6689,49 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                         $selectedOption = SelectedOption::where([ 'optionId' => $value->id, 'SelectedUserId' => $authdata->id])->count();
                         // }
                         $select = $selectedOption > 0 ? 'checked' : '';
-                        
+
                     if($value->configurableitems == 1){
                         $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 2){
                         $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 3){
                         $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 4){
                         $vicaima = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $vicaima = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 5){
                         $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 6){
                         $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 7){
                         $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->Stredor == 8){
                         $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -6788,7 +6793,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -6838,19 +6843,19 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                     }else{
                         $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 4){
                         $VicaimaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 5){
                         $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 6){
                         $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -6863,7 +6868,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selected_cost . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -6876,7 +6881,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -6887,12 +6892,12 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $inch = '';
     if(!empty($value->inch_width) && !empty($value->inch_height)){
         $inch = $value->inch_width .' x '.$value->inch_height;
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
@@ -6935,7 +6940,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOptionCustome(\'' . $optionType . '\')">Update</button>';
@@ -6947,7 +6952,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     </label>
                 </div></th>';
     }
-    
+
     if(Auth::user()->UserType == 1){
         $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
@@ -6991,7 +6996,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                 </thead>
                 <tbody>';
     }
-    
+
                 $i = 1;
                 foreach($aa as $value){
                         $selectedOption = SelectedDoorDimension::where([ 'doordimension_id' => $value->id, 'doordimension_user_id' => $authdata->id])->count();
@@ -7016,10 +7021,10 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     $costInputs .= '</div>';
                     // $costInputs .= '<br>';
                 }
-                
+
                 $costInputs .= '</div>';
             }
-            
+
             if($value->configurableitems == 2){
                 $instleaftypes = \App\Models\IntumescentSealLeafType::where('configurableitems', $value->configurableitems)->get();
                 $costInputs .= '<div class="cost_price_grd">';
@@ -7032,10 +7037,10 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     // $costInputs .= '<br>';
                     $costInputs .= '</div>';
                 }
-                
+
                 $costInputs .= '</div>';
             }
-            
+
             if($value->configurableitems == 7){
                 $instleaftypes = \App\Models\IntumescentSealLeafType::where('configurableitems', $value->configurableitems)->get();
                 $costInputs .= '<div class="cost_price_grd">';
@@ -7048,10 +7053,10 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     // $costInputs .= '<br>';
                     $costInputs .= '</div>';
                 }
-                
+
                 $costInputs .= '</div>';
             }
-            
+
             if($value->configurableitems == 8){
                 $instleaftypes = \App\Models\IntumescentSealLeafType::where('configurableitems', $value->configurableitems)->get();
                 $costInputs .= '<div class="cost_price_grd">';
@@ -7064,7 +7069,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     // $costInputs .= '<br>';
                     $costInputs .= '</div>';
                 }
-                
+
                 $costInputs .= '</div>';
             }
 
@@ -7077,19 +7082,19 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     }else{
                         $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 2){
                         $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 7){
                         $Flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $Flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 8){
                         $Stredor = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -7103,7 +7108,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                     //         </div>';
 
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $custome_door_selected_cost = htmlspecialchars(json_encode($value->custome_door_selected_cost), ENT_QUOTES, 'UTF-8');
@@ -7135,7 +7140,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -7146,12 +7151,12 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $inch = '';
     if(!empty($value->inch_width) && !empty($value->inch_height)){
         $inch = $value->inch_width .' x '.$value->inch_height;
     }
-    
+
     if(Auth::user()->UserType == 1){
         $tbl1 .=        '<tr>
             '.$checkText.'
@@ -7208,7 +7213,7 @@ function doorcorename($doorCore): string{
         8 => 'Stredor',
         default => $doorCoreValue,
     };
-    
+
     return $doorCoreValue;
 }
 
@@ -7254,7 +7259,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -7301,19 +7306,19 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                     }else{
                         $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 5){
                         $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 6){
                         $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
-                    
+
                     if($value->configurableitems == 7){
                         $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
@@ -7326,7 +7331,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selected_cost . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -7340,7 +7345,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                         </div>';
 
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -7351,7 +7356,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
@@ -7415,7 +7420,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -7462,19 +7467,19 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                         }else{
                             $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
                         }
-                        
+
                         if($value->configurableitems == 2){
                             $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
                         }else{
                             $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
                         }
-                        
+
                         if($value->configurableitems == 7){
                             $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                         }else{
                             $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
                         }
-                        
+
                         if($value->configurableitems == 8){
                             $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
                         }else{
@@ -7487,7 +7492,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                                             <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->selected_cost . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                         </div>';
                         }
-                        
+
                         $action = '';
                         if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                             $action = '
@@ -7501,7 +7506,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                             </div>';
 
                         }
-                        
+
                         $costtext = '';
                         $checkText = '<td class="text-center">'.$i++.'</td>';
                         if($authdata->id != 1){
@@ -7512,7 +7517,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                                                 <div class="control_indicator"></div>
                                             </label></div></td>';
                         }
-                        
+
                         $tbl1 .= '<tr>
                                     '.$checkText.'
                                     <td class="text-center">'.$streboard.'</td>
@@ -7543,7 +7548,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
 function lippingSpeciesName($id){
     $Species = LippingSpecies::where('id',$id)->where('Status',1)->first();
     $Species = empty($Species) ? $id : $Species->SpeciesName;
-    
+
     return $Species;
 }
 
@@ -7553,7 +7558,7 @@ function lippingSpeciesId($name){
     if(!empty($Species)){
         $SpeciesId = $Species->id;
     }
-    
+
     return $SpeciesId;
 }
 
@@ -7575,13 +7580,13 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
      }else{
          $countSelectedOption = SelectedOverpanelGlassGlazing::where(['editBy' => $authdata->id])->count();
      }
-     
+
      $optionCheckall = '';
      $priceText = '';
      if ($countOption == $countSelectedOption) {
          $optionCheckall = 'checked';
      }
-     
+
      $check = '<th>#</th>';
      if($authdata->id != 1){
          $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -7636,7 +7641,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                                          <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->glassSelectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                      </div>';
                      }
-                     
+
                      $action = '';
                      if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                          $action = '
@@ -7669,7 +7674,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                              </button>
                          </div>';
                      }
-                     
+
      $costtext = '';
      $checkText = '<td class="text-center">'.$i++.'</td>';
      if($authdata->id != 1){
@@ -7680,7 +7685,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                              <div class="control_indicator"></div>
                          </label></div></td>';
      }
-     
+
      $tbl1 .=        '<tr>
                          '.$checkText.'
                          <td class="text-center">'.$streboard.'</td>
@@ -7733,7 +7738,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -7795,7 +7800,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->glazingSelectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -7809,7 +7814,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
                     $costtext = '';
                     $checkText = '<td class="text-center">'.$i++.'</td>';
                     if($authdata->id != 1){
@@ -7820,7 +7825,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
                     }
-                    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$streboard.'</td>
@@ -7865,13 +7870,13 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
     }else{
         $countSelectedOption = SelectedScreenGlass::where(['editBy' => $authdata->id])->count();
     }
-    
+
     $optionCheckall = '';
     $priceText = '';
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     if($authdata->id != 1){
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
@@ -7925,7 +7930,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->glassSelectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -7954,7 +7959,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                             </button>
                         </div>';
                     }
-                    
+
     $costtext = '';
     $checkText = '<td class="text-center">'.$i++.'</td>';
     if($authdata->id != 1){
@@ -7965,7 +7970,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                             <div class="control_indicator"></div>
                         </label></div></td>';
     }
-    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$value->FireRating.'</td>
@@ -8018,7 +8023,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
     if ($countOption == $countSelectedOption) {
         $optionCheckall = 'checked';
     }
-    
+
     $check = '<th>#</th>';
     $priceText = '';
     if($authdata->id != 1){
@@ -8070,7 +8075,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
                                         <input type="number" onkeyup="chooseoptioncost(this.value,' . $value->id . ',' . $value->selectedId . ",'" . $optionType . '\')" value="' . $value->glazingSelectedPrice . '" class="form-control" data-optionId="' . $value->id . '" id="' . $value->selectedId . '" data-optionName="option" pattern="[0-9]+(\\.[0-9][0-9]?)?">
                                     </div>';
                     }
-                    
+
                     $action = '';
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
@@ -8095,7 +8100,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
                             </button>
                         </div>';
                     }
-                    
+
                     $costtext = '';
                     $checkText = '<td class="text-center">'.$i++.'</td>';
                     if($authdata->id != 1){
@@ -8106,7 +8111,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
                             <div class="control_indicator"></div>
                         </label></div></td>';
                     }
-                    
+
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$value->FireRating.'</td>
