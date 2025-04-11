@@ -493,7 +493,7 @@ $(function(){
         var bomTag = $("#bomTag").val();
         if (currentVersion != 0) {
             // if(bomTag > 0){
-                    let url = QualityControlUrl + '/' + quotationId + '/' + currentVersion;
+                    let url = QualityControlUrl;
                     var request = new XMLHttpRequest();
                     request.onreadystatechange = function() {
                         if(request.readyState == 4) {

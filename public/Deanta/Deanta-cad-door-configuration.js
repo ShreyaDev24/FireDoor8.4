@@ -273,7 +273,12 @@ const render = (CustomElement = null) => {
             var framewidthToShow = SOWidths ;
              }
 
-    var FrameWidth = SOWidth - (Tollerance * FrameWidthAdditionalNumber);
+     // var FrameWidth = SOWidth - (Tollerance * FrameWidthAdditionalNumber);
+     if (DoorSetType == "SD"){
+        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    }else{
+        var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    }
     $("#frameWidth").val(FrameWidth);
 
      var FrameWidthForMap = 0;
@@ -8758,6 +8763,17 @@ else if (swingType != 'DA' && frameonoff) {
                         .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)");
+
+                        const here=$('input[name="vP1Height2"]').val()
+                        console.log(here,$('input[name="vP1Height2"]').val(),'kkkkkkkkkkkkk')
+                        svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x",  DistanceXForLeaf1VPShape - 15) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 ) // set y position of text
+                        .attr("transform", `rotate(-90, ${ DistanceXForLeaf1VPShape - 15}, ${DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 })`)
+                        .text(here);
 
                     svg.append("black")
                         .style("fill", "black")
