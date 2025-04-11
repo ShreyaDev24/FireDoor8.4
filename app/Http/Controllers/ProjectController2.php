@@ -80,7 +80,7 @@ class ProjectController2 extends Controller
                     ])->orderBy('project.id','desc')->get();
 
                 }
-                
+
                 break;
 
             case 2:
@@ -96,7 +96,7 @@ class ProjectController2 extends Controller
                     ])->orderBy('project.id','desc')->get();
 
                 }
-                
+
                 break;
 
                 default:
@@ -132,7 +132,7 @@ class ProjectController2 extends Controller
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
-        
+
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -165,7 +165,7 @@ class ProjectController2 extends Controller
                     $filters[] = ['project.UserId', "=", $request->id];
                     $filters[] = ['project.CompanyId', "=", $login_company_id];
                 }
-                
+
                 break;
 
             case 3:
@@ -214,7 +214,7 @@ class ProjectController2 extends Controller
                     foreach ($filters as $filter) {
                         $q->where($filter[0], $filter[1], $filter[2]);
                     }
-                    
+
                     $q->orWhereIn('project.UserId', $created_by_my_cmpny_admin_user);
                 });
             // ✅ Apply date filter only if it exists
@@ -236,7 +236,7 @@ class ProjectController2 extends Controller
             if($request->listType=='dataListType'){
              $data = $query->orderBy($column, $dir)->get();
          }else{
- 
+
              $data = $query->skip($from)->take($limit)->orderBy($column, $dir)->get();
          }
         } elseif ($UserType == 2) {
@@ -273,7 +273,7 @@ class ProjectController2 extends Controller
                         }
                     }
                 }
-                
+
                 foreach ($filters as $filter) {
                     if ($filter[0] !== "project.created_at") {
                         $query->where($filter[0], $filter[1], $filter[2]);
@@ -344,7 +344,7 @@ class ProjectController2 extends Controller
 
                 $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
                 $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-                
+
                 //firedoor2_role_update
                 // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -402,7 +402,7 @@ $sn++;
 
                 // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
             }
-            
+
             $htmlData .= '</tbody>
             </table>';
         }else{
@@ -452,7 +452,7 @@ $sn++;
 
                 $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
                 $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-                
+
                 //firedoor2_role_update
                 // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -657,7 +657,7 @@ $sn++;
             if ($createInvitation) {
                 return redirect()->back()->with('success', 'Invitation sent successfully! ');
             }
-            
+
             return redirect()->back()->with('error', 'Failed Invitation not sent. Please retry! ');
 
         } catch (Exception) {
@@ -690,7 +690,7 @@ $sn++;
                     ])->orderBy('project.id','desc')->get();
 
                 }
-                
+
                 break;
 
             case 2:
@@ -706,7 +706,7 @@ $sn++;
                     ])->orderBy('project.id','desc')->get();
 
                 }
-                
+
                 break;
 
                 default:
@@ -740,7 +740,7 @@ $sn++;
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
-        
+
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -790,7 +790,7 @@ $sn++;
 
                 $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
                 $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-                
+
                 //firedoor2_role_update
 
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -815,7 +815,7 @@ $sn++;
                         $Currency = "$ US DOLLAR";
                     }
                 }
-                
+
                 $htmlData .=
                 '<div class="col-sm-3 mb-3">
                     <div class="QuotationBox">
@@ -990,7 +990,7 @@ $sn++;
             foreach($users as $valUserId){
                 $user_ids[] = $valUserId;
             }
-            
+
             $user_ids[] = Auth::user()->id;
         }elseif(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -1078,7 +1078,7 @@ $sn++;
                 </tr>';
                 $i++;
             }
-            
+
             $tbl2 = '';
             if(!empty($projectinfo)){
                 $cc = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->where('customers.UserId',$projectinfo->customerId)->get();
@@ -1222,7 +1222,7 @@ $sn++;
                         <td><input type="checkbox" class="survey_users" value="'.$ccs->id.'" '.$select.'/></td>
                     </tr>';
                 }
-                
+
                 $survey_user_table .=  '</tbody></table></div>';
                 $survey_user_table .= '<button type="button" onclick="updateMe()" class="btn btn-primary text-white checkupdate-btn">Select</button>';
 
@@ -1251,7 +1251,7 @@ $sn++;
                         $ccs->oldSOHeight = $ccs->oldestSOHeight;
                         $ccs->oldSODepth = $ccs->oldestSODepth;
                     }
-                    
+
                     $survey_change_request .=
                     '<tr>
                         <td>'.$row++.'</td>
@@ -1267,7 +1267,7 @@ $sn++;
                         <td><button type="button" onclick="ChangeRequest('.$data[0]->quotationId.','.$data[0]->versionId.','.$ccs->SOWidth.','.$ccs->SOHeight.','.$ccs->itemId.','.$ccs->itemMasterId.','.$ccs->oldSOWidth.','.$ccs->oldSOHeight.','.$ccs->oldSODepth.','.$ccs->SODepth.','.$ccs->id.')" class="btn btn-primary text-white" '.$disabled.'>Accept Request</button></td>
                     </tr>';
                 }
-                
+
                 $survey_change_request .=  '</tbody></table></div>';
             }else{
                 $survey_change_request .= '<p> No requests available </p>';
@@ -1302,7 +1302,7 @@ $sn++;
                         <td><button type="button" onclick="taskUpdate(\''.$ccs->tasks."',".$ccs->id.')" class="btn btn-primary text-white float-right">Edit</button></td>
                     </tr>';
                 }
-                
+
                 $survey_tasks .=  '</tbody></table></div>';
             }else{
                 $survey_tasks .= '<p> No tasks available </p>';
@@ -1328,11 +1328,11 @@ $sn++;
                     if(isset($info->fromTime) && !empty($info->fromTime)){
                         $info->fromTime = date('Y-m-d\TH:i', strtotime((string) $info->fromTime));
                     }
-                    
+
                     if(isset($info->toTime) && !empty($info->toTime)){
                         $info->toTime = date('Y-m-d\TH:i', strtotime((string) $info->toTime));
                     }
-                    
+
                     $survey_info_table .=
                     '<tr>
                         <td>'.$row++.'</td>
@@ -1373,7 +1373,7 @@ $sn++;
                         <td><p class="float-right"><a href="'.url('Survey_attachment/'.$ccs->attachment).'" target="_blank" class="btn btn-primary"><i class="fas fa-eye"></i> View</a></p></td>
                     </tr>';
                 }
-                
+
                 $survey_attachments_table .=  '</tbody></table></div>';
             }else{
                 $survey_attachments_table .= '<p> No Attachments available </p>';
@@ -1458,7 +1458,7 @@ $sn++;
         if(!empty($defaultItems)){
             $defaultItemsCustom = $defaultItems->defaultItems->firstWhere('default_type', 'custom') ?? [];
         }
-        
+
         if(!empty($defaultItems)){
             $defaultItemsStandard = $defaultItems->defaultItems->firstWhere('default_type', 'standard') ?? [];
         }
@@ -1501,7 +1501,7 @@ $sn++;
         if($floorPlans){
             echo json_encode(["status" => "success", "data" => $floorPlans, "msg" => "Data found Successfully!"]);
         }
-        
+
         // else{
         //     echo json_encode(array("status" => "error", "data" => $floorPlans, "msg" => "Data not found!"));
 
@@ -1572,7 +1572,7 @@ $sn++;
                     $SurveyChangerequest->oldSODepth = $request->oldSODepth;
                     $SurveyChangerequest->save();
                 }
-                
+
                 \Session::flash('status', 'success');
                 \Session::flash('message', 'Change_request');
                 echo json_encode(["status" => "success", "msg" => "Request Updated Successfully!"]);
@@ -1629,7 +1629,7 @@ $sn++;
                                 $qv->updated_at = date('Y-m-d H:i:s');
                                 $qv->save();
                             }
-                            
+
                             //get version id for check the version exist or not in bom calculation table
                             $version_id = QuotationVersion::where('quotation_id', $OldQuotationItems->QuotationId)->where('id', $VersionId)->value('version');
 
@@ -1638,7 +1638,7 @@ $sn++;
                             }else{
                                 $BOMCalculation = BOMCalculation::where('QuotationId',$OldQuotationItems->QuotationId)->where('itemId',$OldQuotationItems->itemId)->where('VersionId',$version_id)->get();
                             }
-                            
+
                             //insert into bom calculation table
                             if($BOMCalculation != null){
                                 foreach($BOMCalculation as $IKey => $IVal){
@@ -1649,7 +1649,7 @@ $sn++;
                                     $BOMCalculationItems->save();
                                 }
                             }
-                            
+
                             //insert into survey change request
                             $SurveyChangerequest = SurveyChangerequest::find($request->requestId);
                             if(!empty($SurveyChangerequest)){
@@ -1716,7 +1716,7 @@ $sn++;
             $newSurveyTasks->save();
             echo json_encode(["status" => "success", "msg" => "Task Created Successfully!"]);
         }
-        
+
         \Session::flash('status', 'success');
         \Session::flash('message', 'Tasks');
     }
@@ -1774,7 +1774,7 @@ $sn++;
                 foreach($QuotationVersionItems as  $QuotationVersionItem){
                     $itemmasterID[] = $QuotationVersionItem->itemmasterID;
                 }
-                
+
                 $ItemMasters = ItemMaster::wherein('id',$itemmasterID)->select('floor')->groupBy('floor')->get();
                 // dd($ItemMasters);
                 foreach($ItemMasters as  $ItemMaster){
@@ -1801,7 +1801,7 @@ $sn++;
             foreach($users as $valUserId){
                 $user_ids[] = $valUserId;
             }
-            
+
             $user_ids[] = Auth::user()->id;
         }elseif(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -1810,7 +1810,7 @@ $sn++;
         }else{
             $user_ids = [Auth::user()->id];
         }
-        
+
         $keys = $request->selectedValue;
         if (!empty($keys) && count($keys)) {
             $data = SurveyInfo::wherein('companyId', $user_ids)->where('projectId',$request->projectId)->get();
@@ -1858,7 +1858,7 @@ $sn++;
         else{
             SurveyInfo::wherein('companyId' , $user_ids)->where('projectId',$request->projectId)->delete();
         }
-        
+
         echo json_encode(["status" => "ok", "msg" => "Survey User Updated!"]);
 
         \Session::flash('status', 'success');
@@ -1899,7 +1899,7 @@ $sn++;
                 }
             }
         }
-        
+
         \Session::flash('status', 'success');
         \Session::flash('message', 'Schedule');
 
@@ -1916,7 +1916,7 @@ $sn++;
 
            $UserId = ['id' => $User->id];
         }
-        
+
         $addIronmongery = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
         $i = 1;
         $tbl = '';
@@ -1963,7 +1963,7 @@ $sn++;
         return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list]);
         // return view('Project.addironmongery',compact('tooltip','pid','item','hinge' , 'FloorSpring','LocksAndLatches', 'FlushBolts' , 'ConcealedOverheadCloser' , 'PullHandles' , 'PushHandles' , 'KickPlates' ,'DoorSelectors' ,'PanicHardware', 'Doorsecurityviewer' , 'Morticeddropdownseals' , 'Facefixeddropseals' , 'ThresholdSeal' , 'AirTransferGrill' , 'Letterplates' , 'CableWays' , 'SafeHinge' , 'LeverHandle'  , 'DoorSinage'  , 'FaceFixedDoorCloser' , 'Thumbturn'  , 'KeyholeEscutchen'));
     }
-    
+
     public function subaddironmongery(Request $request)
     {
         if(!empty($request->Setname)){
@@ -1983,7 +1983,7 @@ $sn++;
             $item = new AddIronmongery;
             $item->created_at = date('Y-m-d H:i:s');
         }
-        
+
         $item->configurableitems = $request->configurableitems;
         $item->UserId = Auth::user()->id;
         $item->ProjectId = $request->ProjectId;
@@ -2051,7 +2051,7 @@ $sn++;
             if(!empty($request->ProjectId)){
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery updated successfully!');
             }
-            
+
             return redirect('project/ironmongery-list')->with('success', 'Ironmongery updated successfully!');
         }
         else
@@ -2059,7 +2059,7 @@ $sn++;
             if(!empty($request->ProjectId)){
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery added successfully!');
             }
-            
+
             return redirect('project/ironmongery-list')->with('success', 'Ironmongery added successfully!');
 
         }
@@ -2091,7 +2091,7 @@ $sn++;
         else{
             $data->MainContractorId=$MainContractorId;
          }
-        
+
         // dd($data);
          $data->save();
          return redirect()->back();
@@ -2185,154 +2185,154 @@ $sn++;
             $LocksandLatchesPrice = $result['price'];
             $list = $this->setValue("LocksandLatchesKey", $list, $LocksAndLatches, $LocksandLatchesPrice);
         }
-        
+
         if(!empty($item->FlushBolts)){
             $result = ironmongeryGetCodeName($item->FlushBolts);
             $FlushBolts = $result['name'];
             $FlushBoltsPrice = $result['price'];
             $list = $this->setValue("flushBoltsKey", $list, $FlushBolts, $FlushBoltsPrice);
         }
-        
+
         if(!empty($item->ConcealedOverheadCloser)){
             $result = ironmongeryGetCodeName($item->ConcealedOverheadCloser);
             $ConcealedOverheadCloser = $result['name'];
             $ConcealedOverheadCloserPrice = $result['price'];
             $list = $this->setValue("concealedOverheadCloserKey", $list, $ConcealedOverheadCloser, $ConcealedOverheadCloserPrice);
         }
-        
+
         if(!empty($item->PullHandles)){
             $result = ironmongeryGetCodeName($item->PullHandles);
             $PullHandles = $result['name'];
             $PullHandlesPrice = $result['price'];
             $list = $this->setValue("pullHandlesKey", $list, $PullHandles, $PullHandlesPrice);
         }
-        
+
         if(!empty($item->PushHandles)){
             $result = ironmongeryGetCodeName($item->PushHandles);
             $PushHandles = $result['name'];
             $PushHandlesPrice = $result['price'];
             $list = $this->setValue("pushHandlesKey", $list, $PushHandles, $PushHandlesPrice);
         }
-        
+
         if(!empty($item->KickPlates)){
             $result = ironmongeryGetCodeName($item->KickPlates);
             $KickPlates = $result['name'];
             $KickPlatesPrice = $result['price'];
             $list = $this->setValue("kickPlatesKey", $list, $KickPlates, $KickPlatesPrice);
         }
-        
+
         if(!empty($item->DoorSelectors)){
             $result = ironmongeryGetCodeName($item->DoorSelectors);
             $DoorSelectors = $result['name'];
             $DoorSelectorsPrice = $result['price'];
             $list = $this->setValue("doorSelectorsKey", $list, $DoorSelectors, $DoorSelectorsPrice);
         }
-        
+
         if(!empty($item->PanicHardware)){
             $result = ironmongeryGetCodeName($item->PanicHardware);
             $PanicHardware = $result['name'];
             $PanicHardwarePrice = $result['price'];
             $list = $this->setValue("panicHardwareKey", $list, $PanicHardware, $PanicHardwarePrice);
         }
-        
+
         if(!empty($item->Doorsecurityviewer)){
             $result = ironmongeryGetCodeName($item->Doorsecurityviewer);
             $Doorsecurityviewer = $result['name'];
             $DoorsecurityviewerPrice = $result['price'];
             $list = $this->setValue("doorSecurityViewerKey", $list, $Doorsecurityviewer, $DoorsecurityviewerPrice);
         }
-        
+
         if(!empty($item->Morticeddropdownseals)){
             $result = ironmongeryGetCodeName($item->Morticeddropdownseals);
             $Morticeddropdownseals = $result['name'];
             $MorticeddropdownsealsPrice = $result['price'];
             $list = $this->setValue("morticeddropdownsealsKey", $list, $Morticeddropdownseals, $MorticeddropdownsealsPrice);
         }
-        
+
         if(!empty($item->Facefixeddropseals)){
             $result = ironmongeryGetCodeName($item->Facefixeddropseals);
             $Facefixeddropseals = $result['name'];
             $FacefixeddropsealsPrice = $result['price'];
             $list = $this->setValue("facefixeddropsealsKey", $list, $Facefixeddropseals, $FacefixeddropsealsPrice);
         }
-        
+
         if(!empty($item->ThresholdSeal)){
             $result = ironmongeryGetCodeName($item->ThresholdSeal);
             $ThresholdSeal = $result['name'];
             $ThresholdSealPrice = $result['price'];
             $list = $this->setValue("thresholdSealKey", $list, $ThresholdSeal, $ThresholdSealPrice);
         }
-        
+
         if(!empty($item->AirTransferGrill)){
             $result = ironmongeryGetCodeName($item->AirTransferGrill);
             $AirTransferGrill = $result['name'];
             $AirTransferGrillPrice = $result['price'];
             $list = $this->setValue("airtransfergrillsKey", $list, $AirTransferGrill, $AirTransferGrillPrice);
         }
-        
+
         if(!empty($item->Letterplates)){
             $result = ironmongeryGetCodeName($item->Letterplates);
             $Letterplates = $result['name'];
             $LetterplatesPrice = $result['price'];
             $list = $this->setValue("LetterplatesKey", $list, $Letterplates, $LetterplatesPrice);
         }
-        
+
         if(!empty($item->CableWays)){
             $result = ironmongeryGetCodeName($item->CableWays);
             $CableWays = $result['name'];
             $CableWaysPrice = $result['price'];
             $list = $this->setValue("cableWaysKey", $list, $CableWays, $CableWaysPrice);
         }
-        
+
         if(!empty($item->SafeHinge)){
             $result = ironmongeryGetCodeName($item->SafeHinge);
             $SafeHinge = $result['name'];
             $SafeHingePrice = $result['price'];
             $list = $this->setValue("safeHingeKey", $list, $SafeHinge, $SafeHingePrice);
         }
-        
+
         if(!empty($item->LeverHandle)){
             $result = ironmongeryGetCodeName($item->LeverHandle);
             $LeverHandle = $result['name'];
             $LeverHandlePrice = $result['price'];
             $list = $this->setValue("LeverHandleKey", $list, $LeverHandle, $LeverHandlePrice);
         }
-        
+
         if(!empty($item->DoorSinage)){
             $result = ironmongeryGetCodeName($item->DoorSinage);
             $DoorSinage = $result['name'];
             $DoorSinagePrice = $result['price'];
             $list = $this->setValue("DoorSignageKey", $list, $DoorSinage, $DoorSinagePrice);
         }
-        
+
         if(!empty($item->FaceFixedDoorCloser)){
             $result = ironmongeryGetCodeName($item->FaceFixedDoorCloser);
             $FaceFixedDoorCloser = $result['name'];
             $FaceFixedDoorCloserPrice = $result['price'];
             $list = $this->setValue("FaceFixedDoorClosersKey", $list, $FaceFixedDoorCloser, $FaceFixedDoorCloserPrice);
         }
-        
+
         if(!empty($item->Thumbturn)){
             $result = ironmongeryGetCodeName($item->Thumbturn);
             $Thumbturn = $result['name'];
             $ThumbturnPrice = $result['price'];
             $list = $this->setValue("thumbturnKey", $list, $Thumbturn, $ThumbturnPrice);
         }
-        
+
         if(!empty($item->KeyholeEscutchen)){
             $result = ironmongeryGetCodeName($item->KeyholeEscutchen);
             $KeyholeEscutchen = $result['name'];
             $KeyholeEscutchenPrice = $result['price'];
             $list = $this->setValue("keyholeEscutcheonKey", $list, $KeyholeEscutchen, $KeyholeEscutchenPrice);
         }
-        
+
         if(!empty($item->DoorStops)){
             $result = ironmongeryGetCodeName($item->DoorStops);
             $DoorStops = $result['name'];
             $DoorStopsPrice = $result['price'];
             $list = $this->setValue("DoorStopsKey", $list, $DoorStops, $DoorStopsPrice);
         }
-        
+
         if(!empty($item->Cylinders)){
             $result = ironmongeryGetCodeName($item->Cylinders);
             $Cylinders = $result['name'];
@@ -2384,7 +2384,7 @@ $sn++;
                 break;
             }
         }
-        
+
         return $list;
     }
 
@@ -2411,20 +2411,20 @@ $sn++;
             if($tag == 'DoorSchedule'){
                 ProjectFilesDS::where('projectfileId',$projectFileID)->delete();
             }
-            
+
             ProjectFiles::where('id',$projectFileID)->delete();
         }
-        
+
         if($project->ProjectImage != ''){
             File::delete($filepath.$project->ProjectImage);
         }
-        
+
         Quotation::where('ProjectId',$projectId)->update(['ProjectId' => null]);
         AddIronmongery::where('ProjectId',$projectId)->delete();
         Project::where('id',$projectId)->delete();
         return redirect()->back()->with('success', 'Project deleted successfully!');
     }
-    
+
     public function deactivateproject(Request $request)
     {
         $projectId = $request->projectId;
@@ -2434,7 +2434,7 @@ $sn++;
         Quotation::where('ProjectId',$projectId)->update(['ProjectId' => null]);
         return redirect()->back()->with('success', 'Project deactivate successfully!');
     }
-    
+
     public function activateproject(Request $request)
     {
         $projectId = $request->projectId;
@@ -2473,7 +2473,7 @@ $sn++;
             $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
 
         }
-        
+
         // $orders = $request->orders;
         // $column = $orders[0]["column"];
         // $dir = $orders[0]["dir"];
@@ -2509,7 +2509,7 @@ $sn++;
                     $filters[] = ['project.UserId', "=", $request->id];
                     $filters[] = ['project.CompanyId', "=", $login_company_id];
                 }
-                
+
                 break;
 
             case 4:
@@ -2556,7 +2556,7 @@ $sn++;
 
                 $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
                 $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-                
+
                 //firedoor2_role_update
 
                 $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
@@ -2581,7 +2581,7 @@ $sn++;
                         $Currency = "$ US DOLLAR";
                     }
                 }
-                
+
                 $htmlData .=
                 '<div class="col-sm-3 mb-3">
                     <div class="QuotationBox">
@@ -2673,7 +2673,7 @@ $sn++;
         }else{
             echo json_encode(["status" => "error", "msg" => "Project Id not found!"]);
         }
-        
+
         \Session::flash('status', 'success');
         \Session::flash('message', 'Floor');
     }
@@ -2805,7 +2805,10 @@ $sn++;
     }
 
     public function getProjectListExportAll(){
-        return Excel::download(new AllProjectExport(), 'project.xlsx');
+        return Excel::download(new AllProjectExport(), 'project.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     public function defaultsStore(Request $request){

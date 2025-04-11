@@ -39,7 +39,7 @@ class IronmongeryInfo extends Controller
 
                    return redirect("/");
             }
-            
+
             return $next($request);
 
         });
@@ -98,7 +98,7 @@ class IronmongeryInfo extends Controller
             if(isset($IronmongeryInfo->CategoryFieldsJSON)){
                 $categoryFieldsArray = json_decode($IronmongeryInfo->CategoryFieldsJSON);
             }
-            
+
             if(!empty($IronmongeryInfo) && (array)$IronmongeryInfo !== []){
                 return view('IronmongeryInfo.CreateIronmongeryInfo',['IronmongeryInfo' => $IronmongeryInfo, 'option' => $option]);
             } else {
@@ -142,7 +142,7 @@ class IronmongeryInfo extends Controller
                         } else {
                             $Finishes .= $request->Finishes[$j].",";
                         }
-                        
+
                     $j++;
                     }
 
@@ -189,7 +189,7 @@ class IronmongeryInfo extends Controller
                             if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
                                 return redirect('IronmongeryInfo/update/'.$request->update);die;
                             }
-                            
+
                             $file->move($filepath,$ImageName);
                             $IronmongeryInfo->Image = $ImageName;
                         }
@@ -203,7 +203,7 @@ class IronmongeryInfo extends Controller
                                 File::delete($filepath.$IronmongeryInfo->Image);
                                 return redirect('ironmongery-info/update/'.$request->update);die;
                             }
-                            
+
                             $file->move($filepath,$PdfSpecificationName);
                             File::delete($filepath.$IronmongeryInfo->PdfSpecification);
                             File::delete($filepath.$IronmongeryInfo->Image);
@@ -303,7 +303,7 @@ class IronmongeryInfo extends Controller
                     if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
                         return redirect('ironmongery-info/create');die;
                     }
-                    
+
                     $file->move($filepath,$ImageName);
                 }
 
@@ -315,7 +315,7 @@ class IronmongeryInfo extends Controller
                     if(!in_array($PdfSpecificationExtension,["pdf", "PDF"])){
                         return redirect('ironmongery-info/create');die;
                     }
-                    
+
                     $file->move($filepath,$PdfSpecificationName);
                 }
 
@@ -334,7 +334,7 @@ class IronmongeryInfo extends Controller
                         } else {
                             $Finishes .= $request->Finishes[$j].",";
                         }
-                        
+
                     $j++;
                     }
 
@@ -420,7 +420,7 @@ class IronmongeryInfo extends Controller
         }else{
             $data = IronmongeryInfoModel::whereIn('UserId', $UserId )->where(['GeneratedKey' => $GeneratedKey])->orderBy('Category','ASC')->orderBy('id','desc')->get();
         }
-        
+
         if(Auth::user()->id==1){
             $currency = '';
         }else{
@@ -437,7 +437,10 @@ class IronmongeryInfo extends Controller
     }
 
     public function IronmongeryExport(Request $request){
-        return Excel::download(new IronmongeryInfoExport(), 'Ironmongery-List.xlsx');
+        return Excel::download(new IronmongeryInfoExport(), 'Ironmongery-List.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
     public function IronmongeryTableInsert(Request $request): void{
@@ -459,7 +462,7 @@ class IronmongeryInfo extends Controller
                 $i++;
                 continue;
             }
-            
+
             $j = 0;
             $sno = trim((string) $row[$j++]);
             $id = trim((string) $row[$j++]);
@@ -481,7 +484,7 @@ class IronmongeryInfo extends Controller
                 $IronmongeryInfoModel->save();
             }
         }
-        
+
         $msg = '<p>Excel file is imported successfully.</p>';
         return redirect()->back()->with('success', $msg);
     }
@@ -498,7 +501,7 @@ class IronmongeryInfo extends Controller
             $currency = empty($SettingCurrency) ? "£" : QuotationCurrency($SettingCurrency['currency']);
 
         }
-        
+
         $list = '';
         $ConfigurableItems = ConfigurableItems::get();
 
@@ -551,34 +554,34 @@ class IronmongeryInfo extends Controller
             }else{
                 $list .= $categoryIndex;
             }
-            
+
             if($categoryIndex == 'Air Transfer Grill'){
                 $categoryIndexWithoutSpace = "Airtransfergrills";
             }
-            
+
             if($categoryIndex == 'Keyhole Escutche'){
                 $categoryIndexWithoutSpace = "KeyholeEscutcheon";
             }
-            
+
             if($categoryIndex == 'Locks And Latches'){
                 $categoryIndexWithoutSpace = "LocksandLatches";
             }
-            
+
             if($categoryIndex == 'Face Fixed Door Closer'){
                 $categoryIndexWithoutSpace = "FaceFixedDoorClosers";
             }
-            
+
             if($categoryIndex == 'Push Plates'){
                 $categoryIndexWithoutSpace = "PushHandles";
             }
-            
+
             $list .='</h3><i class="fa fa-chevron-down"></i></header><main><ul class="accordian_list"><div class="row">';
             if(!empty($data) && (array)$data !== []){
                 foreach($data as $row){
                     if($row->Category == $categoryIndexWithoutSpace){
                         $select = SelectedIronmongery::where(['UserId' => auth()->user()->id, 'ironmongery_id' => $row->id])->count();
                         $selected = $select > 0 ? 'border-success' : null;
-                        
+
                         $list .= '<div class="col-md-3 col-sm-6 col-6" onClick="selectMe('.$row->id.')">
                                     <div class="product_holder '.$selected.' select_class_'.$row->id.'">
                                         <div class="product_img">
@@ -595,7 +598,7 @@ class IronmongeryInfo extends Controller
                     }
                 }
             }
-            
+
             $list .=   '</div></ul></main></div>';
 
         }
@@ -708,7 +711,7 @@ class IronmongeryInfo extends Controller
             }
 
         }
-        
+
         if(count((array)$data)!="0"){
             echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency]);
         }else{
@@ -730,7 +733,7 @@ class IronmongeryInfo extends Controller
 
                     $useTbl = [$user->id];
                 }
-            
+
             $iron_mongery_info = IronmongeryInfoModel::where('id',$id)->first();
             $selected_iron_mongery = SelectedIronmongery::where('ironmongery_id',$id)->get();
             $selected_iron_mongery_id = [];

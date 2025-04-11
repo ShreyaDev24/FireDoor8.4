@@ -106,7 +106,7 @@ class DoorScheduleController extends Controller
         } else {
             $customers = CustomerContact::join('customers', 'customers.id', 'customer_contacts.MainContractorId')->select('customers.id', 'customer_contacts.FirstName', 'customer_contacts.LastName')->where('customers.UserId', Auth::user()->id)->orderBy('customers.id', 'desc')->get();
         }
-        
+
         return view('DoorSchedule.AddQuotation', ['customers' => $customers]);
     }
 
@@ -141,7 +141,7 @@ class DoorScheduleController extends Controller
         } else {
             $quotation->flag = 0;
         }
-        
+
         $quotation->ProjectId = $request->projectId;
         $quotation->UserId = Auth::user()->id;
         $quotation->QuotationName = $request->QuotationName;
@@ -167,7 +167,7 @@ class DoorScheduleController extends Controller
             $quoteContactInfo->QuotationId = $request->quotationId;
             $quoteContactInfo->created_at = date('Y-m-d H:i:s');
         }
-        
+
         $quoteContactInfo->Contact = $request->Contact;
         $quoteContactInfo->Email = $request->Email;
         $quoteContactInfo->Phone = $request->Phone;
@@ -212,7 +212,7 @@ class DoorScheduleController extends Controller
             $quoteShipInfo->QuotationId = $request->quotationId;
             $quoteShipInfo->created_at = date('Y-m-d H:i:s');
         }
-        
+
         $quoteShipInfo->DeliveryRestrictions = $request->DeliveryRestrictions;
         $quoteShipInfo->WagonPreference = $request->WagonPreference;
         $quoteShipInfo->Booking = $request->Booking;
@@ -248,11 +248,11 @@ class DoorScheduleController extends Controller
                             $GTSellPrice += $value->GTSellPrice;
                         }
                     }
-                    
+
                     $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
                     $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
                 }
-                
+
                 Item::where('itemId', $itemid)->update([
                     'DoorsetPrice' => $GTSellPriceTotal,
                 ]);
@@ -269,7 +269,7 @@ class DoorScheduleController extends Controller
                 if($margin != 0){
                     $QuoteSummaryDiscountValue = ($NonConfigurableItems->price * $margin) / 100;
                 }
-                
+
                 $price = ($margin > 0)? ($NonConfigurableItems->price + $QuoteSummaryDiscountValue):
                 ($NonConfigurableItems->price - $QuoteSummaryDiscountValue);
                 NonConfigurableItemStore::where('id', $val->id)->update([
@@ -278,7 +278,7 @@ class DoorScheduleController extends Controller
                 ]);
             }
         }
-        
+
         $SideScreenItems = SideScreenItem::where(['side_screen_items.QuotationId' => $quotationId, 'side_screen_items.VersionId' => $selectVersionID])->get();
         if(!empty($SideScreenItems)){
             foreach($SideScreenItems as $data){
@@ -292,11 +292,11 @@ class DoorScheduleController extends Controller
                     foreach($ScreenBOMCalculation as $value){
                         $GTSellPrice += $value->GTSellPrice;
                     }
-                    
+
                     $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
                     $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
                 }
-                
+
                 SideScreenItem::where('id', $id)->update([
                     'ScreenPrice' => $GTSellPriceTotal
                 ]);
@@ -354,7 +354,7 @@ class DoorScheduleController extends Controller
                         ->orderBy('id', 'desc')
                         ->get();
                 }
-                
+
                 break;
 
             case 2:
@@ -432,7 +432,7 @@ class DoorScheduleController extends Controller
                         ->where('quotation.QuotationGenerationId', null)
                         ->first();
                 }
-                
+
                 break;
 
             default:
@@ -466,7 +466,7 @@ class DoorScheduleController extends Controller
                 $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')
                     ->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
             }
-            
+
             $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
@@ -488,7 +488,7 @@ class DoorScheduleController extends Controller
                 </tr>';
                 $i++;
             }
-            
+
             return view('DoorSchedule.QuotationRequest', ['tbl' => $tbl, 'vid' => $vid]);
         } else {
             return redirect()->route('quotation/add');
@@ -573,7 +573,7 @@ class DoorScheduleController extends Controller
         } else {
             $zz = Item::select('items.itemId', 'items.DoorType')->where('QuotationId', $quotationID)->get();
         }
-        
+
         // $zz = Item::select('items.itemId','items.DoorType')->where('QuotationId',$quotationID)->get();
         $doortype = '<option value="">Select Door Type</option>';
         foreach ($zz as $rr) {
@@ -581,7 +581,7 @@ class DoorScheduleController extends Controller
             if (old('doortypeId') == $rr->itemId) {
                 $select = 'selected';
             }
-            
+
             $doortype .= '<option value="' . $rr->itemId . '" ' . $select . '>' . $rr->DoorType . '</option>';
         }
 
@@ -600,7 +600,7 @@ class DoorScheduleController extends Controller
         } else {
             $zz = SideScreenItem::select('side_screen_items.id', 'side_screen_items.ScreenType')->where('QuotationId', $quotationID)->get();
         }
-        
+
         $doortype = '<option value="">Select Screen Type</option>';
         foreach ($zz as $rr) {
             $doortype .= '<option value="' . $rr->id . '">' . $rr->ScreenType . '</option>';
@@ -682,11 +682,11 @@ class DoorScheduleController extends Controller
                         $GTSellPrice += $value->GTSellPrice;
                     }
                 }
-                
+
                 $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
                 $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
             }
-            
+
             $Item = Item::where('itemId', $itemid)->update([
                 'DoorsetPrice' => $GTSellPriceTotal
              ]);
@@ -797,7 +797,7 @@ class DoorScheduleController extends Controller
                 'msg'=> 'something went wrong!'
             ];
         }
-        
+
         return response()->json($response, 200,['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
 
@@ -833,7 +833,7 @@ class DoorScheduleController extends Controller
                     if (isset($floor)) {
                         $dd->floor = $floor;
                     }
-                    
+
                     $dd->save();
 
                     if ($versionId > 0) {
@@ -847,7 +847,7 @@ class DoorScheduleController extends Controller
                         $QVI->save();
                     }
                 }
-                
+
                 $success = 0;
             } else {
                 $aa = new Item();
@@ -874,7 +874,7 @@ class DoorScheduleController extends Controller
                     if (isset($floor)) {
                         $dd->floor = $floor;
                     }
-                    
+
                     $dd->save();
 
                     if ($versionId > 0) {
@@ -888,7 +888,7 @@ class DoorScheduleController extends Controller
                         $QVI->save();
                     }
                 }
-                
+
                 $success = 0;
             }
         }
@@ -916,7 +916,7 @@ class DoorScheduleController extends Controller
         } else {
             return view('DoorSchedule/import_fields', ['csv_data' => $csv_data, 'quotationId' => $quotationId, 'vid' => $vid, 'ConfigurationType' => $ConfigurationType]);
         }
-        
+
         // $path = $request->file('csv_file')->getRealPath();
         // $data = array_map('str_getcsv', $path);
         // $csv_data = array_slice($data, 0, 2);
@@ -958,7 +958,7 @@ class DoorScheduleController extends Controller
                     if ($request->DoorType) {
                         $DoorType         = $request->DoorType[$i];      // Type
                     }
-                    
+
                     if ($request->FireRating) {
                         if ($request->FireRating[$i] == 'FD30s' || $request->FireRating[$i] == 'FD30S') {
                             $FireRating = "FD30s";
@@ -968,51 +968,51 @@ class DoorScheduleController extends Controller
                             $FireRating = $request->FireRating[$i];          // FireRating
                         }
                     }
-                    
+
                     if ($request->SOWidth) {
                         $SOWidth          = $request->SOWidth[$i];             // StructuralWidth
                     }
-                    
+
                     if ($request->SOHeight) {
                         $SOHeight         = $request->SOHeight[$i];            // StructuralHeight
                     }
-                    
+
                     if ($request->DoorLeafFacing) {
                         $DoorLeafFacing   = $request->DoorLeafFacing[$i];      // DoorFinish
                     }
-                    
+
                     if ($request->Leaf1VisionPanel) {
                         $Leaf1VisionPanel = $request->Leaf1VisionPanel[$i];    // VisionPanel
                     }
-                    
+
                     if ($request->Floor) {
                         $floor            = $request->Floor[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->doorsetType) {
                         $doorsetType = $request->doorsetType[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->sODepth) {
                         $sODepth = $request->sODepth[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->vP1Width) {
                         $vP1Width = $request->vP1Width[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->vP1Height1) {
                         $vP1Height1 = $request->vP1Height1[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->Architrave) {
                         $Architrave = $request->Architrave[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->architraveWidth) {
                         $architraveWidth = $request->architraveWidth[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->architraveThickness) {
                         $architraveThickness = $request->architraveThickness[$i];              // MarkLevel
                     }
@@ -1020,11 +1020,11 @@ class DoorScheduleController extends Controller
                     if ($request->Location) {
                         $Location = $request->Location[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->DoorDescription) {
                         $DoorDescription = $request->DoorDescription[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->LeafWidth1) {
                         $LeafWidth1 = $request->LeafWidth1[$i];              // MarkLevel
                     }
@@ -1032,7 +1032,7 @@ class DoorScheduleController extends Controller
                     if ($request->LeafWidth2) {
                         $LeafWidth2 = $request->LeafWidth2[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->LeafHeight) {
                         $LeafHeight = $request->LeafHeight[$i];              // MarkLevel
                     }
@@ -1044,15 +1044,15 @@ class DoorScheduleController extends Controller
                     if ($request->LeafType) {
                         $LeafType = $request->LeafType[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->Handing) {
                         $Handing = $request->Handing[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->OpensInwards) {
                         $OpensInwards = $request->OpensInwards[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->VpSize1) {
                         $VpSize1 = $request->VpSize1[$i];              // MarkLevel
                     }
@@ -1064,7 +1064,7 @@ class DoorScheduleController extends Controller
                     if ($request->GlassType) {
                         $GlassType = $request->GlassType[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->FrameMaterials) {
                         $FrameMaterials = $request->FrameMaterials[$i];              // MarkLevel
                     }
@@ -1072,19 +1072,19 @@ class DoorScheduleController extends Controller
                     if ($request->FrameFinish) {
                         $FrameFinish = $request->FrameFinish[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->ArchitraveMaterial) {
                         $ArchitraveMaterial = $request->ArchitraveMaterial[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->ArchitraveSetQty) {
                         $ArchitraveSetQty = $request->ArchitraveSetQty[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->IronSet) {
                         $IronSet = $request->IronSet[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->rWDBRating) {
                         $rWDBRating = $request->rWDBRating[$i];              // MarkLevel
                     }
@@ -1145,7 +1145,7 @@ class DoorScheduleController extends Controller
 
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -1159,7 +1159,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         } else {
 
@@ -1173,40 +1173,40 @@ class DoorScheduleController extends Controller
                             if ($request->SOWidth) {
                                 $aa->SOWidth = $SOWidth;
                             }
-                            
+
                             if ($request->SOHeight) {
                                 $aa->SOHeight = $SOHeight;
                             }
-                            
+
                             // $aa->DoorLeafFacing = $DoorLeafFacing;
                             if ($request->Leaf1VisionPanel) {
                                 $aa->Leaf1VisionPanel = $Leaf1VisionPanel;
                             }
-                            
+
                             if ($request->doorsetType) {
                                 $aa->DoorsetType = $doorsetType;              // MarkLevel
                             }
-                            
+
                             if ($request->sODepth) {
                                 $aa->SOWallThick = $sODepth;              // MarkLevel
                             }
-                            
+
                             if ($request->vP1Width) {
                                 $aa->Leaf1VPWidth = $vP1Width;              // MarkLevel
                             }
-                            
+
                             if ($request->vP1Height1) {
                                 $aa->Leaf1VPHeight1 = $vP1Height1;              // MarkLevel
                             }
-                            
+
                             if ($request->Architrave) {
                                 $aa->Architrave = $Architrave;              // MarkLevel
                             }
-                            
+
                             if ($request->architraveWidth) {
                                 $aa->ArchitraveWidth = $architraveWidth;              // MarkLevel
                             }
-                            
+
                             if ($request->architraveThickness) {
                                 $aa->ArchitraveHeight = $architraveThickness;              // MarkLevel
                             }
@@ -1214,11 +1214,11 @@ class DoorScheduleController extends Controller
                             if ($request->Location) {
                                 // $aa->Location = $Location;
                             }
-                            
+
                             if ($request->DoorDescription) {
                                 // $aa->DoorDescription = $DoorDescription;               // MarkLevel
                             }
-                            
+
                             if ($request->LeafWidth1) {
 
                                 $aa->LeafWidth1 = $LeafWidth1;              // MarkLevel
@@ -1235,7 +1235,7 @@ class DoorScheduleController extends Controller
                             } else {
                                 $aa->DoorsetType = 'SD';
                             }
-                            
+
                             if ($request->LeafHeight) {
 
                                 $aa->LeafHeight = $LeafHeight;               // MarkLevel
@@ -1250,17 +1250,17 @@ class DoorScheduleController extends Controller
                             if ($request->LeafType) {
                                 $aa->LeafConstruction = $LeafType;               // MarkLevel
                             }
-                            
+
                             if ($request->Handing) {
 
                                 $aa->Handing = $Handing;              // MarkLevel
                             }
-                            
+
                             if ($request->OpensInwards) {
 
                                 $aa->OpensInwards = $OpensInwards;               // MarkLevel
                             }
-                            
+
                             if ($request->VpSize1) {
 
                                 $aa->Leaf1VisionPanel = $VpSize1;             // MarkLevel
@@ -1275,7 +1275,7 @@ class DoorScheduleController extends Controller
 
                                 $aa->GlassType = $GlassType;             // MarkLevel
                             }
-                            
+
                             if ($request->FrameMaterials) {
 
                                 $aa->FrameMaterial = lippingSpeciesId($FrameMaterials);             // MarkLevel
@@ -1285,7 +1285,7 @@ class DoorScheduleController extends Controller
 
                                 $aa->FrameFinish = $FrameFinish;              // MarkLevel
                             }
-                            
+
                             if ($request->ArchitraveMaterial) {
 
                                 $ArchitraveMaterials = DB::table('lipping_species')->where('SpeciesName', $ArchitraveMaterial)->first();
@@ -1294,22 +1294,22 @@ class DoorScheduleController extends Controller
                                     $aa->ArchitraveMaterial = $ArchitraveMaterials->id;             // MarkLevel
                                 }
                             }
-                            
+
                             if ($request->ArchitraveSetQty) {
 
                                 $aa->ArchitraveSetQty = $ArchitraveSetQty;               // MarkLevel
                             }
-                            
+
                             if ($request->IronSet) {
 
                                 $aa->IronmongerySet = $IronSet;              // MarkLevel
                             }
-                            
+
                             if ($request->rWDBRating) {
 
                                 $aa->rWDBRating = $rWDBRating;             // MarkLevel
                             }
-                            
+
                             if ($request->DoorLeafFacing) {
 
                                 $aa->DoorLeafFacing = $DoorLeafFacing;     // DoorFinish
@@ -1318,7 +1318,7 @@ class DoorScheduleController extends Controller
                             if ($request->FrameOnOff) {
                                 $FrameOnOff = ($request->FrameOnOff[$i] == 'Yes') ? 1 : 0;
                             }
-                            
+
                             $aa->FrameOnOff = $FrameOnOff ?? 0;
 
                             if ($request->LeafHeight && $request->FireRating && $request->LeafWidth1 && $request->pageType &&  $request->DoorLeafFacing  && $request->LeafType) {
@@ -1372,7 +1372,7 @@ class DoorScheduleController extends Controller
                                                 'leaf_type' => $LeafType
                                             ])->get();
                                         }
-                                        
+
                                         // if NFR case 1 more than data so FD30 data allow
                                         if (count($doordimensionCount2) > 1) {
 
@@ -1454,7 +1454,7 @@ class DoorScheduleController extends Controller
 
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -1468,7 +1468,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         }
                     }
@@ -1488,7 +1488,7 @@ class DoorScheduleController extends Controller
             if ($request->Leaf1VisionPanel && $countDFR === 0) {
                 $error2 = '<p style="color:red">Some VisionPanel is not in correct formate.</p>';
             }
-            
+
             if ($success === 0) {
                 $error3 = '<p>Excel file is imported successfully.</p>';
             }
@@ -1506,7 +1506,7 @@ class DoorScheduleController extends Controller
                     if ($request->DoorType) {
                         $DoorType         = $request->DoorType[$i];      // Type
                     }
-                    
+
                     if ($request->FireRating) {
                         if ($request->FireRating[$i] == 'FD30s' || $request->FireRating[$i] == 'FD30S') {
                             $FireRating = "FD30s";
@@ -1516,51 +1516,51 @@ class DoorScheduleController extends Controller
                             $FireRating = $request->FireRating[$i];          // FireRating
                         }
                     }
-                    
+
                     if ($request->SOWidth) {
                         $SOWidth          = $request->SOWidth[$i];             // StructuralWidth
                     }
-                    
+
                     if ($request->SOHeight) {
                         $SOHeight         = $request->SOHeight[$i];            // StructuralHeight
                     }
-                    
+
                     if ($request->DoorLeafFacing) {
                         $DoorLeafFacing   = $request->DoorLeafFacing[$i];      // DoorFinish
                     }
-                    
+
                     if ($request->Leaf1VisionPanel) {
                         $Leaf1VisionPanel = $request->Leaf1VisionPanel[$i];    // VisionPanel
                     }
-                    
+
                     if ($request->Floor) {
                         $floor            = $request->Floor[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->doorsetType) {
                         $doorsetType = $request->doorsetType[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->sODepth) {
                         $sODepth = $request->sODepth[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->vP1Width) {
                         $vP1Width = $request->vP1Width[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->vP1Height1) {
                         $vP1Height1 = $request->vP1Height1[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->Architrave) {
                         $Architrave = $request->Architrave[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->architraveWidth) {
                         $architraveWidth = $request->architraveWidth[$i];              // MarkLevel
                     }
-                    
+
                     if ($request->architraveThickness) {
                         $architraveThickness = $request->architraveThickness[$i];              // MarkLevel
                     }
@@ -1587,7 +1587,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -1601,7 +1601,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         } else {
 
@@ -1616,112 +1616,112 @@ class DoorScheduleController extends Controller
                             if ($request->LeafWidth1) {
                                 $aa->LeafWidth1 = $request->LeafWidth1[$i];              // MarkLevel
                             }
-                            
+
                             if ($request->LeafWidth2) {
                                 $aa->LeafWidth2 = $request->LeafWidth2[$i];              // MarkLevel
                             }
-                            
+
                             if ($request->LeafHeight) {
                                 $aa->LeafHeight = $request->LeafHeight[$i];              // MarkLevel
                             }
-                            
+
                             // $aa->DoorLeafFacing = $DoorLeafFacing;
                             if ($request->Leaf1VisionPanel) {
                                 $aa->Leaf1VisionPanel = $Leaf1VisionPanel;
                             }
-                            
+
                             if ($request->doorsetType) {
                                 $aa->DoorsetType = $doorsetType;              // MarkLevel
                             }
-                            
+
                             if ($request->sODepth) {
                                 $aa->SOWallThick = $sODepth;              // MarkLevel
                             }
-                            
+
                             if ($request->vP1Width) {
                                 $aa->Leaf1VPWidth = $vP1Width;              // MarkLevel
                             }
-                            
+
                             if ($request->vP1Height1) {
                                 $aa->Leaf1VPHeight1 = $vP1Height1;              // MarkLevel
                             }
-                            
+
                             if ($request->Architrave) {
                                 $aa->Architrave = $Architrave;              // MarkLevel
                             }
-                            
+
                             if ($request->architraveWidth) {
                                 $aa->ArchitraveWidth = $architraveWidth;              // MarkLevel
                             }
-                            
+
                             if ($request->architraveThickness) {
                                 $aa->ArchitraveHeight = $architraveThickness;              // MarkLevel
                             }
-                            
+
                             if ($request->SwingType) {
                                 $aa->SwingType = $request->SwingType[$i];              // SwingType
                             }
-                            
+
                             if ($request->Handing) {
                                 $aa->Handing = $request->Handing[$i];              // Handing
                             }
-                            
+
                             if ($request->LatchType) {
                                 $aa->LatchType = $request->LatchType[$i];              // LatchType
                             }
-                            
+
                             if($request->Tollerance){
                                 $aa->Tollerance = $request->Tollerance[$i];              // Tollerance
                             }
-                            
+
                             if($request->GAP){
                                 $aa->GAP = $request->GAP[$i];              // GAP
                             }
-                            
+
                             if($request->FrameMaterial){
                                 $aa->FrameMaterial = GetlippingSpeciesName($request->FrameMaterial[$i]);              // FrameMaterial
                             }
-                            
+
                             if($request->FrameType){
                                 $aa->FrameType = $request->FrameType[$i];              // FrameType
                             }
-                            
+
                             if($request->PlantonStopWidth){
                                 $aa->PlantonStopWidth = $request->PlantonStopWidth[$i];              // PlantonStopWidth
                             }
-                            
+
                             if($request->PlantonStopHeight){
                                 $aa->PlantonStopHeight = $request->PlantonStopHeight[$i];              // PlantonStopHeight
                             }
-                            
+
                             if($request->RebatedWidth){
                                 $aa->RebatedWidth = $request->RebatedWidth[$i];              // RebatedWidth
                             }
-                            
+
                             if($request->RebatedHeight){
                                 $aa->RebatedHeight = $request->RebatedHeight[$i];              // RebatedHeight
                             }
-                            
+
                             if($request->FrameDepth){
                                 $aa->FrameDepth = $request->FrameDepth[$i];              // FrameDepth
                             }
-                            
+
                             if($request->LippingType){
                                 $aa->LippingType = $request->LippingType[$i];              // LippingType
                             }
-                            
+
                             if ($request->LippingThickness) {
                                 $aa->LippingThickness = $request->LippingThickness[$i];              // LippingThickness
                             }
-                            
+
                             if ($request->LippingSpecies) {
                                 $aa->LippingSpecies = $request->LippingSpecies[$i];              // LippingSpecies
                             }
-                            
+
                             if ($request->Accoustics) {
                                 $aa->Accoustics = $request->Accoustics[$i];              // rWdBRating
                             }
-                            
+
                             if ($request->rWdBRating) {
                                 $aa->rWdBRating = $request->rWdBRating[$i];              // rWdBRating
                             }
@@ -1729,47 +1729,47 @@ class DoorScheduleController extends Controller
                             if ($request->SOWidth) {
                                 $aa->SOWidth = $SOWidth;
                             }
-                            
+
                             if ($request->SOHeight) {
                                 $aa->SOHeight = $SOHeight;
                             }
-                            
+
                             if ($request->Tollerance) {
                                 $aa->Tollerance = $request->Tollerance[$i];              // Tollerance
                             }
-                            
+
                             if ($request->GAP) {
                                 $aa->GAP = $request->GAP[$i];              // GAP
                             }
-                            
+
                             if ($request->FrameMaterial) {
                                 $aa->FrameMaterial = GetlippingSpeciesName($request->FrameMaterial[$i]);              // FrameMaterial
                             }
-                            
+
                             if ($request->FrameType) {
                                 $aa->FrameType = $request->FrameType[$i];              // FrameType
                             }
-                            
+
                             if ($request->PlantonStopWidth) {
                                 $aa->PlantonStopWidth = $request->PlantonStopWidth[$i];              // PlantonStopWidth
                             }
-                            
+
                             if ($request->PlantonStopHeight) {
                                 $aa->PlantonStopHeight = $request->PlantonStopHeight[$i];              // PlantonStopHeight
                             }
-                            
+
                             if ($request->RebatedWidth) {
                                 $aa->RebatedWidth = $request->RebatedWidth[$i];              // RebatedWidth
                             }
-                            
+
                             if ($request->RebatedHeight) {
                                 $aa->RebatedHeight = $request->RebatedHeight[$i];              // RebatedHeight
                             }
-                            
+
                             if ($request->FrameDepth) {
                                 $aa->FrameDepth = $request->FrameDepth[$i];              // FrameDepth
                             }
-                            
+
                             if ($request->ArchitraveMaterial) {
                                 $aa->ArchitraveMaterial = GetlippingSpeciesName($request->ArchitraveMaterial[$i]);              // ArchitraveMaterial
                             }
@@ -1777,23 +1777,23 @@ class DoorScheduleController extends Controller
                             if ($request->ArchitraveType) {
                                 $aa->ArchitraveType = $request->ArchitraveType[$i];              // ArchitraveType
                             }
-                            
+
                             if ($request->ArchitraveFinish) {
                                 $aa->ArchitraveFinish = $request->ArchitraveFinish[$i];              // ArchitraveFinish
                             }
-                            
+
                             if ($request->ArchitraveFinishColor) {
                                 $aa->ArchitraveFinishColor = $request->ArchitraveFinishColor[$i];              // ArchitraveFinishColor
                             }
-                            
+
                             if ($request->ArchitraveSetQty) {
                                 $aa->ArchitraveSetQty = $request->ArchitraveSetQty[$i];              // ArchitraveSetQty
                             }
-                            
+
                             if ($request->FrameThickness) {
                                 $aa->FrameThickness = $request->FrameThickness[$i];              // FrameThickness
                             }
-                            
+
                             $aa->FrameOnOff = $FrameOnOff ?? 0;
                             $aa->save();
 
@@ -1810,7 +1810,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -1824,7 +1824,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         }
                     }
@@ -1844,7 +1844,7 @@ class DoorScheduleController extends Controller
             if ($request->Leaf1VisionPanel && $countDFR === 0) {
                 $error2 = '<p style="color:red">Some VisionPanel is not in correct formate.</p>';
             }
-            
+
             if ($success === 0) {
                 $error3 = '<p>Excel file is imported successfully.</p>';
             }
@@ -1916,11 +1916,11 @@ class DoorScheduleController extends Controller
             }elseif($data[0][1][1] == 'Stredor'){
                 $configurableitems = 8;
             }
-            
+
             if($quotation->configurableitems != $configurableitems && $quotation->configurableitems != null){
                 return redirect()->back()->with('error', 'Quotation is not linked with '.$data[0][1][1].' door!');
             }
-            
+
             if ($configurableitems == 1 || $configurableitems == 2 || $configurableitems == 3 || $configurableitems == 7 || $configurableitems == 8) {
                 $quotation->configurableitems = $configurableitems;
                 $quotation->save();
@@ -1931,7 +1931,7 @@ class DoorScheduleController extends Controller
                         $i++;
                         continue;
                     }
-                    
+
                     // dd($row);
                     $j = 2;
                     $IntumescentLeafType = trim((string) $row[$j++]);
@@ -2167,7 +2167,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -2181,7 +2181,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         } else {
                             $IronmongaryPrice = 0;
@@ -2189,7 +2189,7 @@ class DoorScheduleController extends Controller
                                 $AI = AddIronmongery::select('discountprice')->where('id', floatval($IronmongeryID))->where('UserId', user_id())->first();
                                 $IronmongaryPrice = empty($AI) ? 0 : $AI->discountprice;
                             }
-                            
+
                             $FrameOnOff = ($FrameOnOff == 1) ? 1 : 0;
                             $aa = new Item();
                             $aa->QuotationId = $quotationId;
@@ -2372,7 +2372,7 @@ class DoorScheduleController extends Controller
                                 $aa->ArchitraveFinishColor = $ArchitraveFinishColor;
                                 $aa->ArchitraveSetQty = floatval($ArchitraveSetQty);
                             }
-                            
+
                             $aa->LippingType = $LippingType;
                             $aa->LippingThickness = floatval($LippingThickness);
                             $aa->LippingSpecies = lippingSpeciesId($LippingSpecies);
@@ -2643,7 +2643,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -2699,22 +2699,22 @@ class DoorScheduleController extends Controller
                                         $GTSellPrice += $value1->GTSellPrice;
                                     }
                                 }
-                                
+
                                 $ItemMaster = ItemMaster::where('itemID', $Item->itemId)->get()->count();
                                 $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
                             }
-                            
+
                             $Item = Item::where('itemId', $Item->itemId)->update([
                                 'DoorsetPrice' => $GTSellPriceTotal
                             ]);
 
                             $success = 0;
                         }
-                        
+
                         // BOMQuatityOfDoorUpdate($itemId, $quotationId);
                     }
                 }
-                
+
                 $error = null;
                 $error2 = null;
                 $error3 = null;
@@ -2722,11 +2722,11 @@ class DoorScheduleController extends Controller
                 if ($countFR === 0) {
                     $error = '<p style="color:red">Some Fire Rating is not in correct format</p>';
                 }
-                
+
                 if ($countDFR === 0) {
                     $error2 = '<p style="color:red">Some VisionPanel is not in correct formate.</p>';
                 }
-                
+
                 if ($success === 0) {
                     $error3 = '<p>Excel file is imported successfully.</p>';
                 }
@@ -2977,7 +2977,7 @@ class DoorScheduleController extends Controller
                     if ($Checkingfirerating == 0) {
                         $countFR = 0;
                     }
-                    
+
                 $configurationDoor = configurationDoor($configurableitems);
                     if ($DoorLeafFacing !== '' && $DoorLeafFacing !== '0') {
                         // $CheckingDLF = Option::where(['OptionSlug' => 'Door_Leaf_Facing', 'OptionValue' => $DoorLeafFacing])->count();
@@ -3009,7 +3009,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -3023,7 +3023,7 @@ class DoorScheduleController extends Controller
                                     $QVI->save();
                                 }
                             }
-                            
+
                             $success = 0;
                         } else {
                             $IronmongaryPrice = 0;
@@ -3031,15 +3031,15 @@ class DoorScheduleController extends Controller
                                 $AI = AddIronmongery::select('discountprice')->where('id', floatval($IronmongeryID))->where('UserId', user_id())->first();
                                 $IronmongaryPrice = empty($AI) ? 0 : $AI->discountprice;
                             }
-                            
+
                             if($DoorDimensionId2 === '' || $DoorDimensionId2 === '0'){
                                 $DoorDimensionId2 = 0;
                             }
-                            
+
                             if($HingeCenterCheck === '' || $HingeCenterCheck === '0'){
                                 $HingeCenterCheck = 0;
                             }
-                            
+
                             $FrameOnOff = ($FrameOnOff == 1) ? 1 : 0;
                             $aa = new Item();
                             $aa->QuotationId = $quotationId;
@@ -3236,7 +3236,7 @@ class DoorScheduleController extends Controller
                                 $aa->ArchitraveFinishColor = $ArchitraveFinishColor;
                                 $aa->ArchitraveSetQty = floatval($ArchitraveSetQty);
                             }
-                            
+
                             $aa->LippingType = $LippingType;
                             $aa->LippingThickness = floatval($LippingThickness);
                             $aa->LippingSpecies = lippingSpeciesId($LippingSpecies);
@@ -3516,7 +3516,7 @@ class DoorScheduleController extends Controller
                                 if (isset($floor)) {
                                     $dd->floor = $floor;
                                 }
-                                
+
                                 $dd->save();
 
                                 if ($versionId > 0) {
@@ -3572,18 +3572,18 @@ class DoorScheduleController extends Controller
                                         $GTSellPrice += $value1->GTSellPrice;
                                     }
                                 }
-                                
+
                                 $ItemMaster = ItemMaster::where('itemID', $Item->itemId)->get()->count();
                                 $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
                             }
-                            
+
                             $Item = Item::where('itemId', $Item->itemId)->update([
                                 'DoorsetPrice' => $GTSellPriceTotal
                             ]);
 
                             $success = 0;
                         }
-                        
+
                         // BOMQuatityOfDoorUpdate($itemId, $quotationId);
                     }
                 }
@@ -3595,11 +3595,11 @@ class DoorScheduleController extends Controller
 
                     $error = '<p style="color:red">Some Fire Rating is not in correct format</p>';
                 }
-                
+
                 if ($countDFR === 0) {
                     $error2 = '<p style="color:red">Some VisionPanel is not in correct formate.</p>';
                 }
-                
+
                 if ($success === 0) {
                     $error3 = '<p>Excel file is imported successfully.</p>';
                 }
@@ -3630,7 +3630,7 @@ class DoorScheduleController extends Controller
             ]);
             exit;
         }
-        
+
         if (empty($request->version)) {
             echo json_encode([
                 'status' => 'error',
@@ -3683,7 +3683,7 @@ class DoorScheduleController extends Controller
                                     $BOM->save();
                                 }
                             }
-                            
+
                             $OldItemMasterInformation = ItemMaster::select('item_master.*')->join('items', 'item_master.itemID', '=', 'items.itemId')->join('quotation_version_items', 'quotation_version_items.itemmasterID', 'item_master.id')->where('item_master.itemID', $items->itemId)->where('quotation_version_items.version_id', $versionID)->get();
                             if ($OldItemMasterInformation != null) {
                                 foreach ($OldItemMasterInformation as $items) {
@@ -3739,7 +3739,7 @@ class DoorScheduleController extends Controller
                                     $ScreenBOM->save();
                                 }
                             }
-                            
+
                             $OldItemMasterScreen = SideScreenItemMaster::select('side_screen_item_master.*')->join('side_screen_items', 'side_screen_item_master.ScreenID', '=', 'side_screen_items.id')->where('side_screen_item_master.ScreenID', $screen->id)->get();
                             if ($OldItemMasterScreen != null) {
                                 foreach ($OldItemMasterScreen as $items) {
@@ -3788,7 +3788,7 @@ class DoorScheduleController extends Controller
 
         $MaxVersion = QuotationVersion::where('quotation_id', $quotationId)->max('version');
         $versionId = $MaxVersion != null ? $MaxVersion + 1 : 1;
-        
+
         if (!empty($quotationId) && !empty($versionId)) {
             $QuotationVersion = new QuotationVersion();
             $QuotationVersion->quotation_id = $quotationId;
@@ -3851,7 +3851,7 @@ class DoorScheduleController extends Controller
                         }
                     }
                 }
-                
+
                 $url = url('quotation/generate') . '/' . $quotationId . '/' . $QuotationVersion->id;
 
                 echo json_encode([
@@ -3895,7 +3895,7 @@ class DoorScheduleController extends Controller
         if ($Quotation === null) {
             return abort(404);
         }
-        
+
         // NEED TO SHOW ALL PROJECT ON "EDIT HEADER DETAILS => PROJECT SELECT BOX" (09-12-2023)
         $projectUserId = [];
         switch (auth()->user()->UserType) {
@@ -3913,7 +3913,7 @@ class DoorScheduleController extends Controller
                 $projectUserId = [$Quotation->UserId, auth()->user()->CreatedBy];
                 break;
         }
-        
+
         // $ProjectTable = '<option value="">Select Project</option>';
 
         $ProjectsAddress = '';
@@ -3931,13 +3931,13 @@ class DoorScheduleController extends Controller
                 // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
                 $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
             }
-            
+
             $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $Quotation->CompanyId, 'quotation.ProjectId' => $Quotation->ProjectId])->first();
         } else {
             // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
             $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
         }
-        
+
         // if($Projects !== null){
         //     $Projects = $Projects->toArray();
         //     foreach($Projects as $Project){
@@ -3982,7 +3982,7 @@ class DoorScheduleController extends Controller
                 $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             }
-            
+
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
             $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
@@ -4061,7 +4061,7 @@ class DoorScheduleController extends Controller
                 <td><a href="javascript:void(0);" data-type="strebord" onclick="nonConfigStore(' . $Id . ',' . $vId . ',' . $value->id . ',' . $value->price . ');" class="configure_btn">Add</a></td>
             </tr>';
             }
-            
+
             $NonConfig .= '</tbody></table></div></div></div>';
             //     <script type="text/javascript">
             //          document.write(ReadMore(5,"'.$nonconfigdatas->description.'"))
@@ -4099,7 +4099,7 @@ class DoorScheduleController extends Controller
                         Additional <br> Door Set</a>
                     ';
                 }
-                
+
                 $configItem .=
                     '
                 <div class="col-sm-6 p-0 pr-1">
@@ -4136,7 +4136,7 @@ class DoorScheduleController extends Controller
                         </a>
                     </div>';
                 }
-                
+
                 $DA .= '
                 <input type="hidden" name="quotation_sitedeliveryaddressID[]" value="' . $xxs->id . '">
                 <div class="col-sm-12">
@@ -4341,7 +4341,7 @@ class DoorScheduleController extends Controller
                 if (!empty($request->id)) {
                     $filters[] = ['quotation.UserId', "=", $request->id];
                 }
-                
+
                 $filters[] = ['quotation.UserId', "!=", null];
                 break;
 
@@ -4355,7 +4355,7 @@ class DoorScheduleController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.CompanyId', "=", $login_company_id];
                 }
-                
+
                 // $UserId = User::where('CreatedBy', Auth::user()->id)->where('UserType',3)->pluck('id')->toArray();
                 // array_push($UserId, Auth::user()->id);
                 $UserId =  myCreatedUser();
@@ -4383,7 +4383,7 @@ class DoorScheduleController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.ArchitectId', "=", $login_architect_id];
                 }
-                
+
                 break;
 
 
@@ -4397,13 +4397,13 @@ class DoorScheduleController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.MainContractorId', "=", $login_customer_id];
                 }
-                
+
                 break;
 
             default:
                 $filters[] = ['quotation.UserId', "=", $loginUserId];
         }
-        
+
         // dd($filters);
         $Quotations = Quotation::leftJoin("quotation_versions", function ($join): void {
             $join->on("quotation.id", "quotation_versions.quotation_id")
@@ -4464,7 +4464,7 @@ class DoorScheduleController extends Controller
             // }
 
         }
-        
+
         // else{
         //     $Quotations = $Quotations->where($filters);
         // ->orWhere('quotation.QuotationName','LIKE',$filters[0][2])
@@ -4620,7 +4620,7 @@ class DoorScheduleController extends Controller
 
                 // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
             }
-            
+
             $htmlData .= '</tbody>
             </table>';
             } else {
@@ -4802,7 +4802,7 @@ class DoorScheduleController extends Controller
         } else {
             $UserId = Auth::user()->id;
         }
-        
+
         $company_id = get_company_id($UserId)->id;
         $quotationId = $request->quotationId;
         $customerId = $request->customerId;
@@ -4811,14 +4811,14 @@ class DoorScheduleController extends Controller
         $quotaionUpdate->editBy = Auth::user()->id;
         $quotaionUpdate->updated_at = date('Y-m-d H:i:s');
         $quotaionUpdate->save();
-        
+
         $aa = Quotation::where('id', $quotationId)->first();
         $tt = CustomerContact::where('MainContractorId', $aa->MainContractorId)->get();
         $selectCC = '<option value="">Select Contact List</option>';
         foreach ($tt as $cc) {
             $selectCC .= '<option value="' . $cc->id . '" selected>' . $cc->FirstName . ' ' . $cc->LastName . '</option>';
         }
-        
+
         $selproj = '<option value="">Select Contact List</option>';
         $kk = Project::where(['CompanyId' => $company_id, 'MainContractorId' => $customerId, 'Status' => 1])->get();
         foreach ($kk as $kks) {
@@ -4839,7 +4839,7 @@ class DoorScheduleController extends Controller
                 if (!empty($currency) && $currency->currency == $rr[$i]) {
                     $selected = "selected";
                 }
-                
+
                 $projectCurrency .= '<option value="' . $rr[$i] . '" ' . $selected . '>' . $rr[$i] . '</option>';
 
                 $i++;
@@ -4940,7 +4940,10 @@ class DoorScheduleController extends Controller
         // return $quotationId;
         // $item = Item::limit(5)->get();
         // $fp = fopen('file.csv', 'w');
-        return Excel::download(new ScheduleOrder($quotationId, $versionID), 'ScheduleOrder.xlsx');
+        return Excel::download(new ScheduleOrder($quotationId, $versionID), 'ScheduleOrder.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     // Export in new excel
@@ -4949,9 +4952,17 @@ class DoorScheduleController extends Controller
         // return $quotationId;
         // $item = Item::limit(5)->get();
         // $fp = fopen('file.csv', 'w');
-        return Excel::download(new ScheduleOrderNew($quotationId, $versionID), 'ScheduleOrder.xlsx');
+        return Excel::download(
+            new ScheduleOrderNew($quotationId, $versionID),
+            'ScheduleOrder.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
     }
-    
+
     public function ExportBomCalculation($quotationId,$versionID)
     {
         $quotation = Quotation::where('quotation.id',$quotationId)->first();
@@ -4960,10 +4971,13 @@ class DoorScheduleController extends Controller
             $QV = QuotationVersion::where('id',$versionID)->first();
             $vid = $QV->version;
         }
-        
-        return Excel::download(new BomCalculationExport($quotationId,$versionID), "BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+
+        return Excel::download(new BomCalculationExport($quotationId,$versionID), "BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
-    
+
     public function ExportSideScreen($quotationId,$versionID)
     {
         $quotation = Quotation::where('quotation.id',$quotationId)->first();
@@ -4972,8 +4986,11 @@ class DoorScheduleController extends Controller
             $QV = QuotationVersion::where('id',$versionID)->first();
             $vid = $QV->version;
         }
-        
-        return Excel::download(new SideScreenExport($quotationId,$versionID), "SCREEN ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+
+        return Excel::download(new SideScreenExport($quotationId,$versionID), "SCREEN ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     public function ExportIronmongery($quotationId,$versionID)
@@ -4984,14 +5001,20 @@ class DoorScheduleController extends Controller
             $QV = QuotationVersion::where('id',$versionID)->first();
             $vid = $QV->version;
         }
-        
-        return Excel::download(new IronmongeryExport($quotationId,$versionID), "Ironmongery ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+
+        return Excel::download(new IronmongeryExport($quotationId,$versionID), "Ironmongery ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     // Export in Vicama excel
     public function excelexportVicaima($quotationId, $versionID)
     {
-        return Excel::download(new ScheduleOrderVicaima($quotationId, $versionID), 'ScheduleOrder.xlsx');
+        return Excel::download(new ScheduleOrderVicaima($quotationId, $versionID), 'ScheduleOrder.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     // Export in excel
@@ -4999,7 +5022,10 @@ class DoorScheduleController extends Controller
     {
         // $item = Item::limit(5)->get();
         // $fp = fopen('file.csv', 'w');
-        return Excel::download(new ScheduleOrder2(), 'TwoScheduleOrder.xlsx');
+        return Excel::download(new ScheduleOrder2(), 'TwoScheduleOrder.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     // Search customer
@@ -5045,7 +5071,7 @@ class DoorScheduleController extends Controller
         } else {
             $cusTbl .= '<tr><td>No data found.<td></tr>';
         }
-        
+
         $cusTbl .=
             '</tbody>
         </table>';
@@ -5082,15 +5108,15 @@ class DoorScheduleController extends Controller
         } else {
             $qq->OrderNumber = str_replace("QTR", "ORD", $qq->QuotationGenerationId);
         }
-        
+
         if ($qq->OrderNumber == $qq->QuotationGenerationId) {
             $qq->OrderNumber = str_replace("#", "#ORD", $qq->QuotationGenerationId);
         }
-        
+
         if (!empty($request->QuoteSummaryDiscount)) {
             $qq->QuoteSummaryDiscount = $request->QuoteSummaryDiscount;
         }
-        
+
         $qq->QuotationStatus = 'Ordered';
         $qq->editBy = Auth::user()->id;
         $qq->updated_at = date('Y-m-d H:i:s');
@@ -5117,7 +5143,7 @@ class DoorScheduleController extends Controller
         if (!empty($QSQuotationSiteDeliveryAddressId)) {
             $qq->QSQuotationSiteDeliveryAddressId = $QSQuotationSiteDeliveryAddressId;
         }
-        
+
         $qq->editBy = Auth::user()->id;
         $qq->updated_at = date('Y-m-d H:i:s');
         $qq->save();
@@ -5222,7 +5248,7 @@ class DoorScheduleController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
-                            
+
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }
@@ -5242,7 +5268,7 @@ class DoorScheduleController extends Controller
     }else{
         $ids = Auth::user()->id;
     }
-    
+
     $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'custom')
               ->where('UserId', $ids)
@@ -5321,7 +5347,7 @@ class DoorScheduleController extends Controller
         if ($item === null) {
             return abort(404);
         }
-        
+
         $item = $item->toArray();
         $UserId = Auth::user()->id;
         $UserType = Auth::user()->UserType;
@@ -5347,7 +5373,7 @@ class DoorScheduleController extends Controller
         if ($item === null) {
             return abort(404);
         }
-        
+
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -5402,7 +5428,7 @@ class DoorScheduleController extends Controller
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
         }
-        
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -5458,7 +5484,7 @@ class DoorScheduleController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
-                            
+
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }
@@ -5615,7 +5641,7 @@ class DoorScheduleController extends Controller
                             }
                         }
                     }
-                    
+
                     if ($QuotationVersionItemsForWhereIn !== []) {
                         $OldQuotationItems = Items::whereIn('itemId', $QuotationVersionItemsForWhereIn)->get();
                     } else {
@@ -5666,7 +5692,7 @@ class DoorScheduleController extends Controller
                                 }
                             }
                         }
-                        
+
                         // inser into `BOMCalculation`
                         $version_id = QuotationVersion::where('quotation_id', $id)->where('id', $VersionId)->value('version');
                         $BOMCalculation = BOMCalculation::where('QuotationId', $id)->where('VersionId', $version_id)->where('itemId', $IVal->itemId)->get();
@@ -5718,7 +5744,7 @@ class DoorScheduleController extends Controller
                                     $ScreenBOM->save();
                                 }
                             }
-                            
+
                             $OldItemMasterScreen = SideScreenItemMaster::select('side_screen_item_master.*')->join('side_screen_items', 'side_screen_item_master.ScreenID', '=', 'side_screen_items.id')->where('side_screen_item_master.ScreenID', $screen->id)->get();
                             if ($OldItemMasterScreen != null) {
                                 foreach ($OldItemMasterScreen as $items) {
@@ -5776,7 +5802,7 @@ class DoorScheduleController extends Controller
                 $itemId = $rr->itemId;
                 ItemMaster::where('itemID', $itemId)->delete();
             }
-            
+
             Item::where('QuotationId', $quotationId)->delete();
             BOMCalculation::where('QuotationId', $quotationId)->delete();
             $successmsg = 'Quotation ' . $QuotationGenerationId . ' is deleted successfully!';
@@ -5797,10 +5823,10 @@ class DoorScheduleController extends Controller
                     $itemId = $rr->itemId;
                     ItemMaster::where('itemID', $itemId)->delete();
                 }
-                
+
                 Item::where('QuotationId', $quotationId)->delete();
             }
-            
+
             $successmsg = 'Quotation ' . $QuotationGenerationId . ' Version-' . $version . ' is deleted successfully!';
         }
 
@@ -5823,7 +5849,7 @@ class DoorScheduleController extends Controller
         } else {
             $OptionsData = GetOptions(['accoustics.' . $configurationDoor => $pageId, 'accoustics.Status' => 1, 'accoustics.UnderAttribute' => $UnderAttribute], "join", "Accoustic");
         }
-        
+
         // dd($OptionsData);
 
         $data = '
@@ -5843,7 +5869,7 @@ class DoorScheduleController extends Controller
             </div>
             ';
         }
-        
+
         $data .= '</div> </div>';
 
         return $data;
@@ -5867,7 +5893,7 @@ class DoorScheduleController extends Controller
             if (!empty($currency->currency)) {
                 $selcur = $currency->currency;
             }
-            
+
             $rr = ['$_US_DOLLAR', '£_GBP', '€_EURO'];
             $i = 0;
             $count = count($rr);
@@ -5876,14 +5902,14 @@ class DoorScheduleController extends Controller
                 if (!empty($currency) && !empty($selcur) && $selcur == $rr[$i]) {
                     $selected = "selected";
                 }
-                
+
                 $currency = CurrencyBeautify($rr[$i]);
                 $cur .= '<option value="' . $rr[$i] . '" ' . $selected . '>' . $currency . '</option>';
 
                 $i++;
             }
         }
-        
+
         return $cur;
     }
 
@@ -5908,7 +5934,7 @@ class DoorScheduleController extends Controller
         if ($Quotation === null) {
             return abort(404);
         }
-        
+
         // $ProjectTable = '<option value="">Select Project</option>';
 
         if ($Quotation->MainContractorId != '') {
@@ -6025,7 +6051,7 @@ class DoorScheduleController extends Controller
                         $BOMCalculationItems->save();
                     }
                 }
-                
+
                 // }
 
                 $url = 'quotation/add-new-doors/' . $id . '/' . $VersionId;
@@ -6179,7 +6205,7 @@ class DoorScheduleController extends Controller
         } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
             $request->fireRating = 'FD60';
         }
-        
+
         $door_core_size = DB::table('selected_doordimension')->select('selected_doordimension.*')->where('doordimension_user_id', '=', Auth::user()->id)->where('selected_configurableitems', '=', $request->issingleconfiguration)->where('selected_firerating', '=', $request->fireRating)->get();
 
         $arr = [];
@@ -6192,7 +6218,7 @@ class DoorScheduleController extends Controller
         }
 
         $door_core = $arr === [] ? 0 : min($arr);
-        
+
         $doorcoresize = DB::table('selected_doordimension')->select('selected_doordimension.*')->where('doordimension_user_id', '=', Auth::user()->id)->where('selected_configurableitems', '=', $request->issingleconfiguration)->where('selected_firerating', '=', $request->fireRating)->where('selected_cost', $door_core)->first();
 
         $response = [
@@ -6286,7 +6312,7 @@ class DoorScheduleController extends Controller
                         }
                     }
                 }
-                
+
                 $response = [
                     'status' => 'ok',
                     'message' => 'Ironmongery Info price.',
@@ -6468,7 +6494,7 @@ class DoorScheduleController extends Controller
             } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
                 $request->fireRating = 'FD60';
             }
-            
+
             $configurationDoor = configurationDoor($request->issingleconfiguration);
             $fireRatingDoor = fireRatingDoor($request->fireRating);
             switch ($option) {
@@ -6480,19 +6506,19 @@ class DoorScheduleController extends Controller
                         $unit_cost = ($GeneralLabourCost->DoorsetTypeDDManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorsetTypeDDMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price[] = round($unit_cost, 2);
                     }
-                    
+
                     if ($request->doorsetType == 'SD' && $GeneralLabourCost->DoorsetTypeSD == 1) {
                         $description[] = 'Assemble Single Door Leaf Into Frame';
                         $unit_cost = ($GeneralLabourCost->DoorsetTypeSDManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorsetTypeSDMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price[] = round($unit_cost, 2);
                     }
-                    
+
                     if ($request->doorsetType == 'SD' && $GeneralLabourCost->DoorsetTypeSD2 == 1) {
                         $description[] = 'Doorset Delivery Single';
                         $unit_cost = ($GeneralLabourCost->DoorsetTypeSD2ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorsetTypeSD2MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price[] = round($unit_cost, 2);
                     }
-                    
+
                     if ($request->doorsetType == 'DD' && $GeneralLabourCost->DoorsetTypeDD2 == 1) {
                         $description[] = 'Doorset Delivery Double';
                         $unit_cost = ($GeneralLabourCost->DoorsetTypeDD2ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorsetTypeDD2MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
@@ -6551,7 +6577,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price[] = round($unit_cost, 2);
                     }
-                    
+
                     break;
 
                 case 'doorLeafFacing':
@@ -6561,27 +6587,27 @@ class DoorScheduleController extends Controller
                             $unit_cost = ($GeneralLabourCost->DoorLeafFacingVaneerManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFacingVaneerMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
-                        
+
                         if ($request->optionName == 'Kraft_Paper' && $GeneralLabourCost->DoorLeafFacingKraftPaper == 1) {
                             $description = 'Make door slab Kraft Paper';
                             $unit_cost = ($GeneralLabourCost->DoorLeafFacingKraftPaperManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFacingKraftPaperMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
-                        
+
                         if ($request->optionName == 'Laminate' && $GeneralLabourCost->DoorLeafFacingLaminate == 1) {
                             $description = 'Make door slab Laminate';
                             $unit_cost = ($GeneralLabourCost->DoorLeafFacingLaminateManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFacingLaminateMachineMinutes
                                 * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
-                        
+
                         if ($request->optionName == 'PVC' && $GeneralLabourCost->DoorLeafFacingPVC == 1) {
                             $description = 'Make door slab PVC';
                             $unit_cost = ($GeneralLabourCost->DoorLeafFacingPVCManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFacingPVCMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
                     }
-                    
+
                     break;
 
                 case 'doorLeafFinish':
@@ -6591,20 +6617,20 @@ class DoorScheduleController extends Controller
                             $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFinishPrimedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
-                        
+
                         if (($request->optionName == 'Paint_Finish' || $request->optionName == 'Painted') && $GeneralLabourCost->DoorLeafFinishPainted == 1) {
                             $description = 'Paint of door slab';
                             $unit_cost = ($GeneralLabourCost->DoorLeafFinishPaintedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
-                        
+
                         if ($request->optionName == 'Laqure_Finish' && $GeneralLabourCost->DoorLeafFinishLacquered == 1) {
                             $description = 'Lacquer of door slab';
                             $unit_cost = ($GeneralLabourCost->DoorLeafFinishLacqueredManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFinishLacqueredMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                             $price = round($unit_cost, 2);
                         }
                     }
-                    
+
                     break;
 
                 case 'frameFinish':
@@ -6613,20 +6639,20 @@ class DoorScheduleController extends Controller
                             $description = 'Priming of door frame';
                             $unit_cost = ($GeneralLabourCost->FrameFinishPrimedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->FrameFinishPrimedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if ($request->optionName == 'Painted_Finish' && $GeneralLabourCost->FrameFinishPainted == 1) {
                             $description = 'Painting of door frame';
                             $unit_cost = ($GeneralLabourCost->FrameFinishPaintedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->FrameFinishPaintedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if ($request->optionName == 'Clear_Lacquer' && $GeneralLabourCost->FrameFinishLacqured == 1) {
                             $description = 'Lacquering of Door Frame';
                             $unit_cost = ($GeneralLabourCost->FrameFinishLacquredManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->FrameFinishLacquredMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         $price = round($unit_cost, 2);
                     }
-                    
+
                     break;
 
                 case 'extLiner':
@@ -6635,7 +6661,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = ($GeneralLabourCost->ExtLinerManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->ExtLinerMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price = round($unit_cost, 2);
                     }
-                    
+
                     break;
 
                 case 'extLinerFramefinish':
@@ -6644,18 +6670,18 @@ class DoorScheduleController extends Controller
                             $description = 'Priming of liner ';
                             $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishPrimedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishPrimedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if ($request->optionName == 'Clear_Lacquer' && $GeneralLabourCost->ExtLinerandFrameFinishLacqured == 1) {
                             $description = 'Lacquering liner';
                             $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishLacquredManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishLacquredMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if ($request->optionName == 'Painted_Finish' && $GeneralLabourCost->ExtLinerandFrameFinishPainted == 1) {
                             $description = 'Painting of liner';
                             $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishPaintedManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishPaintedMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6665,7 +6691,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = ($GeneralLabourCost->VisionPanel2ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanel2MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price = round($unit_cost, 2);
                     }
-                    
+
                     break;
 
                 case 'doorLeafFinish1':
@@ -6685,7 +6711,7 @@ class DoorScheduleController extends Controller
                             $unit_cost = ($GeneralLabourCost->DoorLeafFinishLacquered2ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DoorLeafFinishLacquered2MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6695,7 +6721,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = ($GeneralLabourCost->VisionPanelManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanelMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         $price = round($unit_cost, 2);
                     }
-                    
+
                     break;
 
                 case 'fireRating':
@@ -6704,13 +6730,13 @@ class DoorScheduleController extends Controller
                             $description = 'VP (Hockey Stick) - FD30 Fit';
                             $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if (($request->optionName == 'FD60' || $request->optionName == 'FD60s') && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
                             $description = 'VP (Hockey Stick) - FD60 Fit';
                             $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6720,13 +6746,13 @@ class DoorScheduleController extends Controller
                             $description = 'VP (Flush) - FD30 Fit';
                             $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
-                        
+
                         if (($request->optionName == 'FD60' || $request->optionName == 'FD60s') && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
                             $description = 'VP (Flush) - FD60 Fit';
                             $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                         }
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6735,7 +6761,7 @@ class DoorScheduleController extends Controller
                         $description = 'V Grooves';
                         $unit_cost = ($GeneralLabourCost->DecorativeGrovesManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->DecorativeGrovesMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6744,7 +6770,7 @@ class DoorScheduleController extends Controller
                         $description = 'Fanlight Assembley';
                         $unit_cost = ($GeneralLabourCost->OverpanelFanlightManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->OverpanelFanlightMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6753,7 +6779,7 @@ class DoorScheduleController extends Controller
                         $description = 'Fanlight Glazing';
                         $unit_cost = ($GeneralLabourCost->OverpanelFanlightGlazingManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->OverpanelFanlightGlazingMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6762,7 +6788,7 @@ class DoorScheduleController extends Controller
                         $description = 'Side light Assembley';
                         $unit_cost = ($GeneralLabourCost->SideLightManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->SideLightMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
 
@@ -6771,12 +6797,12 @@ class DoorScheduleController extends Controller
                         $description = 'Side Light Glazing';
                         $unit_cost = ($GeneralLabourCost->SideLightGlazingManMinutes * ($BOMSetting->labour_cost_per_man / 60)) + ($GeneralLabourCost->SideLightGlazingMachineMinutes * ($BOMSetting->labour_cost_per_machine / 60));
                     }
-                    
+
                     $price = round($unit_cost, 2);
                     break;
             }
         }
-        
+
         switch ($option) {
             case 'LeafSet':
                 if (!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish) && !empty($request->lippingSpecies)) {
@@ -6839,7 +6865,7 @@ class DoorScheduleController extends Controller
 
                     $unit_cost = ($door_core->selected_cost) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6861,7 +6887,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = $intumescentSealTypeDetails->selected_cost ?: 0;
                     }
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6885,7 +6911,7 @@ class DoorScheduleController extends Controller
 
                     $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6896,7 +6922,7 @@ class DoorScheduleController extends Controller
                     $frame_unit_cost = GlassType::join('selected_glass_type', 'glass_type.id', 'selected_glass_type.glass_id')->where('selected_glass_type.editBy', Auth::user()->id)->where('glass_type.' . $configurationDoor, $request->issingleconfiguration)->where('glass_type.Key', $request->glassType)->first();
                     $unit_cost = empty($frame_unit_cost) ? 0 : $frame_unit_cost->selectedPrice;
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6921,7 +6947,7 @@ class DoorScheduleController extends Controller
                             } elseif ($request->visionPanelQuantity == '5') {
                                 $LMOfGlazing = ($request->vP1Width * 2) + ($request->vP1Height1 * 2) + ($request->vP1Width * 2) + ($request->vP1Height2 * 2) + ($request->vP1Width * 2) + ($request->vP1Height3 * 2) + ($request->vP1Width * 2) + ($request->vP1Height4 * 2) + ($request->vP1Width * 2) + ($request->vP1Height5 * 2);
                             }
-                            
+
                             $LMOfGlazingSystem = $LMOfGlazing / 1000;
                             $unit_cost = $pricePerLM * $LMOfGlazingSystem;
                         } else {
@@ -6931,7 +6957,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = 0;
                     }
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6953,7 +6979,7 @@ class DoorScheduleController extends Controller
                         $unit_cost = $pricePerLM * $LMOfGlazingSystem;
                     }
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
 
@@ -6970,7 +6996,7 @@ class DoorScheduleController extends Controller
                         $unit_cost *= 2;
                     }
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
             case 'sideLight12':
@@ -6986,7 +7012,7 @@ class DoorScheduleController extends Controller
                         $unit_cost *= 2;
                     }
                 }
-                
+
                 $price = round($unit_cost, 2);
                 break;
         }
@@ -7045,7 +7071,7 @@ class DoorScheduleController extends Controller
                             // $description2 = '[Rebated Frame Sides], '.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.', '.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->frameHeight."mm ".$request->frameType." ".$request->rebatedWidth."mm x ".$request->rebatedHeight."mm";
                         }
                     }
-                    
+
                     break;
 
                 case 'Plant_on_Stop':
@@ -7094,7 +7120,7 @@ class DoorScheduleController extends Controller
                             $unit_cost4 = ($request->plantonStopWidth * $request->plantonStopHeight * $unitcostPlantonStopHeight_selected_price) / 1000000;
                         }
                     }
-                    
+
                     $price1 = round($unit_cost1, 2);
                     $price2 = round($unit_cost2, 2);
                     $price3 = round($unit_cost3, 2);
@@ -7138,7 +7164,7 @@ class DoorScheduleController extends Controller
                             // $QtyPerDoorType = ($request->frameHeight/1000)*2;
                         }
                     }
-                    
+
                     break;
 
                 case 'sideLight3':
@@ -7166,11 +7192,11 @@ class DoorScheduleController extends Controller
                             if (empty($request->SL2Height)) {
                                 $request->SL2Height = 0;
                             }
-                            
+
                             $QtyPerDoorType = (($request->SL1Height * 2) + ($request->SL2Height * 2)) / 1000;
                         }
                     }
-                    
+
                     break;
 
                 case 'overpanel3':
@@ -7184,7 +7210,7 @@ class DoorScheduleController extends Controller
                         } else {
                             $unitcost = SelectedLippingSpeciesItems::where('selected_user_id', Auth::user()->id)->where('selected_lipping_species_id', $request->frameMaterial)->where('selected_thickness', '>=', $OPLippingThickness)->get()->first();
                         }
-                        
+
                         if (isset($unitcost->id)) {
 
                             $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
@@ -7193,11 +7219,11 @@ class DoorScheduleController extends Controller
                             $unit_cost = ($request->OPLippingThickness * $request->frameDepth * $unitcost_selected_price) / 1000000;
                         }
                     }
-                    
+
                     break;
             }
         }
-        
+
         $price = round($unit_cost, 2);
 
         $response = [
@@ -7221,12 +7247,12 @@ class DoorScheduleController extends Controller
         } else {
             $data =  Item::select('items.itemId')->join('quotation_version_items', 'quotation_version_items.itemID', 'items.itemId', 'left')->where(['items.QuotationId' => $request->quotationId, 'quotation_version_items.version_id' => $request->versionId])->get();
         }
-        
+
         $data1 = [];
         foreach ($data as $value) {
             $data1[] = $value->itemId;
         }
-        
+
         $response = [
             'status' => 'ok',
             'message' => 'Data found successfully',
@@ -7248,7 +7274,7 @@ class DoorScheduleController extends Controller
         if ($item === null) {
             return abort(404);
         }
-        
+
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -7301,7 +7327,7 @@ class DoorScheduleController extends Controller
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
         }
-        
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -7352,7 +7378,7 @@ class DoorScheduleController extends Controller
         if (empty($request->versionId)) {
             $request->versionId = 0;
         }
-        
+
         // echo $request->itemId;die;
         if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId)) {
             $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('userId', Auth::user()->id)->get()->first();
@@ -7428,7 +7454,7 @@ class DoorScheduleController extends Controller
                 'msg' => 'something went wrong!'
             ];
         }
-        
+
         return response()->json(
             $response,
             200,
@@ -7449,11 +7475,11 @@ class DoorScheduleController extends Controller
                 if (empty($version_id)) {
                     $version_id = 1;
                 }
-                
+
                 if (empty($request->versionId)) {
                     $request->versionId = 0;
                 }
-                
+
                 $userId = CompanyMultiUsers();
                 $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->wherein('userId', $userId)->get()->first();
                 if (!empty($Favorite)) {
@@ -7531,7 +7557,7 @@ class DoorScheduleController extends Controller
                                 $quotation->configurableitems = $quotationConfigurableitems->configurableitems;
                                 $quotation->save();
                             }
-                            
+
                             // }
                             $response = [
                                 'status' => true,
@@ -7564,7 +7590,7 @@ class DoorScheduleController extends Controller
                 'msg' => 'something went wrong!'
             ];
         }
-        
+
         return response()->json(
             $response,
             200,
@@ -7583,7 +7609,7 @@ class DoorScheduleController extends Controller
             } else {
                 $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
             }
-            
+
             $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
@@ -7630,7 +7656,7 @@ class DoorScheduleController extends Controller
             Item::where('itemId', $request->id)->where('VersionId', $request->vid)->delete();
             ItemMaster::where('id', $request->itemmasterId)->delete();
         }
-        
+
         BOMCalculation::where('QuotationId', $request->qId)->where('itemId', $request->id)->delete();
 
         $response = [
@@ -7745,7 +7771,7 @@ class DoorScheduleController extends Controller
             $save->parent_id = $val->id;
             $save->save();
         }
-        
+
         $quote = Quotation::get();
 
         foreach($quote as $val){
@@ -7756,7 +7782,10 @@ class DoorScheduleController extends Controller
     }
 
     public function exportAllQuotations(){
-        return Excel::download(new AllQuotationExport(), 'quotation.xlsx');
+        return Excel::download(new AllQuotationExport(), 'quotation.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 
     public function getFireRatingOptions(Request $request)
@@ -7787,7 +7816,10 @@ class DoorScheduleController extends Controller
             $QV = QuotationVersion::where('id',$versionID)->first();
             $vid = $QV->version;
         }
-        
-        return Excel::download(new BomDoorTypeExport($quotationId,$versionID), "DoorTypeBOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+
+        return Excel::download(new BomDoorTypeExport($quotationId,$versionID), "DoorTypeBOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
     }
 }

@@ -67,12 +67,12 @@ class PrintInvoiceController extends Controller
         }else{
             $id = Auth::user()->id;
         }
-        
+
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
         $contractorName = $contractorName ?: '';
-        
+
         $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
         $currency = QuotationCurrency($quotaion->Currency);
 
@@ -83,7 +83,7 @@ class PrintInvoiceController extends Controller
         }
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
-        
+
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
         $SalesContact = 'N/A';
@@ -180,7 +180,7 @@ class PrintInvoiceController extends Controller
                     if ($PageBreakCount < count($GetIronmongerySet)) {
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
-                    
+
                     $PageBreakCount++;
                 }
             }
@@ -234,7 +234,7 @@ class PrintInvoiceController extends Controller
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
-            
+
             $a2 .=
                 '<tr>
             <td>' . $show->doorNumber . '</td>
@@ -249,7 +249,7 @@ class PrintInvoiceController extends Controller
             </tr>';
             $i++;
         }
-        
+
         $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'HideCosts' => $HideCosts]);
         // return $pdf3->download('file3.pdf');
         $path3 = public_path() . '/allpdfFile';
@@ -311,7 +311,7 @@ class PrintInvoiceController extends Controller
                     $IronmongaryPrice = $totalcost;
                 }
             }
-            
+
             // dd( $IronmongaryPrice);
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
@@ -324,7 +324,7 @@ class PrintInvoiceController extends Controller
                 $dlf = DoorLeafFinish($configurationItem, $show->DoorLeafFinish);
                 $DoorLeafFinish = empty($show->SheenLevel) ? $dlf : $dlf . ' - ' . $show->SheenLevel . ' Sheen';
             }
-            
+
             $DoorLeafFinishColor = '';
             if (!empty($show->DoorLeafFinishColor)) {
                 $DoorLeafFinishColor = ' + ' . $show->DoorLeafFinishColor;
@@ -346,7 +346,7 @@ class PrintInvoiceController extends Controller
                     $LippingType = $SelectedLippingType->OptionValue;
                 }
             }
-            
+
             $LippingSpecies = '';
             if (!empty($show->LippingSpecies)) {
                 $SelectedLippingSpecies = LippingSpecies::find($show->LippingSpecies);
@@ -354,12 +354,12 @@ class PrintInvoiceController extends Controller
                     $LippingSpecies = $SelectedLippingSpecies->SpeciesName;
                 }
             }
-            
+
             $LippingThickness = '';
             if (!empty($show->LippingThickness)) {
                 $LippingThickness = $show->LippingThickness;
             }
-            
+
             if (!empty($LippingType) && !empty($LippingSpecies) && !empty($LippingThickness)) {
                 $Lipping = $LippingType . ' - ' . $LippingSpecies . ' - ' . $LippingThickness . 'mm';
                 // LY-LS-LT = 1-1-1 //
@@ -462,7 +462,7 @@ class PrintInvoiceController extends Controller
             } elseif (!empty($show->FrameType) && $show->FrameType == 'Scalloped') {
                 $FrameSizeForDoorDetailsTable .= $show->ScallopedWidth . "x" . $show->ScallopedHeight . "mm";
             }
-            
+
             // $FrameSizeForDoorDetailsTable .= $show->FrameThickness."mm";
 
             if (!empty($show->IronmongerySet)) {
@@ -476,7 +476,7 @@ class PrintInvoiceController extends Controller
             } else {
                 $IronmongerySet = 'N/A';
             }
-            
+
             $FrameFinishForDoorDetailsTable = 'N/A';
             if (!empty($show->FrameFinish)) {
 
@@ -493,12 +493,12 @@ class PrintInvoiceController extends Controller
             if (!empty($show->ExtLinerValue)) {
                 $ExtLinerValue = $show->ExtLinerValue;
             }
-            
+
             $ExtLinerThickness = '';
             if (!empty($show->ExtLinerThickness)) {
                 $ExtLinerThickness = $show->ExtLinerThickness . 'mm';
             }
-            
+
             if (empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = "N/A";
             } elseif (empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
@@ -562,7 +562,7 @@ class PrintInvoiceController extends Controller
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
-            
+
             $ArchitraveSetQty = 'N/A';
             if (!empty($show->ArchitraveSetQty)) {
                 $ArchitraveSetQty = $show->ArchitraveSetQty;
@@ -573,12 +573,12 @@ class PrintInvoiceController extends Controller
             if (!empty($show->SL1Width)) {
                 $SL1Width = $show->SL1Width;
             }
-            
+
             $SL1Height = '';
             if (!empty($show->SL1Height)) {
                 $SL1Height = $show->SL1Height;
             }
-            
+
             $SideScreen1 = 'N/A';
             if (!empty($SL1Width) && !empty($SL1Height)) {
                 $SideScreen1 = $SL1Width . ' x ' . $SL1Height;
@@ -595,12 +595,12 @@ class PrintInvoiceController extends Controller
             if (!empty($show->SL2Width)) {
                 $SL2Width = $show->SL2Width;
             }
-            
+
             $SL2Height = '';
             if (!empty($show->SL2Height)) {
                 $SL2Height = $show->SL2Height;
             }
-            
+
             $SideScreen2 = 'N/A';
             if (!empty($SL2Width) && !empty($SL2Height)) {
                 $SideScreen2 = $SL2Width . ' x ' . $SL2Height;
@@ -611,7 +611,7 @@ class PrintInvoiceController extends Controller
             } elseif (empty($SL2Width) && empty($SL2Height)) {
                 $SideScreen2 = 'N/A';
             }
-            
+
             if($quotaion->configurableitems == 4){
                 $a .= '<tr>
                             <td>' . $i . '</td>
@@ -669,7 +669,7 @@ class PrintInvoiceController extends Controller
                                 $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
                                 <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
                             }
-                            
+
                             $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
@@ -731,12 +731,12 @@ class PrintInvoiceController extends Controller
                                 $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
                                 <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
                             }
-                            
+
                             $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }
-            
+
             $i++;
             //     }
             // }
@@ -753,7 +753,7 @@ class PrintInvoiceController extends Controller
                             $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
                             <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
                         }
-                        
+
                         $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
@@ -806,7 +806,7 @@ class PrintInvoiceController extends Controller
             }else{
                 $FireRatingActualValue  =  $tt->FireRating;
             }
-            
+
            // sidelight
             if($tt->FireRating == 'FD30s'){
                 $tt->FireRating = 'FD30';
@@ -860,7 +860,7 @@ class PrintInvoiceController extends Controller
             foreach ($DoorNumber as $bb) {
                 $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
             }
-            
+
             $species = LippingSpecies::where('id', $tt->FrameMaterial)->first();
             if ($species != '') {
                 $frameMaterial = $species->SpeciesName;
@@ -961,7 +961,7 @@ class PrintInvoiceController extends Controller
                 $FrameImageStructureLeft = $RemainingSpaceBlock;
                 $FrameImageStructureRight = $RemainingSpaceBlock;
             }
-            
+
             $leaf1RemainingWidth = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
 
             if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
@@ -1312,7 +1312,7 @@ class PrintInvoiceController extends Controller
                                         margin-top: 57px;"></div>';
                         }
                     }
-                    
+
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
@@ -1780,8 +1780,8 @@ class PrintInvoiceController extends Controller
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // class="'.$redstripRightCommonClass.'"
                             if($tt->Leaf2VisionPanel =! 'Yes'){
-                            
-                            
+
+
                                                         $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 23px;"></div>
                                     <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
@@ -1793,7 +1793,7 @@ class PrintInvoiceController extends Controller
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
-                    
+
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
@@ -1909,21 +1909,21 @@ class PrintInvoiceController extends Controller
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
             }
-            
+
             $ProjectName = null;
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
-            
+
             if (!empty($version)) {
                 $version = $version;
             }
-            
+
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
-            
+
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
@@ -1935,7 +1935,7 @@ class PrintInvoiceController extends Controller
                 // $svgFile = URL('/') . '/uploads/files/door.jpg';
                 $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
             }
-            
+
             $elevTbl .=
                 '
                 <div id="headText">
@@ -1957,7 +1957,7 @@ class PrintInvoiceController extends Controller
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -1995,7 +1995,7 @@ class PrintInvoiceController extends Controller
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -2148,7 +2148,7 @@ class PrintInvoiceController extends Controller
                                     <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
-                        
+
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
                                         <p class="frame_sd_t1">-' . $FrameMaterial . '</p>
                                         <div class="arrow-strat"></div>
@@ -2179,7 +2179,7 @@ class PrintInvoiceController extends Controller
                                     <p class="frame_dd_t4 frame_dd_t4_' . $tt->FrameType . ' '.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5 frame_dd_t5_' . $tt->FrameType . ' '.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
-                        
+
                         $elevTbl .= '<!-- <div class="arrow-strat"></div>  <p class="frame_sd_t1">' . $tt->FrameDepth . '</p>
                                         <p class="frame_sd_t2">' . $tt->FrameThickness . '</p>
                                         <p class="frame_dd_t1">-' . $FrameMaterial . '</p>
@@ -2203,7 +2203,7 @@ class PrintInvoiceController extends Controller
                         break;
                 }
             endif;
-            
+
             // }
 
 
@@ -2213,7 +2213,7 @@ class PrintInvoiceController extends Controller
             if (!empty($tt->ExtLinerValue)) {
                 $ExtLinerValue = $tt->ExtLinerValue;
             }
-            
+
             $ExtLinerThickness = '';
             if (!empty($tt->ExtLinerThickness)) {
                 $ExtLinerThickness = $tt->ExtLinerThickness . "mm";
@@ -2252,12 +2252,12 @@ class PrintInvoiceController extends Controller
                 $dlf = DoorLeafFinish($configurationItem, $tt->DoorLeafFinish);
                 $DoorLeafFinish = empty($tt->SheenLevel) ? $dlf : $dlf . ' - ' . $tt->SheenLevel . ' Sheen';
             }
-            
+
             $DoorLeafFinishColor = '';
             if (!empty($tt->DoorLeafFinishColor)) {
                 $DoorLeafFinishColor = ' + ' . $tt->DoorLeafFinishColor;
             }
-            
+
             $DoorLeafFacing = "N/A";
             if (!empty($tt->DoorLeafFacing)) {
                 $DoorLeafFacing = DoorLeafFacing($configurationItem, $tt->DoorLeafFacing, $tt->DoorLeafFacingValue);
@@ -2288,12 +2288,12 @@ class PrintInvoiceController extends Controller
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
-            
+
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
                 $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem, $FireRatingActualValue, $tt->OPGlassType);
             }
-            
+
             $ArchitraveFinishForDoorDetailsTable = "N/A";
             if (!empty($tt->ArchitraveFinish)) {
                 $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem, $tt->ArchitraveFinish, $tt->FrameFinishColor);
@@ -2312,7 +2312,7 @@ class PrintInvoiceController extends Controller
                     ->where("OptionSlug", "Glass_Integrity")
                     ->where("OptionKey", $tt->GlassIntegrity)->first();
                 }
-                
+
                 $GlassIntegrity = $gi->OptionValue;
             }
 
@@ -2377,7 +2377,7 @@ class PrintInvoiceController extends Controller
 
             $FrameDepth = empty($tt->FrameDepth) ? 'N/A' : $tt->FrameDepth;
             $IronmongerySet = empty($tt->IronmongeryID) ? 'N/A' : IronmongerySetName($tt->IronmongeryID);
-            
+
             // if (!empty($tt->IronmongerySet)) {
             //     if ($tt->IronmongerySet == 'No') {
             //         $IronmongerySet = 'N/A';
@@ -2429,22 +2429,22 @@ class PrintInvoiceController extends Controller
                     $ArchitraveMaterial = $ls->SpeciesName;
                 }
             }
-            
+
             $ArchitraveSetQty = 'N/A';
             if (!empty($tt->ArchitraveSetQty)) {
                 $ArchitraveSetQty = $tt->ArchitraveSetQty;
             }
-            
+
             $ArchitraveWidth = 'N/A';
             if (!empty($tt->ArchitraveWidth)) {
                 $ArchitraveWidth = $tt->ArchitraveWidth;
             }
-            
+
             $ArchitraveDepth = 'N/A';
             if (!empty($tt->ArchitraveDepth)) {
                 $ArchitraveDepth = $tt->ArchitraveDepth;
             }
-            
+
             $ArchitraveHeight = 'N/A';
             if (!empty($tt->ArchitraveHeight)) {
                 $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -2569,7 +2569,7 @@ class PrintInvoiceController extends Controller
                                     <td class="dicription_blank">' . $tt->SOWallThick . '</td>
                                 </tr>';
             }
-            
+
             $elevTbl .=  '  <tr>
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
@@ -2597,7 +2597,7 @@ class PrintInvoiceController extends Controller
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
-            
+
             $elevTbl .=         '
                                 <tr>
                                     <td class="dicription_grey">Door Leaf Width 1</td>
@@ -2658,7 +2658,7 @@ class PrintInvoiceController extends Controller
                                 </tbody>
                             </table>';
             }
-            
+
             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -2780,7 +2780,7 @@ class PrintInvoiceController extends Controller
                             </tbody>
                         </table>';
                         }
-                
+
                         $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -2805,7 +2805,7 @@ class PrintInvoiceController extends Controller
                             </tbody>
                         </table>';
                         }
-                        
+
                         $elevTbl .=  '</div></div>
                     <div id="footer">
                         <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
@@ -2836,7 +2836,7 @@ class PrintInvoiceController extends Controller
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .= '</span>
                                     </td>
                                     <td class="tbl_color"><span>Ref</span></td>
@@ -2896,7 +2896,7 @@ class PrintInvoiceController extends Controller
                         <td></td>
                     </tr>';
                 }
-                
+
                 $elevTbl .= '</tbody>
             </table>
             </div>
@@ -2908,7 +2908,7 @@ class PrintInvoiceController extends Controller
             $PageBreakCounts++;
 
         }
-        
+
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
@@ -2943,7 +2943,7 @@ class PrintInvoiceController extends Controller
             foreach ($DoorNumberS as $bb) {
                 $doorNoS .= '<span style="padding-left:5px;">' . $bb->screenNumber . '</span>';
             }
-            
+
             $QuotationGenerationId = null;
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
@@ -2953,7 +2953,7 @@ class PrintInvoiceController extends Controller
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
-            
+
             if (!empty($version)) {
                 $version = $version;
             }
@@ -2962,7 +2962,7 @@ class PrintInvoiceController extends Controller
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
-            
+
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
@@ -2996,7 +2996,7 @@ class PrintInvoiceController extends Controller
             } else {
                 $elevSideScreenTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevSideScreenTbl .=
                 '</span>
                                                 </td>
@@ -3036,7 +3036,7 @@ class PrintInvoiceController extends Controller
             // dd($tt->FrameMaterial);
             // dd($SelectedFrameMaterial);
             $FrameMaterials = $SelectedFrameMaterial != null ? $SelectedFrameMaterial->SpeciesName : 'N/A';
-            
+
             if($tt->GlazingBeadShape == 'Square'){
                 $elevSideScreenTbl .= '<td style=" width:300px;margin: 0 auto;position: relative;">
                 <div class="">
@@ -3272,7 +3272,7 @@ class PrintInvoiceController extends Controller
             // return $pdf7->download('IronmongeryData.pdf');
             $pdf7->save($path7 . '/' . $fileName7);
         }
-        
+
         // Document PDF
         $pdf_document = SettingPDFDocument::where('UserId', $id)->first();
         $pdf5 = PDF::loadView('Company.pdf_files.documentpdf', ['pdf_document' => $pdf_document]);
@@ -3308,7 +3308,7 @@ class PrintInvoiceController extends Controller
                 public_path() . '/allpdfFile' . '/' . $fileName5,
             ];
         }
-        
+
         if(count($ed) == 0){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
@@ -3323,7 +3323,7 @@ class PrintInvoiceController extends Controller
             foreach ($pdfFiles as $pdfFile) {
                 $pdfMerger->addPDF($pdfFile, 'all');
             }
-            
+
             $mergedFilePath = public_path() . '/allpdfFile/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
@@ -3444,9 +3444,15 @@ class PrintInvoiceController extends Controller
         $quotaion = Quotation::where('id', $quatationId)->first();
         $QuotationGenerationId = $quotaion->QuotationGenerationId;
         if($quotaion->configurableitems == 4){
-            return Excel::download(new InvoiceInExcelVicaima($quatationId, $versionID), $QuotationGenerationId . '.xlsx');
+            return Excel::download(new InvoiceInExcelVicaima($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
         }else{
-            return Excel::download(new InvoiceInExcel($quatationId, $versionID), $QuotationGenerationId . '.xlsx');
+            return Excel::download(new InvoiceInExcel($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
         }
     }
 }
