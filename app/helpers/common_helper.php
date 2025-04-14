@@ -1067,7 +1067,7 @@ function ConfigurationURL($configurableitems,string $itemId,string $version_id){
 
 
 
-function QuotationList(array $val): string{
+function QuotationList($val): string{
     $QVID = $val['QVID'] != ""?$val['QVID']:0;
     // $DoorsetPrice = 0;
 
