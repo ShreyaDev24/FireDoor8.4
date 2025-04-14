@@ -307,17 +307,8 @@ class IronmongeryInfo extends Controller
                     $file->move($filepath,$ImageName);
                 }
 
-                if($request->hasFile('PdfSpecification')){
-                    $file = $request->file('PdfSpecification');
-                    $PdfSpecificationName = rando().$file->getClientOriginalName();
-                    $filepath = public_path('uploads/IronmongeryInfo/');
-                    $PdfSpecificationExtension = $file->getClientOriginalExtension();
-                    if(!in_array($PdfSpecificationExtension,["pdf", "PDF"])){
-                        return redirect('ironmongery-info/create');die;
-                    }
 
-                    $file->move($filepath,$PdfSpecificationName);
-                }
+
 
                 $count = count($request->FireRating);
                 $i = 0;
@@ -375,7 +366,19 @@ class IronmongeryInfo extends Controller
                     $IronmongeryInfo->MachineMinutes = $request->MachineMinutes;
 
                     $IronmongeryInfo->Supplier = $request->Supplier;
-                    $IronmongeryInfo->PdfSpecification = $PdfSpecificationName;
+                    if ($request->hasFile('PdfSpecification')) {
+                        $file = $request->file('PdfSpecification');
+                        $PdfSpecificationName = rando().$file->getClientOriginalName();
+                        $filepath = public_path('uploads/IronmongeryInfo/');
+                        $PdfSpecificationExtension = $file->getClientOriginalExtension();
+
+                        if (!in_array($PdfSpecificationExtension, ["pdf", "PDF"])) {
+                            return redirect('ironmongery-info/create');
+                        }
+
+                        $file->move($filepath, $PdfSpecificationName);
+                        $IronmongeryInfo->PdfSpecification = $PdfSpecificationName;
+                    }
                     $IronmongeryInfo->Status = $request->Status;
                     $IronmongeryInfo->save();
 
