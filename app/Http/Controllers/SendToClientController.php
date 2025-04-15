@@ -30,7 +30,7 @@ class SendToClientController extends Controller
     {
         $this->middleware('auth')->except(['quotationApproval','quotaionAccept','quotaionReject']);
     }
-    
+
     public function sendToClientUrl(Request $request): void
     {
 
@@ -54,7 +54,7 @@ class SendToClientController extends Controller
                 exit;
             }
         }
-        
+
         $QuotationGenerationId = $q->QuotationGenerationId;
         $SalesCon =  $q->SalesContact;
         // $cc = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->select('customer_contacts.FirstName','customer_contacts.LastName','customer_contacts.ContactEmail')->where('customers.UserId',$CustomerContactId)->first();
@@ -75,7 +75,7 @@ class SendToClientController extends Controller
                 ]);
                 exit;
             }
-            
+
         // Check quotation file is exist or not in folder
             $file = public_path().'/quotationFiles'.'/'.$QuotationGenerationId.'_'.$version.'.pdf';
             if(!file_exists($file)){
@@ -85,7 +85,7 @@ class SendToClientController extends Controller
                 ]);
                 exit;
             }
-            
+
         if(!empty($QuotationContactInformation->Email)){
             $to = $QuotationContactInformation->Email;
             $subject = 'Order process | Quotation ' . $q->QuotationGenerationId;
@@ -172,7 +172,7 @@ class SendToClientController extends Controller
             $file->move($filepath,$ImageName);
             $q->fileByClient = $ImageName;
         }
-        
+
         if($q->save()){
             $projectId  = $q->ProjectId;
 
@@ -216,11 +216,11 @@ class SendToClientController extends Controller
                 foreach($QuotationVersionItems as  $QuotationVersionItem){
                     $itemmasterID[] = $QuotationVersionItem->itemmasterID;
                 }
-                
+
                 $ItemMasters = ItemMaster::wherein('id',$itemmasterID)->select('floor')->groupBy('floor')->get();
                 // dd($ItemMasters);
                 foreach($ItemMasters as  $ItemMaster){
-                    if(!empty($ItemMaster->floor)){
+                    if ($ItemMaster->floor !== null && $ItemMaster->floor !== '') {
                         $floor = new Floor();
                         $floor->floor_name = $ItemMaster->floor;
                         $floor->projectId = $projectId;
@@ -231,10 +231,10 @@ class SendToClientController extends Controller
                 }
             }
         }
-        
+
         return redirect()->back()->with('success', 'Thank you for accepting quotation!');
     }
-    
+
     public function quotaionReject(Request $request)
     {
         $id = $request->id;
