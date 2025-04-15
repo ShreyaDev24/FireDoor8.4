@@ -417,6 +417,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
+    Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');
     Route::get('/excelexportVicaimaUrl/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelexportVicaima'])->name('excelexportVicaima');
     Route::get('/ExportIronmongery/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportIronmongery'])->name('ExportIronmongery');
 
