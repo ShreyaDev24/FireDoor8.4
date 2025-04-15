@@ -177,8 +177,8 @@ input[type=number]::-webkit-outer-spin-button {
                                     @if(!isset($item) && empty($item) && $item == '')
                                     @foreach ($list as $val)
                                         @php
-                                            $category = $val->category;
-                                            $quantity = $val->quantity;
+                                            $category = $val['category'];
+                                            $quantity = $val['quantity'];
                                             if($category == 'DoorSignage'){
                                                 $category = 'DoorSinage';
                                                 $quantity = 'doorSignageQty';
@@ -196,23 +196,23 @@ input[type=number]::-webkit-outer-spin-button {
                                                 $category = 'LocksAndLatches';
                                             }
                                         @endphp
-                                        <div class="col-md-3 mt-3" id="main-{{ $val->category }}">
+                                        <div class="col-md-3 mt-3" id="main-{{ $val['category'] }}">
                                             <div class="position-relative form-group">
                                                 <div class="d-flex justify-content-between">
-                                                    <label for="{{ $val->key }}">{{ $val->name }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val->category }}Key','{{ $quantity }}','{{ $val->category }}Value')" style="font-size: 12px;margin: 8px;"></i>
+                                                    <label for="{{ $val['key'] }}">{{ $val['name'] }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val['category'] }}Key','{{ $quantity }}','{{ $val['category'] }}Value')" style="font-size: 12px;margin: 8px;"></i>
                                                 </div>
                                                 <div class="input-icons">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <div class="input-group-text">
-                                                                <i class="fa fa-info icon" id="{{ $val->data_fill }}" onClick="IronMongery('{{ $val->category }}','{{ $val->name }}', this)"></i>
+                                                                <i class="fa fa-info icon" id="{{ $val['data_fill'] }}" onClick="IronMongery('{{ $val['category'] }}','{{ $val['name'] }}', this)"></i>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="{{ $val->Value }}[]" id="{{ $val->category }}Value" value="">
+                                                        <input type="hidden" name="{{ $val['Value'] }}[]" id="{{ $val['category'] }}Value" value="">
 
-                                                        <input type="hidden" name="{{ $val->Price }}[]" class="price" value="">
+                                                        <input type="hidden" name="{{ $val['Price'] }}[]" class="price" value="">
 
-                                                        <input type="text" name="{{ $val->key }}[]" id="{{ $val->category }}Key" class="form-control bg-white {{ $val->category }}Key"  value="" readonly>
+                                                        <input type="text" name="{{ $val['key'] }}[]" id="{{ $val['category'] }}Key" class="form-control bg-white {{ $val['category'] }}Key"  value="" readonly>
 
                                                     </div>
 
@@ -223,22 +223,23 @@ input[type=number]::-webkit-outer-spin-button {
                                                     <input type="number" min="1" onkeydown="if(event.key==='.'){event.preventDefault();}" id="{{ $quantity }}" name="{{ $quantity }}[]" class="form-control qty">
 
                                                     <button type="button" class="btn customcross">
-                                                        <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val->category }}" onclick="addMoreCategory(this , '{{ $val->category }}','{{ $val->name }}','{{ $val->key }}','{{ $val->data_fill }}','{{ $val->Value }}','{{ $val->quantity }}','{{ $val->Price }}','{{ $val->msg }}','{{ $category }}')"></i>
+                                                        <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val['category'] }}" onclick="addMoreCategory(this , '{{ $val['category'] }}','{{ $val['name'] }}','{{ $val['key'] }}','{{ $val['data_fill'] }}','{{ $val['Value'] }}','{{ $val['quantity'] }}','{{ $val['Price'] }}','{{ $val['msg'] }}','{{ $category }}')"></i>
                                                     </button>
 
                                                 </div>
                                             </div>
-                                            <div class="text_style {{ $val->msg }}" id="{{ $val->msg }}"></div>
+                                            <div class="text_style {{ $val['msg'] }}" id="{{ $val['msg'] }}"></div>
                                         </div>
-                                        {{-- <div id="appendData{{ $val->category }}"></div> --}}
+                                        {{-- <div id="appendData{{ $val['category'] }}"></div> --}}
                                     @endforeach
                                 @else
 
                                     @foreach ($list as $val)
 
                                     @php
-                                        $category = $val->category;
-                                        $quantity = $val->quantity;
+                                        $category = $val['category'];
+                                        $quantity = $val['quantity'];
+
                                         if($category == 'DoorSignage'){
                                             $category = 'DoorSinage';
                                             $quantity = 'doorSignageQty';
@@ -267,22 +268,22 @@ input[type=number]::-webkit-outer-spin-button {
                                         $j = 0;
                                     @endphp
 
-                                    <div class="col-md-3 mt-3" id="main-{{ $val->category }}">
-                                        @if(isset($val->val_name) && count($val->val_name))
-                                            @foreach ($val->val_name as $k => $n)
+                                    <div class="col-md-3 mt-3" id="main-{{ $val['category'] }}">
+                                        @if(isset($val['val_name']) && count($val['val_name']))
+                                            @foreach ($val['val_name'] as $k => $n)
                                                 @php
                                                     $j++;
                                                 @endphp
-                                                <div class="position-relative form-group" @if ($k > 0)id="child-{{ $val->category }}"@endif>
+                                                <div class="position-relative form-group" @if ($k > 0)id="child-{{ $val['category'] }}"@endif>
                                                     @if($k == 0)
                                                     <div class="d-flex justify-content-between">
-                                                        <label for="{{ $val->key }}">{{ $val->name }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val->category }}Key','{{ $quantity }}','{{ $val->category }}Value')" style="font-size: 12px;margin: 8px;"></i>
+                                                        <label for="{{ $val['key'] }}">{{ $val['name'] }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val['category'] }}Key','{{ $quantity }}','{{ $val['category'] }}Value')" style="font-size: 12px;margin: 8px;"></i>
                                                     </div>
                                                     @else
-                                                    <label for="{{ $val->key }}">{{ $val->name }}
-                                                        @if(!empty($tooltip->$val->key))
+                                                    <label for="{{ $val['key'] }}">{{ $val['name'] }}
+                                                        @if(!empty($tooltip[$val['key']]))
                                                         <script type="text/javascript">
-                                                        document.write(Tooltip('{{$tooltip->$val->key }}'));
+                                                        document.write(Tooltip('{{$tooltip[$val['key']] }}'));
                                                         </script>
                                                         @endif
                                                     </label>
@@ -291,14 +292,14 @@ input[type=number]::-webkit-outer-spin-button {
                                                         <div class="input-group">
                                                             <div class="input-group-prepend">
                                                                 <div class="input-group-text">
-                                                                    <i class="fa fa-info icon" id="{{ $val->data_fill }}" onClick="IronMongery('{{ $val->category }}','{{ $val->name }}', this)"></i>
+                                                                    <i class="fa fa-info icon" id="{{ $val['data_fill'] }}" onClick="IronMongery('{{ $val['category'] }}','{{ $val['name'] }}', this)"></i>
                                                                 </div>
                                                             </div>
-                                                            <input type="hidden" name="{{ $val->Value }}[]" id="{{ $val->category }}Value" value="@if(isset($data[$k])){{$data[$k] }}@else{{old($category)}}@endif">
+                                                            <input type="hidden" name="{{ $val['Value'] }}[]" id="{{ $val['category'] }}Value" value="@if(isset($data[$k])){{$data[$k] }}@else{{old($category)}}@endif">
 
-                                                            <input type="hidden" name="{{ $val->Price }}[]" class="price" value="@if(isset($$catPrice[$k])){{$$catPrice[$k]}}@endif">
+                                                            <input type="hidden" name="{{ $val['Price'] }}[]" class="price" value="@if(isset($$catPrice[$k])){{$$catPrice[$k]}}@endif">
 
-                                                            <input type="text" name="{{ $val->key }}[]" id="{{ $val->category }}Key" class="form-control bg-white {{ $val->category }}Key"  value="@if(isset($qty[$k])){{ $n }}@endif" readonly>
+                                                            <input type="text" name="{{ $val['key'] }}[]" id="{{ $val['category'] }}Key" class="form-control bg-white {{ $val['category'] }}Key"  value="@if(isset($qty[$k])){{ $n }}@endif" readonly>
 
                                                         </div>
 
@@ -314,12 +315,12 @@ input[type=number]::-webkit-outer-spin-button {
 
                                                         @if ($k == 0)
                                                         <button type="button" class="btn customcross">
-                                                            <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val->category }}" onclick="addMoreCategory(this , '{{ $val->category }}','{{ $val->name }}','{{ $val->key }}','{{ $val->data_fill }}','{{ $val->Value }}','{{ $val->quantity }}','{{ $val->Price }}','{{ $val->msg }}','{{ $category }}')"></i>
+                                                            <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val['category'] }}" onclick="addMoreCategory(this , '{{ $val['category'] }}','{{ $val['name'] }}','{{ $val['key'] }}','{{ $val['data_fill'] }}','{{ $val['Value'] }}','{{ $val['quantity'] }}','{{ $val['Price'] }}','{{ $val['msg'] }}','{{ $category }}')"></i>
                                                         </button>
                                                         @endif
                                                     </div>
                                                 </div>
-                                                <div class="text_style {{ $val->msg }}" id="{{ $val->msg }}"></div>
+                                                <div class="text_style {{ $val['msg'] }}" id="{{ $val['msg'] }}"></div>
                                             @endforeach
 
                                         @else
@@ -328,11 +329,11 @@ input[type=number]::-webkit-outer-spin-button {
                                             @endphp
                                             <div class="position-relative form-group">
                                                 <div class="d-flex justify-content-between">
-                                                    <label for="{{ $val->key }}">{{ $val->name }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val->category }}Key','{{ $quantity }}','{{ $val->category }}Value')" style="font-size: 12px;margin: 8px;"></i>
+                                                    <label for="{{ $val['key'] }}">{{ $val['name'] }}</label><i class="fa fa-times" aria-hidden="true" onclick="clearInput('{{ $val['category'] }}Key','{{ $quantity }}','{{ $val['category'] }}Value')" style="font-size: 12px;margin: 8px;"></i>
                                                 </div>
-                                                    @if(!empty($tooltip->$val->key))
+                                                    @if(!empty($tooltip[$val['key']]))
                                                     <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->$val->key }}'));
+                                                    document.write(Tooltip('{{$tooltip[$val['key']] }}'));
                                                     </script>
                                                     @endif
 
@@ -340,14 +341,14 @@ input[type=number]::-webkit-outer-spin-button {
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
                                                             <div class="input-group-text">
-                                                                <i class="fa fa-info icon" id="{{ $val->data_fill }}" onClick="IronMongery('{{ $val->category }}','{{ $val->name }}', this)"></i>
+                                                                <i class="fa fa-info icon" id="{{ $val['data_fill'] }}" onClick="IronMongery('{{ $val['category'] }}','{{ $val['name'] }}', this)"></i>
                                                             </div>
                                                         </div>
-                                                        <input type="hidden" name="{{ $val->Value }}[]" id="{{ $val->category }}Value" value="">
+                                                        <input type="hidden" name="{{ $val['Value'] }}[]" id="{{ $val['category'] }}Value" value="">
 
-                                                        <input type="hidden" name="{{ $val->Price }}[]" class="price" value="">
+                                                        <input type="hidden" name="{{ $val['Price'] }}[]" class="price" value="">
 
-                                                        <input type="text" name="{{ $val->key }}[]" id="{{ $val->category }}Key" class="form-control bg-white {{ $val->category }}Key"  value="" readonly>
+                                                        <input type="text" name="{{ $val['key'] }}[]" id="{{ $val['category'] }}Key" class="form-control bg-white {{ $val['category'] }}Key"  value="" readonly>
 
                                                     </div>
 
@@ -358,16 +359,16 @@ input[type=number]::-webkit-outer-spin-button {
                                                     <input type="number" min="1" onkeydown="if(event.key==='.'){event.preventDefault();}" id="{{ $quantity }}" name="{{ $quantity }}[]" value="" class="form-control qty {{ $quantity }}" placeholder="QTY">
 
                                                     <button type="button" class="btn customcross">
-                                                        <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val->category }}" onclick="addMoreCategory(this , '{{ $val->category }}','{{ $val->name }}','{{ $val->key }}','{{ $val->data_fill }}','{{ $val->Value }}','{{ $val->quantity }}','{{ $val->Price }}','{{ $val->msg }}','{{ $category }}')"></i>
+                                                        <i style="margin-top: -5px;color: black;" class="fa fa-plus cursor-pointer" data-id="main-{{ $val['category'] }}" onclick="addMoreCategory(this , '{{ $val['category'] }}','{{ $val['name'] }}','{{ $val['key'] }}','{{ $val['data_fill'] }}','{{ $val['Value'] }}','{{ $val['quantity'] }}','{{ $val['Price'] }}','{{ $val['msg'] }}','{{ $category }}')"></i>
                                                     </button>
                                                 </div>
                                             </div>
-                                            <div class="text_style {{ $val->msg }}" id="{{ $val->msg }}"></div>
+                                            <div class="text_style {{ $val['msg'] }}" id="{{ $val['msg'] }}"></div>
                                         @endif
                                     </div>
 
                                     {{-- @endfor --}}
-                                    {{-- <div id="appendData{{ $val->category }}"></div> --}}
+                                    {{-- <div id="appendData{{ $val['category'] }}"></div> --}}
                                 @endforeach
                                 @endif
 

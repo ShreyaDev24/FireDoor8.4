@@ -2375,13 +2375,23 @@ $sn++;
 
     }
 
-    public function setValue($key, array $list, $name, $price): array
+    public function setValue($key, $list, $name, $price): array
     {
-        foreach ($list as $k => $lst) {
-            if($lst->key == $key){
-                $list[$k]['val_name'] = $name;
-                $list[$k]['val_price'] = $price;
-                break;
+        if ($list instanceof \Illuminate\Support\Collection) {
+            $list = $list->map(function ($item) use ($key, $name, $price) {
+                if ($item->key == $key) {
+                    $item->val_name = $name;
+                    $item->val_price = $price;
+                }
+                return $item;
+            })->toArray();
+        } else {
+            foreach ($list as $k => $lst) {
+                if ($lst['key'] == $key) {
+                    $list[$k]['val_name'] = $name;
+                    $list[$k]['val_price'] = $price;
+                    break;
+                }
             }
         }
 
