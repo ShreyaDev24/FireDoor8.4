@@ -3699,7 +3699,7 @@ function frameExport($request,$userIds): void{
     if(!empty($request->frameMaterial) && !empty($request->frameType)){
         $frameMaterial = LippingSpecies::where('id', $request->frameMaterial)->get();
 
-        $Frame_Finish_Cost =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id,'options.OptionSlug' => 'Frame_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->frameFinish])->wherein('options.editBy', $userIds)->select('selected_option.SelectedOptionCost','selected_option.id')->first();
+        $Frame_Finish_Cost =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where("options.configurableitems",$request->issingleconfiguration)->where(['selected_option.SelectedUserId'=>auth()->user()->id,'options.OptionSlug' => 'Frame_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->frameFinish])->wherein('options.editBy', $userIds)->select('selected_option.SelectedOptionCost','selected_option.id')->first();
 
         $selectedPrice = (empty($Frame_Finish_Cost))?0 : $Frame_Finish_Cost->SelectedOptionCost??0;
 
@@ -4033,7 +4033,7 @@ function frameExport($request,$userIds): void{
             if($archiTrave){
                 $LM = (($request->frameHeight*2)+$request->frameWidth)/1000;
 
-                $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
+                $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
 
                 $finishCost = (empty($Architrave_Finish))?0 : $Architrave_Finish->SelectedOptionCost??0;
 
@@ -6484,7 +6484,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
 
     $aa = Option::where(['options.OptionSlug' => $optionType,'options.is_deleted' => 0])
                 ->wherein('options.editBy', $UserId)
-                ->where(['options.configurableitems'=>4])
+                // ->where(['options.configurableitems'=>4])
                 ->leftJoin('selected_option', function ($join) use ($authdata): void {
                     $join->on('options.id', '=', 'selected_option.optionId')
                         ->where('selected_option.SelectedUserId', '=', $authdata->id);
