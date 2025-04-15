@@ -3984,7 +3984,12 @@ function frameExport($request,$userIds): void{
             }
         }
 
-        if($request->overpanel=='Fan_Light'){
+        if($request->overpanel=='Fan_Light' || $request->overpanel=='Overpanel'){
+            if($request->overpanel=='Fan_Light'){
+                $overpanelKey = "Fanlight side1";
+            }elseif($request->overpanel=='Overpanel'){
+                $overpanelKey = "Overpanel side1";
+            }
             // $OPLippingThickness = round($request->OPLippingThickness/25.4,1);
             // $OPLippingThickness = getLippingSpeciesNearTheeknessValue($request->OPLippingThickness);
 
@@ -3996,19 +4001,24 @@ function frameExport($request,$userIds): void{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness',1)->get()->first();
 
             }
-
             if(isset($unitcost->id)){
 
-                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+                $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
                 $category = 'Frame';
                 $frame_unit = 'Metre';
-                $description = '[Fanlight side1]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->oPHeigth."mm | - | -";
+                $description = '['.$overpanelKey.']|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->oPHeigth."mm | - | -";
                 $QtyPerDoorType = ($request->oPHeigth * 2)/1000;
 
                 $unit_cost = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
-                $description = ' [Fanlight head & Bottom]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->oPHeigth."mm | - | -";
+                if($request->overpanel=='Fan_Light'){
+                    $overpanelKey = "Fanlight head & Bottom";
+                }elseif($request->overpanel=='Overpanel'){
+                    $overpanelKey = "Overpanel head & Bottom";
+                }
+
+                $description = '['.$overpanelKey.']|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->oPHeigth."mm | - | -";
                 $QtyPerDoorType = ($request->frameWidth * 2)/1000;
 
                 $unit_cost = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
