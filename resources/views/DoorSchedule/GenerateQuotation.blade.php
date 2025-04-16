@@ -106,6 +106,7 @@
                                                 Calculation</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                            <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
                                             <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
@@ -807,6 +808,8 @@
         value="{{ url('/quotation/ExportDoorTypeBom') }}" />
     <input type="hidden" name="ExportSideScreenUrl" id="ExportSideScreenUrl"
         value="{{ url('/quotation/ExportSideScreen') }}" />
+    <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
+        value="{{ url('/quotation/cuttingList') }}" />
     <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
         value="{{ url('/quotation/ExportIronmongery') }}" />
     <input type="hidden" name="excelexportVicaimaUrl" id="excelexportVicaimaUrl"
@@ -1674,6 +1677,18 @@
                     }
                 //}
             });
+            cuttingList = function() {
+                var cuttingListUrl = $("#cuttingListUrl").val();
+                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
             //    let popupParent = document.querySelector(".popup-parent1");
             //    let btn = document.getElementById("btn");
             //    let btnClose = document.querySelector(".close");

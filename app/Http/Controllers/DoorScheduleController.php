@@ -87,6 +87,7 @@ use App\Models\GlazingSystem;
 use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use App\Models\DoorFrameConstruction;
+use App\Exports\cuttingListExport;
 
 class DoorScheduleController extends Controller
 {
@@ -7821,5 +7822,16 @@ class DoorScheduleController extends Controller
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]);
+    }
+
+    public function cuttingList($quotationId,$versionID)
+    {
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',$versionID)->first();
+            $vid = $QV->version;
+        }
+        return Excel::download(new cuttingListExport($quotationId,$versionID), "CutList ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 }
