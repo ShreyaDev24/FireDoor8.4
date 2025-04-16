@@ -184,54 +184,67 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursid
     if($type == "Frame"){
         if($configurationDoor == 2 || $configurationDoor == 3 || $configurationDoor == 4 || $configurationDoor == 5 || $configurationDoor == 6){
             if ($fireRating=="FD30" || $fireRating=="FD30s") {
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "510"]]);
+                GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 510]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 510]
+                ]);
+
             } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+                $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
             }
+
         }elseif($configurationDoor == 7){
             if ($foursided == 1) {
                 if ($fireRating=="FD30" || $fireRating=="FD30s") {
-                    // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "510"], ["lipping_species.MaxValues", ">=", "510"]]);
-                    $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+                    // $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 510]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 510], ["lipping_species.MaxValues", ">=", 510]]);
+                    $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
                 } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
-                    // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
-                    $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue",  "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+                    // $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
+                    $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue",  640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
                 }
             } elseif ($fireRating=="FD30" || $fireRating=="FD30s") {
-                // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "510"], ["lipping_species.MaxValues", ">=", "510"]]);
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "510"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "510"]]);
+                // $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 510]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 510], ["lipping_species.MaxValues", ">=", 510]]);
+                $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 510]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 510]]);
             } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
-                // $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+                // $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
+                $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
             }
 
         }
         elseif($configurationDoor == 1 || $configurationDoor == 8){
             if ($fireRating=="FD30" || $fireRating=="FD30s") {
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "450"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "450"]]);
+                $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 450]], "join", "lippingSpecies", "get",[],[["lipping_species.MaxValues", ">=", 450]]);
             } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
-                $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+                $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
             }
         }
     }
 
     if($type == "Other" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
-        $lippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", "640"], ["lipping_species.MaxValues", ">=", "640"]]);
+        $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
     }
 
     if($fireRating=="NFR" || $type == "Architrave"){
-        $lippingSpecies = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1]], "join", "lippingSpecies", "query");
     }
 
-    if (!($lippingSpecies instanceof \Illuminate\Database\Eloquent\Builder)) {
+    if ($lippingSpecies instanceof \Illuminate\Database\Eloquent\Builder) {
+        // If it's a query builder, finalize it now
+        $lippingSpecies = $lippingSpecies->get();
+    } elseif (is_array($lippingSpecies)) {
+        // If it's an array, convert it to a collection
         $lippingSpecies = collect($lippingSpecies);
     }
+
 
     if(in_array($authdata->UserType, [1,4])){
         $lippingSpecies = $lippingSpecies->values(); // Return as collection
     } else {
         $lippingSpecies = $lippingSpecies->whereIn("id",  $SelectedLippingSpeciesIds)->values(); // Filtered
     }
+
 
 
     return $lippingSpecies;
@@ -246,15 +259,19 @@ function filterOnlyLippingSpecies($type,$configurationDoor="",$fireRating="",$fo
     $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
     if($type == "Lipping" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s" || $fireRating == "NFR")){
-        // $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "Lipping", "query",[],[]);
-        $OnlylippingSpecies = GetOptions(['lipping_species.Status' => 1, ["lipping_species.MinValue", ">=", "640"]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", "640"]]);
+        // $OnlylippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "Lipping", "query",[],[]);
+        $OnlylippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
+    }
+    if ($OnlylippingSpecies instanceof \Illuminate\Database\Eloquent\Builder) {
+        $OnlylippingSpecies = $OnlylippingSpecies->get();
+    } elseif (is_array($OnlylippingSpecies)) {
+        $OnlylippingSpecies = collect($OnlylippingSpecies);
     }
 
-    if(in_array($authdata->UserType, [1,4])){
-        $OnlylippingSpecies = $OnlylippingSpecies->get();
-
-    }else{
-        $OnlylippingSpecies = $OnlylippingSpecies->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+    if (in_array($authdata->UserType, [1, 4])) {
+        // already a collection, do nothing
+    } else {
+        $OnlylippingSpecies = $OnlylippingSpecies->whereIn("id", $SelectedLippingSpeciesIds);
     }
 
     return $OnlylippingSpecies;

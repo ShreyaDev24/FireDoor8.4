@@ -38,7 +38,7 @@ class OrderController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function orderlist()
     {
         $LoginUserId = Auth::user()->id;
@@ -52,7 +52,7 @@ class OrderController extends Controller
             $orderData = json_decode((string) $request->input('orders'), true);
             $request->merge(['orders' => $orderData]);
         }
-        
+
         if($request->ajaxCall == 1){
             $from = $request->from;
             $limit = $request->limit;
@@ -69,7 +69,7 @@ class OrderController extends Controller
             for($i = 0 ; $i <= count($filters)-1; $i++){
                 $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
             }
-            
+
             $orders = $request->orders;
             $column = $orders[0]["column"];
             $dir = $orders[0]["dir"];
@@ -84,7 +84,7 @@ class OrderController extends Controller
                 if(!empty($request->id)){
                     $filters[] = ['quotation.UserId', "=", $request->id];
                 }
-                
+
                 $filters[] = ['quotation.CompanyId', "!=", 1];
                 break;
             case 2:
@@ -95,7 +95,7 @@ class OrderController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.CompanyId', "=", $login_company_id];
                 }
-                
+
                 break;
             case 3:
                 $login_company_id = get_company_id(Auth::user()->CreatedBy)->id;
@@ -105,7 +105,7 @@ class OrderController extends Controller
                     $filters[] = ['quotation.UserId', "=", $request->id];
                     $filters[] = ['quotation.CompanyId', "=", $login_company_id];
                 }
-                
+
                 break;
             default:
             $filters[] = ['quotation.UserId', "=", $loginUserId];
@@ -192,7 +192,7 @@ class OrderController extends Controller
 
             ->count();
         }
-        
+
         if($Quotations !== null){
             $htmlData = '';
 
@@ -311,7 +311,7 @@ $sn++;
 
                 // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
             }
-           
+
             $htmlData .= '</tbody>
             </table>';
 
@@ -383,7 +383,7 @@ $sn++;
                 }else{
                     $Currency = "£";
                 }
-                
+
                 $htmlData .=
                 '
                 <div class="col-sm-3 mb-3">
@@ -429,7 +429,7 @@ $sn++;
                 </div>';
             }
         }
-            
+
             // $Quotations = $Quotations->toArray();
 
             if(!empty($Quotations)){
@@ -479,7 +479,7 @@ $sn++;
         if($Quotation === null){
             return abort(404);
         }
-        
+
         // $ProjectTable = '<option value="">Select Project</option>';
 
         if($Quotation->CustomerId != ''){
@@ -528,7 +528,7 @@ $sn++;
                 // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
                 $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
             }
-            
+
             $TotalDoorSetPrice = itemAdjustCount($Id,$vId);
             $nonConfigData = nonConfigurableItem($Id,$vId,CompanyUsers());
             $nonConfigDataPrice = nonConfigurableItem($Id,$vId,CompanyUsers(),'',true);
@@ -609,7 +609,7 @@ $sn++;
                 <td><a href="javascript:void(0);" data-type="strebord" onclick="nonConfigStore('.$Id.','.$vId.','.$value->id.','.$value->price.');" class="configure_btn">Add</a></td>
             </tr>';
             }
-            
+
             $NonConfig .= '</tbody></table></div></div></div>';
 
             // hide or disabled 'Add Item' button from GenerateQuotation.blade page
@@ -649,7 +649,7 @@ $sn++;
                         Additional <br> Door Type</a>
                     ';
                 }
-                
+
                 $configItem .=
                 '
                 <div class="col-sm-6 p-0 pr-1">
@@ -686,7 +686,7 @@ $sn++;
                         </a>
                     </div>';
                 }
-                
+
                 $DA .= '
                 <input type="hidden" name="quotation_sitedeliveryaddressID[]" value="'.$xxs->id.'">
                 <div class="col-sm-12">
@@ -737,7 +737,7 @@ $sn++;
                 ';
                 $loop++;
             }
-            
+
             $quotation_data = Quotation::where('id',$Id)->first();
             $currency = SettingCurrency::where('companyId',Auth::user()->CompanyId)->first();
             return view('DoorSchedule.Ordered',[
@@ -776,7 +776,10 @@ $sn++;
     }
 
     public function orderlistAllExport(){
-        return Excel::download(new AllOrderExport(), 'Order.xlsx');
+        return Excel::download(new AllOrderExport(), 'Order.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 
 }

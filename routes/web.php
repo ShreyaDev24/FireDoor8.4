@@ -28,7 +28,7 @@ Route::get('/clear-cache', function(): void {
 
 Route::get('/', function () {
     if(Auth::check()){return Redirect::to('/');}
-    
+
     return view('auth.login');
 });
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
@@ -394,7 +394,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/generateBOMPrint' , [App\Http\Controllers\BOMController::class,'BomCalculationPrint'])->name('generateBOMPrint');
     Route::post('/ScreengenerateBOMPrint' , [App\Http\Controllers\BOMController::class,'ScreenBomCalculationPrint'])->name('ScreengenerateBOMPrint');
     Route::post('/DoorOrderSheetUrl' , [App\Http\Controllers\BOMController::class,'DoorOrderSheetUrl'])->name('DoorOrderSheetUrl');
-    Route::get('/QualityControlPrint/{v}/{qid}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
+    Route::get('/QualityControlPrint/{qid}/{v}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
 
     Route::post('/FrameTransomsUrl' , [App\Http\Controllers\BOMController::class,'FrameTransomsUrl'])->name('FrameTransomsUrl');
 
@@ -417,6 +417,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
+    Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');
     Route::get('/excelexportVicaimaUrl/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelexportVicaima'])->name('excelexportVicaima');
     Route::get('/ExportIronmongery/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportIronmongery'])->name('ExportIronmongery');
 

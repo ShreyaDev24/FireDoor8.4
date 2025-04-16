@@ -65,50 +65,52 @@
             @endphp
 
             @foreach ($item as $value)
-                @if ($i++ == 0)
+                    @if ($i++ == 0)
+                        <tr>
+                            <th>DOOR NUMBER</th>
+                            <th>GLASS THICKNESS IN MM</th>
+                            <th>GLASS TYPE</th>
+                            <th>CUT Height BOTTOM PANEL</th>
+                            <th>CUT WIDTH BOTTOM PANEL</th>
+                            <th>QTY OF GLASS PANELS TO ORDER</th>
+                            <th>CUT SIZES Height TOP PANEL</th>
+                            <th>CUT SIZES WIDTH TOP PANEL</th>
+                            <th>QTY OF GLASS PANELS TO ORDER</th>
+                        </tr>
+                        <tr style="background:#00B0F0">
+                            <td><b></b></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    @endif
+                    @if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
                     <tr>
-                        <th>DOOR NUMBER</th>
-                        <th>GLASS THICKNESS IN MM</th>
-                        <th>GLASS TYPE</th>
-                        <th>CUT Height BOTTOM PANEL</th>
-                        <th>CUT WIDTH BOTTOM PANEL</th>
-                        <th>QTY OF GLASS PANELS TO ORDER</th>
-                        <th>CUT SIZES Height TOP PANEL</th>
-                        <th>CUT SIZES WIDTH TOP PANEL</th>
-                        <th>QTY OF GLASS PANELS TO ORDER</th>
-                    </tr>
-                    <tr style="background:#00B0F0">
-                        <td><b></b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ $value->doorNumber }}</td>
+                        <td>{{ $value->GlassThickness }}</td>
+                        <td>{{ str_replace('_', ' ', $value->GlassType) }}</td>
+                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 8 : $value->Leaf1VPHeight1 - 5 }}</td>
+                        @php
+                            if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
+                                $wdth = 5;
+                            }elseif($value->FireRating == 'FD60s' || $value->FireRating == 'FD60'){
+                                $wdth = 8;
+                            }else{
+                                $wdth = 0;
+                            }
+                        @endphp
+                        <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
+                        <td>{{ $value->VisionPanelQuantity }}</td>
                         <td></td>
                         <td></td>
                         <td></td>
                     </tr>
                 @endif
-                <tr>
-                    <td>{{ $value->doorNumber }}</td>
-                    <td>{{ $value->GlassThickness }}</td>
-                    <td>{{ str_replace('_', ' ', $value->GlassType) }}</td>
-                    <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 8 : $value->Leaf1VPHeight1 - 5 }}</td>
-                    @php
-                        if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
-                            $wdth = 5;
-                        }elseif($value->FireRating == 'FD60s' || $value->FireRating == 'FD60'){
-                            $wdth = 8;
-                        }else{
-                            $wdth = 0;
-                        }
-                    @endphp
-                    <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
-                    <td>{{ $value->VisionPanelQuantity }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
             @endforeach
         </tbody>
     </table>

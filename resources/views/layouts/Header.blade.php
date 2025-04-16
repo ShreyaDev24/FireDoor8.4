@@ -32,11 +32,15 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:wght@900&display=swap" rel="stylesheet">
 
 
-    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"> -->
+    <!-- Recommended for modern browsers -->
+    <script type="module" src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.esm.js"></script>
 
-    
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" /> 
+    <!-- Fallback for older browsers -->
+    <script nomodule src="https://unpkg.com/ionicons@5.4.0/dist/ionicons/ionicons.js"></script>
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/css/bootstrap-select.css" />
     @yield('css')
     <style>
     .loader{
@@ -47,8 +51,8 @@
       height: 100%;
       z-index: 9999;
       opacity: 0.5;
-      background: url('//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Phi_fenomeni.gif/50px-Phi_fenomeni.gif') 
-              50% 50% no-repeat rgb(249,249,249); 
+      background: url('//upload.wikimedia.org/wikipedia/commons/thumb/e/e5/Phi_fenomeni.gif/50px-Phi_fenomeni.gif')
+              50% 50% no-repeat rgb(249,249,249);
     }
     .bootstrap-select .btn {
       background-color: white;

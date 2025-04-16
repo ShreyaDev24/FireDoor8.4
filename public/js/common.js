@@ -28,6 +28,17 @@ function floor_finish_change(){
     if(withoutFrameId == 1){
         $("#floor_finish").hide();
     }
+
+    let foursidedframe = document.getElementById("foursidedframe");
+
+    if (foursidedframe.checked) {
+        $("#frameType option[value='Scalloped']").prop("disabled", true);
+        $("#undercut,#floorFinish").val(0).prop("readonly", true);
+    }else{
+        $("#frameType option[value='Scalloped']").prop("disabled", false);
+        $("#floorFinish").prop("readonly", false);
+
+    }
 }
 
 $(document).on('click','#swingType',function(e){
