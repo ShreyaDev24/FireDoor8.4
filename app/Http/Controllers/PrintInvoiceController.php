@@ -2624,6 +2624,10 @@ class PrintInvoiceController extends Controller
                                         <th class="tblTitle">Frame</th>
                                     </tr>
                                     <tr>
+                                        <td class="dicription_grey">Four Sided Frame</td>
+                                        <td class="dicription_blank">' . (($tt->FourSidedFrame == 1)?'Yes':'No') . '</td>
+                                    </tr>
+                                    <tr>
                                         <td class="dicription_grey">Frame Material</td>
                                         <td class="dicription_blank">' . $frameMaterial . '</td>
                                     </tr>
