@@ -1778,7 +1778,7 @@ $sn++;
                 $ItemMasters = ItemMaster::wherein('id',$itemmasterID)->select('floor')->groupBy('floor')->get();
                 // dd($ItemMasters);
                 foreach($ItemMasters as  $ItemMaster){
-                    if(!empty($ItemMaster->floor)){
+                    if ($ItemMaster->floor !== null && $ItemMaster->floor !== '') {
                         $floor = new Floor();
                         $floor->floor_name = $ItemMaster->floor;
                         $floor->projectId = $request->projectId;
