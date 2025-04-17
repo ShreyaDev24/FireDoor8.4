@@ -448,8 +448,8 @@ $(document).on('change', '#numberOfGroove', function (e) {
 
 // Vision Panel
 
-$("#leaf1VisionPanel").change(function () {
-    if ($(this).val() == "Yes") {
+function visionPanelChange(){
+    if($("#leaf1VisionPanel").val()=="Yes"){
         $("#visionPanelQuantity").attr('disabled', false);
         $("#visionPanelQuantity").attr('required', true);
         $("#leaf1VisionPanelShape").attr('readonly', false);
@@ -493,17 +493,34 @@ $("#leaf1VisionPanel").change(function () {
             $("#vP1Height" + i).attr({ 'required': false, 'readonly': true }).val("");
         }
         $('#leaf1VisionPanelShape').val('').attr({ 'readonly': true, 'required': false }).val("");
-        $('#glazingSystems').attr('required', false);
-        $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
-        $('#glassType').val('').attr('required', false);
-        $('#glazingBeads').val('').attr('required', false);
-        $('#glazingBeadsThickness').val('').attr('required', false);
-        $('#glazingBeadsWidth').val('').attr('required', false);
-        $('#glazingBeadsHeight').val('').attr('required', false);
-        $('#glazingBeadsFixingDetail').val('').attr('required', false);
-        $('#glazingBeadSpecies').val('').attr('required', false);
-        $('#glassThickness').val('').attr('required', false);
+        if($("#leaf2VisionPanel").val() == 'Yes'){
+            $('#glazingSystems').attr('required', false);
+            $('#lazingIntegrityOrInsulationIntegrity').attr('required', false);
+            $('#glassType').attr('required', false);
+            $('#glazingBeads').attr('required', false);
+            $('#glazingBeadsThickness').attr('required', false);
+            $('#glazingBeadsWidth').attr('required', false);
+            $('#glazingBeadsHeight').attr('required', false);
+            $('#glazingBeadsFixingDetail').attr('required', false);
+            $('#glazingBeadSpecies').attr('required', false);
+            $('#glassThickness').attr('required', false);
+        }else{
+            $('#glazingSystems').attr('required', false);
+            $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
+            $('#glassType').val('').attr('required', false);
+            $('#glazingBeads').val('').attr('required', false);
+            $('#glazingBeadsThickness').val('').attr('required', false);
+            $('#glazingBeadsWidth').val('').attr('required', false);
+            $('#glazingBeadsHeight').val('').attr('required', false);
+            $('#glazingBeadsFixingDetail').val('').attr('required', false);
+            $('#glazingBeadSpecies').val('').attr('required', false);
+            $('#glassThickness').val('').attr('required', false);
+        }
     }
+}
+
+$("#leaf1VisionPanel").change(function () {
+    visionPanelChange();
 });
 
 $("#visionPanelQuantity").change(function () {
@@ -1759,6 +1776,7 @@ function FireRatingChange() {
         scalloppedLippingThickness($("#fireRating").val());
         flatLippingThickness($("#fireRating").val());
         rebatedLippingThickness($("#fireRating").val());
+        visionPanelChange();
     }
     IntumescentSeals();
 }
@@ -2717,8 +2735,8 @@ function filterSpecies(){
     setTimeout(() => {
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
-        $("#frameHeight").val(so_height - parseInt(tollerance));
         framewidth();
+        $("#frameHeight").val(so_height - parseInt(tollerance));
     }, 500);
 };
 
@@ -5158,7 +5176,7 @@ $("#DoorDimensionsIcon2").on("click", function () {
     // setTimeout(() => {
     //     var so_width = parseInt($("#sOWidth").val());
     //     var so_height = parseInt($("#sOHeight").val());
-    //     $("#frameWidth").val(so_width - (parseInt(tollerance) * 2));
+    //     framewidth();
     //     $("#frameHeight").val(so_height - parseInt(tollerance));
     // }, 500);
 
