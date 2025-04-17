@@ -4,7 +4,13 @@
 <!-- <script src="https://cdn.ckeditor.com/4.15.1/standard-all/ckeditor.js"></script> -->
 <!-- <script src="https://cdn.ckeditor.com/4.15.1/full-all/ckeditor.js"></script> -->
 <!-- <script src="http://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script> -->
-<script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>
+{{--  <script src="https://cdn.ckeditor.com/4.12.1/full/ckeditor.js"></script>  --}}
+<!-- Froala Editor CSS -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.13/css/froala_editor.pkgd.min.css" rel="stylesheet">
+
+<!-- Froala Editor JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/froala-editor/4.0.13/js/froala_editor.pkgd.min.js"></script>
+
 <style>
     .cke_contents{
         height: 29.7cm !important;
@@ -74,30 +80,27 @@
                                         <p>[QuotationGenerationId]</p>
                                         <p>[ContractorName]</p>
                                     </div>
-                                    <div class="col-md-10   col-sm-9">
+                                    <div class="col-md-10 col-sm-9">
                                         <div class="main-card mb-3 card">
                                             <form action="{{route('submitpdf1')}}" method="post">
                                                 {{ csrf_field() }}
-                                                <input type="hidden" name="updval"
-                                                    value="@if( !empty($pdf1->id) ) {{ $pdf1->id }} @endif">
+                                                <input type="hidden" name="updval" value="@if(!empty($pdf1->id)) {{ $pdf1->id }} @endif">
                                                 <div class="card-body">
                                                     <div class="form-group">
-                                                        <label for="First Name" class="">PDF Format One<span
-                                                                class="text-danger">*</span></label>
-                                                        <textarea cols="80" style="height:500px !important" id="editor1" name="editor1" rows="10"
-                                                            data-sample-short>@if( !empty($pdf1->msg) ) {{ $pdf1->msg }} @endif</textarea>
-
+                                                        <label for="editor1">PDF Format One <span class="text-danger">*</span></label>
+                                                        <textarea id="editor1" name="editor1" style="height:500px !important;" rows="10">
+                                                            @if(!empty($pdf1->msg)) {{ $pdf1->msg }} @endif
+                                                        </textarea>
                                                     </div>
                                                 </div>
                                                 <div class="d-block text-right card-footer">
-                                                    <button id="print1" class="btn-wide btn btn-info"
-                                                        style="margin-right: 20px"> PRINT PREVIEW </button>
-                                                    <button type="submit" id="submit" class="btn-wide btn btn-success"
-                                                        style="margin-right: 20px"> SET FORMAT </button>
+                                                    <button id="print1" class="btn-wide btn btn-info" style="margin-right: 20px"> PRINT PREVIEW </button>
+                                                    <button type="submit" id="submit" class="btn-wide btn btn-success" style="margin-right: 20px"> SET FORMAT </button>
                                                 </div>
                                             </form>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
 
@@ -231,95 +234,61 @@
 
 @section("script_section")
 <script>
-var i = 1;
-var max = 5;
-while (max > i) {
-    CKEDITOR.replace('editor' + i, {
-        filebrowserUploadUrl: "{{route('ckeditor.upload', ['_token' => csrf_token() ])}}",
-        filebrowserUploadMethod: 'form'
+    document.addEventListener("DOMContentLoaded", function() {
+        const editorIds = ['editor1', 'editor2', 'editor3', 'editor4'];
+
+        editorIds.forEach(id => {
+            new FroalaEditor(`#${id}`, {
+                heightMin: 300,
+                heightMax: 500,
+                imageUploadURL: "/setting/ckeditor/upload", // Match Laravel route
+                imageUploadMethod: 'POST',
+                imageAllowedTypes: ['jpeg', 'jpg', 'png', 'gif'],
+                imageUploadParams: {
+                    _token: document.querySelector('meta[name="csrf-token"]')
+                            ? document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                            : ''
+                },
+                events: {
+                    'image.uploaded': function(response) {
+                        console.log(`Image uploaded successfully in ${id}`, response);
+                    },
+                    'image.error': function(error) {
+                        console.log(`Image upload error in ${id}`, error);
+                    }
+                }
+            });
+        });
     });
 
-    // CKEDITOR.replace( 'editor'+i, {
-    //     height: 300,
-    //     filebrowserUploadUrl: "upload.php"
-    // });
-    // CKEDITOR.replace('editor'+i, {
-    //     extraPlugins: 'easyimage',
-    //     removePlugins: 'image',
-    //     removeDialogTabs: 'link:advanced',
-    //     cloudServices_uploadUrl: 'https://33333.cke-cs.com/easyimage/upload/',
-    //     // Note: this is a token endpoint to be used for CKEditor 4 samples only. Images uploaded using this token may be deleted automatically at any moment.
-    //     // To create your own token URL please visit https://ckeditor.com/ckeditor-cloud-services/.
-    //     cloudServices_tokenUrl: 'https://33333.cke-cs.com/token/dev/ijrDsqFix838Gh3wGO3F77FSW94BwcLXprJ4APSp3XQ26xsUHTi0jcb1hoBt',
-    //     easyimage_styles: {
-    //         gradient1: {
-    //         group: 'easyimage-gradients',
-    //         attributes: {
-    //             'class': 'easyimage-gradient-1'
-    //         },
-    //         label: 'Blue Gradient',
-    //         icon: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/gradient1.png',
-    //         iconHiDpi: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/hidpi/gradient1.png'
-    //         },
-    //         gradient2: {
-    //         group: 'easyimage-gradients',
-    //         attributes: {
-    //             'class': 'easyimage-gradient-2'
-    //         },
-    //         label: 'Pink Gradient',
-    //         icon: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/gradient2.png',
-    //         iconHiDpi: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/hidpi/gradient2.png'
-    //         },
-    //         noGradient: {
-    //         group: 'easyimage-gradients',
-    //         attributes: {
-    //             'class': 'easyimage-no-gradient'
-    //         },
-    //         label: 'No Gradient',
-    //         icon: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/nogradient.png',
-    //         iconHiDpi: 'https://ckeditor.com/docs/ckeditor4/4.15.1/examples/assets/easyimage/icons/hidpi/nogradient.png'
-    //         }
-    //     },
-    //     easyimage_toolbar: [
-    //         'EasyImageFull',
-    //         'EasyImageSide',
-    //         'EasyImageGradient1',
-    //         'EasyImageGradient2',
-    //         'EasyImageNoGradient',
-    //         'EasyImageAlt'
-    //     ]
-    // });
 
-    i++;
-}
+    $('#print1').on('click',function(){
+        var editor1 = $('#editor1').val();
+        newwin=window.open();
+        newwin.document.write(editor1)
+        newwin.document.close();
+    })
 
-$('#print1').on('click',function(){
-    var editor1 = $('#editor1').val();
-    newwin=window.open();
-    newwin.document.write(editor1)
-    newwin.document.close();
-})
+    $('#print2').on('click',function(){
+        var editor2 = $('#editor2').val();
+        newwin=window.open();
+        newwin.document.write(editor2)
+        newwin.document.close();
+    })
 
-$('#print2').on('click',function(){
-    var editor2 = $('#editor2').val();
-    newwin=window.open();
-    newwin.document.write(editor2)
-    newwin.document.close();
-})
+    $('#print3').on('click',function(){
+        var editor3 = $('#editor3').val();
+        newwin=window.open();
+        newwin.document.write(editor3)
+        newwin.document.close();
+    })
 
-$('#print3').on('click',function(){
-    var editor3 = $('#editor3').val();
-    newwin=window.open();
-    newwin.document.write(editor3)
-    newwin.document.close();
-})
-
-$('#print4').on('click',function(){
-    var editor4 = $('#editor4').val();
-    newwin=window.open();
-    newwin.document.write(editor4)
-    newwin.document.close();
-})
+    $('#print4').on('click',function(){
+        var editor4 = $('#editor4').val();
+        newwin=window.open();
+        newwin.document.write(editor4)
+        newwin.document.close();
+    })
 </script>
 
 @endsection

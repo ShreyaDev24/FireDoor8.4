@@ -10,6 +10,7 @@ use App\Models\SettingPDF1;
 use App\Models\SettingPDF2;
 use App\Models\SettingPDFfooter;
 use App\Models\SettingPDFDocument;
+use Illuminate\Http\JsonResponse;
 
 class PdfsettingController extends Controller
 {
@@ -27,7 +28,7 @@ class PdfsettingController extends Controller
         $pdf_document = SettingPDFDocument::wherein('UserId',$ids)->first();
         return view('Setting.settingpdf1',['pdf1' => $pdf1, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'pdf_document' => $pdf_document]);
     }
-    
+
     public function submitpdf1(Request $request)
     {
         $id = Auth::user()->id;
@@ -44,7 +45,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
-        
+
         foreach ($users as $key => $usr) {
             $update_val = $request->updval;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -52,7 +53,7 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDF1;
             }
-            
+
             $a->UserId = $usr;
             $a->msg = $request->editor1;
             $a->created_at = date('Y-m-d H:i:s');
@@ -68,7 +69,7 @@ class PdfsettingController extends Controller
             return redirect()->back()->with('success', 'PDF Format One added successfully!');
         }
     }
-    
+
     public function submitpdf2(Request $request)
     {
         $id = Auth::user()->id;
@@ -85,7 +86,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
-        
+
         foreach ($users as $key => $usr) {
             $update_val = $request->updval2;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -93,14 +94,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDF2;
             }
-            
+
             $a->UserId = $usr;
             $a->msg = $request->editor2;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
-        
+
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF Format Two update successfully!');
         }
@@ -126,7 +127,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
-        
+
         foreach ($users as $key => $usr) {
             $update_val = $request->updval3;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -134,14 +135,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDFfooter;
             }
-            
+
             $a->UserId = $usr;
             $a->msg = $request->editor3;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
-        
+
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF footer update successfully!');
         }
@@ -150,7 +151,7 @@ class PdfsettingController extends Controller
             return redirect()->back()->with('success', 'PDF footer added successfully!');
         }
     }
-    
+
     public function submitpdf4(Request $request)
     {
         $id = Auth::user()->id;
@@ -167,7 +168,7 @@ class PdfsettingController extends Controller
         }else{
             $users = [$id];
         }
-        
+
         foreach ($users as $key => $usr) {
             $update_val = $request->updval4;
             if(!is_null($update_val) && Auth::user()->UserType != 2){
@@ -175,14 +176,14 @@ class PdfsettingController extends Controller
             } else {
                 $a = new SettingPDFDocument;
             }
-            
+
             $a->UserId = $usr;
             $a->msg = $request->editor4;
             $a->created_at = date('Y-m-d H:i:s');
             $a->updated_at = date('Y-m-d H:i:s');
             $a->save();
         }
-        
+
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'PDF document update successfully!');
         }
@@ -192,23 +193,44 @@ class PdfsettingController extends Controller
         }
     }
 
-    public function upload(Request $request): void
+    public function upload(Request $request): JsonResponse
     {
-        if($request->hasFile('upload')) {
-            $originName = $request->file('upload')->getClientOriginalName();
-            $fileName = pathinfo($originName, PATHINFO_FILENAME);
-            $extension = $request->file('upload')->getClientOriginalExtension();
-            $fileName = $fileName.'_'.time().'.'.$extension;
+        if ($request->hasFile('file')) {
+            $request->validate([
+                'file' => 'required|mimes:pdf,jpg,jpeg,png|max:5120',
+            ]);
 
-            $request->file('upload')->move(public_path('images/pdf/'), $fileName);
+            try {
+                $file = $request->file('file');
+                $filename = time() . '_' . uniqid() . '_' . $file->getClientOriginalName();
+                $filePath = public_path('images/pdf/');
 
-            $CKEditorFuncNum = $request->input('CKEditorFuncNum');
-            $url = asset('images/pdf/'.$fileName);
-            $msg = 'Image uploaded successfully';
-            $response = sprintf("<script>window.parent.CKEDITOR.tools.callFunction(%s, '%s', '%s')</script>", $CKEditorFuncNum, $url, $msg);
+                if (!file_exists($filePath)) {
+                    mkdir($filePath, 0777, true);
+                }
 
-            @header('Content-type: text/html; charset=utf-8');
-            echo $response;
+                $movedFilePath = $filePath . $filename;
+                $file->move($filePath, $filename);
+
+                if (!file_exists($movedFilePath)) {
+                    return response()->json(['error' => 'File move failed.'], 500);
+                }
+
+                $fileData = file_get_contents($movedFilePath);
+                $base64 = base64_encode($fileData);
+                $mimeType = mime_content_type($movedFilePath);
+
+                return response()->json([
+                    'link' => "data:$mimeType;base64,$base64",
+                    'filename' => $file->getClientOriginalName()
+                ]);
+
+            } catch (\Exception $e) {
+                return response()->json(['error' => $e->getMessage()], 500);
+            }
         }
+
+        return response()->json(['error' => 'No file uploaded'], 400);
     }
+
 }
