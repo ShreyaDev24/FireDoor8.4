@@ -2284,17 +2284,6 @@ function frameMaterialFilter(fireRating){
                             FrameMaterialValue = $("#FrameMaterial-value").data("value");
                             if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
                                 $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
-                                found = true;
-                                break;
-                            } else if(frameMaterialNew != leepingSpecies[j].id && frameMaterialNew){
-                                $( "a[href='#frame-section']").css({'background':'red'});
-                                $('#checking-level').show();
-                                $('#frameMaterial').css('border', '1px solid red');
-                            } else {
-                                $( "a[href='#frame-section']").css({'background':''});
-                                $('#checking-level').hide();
-                                $('#frameMaterial').css('border', '');
-                            }
                         }
                         var filepath = $("input[name='base_url']").val()+"/uploads/Options/"+leepingSpecies[j].file;
 
