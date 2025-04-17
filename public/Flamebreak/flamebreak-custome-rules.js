@@ -4905,7 +4905,10 @@ $(document).ready(function(){
 
 function leafReadonly() {
     let doorsetType = $('#doorsetType').val();
+    let withoutFrameId = $('#withoutFrameId').val();
     if (doorsetType === 'leaf_and_a_half') {
+        $('#leafWidth1').removeAttr('readonly');
+    } else if(withoutFrameId == 1) {
         $('#leafWidth1').removeAttr('readonly');
     } else {
         $('#leafWidth1').attr('readonly', true);
