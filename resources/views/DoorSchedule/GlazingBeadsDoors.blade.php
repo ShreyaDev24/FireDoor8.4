@@ -95,6 +95,7 @@
                         <td></td>
                     </tr>
                 @endif
+                @if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
                 <tr>
                     <td>{{ $value->doorNumber }}</td>
                     <td>{{ $value->SpeciesName }}</td>
@@ -105,10 +106,11 @@
                     <td>{{ $value->Leaf1VPHeight1 - 1 }}</td>
                     <td>{{ $value->VisionPanelQuantity * 4 }}</td>
                     <td>{{ $value->Leaf1VPWidth - 1}}</td>
-                    <td>{{ $value->VisionPanelQuantity * 4 }}</td>
+                    <td>{{ ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)}}</td>
                     <td></td>
                     <td></td>
                 </tr>
+                @endif
             @endforeach
         </tbody>
     </table>
