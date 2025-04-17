@@ -414,6 +414,7 @@
         $("select[name=architraveFinish]").val($("#ArchitraveFinish-import").data("value"));
         $("#architraveFinishcolor").val($("#ArchitraveFinishColor-import").data("value"));
         $("select[name=architraveSetQty]").val($("#ArchitraveSetQty-import").data("value"));
+        frameThicknessChanges()
         if($("#Architrave-import").data("value") == 'Yes'){
             $("#architraveMaterial").attr({ 'readonly': true, 'required': true });
             $("#architraveMaterial").addClass('bg-white');
@@ -433,6 +434,7 @@
         architrave(1);
         floor_finish_change();
         IntumescentSealArrangementValue();
+        swingAndLatchs();
         let framTypeValue = $("#FrameType-import").data("value");
         if (framTypeValue == "Plant_on_Stop") {
             $("#plantonStopWidth").attr('min', '20');
@@ -504,6 +506,43 @@
             }, index * 100); // Delay increases by 100ms for each element
         });
     }
+
+    function frameThicknessChanges(){
+        if($("#fireRating").val() != "NFR"){
+           if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','32');
+            } else{
+                $("#frameThickness").removeAttr('min');
+            }
+        }else{
+            $("#frameThickness").removeAttr('min');
+        }
+    }
+
+    function swingAndLatchs(){
+        if($("#swingType").val() == 'DA'){
+            $("select[name=frameType]").val('Scalloped').trigger("change");
+            $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']")
+                .prop("disabled", true);
+            $('#foursidedframe').prop({
+                disabled: true,
+                checked: false
+            });
+            $("#frameType option[value='Scalloped']").prop("disabled", false);
+            $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
+            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
+
+        }else{
+            $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
+            $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
+            $("#frameType option[value='Scalloped']").prop("disabled", true);
+            $("#frameType").val('').trigger('change');
+        }
+    };
 
     $('#submit').attr({'disabled': true,"readonly":true });
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
