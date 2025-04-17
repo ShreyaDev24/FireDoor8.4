@@ -348,10 +348,8 @@ function pageIdentity(){
         }
     })
 
-// Vision Panel
-$(document).ready(function() {
-    $("#leaf1VisionPanel").change(function(){
-        if($(this).val()=="Yes"){
+    function visionPanelChange(){
+        if($("#leaf1VisionPanel").val()=="Yes"){
             $("#visionPanelQuantity").attr('disabled',false);
             $("#visionPanelQuantity").attr('required',true);
             $("#leaf1VisionPanelShape").attr('readonly',false);
@@ -390,17 +388,37 @@ $(document).ready(function() {
                 $("#vP1Height"+i).attr({'required':false,'readonly':true}).val("");
             }
             $('#leaf1VisionPanelShape').val('').attr({'readonly':true,'required':false}).val("");
-            $('#glazingSystems').attr('required',false);
-            $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required',false);
-            $('#glassType').val('').attr('required',false);
-            $('#glazingBeads').val('').attr('required',false);
-            $('#glazingBeadsThickness').val('').attr('required',false);
-            $('#glazingBeadsWidth').val('').attr('required',false);
-            $('#glazingBeadsHeight').val('').attr('required',false);
-            $('#glazingBeadsFixingDetail').val('').attr('required',false);
-            $('#glazingBeadSpecies').val('').attr('required',false);
-            $('#glassThickness').val('').attr('required',false);
+            if($("#leaf2VisionPanel").val() == 'Yes'){
+                $('#glazingSystems').attr('required',false);
+                $('#glassType').attr('required',false);
+                $('#glazingBeads').attr('required',false);
+                $('#glazingBeadsThickness').attr('required',false);
+                $('#glazingBeadsWidth').attr('required',false);
+                $('#glazingBeadsHeight').attr('required',false);
+                $('#glazingBeadsFixingDetail').attr('required',false);
+                $('#glazingBeadSpecies').attr('required',false);
+                $('#glassThickness').attr('required',false);
+                $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
+            }else{
+                $('#glazingSystems').attr('required',false);
+                $('#glassType').val('').attr('required',false);
+                $('#glazingBeads').val('').attr('required',false);
+                $('#glazingBeadsThickness').val('').attr('required',false);
+                $('#glazingBeadsWidth').val('').attr('required',false);
+                $('#glazingBeadsHeight').val('').attr('required',false);
+                $('#glazingBeadsFixingDetail').val('').attr('required',false);
+                $('#glazingBeadSpecies').val('').attr('required',false);
+                $('#glassThickness').val('').attr('required',false);
+                $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required',false);
+            }
+
         }
+    }
+
+// Vision Panel
+$(document).ready(function() {
+    $("#leaf1VisionPanel").change(function(){
+        visionPanelChange();
     });
 
     $("#visionPanelQuantity").change(function(){
@@ -1035,6 +1053,7 @@ function sideLight1Change(){
         doorLeafFacingPrice('sideLight11',"Yes");
         doorLeafFacingPrice('sideLight2',"Yes");
         FramePrice('sideLight3');
+        updateTransomFields();
     } else {
 
         $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1109,6 +1128,7 @@ function sideLight2Change(){
             $("#SL2Transom").attr({ 'disabled': false, "required": true });
         }
         doorLeafFacingPrice('sideLight12',"Yes");
+        updateTransomFields();
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
@@ -1131,7 +1151,6 @@ $(".SL1").on("change keyup", function() {
 });
 function copyOfSideLite1Change(){
     if($("#copyOfSideLite1").val()=="Yes"){
-        updateGlassType(isStatus = true, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
         $("#SL2GlassIntegrity").attr({ 'disabled': true, "required": true }).val($("#SL1GlassIntegrity").val());
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassType").val());
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": true }).val($("#SideLight1BeadingType").val());
@@ -1142,6 +1161,7 @@ function copyOfSideLite1Change(){
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
         $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
         $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
+        $("#SL2TransomDepth").attr({ 'disabled': true, "required": true }).val($("#SL1TransomDepth").val());
 
         //new 12-07-2024
         $("#sideLight2GlassThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassThickness").val());
@@ -1152,6 +1172,7 @@ function copyOfSideLite1Change(){
         $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlazingBeadsFixingDetail").val());
 
         //end
+        updateGlassType(isStatus = false, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
 
         var val = $('#sideLight1GlassType').val();
         $("#sidelight1-selected1").empty().text(val);
@@ -1190,6 +1211,7 @@ function copyOfSideLite1Change(){
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': true, "required": false }).val('');
         }
     }
+    updateTransomFields();
 }
 
 // Lipping And Intumescent
@@ -1743,6 +1765,7 @@ function copyOfSideLite1Change(){
             glazingSystemFIlter($("#fireRating").val());
             onlyLipingSpecies($("#fireRating").val());
             glass_glazing_system();
+            visionPanelChange();
             // glazingBeadsFilter($("#fireRating").val());
             frameMaterialFilter($("#fireRating").val());
             scalloppedLippingThickness($("#fireRating").val());
@@ -5581,18 +5604,24 @@ function filter_sidelight_beads(fireRating){
 }
 
 // JFDS-700
-$("#SL1Transom").change(function(){
-    if($(this).val()=="No"){
-        $("#SL1TransomDepth").removeAttr('required',false);
-        $("#SL1TransomDepth").attr('disabled',true);
-    }
+$(document).ready(function () {
+    $("#SL1Transom, #SL2Transom").change(function() {
+        updateTransomFields(); // Ensure fields are set correctly on page load
+    });
 });
-$("#SL2Transom").change(function(){
-    if($(this).val()=="No"){
-        $("#SL2TransomDepth").removeAttr('required',false);
-        $("#SL2TransomDepth").attr('disabled',true);
+
+function updateTransomFields() {
+    toggleField("#SL1Transom", "#SL1TransomDepth");
+    toggleField("#SL2Transom", "#SL2TransomDepth");
+}
+
+function toggleField(transomSelector, depthSelector) {
+    if ($(transomSelector).val() === "No") {
+        $(depthSelector).prop({ required: false, disabled: true });
+    } else {
+        $(depthSelector).prop({ required: true, disabled: false });
     }
-});
+}
 
 //JFDS-709
 function LippingIns(fireratings){
