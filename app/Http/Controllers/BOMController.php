@@ -56,7 +56,7 @@ class BOMController extends Controller
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
 
         $user = empty($quotaion->UserId) ? '' : User::where('id',$quotaion->UserId)->first();
-        
+
         $comapnyDetail = Company::where('UserId',$UserId)->first();
         $bom_setting = BOMSetting::where('UserId',$UserId)->first();
         $bom_doorcore = SettingBOMCost::first();
@@ -70,7 +70,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($quotationId)){
             echo json_encode([
                 'status'=>'error',
@@ -78,7 +78,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($versionID)){
             echo json_encode([
                 'status'=>'error',
@@ -222,7 +222,7 @@ class BOMController extends Controller
                         } elseif ($j === 2) {
                             Lipping('Height',$quotationId,$versionID,$doortype,$margin,$labourCostPH,$labourMargin,$minutes,$given_qty,'','',$lipping_height,$cost_of_lipping,$lipping_thickness,$tag);
                         }
-                        
+
                         $j++;
                     }
                 } elseif ($lipping_width1 != '' && $lipping_width2 == '' && $lipping_height == '') {
@@ -237,7 +237,7 @@ class BOMController extends Controller
                         } elseif ($j === 1) {
                             Lipping('Width2',$quotationId,$versionID,$doortype,$margin,$labourCostPH,$labourMargin,$minutes,$given_qty,'',$lipping_width2,'',$cost_of_lipping,$lipping_thickness,$tag);
                         }
-                        
+
                         $j++;
                     }
                 } elseif ($lipping_width1 != '' && $lipping_width2 == '' && $lipping_height != '') {
@@ -249,7 +249,7 @@ class BOMController extends Controller
                         } elseif ($j === 1) {
                             Lipping('Height',$quotationId,$versionID,$doortype,$margin,$labourCostPH,$labourMargin,$minutes,$given_qty,'','',$lipping_height,$cost_of_lipping,$lipping_thickness,$tag);
                         }
-                        
+
                         $j++;
                     }
                 } elseif ($lipping_width1 == '' && $lipping_width2 != '' && $lipping_height == '') {
@@ -264,7 +264,7 @@ class BOMController extends Controller
                         } elseif ($j === 1) {
                             Lipping('Height',$quotationId,$versionID,$doortype,$margin,$labourCostPH,$labourMargin,$minutes,$given_qty,'','',$lipping_height,$cost_of_lipping,$lipping_thickness,$tag);
                         }
-                        
+
                         $j++;
                     }
                 } elseif ($lipping_width1 == '' && $lipping_width2 == '' && $lipping_height != '') {
@@ -908,7 +908,7 @@ class BOMController extends Controller
         $comapnyDetail = Company::where('UserId',$UserId)->first();
         $quotaion = Quotation::where('id',$quotationId)->first();
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
-        
+
         $qv = QuotationVersion::where('id',$versionID)->first();
         $version = $qv->version;
         $user = empty($quotaion->UserId) ? '' : User::where('id',$quotaion->UserId)->first();
@@ -930,7 +930,7 @@ class BOMController extends Controller
                     if(empty($BOMArray)){
                         continue;
                     }
-                    
+
                     $tbl .= '<h3 class="title">'.$TitleVal.'</h3>';
                     $tbl .= '
                     <table id="WithBorder" class="tbl1">
@@ -973,7 +973,7 @@ class BOMController extends Controller
                                                         if ($tt->DoorsetType != "SD") {
                                                             $Description .= "<br>" . $tt->CoreWidth2 . "x" . $tt->CoreHeight . "x" . $tt->LeafThickness . "mm";
                                                         }
-                                                        
+
                                                         $gg3->unitLM = $gg3->insertedIn;
                                                     } elseif ($gg3->name == "Lipping"){
                                                         if($b3key == 0){
@@ -1013,13 +1013,13 @@ class BOMController extends Controller
                                                             $OptionForDoorLeafFacing = $OptionForDoorLeafFacing->toArray();
                                                             $DoorLeafFacing = $OptionForDoorLeafFacing['OptionValue'];
                                                         }
-                                                        
+
                                                         $OptionForDoorLeafFinish = Option::where(['OptionKey' => $tt->DoorLeafFinish])->first();
                                                         if ($OptionForDoorLeafFinish != null) {
                                                             $OptionForDoorLeafFinish = $OptionForDoorLeafFinish->toArray();
                                                             $DoorLeafFinish = $OptionForDoorLeafFinish['OptionValue'];
                                                         }
-                                                        
+
                                                         $tbl .= '<tr>
                                                             <td '.$BottomBorder.'><span>'.$DoorLeafFacing . ' ( ' . $DoorLeafFinish . ' )</span></td>
                                                             <td '.$BottomBorder.'><span></span></td>
@@ -1046,11 +1046,11 @@ class BOMController extends Controller
                                                     } elseif ($gg3->name == "Glass" || $gg3->name == "Accoustic" || $gg3->name == "Ironmongery") {
                                                         $Description = (empty($gg3->insertedIn))?$gg3->name:$gg3->insertedIn;
                                                     }
-                                                    
+
                                                     break;
                                                 }
                                             }
-                                            
+
                                             $Border = "";
                                             if($gg3->name == "Lipping"){
                                                 if($gg3->insertedIn == "Width1"){
@@ -1067,7 +1067,7 @@ class BOMController extends Controller
                                             } elseif($gg3->name == "DoorFinish"){
                                                 $Border = $TopBorder;
                                             }
-                                            
+
                                             $tbl .= '<tr>
                                                 <!--<td><span>' . $gg3->name . ' ' . $gg3->insertedIn . '</span></td>-->
                                                 <td '.$Border.'><span>' . $Description . '</span></td>
@@ -1111,7 +1111,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($versionID)){
             echo json_encode([
                 'status'=>'error',
@@ -1119,7 +1119,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$request->quatationId)->first();
         $data = BOMCalculation::where('QuotationId',$request->quatationId)->get();
         $item_details = Item::where(['QuotationId'=>$quotationId, 'VersionId'=>$versionID])->get();
@@ -1143,7 +1143,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($versionID)){
             echo json_encode([
                 'status'=>'error',
@@ -1151,7 +1151,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$request->quatationId)->first();
         $data = ScreenBOMCalculation::where('QuotationId',$request->quatationId)->get();
         $item_details = SideScreenItem::where(['QuotationId'=>$quotationId, 'VersionId'=>$versionID])->get();
@@ -1174,7 +1174,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($versionID)){
             echo json_encode([
                 'status'=>'error',
@@ -1182,7 +1182,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$request->quatationId)->first();
         $data = Item::where('QuotationId',$request->quatationId)->get();
         echo json_encode([
@@ -1202,7 +1202,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         if(empty($versionID)){
             echo json_encode([
                 'status'=>'error',
@@ -1210,7 +1210,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         $DoorFrameConstruction = DoorFrameConstruction::where('UserId',Auth::user()->id)->get();
         if ($DoorFrameConstruction->isEmpty()) {
             echo json_encode([
@@ -1219,7 +1219,7 @@ class BOMController extends Controller
             ]);
             exit;
         }
-        
+
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$request->quatationId)->first();
         $data = Item::where('QuotationId',$request->quatationId)->get();
         echo json_encode([
@@ -1250,7 +1250,7 @@ class BOMController extends Controller
         $totDoorsetType = NumberOfDoorSets($version,$id);
         $totIronmongerySet = Item::join('item_master','item_master.itemID','items.itemId')->where(['items.QuotationId' => $id,'items.VersionId'=>$version])->whereNotNull('items.IronmongeryID')->count();
         $totIronmongerySet = $totIronmongerySet;
-        
+
         $version = $bomVersion->VersionId;
         $item_details = Item::join('item_master','items.itemId','item_master.itemID')->select('items.*','item_master.*')->where(['QuotationId'=>$id])->get();
 
@@ -1266,7 +1266,7 @@ class BOMController extends Controller
 
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
-    
+
     public function ScreenBomCalculation($id,string $vid,$version){
         ini_set('memory_limit', '500M');
         // $vid means version number(1,2,3,4 etc) and $version means version id or number
@@ -1334,7 +1334,7 @@ class BOMController extends Controller
         }else{
             $ids = Auth::user()->id;
         }
-        
+
         $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
 
         $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint]);
@@ -1375,7 +1375,7 @@ class BOMController extends Controller
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
-    public function QualityControlPrint($quatationId, string $versionID): void{
+    public function QualityControlPrint($quatationId, string $versionID,$version): void{
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
         $result = BOMCAlculationExport($quatationId,$versionID);
@@ -1388,7 +1388,7 @@ class BOMController extends Controller
         }else{
             $id = Auth::user()->id;
         }
-        
+
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
@@ -1401,7 +1401,7 @@ class BOMController extends Controller
         }
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
-        
+
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
         $SalesContact = 'N/A';
@@ -1432,35 +1432,40 @@ class BOMController extends Controller
         else{
             $contactfirstandlastname = '';
         }
-        
+
         $QuotationGenerationId = null;
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
             }
 
             $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
-            
+
         $ProjectName = null;
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
-            
+
             if (!empty($version)) {
                 $version = $version;
             }
-            
+
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
-            
+
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
             }
 
 
-            $data = BOMCalculation::join('items','items.itemId','bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->where('bom_calculations.QuotationId',$quatationId)->get();
+            $bomVersion = BOMCalculation::where('QuotationId',$id)->get()->first();
+            if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->distinct('item_master.itemID')->get();
+            }else{
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$versionID)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->distinct('item_master.itemID')->get();
+            }
             $elevTbl = '';
             $elevTbl  = '
         <div id="headText" style="font-size:20px; text-align: center; font-weight: bold; margin-top:20px">
@@ -1481,7 +1486,7 @@ class BOMController extends Controller
     } else {
         $elevTbl .= Base64Image('defaultImg');
     }
-    
+
     $elevTbl .= '</span>
                                         </td>
                                         <td style="border: 1px solid black; padding: 5px;"><b>Ref</b></td>
@@ -1590,7 +1595,7 @@ class BOMController extends Controller
                                                             } else {
                                                                 $glazingTbl .= Base64Image('defaultImg');
                                                             }
-                                                            
+
                                                             $glazingTbl .= '</span>
 
 
@@ -1705,7 +1710,7 @@ class BOMController extends Controller
                                                             } else {
                                                                 $lipingTbl .= Base64Image('defaultImg');
                                                             }
-                                                            
+
                                                             $lipingTbl .= '</span>
 
 
@@ -1881,7 +1886,7 @@ class BOMController extends Controller
                                                             } else {
                                                                 $glassTbl .= Base64Image('defaultImg');
                                                             }
-                                                            
+
                                                             $glassTbl .= '</span>
 
 
@@ -2008,7 +2013,7 @@ class BOMController extends Controller
                                             </tr>';
                                         }
                                     }
-                                    
+
         $summaryTbl .= '        </tbody>
                             </table>';
         $summaryTbl .= '    <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 20px; border: 1px solid black;">
@@ -2035,7 +2040,7 @@ class BOMController extends Controller
                                                 $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
                                                 $leafType = $getLeaf->leaf_type_key;
                                             }
-                                            
+
                                             $doorLeafFacing = $value->DoorLeafFacing;
                                             $doorLeafSize = trim($parts[5]);
         $summaryTbl .=                      '<tr>
@@ -2047,7 +2052,7 @@ class BOMController extends Controller
                                             </tr>';
                                         }
                                     }
-                                    
+
         $summaryTbl .=          '</tbody>
                             </table>';
         $summaryTbl .= '    <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 20px; border: 1px solid black;">
@@ -2074,7 +2079,7 @@ class BOMController extends Controller
                                             }else{
                                                 $wdth = 0;
                                             }
-                                            
+
                                             $glassType = trim($parts[1]); // Extract Glass Type
                                             $cutheght = $value->FireRating == 'FD60s' || $value->FireRating == 'FD60' ? $value->Leaf1VPHeight1 - 8 : $value->Leaf1VPHeight1 - 5;
                                             $cutwidth = $value->Leaf1VPWidth - $wdth;
@@ -2101,7 +2106,7 @@ class BOMController extends Controller
                                             }
                                         }
                                     }
-                                    
+
         $summaryTbl .=          '</tbody>
                             </table>';
                         '</div>
@@ -2128,7 +2133,7 @@ class BOMController extends Controller
             foreach ($pdfFiles as $pdfFile) {
                 $pdfMerger->addPDF($pdfFile, 'all');
             }
-            
+
             $mergedFilePath = public_path() . '/qualitycontrolallpdf/' . $quotaion->QuotationGenerationId . '_' . $versionID . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
