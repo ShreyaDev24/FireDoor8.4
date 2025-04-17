@@ -73,7 +73,7 @@
                                                     </label>
                                                     <input type="number" @if(empty($Item['PlantonStopHeight'])){{'readonly'}}@endif  name="plantonStopHeight"
                                                         id="plantonStopHeight" class="form-control"
-                                                        value="@if(isset($Item['PlantonStopHeight'])){{$Item['PlantonStopHeight']}}@else{{'0'}}@endif" min="12.5">
+                                                        value="@if(isset($Item['PlantonStopHeight'])){{$Item['PlantonStopHeight']}}@else{{'0'}}@endif" min="12">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
