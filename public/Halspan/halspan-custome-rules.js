@@ -81,6 +81,7 @@ function pageIdentity(){
                 $("#frameThickness").attr('min','22');
             }else if($("#swingType").val() == "DA"){
                 $("#frameThickness").attr('min','27');
+                isScallopedFrame('Scalloped')
             }
         }else{
             $("#frameThickness").removeAttr('min');
@@ -682,6 +683,7 @@ $(document).ready(function() {
 
     $("#frameType").change(function () {
         framTypeChangeInputEnableDisable();
+        isScallopedFrame($(this).val());
     });
     $(document).ready(function () {
         const selectedValue = $("#frametypevalue").val();
@@ -5804,6 +5806,16 @@ function onlyLipingSpecies(fireRating){
                 // $("#glazingSystemsThickness").val(0);
             }
         });
+}
+function isScallopedFrame(value){
+    if(value == 'Scalloped'){
+        let doorthicknessval = $('#doorThickness').val();
+        if(doorthicknessval){
+            $("#ScallopedWidth").val(doorthicknessval);
+            $("#ScallopedLabel").text(`Scalloped Width (min ${doorthicknessval})`);
+            $("#ScallopedWidth").attr('min', doorthicknessval);
+        }
+    }
 }
 
 

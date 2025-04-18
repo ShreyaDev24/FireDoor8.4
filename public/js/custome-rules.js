@@ -81,6 +81,7 @@ function pageIdentity(){
                 $("#frameThickness").attr('min','32');
             }else if($("#swingType").val() == "DA"){
                 $("#frameThickness").attr('min','37');
+                isScallopedFrame('Scalloped')
             }
         }else{
             $("#frameThickness").removeAttr('min');
@@ -679,6 +680,7 @@ $(document).ready(function() {
 
     $("#frameType").change(function () {
         framTypeChangeInputEnableDisable();
+        isScallopedFrame($(this).val());
     });
 
     function framTypeChangeInputEnableDisable(){
@@ -4850,8 +4852,9 @@ function architrave(isModal=0) {
         dataType: "Json",
         data: {  _token: $("#_token").val(), pageId: 1 },
         success: function (result) {
-            var innerHtml = '';
             if (result.status == "ok") {
+
+                var innerHtml = '';
                 var leepingSpecies = result.lippingSpecies;
 
                 if (leepingSpecies != '') {
@@ -4883,7 +4886,7 @@ function architrave(isModal=0) {
 
 
             } else {
-                innerHtml += 'No Frame architrave Found';
+                innerHtmlPopUp += 'No Frame architrave Found';
 
                 $("#architraveMaterial").empty().append(innerHtml);
             }
@@ -5795,4 +5798,14 @@ function onlyLipingSpecies(fireRating){
                 // $("#glazingSystemsThickness").val(0);
             }
         });
+}
+function isScallopedFrame(value){
+    if(value == 'Scalloped'){
+        let doorthicknessval = $('#doorThickness').val();
+        if(doorthicknessval){
+            $("#ScallopedWidth").val(doorthicknessval);
+            $("#ScallopedLabel").text(`Scalloped Width (min ${doorthicknessval})`);
+            $("#ScallopedWidth").attr('min', doorthicknessval);
+        }
+    }
 }

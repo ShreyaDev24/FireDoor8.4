@@ -323,6 +323,11 @@ $(document).ready(function() {
             $("#standardarchitraveMaterial").attr({'readonly':true,'required':false}).val('');
         }
 
+        setTimeout(() => {
+            swingAndLatch();
+        }, 100);
+        standardFrameThicknessChange();
+
     });
 
     function standardArchitraveMaterial(){
@@ -924,30 +929,6 @@ function floor_finish_change(){
     }
 }
 
-$(document).on('click','#standardswingType',function(e){
-    if($("#standardswingType").val() == 'DA'){
-        $("select[name=frameType]").val('Scalloped').trigger("change");
-        $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']")
-            .prop("disabled", true);
-        $('#foursidedframe').prop({
-            disabled: true,
-            checked: false
-        });
-        $("#frameType option[value='Scalloped']").prop("disabled", false);
-        $('.mylatch').siblings('label').children('.dsl').html('');
-        $('.mylatch option').eq(0).prop('selected', true);
-        $('.mylatch').attr("disabled",true);
-    }else{
-        $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
-        $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
-        $("#frameType option[value='Scalloped']").prop("disabled", true);
-        $("#frameType").val('').trigger('change');
-        $('#foursidedframe').prop('disabled', false);
-        $('.mylatch').attr("disabled",false);
-    }
-    framTypeChangeInputEnableDisable();
-});
-
 // for custome door
 
 $(document).on('click','#swingType',function(e){
@@ -974,7 +955,46 @@ $(document).on('click','#swingType',function(e){
     framTypeChangeInputEnableDisable();
 });
 
+$("#standardswingType").change(function(){
+    standardFrameThicknessChange();
+    swingAndLatch();
+});
 
+function standardFrameThicknessChange(){
+    if($("#StandardfireRating").val() != "NFR"){
+        if($("#standardswingType").val() == "DA"){
+            $(".testthickness").attr('min','32');
+        } else {
+            $(".testthickness").removeAttr('min');
+        }
+    }else{
+        $(".testthickness   ").removeAttr('min');
+    }
+}
+
+function swingAndLatch(){
+    if($("#standardswingType").val() == 'DA'){
+        $("select[name=frameType]").val('Scalloped').trigger("change");
+        $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']")
+            .prop("disabled", true);
+        $('#foursidedframe').prop({
+            disabled: true,
+            checked: false
+        });
+        $("#frameType option[value='Scalloped']").prop("disabled", false);
+        $('.standardlatch').siblings('label').children('.dsl').html('');
+        $('.standardlatch option').eq(0).prop('selected', true);
+        $('.standardlatch').attr("disabled",true);
+    }else{
+        $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
+        $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
+        $("#frameType option[value='Scalloped']").prop("disabled", true);
+        $("#frameType").val('').trigger('change');
+        $('#foursidedframe').prop('disabled', false);
+        $('.standardlatch').attr("disabled",false);
+    }
+    framTypeChangeInputEnableDisable();
+};
 
 
 

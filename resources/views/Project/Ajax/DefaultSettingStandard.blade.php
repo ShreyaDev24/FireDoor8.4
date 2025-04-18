@@ -71,7 +71,7 @@
     <div class="col-md-6">
         <div class="position-relative form-group">
             <label for="latchType">Latch Type</label>
-            <select name="latchType" id="latchType" class="form-control combination_of mylatch">
+            <select name="latchType" id="latchType" class="form-control combination_of standardlatch">
                 <option value="">Select latch type</option>
                 @foreach($option_data as $row)
                 @if($row->OptionSlug=='door_configuration_latch_type')
@@ -133,7 +133,7 @@
     <div class="col-md-6 framehideshow">
         <div class="position-relative form-group">
             <label for="frameThickness">Frame Thickness</label>
-            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($defaultItemsStandard->FrameThickness)){{$defaultItemsStandard->FrameThickness}}@else{{'32'}}@endif" class="form-control change-event-calulation door-configuration" required>
+            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($defaultItemsStandard->FrameThickness)){{$defaultItemsStandard->FrameThickness}}@else{{'32'}}@endif" class="form-control change-event-calulation door-configuration testthickness" required>
         </div>
     </div>
     <div class="col-md-6">
