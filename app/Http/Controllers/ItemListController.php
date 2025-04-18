@@ -2347,40 +2347,35 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
-
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
 
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
+
         $userType = Auth::user()->UserType;
 
-        if($fireRating == 'NFR'){
-            $data = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_type.*')
-                    ->join('glass_type','glass_type.id','glass_glazing_system.glass_id')
-                    ->leftJoin('selected_glass_type','selected_glass_type.glass_id','glass_glazing_system.glass_id')
-                    ->where('glass_type.GlassIntegrity', $integrity)
-                    ->where('glass_type.'.$configurationDoor, $pageId)
-                    ->wherein('glass_type.EditBy', $userIds)
-                    ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                    ->groupBy('glass_glazing_system.glass_id')
-                    ->orderBy('glass_type.Key','ASC')
-                    ->where('selected_glass_type.editBy',Auth::user()->id)
-                    ->get();
+        $query = GlassGlazingSystem::select(
+            'glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value',
+            'glass_type.*'
+        )
+        ->join('glass_type', 'glass_type.id', 'glass_glazing_system.glass_id')
+        ->leftJoin('selected_glass_type', 'selected_glass_type.glass_id', 'glass_glazing_system.glass_id')
+        ->where('glass_type.GlassIntegrity', $integrity)
+        ->where('glass_type.' . $configurationDoor, $pageId)
+        ->whereIn('glass_type.EditBy', $userIds)
+        ->where('selected_glass_type.editBy', Auth::user()->id);
+
+        if ($fireRating !== 'NFR') {
+            $query->where('glass_type.' . $fireRatingDoor, $fireRating);
         }
-        else{
-            $data = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_type.*')
-                    ->join('glass_type','glass_type.id','glass_glazing_system.glass_id')
-                    ->leftJoin('selected_glass_type','selected_glass_type.glass_id','glass_glazing_system.glass_id')
-                    ->where('glass_type.GlassIntegrity', $integrity)
-                    ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                    ->where('glass_type.'.$configurationDoor, $pageId)
-                    ->wherein('glass_type.EditBy', $userIds)
-                    ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                    ->groupBy('glass_glazing_system.glass_id')
-                    ->orderBy('glass_type.Key','ASC')
-                    ->where('selected_glass_type.editBy',Auth::user()->id)
-                    ->get();
+
+        if (!empty($leaf1VpAreaSizeM2Value)) {
+            $query->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value);
         }
+
+        $data = $query->groupBy('glass_glazing_system.glass_id')
+            ->orderBy('glass_type.Key', 'ASC')
+            ->get();
 
 
         if(!empty($data) && count( $data)){
@@ -2403,79 +2398,76 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
-
         $configurationDoor = configurationDoor($pageId);
         $fireRatingDoor = fireRatingDoor($fireRating);
 
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
         $userType = Auth::user()->UserType;
 
-        if (!empty($glassType)) {
-            if($fireRating == 'NFR'){
-                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                ->leftJoin('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
-                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                ->where('glazing_system.'.$configurationDoor, $pageId)
-                ->wherein('glazing_system.editBy', $userIds)
-                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                ->groupBy('glass_glazing_system.GlazingSystem')
-                ->orderBy('glazing_system.Key','ASC')
-                ->wherein('selected_glazing_system.userId',$userIds)
-                ->get();
-            }else{
-                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                ->leftJoin('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
-                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                ->where('glazing_system.'.$fireRatingDoor, $fireRating)
-                ->where('glazing_system.'.$configurationDoor, $pageId)
-                ->wherein('glazing_system.editBy', $userIds)
-                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                ->groupBy('glass_glazing_system.GlazingSystem')
-                ->orderBy('glazing_system.Key','ASC')
-                ->wherein('selected_glazing_system.userId',$userIds)
-                ->get();
+        if(!empty($glassType)){
+            $query = GlassGlazingSystem::select(
+                'glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value',
+                'glass_glazing_system.GlassType',
+                'glazing_system.*'
+            )
+            ->join('glazing_system', 'glazing_system.id', 'glass_glazing_system.glazing_system')
+            ->leftJoin('selected_glazing_system', 'selected_glazing_system.glazingId', 'glass_glazing_system.glazing_system')
+            ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
+            ->where('glazing_system.' . $configurationDoor, $pageId)
+            ->whereIn('glazing_system.editBy', $userIds)
+            ->whereIn('selected_glazing_system.userId', $userIds);
+
+            if ($fireRating !== 'NFR') {
+                $query->where('glazing_system.' . $fireRatingDoor, $fireRating);
             }
+
+            if (!empty($leaf1VpAreaSizeM2Value)) {
+                $query->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value);
+            }
+
+            $GlazingData = $query->groupBy('glass_glazing_system.GlazingSystem')
+                ->orderBy('glazing_system.Key', 'ASC')
+                ->get();
+
+
 
             $glazingBeads = DB::table('options')->where('configurableitems', $pageId)->where('OptionSlug', 'leaf1_glazing_beads')->get(['id', 'OptionKey', 'OptionValue']);
             $beads = [];
             foreach($glazingBeads as $val){
                 $beads[] = $val->OptionKey;
             }
-
             $glazing = json_encode($beads);
-        } elseif (!empty($glassType)) {
-            if($fireRating == 'NFR'){
-                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
+        }else{
+            if(!empty($glassType)){
+
+                $query = GlassGlazingSystem::select(
+                    'glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value',
+                    'glass_glazing_system.GlassType',
+                    'glazing_system.*'
+                )
+                ->join('glazing_system', 'glazing_system.id', 'glass_glazing_system.glazing_system')
+                ->join('selected_glazing_system', 'selected_glazing_system.glazingId', 'glass_glazing_system.glazing_system')
                 ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                ->where('glazing_system.'.$configurationDoor, $pageId)
-                ->groupBy('glass_glazing_system.glazing_system')
-                ->orderBy('glazing_system.Key','ASC')
-                ->where('selected_glazing_system.userId',Auth::user()->id)
-                ->get();
+                ->where('glazing_system.' . $configurationDoor, $pageId)
+                ->where('selected_glazing_system.userId', Auth::user()->id);
 
+                if ($fireRating !== 'NFR') {
+                    $query->where('glazing_system.' . $fireRatingDoor, $fireRating);
+                }
+
+                // Ensure $leaf1VpAreaSizeM2Value is numeric before using comparison operator
+                if (!empty($leaf1VpAreaSizeM2Value) && is_numeric($leaf1VpAreaSizeM2Value)) {
+                    $query->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value);
+                }
+
+                $GlazingData = $query->groupBy('glass_glazing_system.glazing_system')
+                    ->orderBy('glazing_system.Key', 'ASC')
+                    ->get();
+
+                $GlassType = GlassType::where('Key',$glassType)->first();
+
+                $glazing = $GlassType->GlazingBeads;
             }
-            else{
-                $GlazingData = GlassGlazingSystem::select('glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value','glass_glazing_system.GlassType','glazing_system.*')
-                ->join('glazing_system','glazing_system.id','glass_glazing_system.glazing_system')
-                ->join('selected_glazing_system','selected_glazing_system.glazingId','glass_glazing_system.glazing_system')
-                ->where('glazing_system.'.$fireRatingDoor, $fireRating)
-                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
-                ->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value)
-                ->where('glazing_system.'.$configurationDoor, $pageId)
-                ->groupBy('glass_glazing_system.glazing_system')
-                ->orderBy('glazing_system.Key','ASC')
-                ->where('selected_glazing_system.userId',Auth::user()->id)
-                ->get();
-
-            }
-
-            $GlassType = GlassType::where('Key',$glassType)->first();
-            $glazing = $GlassType->GlazingBeads;
         }
 
         if(!empty($GlazingData) && count( $GlazingData)){

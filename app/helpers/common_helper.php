@@ -4440,6 +4440,29 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
+    }else if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2) && !empty($request->issingleconfiguration) && !empty($request->glassType)){
+        if($request->visionPanelQuantityforLeaf2 == '1'){
+            $description = $request->glassType.'| '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm';
+            $QtyPerDoorType = ($request->vP2Width/1000) * ($request->vP2Height1/1000);
+        }elseif($request->visionPanelQuantityforLeaf2 == '2'){
+            $description = $request->glassType.'| '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm';
+            $QtyPerDoorType = (($request->vP2Width/1000) * ($request->vP2Height1/1000)) + (($request->vP2Width/1000) * ($request->vP2Height2/1000));
+        }elseif($request->visionPanelQuantityforLeaf2 == '3'){
+            $description = $request->glassType.'| '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm';
+            $QtyPerDoorType = (($request->vP2Width/1000) * ($request->vP2Height1/1000)) + (($request->vP2Width/1000) * ($request->vP2Height2/1000))  + (($request->vP2Width/1000) * ($request->vP2Height3/1000));
+        }elseif($request->visionPanelQuantityforLeaf2 == '4'){
+            $description = $request->glassType.'| '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm';
+            $QtyPerDoorType = (($request->vP2Width/1000) * ($request->vP2Height1/1000)) + (($request->vP2Width/1000) * ($request->vP2Height2/1000))  + (($request->vP2Width/1000) * ($request->vP2Height3/1000))  + (($request->vP2Width/1000) * ($request->vP2Height4/1000));
+        }elseif($request->visionPanelQuantityforLeaf2 == '5'){
+            $description = $request->glassType.'| '.$request->vP2Width.'mm x '.$request->vP2Height1.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm'.' & '.$request->vP2Width.'mm x '.$request->vP2Height5.'mm';
+            $QtyPerDoorType = (($request->vP2Width/1000) * ($request->vP2Height1/1000)) + (($request->vP2Width/1000) * ($request->vP2Height2/1000))  + (($request->vP2Width/1000) * ($request->vP2Height3/1000))  + (($request->vP2Width/1000) * ($request->vP2Height4/1000))  + (($request->vP2Width/1000) * ($request->vP2Height5/1000));
+        }
+
+        $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->glassType)->first();
+        $category = 'Glass';
+        $frame_unit = 'Area M2';
+        $unit_cost = (!empty($frame_unit_cost))?$frame_unit_cost->selectedPrice:0;
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
     if ($request->overpanel == 'Fan_Light' && (!empty($request->opGlassType) && !empty($request->frameThickness))) {
@@ -4544,6 +4567,34 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
         }
 
         $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
+
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+    }elseif(!empty($request->issingleconfiguration) && !empty($request->glazingSystems) && !empty($request->visionPanelQuantityforLeaf2)){
+
+        $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->glazingSystems)->first();
+
+        $description = $request->glazingSystems.'|10mm x 5mm|Black Glazing Gasket';
+        $category = 'GlazingSystem';
+        $frame_unit = 'Metre';
+
+        if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2)){
+            if($request->visionPanelQuantityforLeaf2 == '1'){
+                $QtyPerDoorType = (($request->vP2Width * 4) + ($request->vP2Height1 * 4))/1000;
+            }elseif($request->visionPanelQuantityforLeaf2 == '2'){
+                $QtyPerDoorType = (($request->vP2Width * 4) + ($request->vP2Height1 * 4) + ($request->vP2Width * 4) + ($request->vP2Height2 * 4))/1000;
+            }elseif($request->visionPanelQuantityforLeaf2 == '3'){
+                $QtyPerDoorType = (($request->vP2Width * 4) + ($request->vP2Height1 * 4) + ($request->vP2Width * 4) + ($request->vP2Height2 * 4) + ($request->vP2Width * 4) + ($request->vP2Height3 * 4))/1000;
+            }elseif($request->visionPanelQuantityforLeaf2 == '4'){
+                $QtyPerDoorType = (($request->vP2Width * 4) + ($request->vP2Height1 * 4) + ($request->vP2Width * 4) + ($request->vP2Height2 * 4) + ($request->vP2Width * 4) + ($request->vP2Height3 * 4) + ($request->vP2Width * 4) + ($request->vP2Height4 * 4))/1000;
+            }elseif($request->visionPanelQuantityforLeaf2 == '5'){
+                $QtyPerDoorType = (($request->vP2Width * 4) + ($request->vP2Height1 * 4) + ($request->vP2Width * 4) + ($request->vP2Height2 * 4) + ($request->vP2Width * 4) + ($request->vP2Height3 * 4) + ($request->vP2Width * 4) + ($request->vP2Height4 * 4) + ($request->vP2Width * 4) + ($request->vP2Height5 * 4))/1000;
+            }
+        }
+        if(!empty($glazing_unit_cost)){
+            $unit_cost = $glazing_unit_cost->selectedPrice;
+        }else{
+            $unit_cost = 0;
+        }
 
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }

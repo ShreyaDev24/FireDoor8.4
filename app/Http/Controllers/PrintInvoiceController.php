@@ -2677,6 +2677,10 @@ class PrintInvoiceController extends Controller
                                     <td class="dicription_blank">' . $SpeciesName . '</td>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Lipping Thickness</td>
+                                    <td class="dicription_blank">' . $tt->LippingThickness . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Intumescent Seal Brand</td>
                                     <td class="dicription_blank">' . $intumescentSealArrangement . '</td>
                                 </tr>
