@@ -310,7 +310,11 @@ input[type=number]::-webkit-outer-spin-button {
                                                         <input type="number" min="1" onkeydown="if(event.key==='.'){event.preventDefault();}" id="{{ $quantity }}" name="{{ $quantity }}[]" value="@if($qty[$k]){{$qty[$k] }}@else{{old($quantity)}}@endif" class="form-control qty {{ $quantity }}" placeholder="QTY" @if(isset($item) && isset($qty[$k]) && !empty($qty[$k])){{ 'required' }}@endif>
 
                                                         @if ($k >= 1)
-                                                        <button type="button" class="btn customcross" onclick="removeMe(this)" data-id="child-{{ $category }}" data-main-id="main-{{ $category }}">X</button>
+                                                            @if($category == 'LocksAndLatches')
+                                                                <button type="button" class="btn customcross" onclick="removeMe(this)" data-id="child-LocksandLatches" data-main-id="main-{{ $category }}">X</button>
+                                                            @else
+                                                                <button type="button" class="btn customcross" onclick="removeMe(this)" data-id="child-{{ $category }}" data-main-id="main-{{ $category }}">X</button>
+                                                            @endif
                                                         @endif
 
                                                         @if ($k == 0)
