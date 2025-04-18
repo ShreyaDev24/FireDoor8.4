@@ -890,13 +890,13 @@ function groovesNumbershow(){
 
        let doorSetType = $('#doorsetType').val();
         if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
-          $('.OpHeightMax').html('OP Heigth (Max-value:2000)');
+          $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
         if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
 
-            $('.OpHeightMax').html('OP Heigth (Max-value:1500)');
+            $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
@@ -1014,13 +1014,13 @@ function groovesNumbershow(){
 
        let doorSetType = $('#doorsetType').val();
         if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
-          $('.OpHeightMax').html('OP Heigth (Max-value:2000)');
+          $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
         if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
 
-            $('.OpHeightMax').html('OP Heigth (Max-value:1500)');
+            $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
@@ -1042,13 +1042,13 @@ function groovesNumbershow(){
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
 
-          $('.OpHeightMax').html('OP Heigth (Max-value:2000)');
+          $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
         if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
 
-            $('.OpHeightMax').html('OP Heigth (Max-value:1500)');
+            $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
@@ -1071,12 +1071,12 @@ function groovesNumbershow(){
         $('#oPHeigth').attr('max',600);
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
-          $('.OpHeightMax').html('OP Heigth (Max-value:2000)');
+          $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
         if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
-            $('.OpHeightMax').html('OP Heigth (Max-value:1500)');
+            $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
