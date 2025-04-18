@@ -48,7 +48,7 @@ class CompanyController extends Controller
     {
         $this->middleware('auth');
     }
-    
+
     public function add()
     {
         if(Auth::user()->UserType=='1'){
@@ -57,7 +57,7 @@ class CompanyController extends Controller
 
         return null;
     }
-    
+
     public function list()
     {
         if (Auth::user()->UserType=='1') {
@@ -285,7 +285,7 @@ class CompanyController extends Controller
                 $status_mail = true;
                 $pass = $request->newpassword;
             }
-            
+
             if($status_mail == true){
                 $emailTo = $request->UserEmail;
                 $subject = 'Login Password';
@@ -711,11 +711,11 @@ class CompanyController extends Controller
                 if(File::exists($image_path2)) {
                     File::delete($image_path2);
                 }
-                
+
                 CustomerContact::where('CustomerId',$cuss->id)->delete();
                 ShippingAddress::where('CustomerId',$cuss->id)->delete();
             }
-            
+
             Customer::where('UserId',$userid)->delete();
 
             $compCount = Company::select('CompanyPhoto')->where('id',$userid)->count();
@@ -726,7 +726,7 @@ class CompanyController extends Controller
                     File::delete($image_path);
                 }
             }
-            
+
             Company::where('UserId',$userid)->delete();
             CompanyQuotationCounter::where('UserId',$userid)->delete();
 
@@ -736,11 +736,11 @@ class CompanyController extends Controller
                 if(File::exists($image_path3)) {
                     File::delete($image_path3);
                 }
-                
+
                 ItemMaster::where('itemID',$items->itemId)->delete();
                 QuotationVersionItems::where('itemID',$items->itemId)->delete();
             }
-            
+
             Item::where('UserId',$userid)->delete();
 
             $pro = Project::select('id','ProjectImage')->where('CompanyId',$company->id)->get();
@@ -749,17 +749,17 @@ class CompanyController extends Controller
                 if(File::exists($image_path4)) {
                     File::delete($image_path4);
                 }
-                
+
                 $proF = ProjectFiles::select('id','file')->where('projectId',$pros->id)->get();
                 foreach($proF as $proFs){
                     $image_path5 = public_path('uploads/Project/' . $proFs->file);  // Value is not URL but directory file path
                     if(File::exists($image_path5)) {
                         File::delete($image_path5);
                     }
-                    
+
                     ProjectFilesDS::where('projectfileId',$proFs->id)->delete();
                 }
-                
+
                 ProjectFiles::where('projectId',$pros->id)->delete();
             }
 
@@ -776,7 +776,7 @@ class CompanyController extends Controller
                 QuotationSiteDeliveryAddress::where('QuotationId',$qos->id)->delete();
                 QuotationVersion::where('quotation_id',$qos->id)->delete();
             }
-            
+
             Quotation::where('UserId',$userid)->delete();
 
             SelectedColor::where('SelectedUserId',$userid)->delete();
@@ -801,7 +801,7 @@ class CompanyController extends Controller
             return response()->json($response, 200,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
         }
-        
+
         $check = User::select('UserEmail','id')->where('UserEmail',$request->value)->first();
         if(empty($check->UserEmail)){
             $response = [
@@ -816,7 +816,7 @@ class CompanyController extends Controller
                 'UserEmail' => $check->UserEmail
             ];
         }
-        
+
         return response()->json($response, 200,
             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'], JSON_UNESCAPED_UNICODE);
     }
@@ -838,7 +838,7 @@ class CompanyController extends Controller
     public function companyStore(request $request)
     {
 
-        if(property_exists($request, 'update') && $request->update !== null){
+        if ($request->has('update') && $request->input('update') !== null) {
             $data = Company::where('UserId',$request->update)->first();
             $user = User::where('id',$request->update)->first();
             $flash = "updated";
@@ -943,7 +943,7 @@ class CompanyController extends Controller
             $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
 
             // If updating, delete the old file
-            if (property_exists($request, 'update') && $request->update !== null) {
+            if ($request->has('update') && $request->input('update') !== null) {
                 File::delete($filepath . $data->CompanyPhoto);
             }
 
