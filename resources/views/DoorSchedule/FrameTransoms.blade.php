@@ -34,19 +34,19 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="23">Frames & Transoms BOM</th>
+                <th colspan="24">Frames & Transoms BOM</th>
             </tr>
             <tr>
                 <th colspan="3">Ref</th>
                 <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
-                <th colspan="3">Project</th>
+                <th colspan="4">Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
                 <th colspan="5">Prepared By</th>
                 <td colspan="4">{{ $userName }}</td>
             </tr>
             <tr>
                 <th colspan="2">Revision</th>
-                <td colspan="1">{{ $item[0]->VersionId }}</td>
+                <td colspan="2">{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="2">{{ $today }}</td>
                 <th colspan="3">Main Contractor</th>
@@ -55,21 +55,21 @@
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="23">Text</th>
+                <th colspan="24">Text</th>
             </tr>
             <tr>
-                <th colspan="23">Items</th>
+                <th colspan="24">Items</th>
             </tr>
             @php
                 $i = 0;
             @endphp
-
             @foreach ($item as $value)
                 @if ($i++ == 0)
                     <tr>
                         <th>Door Number</th>
                         <th>Fire Rating</th>
                         <th>Door Thickness</th>
+                        <th>Door Size</th>
                         <th>Frame Material</th>
                         <th>O/A Frame H</th>
                         <th>O/A Frame W</th>
@@ -94,6 +94,7 @@
                     </tr>
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -146,6 +147,7 @@
                     <td>{{ $value->doorNumber }}</td>
                     <td>{{ $value->FireRating }}</td>
                     <td>{{ $value->LeafThickness }}</td>
+                    <td> <p style="width: 100px;">{{ $value->LeafWidth1 }} × {{ $value->LeafHeight }}</p></td>
                     <td>{{ $value->SpeciesName }}</td>
                     <td>{{ $value->FrameHeight }}</td>
                     <td>{{ $value->FrameWidth }}</td>
@@ -160,7 +162,13 @@
                     <td>{{ $stopleg2 }}</td>
                     <td>{{ $stophead }}</td>
                     <td></td>
+                    @if($value->Handing == 'Left_Hand_Master_Right_Hand_Slave')
+                    <td><p style="width: 120px;">Left Hand Master Right Hand Slave</p></td>
+                    @elseif($value->Handing == 'Right_Hand_Master_Left_Hand_Slave')
+                    <td><p style="width: 120px;">Right Hand Master Left Hand Slave</p></td>
+                    @else
                     <td>{{ $value->Handing }}</td>
+                    @endif
                     <td>{{ str_replace('_', ' ', $value->FrameFinish) }}</td>
                     <td></td>
                     <td></td>
