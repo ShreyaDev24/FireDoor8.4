@@ -7672,7 +7672,7 @@ class DoorScheduleController extends Controller
         );
     }
 
-    public function surveyReport(array $id)
+    public function surveyReport($id)
     {
         // $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
         // $data = BOMCalculation::where('QuotationId',$id)->get();
