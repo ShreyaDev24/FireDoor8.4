@@ -5754,10 +5754,10 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlazingSystemCustome('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->Flamebreak. "','" .$value->Stredor. "','" .$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlazingBeadFixingDetail . "','".$value->selectedPrice. "','" .$value->selectedId. "','" .$value->GlazingThickness. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlazingSystemCustome('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->Flamebreak. "','" .$value->Stredor. "','" .$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlazingSystem . "','" . $value->GlazingBeadFixingDetail . "','".$value->selectedPrice. "','" .$value->selectedId. "','" .$value->GlazingThickness. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
+                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'leaf1_glazing_systems\','.$value->id.')">
                                 <i class="fa fa-trash text-white text-center"></i>
                             </button>
                         </div>';
@@ -6154,7 +6154,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                             <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlassTypeCustome('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->Flamebreak. "','" .$value->Stredor. "','".$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlassIntegrity . "','" . $value->GlassType . "',".$GlassThickness.",'".$value->selectedPrice. "','" .$value->selectedId. "',".htmlspecialchars(json_encode($value->GlazingBeads), ENT_QUOTES, 'UTF-8').')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
+                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'leaf1_glass_type\', ' . $value->id . ')">
                                 <i class="fa fa-trash text-white text-center"></i>
                             </button>
                         </div>';
