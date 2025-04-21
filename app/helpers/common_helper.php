@@ -6873,7 +6873,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorDimensional('.$value->id.",'".$value->configurableitems. "','" .$value->fire_rating. "','" .$value->code. "','" .$value->inch_height. "','" .$value->inch_width. "','" .$value->mm_height. "','" . $value->mm_width . "','" . $value->door_leaf_finish . "','".$value->door_leaf_facing."','".$value->cost_price."','".$value->image."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->leaf_type. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorDimensional('.$value->id.','.$value->configurableitems. ",'" .$value->fire_rating. "','" .$value->code. "','" .$value->inch_height. "','" .$value->inch_width. "','" .$value->mm_height. "','" . $value->mm_width . "','" . $value->door_leaf_finish . "','".$value->door_leaf_facing."','".$value->cost_price."','".$value->image."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->leaf_type. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onClick="dimension_delete(' . $value->id .',' . $value->configurableitems .')">
@@ -7201,7 +7201,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
     return $tbl1;
 }
 
-function doorcorename($doorCore): string{
+function doorcorename($doorCore): string {
     $doorCoreValue = match ($doorCore) {
         1 => 'streboard',
         2 => 'halspan',
@@ -7211,11 +7211,12 @@ function doorcorename($doorCore): string{
         6 => 'Deanta',
         7 => 'Flamebreak',
         8 => 'Stredor',
-        default => $doorCoreValue,
+        default => 'Unknown', // ✅ Safe default
     };
 
     return $doorCoreValue;
 }
+
 
 function intumescentSealArrangement($authdata,string $optionType,$UserId): string{
     $tbl1 = '';
