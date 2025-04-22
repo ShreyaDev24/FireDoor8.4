@@ -267,7 +267,7 @@ function filterOnlyLippingSpecies($type,$configurationDoor="",$fireRating="",$fo
         $OnlylippingSpecies = $OnlylippingSpecies->whereIn("id", $SelectedLippingSpeciesIds);
     }
 
-    return $OnlylippingSpecies;
+    return array_values($OnlylippingSpecies->toArray());
 }
 
 function GetlippingSpeciesName($LippingSpeciesNames){
