@@ -30,7 +30,7 @@ class SurveyController extends Controller
 
             return view('Survey.SurveyList', ['data' => $data]);
         }
-        
+
         // }else if(Auth::user()->UserType=='1'){
         //     $data = User::where('UserType',3)->orderBy('id','desc')->get();
         //     return view('Users.UserList',compact('data'));
@@ -63,7 +63,7 @@ class SurveyController extends Controller
             return redirect()->route('survey/details');
         }
     }
-    
+
     // public function profile()
     // {
     //     if(Auth::user()->UserType=='3'){
@@ -156,7 +156,7 @@ class SurveyController extends Controller
                     echo $e->getMessage();
             }
         }
-        
+
         $user->save();
         // sending_mail_credential($user->UserEmail, $request->password);
         $request->session()->flash($flash, 'data');
@@ -197,25 +197,28 @@ class SurveyController extends Controller
         }
     }
 
-    public function statusChange(request $request){
+    public function statusChange(Request $request) {
+        if (Auth::check() && Auth::user()->UserType == '2') {
+            if ($request->has('id')) {
+                $newStatus = $request->status == 1 ? 0 : 1;
+                User::where('id', $request->id)->update(['status' => $newStatus]);
 
-        if (Auth::user()->UserType == '2') {
-            if (property_exists($request, 'id') && $request->id !== null) {
-                if($request->status == 1){
-                    User::where('id', $request->id)->update(['status' => 0]);
-                    return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
-                }
-                else{
-                    User::where('id', $request->id)->update(['status' => 1]);
-                    return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
-                }
-                
-                return redirect()->route('survey/list');
+                return response()->json([
+                    'status' => 'ok',
+                    'msg' => 'Survey user status updated!'
+                ]);
             } else {
-                return redirect()->route('survey/list');
+                return response()->json([
+                    'status' => 'error',
+                    'msg' => 'ID not provided'
+                ]);
             }
         }
 
-        return null;
+        return response()->json([
+            'status' => 'error',
+            'msg' => 'Unauthorized action'
+        ], 403);
     }
+
 }

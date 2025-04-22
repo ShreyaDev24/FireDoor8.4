@@ -69,7 +69,7 @@ class OptionController extends Controller
         }
 
         $ci = $id > 0 ? ConfigurableItems::where('id', $upd->configurableitems)->first() : '';
-        
+
         return view('option/addOption', ['option' => $option, 'firerating' => $firerating, 'id' => $id, 'upd' => $upd, 'ConfigurableItems' => $ConfigurableItems, 'ci' => $ci]);
     }
 
@@ -80,7 +80,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         if (Auth::user()->UserType == 2) {
             $slug = [$optionType];
             // $slug = ['door_leaf_facing_value','Glass_Integrity','leaf1_glass_type','leaf1_glazing_systems','Accoustics','Intumescent_Seal_Color'];
@@ -91,7 +91,7 @@ class OptionController extends Controller
         }
 
         $ci = $id > 0 ? ConfigurableItems::where('id', $upd->configurableitems)->first() : '';
-        
+
         return view('option/addOption1', ['option' => $option, 'firerating' => $firerating, 'id' => $id, 'upd' => $upd, 'ConfigurableItems' => $ConfigurableItems, 'ci' => $ci, 'optionType' => $optionType]);
     }
 
@@ -102,7 +102,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         $value = ['FD30s', 'FD60s'];
         $pageId = $request->pageId;
         $option = Option::where(['configurableitems' => $pageId, 'OptionSlug' => 'fire_rating'])->wherein('editBy', $UserId)->whereNotIn('OptionKey', $value)->get();
@@ -110,7 +110,7 @@ class OptionController extends Controller
         foreach ($option as $rr) {
             $tbl .= '<option value="' . $rr->OptionKey . '">' . $rr->OptionKey . '</option>';
         }
-        
+
         return $tbl;
         // echo json_encode([
         //     'status'=>'success',
@@ -188,7 +188,7 @@ class OptionController extends Controller
                 $data->file = $imageName;
                 $image->move(public_path('uploads/Options'), $imageName);
             }
-            
+
             $data->save();
         } else {
             $valid = $request->validate(
@@ -289,7 +289,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         $data = Option::where(['configurableitems' => $pageId, 'is_deleted' => 0])->wherein('editBy', $UserId)->orderBy('id', 'desc')->get();
         return view('option.OptionList', ['data' => $data, 'pageId' => $pageId]);
     }
@@ -311,7 +311,7 @@ class OptionController extends Controller
         $data = Option::where('id', $request->id)->first();
         $data->is_deleted = 1;
         $data->save();
-        
+
         $flash = "deleted";
         return 'success';
         // $request->session()->flash($flash, 'data');
@@ -439,7 +439,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         $pageId = $request->pageId;
         $data = Option::where(['configurableitems' => $pageId, 'OptionSlug' => $request->id])->wherein('editBy', $UserId)->get();
         $optVal = '';
@@ -448,7 +448,7 @@ class OptionController extends Controller
 
             $optVal .= '<option value="' . $tt->id . '">' . $optValue . '</option>';
         }
-        
+
         return $optVal;
     }
 
@@ -554,7 +554,7 @@ class OptionController extends Controller
 
                                     ';
                     }
-                    
+
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -602,7 +602,7 @@ class OptionController extends Controller
 
                             $select = @$row_item->selected_lipping_species_items[0]->id ? 'checked' : '';
                         }
-                        
+
                         $tbl1 .= '<div class="question">
 
                             <header>
@@ -702,7 +702,7 @@ class OptionController extends Controller
                             </main>
                         </div>';
                 }
-                
+
                 $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>';
 
                 break;
@@ -769,7 +769,7 @@ class OptionController extends Controller
                             margin-left: 68px;
                         ">PRICE PER SHEET</div><div class="col-md-2 col-sm-2 font-weight-bolder">ACTION</div><div class="col-md-2 col-sm-2 text-center font-weight-bolder"></div></div></li>';
                     }
-                    
+
                     if ($data->UnderAttribute == 'Veneer') {
                         $tbl1 .= '<li>
                         <div class="row">
@@ -810,7 +810,7 @@ class OptionController extends Controller
 
                                         ';
                             }
-                            
+
                             $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success " style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -818,7 +818,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12 text-center">
                             ' . $action . '
                             </div><div class="col-md-2 col-sm-12">
@@ -941,7 +941,7 @@ class OptionController extends Controller
                                                 </div>
                                             </div>';
                             }
-                            
+
                             $action = '';
 
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
@@ -956,7 +956,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12 text-center d-flex">
                             ' . $action . '
                             </div><div class="col-md-1 col-sm-12">
@@ -1107,7 +1107,7 @@ class OptionController extends Controller
 
                                         ';
                             }
-                            
+
                             $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1115,7 +1115,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                             ' . $action . '
                             </div><div class="col-md-2 col-sm-12">
@@ -1199,7 +1199,7 @@ class OptionController extends Controller
 
                                             ';
                                 }
-                                
+
                                 $optionTypeFace = "Door_Leaf_Facing";
                                 $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                             <div class="control-group">
@@ -1290,7 +1290,7 @@ class OptionController extends Controller
 
                                             ';
                             }
-                            
+
                             $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                             <div class="control-group">
                                                 <label class="control control-checkbox">
@@ -1421,13 +1421,13 @@ class OptionController extends Controller
 
                                     ';
                     }
-                    
+
                     $action = '';
                     if (($row->edit != 1 || Auth::user()->UserType == 1)) {
                         $action = '<a href="' . route('DoorDimension/edit', $row->door_dimension_id) . '" class="btn btn-success"><i class="fa fa-pencil" style="color: #fff; font-size:13px"></i></a>
                         <button onClick="dimension_delete(' . $row->door_dimension_id . ')" class="btn btn-danger"><i class="fa fa-trash" style="color: #fff; font-size:13px"></i></button>';
                     }
-                    
+
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                 ' . $action . '
                                 </div><div class="col-md-1 col-sm-12">
@@ -1517,7 +1517,7 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
-                
+
                 if ($optionType === 'Architrave_Type') {
                     $tbl1 .= '<li>
                         <div class="row">
@@ -1527,7 +1527,7 @@ class OptionController extends Controller
 
                         <div class="col-md-6 col-sm-12 text-center font-weight-bolder">PRICE PER M3</div></div></li>';
                 }
-                
+
                 if ($optionType === 'leaf1_glazing_systems') {
                     $tbl1 .= '<li>
                         <div class="row">
@@ -1542,7 +1542,7 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
-                
+
                 if ($optionType === 'Intumescent_Seal_Color') {
                     $tbl1 .= '<li>
                         <div class="row">
@@ -1554,7 +1554,7 @@ class OptionController extends Controller
                         <div class="col-md-2 col-sm-12 text-center font-weight-bolder"></div>
                         </div></li>';
                 }
-                
+
                 foreach ($aa as $row) {
 
                     $selectedOption = SelectedOption::where(['configurableitems' => $pageId, 'optionId' => $row->id, 'SelectedUserId' => $authdata->id])->count();
@@ -1584,7 +1584,7 @@ class OptionController extends Controller
 
                                     ';
                     }
-                    
+
                     $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1592,7 +1592,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1625,7 +1625,7 @@ class OptionController extends Controller
 
                                     ';
                     }
-                    
+
                     $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1633,7 +1633,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                     $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1668,7 +1668,7 @@ class OptionController extends Controller
 
                                     ';
                         }
-                        
+
                         $action = '';
                             if (($row->editBy != 1 || Auth::user()->UserType == 1)) {
                                 $action = '<a href="'.route("options/add1",[$row->id, $optionType]).'" class="btn btn-success" style="color: #fff; font-size:13px"><i class="fa fa-edit text-white text-center"></i></a>
@@ -1676,7 +1676,7 @@ class OptionController extends Controller
                                     <i class="fa fa-trash text-white text-center"></i>
                                 </button>';
                             }
-                            
+
                         $tbl1 .= '</div><div class="col-md-2 col-sm-12">'.$action.'</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1712,7 +1712,7 @@ class OptionController extends Controller
 
                                     ';
                         }
-                        
+
                         $tbl1 .= '</div><div class="col-md-2 col-sm-12">
                                     <div class="control-group">
                                         <label class="control control-checkbox">
@@ -1762,7 +1762,7 @@ class OptionController extends Controller
             }else{
                 $keys = $request->selectedValue;
             }
-        
+
         $className = $request->className;
         $UserId = Auth::user()->id;
         if (!empty($keys) && count($keys)) {
@@ -2218,7 +2218,7 @@ class OptionController extends Controller
                             // dd($selectedOption);
                         }
                     }
-                    
+
                     break;
             }
 
@@ -2227,39 +2227,39 @@ class OptionController extends Controller
             if ($className == 'lippingSpecies') {
                 SelectedLippingSpeciesItems::where(['selected_user_id' => $UserId])->delete();
             }
-            
+
             if ($className == 'doordimension') {
                 SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [1,2,7,8])->delete();
             }
-            
+
             if ($className == 'intumescentSealArrangement') {
                 SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [3,4,5,6])->delete();
             }
-            
+
             if ($className == 'intumescentSealArrangementCustome') {
                 SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [1, 2, 7, 8])->delete();
             }
-            
+
             if ($className == "door_leaf_facing_value") {
                 SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'doorleaffacingvalue'])->delete();
             }
-            
+
             if ($className == "Accoustics") {
                 SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'Accoustics'])->delete();
             }
-            
+
             if ($className == "door_leaf_finish") {
-                SelectedOption::where(['configurableitems' => $pageId, 'SelectedUserId' => $UserId, 'tag' => 'door_leaf_finish'])->delete();
+                SelectedOption::where(['SelectedUserId' => $UserId, 'tag' => 'door_leaf_finish'])->delete();
             }
-            
+
             if ($className == "color_list") {
                 SelectedColor::where(['SelectedUserId' => $UserId])->where('DoorLeafFacingName',$request->colorType)->delete();
             }
-            
+
             if ($className == "leaf_type") {
                 SelectedLeafType::where(['editBy' => $UserId])->delete();
             }
-            
+
             if ($className == "leaf1_glass_type") {
                 // SelectedGlassType::where(['editBy' => $UserId])->delete();
                 $customGlassTypeIds = GlassType::where(function ($query): void {
@@ -2274,7 +2274,7 @@ class OptionController extends Controller
                 ->whereIn('glass_id', $customGlassTypeIds)
                 ->delete();
             }
-            
+
             if ($className == "leaf1_glass_type_custome") {
                 $customGlassTypeIds = GlassType::where(function ($query): void {
                     $query->whereNotNull('Streboard')
@@ -2290,7 +2290,7 @@ class OptionController extends Controller
                 ->delete();
                 // SelectedGlassType::where(['editBy' => $UserId])->delete();
             }
-            
+
             if ($className == "leaf1_glazing_systems") {
                 $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                     $query->whereNotNull('VicaimaDoorCore')
@@ -2302,7 +2302,7 @@ class OptionController extends Controller
                     ->whereIn('glazingId', $customGlassTypeIds)
                     ->delete();
             }
-            
+
             if ($className == "leaf1_glazing_systems_custome") {
                 $customGlassTypeIds = GlazingSystem::where(function ($query): void {
                     $query->whereNotNull('Streboard')
@@ -2315,31 +2315,31 @@ class OptionController extends Controller
                     ->whereIn('glazingId', $customGlassTypeIds)
                     ->delete();
             }
-            
+
             if ($className == "Intumescent_Seal_Color") {
                 SelectedIntumescentSealColor::where(['userId' => $UserId])->delete();
             }
-            
+
             if ($className == "Accoustics") {
                 SelectedAccoustics::where(['userId' => $UserId])->delete();
             }
-            
+
             if ($className == "door_leaf_facing_value") {
                 SelectedDoorLeafFacing::where(['userId' => $UserId])->delete();
             }
-            
+
             if ($className == "Architrave_Type") {
                 SelectedArchitraveType::where(['userId' => $UserId])->delete();
             }
-            
+
             if ($className == "Overpanel_Glazing_System" || $className == "Overpanel_Glass_Type") {
                 SelectedOverpanelGlassGlazing::where(['editBy' => $UserId])->delete();
             }
-            
+
             if ($className == "SideScreen_Glass_Type") {
                 SelectedScreenGlass::where(['editBy' => $UserId])->delete();
             }
-            
+
             if ($className == "SideScreen_Glazing_System") {
                 SelectedScreenGlazing::where(['editBy' => $UserId])->delete();
             }
@@ -2359,7 +2359,7 @@ class OptionController extends Controller
         }else{
                 $keys = $request->selectedValue;
             }
-        
+
         $UserId = Auth::user()->id;
         if (!empty($keys) && count($keys)) {
             $optionKey = $className;
@@ -2367,7 +2367,7 @@ class OptionController extends Controller
                 'door_dimension_custome' => "door_dimension_custome",
                 default => $className,
             };
-            
+
             switch ($className) {
                 case 'door_dimension_custome':
                     SelectedDoordimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('doordimension_id', $keys)->delete();
@@ -2415,7 +2415,7 @@ class OptionController extends Controller
                             // dd($selectedOption);
                         }
                     }
-                    
+
                     break;
             }
 
@@ -2424,7 +2424,7 @@ class OptionController extends Controller
             if ($className == 'door_dimension_custome') {
                 SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->delete();
             }
-            
+
             echo json_encode(["status" => "ok", "msg" => "please check options"]);
         }
     }
@@ -2452,7 +2452,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'intumescentSealArrangement':
@@ -2470,7 +2470,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
             case 'intumescentSealArrangementCustome':
                 $selectedOption = SelectedIntumescentSeals2::where(['id' => $request->selectedId])->first();
@@ -2487,7 +2487,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'door_dimension':
@@ -2500,7 +2500,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
                 case 'door_dimension_custome':
                     // dd($request->all());
@@ -2513,7 +2513,7 @@ class OptionController extends Controller
                     } else {
                         echo json_encode(["status" => "error", "msg" => "option not found"]);
                     }
-                    
+
                     break;
             case 'leaf1_glass_type':
                 $selectedOption = SelectedGlassType::where(['id' => $request->selectedId])->first();
@@ -2525,7 +2525,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
             case 'leaf1_glass_type_custome':
                 $selectedOption = SelectedGlassType::where(['id' => $request->selectedId])->first();
@@ -2537,7 +2537,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 // dd($selectedOption);
                 break;
             case 'leaf_type':
@@ -2550,7 +2550,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'leaf1_glazing_systems':
@@ -2563,7 +2563,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
             case 'leaf1_glazing_systems_custome':
                 $selectedOption = SelectedGlazingSystem::where(['id' => $request->selectedId])->first();
@@ -2575,7 +2575,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'Intumescent_Seal_Color':
@@ -2588,7 +2588,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'Architrave_Type':
@@ -2601,7 +2601,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'color_list':
@@ -2614,7 +2614,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'Accoustics':
@@ -2627,7 +2627,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
             case 'door_leaf_facing_value':
                 $selectedOption = SelectedDoorLeafFacing::where(['id' => $request->selectedId])->first();
@@ -2639,7 +2639,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
 
             case 'door_leaf_finish':
@@ -2652,7 +2652,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
             break;
             case 'Overpanel_Glass_Type':
                 $selectedOption = SelectedOverpanelGlassGlazing::where(['id' => $request->selectedId])->first();
@@ -2664,7 +2664,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
             break;
             case 'Overpanel_Glazing_System':
                 $selectedOption = SelectedOverpanelGlassGlazing::where(['id' => $request->selectedId])->first();
@@ -2676,7 +2676,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
             break;
             case 'SideScreen_Glass_Type':
                 $selectedOption = SelectedScreenGlass::where(['id' => $request->selectedId])->first();
@@ -2688,7 +2688,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
             break;
             case 'SideScreen_Glazing_System':
                 $selectedOption = SelectedScreenGlazing::where(['id' => $request->selectedId])->first();
@@ -2700,7 +2700,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
             break;
 
             default:
@@ -2713,7 +2713,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "option not found"]);
                 }
-                
+
                 break;
         }
     }
@@ -2747,7 +2747,7 @@ class OptionController extends Controller
                 } else {
                     return response()->json(["status" => "error", "msg" => "Option not found"]);
                 }
-                
+
                 break;
 
             default:
@@ -2763,7 +2763,7 @@ class OptionController extends Controller
                 } else {
                     return response()->json(["status" => "error", "msg" => "Option not found"]);
                 }
-                
+
                 break;
         }
     }
@@ -2782,7 +2782,7 @@ class OptionController extends Controller
                 ->where('OptionKey', 'SA')
                 ->first();
         }
-        
+
         return $data;
     }
 
@@ -2799,7 +2799,7 @@ class OptionController extends Controller
             } else {
                 $data = DoorDimension::where('leaf_type', $request->leaf_type)->where('door_leaf_finish', $request->door_leaf_finish)->get();
             }
-            
+
             return $data;
         } elseif (property_exists($request, 'page_id') && $request->page_id !== null && ($request->page_id == 4 || $request->page_id == 5) && $request->door_leaf_facing && $request->leaf_type && $request->firerating) {
             $fireRating = fireRatingDoor($request->firerating);
@@ -2818,7 +2818,7 @@ class OptionController extends Controller
             } else {
                 $data = DoorDimension::where('leaf_type', '!=', 'Flush')->where('door_leaf_finish', $request->door_leaf_finish)->get();
             }
-            
+
             return $data;
         }
     }
@@ -2845,19 +2845,19 @@ class OptionController extends Controller
                 ->where('OptionKey', 'L')
                 ->get();
         }
-        
+
         if ($door_set_type == "DD" && $swing_type == "SA") {
             $data = Option::where('configurableitems', 3)
                 ->where('OptionSlug', 'door_configuration_latch_type')
                 ->get();
         }
-        
+
         if ($door_set_type == "leaf_and_a_half" && $swing_type == "SA") {
             $data = Option::where('configurableitems', 3)
                 ->where('OptionSlug', 'door_configuration_latch_type')
                 ->get();
         }
-        
+
         return $data;
     }
 
@@ -2900,7 +2900,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "Id not found"]);
                 }
-                
+
                 break;
 
             case 'intumescentSealArrangement':
@@ -2938,7 +2938,7 @@ class OptionController extends Controller
                 } else {
                     echo json_encode(["status" => "error", "msg" => "Id not found"]);
                 }
-                
+
                 break;
         }
     }
@@ -2975,13 +2975,13 @@ class OptionController extends Controller
                     }
                 }
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
         return null;
     }
-    
+
     public function importglasstype(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3013,25 +3013,25 @@ class OptionController extends Controller
                 if($configurable === '1'){
                     $data->Streboard = 1;
                 }
-                
+
                 if($configurable === '2'){
                     $data->Halspan = 2;
                 }
-                
+
                 if($configurable === '7'){
                     $data->Flamebreak = 7;
                 }
-                
+
                 if($configurable === '8'){
                     $data->Stredor = 8;
                 }
-                
+
                 $data->NFR = NULL;
 
                 if($FireRating === 'FD30'){
                     $data->FD30 = 'FD30';
                 }
-                
+
                 if($FireRating === 'FD60'){
                     $data->FD60 = 'FD60';
                 }
@@ -3045,13 +3045,13 @@ class OptionController extends Controller
                 $data->EditBy = Auth::user()->id;
                 $data->save();
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
         return null;
     }
-    
+
     public function importglazingsystem(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3080,15 +3080,15 @@ class OptionController extends Controller
                 if($configurable === '1'){
                     $data->Streboard = 1;
                 }
-                
+
                 if($configurable === '2'){
                     $data->Halspan = 2;
                 }
-                
+
                 if($configurable === '7'){
                     $data->Flamebreak = 7;
                 }
-                
+
                 if($configurable === '8'){
                     $data->Stredor = 8;
                 }
@@ -3098,7 +3098,7 @@ class OptionController extends Controller
                 if($FireRating === 'FD30'){
                     $data->FD30 = 'FD30';
                 }
-                
+
                 if($FireRating === 'FD60'){
                     $data->FD60 = 'FD60';
                 }
@@ -3111,7 +3111,7 @@ class OptionController extends Controller
                 $data->editBy = Auth::user()->id;
                 $data->save();
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
@@ -3170,27 +3170,27 @@ class OptionController extends Controller
                     $IntumescentSealLeafType1 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype1 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType1))?'':$IntumescentSealLeafType1->id;
                 }
-                
+
                 if($leaftype2 !== '' && $leaftype2 !== '0'){
                     $IntumescentSealLeafType2 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype2 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType2))?'':$IntumescentSealLeafType2->id;
                 }
-                
+
                 if(!empty($leaftype3)){
                     $IntumescentSealLeafType3 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype3 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType3))?'':$IntumescentSealLeafType3->id;
                 }
-                
+
                 if(!empty($leaftype4)){
                     $IntumescentSealLeafType4 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype4 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType4))?'':$IntumescentSealLeafType4->id;
                 }
-                
+
                 if(!empty($leaftype5)){
                     $IntumescentSealLeafType5 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype5 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType5))?'':$IntumescentSealLeafType5->id;
                 }
-                
+
                 if(!empty($leaftype6)){
                     $IntumescentSealLeafType6 = IntumescentSealLeafType::where('leaf_type_key', 'like', '%' . $leaftype6 . '%')->where('status',1)->where('configurableitems',$doorConfiguration)->first();
                     $leafType[] = (empty($IntumescentSealLeafType6))?'':$IntumescentSealLeafType6->id;
@@ -3243,13 +3243,13 @@ class OptionController extends Controller
                 $selectedOption->selected_cost = ($request->IntumescentSealPrice) ?? 0;
                 $selectedOption->save();
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
         return null;
     }
-    
+
      public function updateOverpanelGlassGlazing(Request $request){
         $UserId = Auth::user()->id;
         if($UserId == 1){
@@ -3304,33 +3304,33 @@ class OptionController extends Controller
                 if($DoorType === 'Streboard'){
                     $a->Streboard = 1;
                 }
-                
+
                 if($DoorType === 'Halspan'){
                     $a->Halspan = 2;
                 }
-                
+
                 if($DoorType === 'Flamebreak'){
                     $a->Flamebreak = 7;
                 }
-                
+
                 if($DoorType === 'Stredor'){
                     $a->Stredor = 8;
                 }
-                
+
                 $a->NFR = NULL;
                 if($FireRating === 'FD30'){
                     $a->FD30 = 'FD30';
                 }
-                
+
                 if($FireRating === 'FD60'){
                     $a->FD60 = 'FD60';
                 }
-                
+
                 $a->updated_at = date('Y-m-d H:i:s');
                 $a->editBy = Auth::user()->id;
                 $a->save();
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
@@ -3395,7 +3395,7 @@ class OptionController extends Controller
                 $b->EditBy = Auth::user()->id;
                 $b->save();
             }
-            
+
             return redirect()->back()->with('success',"Excel file imported successfully");
         }
 
@@ -3412,64 +3412,68 @@ class OptionController extends Controller
                 $leafType = $request->leafType;
                 $leafPrice = $request->leafPrice;
                 $key = str_replace(' ', '_', $leafType);
-                if((property_exists($request, 'vicaimaDoorCore') && $request->vicaimaDoorCore !== null || property_exists($request, 'normaDoorCore') && $request->normaDoorCore !== null || property_exists($request, 'seadecDoorCore') && $request->seadecDoorCore !== null || property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null) &&  !empty($leafType)){
 
-                    if(!empty($request->id)){
-                        $data = LeafType::find($request->id);
-                        if(!empty($request->selectId)){
-                            $selectedOption = SelectedLeafType::find($request->selectId);
-                        }else{
-                            $selectedOption = new SelectedLeafType();
-                        }
+                // Check if any of the core options are selected
+                if (
+                    (!empty($request->vicaimaDoorCore) ||
+                    !empty($request->normaDoorCore) ||
+                    !empty($request->seadecDoorCore) ||
+                    !empty($request->deantaDoorCore)) &&
+                    !empty($leafType)
+                ) {
+                    // Retrieve or initialize models
+                    $data = !empty($request->id) ? LeafType::find($request->id) : new LeafType();
+                    $selectedOption = !empty($request->selectId)
+                        ? SelectedLeafType::find($request->selectId)
+                        : new SelectedLeafType();
 
-                    }else{
-                        $data = new LeafType();
-                        $selectedOption = new SelectedLeafType();
-                    }
-                    
-                    $data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;
+                    // Reset all door core options
+                    $data->NormaDoorCore = null;
+                    $data->VicaimaDoorCore = null;
+                    $data->Seadec = null;
+                    $data->Deanta = null;
 
-                    if(property_exists($request, 'normaDoorCore') && $request->normaDoorCore !== null){
+                    // Set selected door core(s)
+                    if (!empty($request->normaDoorCore)) {
                         $data->NormaDoorCore = 3;
                     }
-                    
-                     if(property_exists($request, 'vicaimaDoorCore') && $request->vicaimaDoorCore !== null){
+
+                    if (!empty($request->vicaimaDoorCore)) {
                         $data->VicaimaDoorCore = 4;
                     }
-                     
-                    if(property_exists($request, 'seadecDoorCore') && $request->seadecDoorCore !== null){
+
+                    if (!empty($request->seadecDoorCore)) {
                         $data->Seadec = 5;
                     }
-                    
-                    if(property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null){
+
+                    if (!empty($request->deantaDoorCore)) {
                         $data->Deanta = 6;
                     }
-                    
+
+                    // Common fields
                     $data->Key = $key;
                     $data->UnderAttribute = $key;
                     $data->LeafType = $leafType;
-                    $data->EditBy = Auth::user()->id;
+                    $data->EditBy = Auth::id();
                     $data->save();
 
-                    if(Auth::user()->id != 1){ //admin will not add selected price
-                        $selectedOption->leaf_id = $data->id;
-                        if(empty($data->id) && empty($request->selectId)){
-                            $selectedOption->leaf_id = $request->id;
-                        }
-                        
+                    // If not admin, save selected price
+                    if (Auth::id() != 1) {
+                        $selectedOption->leaf_id = $data->id ?: $request->id;
                         $selectedOption->selectedPrice = $leafPrice;
-                        $selectedOption->editBy = Auth::user()->id;
+                        $selectedOption->editBy = Auth::id();
                         $selectedOption->save();
                     }
 
-                    $request->session()->flash('success',"Leaf Type added successfully!");
+                    $request->session()->flash('success', 'Leaf Type added successfully!');
                     return redirect('options/selected/leaf_type')->with('success', 'Leaf Type added successfully!');
-                }else{
-                    $request->session()->flash('error',"Something went wrong!");
+                } else {
+                    $request->session()->flash('error', 'Something went wrong!');
                     return redirect('options/selected/leaf_type')->with('error', 'Something went wrong!');
                 }
 
-            break;
+                break;
+
             case 'Glass':
                 $integrity = $request->integrity;
                 $glassType = $request->glassType;
@@ -3503,31 +3507,31 @@ class OptionController extends Controller
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
-                        
+
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
-                        
+
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
-                        
+
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
-                        
+
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
-                        
+
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
-                        
+
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
-                        
+
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
@@ -3541,11 +3545,11 @@ class OptionController extends Controller
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
-                        
+
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
-                        
+
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -3565,7 +3569,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_id = $request->id;
                         }
-                        
+
                         $selectedOption->selectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -3608,54 +3612,54 @@ class OptionController extends Controller
                         //insert into selectedglazingsystem table
                         $selectedOption = new SelectedGlazingSystem();
                     }
-                    
+
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
-                        
+
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
-                        
+
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
-                        
+
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
-                        
+
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
-                        
+
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
-                        
+
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
-                        
+
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
                     }
-                    
+
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
                     $counter = count($firerating);
                     for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
-                        
+
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
-                        
+
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -3674,12 +3678,12 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glazingId = $request->id;
                         }
-                        
+
                         $selectedOption->selectedPrice = $glazingPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
                     }
-                    
+
                     if($request->glassTypeurl == 'leaf1_glazing_systems_custome'){
                         $request->session()->flash('success',"Glazing System added successfully!");
                         return redirect('options/selected/leaf1_glazing_systems_custome')->with('success', 'Glazing System added successfully!');
@@ -3707,7 +3711,7 @@ class OptionController extends Controller
                         //insert data in glazing system table
                         $data = new GlassGlazingSystem();
                     }
-                    
+
                     $GlassTypeId = GlassType::where('status',1)->where('GlassType',$GlassType)->first();
                     $GlazingSystemId = GlazingSystem::where('status',1)->where('GlazingSystem',$glazingSystem)->first();
 
@@ -3750,34 +3754,34 @@ class OptionController extends Controller
                             //insert into SelectedIntumescentSealColor table
                             $selectedOption = new SelectedIntumescentSealColor();
                         }
-                        
+
                         $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
                         $counter = count($config);
                         for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
                                 $data->Streboard = 1;
                             }
-                            
+
                             if($config[$m] == '2'){
                                 $data->Halspan = 2;
                             }
-                            
+
                             if($config[$m] == '3'){
                                 $data->NormaDoorCore = 3;
                             }
-                            
+
                              if($config[$m] == '5'){
                                 $data->Seadec = 5;
                             }
-                             
+
                             if($config[$m] == '6'){
                                 $data->Deanta = 6;
                             }
-                            
+
                             if($config[$m] == '7'){
                                 $data->Flamebreak = 7;
                             }
-                            
+
                             if($config[$m] == '8'){
                                 $data->Stredor = 8;
                             }
@@ -3793,7 +3797,7 @@ class OptionController extends Controller
                             if(empty($data->id) && empty($request->selectId)){
                                 $selectedOption->intumescentSealColorId = $request->id;
                             }
-                            
+
                             $selectedOption->selectedPrice = $IntumescentSealColorPrice;
                             $selectedOption->userId = Auth::user()->id;
                             $selectedOption->save();
@@ -3828,38 +3832,38 @@ class OptionController extends Controller
                             //insert into SelectedArchitraveType table
                             $selectedOption = new SelectedArchitraveType();
                         }
-                        
+
                         $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
                         $counter = count($config);
                         for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
                                 $data->Streboard = 1;
                             }
-                            
+
                             if($config[$m] == '2'){
                                 $data->Halspan = 2;
                             }
-                            
+
                             if($config[$m] == '3'){
                                 $data->NormaDoorCore = 3;
                             }
-                            
+
                             if($config[$m] == '4'){
                                 $data->VicaimaDoorCore = 4;
                             }
-                            
+
                             if($config[$m] == '5'){
                                 $data->Seadec = 5;
                             }
-                            
+
                             if($config[$m] == '6'){
                                 $data->Deanta = 6;
                             }
-                            
+
                             if($config[$m] == '7'){
                                 $data->Flamebreak = 7;
                             }
-                            
+
                             if($config[$m] == '8'){
                                 $data->Stredor = 8;
                             }
@@ -3875,7 +3879,7 @@ class OptionController extends Controller
                             if(empty($data->id) && empty($request->selectId)){
                                 $selectedOption->architraveTypeId = $request->id;
                             }
-                            
+
                             $selectedOption->selectedPrice = $ArchitraveTypePrice;
                             $selectedOption->userId = Auth::user()->id;
                             $selectedOption->save();
@@ -3917,38 +3921,38 @@ class OptionController extends Controller
                         //insert into SelectedAccoustics table
                         $selectedOption = new SelectedAccoustics();
                     }
-                    
+
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
-                        
+
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
-                        
+
                         if($config[$m] == '3'){
                             $data->NormaDoorCore = 3;
                         }
-                        
+
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
-                        
+
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
                         }
-                        
+
                         if($config[$m] == '6'){
                             $data->Deanta = 6;
                         }
-                        
+
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
-                        
+
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
@@ -3960,7 +3964,7 @@ class OptionController extends Controller
                     if($imageName !== '' && $imageName !== '0'){
                         $data->file = $imageName;
                     }
-                    
+
                     $data->editBy = Auth::user()->id;
                     $data->save();
 
@@ -3969,12 +3973,12 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->accousticsId = $request->id;
                         }
-                        
+
                         $selectedOption->selectedPrice = $AccousticsPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
                     }
-                    
+
                     $request->session()->flash('success',"Accoustics added successfully!");
                     return redirect('options/selected/Accoustics')->with('success', 'Accoustics added successfully!');
                 }else{
@@ -4007,37 +4011,37 @@ class OptionController extends Controller
                         //insert into SelectedDoorLeafFacing table
                         $selectedOption = new SelectedDoorLeafFacing();
                     }
-                    
+
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
 
                     if(property_exists($request, 'Streboard') && $request->Streboard !== null){
                         $data->Streboard = 1;
                     }
-                    
+
                      if(property_exists($request, 'Halspan') && $request->Halspan !== null){
                         $data->Halspan = 2;
                     }
-                     
+
                     if(property_exists($request, 'NormaDoorCore') && $request->NormaDoorCore !== null){
                         $data->NormaDoorCore = 3;
                     }
-                    
+
                     if(property_exists($request, 'VicaimaDoorCore') && $request->VicaimaDoorCore !== null){
                         $data->VicaimaDoorCore = 4;
                     }
-                    
+
                     if(property_exists($request, 'SeadecDoorCore') && $request->SeadecDoorCore !== null){
                         $data->Seadec = 5;
                     }
-                    
+
                     if(property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null){
                         $data->Deanta = 6;
                     }
-                    
+
                     if(property_exists($request, 'Flamebreak') && $request->Flamebreak !== null){
                         $data->Flamebreak = 7;
                     }
-                    
+
                     if(property_exists($request, 'Stredor') && $request->Stredor !== null){
                         $data->Stredor = 8;
                     }
@@ -4053,7 +4057,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->doorLeafFacingId = $request->id;
                         }
-                        
+
                         $selectedOption->selectedPrice = $DoorLeafFacingPrice;
                         $selectedOption->userId = Auth::user()->id;
                         $selectedOption->save();
@@ -4095,7 +4099,7 @@ class OptionController extends Controller
                     if(!empty($request->DoorLeafFacingval)){
                         $data->DoorLeafFacingValue = $request->DoorLeafFacingval;
                     }
-                    
+
                     $data->Hex = $Hex;
                     $data->editBy = Auth::user()->id;
                     $data->save();
@@ -4104,7 +4108,7 @@ class OptionController extends Controller
                     if(empty($data->id) && empty($request->selectId)){
                         $selectedOption->SelectedColorId = $request->id;
                     }
-                    
+
                     $selectedOption->SelectedPrice = $colorPrice;
                     $selectedOption->DoorLeafFacingName = $DoorLeafFacing;
                     $selectedOption->SelectedUserId = Auth::user()->id;
@@ -4144,38 +4148,38 @@ class OptionController extends Controller
                         $data = new OverpanelGlassGlazing();
                         $selectedOption = new SelectedOverpanelGlassGlazing();
                     }
-                    
+
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
-                        
+
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
-                        
+
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
-                        
+
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
                     }
-                    
+
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
                     $counter = count($firerating);
                     for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
-                        
+
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
-                        
+
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -4200,7 +4204,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_glazing_id = $request->id;
                         }
-                        
+
                         $selectedOption->glassSelectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4213,7 +4217,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/Overpanel_Glass_Type')->with('error', 'Something went wrong!');
                 }
-                
+
             break;
 
             case 'Overpanel_Glazing_System':
@@ -4238,34 +4242,34 @@ class OptionController extends Controller
                         $data = OverpanelGlassGlazing::where('key',$key)->first();
                         $selectedOption = SelectedOverpanelGlassGlazing::where('glass_glazing_id',$data->id)->first();
                     }
-                    
+
                     $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
                             $data->Streboard = 1;
                         }
-                        
+
                         if($config[$m] == '2'){
                             $data->Halspan = 2;
                         }
-                        
+
                         if($config[$m] == '7'){
                             $data->Flamebreak = 7;
                         }
                     }
-                    
+
                     $data->NFR = NULL;$data->FD30 = NULL;$data->FD60 = NULL;
                     $counter = count($firerating);
                     for($n = 0; $n < $counter; $n++){
                         if($firerating[$n] == 'NFR'){
                             $data->NFR = 'NFR';
                         }
-                        
+
                         if($firerating[$n] == 'FD30'){
                             $data->FD30 = 'FD30';
                         }
-                        
+
                         if($firerating[$n] == 'FD60'){
                             $data->FD60 = 'FD60';
                         }
@@ -4287,7 +4291,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_glazing_id = $request->id;
                         }
-                        
+
                         $selectedOption->glazingSelectedPrice = $glazingPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4300,7 +4304,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/Overpanel_Glazing_System')->with('error', 'Something went wrong!');
                 }
-                
+
             break;
             case 'SideScreen_Glass_Type':
                 $GlassType = $request->GlassType;
@@ -4329,7 +4333,7 @@ class OptionController extends Controller
                         $data = new ScreenGlassType();
                         $selectedOption = new SelectedScreenGlass();
                     }
-                    
+
                     $data->GlassType = $GlassType;
                     $data->DFRating = $DFRating;
                     $data->FireRating = $FireRating;
@@ -4350,7 +4354,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glass_id = $request->id;
                         }
-                        
+
                         $selectedOption->glassSelectedPrice = $glassPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4363,7 +4367,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/SideScreen_Glass_Type')->with('error', 'Something went wrong!');
                 }
-                
+
             break;
 
             case 'SideScreen_Glazing_System':
@@ -4389,7 +4393,7 @@ class OptionController extends Controller
                         $data = new ScreenGlazingType();
                         $selectedOption = new SelectedScreenGlazing();
                     }
-                    
+
                     $data->FireRating = $FireRating;
                     $data->ScreenGlassId = $GlassType;
                     $data->GlazingThickness = $GlazingThickness;
@@ -4407,7 +4411,7 @@ class OptionController extends Controller
                         if(empty($data->id) && empty($request->selectId)){
                             $selectedOption->glazing_id = $request->id;
                         }
-                        
+
                         $selectedOption->glazingSelectedPrice = $glazingPrice;
                         $selectedOption->editBy = Auth::user()->id;
                         $selectedOption->save();
@@ -4420,7 +4424,7 @@ class OptionController extends Controller
                     $request->session()->flash('error',"Something went wrong!");
                     return redirect('options/selected/SideScreen_Glazing_System')->with('error', 'Something went wrong!');
                 }
-                
+
             break;
         }
 
@@ -4432,7 +4436,7 @@ class OptionController extends Controller
     {
         $authdata = Auth::user();
         $UserId = Auth::user()->UserType == 2 ? CompanyUsers() : ['1'];
-        
+
         if($configurableItem == 'Halspan'){
             $doorValue = 2;
         }
@@ -4562,7 +4566,7 @@ class OptionController extends Controller
                 $tbl1 = SideScreen_Glazing_System($authdata,$optionType,$UserId);
 
         }
-        
+
         return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'leaftype2' => $leaftype2, 'intumenseLeafType' => $intumenseLeafType, 'GlassType' => $GlassType, 'GlazingSystem' => $GlazingSystem, 'screenGlassType' => $screenGlassType]);
     }
 
@@ -4575,7 +4579,7 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         $leaftype = GetOptions(['leaf_type.Status' => 1], "join","leaf_type");
         $IntumescentSealsConfiguration = SettingIntumescentSeals2::wherein('editBy', $UserId)->groupBy('configuration')->get();
         $intumenseLeafType = IntumescentSealLeafType::where('status',1)->get();
@@ -4587,12 +4591,12 @@ class OptionController extends Controller
         } else {
             $UserId = ['1'];
         }
-        
+
         $tbl1 = '';
         if ($optionType === 'color_list') {
             $tbl1 = color($authdata,$optionType,$UserId,$colorType);
         }
-        
+
         return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'colorType' => $colorType, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'intumenseLeafType' => $intumenseLeafType]);
     }
 
@@ -4644,7 +4648,7 @@ class OptionController extends Controller
         ->get();
         return json_encode(['status'=>'ok','data'=> $data]);
     }
-    
+
     public function filterSideLightBeading(Request $request){
         $configurationDoor = $request->pageId;
         $firerating = fireRatingDoor($request->fireRating);
