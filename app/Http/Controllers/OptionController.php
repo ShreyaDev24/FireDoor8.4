@@ -4012,39 +4012,14 @@ class OptionController extends Controller
                         $selectedOption = new SelectedDoorLeafFacing();
                     }
 
-                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
-
-                    if(property_exists($request, 'Streboard') && $request->Streboard !== null){
-                        $data->Streboard = 1;
-                    }
-
-                     if(property_exists($request, 'Halspan') && $request->Halspan !== null){
-                        $data->Halspan = 2;
-                    }
-
-                    if(property_exists($request, 'NormaDoorCore') && $request->NormaDoorCore !== null){
-                        $data->NormaDoorCore = 3;
-                    }
-
-                    if(property_exists($request, 'VicaimaDoorCore') && $request->VicaimaDoorCore !== null){
-                        $data->VicaimaDoorCore = 4;
-                    }
-
-                    if(property_exists($request, 'SeadecDoorCore') && $request->SeadecDoorCore !== null){
-                        $data->Seadec = 5;
-                    }
-
-                    if(property_exists($request, 'deantaDoorCore') && $request->deantaDoorCore !== null){
-                        $data->Deanta = 6;
-                    }
-
-                    if(property_exists($request, 'Flamebreak') && $request->Flamebreak !== null){
-                        $data->Flamebreak = 7;
-                    }
-
-                    if(property_exists($request, 'Stredor') && $request->Stredor !== null){
-                        $data->Stredor = 8;
-                    }
+                    $data->Streboard = $request->filled('Streboard') ? 1 : null;
+                    $data->Halspan = $request->filled('Halspan') ? 2 : null;
+                    $data->NormaDoorCore = $request->filled('NormaDoorCore') ? 3 : null;
+                    $data->VicaimaDoorCore = $request->filled('VicaimaDoorCore') ? 4 : null;
+                    $data->Seadec = $request->filled('SeadecDoorCore') ? 5 : null;
+                    $data->Deanta = $request->filled('deantaDoorCore') ? 6 : null;
+                    $data->Flamebreak = $request->filled('Flamebreak') ? 7 : null;
+                    $data->Stredor = $request->filled('Stredor') ? 8 : null;
 
                     $data->Key = $key;
                     $data->doorLeafFacing = $DoorLeafOption;
