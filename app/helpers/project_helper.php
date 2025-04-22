@@ -1752,19 +1752,12 @@ function BOMUpdate($data, $configurableitems): void{
     $item->issingleconfiguration = $configurableitems;
 
     match ($configurableitems) {
-        // VICAIMA DOOR
-        '4' => BomCalculationVicaima($item),
-        // Seadec DOOR
-        '5' => BomCalculationSeadec($item),
-        // Deanta DOOR
-        '6' => BomCalculationDeanta($item),
-        // Halspan DOOR
-        '2' => HalspanBomCalculation($item),
-        // Flamebreak DOOR
-        '7' => FlamebreakBomCalculation($item),
-        // Stredor DOOR
-        '8' => StredorBomCalculation($item),
-        // STAREBOARD AND ALL
+        4 => BomCalculationVicaima($item),
+        5 => BomCalculationSeadec($item),
+        6 => BomCalculationDeanta($item),
+        2 => HalspanBomCalculation($item),
+        7 => FlamebreakBomCalculation($item),
+        8 => StredorBomCalculation($item),
         default => BomCalculation($item),
     };
 
