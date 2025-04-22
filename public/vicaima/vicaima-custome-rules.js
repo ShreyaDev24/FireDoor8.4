@@ -2293,6 +2293,7 @@ function frameMaterialFilter(fireRating){
                             FrameMaterialValue = $("#FrameMaterial-value").data("value");
                             if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
                                 $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
+                            }
                         }
                         var filepath = $("input[name='base_url']").val()+"/uploads/Options/"+leepingSpecies[j].file;
 
