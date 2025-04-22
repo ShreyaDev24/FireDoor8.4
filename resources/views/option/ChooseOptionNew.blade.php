@@ -1014,6 +1014,7 @@ dd(1);
                 <form id='glazingTypeAddFormcustome_form' method="post" action="{{ route('option/update-glassType') }}">
                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="optionName" value="Glazing">
+                    <input type="hidden" name="glassTypeurl" value="leaf1_glazing_systems_custome">
                     <div class="form-row">
                         <div class="row">
                             <div class="col-md-12">
@@ -2599,7 +2600,10 @@ dd(1);
         });
 }
 
-
+    $(document).on('click', '.close_model', function() {
+        console.log("Close button clicked");
+        $(this).closest('.modal').modal('hide');
+    });
 
     $(document).ready(function(){
         $("#DoorLeafFacingPriceDiv").hide();
@@ -2692,24 +2696,9 @@ dd(1);
         $("#leafTypeAddForm").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#glassTypeAddForm').modal('hide');
-    });
-    $('.close_model').on('click', function() {
-        $('#glassTypeCustomeAddForm').modal('hide');
-    });
-
-    $('.close_model').on('click', function() {
-        $('#leafTypeAddForm').modal('hide');
-    });
-
     $("#Add_IntumescentSealArrangement").click(function(e) {
         e.preventDefault();
         $("#intumescentSealArrangementAddForm").modal('show');
-    });
-
-    $('.close_model').on('click', function() {
-        $('#intumescentSealArrangementAddForm').modal('hide');
     });
 
     $("#add_door_dimension").click(function(e) {
@@ -2721,13 +2710,6 @@ dd(1);
         $("#door_dimension_customeAddForm").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#door_dimensionAddForm').modal('hide');
-    });
-    $('.close_model').on('click', function() {
-        $('#door_dimension_customeAddForm').modal('hide');
-    });
-
     $("#add_color_modal").click(function(e) {
         e.preventDefault();
         $('#DoorLeafFacingval').val("");
@@ -2735,17 +2717,9 @@ dd(1);
         $("#add_color").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#add_color').modal('hide');
-    });
     $("#AddArchitrave_Type").click(function(e) {
         e.preventDefault();
         $("#add_Architrave_Type").modal('show');
-    });
-
-    $('.close_model').on('click', function() {
-
-        $('#add_Architrave_Type').modal('hide');
     });
 
     $("#add_glazingType").click(function(e) {
@@ -2753,24 +2727,14 @@ dd(1);
         $("#glazingTypeAddForm").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#glazingTypeAddForm').modal('hide');
-    });
     $("#add_glazingTypeCustome").click(function(e) {
         e.preventDefault();
         $("#glazingTypeAddFormcustome").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#glazingTypeAddFormcustome').modal('hide');
-    });
     $("#add_GlassGlazingType").click(function(e) {
         e.preventDefault();
         $("#addGlassGlazingType").modal('show');
-    });
-
-    $('.close_model').on('click', function() {
-        $('#addGlassGlazingType').modal('hide');
     });
 
     $("#Add_IntumescentSealColor").click(function(e) {
@@ -2778,17 +2742,9 @@ dd(1);
         $("#Add_Intumescent_Seal_Color").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#Add_Intumescent_Seal_Color').modal('hide');
-    });
-
     $("#AddAccoustics").click(function(e) {
         e.preventDefault();
         $("#add_Accoustics").modal('show');
-    });
-
-    $('.close_model').on('click', function() {
-        $('#add_Accoustics').modal('hide');
     });
 
     $("#AddDoorLeafFacing").click(function(e) {
@@ -2796,25 +2752,14 @@ dd(1);
         $("#add_Door_Leaf").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#add_Door_Leaf').modal('hide');
-    });
-
     $("#add_Overpanel_Glass_Type").click(function(e) {
         e.preventDefault();
         $("#slAndFlGlassTypeAddForm").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#slAndFlGlassTypeAddForm').modal('hide');
-    });
-
     $("#Overpanel_Glazing_System").click(function(e) {
         e.preventDefault();
         $("#SlandFlglazingTypeAddForm").modal('show');
-    });
-    $('.close_model').on('click', function() {
-        $('#SlandFlglazingTypeAddForm').modal('hide');
     });
 
 
@@ -2827,17 +2772,9 @@ dd(1);
         $("#SideScreenGlassTypeAddForm").modal('show');
     });
 
-    $('.close_model').on('click', function() {
-        $('#SideScreenGlassTypeAddForm').modal('hide');
-    });
-
     $("#add_SideScreen_Glazing_System").click(function(e) {
         e.preventDefault();
         $("#SideScreenGlazingSystemAddForm").modal('show');
-    });
-
-    $('.close_model').on('click', function() {
-        $('#SideScreenGlazingSystemAddForm').modal('hide');
     });
 
     function editLeafType(id,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,LeafType,selectedPrice,selectedId){
