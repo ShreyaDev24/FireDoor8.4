@@ -1746,7 +1746,6 @@ function FireRatingChange() {
         $('#opGlassIntegrity').val('');
         $('#opGlassType').val('');
         floor_finish_change();
-        frameThicknessChange($("#fireRating").val());
         MeetingStyle();
         doorThicknessFilter($("#fireRating").val());
         glazingSystemFIlter($("#fireRating").val());
@@ -5640,18 +5639,6 @@ function updateDoorDimensions() {
     }
 }
 
-function frameThicknessChange(firerating){
-    if(firerating == "NFR"){
-        $("#frameThickness").attr('min','28');
-    } else if(firerating == "FD60" || firerating == "FD60s"){
-        $("#frameThickness").attr('min','32');
-    } else{
-        $("#frameThickness").attr('min','28');
-    }
-    var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-    SetBuildOfMaterial(identifier);
-}
-
 $(document).ready(function () {
     function enforceScallopedRules() {
         var fireRating = $('#fireRating').val();
@@ -5670,25 +5657,20 @@ $(document).ready(function () {
             $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
             var frameType = $('#frameType').val();
 
-            // ✅ Only show DA in dropdown (don't disable it)
-            if (frameType === 'Scalloped') {
-                $('#swingType').html(originalSwingOptions); // reset options
-                $('#swingType option').each(function () {
-                    if ($(this).val() !== 'DA') {
-                        $(this).remove();
-                    }
-                });
-                $('#swingType').val('DA'); // ensure it's selected
+            //Only show DA in dropdown (but not disabled)
+            if (frameType === 'Scalloped') { // reset options
+                $("#swingType option[value='SA']").prop("disabled", true);
             }
 
-            // Frame thickness hint (but not locked)
-            var frameThickness = parseFloat($('#frameThickness').val());
-            if (frameThickness < 40) {
-                $('#frameThickness').attr('min', 40);
+            // Frame Thickness Logic (Integrated frameThicknessChange)
+            let baseMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
+            let finalMin = 40; // For SD + DA condition
+            $('#frameThickness').attr('min', finalMin);
+            if (parseFloat($('#frameThickness').val()) < finalMin) {
+                $('#frameThickness').val(finalMin);
             }
 
-
-            // Scalloped Width logic
+            //Scalloped Width Logic
             var scallopedWidth = parseFloat($('#ScallopedWidth').val()) || 0;
             var minWidth = 0;
             if (fireRating === 'NFR') {
@@ -5701,22 +5683,23 @@ $(document).ready(function () {
             $('#ScallopedWidth').attr('min', minWidth);
             $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
 
-            // Scalloped Depth logic (4 to 8)
+            //Scalloped Depth Logic (4 to 8)
             var scallopedDepth = parseFloat($('#ScallopedHeight').val()) || 0;
             $('#ScallopedHeight').attr({ min: 4, max: 8 });
             $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
 
         } else {
-            // alert('jii')
-            // Reset swingType options
-            if ($('#swingType').data('original-options')) {
-                $('#swingType').html($('#swingType').data('original-options'));
-            }
             $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
             $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
             $("#frameType option[value='Scalloped']").prop("disabled", true);
+            $("#swingType option[value='SA']").prop("disabled", false);
+            $("#swingType option[value='DA']").prop("disabled", false);
+            let finalMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
+            $('#frameThickness').attr('min', finalMin);
+            if (parseFloat($('#frameThickness').val()) < finalMin) {
+                $('#frameThickness').val(finalMin);
+            }
 
-            $('#frameThickness').removeAttr('min');
             $('#ScallopedWidth').removeAttr('min');
             $('#ScallopedHeight').removeAttr('min').removeAttr('max');
 
