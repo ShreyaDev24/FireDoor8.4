@@ -2801,8 +2801,8 @@ class OptionController extends Controller
             }
 
             return $data;
-        } elseif (isset($request->page_id) && in_array($request->page_id, [4, 5, 6], true) &&
-            !empty($request->door_leaf_facing) && !empty($request->leaf_type) && !empty($request->firerating)){
+        } elseif (isset($request->page_id) && in_array((int)$request->page_id, [4, 5, 6], true) &&
+        !empty($request->door_leaf_facing) && !empty($request->leaf_type) && !empty($request->firerating)){
             $fireRating = fireRatingDoor($request->firerating);
             $data = $fireRating !== 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing], "join","DoorDimension");
             return $data;
@@ -2828,7 +2828,7 @@ class OptionController extends Controller
     {
         if (
             $request->has('page_id') &&
-            in_array($request->page_id, [4, 5, 6]) &&
+            in_array((int)$request->page_id, [4, 5, 6]) &&
             $request->filled('door_leaf_facing') &&
             $request->filled('leaf_type') &&
             $request->filled('firerating') &&
