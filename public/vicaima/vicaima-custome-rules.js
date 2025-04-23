@@ -5644,14 +5644,6 @@ $(document).ready(function () {
         var fireRating = $('#fireRating').val();
         var doorsetType = $('#doorsetType').val();
         var swingType = $('#swingType').val();
-        var originalSwingOptions = $('#swingType').data('original-options');
-
-        // Save swing options once
-        if (!originalSwingOptions) {
-            $('#swingType').data('original-options', $('#swingType').html());
-            originalSwingOptions = $('#swingType').html();
-        }
-
         if (doorsetType === 'SD' && swingType === 'DA') {
             $("select[name=frameType]").val('Scalloped');
             $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
@@ -5666,9 +5658,6 @@ $(document).ready(function () {
             let baseMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
             let finalMin = 40; // For SD + DA condition
             $('#frameThickness').attr('min', finalMin);
-            if (parseFloat($('#frameThickness').val()) < finalMin) {
-                $('#frameThickness').val(finalMin);
-            }
 
             //Scalloped Width Logic
             var scallopedWidth = parseFloat($('#ScallopedWidth').val()) || 0;
@@ -5696,10 +5685,6 @@ $(document).ready(function () {
             $("#swingType option[value='DA']").prop("disabled", false);
             let finalMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
             $('#frameThickness').attr('min', finalMin);
-            if (parseFloat($('#frameThickness').val()) < finalMin) {
-                $('#frameThickness').val(finalMin);
-            }
-
             $('#ScallopedWidth').removeAttr('min');
             $('#ScallopedHeight').removeAttr('min').removeAttr('max');
 
