@@ -56,13 +56,13 @@ class ContractorController extends Controller
             $data = User::join('customers','customers.UserId','users.id')->where('users.UserType',5)->orderBy('customers.CstCompanyName','asc')->get()->toArray();
         } elseif (Auth::user()->UserType == '3') {
             $created_by_my_cmpny_admin_user = myCreatedUser();
-            
+
             $data = User::join('customers','customers.UserId','users.id')->where('users.UserType',5)->orderBy('customers.CstCompanyName','asc')->wherein('users.CreatedBy', $created_by_my_cmpny_admin_user)->get()->toArray();
 
         }elseif(Auth::user()->UserType == '2'){
 
             $created_by_me_users = myCreatedUser();
-            
+
             $data = Customer::join('users', 'users.id', 'customers.UserId')
                 ->select('customers.*', 'users.UserEmail')->whereIn('users.CreatedBy', $created_by_me_users)->orderBy('customers.CstCompanyName', 'asc')->get()->toArray();
         } else {
@@ -117,7 +117,7 @@ class ContractorController extends Controller
             } else {
                 $tbl .= '<td colspan="5">No record found.</td>';
             }
-            
+
             $tbl .= '</tr>';
         }
 
@@ -138,7 +138,7 @@ class ContractorController extends Controller
                 }
             }
 
-            if (property_exists($request, 'update') && $request->update !== null) {
+            if (isset($request->update)) {
                 $data = Customer::find($request->update);
                 $user = User::where('id', $data->UserId)->first();
             } else {
@@ -250,7 +250,7 @@ class ContractorController extends Controller
                     } else {
                         $contractor_contact = new CustomerContact();
                     }
-                    
+
                     if (!empty($request->FirstName[$i]) || !empty($request->LastName[$i]) || !empty($request->ContactEmail[$i]) || !empty($request->ContactJobTitle[$i]) || !empty($request->ContactPhone[$i])) {
                         $contractor_contact->FirstName = $request->FirstName[$i];
                         $contractor_contact->LastName = $request->LastName[$i];
@@ -363,7 +363,7 @@ class ContractorController extends Controller
             foreach ($CustomerContact as $val) {
                 CustomerContact::where('id', $val->id)->delete();
             }
-            
+
             $Customer->delete();
             $Users->delete();
             return redirect()->back()->with('successed', 'The Main Contractor deleted successfully!');

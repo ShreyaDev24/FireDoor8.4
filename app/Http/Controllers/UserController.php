@@ -64,7 +64,7 @@ class UserController extends Controller
         return redirect()->route('user/details');
     }
     }
-    
+
     public function profile()
     {
         if(Auth::user()->UserType=='3'){
@@ -89,7 +89,7 @@ class UserController extends Controller
 
     public function store(request $request)
     {
-        if(property_exists($request, 'update') && $request->update !== null){
+        if (isset($request->update)){
         $user = User::where('id',$request->update)->first();
         $flash = "updated";
         }
@@ -131,10 +131,10 @@ class UserController extends Controller
         $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
         $user->UserType = 3;
-        if(!property_exists($request, 'update') || $request->update === null){
+        if (isset($request->update)){
         $user->password =  Hash::make($request->password);
         }
-        
+
         $user->CreatedBy = Auth::user()->id;
         $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
@@ -174,7 +174,7 @@ class UserController extends Controller
     public function delete(request $request){
 //
         if (Auth::user()->UserType == '2') {
-            if (property_exists($request, 'id') && $request->id !== null) {
+            if (isset($request->id)) {
                 User::where('id', $request->id)->delete();
                 return json_encode(["status" => "ok", "msg" => "User Deleted!"]);
 

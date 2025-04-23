@@ -27,7 +27,7 @@ class DoorDimensionController extends Controller
     }
 
     public function store(request $request){
-        if(property_exists($request, 'id') && $request->id !== null){
+        if (isset($request->id)){
             $dimensiondata = DoorDimension::find($request->id);
             $selectedOption = SelectedDoordimension::where('doordimension_id',$request->id)->where('doordimension_user_id',Auth::user()->id)->first();
         }else{
@@ -36,7 +36,7 @@ class DoorDimensionController extends Controller
             $dimensiondata = new DoorDimension();
             $selectedOption = new SelectedDoordimension();
         }
-        
+
         $doorCore = doorcorename($request->configurableitems);
         if ($request->configurableitems == 3 && $request->hasFile('image')) {
             $file = $request->file('image');
@@ -94,17 +94,17 @@ class DoorDimensionController extends Controller
     }
 
     }
-    
+
     public function storeCustome(request $request){
     // dd($request->all());
-        if(property_exists($request, 'id') && $request->id !== null){
+        if (isset($request->id)){
             $dimensiondata = DoorDimension::find($request->id);
             $selectedOption = SelectedDoordimension::where('doordimension_id',$request->id)->where('doordimension_user_id',Auth::user()->id)->first();
         }else{
             $dimensiondata = new DoorDimension();
             $selectedOption = new SelectedDoordimension();
         }
-        
+
         $prices = $request->input('prices');
         $pricesJson = json_encode($prices);
         $dimensiondata->configurableitems = $request->configurableitems;
@@ -154,7 +154,7 @@ class DoorDimensionController extends Controller
         }else{
             $UserId = ['1'];
         }
-        
+
         $doorDimension=DoorDimension::where('is_deleted', 0)->wherein('editBy',$UserId)->where('configurableitems',$pageId)->orderBy('id', 'DESC')->get();
         return view('DoorDimension.DoorDimensionList',['doorDimension' => $doorDimension, 'pageId' => $pageId]);
     }
