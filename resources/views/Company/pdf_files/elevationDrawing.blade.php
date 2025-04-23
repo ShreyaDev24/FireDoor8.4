@@ -206,38 +206,78 @@
             margin-left: 295px;
             margin-top: 90px;
         }
+/* vision panel sd */
+.visionpanel_t1_sd {
+            position: absolute;
+            width: 80px;
+            font-size: 8px;
+            margin-left: 130px;
+            margin-top: 85px;
+        }
 
+        .visionpanel_t2_sd {
+            position: absolute;
+            width: 90px;
+            font-size: 8px;
+            margin-left: 100px;
+            margin-top: 125px;
+        }
+
+        .visionpanel_t3_sd {
+            position: absolute;
+            width: 80px;
+            font-size: 8px;
+            margin-left: 110px;
+            margin-top: 188px;
+        }
+
+        .visionpanel_t4_sd {
+            position: absolute;
+            width: 80px;
+            font-size: 8px;
+            margin-left: 130px;
+            margin-top: 260px;
+        }
+
+        .visionpanel_t5_sd {
+            position: absolute;
+            color: red;
+            /*width:57px;*/
+            font-size: 13px;
+            margin-left: 260px !important;
+            margin-top: 380px;
+        }
         /* vision panel */
         .visionpanel_t1 {
             position: absolute;
             width: 80px;
             font-size: 8px;
             margin-left: 65px;
-            margin-top: 178px;
+            margin-top: 150px;
         }
 
         .visionpanel_t2 {
             position: absolute;
             width: 90px;
-            font-size: 15px;
+            font-size: 8px;
             margin-left: 10px;
-            margin-top: 220px;
+            margin-top: 190px;
         }
 
         .visionpanel_t3 {
             position: absolute;
             width: 80px;
             font-size: 8px;
-            margin-left: 10px;
-            margin-top: 283px;
+            margin-left: 30px;
+            margin-top: 253px;
         }
 
         .visionpanel_t4 {
             position: absolute;
             width: 80px;
             font-size: 8px;
-            margin-left: 40px;
-            margin-top: 360px;
+            margin-left: 50px;
+            margin-top: 330px;
         }
 
         .visionpanel_t5 {
@@ -245,8 +285,8 @@
             color: red;
             /*width:57px;*/
             font-size: 13px;
-            margin-left: 165px !important;
-            margin-top: 480px;
+            margin-left: 175px !important;
+            margin-top: 460px;
         }
 
         .visionpanel_t6 {
