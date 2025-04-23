@@ -3059,7 +3059,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if($tt->GlazingBeadShape == 'Square'){
                 $elevSideScreenTbl .= '<td style=" width:300px;margin: 0 auto;position: relative;">
                 <div class="">
-                    <img style="width: 220px; position: absolute;top: -160px;height: 320px;right:65px;z-index: -1;" src="' . $SideScreenSquare . '" class="" style="">
+                    <img style="width: 220px; position: absolute;top: -160px;height: 320px;right:65px;z-index: -1;" src="' . $SideScreenSquare . '" class="" >
                 </div>
 
             </td>
@@ -3076,7 +3076,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if($tt->GlazingBeadShape == 'Chamfer'){
                 $elevSideScreenTbl .= '<td style=" width:300px;margin: 0 auto;position: relative;">
                 <div class="">
-                    <img style="width: 220px; position: absolute;top: -160px;height: 320px;right:65px;z-index: -1;" src="' . $SideScreenChamfered . '" class="" style="">
+                    <img style="width: 220px; position: absolute;top: -160px;height: 320px;right:65px;z-index: -1;" src="' . $SideScreenChamfered . '" class="" >
                 </div>
 
             </td>
