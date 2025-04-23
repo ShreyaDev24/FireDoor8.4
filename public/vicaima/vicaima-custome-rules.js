@@ -2727,10 +2727,19 @@ function framewidth(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
     var DoorSetType = $('select[name="doorsetType"]').val();
+    var frameType = $('select[name="frameType"]').val();
     if (DoorSetType == "SD"){
-        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
+        if(frameType == 'Scalloped'){
+            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
+            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness ;
+        }
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        if(frameType == 'Scalloped'){
+            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
+            FrameWidth = FrameThickness - ScallopedHeight + gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
+        }
     }
 
     $("#frameWidth").val(FrameWidth);
