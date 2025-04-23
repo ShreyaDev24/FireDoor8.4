@@ -88,7 +88,7 @@ class SurveyController extends Controller
 
     public function store(request $request)
     {
-        if (property_exists($request, 'update') && $request->update !== null) {
+        if (isset($request->update)) {
             $user = User::where('id', $request->update)->first();
             $flash = "updated";
         } else {
@@ -132,7 +132,7 @@ class SurveyController extends Controller
 
         $user->CreatedBy = Auth::user()->id;
 
-        if (!property_exists($request, 'update') || $request->update === null) {
+        if (isset($request->update)) {
             $password = random_int(100000,1000000);
             $user->password = Hash::make($password);
             $emailTo = $request->UserEmail;
@@ -185,7 +185,7 @@ class SurveyController extends Controller
     public function delete(request $request){
 
         if (Auth::user()->UserType == '2') {
-            if (property_exists($request, 'id') && $request->id !== null) {
+            if (isset($request->id)) {
                 User::where('id', $request->id)->delete();
                 return json_encode(["status" => "ok", "msg" => "Survey User Deleted!"]);
 

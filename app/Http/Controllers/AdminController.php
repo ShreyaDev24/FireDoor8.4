@@ -38,7 +38,7 @@ class AdminController extends Controller
 
     public function store(request $request)
     {
-        if (property_exists($request, 'update') && $request->update !== null) {
+        if (isset($request->update)) {
             $user = User::where('id', $request->update)->first();
             $flash = "updated";
         } else {
@@ -83,7 +83,7 @@ class AdminController extends Controller
 
 
             // $user->CreatedBy = Auth::user()->id;
-            if (!property_exists($request, 'update') || $request->update === null) {
+            if (isset($request->update)) {
                 if($_SERVER['SERVER_NAME'] == '127.0.0.1'){
                     $password = '123456';
                     $user->password = Hash::make($password);
@@ -112,17 +112,17 @@ class AdminController extends Controller
                     }
                 }
             }
-            
+
             $user->save();
             // sending_mail_credential($user->UserEmail, $request->password);
-            if (!property_exists($request, 'update') || $request->update === null) {
+            if (isset($request->update)) {
                 $comp = get_company_id(Auth::user()->id);
                 if($comp){
                     $val = $comp->id;
                 }else{
                     $val = DB::table('user_data')->where(['type'=>'company', 'user_id'=>Auth::user()->id])->first()->value;
                 }
-                
+
                 DB::table('user_data')->insert([
                     'user_id'=>$user->id,
                     'type' => 'company',
@@ -144,7 +144,7 @@ class AdminController extends Controller
                     ]);
                 }
             }
-            
+
             $request->session()->flash($flash, 'data');
             return redirect()->route('user/list');
         }else{
@@ -196,7 +196,7 @@ class AdminController extends Controller
     public function delete(request $request){
 
         if (Auth::user()->UserType == '2') {
-            if (property_exists($request, 'id') && $request->id !== null) {
+            if (isset($request->id)) {
                 User::where('id', $request->id)->delete();
                 return json_encode(["status" => "ok", "msg" => "Admin Deleted!"]);
 

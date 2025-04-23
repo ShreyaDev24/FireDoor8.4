@@ -296,7 +296,7 @@ class OptionController extends Controller
 
     public function edit(request $request)
     {
-        if (property_exists($request, 'edit') && $request->edit !== null) {
+        if ($request->has('edit') && $request->input('edit') !== null) {
             Session::put('edit_option', $request->edit);
             return redirect()->route('options/edit');
         } else {
@@ -2801,7 +2801,8 @@ class OptionController extends Controller
             }
 
             return $data;
-        } elseif (property_exists($request, 'page_id') && $request->page_id !== null && ($request->page_id == 4 || $request->page_id == 5) && $request->door_leaf_facing && $request->leaf_type && $request->firerating) {
+        } elseif (isset($request->page_id) && in_array($request->page_id, [4, 5, 6], true) &&
+            !empty($request->door_leaf_facing) && !empty($request->leaf_type) && !empty($request->firerating)){
             $fireRating = fireRatingDoor($request->firerating);
             $data = $fireRating !== 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing], "join","DoorDimension");
             return $data;
@@ -2825,7 +2826,14 @@ class OptionController extends Controller
 
     public function filter_door_dimensions_leaf(request $request)
     {
-        if (property_exists($request, 'page_id') && $request->page_id !== null && ($request->page_id == 4 || $request->page_id == 5 || $request->page_id == 6) && $request->door_leaf_facing && $request->leaf_type && $request->firerating && $request->DoorDimensionId) {
+        if (
+            $request->has('page_id') &&
+            in_array($request->page_id, [4, 5, 6]) &&
+            $request->filled('door_leaf_facing') &&
+            $request->filled('leaf_type') &&
+            $request->filled('firerating') &&
+            $request->filled('DoorDimensionId')
+        ) {
             $fireRating = fireRatingDoor($request->firerating);
 
             $mm_height = DoorDimension::where('id',$request->DoorDimensionId)->first();

@@ -21,13 +21,13 @@ class GeneralSettingController extends Controller
         }else{
             $users = [Auth::user()->id];
         }
-        
+
         $currency = SettingCurrency::wherein('UserId',$users)->first();
         $ComQuotCounter = CompanyQuotationCounter::wherein('UserId',$users)->first();
         $ComOrdCounter = CompanyOrderCounter::wherein('UserId',$users)->first();
         return view('Setting.generalsetting',['currency' => $currency, 'ComQuotCounter' => $ComQuotCounter, 'ComOrdCounter' => $ComOrdCounter]);
     }
-    
+
     public function DoorFrameConstruction(Request $request)
     {
         $users = Auth::user()->id;
@@ -84,13 +84,13 @@ class GeneralSettingController extends Controller
                     $doorFrame->Width = $dimensions['width'];
                     $doorFrame->Height = $dimensions['height'];
                 }
-                
+
                 $doorFrame->DoorFrameConstruction = $door;
                 $doorFrame->UserId = $userId;
                 $doorFrame->save();
             }
         }
-        
+
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
         }else{
@@ -121,8 +121,8 @@ class GeneralSettingController extends Controller
         }
 
         foreach (array_keys($users) as $key) {
-            if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null && (property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null) && (property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null)){
-                if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null){
+            if (isset($request->currencyUpdate, $request->quotation_prefixUpdval, $request->order_prefixUpdval)){
+                if (isset($request->currencyUpdate)){
                     $currency = SettingCurrency::find($request->currencyUpdate);
                     $currency->UserId = Auth::user()->id;
                     $currency->currency = $request->currency;
@@ -131,8 +131,8 @@ class GeneralSettingController extends Controller
                     $currency->updated_at = date('Y-m-d H:i:s');
                     $currency->update();
                 }
-                
-                if(property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null){
+
+                if (isset($request->quotation_prefixUpdval)){
                     $quotation_prefix = CompanyQuotationCounter::find($request->quotation_prefixUpdval);
                     $quotation_prefix->UserId = Auth::user()->id;
                     $quotation_prefix->quotation_prefix = $request->quotation_prefix;
@@ -142,7 +142,8 @@ class GeneralSettingController extends Controller
                     $quotation_prefix->update();
                 }
 
-                if(property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null){
+
+                if (isset($request->order_prefixUpdval)){
                     $order_prefix = CompanyOrderCounter::find($request->order_prefixUpdval);
                     $order_prefix->UserId = Auth::user()->id;
                     $order_prefix->order_prefix = $request->order_prefix;
@@ -155,7 +156,7 @@ class GeneralSettingController extends Controller
                 return redirect()->back()->with('success', 'Update Successfully!');
             }else{
 
-                if(property_exists($request, 'currency') && $request->currency !== null){
+                if (isset($request->currency)){
                     $a = new SettingCurrency;
                     $a->created_at = date('Y-m-d H:i:s');
                     $a->UserId = Auth::user()->id;
@@ -163,7 +164,7 @@ class GeneralSettingController extends Controller
                     $a->save();
                 }
 
-                if(property_exists($request, 'quotation_prefix') && $request->quotation_prefix !== null){
+                if (isset($request->quotation_prefix)){
                     $b = new CompanyQuotationCounter;
                     $b->created_at = date('Y-m-d H:i:s');
                     $b->UserId = Auth::user()->id;
@@ -173,7 +174,7 @@ class GeneralSettingController extends Controller
                     $b->save();
                 }
 
-                if(property_exists($request, 'order_prefix') && $request->order_prefix !== null){
+                if (isset($request->order_prefix)){
                     $c = new CompanyOrderCounter;
                     $c->created_at = date('Y-m-d H:i:s');
                     $c->UserId = Auth::user()->id;
@@ -183,13 +184,13 @@ class GeneralSettingController extends Controller
                     $c->save();
                 }
             }
-            
-            if(property_exists($request, 'currencyUpdate') && $request->currencyUpdate !== null && (property_exists($request, 'quotation_prefixUpdval') && $request->quotation_prefixUpdval !== null) && (property_exists($request, 'order_prefixUpdval') && $request->order_prefixUpdval !== null)){
+
+            if (isset($request->currencyUpdate, $request->quotation_prefixUpdval, $request->order_prefixUpdval)){
                 return redirect()->back()->with('success', 'Update Successfully!');
             }else{
                 return redirect()->back()->with('success', 'Added Successfully!');
             }
-            
+
         // if(!is_null($update_val)){
         //     return redirect()->back()->with('success', 'The currency update successfully!');
         // }

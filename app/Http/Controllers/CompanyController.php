@@ -122,7 +122,7 @@ class CompanyController extends Controller
     public function store(request $request)
     {
         $status_mail = false;
-        if(property_exists($request, 'update') && $request->update !== null){
+        if (isset($request->update)){
             $data = Company::where('UserId',$request->update)->first();
             $user = User::where('id',$request->update)->first();
             $flash = "updated";
@@ -237,7 +237,7 @@ class CompanyController extends Controller
             $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
 
             // If updating, delete the old file
-            if (property_exists($request, 'update') && $request->update !== null) {
+            if (isset($request->update)) {
                 File::delete($filepath . $data->CompanyPhoto);
             }
 
@@ -315,7 +315,7 @@ class CompanyController extends Controller
             $userid->parent_id = $user->id;
             $userid->save();
 
-            if(property_exists($request, 'update') && $request->update !== null){
+            if (isset($request->update)){
                 $data = Company::where('UserId',$request->update)->first();
             }
 

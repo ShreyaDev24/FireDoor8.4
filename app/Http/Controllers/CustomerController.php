@@ -86,7 +86,7 @@ class CustomerController extends Controller
                     $tbl .= '<td>'.$user->FirstName.' '.$user->LastName.' (Architect) </td>';
                 }
                 }
-                
+
                 $tbl .= '</tr>';
             }
         }else{
@@ -96,7 +96,7 @@ class CustomerController extends Controller
             }else{
                 $tbl .= '<td colspan="5">No record found.</td>';
             }
-            
+
             $tbl .= '</tr>';
         }
 
@@ -112,7 +112,7 @@ class CustomerController extends Controller
             return redirect()->back();
         }
 
-        if(property_exists($request, 'update') && $request->update !== null){
+        if (isset($request->update)){
             $data = Customer::find($request->update);
         }else{
 
@@ -202,7 +202,7 @@ class CustomerController extends Controller
         return redirect()->route('contractor/list');
     }else{
         $request->session()->flash('error','Please fill required field!');
-        return redirect()->back(); 
+        return redirect()->back();
     }
     }
 

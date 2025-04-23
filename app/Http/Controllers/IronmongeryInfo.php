@@ -119,7 +119,7 @@ class IronmongeryInfo extends Controller
         $useId = CompanyUsers();
         if(!empty($request->FireRating[0]) && !empty($request->Category) && !empty($request->Name) && !empty($request->Code) && !empty($request->Description) && !empty($request->Price) && !empty($request->Supplier)){
 
-            if(property_exists($request, 'update') && $request->update !== null){
+            if (isset($request->update)){
                 if(Auth::user()->id==1){
                     $IronmongeryInfo = IronmongeryInfoModel::where([ 'GeneratedKey' => $request->update ])->first();
                 }
