@@ -43,7 +43,7 @@ class ProjectController extends Controller
             if (!in_array($loginUser->UserType, ["2", "3", "1", "4"])) {
                 return redirect("/");
             }
-            
+
             return $next($request);
         });
     }
@@ -117,7 +117,7 @@ class ProjectController extends Controller
                         ['UserId', '=', $loginUserId]
                     ])->first();
             }
-            
+
             $projects = Project::where('GeneratedKey', $id)->first();
             $ProjectFiles = ProjectFiles::where('projectId', $projects->id)->get();
             $ProjectBuildingDetails = ProjectBuildingDetails::where('projectId', $projects->id)->get();
@@ -179,7 +179,7 @@ class ProjectController extends Controller
                             ['UserId', '=', $loginUserId]
                         ])->first();
                 }
-                
+
                 ProjectBuildingDetails::where('projectId', $project->id)->delete();
             } else {
                 $project = new Project();
@@ -196,10 +196,10 @@ class ProjectController extends Controller
                     $project->ProjectStatus = 'Created';
                     $project->ArchitectId = $get_architect_id->id;
                 }
-                
+
                 $project->created_at = date('Y-m-d H:i:s');
             }
-            
+
             if (!empty($project)) {
                 $returnTenderDate = date('Y-m-d', strtotime($request->returnTenderDate));
                 if ($request->hasFile('ProjectImage')) {
@@ -220,7 +220,7 @@ class ProjectController extends Controller
                         $project->ProjectImage = $ImageName;
                     }
                 }
-                
+
                 // if(Auth::user()->UserType=='4'){
                 //     customerId ==null;
                 // }
@@ -351,7 +351,7 @@ class ProjectController extends Controller
             $projects = Project::where('GeneratedKey', $id)->first();
             $quotationToTheseProject = Quotation::whereNull('ProjectId')->where(['CustomerId' => $projects->customerId])->orderBy('id', 'desc')->get();
         }
-        
+
         if (!empty($projects) && (array)$projects !== []) {
             return view('DoorSchedule.AddQuotation', ['quotationWithNoProject' => $quotationWithNoProject, 'quotationToTheseProject' => $quotationToTheseProject, 'projects' => $projects, 'customer' => $customer]);
         } else {
@@ -388,12 +388,12 @@ class ProjectController extends Controller
             if ($request->filters == "") {
                 $filters = [];
             }
-            
+
             for ($i = 0; $i <= count($filters) - 1; $i++) {
 
                 $filters[$i] = [$filters[$i][0], $filters[$i][1], $filters[$i][2]];
             }
-            
+
             $orders = $request->orders;
             $column = $orders[0]["column"];
             $dir = $orders[0]["dir"];
@@ -429,7 +429,7 @@ class ProjectController extends Controller
     public function edit(request $request)
     {
         if (Auth::user()->UserType == '2') {
-            if (property_exists($request, 'edit') && $request->edit !== null) {
+            if (isset($request->edit)) {
                 Session::put('edit', $request->edit);
                 return redirect()->route('user/edit');
             } else {
@@ -454,7 +454,7 @@ class ProjectController extends Controller
         for ($i = 0; $i < 10; $i++) {
             $randstring .= $characters[random_int(0, strlen($characters) - 1)];
         }
-        
+
         return $randstring;
     }
 
@@ -480,7 +480,7 @@ class ProjectController extends Controller
                         ['UserId', '=', $request->id]
                     ])->orderBy('project.id', 'desc')->get();
                 }
-                
+
                 break;
 
             case 2:
@@ -548,7 +548,7 @@ class ProjectController extends Controller
                     'txt' => 'Invalid file type',
                 ]);
             }
-            
+
             $uploaded = $file->move($filepath, $fileName);
             if ($uploaded) {
                 if ($oldfile != "") {
@@ -604,7 +604,7 @@ class ProjectController extends Controller
         //     $quo->flag = 0;
         // }
         $quo->save();
-        
+
         $url = url('quotation/generate/' . $id . '/' . $version);
         return redirect()->to($url);
     }
@@ -626,7 +626,7 @@ class ProjectController extends Controller
         } else {
             $version = 0;
         }
-        
+
         $quo = Quotation::find($id);
         $quo->ProjectId = $request->ProjectId;
         $quo->editBy = Auth::user()->id;
@@ -637,7 +637,7 @@ class ProjectController extends Controller
         //     $quo->flag = 0;
         // }
         $quo->save();
-        
+
         $url = url('quotation/generate/' . $id . '/' . $version);
         return redirect()->to($url);
     }
@@ -655,7 +655,7 @@ class ProjectController extends Controller
             $quotaionUpdate->updated_at = date('Y-m-d H:i:s');
             $quotaionUpdate->save();
         }
-        
+
         return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
     }
 
