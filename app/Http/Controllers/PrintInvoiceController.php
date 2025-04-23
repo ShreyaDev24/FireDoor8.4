@@ -1316,7 +1316,7 @@ class PrintInvoiceController extends Controller
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
-
+                    if($tt->FrameType !== null){
                     $DoorFrameImage .= '<div style="position: absolute;top: 21px;right: -27px;">
                                         <img style="width: 77px;
                                         margin-top: '. (
@@ -1324,7 +1324,7 @@ class PrintInvoiceController extends Controller
                                     </div>
                                 </div>
                             ';
-
+                                        }
                     if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="position: absolute;top: 23px;left: 912px;">
@@ -1793,7 +1793,7 @@ class PrintInvoiceController extends Controller
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
-
+                    if($tt->FrameType !== null){
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
@@ -1801,7 +1801,7 @@ class PrintInvoiceController extends Controller
                                             <img style="width:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
                                         </div>';
-
+                                            }
                     // ----------------Right-------------------
 
                     if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
@@ -3043,7 +3043,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                 $elevSideScreenTbl .= '<td ' . $IsLeafEnabled . '>
                 <div class="doorImgBox">
-                    <!--<img src="' . URL('/') . '/uploads/files/' . $svgFileS . '" class="doorImg">-->
+                   
                     <img src="' . $svgFileS . '" class="doorImg" style="">
                 </div>
             </td>
