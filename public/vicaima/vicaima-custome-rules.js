@@ -1746,6 +1746,7 @@ function FireRatingChange() {
         $('#opGlassIntegrity').val('');
         $('#opGlassType').val('');
         floor_finish_change();
+        frameThicknessChange($("#fireRating").val());
         MeetingStyle();
         doorThicknessFilter($("#fireRating").val());
         glazingSystemFIlter($("#fireRating").val());
@@ -5639,6 +5640,94 @@ function updateDoorDimensions() {
     }
 }
 
+function frameThicknessChange(firerating){
+    if(firerating == "NFR"){
+        $("#frameThickness").attr('min','28');
+    } else if(firerating == "FD60" || firerating == "FD60s"){
+        $("#frameThickness").attr('min','32');
+    } else{
+        $("#frameThickness").attr('min','28');
+    }
+    var identifier = $("#frameThickness"); // Or specify a specific selector if needed
+    SetBuildOfMaterial(identifier);
+}
+
+$(document).ready(function () {
+    function enforceScallopedRules() {
+        var fireRating = $('#fireRating').val();
+        var doorsetType = $('#doorsetType').val();
+        var swingType = $('#swingType').val();
+        var originalSwingOptions = $('#swingType').data('original-options');
+
+        // Save swing options once
+        if (!originalSwingOptions) {
+            $('#swingType').data('original-options', $('#swingType').html());
+            originalSwingOptions = $('#swingType').html();
+        }
+
+        if (doorsetType === 'SD' && swingType === 'DA') {
+            $("select[name=frameType]").val('Scalloped');
+            $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
+            var frameType = $('#frameType').val();
+
+            // ✅ Only show DA in dropdown (don't disable it)
+            if (frameType === 'Scalloped') {
+                $('#swingType').html(originalSwingOptions); // reset options
+                $('#swingType option').each(function () {
+                    if ($(this).val() !== 'DA') {
+                        $(this).remove();
+                    }
+                });
+                $('#swingType').val('DA'); // ensure it's selected
+            }
+
+            // Frame thickness hint (but not locked)
+            var frameThickness = parseFloat($('#frameThickness').val());
+            if (frameThickness < 40) {
+                $('#frameThickness').attr('min', 40);
+            }
+
+
+            // Scalloped Width logic
+            var scallopedWidth = parseFloat($('#ScallopedWidth').val()) || 0;
+            var minWidth = 0;
+            if (fireRating === 'NFR') {
+                minWidth = 35;
+            } else if (fireRating === 'FD30') {
+                minWidth = 44;
+            } else if (fireRating === 'FD60') {
+                minWidth = 54;
+            }
+            $('#ScallopedWidth').attr('min', minWidth);
+            $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
+
+            // Scalloped Depth logic (4 to 8)
+            var scallopedDepth = parseFloat($('#ScallopedHeight').val()) || 0;
+            $('#ScallopedHeight').attr({ min: 4, max: 8 });
+            $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
+
+        } else {
+            // alert('jii')
+            // Reset swingType options
+            if ($('#swingType').data('original-options')) {
+                $('#swingType').html($('#swingType').data('original-options'));
+            }
+            $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
+            $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
+            $("#frameType option[value='Scalloped']").prop("disabled", true);
+
+            $('#frameThickness').removeAttr('min');
+            $('#ScallopedWidth').removeAttr('min');
+            $('#ScallopedHeight').removeAttr('min').removeAttr('max');
+
+            $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
+            $('#ScallopedLabelDepth').text('Scalloped Depth');
+        }
+    }
+
+    $('#frameType, #fireRating, #ScallopedWidth, #ScallopedHeight, #frameThickness, #doorsetType, #swingType').on('change keyup', enforceScallopedRules);
+    enforceScallopedRules(); // Initial run
+});
 // Attach the function to the change event
 $(document).on("change", "#doorThickness", updateDoorDimensions);
 

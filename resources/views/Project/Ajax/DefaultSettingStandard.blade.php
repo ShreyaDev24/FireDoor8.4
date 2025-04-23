@@ -133,7 +133,7 @@
     <div class="col-md-6 framehideshow">
         <div class="position-relative form-group">
             <label for="frameThickness">Frame Thickness</label>
-            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($defaultItemsStandard->FrameThickness)){{$defaultItemsStandard->FrameThickness}}@else{{'32'}}@endif" class="form-control change-event-calulation door-configuration testthickness" required>
+            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($defaultItemsStandard->FrameThickness)){{$defaultItemsStandard->FrameThickness}}@else{{'32'}}@endif" class="form-control change-event-calulation door-configuration testthickness" required min="28">
         </div>
     </div>
     <div class="col-md-6">
