@@ -5673,9 +5673,9 @@ $(document).ready(function () {
             var minWidth = 0;
             if (fireRating === 'NFR') {
                 minWidth = 35;
-            } else if (fireRating === 'FD30') {
+            } else if (fireRating === 'FD30' || fireRating === 'FD30s') {
                 minWidth = 44;
-            } else if (fireRating === 'FD60') {
+            } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
                 minWidth = 54;
             }
             $('#ScallopedWidth').attr('min', minWidth);
