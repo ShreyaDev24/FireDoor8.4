@@ -898,7 +898,12 @@
         .Door_left_strip_DD {
             margin-left: -4px !important;
         }
-
+        .Frame_left_strip_DD{
+margin-left: -12px;
+        }
+        .DD_NoFrame_left_intubacent{
+            margin-left: -5px
+        }
         /* .Frame_right_strip_DD {
             margin-left: -52px !important;
         } */
