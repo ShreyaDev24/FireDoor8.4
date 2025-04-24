@@ -1131,6 +1131,10 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     doorLeafFacingPrice('doorLeafFinish1',"{{$Item['DoorLeafFinish']}}");
     @endif
 
+    @if(isset($Item['IronmongerySet']) && $Item['IronmongerySet'] == 'Yes')
+    ironmongerySetchange();
+    @endif
+
     @if(isset($Item["GlassType"]))
     GlassTypeChange("{{$Item['GlassType']}}");
     @endif

@@ -670,6 +670,10 @@ $(document).ready(function() {
     doorLeafFacingPrice('doorLeafFinish1',"{{$Item['DoorLeafFinish']}}");
     @endif
 
+    @if(isset($Item['IronmongerySet']) && $Item['IronmongerySet'] == 'Yes')
+    ironmongerySetchange();
+    @endif
+
 
 
     @if(isset($Item["SideLight1GlassType"]))
