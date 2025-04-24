@@ -1412,9 +1412,9 @@ class PrintInvoiceController extends Controller
 
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
-
+                        // margin-left: 5px;
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                            $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 5px;margin-top: 18px;"></div>';
+                            $DoorFrameImage .= '<div class="'. ($tt->FrameType !== null ? $redstripLeftCommonClass : 'DD_NoFrame_left_intubacent') .'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-top: 18px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 10px;"></div>
                                     <div class="'.$redstripLeftCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 25px;"></div>';
@@ -1747,7 +1747,7 @@ class PrintInvoiceController extends Controller
 
                                     if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 632px;margin-top: -38px;"></div>';
+                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? '640':'632').'px;margin-top:' .(($tt->FrameType !== null)? '-381':'-385').'px;"></div>';
                                     }
                     }
 
