@@ -5309,6 +5309,9 @@ function doorDimensionCalculation(){
     if (leafWidth2 == '') {
         leafWidth2 = 0;
     }
+    if (adjustmentLeafWidth1 == '') {
+        adjustmentLeafWidth1 = 0;
+    }
    //  Door leaf W -leaf width  adjustment + gapx2+ToleranceX2+Frame thicknessX2
     var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1) +  parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2;
     if (doortypeValue == 'DD') {
@@ -5771,6 +5774,9 @@ function updateformulaS1(val){
         if (SL1Width == '') {
             SL1Width = 0;
         }
+        if (adjustmentLeafWidth1 == '') {
+            adjustmentLeafWidth1 = 0;
+        }
         // SO Width + SL   Door leafW-leaf width adjustment+gapX2+frame thicknessX2+ToleranceX2+SL W
         // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
 
@@ -5828,6 +5834,9 @@ function updateformulaS2(val){
         }
         if (SL1Width == '') {
             SL1Width = 0;
+        }
+        if (adjustmentLeafWidth1 == '') {
+            adjustmentLeafWidth1 = 0;
         }
         // SO Width + SL 2    Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
         // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
