@@ -2661,19 +2661,19 @@ class DoorScheduleController extends Controller
 
                             match ($configurableitems) {
                                 // VICAIMA DOOR
-                                '4' => BomCalculationVicaima($item),
+                                4 => BomCalculationVicaima($item),
                                 // Seadec DOOR
-                                '5' => BomCalculationSeadec($item),
+                                5 => BomCalculationSeadec($item),
                                 // Deanta DOOR
-                                '6' => BomCalculationDeanta($item),
+                                6 => BomCalculationDeanta($item),
                                 // Halspan DOOR
-                                '2' => HalspanBomCalculation($item),
+                                2 => HalspanBomCalculation($item),
                                 // Flamebreak DOOR
-                                '7' => FlamebreakBomCalculation($request),
+                                7 => FlamebreakBomCalculation($item),
                                 // Stredor DOOR
-                                '8' => StredorBomCalculation($request),
+                                8 => StredorBomCalculation($item),
                                 // STAREBOARD AND ALL
-                                default => BomCalculation($item),
+                                1 => BomCalculation($item),
                             };
 
                             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId', $aa->QuotationId)->where('DoorType', $DoorType)->get();
@@ -3534,19 +3534,19 @@ class DoorScheduleController extends Controller
 
                             match ($configurableitems) {
                                 // VICAIMA DOOR
-                                '4' => BomCalculationVicaima($item),
+                                4 => BomCalculationVicaima($item),
                                 // Seadec DOOR
-                                '5' => BomCalculationSeadec($item),
+                                5 => BomCalculationSeadec($item),
                                 // Deanta DOOR
-                                '6' => BomCalculationDeanta($item),
+                                6 => BomCalculationDeanta($item),
                                 // Halspan DOOR
-                                '2' => HalspanBomCalculation($item),
+                                2 => HalspanBomCalculation($item),
                                 // Flamebreak DOOR
-                                '7' => FlamebreakBomCalculation($request),
+                                7 => FlamebreakBomCalculation($item),
                                 // Stredor DOOR
-                                '8' => StredorBomCalculation($request),
+                                8 => StredorBomCalculation($item),
                                 // STAREBOARD AND ALL
-                                default => BomCalculation($item),
+                                1 => BomCalculation($item),
                             };
 
                             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId', $aa->QuotationId)->where('DoorType', $DoorType)->get();
