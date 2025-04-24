@@ -879,11 +879,25 @@ function groovesNumbershow(){
        }
 
        if(fireRating == 'FD30s'){
-        $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
        }
 
        if(fireRating == 'FD60s'){
-        $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
+       }
+       if(fireRating == 'NFR'){
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
        }
 
        let doorSetType = $('#doorsetType').val();

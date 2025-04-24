@@ -2745,7 +2745,7 @@ function framewidth(){
         var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
         if(frameType == 'Scalloped'){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
-            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness ;
+            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness;
         }
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
@@ -5704,9 +5704,9 @@ $(document).ready(function () {
             var minWidth = 0;
             if (fireRating === 'NFR') {
                 minWidth = 35;
-            } else if (fireRating === 'FD30') {
+            } else if (fireRating === 'FD30' || fireRating === 'FD30s') {
                 minWidth = 44;
-            } else if (fireRating === 'FD60') {
+            } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
                 minWidth = 54;
             }
             $('#ScallopedWidth').attr('min', minWidth);
