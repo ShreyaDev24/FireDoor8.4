@@ -897,13 +897,17 @@ $(document).on('change', '#extLinerThickness', function (e) {
 
 // if Ironmongery Set is Yes then Enabled Select Ironmongery Set
 // In other words when id `ironmongerySet` is Yes it enabled id `IronmongeryID`
-$(document).on('change', '#ironmongerySet,#IronmongeryID', function (e) {
+$(document).on('change','#ironmongerySet,#IronmongeryID',function(e){
     e.preventDefault();
+    ironmongerySetchange();
+});
+
+function ironmongerySetchange(){
     const ironmongerySetValue = $("#ironmongerySet").val();
-    if (ironmongerySetValue == 'Yes') {
+    if(ironmongerySetValue == 'Yes'){
         IronmongeryIDItemsPrice();
         IronmongeryIDPrice();
-        $('#IronmongeryID').attr({ 'disabled': false, 'required': true })
+        $('#IronmongeryID').attr({'disabled':false,'required':true})
     } else {
         $('#IronmongeryID').val('').attr({'disabled':true,'required':false})
         $('#IronmongeryID-selected').empty();
@@ -912,7 +916,7 @@ $(document).on('change', '#ironmongerySet,#IronmongeryID', function (e) {
         $("#ironmongerySet-section1").removeClass("table_row_show");
         $("#ironmongerySet-section1").addClass("table_row_hide");
     }
-});
+}
 
 // Over Panel Section
 

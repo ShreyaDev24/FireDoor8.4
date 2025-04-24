@@ -843,6 +843,10 @@ $(document).ready(function() {
     // In other words when id `ironmongerySet` is Yes it enabled id `IronmongeryID`
     $(document).on('change','#ironmongerySet,#IronmongeryID',function(e){
         e.preventDefault();
+        ironmongerySetchange();
+    });
+
+    function ironmongerySetchange(){
         const ironmongerySetValue = $("#ironmongerySet").val();
         if(ironmongerySetValue == 'Yes'){
             IronmongeryIDItemsPrice();
@@ -856,7 +860,7 @@ $(document).ready(function() {
             $("#ironmongerySet-section1").removeClass("table_row_show");
             $("#ironmongerySet-section1").addClass("table_row_hide");
         }
-    });
+    }
 
 // Over Panel Section
 
