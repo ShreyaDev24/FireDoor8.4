@@ -302,7 +302,7 @@ const render = (CustomElement = null) => {
             console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness)
         }
     }
-    console.log(FrameWidth);
+    console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')
 
     $("#frameWidth").val(FrameWidth);
 
