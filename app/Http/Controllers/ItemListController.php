@@ -2064,7 +2064,7 @@ class ItemListController extends Controller
         }
 
         if($fireRating=="NFR"){
-            $lippingSpecies = GetOptions(["lipping_species.Status", "=", 1], "join", "lippingSpecies", "query");
+            $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1]], "join", "lippingSpecies", "query");
         }
 
         if(in_array($authdata->UserType, [1,4])){
