@@ -737,10 +737,12 @@ $("#opGlassType").change(function(){
 
 $("#sideLight1GlassType").change(function(){
     GlassTypeChange(null,'sideLight1GlassType');
+    updateformulaS1($(this).val())
 });
 
 $("#sideLight2GlassType").change(function(){
     GlassTypeChange(null,'sideLight2GlassType');
+    updateformulaS2($(this).val())
 });
 
 //getting glazing thikness filter using glazing systems
@@ -951,7 +953,7 @@ $(document).on('change', '#overpanel', function (e) {
         $(".overpanel3_section").removeClass("table_row_show");
         $(".overpanel3_section").addClass("table_row_hide");
     }
-
+    UpdateformulaSoHeightAndWidth($(this).val())
     IntumescentSeals();
 });
 
@@ -2659,6 +2661,18 @@ $(document).ready(function(){
     }, 3000)
 
     setTimeout(function(){
+        var overpanel = $("#overpanel").val();
+        var sideLight1 = $("#sideLight1").val();
+        var sideLight2 = $("#sideLight2").val();
+        if(overpanel != 'No'){
+            UpdateformulaSoHeightAndWidth(overpanel)
+        }
+        if(sideLight1 == 'Yes'){
+            updateformulaS1(sideLight1)
+        }
+        if(sideLight2 == 'Yes'){
+            updateformulaS2(sideLight2)
+        }
         DoorSetTypeChange();
     }, 200);
 
@@ -5282,7 +5296,10 @@ function doorDimensionCalculation(){
     }
     var leafWidth1 = $("#leafWidth1").val();
     var leafWidth2 = $("#leafWidth2").val();
+    var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
     var leafHeightNoOP = $("#leafHeightNoOP").val();
+    var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+    var foursidedframe = $("#foursidedframe").val();
     if (leafHeightNoOP == '') {
         leafHeightNoOP = 0;
     }
@@ -5292,7 +5309,8 @@ function doorDimensionCalculation(){
     if (leafWidth2 == '') {
         leafWidth2 = 0;
     }
-    var so_width = parseInt(leafWidth1) + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(gap) * 2;
+   //  Door leaf W -leaf width  adjustment + gapx2+ToleranceX2+Frame thicknessX2
+    var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1) +  parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2;
     if (doortypeValue == 'DD') {
         so_width = (parseInt(leafWidth1)*2) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
         $("#sOWidth").val(so_width)
@@ -5304,7 +5322,17 @@ function doorDimensionCalculation(){
     }
 
 
-    var soHeight = parseInt(leafHeightNoOP) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap);
+    // var soHeight = parseInt(leafHeightNoOP) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap); // old formula
+
+    // Door leaf H-leaf adjustment +gap+undercut+frame thickness+ Tolerance
+
+    var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance);
+
+    if(foursidedframe){
+        // SO Height (4 sided frame)   Door leaf H-leaf adjustment +gapx2+frame thicknessX2 + Tolerance x1 (4 sided frame only)
+        soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(gap) + parseInt(frame_thickness) + + parseInt(frame_thickness) +  parseInt(tollerance);
+    }
+
 
     $("#sOHeight").val(soHeight);
 
@@ -5641,3 +5669,177 @@ function updateDoorDimensions() {
 
 // Attach the function to the change event
 $(document).on("change", "#doorThickness", updateDoorDimensions);
+
+function UpdateformulaSoHeightAndWidth(val){
+    if(val == 'Overpanel' || val == 'Fan_Light'){
+
+        let doortypeValue = $('#doorsetType').val();
+        var tollerance = $("#tollerance").val();
+        var frame_thickness = $("#frameThickness").val();
+        var gap = $("#gap").val();
+        var undercut = $("#undercut").val();
+
+        if (tollerance == '') {
+            tollerance = 0;
+        }
+
+        if (frame_thickness == '') {
+            frame_thickness = 0;
+        }
+
+        if (undercut == '') {
+            undercut = 0;
+        }
+
+        if (gap == '') {
+            gap = 0;
+        }
+        var leafWidth1 = $("#leafWidth1").val();
+        var leafWidth2 = $("#leafWidth2").val();
+        var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+        var leafHeightNoOP = $("#leafHeightNoOP").val();
+        var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+        var oPHeigth = $("#oPHeigth").val();
+        var foursidedframe = $("#foursidedframe").val();
+        if (leafHeightNoOP == '') {
+            leafHeightNoOP = 0;
+        }
+        if (leafWidth1 == '') {
+            leafWidth1 = 0;
+        }
+        if (leafWidth2 == '') {
+            leafWidth2 = 0;
+        }
+        if (oPHeigth == '') {
+            oPHeigth = 0;
+        }
+        // SO Width + OP/FL  Door leafW-leaf width adjustment+gapX2+frame thicknessX2+ToleranceX2
+        // SO Height + OP/FL    Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+
+        var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2;
+        var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
+
+        $("#sOWidth").val(so_width)
+        $("#sOHeight").val(soHeight);
+
+    }
+
+}
+function updateformulaS1(val){
+    if(val == 'Yes'){
+        let doortypeValue = $('#doorsetType').val();
+        var tollerance = $("#tollerance").val();
+        var frame_thickness = $("#frameThickness").val();
+        var gap = $("#gap").val();
+        var undercut = $("#undercut").val();
+
+        if (tollerance == '') {
+            tollerance = 0;
+        }
+
+        if (frame_thickness == '') {
+            frame_thickness = 0;
+        }
+
+        if (undercut == '') {
+            undercut = 0;
+        }
+
+        if (gap == '') {
+            gap = 0;
+        }
+        var leafWidth1 = $("#leafWidth1").val();
+        var leafWidth2 = $("#leafWidth2").val();
+        var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+        var leafHeightNoOP = $("#leafHeightNoOP").val();
+        var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+        var oPHeigth = $("#oPHeigth").val();
+        var SL1Width = $("#SL1Width").val();
+        var foursidedframe = $("#foursidedframe").val();
+        if (leafHeightNoOP == '') {
+            leafHeightNoOP = 0;
+        }
+        if (leafWidth1 == '') {
+            leafWidth1 = 0;
+        }
+        if (leafWidth2 == '') {
+            leafWidth2 = 0;
+        }
+        if (oPHeigth == '') {
+            oPHeigth = 0;
+        }
+        if (SL1Width == '') {
+            SL1Width = 0;
+        }
+        // SO Width + SL   Door leafW-leaf width adjustment+gapX2+frame thicknessX2+ToleranceX2+SL W
+        // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+
+        var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(SL1Width);
+        var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
+
+        $("#sOWidth").val(so_width)
+        $("#sOHeight").val(soHeight);
+
+    }
+
+}
+function updateformulaS2(val){
+    if(val == 'Yes'){
+        let doortypeValue = $('#doorsetType').val();
+        var tollerance = $("#tollerance").val();
+        var frame_thickness = $("#frameThickness").val();
+        var gap = $("#gap").val();
+        var undercut = $("#undercut").val();
+
+        if (tollerance == '') {
+            tollerance = 0;
+        }
+
+        if (frame_thickness == '') {
+            frame_thickness = 0;
+        }
+
+        if (undercut == '') {
+            undercut = 0;
+        }
+
+        if (gap == '') {
+            gap = 0;
+        }
+        var leafWidth1 = $("#leafWidth1").val();
+        var leafWidth2 = $("#leafWidth2").val();
+        var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+        var leafHeightNoOP = $("#leafHeightNoOP").val();
+        var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+        var oPHeigth = $("#oPHeigth").val();
+        var SL1Width = $("#SL1Width").val();
+        var foursidedframe = $("#foursidedframe").val();
+        if (leafHeightNoOP == '') {
+            leafHeightNoOP = 0;
+        }
+        if (leafWidth1 == '') {
+            leafWidth1 = 0;
+        }
+        if (leafWidth2 == '') {
+            leafWidth2 = 0;
+        }
+        if (oPHeigth == '') {
+            oPHeigth = 0;
+        }
+        if (SL1Width == '') {
+            SL1Width = 0;
+        }
+        // SO Width + SL 2    Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+        // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+
+        var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) + parseInt(undercut) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(oPHeigth);
+        var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
+
+        $("#sOWidth").val(so_width)
+        $("#sOHeight").val(soHeight);
+
+    }
+
+}
+
+
