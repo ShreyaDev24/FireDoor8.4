@@ -2732,7 +2732,7 @@ function framewidth(){
         var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
         if(frameType == 'Scalloped'){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
-            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness ;
+            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness;
         }
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
