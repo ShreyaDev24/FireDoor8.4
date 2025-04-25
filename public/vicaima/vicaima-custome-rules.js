@@ -5299,7 +5299,7 @@ function doorDimensionCalculation(){
     var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
     var leafHeightNoOP = $("#leafHeightNoOP").val();
     var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
-    var foursidedframe = $("#foursidedframe").val();
+    var IsFourSidedFrame = document.getElementById('foursidedframe').checked
     if (leafHeightNoOP == '') {
         leafHeightNoOP = 0;
     }
@@ -5311,6 +5311,9 @@ function doorDimensionCalculation(){
     }
     if (adjustmentLeafWidth1 == '') {
         adjustmentLeafWidth1 = 0;
+    }
+    if (adjustmentLeafHeightNoOP == '') {
+        adjustmentLeafHeightNoOP = 0;
     }
    //  Door leaf W -leaf width  adjustment + gapx2+ToleranceX2+Frame thicknessX2
     var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1) +  parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2;
@@ -5330,8 +5333,9 @@ function doorDimensionCalculation(){
     // Door leaf H-leaf adjustment +gap+undercut+frame thickness+ Tolerance
 
     var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance);
+    console.log(soHeight,parseInt(leafHeightNoOP) , parseInt(adjustmentLeafHeightNoOP) , parseInt(gap) , parseInt(undercut) , parseInt(frame_thickness) , parseInt(tollerance),'hiihihi')
 
-    if(foursidedframe){
+    if(IsFourSidedFrame){
         // SO Height (4 sided frame)   Door leaf H-leaf adjustment +gapx2+frame thicknessX2 + Tolerance x1 (4 sided frame only)
         soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(gap) + parseInt(frame_thickness) + + parseInt(frame_thickness) +  parseInt(tollerance);
     }
@@ -5342,7 +5346,10 @@ function doorDimensionCalculation(){
     framewidth();
 
     var so_height = parseInt($("#sOHeight").val());
+    console.log(so_height)
+
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
+    console.log(so_height,parseInt(tollerance),'hii')
 
 
     let elements = $(this);
