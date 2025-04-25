@@ -297,9 +297,9 @@ const render = (CustomElement = null) => {
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
 
         if(frameType == 'Scalloped'){
-            FrameWidth = FrameThickness - ScallopedHeight + gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
+            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
 
-            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness)
+            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'here i am')
         }
     }
     console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')

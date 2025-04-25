@@ -2739,6 +2739,7 @@ function framewidth(){
         if(frameType == 'Scalloped'){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
             FrameWidth = FrameThickness - ScallopedHeight + gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
+            console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
         }
     }
 
@@ -5687,18 +5688,24 @@ $(document).ready(function () {
             $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
 
         } else {
-            $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
-            $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
-            $("#frameType option[value='Scalloped']").prop("disabled", true);
-            $("#swingType option[value='SA']").prop("disabled", false);
-            $("#swingType option[value='DA']").prop("disabled", false);
-            let finalMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
-            $('#frameThickness').attr('min', finalMin);
-            $('#ScallopedWidth').removeAttr('min');
-            $('#ScallopedHeight').removeAttr('min').removeAttr('max');
+            if(doorsetType === 'DD' && swingType === 'DA'){
+                $("select[name=frameType]").val('Scalloped');
+                $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
+            } else {
+                $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
+                $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
+                $("#frameType option[value='Scalloped']").prop("disabled", true);
+                $("#swingType option[value='SA']").prop("disabled", false);
+                $("#swingType option[value='DA']").prop("disabled", false);
+                let finalMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
+                $('#frameThickness').attr('min', finalMin);
+                $('#ScallopedWidth').removeAttr('min');
+                $('#ScallopedHeight').removeAttr('min').removeAttr('max');
 
-            $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
-            $('#ScallopedLabelDepth').text('Scalloped Depth');
+                $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
+                $('#ScallopedLabelDepth').text('Scalloped Depth');
+            }
+
         }
     }
 
