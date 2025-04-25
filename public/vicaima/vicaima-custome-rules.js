@@ -5696,7 +5696,7 @@ $(document).ready(function () {
         var fireRating = $('#fireRating').val();
         var doorsetType = $('#doorsetType').val();
         var swingType = $('#swingType').val();
-        if (doorsetType === 'SD' && swingType === 'DA') {
+        if ((doorsetType === 'SD' && swingType === 'DA') || (doorsetType === 'DD' && swingType === 'DA')) {
             $("select[name=frameType]").val('Scalloped');
             $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
             var frameType = $('#frameType').val();
@@ -5730,10 +5730,6 @@ $(document).ready(function () {
             $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
 
         } else {
-            if(doorsetType === 'DD' && swingType === 'DA'){
-                $("select[name=frameType]").val('Scalloped');
-                $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
-            } else {
                 $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
                 $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
                 $("#frameType option[value='Scalloped']").prop("disabled", true);
@@ -5743,11 +5739,8 @@ $(document).ready(function () {
                 $('#frameThickness').attr('min', finalMin);
                 $('#ScallopedWidth').removeAttr('min');
                 $('#ScallopedHeight').removeAttr('min').removeAttr('max');
-
                 $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
                 $('#ScallopedLabelDepth').text('Scalloped Depth');
-            }
-
         }
     }
 
