@@ -724,15 +724,13 @@ $(document).ready(function() {
     @endif
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
-    sideLight1Change();
-    sideLightGlassType(true);
+    sideLight1Change(true);
     @endif
     @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-    sideLight2Change();
-    sideLight2GlassType(true);
+    sideLight2Change(true);
     @endif
     @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
-    copyOfSideLite1Change();
+    copyOfSideLite1Change(true);
     @endif
 
     @if(isset($Item['Overpanel']) && $Item['Overpanel'] == "Fan_Light")

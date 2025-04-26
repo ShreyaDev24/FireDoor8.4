@@ -1009,10 +1009,10 @@ $("#sideLight1").change(function(){
     sideLight1Change();
 });
 
-function sideLight1Change(){
+function sideLight1Change(isstatus = false){
     if($("#sideLight1").val()=="Yes"){
 
-        sideLightGlassType();
+        sideLightGlassType(isstatus);
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
         $("#SL1Transom").attr('readonly',false);
@@ -1052,7 +1052,7 @@ function sideLight1Change(){
         }
 
         $("#SL1Width").attr({ 'readonly': false, "required": true });
-        $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());;
+        $("#SL1Height").attr({ 'readonly': true, "required": true }).val();
         $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth").attr({ 'readonly': false, "required": true });
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
@@ -1116,9 +1116,9 @@ $("#sideLight2").change(function(){
     sideLight2Change();
 });
 
-function sideLight2Change(){
+function sideLight2Change(isstatus = false){
     if($("#sideLight2").val()=="Yes"){
-        sideLight2GlassType();
+        sideLight2GlassType(isstatus);
         if($("#sideLight1").val()=="Yes"){
             $("#copyOfSideLite1").attr({ 'disabled': false, "required": true });
         }else{
@@ -1155,7 +1155,7 @@ $("#copyOfSideLite1").change(function(){
 $(".SL1").on("change keyup", function() {
     copyOfSideLite1Change();
 });
-function copyOfSideLite1Change(){
+function copyOfSideLite1Change(isstatus = false){
     if($("#copyOfSideLite1").val()=="Yes"){
         $("#SL2GlassIntegrity").attr({ 'disabled': true, "required": true }).val($("#SL1GlassIntegrity").val());
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassType").val());
@@ -5439,7 +5439,7 @@ function updateGlassType(isStatus = false, type, heightSelector, integritySelect
             fireRating = fireRatingValue;
         }
     }
-    let height = $(heightSelector).val() ?? $("SL1Height").val();
+    let height = $(heightSelector).val() ?? $("#SL1Height").val();
     if(copy == "copy"){
         integrity = $("#SL1GlassIntegrity").val();
         height = $("#SL1Height").val();
