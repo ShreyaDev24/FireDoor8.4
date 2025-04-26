@@ -1174,7 +1174,7 @@ function copyOfSideLite1Change(isstatus = false){
         $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlazingBeadsFixingDetail").val());
 
         //end
-        updateGlassType(isStatus = false, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
+        updateGlassType(isstatus, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
 
         var val = $('#sideLight1GlassType').val();
         $("#sidelight1-selected1").empty().text(val);
