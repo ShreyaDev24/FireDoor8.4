@@ -1577,7 +1577,7 @@ function changeLippingThickness(){
         } else if(latchType === ""){
             $("#latchType").attr({ 'disabled': false, "required": true });
         } else{
-            $("#latchType").attr({ 'disabled': true, "required": false });
+            $("#latchType").attr({ 'disabled': false, "required": false });
         }
         let withoutFrameId = $('#withoutFrameId').val();
         let frameCostuction = $('#mydoor').val();
