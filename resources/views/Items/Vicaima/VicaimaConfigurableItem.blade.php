@@ -834,7 +834,7 @@ function groovesNumbershow(){
            $('#frameDepth').attr({ 'required':false})
 
 
-       if(fireRating == 'FD30'){
+       if(fireRating == 'FD30' || fireRating == 'FD30s'){
 
          // Lipping & Intumescent
            $('#intumescentSealType').attr({ 'required':true})
@@ -859,7 +859,7 @@ function groovesNumbershow(){
 
        }
 
-       if(fireRating == 'FD60'){
+       if(fireRating == 'FD60' || fireRating == 'FD60s'){
         $('#intumescentSealType').attr({ 'required':true})
            $('#intumescentSealLocation').attr({ 'required':true})
            $('#intumescentSealColor').attr({ 'required':true})
@@ -901,18 +901,18 @@ function groovesNumbershow(){
        }
 
        let doorSetType = $('#doorsetType').val();
-        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -977,7 +977,7 @@ function groovesNumbershow(){
 
 
 
-       if(fireRating == 'FD30'){
+       if(fireRating == 'FD30' || fireRating == 'FD30s'){
 
 
            // Lipping & Intumescent
@@ -1003,7 +1003,7 @@ function groovesNumbershow(){
 
        }
 
-       if(fireRating == 'FD60'){
+       if(fireRating == 'FD60' || fireRating == 'FD60s'){
 
            // Lipping & Intumescent
            $('#intumescentSealType').attr({ 'required':true})
@@ -1025,18 +1025,18 @@ function groovesNumbershow(){
        }
 
        let doorSetType = $('#doorsetType').val();
-        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -1052,20 +1052,20 @@ function groovesNumbershow(){
       $('.OpHeightMax').html('OP Height (Max-value:600)');
      $('#oPHeigth').attr('max',600);
 
-      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
             $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -1082,17 +1082,17 @@ function groovesNumbershow(){
         $('.OpHeightMax').html('OP Height (Max-value:600)');
         $('#oPHeigth').attr('max',600);
 
-      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }

@@ -463,7 +463,7 @@ $(".change-event-calulation").change(function(){
         }
 
         $("#OPLippingThickness").attr({'disabled':false,required:true});
-        $("#oPHeigth").val('').attr({'readonly':false,'required':true});
+        $("#oPHeigth").attr({'readonly':false,'required':true});
         $("#opTransom").attr('disabled',false);
         $("#transomThickness").attr('disabled',false);
         $("#opGlassType").attr({'disabled':false, 'required':true});
@@ -487,7 +487,7 @@ $(".change-event-calulation").change(function(){
         }
 
         $("#OPLippingThickness").attr({'disabled':false,required:true});
-        $("#oPHeigth").val('').attr({'readonly':false,'required':true});
+        $("#oPHeigth").attr({'readonly':false,'required':true});
         $("#opTransom").attr('disabled',false);
         $("#transomThickness").attr('disabled',true);
         $("#opGlassType").attr({'disabled':true, 'required':false});
