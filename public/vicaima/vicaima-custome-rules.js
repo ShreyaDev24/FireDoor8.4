@@ -1653,6 +1653,7 @@ $(function () {
 
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
+        frameHeight();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
 
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -2737,6 +2738,27 @@ function framewidth(){
     }
 
     $("#frameWidth").val(FrameWidth);
+    frameHeight();
+}
+
+function frameHeight(){
+    var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
+    var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
+    var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
+    var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+
+    let foursidedframe = document.getElementById("foursidedframe");
+    var DoorSetType = $('select[name="doorsetType"]').val();
+    if (DoorSetType != "SD"){
+        if (foursidedframe.checked) {
+            var frameHeight = (leafHeightNoOP - adjustmentLeafHeightNoOP) + Gap + Gap + FrameThickness + FrameThickness;
+            console.log(
+                `(${leafHeightNoOP} - ${adjustmentLeafHeightNoOP}) + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
+                );
+                alert(frameHeight);
+            $("#frameHeight").val(frameHeight);
+        }
+    }
 }
 
 function filterHandling() {
@@ -4053,6 +4075,7 @@ $("#overpanel1").change(function () {
         var plantonStopHeight = soheight - tollerance;
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
+        frameHeight();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
         // $("#frameDepth").val(frameDepth);
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -5154,8 +5177,8 @@ $("#DoorDimensionsIcon").on("click", function () {
     setTimeout(() => {
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
-        framewidth();
         $("#frameHeight").val(so_height - parseInt(tollerance));
+        framewidth();
     }, 500);
 
 
@@ -5315,7 +5338,7 @@ function doorDimensionCalculation(){
 
     var so_height = parseInt($("#sOHeight").val());
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
-
+    frameHeight();
 
     let elements = $(this);
     render(elements);
