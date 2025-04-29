@@ -2751,9 +2751,9 @@ function frameHeight(){
     var DoorSetType = $('select[name="doorsetType"]').val();
     if (DoorSetType != "SD"){
         if (foursidedframe.checked) {
-            var frameHeight = (leafHeightNoOP - adjustmentLeafHeightNoOP) + Gap + Gap + FrameThickness + FrameThickness;
+            var frameHeight = leafHeightNoOP + Gap + Gap + FrameThickness + FrameThickness;
             console.log(
-                `(${leafHeightNoOP} - ${adjustmentLeafHeightNoOP}) + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
+                `${leafHeightNoOP} + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
                 );
             $("#frameHeight").val(frameHeight);
         }
