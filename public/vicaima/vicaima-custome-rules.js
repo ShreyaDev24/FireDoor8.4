@@ -5394,7 +5394,8 @@ function doorDimensionCalculation(){
     console.log(so_height)
 
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
-
+    console.log(so_height,parseInt(tollerance),'hii')
+    frameHeight();
 
     let elements = $(this);
     render(elements);
