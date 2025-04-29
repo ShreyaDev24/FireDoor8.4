@@ -2755,7 +2755,6 @@ function frameHeight(){
             console.log(
                 `(${leafHeightNoOP} - ${adjustmentLeafHeightNoOP}) + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
                 );
-                alert(frameHeight);
             $("#frameHeight").val(frameHeight);
         }
     }
