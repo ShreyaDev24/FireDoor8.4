@@ -2745,7 +2745,8 @@ function frameHeight(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
     var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
-    var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+    var soheight = parseInt($('input[name="sOHeight"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
     var DoorSetType = $('select[name="doorsetType"]').val();
@@ -2756,7 +2757,13 @@ function frameHeight(){
                 `${leafHeightNoOP} + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
                 );
             $("#frameHeight").val(frameHeight);
+        }else{
+            var plantonStopHeight = soheight - tollerance;
+            $("#frameHeight").val(plantonStopHeight);
         }
+    }else{
+        var plantonStopHeight = soheight - tollerance;
+        $("#frameHeight").val(plantonStopHeight);
     }
 }
 
