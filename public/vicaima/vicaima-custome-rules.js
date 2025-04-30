@@ -5753,7 +5753,7 @@ function UpdateformulaSoHeightAndWidth(val){
         console.log(parseInt(leafHeightNoOP) , parseInt(adjustmentLeafHeightNoOP) , parseInt(gap) , parseInt(undercut) , parseInt(frame_thickness) ,  parseInt(tollerance) , parseInt(oPHeigth), 'soheight', soHeight)
         $("#sOWidth").val(so_width)
         $("#sOHeight").val(soHeight);
-
+        frameHeight();
     }
 
 }
@@ -5817,7 +5817,7 @@ function updateformulaS1(val){
 
         $("#sOWidth").val(so_width)
         $("#sOHeight").val(soHeight);
-
+        frameHeight();
     }
 
 }
@@ -5880,7 +5880,7 @@ function updateformulaS2(val){
 
         $("#sOWidth").val(so_width)
         $("#sOHeight").val(soHeight);
-
+        frameHeight();
     }
 
 }
