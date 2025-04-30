@@ -5500,7 +5500,7 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
 
         var soHeight = parseInt(leafH) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap)
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
-
+        frameHeight();
     }
     if (doortypeValue == 'leaf_and_a_half') {
         if (height_width_doorDimension2.length) {
