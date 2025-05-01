@@ -1031,7 +1031,7 @@ function sideLight1Change(isstatus = false){
         }
 
         $("#SL1Width").attr({ 'readonly': false, "required": true });
-        $("#SL1Height").attr({ 'readonly': true, "required": true }).val();
+        $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
         $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth").attr({ 'readonly': false, "required": true });
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
