@@ -177,6 +177,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'The minimum distance from the edge of the door is' + getmininputvalue + 'mm';
                     } else if (id == 'distanceBetweenVPs') {
                         getmsginput = 'The minimum distance between the VP’s is' + getmininputvalue + 'mm';
+                    } else if (id == 'OpBeadThickness') {
+                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                    } else if (id == 'OpBeadHeight') {
+                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
