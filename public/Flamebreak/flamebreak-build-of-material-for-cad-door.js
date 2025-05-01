@@ -175,6 +175,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                    } else if (id == 'OpBeadThickness') {
+                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                    } else if (id == 'OpBeadHeight') {
+                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
