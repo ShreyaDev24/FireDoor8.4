@@ -5458,6 +5458,45 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
         frameHeight();
     }
 
+    if (doortypeValue == 'leaf_and_a_half') {
+        if (height_width_doorDimension2.length) {
+            var tollerance = $("#tollerance").val();
+            var frame_thickness = $("#frameThickness").val();
+            var gap = $("#gap").val();
+            var undercut = $("#undercut").val();
+            var leafW2 = height_width_doorDimension2[0].trim();
+            var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+            var adjustmentLeafWidth2 = $("#adjustmentLeafWidth2").val();
+            var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+
+            if (adjustmentLeafWidth1 == '') {
+                adjustmentLeafWidth1 = 0;
+            }
+            if (adjustmentLeafWidth2 == '') {
+                adjustmentLeafWidth2 = 0;
+            }
+            if (tollerance == '') {
+                tollerance = 0;
+            }
+            if (frame_thickness == '') {
+                frame_thickness = 0;
+            }
+            if (undercut == '') {
+                undercut = 0;
+            }
+            if (gap == '') {
+                gap = 0;
+            }
+            $("#leafWidth2").val(parseInt(leafW2) - parseInt(adjustmentLeafWidth2));
+            var leafWidth1 = $("#leafWidth1").val();
+
+            so_width = ((parseInt(leafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+
+            console.log("so_width =", `(${leafWidth1}) + (${leafW2} - ${adjustmentLeafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
+            $("#sOWidth").val(so_width)
+        }
+    }
+
     corewidth1Value();
     doorDimensionCalculation();
 });
