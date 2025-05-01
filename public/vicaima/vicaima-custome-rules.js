@@ -5332,12 +5332,12 @@ function doorDimensionCalculation(){
 
     // Door leaf H-leaf adjustment +gap+undercut+frame thickness+ Tolerance
 
-    var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance);
-    console.log(soHeight,parseInt(leafHeightNoOP) , parseInt(adjustmentLeafHeightNoOP) , parseInt(gap) , parseInt(undercut) , parseInt(frame_thickness) , parseInt(tollerance),'hiihihi')
+    var soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance);
+    console.log(soHeight,parseInt(leafHeightNoOP) , parseInt(gap) , parseInt(undercut) , parseInt(frame_thickness) , parseInt(tollerance),'hiihihi')
 
     if(IsFourSidedFrame){
         // SO Height (4 sided frame)   Door leaf H-leaf adjustment +gapx2+frame thicknessX2 + Tolerance x1 (4 sided frame only)
-        soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(gap) + parseInt(frame_thickness) + + parseInt(frame_thickness) +  parseInt(tollerance);
+        soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(gap) + parseInt(frame_thickness) + + parseInt(frame_thickness) +  parseInt(tollerance);
     }
 
 
