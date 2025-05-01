@@ -745,12 +745,12 @@ $("#opGlassType").change(function(){
 
 $("#sideLight1GlassType").change(function(){
     GlassTypeChange(null,'sideLight1GlassType');
-    updateformulaS1($(this).val())
+    // updateformulaS1($(this).val())
 });
 
 $("#sideLight2GlassType").change(function(){
     GlassTypeChange(null,'sideLight2GlassType');
-    updateformulaS2($(this).val())
+    // updateformulaS2($(this).val())
 });
 
 //getting glazing thikness filter using glazing systems
@@ -2675,17 +2675,17 @@ $(document).ready(function(){
 
     setTimeout(function(){
         // var overpanel = $("#overpanel").val(); reverted code
-        var sideLight1 = $("#sideLight1").val();
-        var sideLight2 = $("#sideLight2").val();
+        // var sideLight1 = $("#sideLight1").val();
+        // var sideLight2 = $("#sideLight2").val();
         // if(overpanel != 'No'){ reverted code
         //     UpdateformulaSoHeightAndWidth(overpanel)
         // }
-        if(sideLight1 == 'Yes'){
-            updateformulaS1(sideLight1)
-        }
-        if(sideLight2 == 'Yes'){
-            updateformulaS2(sideLight2)
-        }
+        // if(sideLight1 == 'Yes'){
+        //     updateformulaS1(sideLight1)
+        // }
+        // if(sideLight2 == 'Yes'){
+        //     updateformulaS2(sideLight2)
+        // }
         DoorSetTypeChange();
     }, 200);
 
@@ -5812,17 +5812,17 @@ $(document).on("change", "#doorThickness", updateDoorDimensions);
 
 $('#oPHeigth,#SL1Width').on('input', function () {
     // let overpanel = $('#overpanel').val(); // get dynamic value from the UI reverted code
-    var sideLight1 = $("#sideLight1").val();
-    var sideLight2 = $("#sideLight2").val();
+    // var sideLight1 = $("#sideLight1").val();
+    // var sideLight2 = $("#sideLight2").val();
     // if(overpanel != 'No'){
     //     UpdateformulaSoHeightAndWidth(overpanel)  reverted code
     // }
-    if(sideLight1 == 'Yes'){
-        updateformulaS1(sideLight1)
-    }
-    if(sideLight2 == 'Yes'){
-        updateformulaS2(sideLight2)
-    }
+    // if(sideLight1 == 'Yes'){
+    //     updateformulaS1(sideLight1)
+    // }
+    // if(sideLight2 == 'Yes'){
+    //     updateformulaS2(sideLight2)
+    // }
 });
 
 // function UpdateformulaSoHeightAndWidth(val){ reverted code
@@ -5886,130 +5886,130 @@ $('#oPHeigth,#SL1Width').on('input', function () {
 //     }
 
 // }
-function updateformulaS1(val){
-    if(val == 'Yes'){
-        var tollerance = $("#tollerance").val();
-        var frame_thickness = $("#frameThickness").val();
-        var gap = $("#gap").val();
-        var undercut = $("#undercut").val();
-        var leafWidth1 = $("#leafWidth1").val();
-        var leafWidth2 = $("#leafWidth2").val();
-        var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
-        var leafHeightNoOP = $("#leafHeightNoOP").val();
-        var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
-        var oPHeigth = $("#oPHeigth").val();
-        var SL1Width = $("#SL1Width").val();
+// function updateformulaS1(val){
+//     if(val == 'Yes'){
+//         var tollerance = $("#tollerance").val();
+//         var frame_thickness = $("#frameThickness").val();
+//         var gap = $("#gap").val();
+//         var undercut = $("#undercut").val();
+//         var leafWidth1 = $("#leafWidth1").val();
+//         var leafWidth2 = $("#leafWidth2").val();
+//         var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+//         var leafHeightNoOP = $("#leafHeightNoOP").val();
+//         var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+//         var oPHeigth = $("#oPHeigth").val();
+//         var SL1Width = $("#SL1Width").val();
 
-        if (tollerance == '') {
-            tollerance = 0;
-        }
+//         if (tollerance == '') {
+//             tollerance = 0;
+//         }
 
-        if (frame_thickness == '') {
-            frame_thickness = 0;
-        }
+//         if (frame_thickness == '') {
+//             frame_thickness = 0;
+//         }
 
-        if (undercut == '') {
-            undercut = 0;
-        }
+//         if (undercut == '') {
+//             undercut = 0;
+//         }
 
-        if (gap == '') {
-            gap = 0;
-        }
+//         if (gap == '') {
+//             gap = 0;
+//         }
 
-        if (leafHeightNoOP == '') {
-            leafHeightNoOP = 0;
-        }
-        if (leafWidth1 == '') {
-            leafWidth1 = 0;
-        }
-        if (leafWidth2 == '') {
-            leafWidth2 = 0;
-        }
-        if (oPHeigth == '') {
-            oPHeigth = 0;
-        }
-        if (SL1Width == '') {
-            SL1Width = 0;
-        }
-        if (adjustmentLeafWidth1 == '') {
-            adjustmentLeafWidth1 = 0;
-        }
-        if (adjustmentLeafHeightNoOP == '') {
-            adjustmentLeafHeightNoOP = 0;
-        }
-        // SO Width + SL   Door leafW-leaf width adjustment+gapX2+frame thicknessX2+ToleranceX2+SL W
-        // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+//         if (leafHeightNoOP == '') {
+//             leafHeightNoOP = 0;
+//         }
+//         if (leafWidth1 == '') {
+//             leafWidth1 = 0;
+//         }
+//         if (leafWidth2 == '') {
+//             leafWidth2 = 0;
+//         }
+//         if (oPHeigth == '') {
+//             oPHeigth = 0;
+//         }
+//         if (SL1Width == '') {
+//             SL1Width = 0;
+//         }
+//         if (adjustmentLeafWidth1 == '') {
+//             adjustmentLeafWidth1 = 0;
+//         }
+//         if (adjustmentLeafHeightNoOP == '') {
+//             adjustmentLeafHeightNoOP = 0;
+//         }
+//         // SO Width + SL   Door leafW-leaf width adjustment+gapX2+frame thicknessX2+ToleranceX2+SL W
+//         // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
 
-        var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(SL1Width);
-        var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
-       console.log(oPHeigth,SL1Width)
+//         var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(SL1Width);
+//         var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
+//        console.log(oPHeigth,SL1Width)
 
-        $("#sOWidth").val(so_width)
-        $("#sOHeight").val(soHeight);
-    }
+//         $("#sOWidth").val(so_width)
+//         $("#sOHeight").val(soHeight);
+//     }
 
-}
-function updateformulaS2(val){
-    if(val == 'Yes'){
-        var tollerance = $("#tollerance").val();
-        var frame_thickness = $("#frameThickness").val();
-        var gap = $("#gap").val();
-        var undercut = $("#undercut").val();
-        var leafWidth1 = $("#leafWidth1").val();
-        var leafWidth2 = $("#leafWidth2").val();
-        var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
-        var leafHeightNoOP = $("#leafHeightNoOP").val();
-        var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
-        var oPHeigth = $("#oPHeigth").val();
-        var SL1Width = $("#SL1Width").val();
+// }
+// function updateformulaS2(val){
+//     if(val == 'Yes'){
+//         var tollerance = $("#tollerance").val();
+//         var frame_thickness = $("#frameThickness").val();
+//         var gap = $("#gap").val();
+//         var undercut = $("#undercut").val();
+//         var leafWidth1 = $("#leafWidth1").val();
+//         var leafWidth2 = $("#leafWidth2").val();
+//         var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
+//         var leafHeightNoOP = $("#leafHeightNoOP").val();
+//         var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
+//         var oPHeigth = $("#oPHeigth").val();
+//         var SL1Width = $("#SL1Width").val();
 
-        if (tollerance == '') {
-            tollerance = 0;
-        }
+//         if (tollerance == '') {
+//             tollerance = 0;
+//         }
 
-        if (frame_thickness == '') {
-            frame_thickness = 0;
-        }
+//         if (frame_thickness == '') {
+//             frame_thickness = 0;
+//         }
 
-        if (undercut == '') {
-            undercut = 0;
-        }
+//         if (undercut == '') {
+//             undercut = 0;
+//         }
 
-        if (gap == '') {
-            gap = 0;
-        }
+//         if (gap == '') {
+//             gap = 0;
+//         }
 
-        if (leafHeightNoOP == '') {
-            leafHeightNoOP = 0;
-        }
-        if (leafWidth1 == '') {
-            leafWidth1 = 0;
-        }
-        if (leafWidth2 == '') {
-            leafWidth2 = 0;
-        }
-        if (oPHeigth == '') {
-            oPHeigth = 0;
-        }
-        if (SL1Width == '') {
-            SL1Width = 0;
-        }
-        if (adjustmentLeafWidth1 == '') {
-            adjustmentLeafWidth1 = 0;
-        }
-        if (adjustmentLeafHeightNoOP == '') {
-            adjustmentLeafHeightNoOP = 0;
-        }
-        // SO Width + SL 2    Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
-        // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+//         if (leafHeightNoOP == '') {
+//             leafHeightNoOP = 0;
+//         }
+//         if (leafWidth1 == '') {
+//             leafWidth1 = 0;
+//         }
+//         if (leafWidth2 == '') {
+//             leafWidth2 = 0;
+//         }
+//         if (oPHeigth == '') {
+//             oPHeigth = 0;
+//         }
+//         if (SL1Width == '') {
+//             SL1Width = 0;
+//         }
+//         if (adjustmentLeafWidth1 == '') {
+//             adjustmentLeafWidth1 = 0;
+//         }
+//         if (adjustmentLeafHeightNoOP == '') {
+//             adjustmentLeafHeightNoOP = 0;
+//         }
+//         // SO Width + SL 2    Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
+//         // SO Height +OP/FL+SL2   Door leaf H -leaf adjustment+gap+undercut+frame thickness+ Tolerance+OP/FL Height
 
-        var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) + parseInt(undercut) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(oPHeigth);
-        var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
+//         var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1)  + parseInt(gap) + parseInt(undercut) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(oPHeigth);
+//         var soHeight = parseInt(leafHeightNoOP) - parseInt(adjustmentLeafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance) + parseInt(oPHeigth);
 
-        $("#sOWidth").val(so_width)
-        $("#sOHeight").val(soHeight);
-    }
+//         $("#sOWidth").val(so_width)
+//         $("#sOHeight").val(soHeight);
+//     }
 
-}
+// }
 
 
