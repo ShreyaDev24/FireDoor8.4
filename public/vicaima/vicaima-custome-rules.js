@@ -2772,6 +2772,7 @@ function frameHeight(){
     var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
     var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
+    var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
     var DoorSetType = $('select[name="doorsetType"]').val();
@@ -2791,7 +2792,10 @@ function frameHeight(){
                 `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 2) + ${leafHeightNoOP} = frameHeight ${frameHeight}`
               );
         }else{
-            
+            var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = frameHeight ${frameHeight}`
+              );
         }
 
         $("#frameHeight").val(frameHeight);
