@@ -2757,6 +2757,10 @@ function filterSpecies(){
 function framewidth(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
+    var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
+
     var DoorSetType = $('select[name="doorsetType"]').val();
     var frameType = $('select[name="frameType"]').val();
     if (DoorSetType == "SD"){
@@ -2774,9 +2778,28 @@ function framewidth(){
         }
     }
 
+    if($("#frameType").val() == 'Rebated_Frame'){
+        if (DoorSetType == "SD"){
+            var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
+            console.log(
+                `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = FrameWidth ${FrameWidth}`
+              );
+        }else{
+            var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = FrameWidth ${FrameWidth}`
+              );
+
+        }
+    }
+
     $("#frameWidth").val(FrameWidth);
     frameHeight();
 }
+
+$("#rebatedHeight").on("keyup", function () {
+    framewidth();
+});
 
 function frameHeight(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
@@ -2784,6 +2807,9 @@ function frameHeight(){
     var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
     var soheight = parseInt($('input[name="sOHeight"]').val(), 10) || 0;
     var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
+    var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
     var DoorSetType = $('select[name="doorsetType"]').val();
@@ -2804,6 +2830,19 @@ function frameHeight(){
         var plantonStopHeight = soheight - tollerance;
         $("#frameHeight").val(plantonStopHeight);
     }
+    if($("#frameType").val() == 'Rebated_Frame'){
+        if (foursidedframe.checked) {
+            var frameHeight = FrameThickness - rebatedHeight + FrameThickness - rebatedHeight + (Gap *2) + leafHeightNoOP;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 2) + ${leafHeightNoOP} = frameHeight ${frameHeight}`
+              );
+        }else{
+
+        }
+
+        $("#frameHeight").val(frameHeight);
+    }
+
 }
 
 

@@ -57,11 +57,11 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             if($item[$i]->configurableitems == 4){
                 $configurableitems = 'Vicaima';
             }
-            
+
             if($item[$i]->configurableitems == 5){
                 $configurableitems = 'Seadec';
             }
-            
+
             if($item[$i]->configurableitems == 6){
                 $configurableitems = 'Deanta';
             }
@@ -507,7 +507,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $i++;
             $j++;
         }
-        
+
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -528,7 +528,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -632,7 +632,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Plant on Stop Width ',
             'Plant on Stop Height ',
             'Rebated Width ',
-            'Rebated Height ',
+            'Rebated Depth  ',
             'Scalloped Width ',
             'Scalloped Depth ',
             'Frame Width ',
@@ -754,7 +754,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
 
     }
-    
+
     public function registerEvents(): array
     {
 

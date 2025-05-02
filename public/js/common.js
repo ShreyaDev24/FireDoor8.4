@@ -36,6 +36,7 @@ function floor_finish_change(){
         $("#undercut,#floorFinish").val(0).prop("readonly", true);
     }else{
         $("#frameType option[value='Scalloped']").prop("disabled", false);
+        $("#frameType").select2(); // re-initialize or use .trigger("change");
         $("#floorFinish").prop("readonly", false);
 
     }
@@ -54,6 +55,7 @@ function swingTypeFrameType(){
             checked: false
         });
         $("#frameType option[value='Scalloped']").prop("disabled", false);
+        $("#frameType").select2(); // re-initialize or use .trigger("change");
     }else if($("#swingType").val() == 'SA'){
         $("select[name=frameType]").val('Plant_on_Stop').trigger("change");
         $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
@@ -78,6 +80,7 @@ function four_sided_frame(){
         $("#undercut,#floorFinish").val(0).prop("readonly", true);
     }else{
         $("#frameType option[value='Scalloped']").prop("disabled", false);
+        $("#frameType").select2(); // re-initialize or use .trigger("change");
         $("#floorFinish").prop("readonly", false);
         floor_finish_change();
     }

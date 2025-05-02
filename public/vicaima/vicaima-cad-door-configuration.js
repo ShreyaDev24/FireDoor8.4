@@ -285,26 +285,16 @@ const render = (CustomElement = null) => {
              var frameType = $('select[name="frameType"]').val();
 
     // var FrameWidth = SOWidth - (Tollerance * FrameWidthAdditionalNumber);
-    if (DoorSetType == "SD"){
-        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
-        if(frameType == 'Scalloped'){
-            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness;
-            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')
-        }
+    // if (DoorSetType == "SD"){
+    //     var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    // }else{
+    //     var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+    // }
+    // console.log(parseInt($('input[name="leafWidth1"]').val(), 10) , Gap ,Gap ,Gap ,FrameThickness ,FrameThickness);
 
-    }else{
-
-        var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
-
-        if(frameType == 'Scalloped'){
-            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
-
-            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'here i am')
-        }
-    }
-    console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')
-
-    $("#frameWidth").val(FrameWidth);
+    // $("#frameWidth").val(FrameWidth);
+    framewidth();
+    var FrameWidth = $("#frameWidth").val();
 
      var FrameWidthForMap = 0;
 
@@ -10695,45 +10685,45 @@ let parser = new DOMParser();
 return parser.parseFromString(svg, "image/svg+xml");
 }
 
-// JFDS 812
-$("#frameType").change(function () {
-    let doorsettype = $("#doorsetType").val();
-    let doorleafWidth1 = parseFloat($("#leafWidth1").val()) || 0;
-    let doorleafWidth2 = parseFloat($("#leafWidth2").val()) || 0;
-    let gap = parseFloat($("#gap").val()) || 0;
-    let FrameThickness = parseFloat($("#frameThickness").val()) || 0;
-    let tollerance = parseFloat($("#tollerance").val()) || 0;
-    if($(this).val() == 'Rebated_Frame'){
-        if(doorsettype == 'SD'){
-            // Door Leaf Width 1 + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
-            $("#rebatedHeight").on("keyup", function () {
-                let rebatedHeighta = parseFloat($(this).val()) || 0;
-                let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
-                console.log(doorleafWidth1 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
-                let soWidth = doorleafWidth1 +  gap +  gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
-                $("#sOWidth").val(soWidth);
-            });
+// // JFDS 812
+// $("#frameType").change(function () {
+//     let doorsettype = $("#doorsetType").val();
+//     let doorleafWidth1 = parseFloat($("#leafWidth1").val()) || 0;
+//     let doorleafWidth2 = parseFloat($("#leafWidth2").val()) || 0;
+//     let gap = parseFloat($("#gap").val()) || 0;
+//     let FrameThickness = parseFloat($("#frameThickness").val()) || 0;
+//     let tollerance = parseFloat($("#tollerance").val()) || 0;
+//     if($(this).val() == 'Rebated_Frame'){
+//         if(doorsettype == 'SD'){
+//             // Door Leaf Width 1 + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
+//             $("#rebatedHeight").on("keyup", function () {
+//                 let rebatedHeighta = parseFloat($(this).val()) || 0;
+//                 let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
+//                 console.log(doorleafWidth1 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
+//                 let soWidth = doorleafWidth1 +  gap +  gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
+//                 $("#sOWidth").val(soWidth);
+//             });
 
-        } else if(doorsettype == 'DD'){
-            // Door Leaf Width 1 + Door Leaf width 2  + Gap + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
-            $("#rebatedHeight").on("keyup", function () {
-                let rebatedHeighta = parseFloat($(this).val()) || 0;
-                let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
-                console.log(doorleafWidth1 , doorleafWidth2 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
-                soWidth = doorleafWidth1 + doorleafWidth2 + gap + gap + gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
-                $('#sOWidth').val(soWidth);
-            });
+//         } else if(doorsettype == 'DD'){
+//             // Door Leaf Width 1 + Door Leaf width 2  + Gap + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
+//             $("#rebatedHeight").on("keyup", function () {
+//                 let rebatedHeighta = parseFloat($(this).val()) || 0;
+//                 let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
+//                 console.log(doorleafWidth1 , doorleafWidth2 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
+//                 soWidth = doorleafWidth1 + doorleafWidth2 + gap + gap + gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
+//                 $('#sOWidth').val(soWidth);
+//             });
 
-        } else {
-            // Door Leaf Width 1 + Door Leaf width 2  + Gap + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
-            $("#rebatedHeight").on("keyup", function () {
-                let rebatedHeighta = parseFloat($(this).val()) || 0;
-                let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
-                console.log(doorleafWidth1 , doorleafWidth2 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
-                soWidth = doorleafWidth1 + doorleafWidth2 + gap + gap + gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
-                $('#sOWidth').val(soWidth);
-           });
-        }
-    }
-});
+//         } else {
+//             // Door Leaf Width 1 + Door Leaf width 2  + Gap + Gap + Gap + (Frame Thickness - Frame rebated Height) * 2 + tolerance + tolerance
+//             $("#rebatedHeight").on("keyup", function () {
+//                 let rebatedHeighta = parseFloat($(this).val()) || 0;
+//                 let rebatedWidth = parseFloat($("#rebatedWidth").val()) || 0;
+//                 console.log(doorleafWidth1 , doorleafWidth2 , gap , gap , gap , rebatedWidth , rebatedHeighta , tollerance , tollerance)
+//                 soWidth = doorleafWidth1 + doorleafWidth2 + gap + gap + gap + (rebatedWidth - rebatedHeighta) * 2 + tollerance + tollerance;
+//                 $('#sOWidth').val(soWidth);
+//            });
+//         }
+//     }
+// });
 
