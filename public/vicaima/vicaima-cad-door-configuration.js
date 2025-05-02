@@ -294,7 +294,7 @@ const render = (CustomElement = null) => {
 
     // $("#frameWidth").val(FrameWidth);
     framewidth();
-    var FrameWidth = $("#frameWidth").val();
+    var FrameWidth = parseInt($("#frameWidth").val(), 10);
 
      var FrameWidthForMap = 0;
 
