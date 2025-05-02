@@ -188,6 +188,10 @@ const render = (CustomElement = null) => {
     if(swingType == ""){
         swingType = 0;
     }
+    ScallopedHeight = $('input[name="ScallopedHeight"]').val();
+    if(ScallopedHeight == ""){
+        ScallopedHeight = 0;
+    }
 
      //HINGES
 
@@ -278,14 +282,27 @@ const render = (CustomElement = null) => {
             const  SOWidths=  parseInt($('input[name="leafWidth1"]').val(), 10);
             var framewidthToShow = SOWidths ;
              }
+             var frameType = $('select[name="frameType"]').val();
 
     // var FrameWidth = SOWidth - (Tollerance * FrameWidthAdditionalNumber);
     if (DoorSetType == "SD"){
-        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
+        if(frameType == 'Scalloped'){
+            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness;
+            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')
+        }
+
     }else{
+
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+
+        if(frameType == 'Scalloped'){
+            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
+
+            console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'here i am')
+        }
     }
-    console.log(parseInt($('input[name="leafWidth1"]').val(), 10) , Gap ,Gap ,Gap ,FrameThickness ,FrameThickness);
+    console.log(FrameThickness , ScallopedHeight , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , Gap , FrameThickness,FrameWidth,'hoooooooo')
 
     $("#frameWidth").val(FrameWidth);
 

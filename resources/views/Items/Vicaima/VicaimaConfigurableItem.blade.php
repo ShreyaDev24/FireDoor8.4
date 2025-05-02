@@ -435,8 +435,8 @@
         IntumescentSealArrangementValue();
         let framTypeValue = $("#FrameType-import").data("value");
         if (framTypeValue == "Plant_on_Stop") {
-            $("#plantonStopWidth").attr('min', '20');
-            $("#plantonStopHeight").attr('min', '12');
+            $("#plantonStopWidth").attr('min', '26');  // JFDS 914
+            $("#plantonStopHeight").attr('min', '12'); // JFDS 914
             $("#rebatedWidth").removeAttr('min', '32');
             $("#rebatedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").removeAttr('min', '12');
@@ -453,8 +453,6 @@
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            //$("#ScallopedWidth").attr('min', '32');
-            // $("#ScallopedHeight").attr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -468,7 +466,7 @@
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedWidth").attr('min', '32');
             $("#rebatedHeight").attr('min', '12');
-            $("#plantonStopWidth").removeAttr('min', '20');
+            $("#plantonStopWidth").removeAttr('min', '26');
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedWidth").removeAttr('min', '32');
@@ -805,10 +803,10 @@ function groovesNumbershow(){
            $('#intumescentSealArrangement').attr({ 'required':true})
            $('#frameDepth').attr({ 'required':true})
 
-          $('#plan-on-stop-min-width').html('(min 25 MM)');
-          $('#plantonStopWidth').attr('min',25);
-           $('#plan-on-stop-min-height').html('(min 12.5 MM)');
-          $('#plantonStopHeight').attr('min',12.5);
+          $('#plan-on-stop-min-width').html('(min 26 MM)');
+          $('#plantonStopWidth').attr('min',26);  // JFDS 914
+           $('#plan-on-stop-min-height').html('(min 12 MM)');
+          $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
           $('.OverPanelTitle').html('Overpanel/Fanlight');
@@ -828,10 +826,10 @@ function groovesNumbershow(){
            $('#intumescentSealArrangement').attr({ 'required':true})
            $('#frameDepth').attr({ 'required':true})
 
-        $('#plan-on-stop-min-width').html('(min 25 MM)');
-          $('#plantonStopWidth').attr('min',25);
+        $('#plan-on-stop-min-width').html('(min 26 MM)');
+          $('#plantonStopWidth').attr('min',26); // JFDS 914
            $('#plan-on-stop-min-height').html('(min 12 MM)');
-          $('#plantonStopHeight').attr('min',12);
+          $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
           $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
@@ -841,11 +839,25 @@ function groovesNumbershow(){
        }
 
        if(fireRating == 'FD30s'){
-        $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
        }
 
        if(fireRating == 'FD60s'){
-        $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#intumescentSealArrangement').attr({ 'required':true})
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
+       }
+       if(fireRating == 'NFR'){
+            $('#plan-on-stop-min-width').html('(min 26 MM)');
+            $('#plantonStopWidth').attr('min',26); // JFDS 914
+            $('#plan-on-stop-min-height').html('(min 12 MM)');
+            $('#plantonStopHeight').attr('min',12); // JFDS 914
        }
 
        let doorSetType = $('#doorsetType').val();
@@ -935,10 +947,10 @@ function groovesNumbershow(){
            $('#intumescentSealArrangement').attr({ 'required':true})
            $('#frameDepth').attr({ 'required':true})
 
-          $('#plan-on-stop-min-width').html('(min 25 MM)');
-          $('#plantonStopWidth').attr('min',25);
+          $('#plan-on-stop-min-width').html('(min 26 MM)');
+          $('#plantonStopWidth').attr('min',26); // JFDS 914
            $('#plan-on-stop-min-height').html('(min 12 MM)');
-          $('#plantonStopHeight').attr('min',12);
+          $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
           $('.OverPanelTitle').html('Overpanel/Fanlight');
@@ -960,10 +972,10 @@ function groovesNumbershow(){
            $('#intumescentSealArrangement').attr({ 'required':true})
            $('#frameDepth').attr({ 'required':true})
 
-        $('#plan-on-stop-min-width').html('(min 25 MM)');
-          $('#plantonStopWidth').attr('min',25);
+        $('#plan-on-stop-min-width').html('(min 26 MM)');
+          $('#plantonStopWidth').attr('min',26); // JFDS 914
            $('#plan-on-stop-min-height').html('(min 12 MM)');
-          $('#plantonStopHeight').attr('min',12);
+          $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
           $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');

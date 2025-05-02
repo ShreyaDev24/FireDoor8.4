@@ -2745,10 +2745,20 @@ function framewidth(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
     var DoorSetType = $('select[name="doorsetType"]').val();
+    var frameType = $('select[name="frameType"]').val();
     if (DoorSetType == "SD"){
-        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
+        if(frameType == 'Scalloped'){
+            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
+            FrameWidth = FrameThickness - ScallopedHeight + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + FrameThickness;
+        }
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        if(frameType == 'Scalloped'){
+            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
+            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
+            console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
+        }
     }
 
     $("#frameWidth").val(FrameWidth);
@@ -5702,6 +5712,62 @@ function updateDoorDimensions() {
     }
 }
 
+$(document).ready(function () {
+    function enforceScallopedRules() {
+        var fireRating = $('#fireRating').val();
+        var doorsetType = $('#doorsetType').val();
+        var swingType = $('#swingType').val();
+        if ((doorsetType === 'SD' && swingType === 'DA') || (doorsetType === 'DD' && swingType === 'DA')) {
+            $("select[name=frameType]").val('Scalloped');
+            $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
+            var frameType = $('#frameType').val();
+
+            //Only show DA in dropdown (but not disabled)
+            if (frameType === 'Scalloped') { // reset options
+                $("#swingType option[value='SA']").prop("disabled", true);
+            }
+
+            // Frame Thickness Logic (Integrated frameThicknessChange)
+            let baseMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
+            let finalMin = 40; // For SD + DA condition
+            $('#frameThickness').attr('min', finalMin);
+
+            //Scalloped Width Logic
+            var scallopedWidth = parseFloat($('#ScallopedWidth').val()) || 0;
+            var minWidth = 0;
+            if (fireRating === 'NFR') {
+                minWidth = 35;
+            } else if (fireRating === 'FD30' || fireRating === 'FD30s') {
+                minWidth = 44;
+            } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
+                minWidth = 54;
+            }
+            $('#ScallopedWidth').attr('min', minWidth);
+            $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
+
+            //Scalloped Depth Logic (4 to 8)
+            var scallopedDepth = parseFloat($('#ScallopedHeight').val()) || 0;
+            $('#ScallopedHeight').attr({ min: 4, max: 8 });
+            $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
+
+        } else {
+                $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
+                $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
+                $("#frameType option[value='Scalloped']").prop("disabled", true);
+                $("#swingType option[value='SA']").prop("disabled", false);
+                $("#swingType option[value='DA']").prop("disabled", false);
+                let finalMin = (fireRating === "FD60" || fireRating === "FD60s") ? 32 : 28;
+                $('#frameThickness').attr('min', finalMin);
+                $('#ScallopedWidth').removeAttr('min');
+                $('#ScallopedHeight').removeAttr('min').removeAttr('max');
+                $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
+                $('#ScallopedLabelDepth').text('Scalloped Depth');
+        }
+    }
+
+    $('#frameType, #fireRating, #ScallopedWidth, #ScallopedHeight, #frameThickness, #doorsetType, #swingType').on('change keyup', enforceScallopedRules);
+    enforceScallopedRules(); // Initial run
+});
 // Attach the function to the change event
 $(document).on("change", "#doorThickness", updateDoorDimensions);
 
