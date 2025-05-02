@@ -178,9 +178,9 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if (id == 'distanceBetweenVPs') {
                         getmsginput = 'The minimum distance between the VP’s is' + getmininputvalue + 'mm';
                     } else if (id == 'OpBeadThickness') {
-                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
                     } else if (id == 'OpBeadHeight') {
-                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

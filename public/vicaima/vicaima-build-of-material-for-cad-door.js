@@ -174,13 +174,15 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
+                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minixmum of 150mm and maximum of 250mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if (id == 'OpBeadThickness') {
-                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
+                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     } else if (id == 'OpBeadHeight') {
-                        getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
+                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
