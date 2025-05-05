@@ -1019,6 +1019,9 @@ function sideLight1Change(){
         $("#SlBeadHeight").attr('readonly',false);
         $("#SlBeadThickness").attr('required',true);
         $("#SlBeadHeight").attr('required',true);
+        $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
+        $("#sideLight1GlazingSystems").attr({ 'readonly': false });
+        $("#sideLight1FrameThickness").attr({ 'disabled': false, "required": true });
 
 
 
@@ -1086,7 +1089,7 @@ function sideLight1Change(){
 
         }
 
-        $("#sideLight1GlazingSystems").attr({ 'disabled': true, "required": false }).val('');
+        $("#sideLight1GlazingSystems").attr({ 'readonly': true, "required": false }).val('');
         $("#sideLight1GlassThickness").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingSystemsThickness").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingBeadsThickness").attr({ 'disabled': true, "required": false }).val('');
@@ -1099,6 +1102,7 @@ function sideLight1Change(){
         $("#SL1Height").attr({ 'readonly': true, "required": false }).val("");
         $("#SL1Depth").attr({ 'readonly': true, "required": false }).val('');
         $("#SL1Transom").attr({ 'disabled': true, "required": false }).val('');
+        $("#sideLight1FrameThickness").attr({ 'disabled': true, "required": false }).val('');
 
         $("#sideLight2-section1").removeClass("table_row_show");
         $("#sideLight2-section1").addClass("table_row_hide");
@@ -1122,6 +1126,8 @@ function sideLight2Change(){
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
         }
         doorLeafFacingPrice('sideLight12',"Yes");
     } else {
@@ -1150,6 +1156,7 @@ function copyOfSideLite1Change(){
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
         $("#SL2Depth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
         $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
+        $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight2FrameThickness").val());
 
         //new 12-07-2024
         $("#sideLight2GlassThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassThickness").val());
@@ -1175,11 +1182,15 @@ function copyOfSideLite1Change(){
             $("#SL2Depth").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlassThickness").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'readonly': false }).val('');
             $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false}).val('');
+            $("#sideLight2FrameThickness").attr({ 'disabled': false, "required": true }).val('');
         }else{
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
@@ -1189,6 +1200,7 @@ function copyOfSideLite1Change(){
             $("#SL2Height").attr({ 'readonly': true, "required": false }).val('');
             $("#SL2Depth").attr({ 'readonly': true, "required": false }).val('');
             $("#SL2Transom").attr({ 'disabled': true, "required": false }).val('');
+            $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": false }).val('');
 
             $("#sideLight2GlassThickness").attr({ 'readonly': true, "required": false }).val('');
             $("#sideLight2GlazingSystems").attr({ 'readonly': true, "required": false }).val('');
@@ -2652,6 +2664,8 @@ $(document).ready(function(){
         frameMaterialFilter($("#fireRating").val());
         framTypeChangeInputEnableDisable();
     }, 3000)
+    sideLight1Change()
+    sideLight2Change()
 
     setTimeout(function(){
         DoorSetTypeChange();

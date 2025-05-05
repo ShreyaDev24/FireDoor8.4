@@ -179,6 +179,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                    } else if(id == 'sideLight1FrameThickness'){
+                        getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
+                    } else if(id == 'sideLight2FrameThickness'){
+                        getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

@@ -177,6 +177,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'The minimum distance from the edge of the door is' + getmininputvalue + 'mm';
                     } else if (id == 'distanceBetweenVPs') {
                         getmsginput = 'The minimum distance between the VP’s is' + getmininputvalue + 'mm';
+                    } else if(id == 'sideLight1FrameThickness'){
+                        getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
+                    } else if(id == 'sideLight2FrameThickness'){
+                        getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

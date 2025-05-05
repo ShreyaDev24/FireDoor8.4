@@ -121,7 +121,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                          {{--  <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="sideLight1GlazingBeadsThickness">Side Light 1 Glazing Beads Thickness
                                                     @if(!empty($tooltip->sideLight1GlazingBeadsThickness))
@@ -134,9 +134,9 @@
                                                             id="sideLight1GlazingBeadsThickness" class="form-control SL1"
                                                             value="@if(isset($Item['SideLight1GlazingBeadsThickness'])){{$Item['SideLight1GlazingBeadsThickness']}}@endif">
                                                 </div>
-                                            </div>
+                                            </div>  --}}
 
-                                            <div class="col-md-6">
+                                           {{-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="sideLight1GlazingBeadsWidth" class="">Side Light 1 Glazing Beads Width
                                                     @if(!empty($tooltip->sideLight1GlazingBeadsWidth))
@@ -148,6 +148,21 @@
                                                     <input Type="number" min="0" name="sideLight1GlazingBeadsWidth"
                                                     id="sideLight1GlazingBeadsWidth" class="form-control SL1"
                                                     value="@if(isset($Item['SideLight1GlazingBeadsWidth'])){{$Item['SideLight1GlazingBeadsWidth']}}@endif">
+                                                </div>
+                                            </div>  --}}
+
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="sideLight1FrameThickness" class="">SL1 Frame Thickness
+                                                    @if(!empty($tooltip->sideLight1FrameThickness))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->sideLight1FrameThickness}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <input Type="number" min="44" required name="sideLight1FrameThickness"
+                                                    id="sideLight1FrameThickness" class="form-control SL1"
+                                                    value="@if(isset($Item['SideLight1FrameThickness'])){{$Item['SideLight1FrameThickness']}}@endif">
                                                 </div>
                                             </div>
 
@@ -276,6 +291,9 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                            </div>
+                                            <div class="col-md-6">
+
                                             </div>
 
                                             <div class="col-md-6">
@@ -425,7 +443,7 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                           {{-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="sideLight2GlazingBeadsThickness">Side Light 2 Glazing Beads Thickness
                                                     @if(!empty($tooltip->sideLight2GlazingBeadsThickness))
@@ -438,9 +456,9 @@
                                                             id="sideLight2GlazingBeadsThickness" class="form-control sidelight2section"
                                                             value="@if(isset($Item['SideLight2GlazingBeadsThickness'])){{$Item['SideLight2GlazingBeadsThickness']}}@endif">
                                                 </div>
-                                            </div>
+                                            </div>  --}}
 
-                                            <div class="col-md-6">
+                                            {{-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="sideLight2GlazingBeadsWidth" class="">Side Light 2 Glazing Beads Width
                                                     @if(!empty($tooltip->sideLight2GlazingBeadsWidth))
@@ -452,6 +470,21 @@
                                                     <input Type="number" min="0" name="sideLight2GlazingBeadsWidth"
                                                     id="sideLight2GlazingBeadsWidth" class="form-control sidelight2section"
                                                     value="@if(isset($Item['SideLight2GlazingBeadsWidth'])){{$Item['SideLight2GlazingBeadsWidth']}}@endif">
+                                                </div>
+                                            </div> --}}
+
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="sideLight2FrameThickness" class="">SL2 Frame Thickness
+                                                    @if(!empty($tooltip->sideLight2FrameThickness))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->sideLight2FrameThickness}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <input Type="number" min="44" required name="sideLight2FrameThickness"
+                                                    id="sideLight2FrameThickness" class="form-control sidelight2section"
+                                                    value="@if(isset($Item['SideLight2FrameThickness'])){{$Item['SideLight2FrameThickness']}}@endif">
                                                 </div>
                                             </div>
 
