@@ -35,9 +35,15 @@ function floor_finish_change(){
         $("#frameType option[value='Scalloped']").prop("disabled", true);
         $("#undercut,#floorFinish").val(0).prop("readonly", true);
     }else{
+     // Enable the option
         $("#frameType option[value='Scalloped']").prop("disabled", false);
-        $("#frameType").select2(); // re-initialize or use .trigger("change");
+
+        // Refresh Select2 UI
+        $("#frameType").trigger("change");
+
+        // Enable the input field
         $("#floorFinish").prop("readonly", false);
+
 
     }
 }
@@ -55,7 +61,8 @@ function swingTypeFrameType(){
             checked: false
         });
         $("#frameType option[value='Scalloped']").prop("disabled", false);
-        $("#frameType").select2(); // re-initialize or use .trigger("change");
+        // Refresh Select2 UI
+        $("#frameType").trigger("change");
     }else if($("#swingType").val() == 'SA'){
         $("select[name=frameType]").val('Plant_on_Stop').trigger("change");
         $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
@@ -79,9 +86,13 @@ function four_sided_frame(){
         $("#frameType option[value='Scalloped']").prop("disabled", true);
         $("#undercut,#floorFinish").val(0).prop("readonly", true);
     }else{
+     // Enable the option
         $("#frameType option[value='Scalloped']").prop("disabled", false);
-        $("#frameType").select2(); // re-initialize or use .trigger("change");
+        // Refresh Select2 UI
+        $("#frameType").trigger("change");
+        // Enable the input field
         $("#floorFinish").prop("readonly", false);
+
         floor_finish_change();
     }
     swingTypeFrameType();
