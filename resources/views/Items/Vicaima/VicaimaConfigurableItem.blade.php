@@ -698,7 +698,7 @@ function AdjustmentLipping() {
         }
     }
 
-    if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '' ) {
+    if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '' || adjustmentLeafWidth2.trim() !== '') {
 
         $('#lippingType').prop('disabled', false);
         $('#lippingType').prop('required', true);
