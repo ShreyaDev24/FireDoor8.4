@@ -5674,18 +5674,22 @@ $(document).ready(function () {
             var minWidth = 0;
             if (fireRating === 'NFR') {
                 minWidth = 35;
+                 //Scalloped Depth Logic (4 to 6)
+                $('#ScallopedHeight').attr({ min: 4, max: 6 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:6)`);
             } else if (fireRating === 'FD30' || fireRating === 'FD30s') {
                 minWidth = 44;
+                 //Scalloped Depth Logic (4 to 6)
+                $('#ScallopedHeight').attr({ min: 4, max: 6 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:6)`);
             } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
                 minWidth = 54;
+                 //Scalloped Depth Logic (4 to 8)
+                $('#ScallopedHeight').attr({ min: 4, max: 8 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
             }
             $('#ScallopedWidth').attr('min', minWidth);
             $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
-
-            //Scalloped Depth Logic (4 to 8)
-            var scallopedDepth = parseFloat($('#ScallopedHeight').val()) || 0;
-            $('#ScallopedHeight').attr({ min: 4, max: 8 });
-            $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
 
         } else {
                 $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
@@ -5707,3 +5711,23 @@ $(document).ready(function () {
 });
 // Attach the function to the change event
 $(document).on("change", "#doorThickness", updateDoorDimensions);
+
+// 914 update changes
+$(document).on('change','#swingType', function (e) {
+    let defaultDoorSetType = $('#DoorsetType-import').data('value');
+    let defaultswingType = $('#SwingType-import').data('value');
+    let DoorSetType = $('#doorsetType').val();
+    let swingType = $(this).val();
+    let frameThickness = $('#frameThickness').val();
+    if((defaultDoorSetType == 'SD' &&  DoorSetType == 'DD') || (defaultswingType == 'SA' && swingType == 'DA' || defaultDoorSetType == 'DD' && swingType == 'DA')){
+        if(frameThickness < 40){
+            $('#frameThickness').attr('min',40);
+            $('#frameThickness').val('');
+            $('#frameThickness').css({ 'border': '1px solid red' });
+            swal('Warning', 'FrameThickness should not be less than 40mm');
+        } else {
+            $('#frameThickness').removeAttr('min',40);
+            $('#frameThickness').css('border', '');
+        }
+    }
+});
