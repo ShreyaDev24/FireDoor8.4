@@ -1177,7 +1177,7 @@ function copyOfSideLite1Change(){
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
         $("#SL2Depth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
         $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
-        $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight2FrameThickness").val());
+        $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1FrameThickness").val());
 
         //new 12-07-2024
         $("#sideLight2GlassThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassThickness").val());
