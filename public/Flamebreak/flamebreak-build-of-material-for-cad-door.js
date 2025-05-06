@@ -179,6 +179,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                    } else if(id == 'sideLight1FrameThickness'){
+                        getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
+                    } else if(id == 'sideLight2FrameThickness'){
+                        getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

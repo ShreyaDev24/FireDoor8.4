@@ -122,6 +122,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL2 Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 }else if (id == 'ScallopedHeight') {
                     getmsginput = 'Scalloped Height should be a minimum of ' + getmininputvalue + '.';
+                } else if(id == 'sideLight1FrameThickness'){
+                    getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
+                } else if(id == 'sideLight2FrameThickness'){
+                    getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                 }
 
 
