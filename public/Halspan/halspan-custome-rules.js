@@ -1216,6 +1216,7 @@ $(document).ready(function() {
             $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
             $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
             $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
+            $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1FrameThickness").val());
 
             //new 12-07-2024
             $("#sideLight2GlassThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassThickness").val());
