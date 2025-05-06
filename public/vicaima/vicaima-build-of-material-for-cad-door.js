@@ -138,7 +138,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if(id == 'ScallopedHeight'){
-                        getmsginput = 'Scalloped Height should be between 4 - 8mm';
+                        getmsginput = 'Scalloped Height should be between ' + getmininputvalue + '-' + getmaxinputvalue + ' mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
@@ -183,6 +183,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                    } else if(id == 'sideLight1FrameThickness'){
+                        getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
+                    } else if(id == 'sideLight2FrameThickness'){
+                        getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
