@@ -619,6 +619,8 @@ $(document).ready(function() {
             }
         }
     });
+    sideLight1Change();
+    sideLight2Change();
 });
     $("#lazingIntegrityOrInsulationIntegrity").on('change',function(){
         glazingSystemFIlter($("#fireRating").val());
@@ -1047,6 +1049,7 @@ $(document).ready(function() {
 
     function sideLight1Change(isstatus = false){
         if($("#sideLight1").val()=="Yes"){
+
             sideLightGlassType(isstatus);
             $("#SlBeadThickness").attr('readonly',false);
             $("#SlBeadHeight").attr('readonly',false);
@@ -1088,7 +1091,7 @@ $(document).ready(function() {
 
             $("#SL1Width").attr({ 'readonly': false, "required": true });
             $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
-            $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth").attr({ 'readonly': false, "required": true });
+            $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
             $("#SL1Transom").attr({ 'disabled': false, "required": true });
             doorLeafFacingPrice('sideLight1',"Yes");
             doorLeafFacingPrice('sideLight11',"Yes");
@@ -1100,6 +1103,8 @@ $(document).ready(function() {
             $("#SlBeadHeight").val(0).attr('readonly',true);
             $("#SlBeadThickness").val(0).attr('required',false);
             $("#SlBeadHeight").val(0).attr('required',false);
+            $("#SL1GlassIntegrity").attr({ 'readonly': true, "required": false }).val('');
+            $("#sideLight1FrameThickness").attr({ 'readonly': true, "required": false }).val('');
 
 
             if($("#sideLight2").val()=="Yes"){
@@ -1156,8 +1161,8 @@ $(document).ready(function() {
             if($("#sideLight1").val()=="Yes"){
                 $("#copyOfSideLite1").attr({ 'disabled': false, "required": true });
             }else{
-                $("#copyOfSideLite1").attr({'disabled': true,"readonly":true }).val("No");
 
+                $("#copyOfSideLite1").attr({'disabled': true,"readonly":true }).val("No");
                 $("#sideLight2GlassType,#SL2GlassIntegrity").attr({ 'disabled': false, "required": true });
                 $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true });
                 $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true });
@@ -1165,11 +1170,19 @@ $(document).ready(function() {
                 $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true });
                 $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
                 $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'disabled': false, 'readonly': false, "required": true });
+                $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
+                $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+                $("#sideLight2FrameThickness").attr({'readonly': false, "required": true });
+                $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
                 $("#SL2Transom").attr({ 'disabled': false, "required": true });
             }
             doorLeafFacingPrice('sideLight12',"Yes");
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
+            $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
+            $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+            $("#sideLight2FrameThickness").attr({'readonly': false, "required": true });
+            $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
             $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
             $(".sidelight2section").attr({ 'disabled': true, "required": false }).val('');
@@ -1180,6 +1193,7 @@ $(document).ready(function() {
             $("#SL2Transom").attr({ 'disabled': true, "required": false }).val('');
             $("#sideLight12-section1").removeClass("table_row_show");
             $("#sideLight12-section1").addClass("table_row_hide");
+            $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
         }
     }
     $(".SL1").on("change keyup", function() {
