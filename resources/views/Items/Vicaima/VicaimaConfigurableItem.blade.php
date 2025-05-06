@@ -440,7 +440,6 @@
         if (framTypeValue == "Plant_on_Stop") {
             $("#plantonStopWidth").attr('min', '26');  // JFDS 914
             $("#plantonStopHeight").attr('min', '12'); // JFDS 914
-            $("#rebatedWidth").removeAttr('min', '32');
             $("#rebatedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").removeAttr('max', '5');
@@ -471,7 +470,6 @@
         } else if (framTypeValue == "Rebated_Frame") {
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedWidth").attr('min', '32');
             $("#rebatedHeight").attr('min', '12');
             $("#plantonStopWidth").removeAttr('min', '26');
             $("#plantonStopHeight").removeAttr('min', '12');
@@ -484,6 +482,7 @@
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
+            rebatedWidth();
             // frameprice('Rebated_Frame');
         } else {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);

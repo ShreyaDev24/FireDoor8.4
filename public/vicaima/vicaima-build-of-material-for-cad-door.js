@@ -168,7 +168,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if (id == 'frameDepth') {
                         getmsginput = 'Frame Depth should be a minimum of 70mm';
                     }else if(id == 'rebatedWidth'){
-                        getmsginput = 'Rebated Width should be a minimum of 32mm';
+                        getmsginput = 'Rebated Width should be a minimum of '+getmininputvalue+ 'mm';
                     } else if(id == 'rebatedHeight'){
                         getmsginput = 'Rebated Depth should be a minimum of 12mm';
                     } else if(id == 'hinge1Location'){
