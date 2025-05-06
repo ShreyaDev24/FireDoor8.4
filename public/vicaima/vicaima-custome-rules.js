@@ -798,6 +798,7 @@ function framTypeChangeInputEnableDisable(){
         $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
         $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
       //  FramePrice('Plant_on_Stop');
     } else if(framTypeValue == "Scalloped"){
         $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
@@ -808,6 +809,7 @@ function framTypeChangeInputEnableDisable(){
         $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
     } else if (framTypeValue == "Rebated_Frame") {
         $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -830,6 +832,7 @@ function framTypeChangeInputEnableDisable(){
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
     }
      else {
         $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -2820,6 +2823,12 @@ function framewidth(){
               );
 
         }
+        let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+        let so_width = FrameWidth + tollerance + tollerance;
+        $("#sOWidth").val(so_width);
+        console.log(
+            `${FrameWidth} + ${tollerance} + ${tollerance} = so_width ${so_width}`
+          );
     }
 
     $("#frameWidth").val(FrameWidth);
