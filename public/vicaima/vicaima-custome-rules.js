@@ -2784,10 +2784,8 @@ function framewidth(){
         }
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
-        if(frameType == 'Scalloped'){
-            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
-            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
-            console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
+        if($("#frameType").val() == 'Scalloped'){
+            calsowidth(FrameWidth);
         }
     }
 
@@ -2809,6 +2807,12 @@ function framewidth(){
     $("#frameWidth").val(FrameWidth);
     frameHeight();
 }
+function calsowidth(framewidth){
+    let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    let so_width = framewidth + tollerance + tollerance;
+    $("#sOWidth").val(so_width);
+}
+
 
 $("#rebatedHeight").on("keyup", function () {
     framewidth();
