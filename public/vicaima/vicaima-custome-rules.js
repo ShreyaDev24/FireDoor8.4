@@ -2785,7 +2785,10 @@ function framewidth(){
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
         if($("#frameType").val() == 'Scalloped'){
+            let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
+            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
             calsowidth(FrameWidth);
+            console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
         }
     }
 
