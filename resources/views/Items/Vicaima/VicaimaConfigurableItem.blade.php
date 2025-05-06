@@ -663,7 +663,7 @@
         render($("#fireRating"));
     }
 
-$('#adjustmentLeafWidth1,#adjustmentLeafWidth2, #adjustmentLeafHeightNoOP').keyup(function(){
+$('#adjustmentLeafWidth1,#adjustmentLeafWidth2, #adjustmentLeafHeightNoOP,#doorsetType').keyup(function(){
     AdjustmentLipping();
 });
 
@@ -672,34 +672,7 @@ function AdjustmentLipping() {
     let adjustmentLeafWidth2 = $('#adjustmentLeafWidth2').val();
     let adjustmentLeafHeightNoOP = $('#adjustmentLeafHeightNoOP').val();
     let doorsetType = $('#doorsetType').val();
-    if(doorsetType == 'leaf_and_a_half'){
-        if(adjustmentLeafWidth2.trim() !== ''){
-            $('#lippingType').prop('disabled', false);
-            $('#lippingType').prop('required', true);
-            $('#lippingThickness').prop('disabled', false);
-            $('#lippingThickness').prop('required', true);
-            $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
-            $('#lippingSpecies').prop('required', true);
-            $('#coreWidth1').prop('disabled', false);
-            $('#coreWidth2').prop('disabled', false);
-            $('#coreHeight').prop('disabled', false);
-        } else {
-            $('#lippingType').prop('disabled', true).val('');
-            $('#lippingThickness').prop('disabled', true).val('');
-            $('#lippingSpecies').prop('disabled', true).removeClass('bg-white').val('');
-            $('#coreWidth1').prop('disabled', true).val('');
-            $('#coreWidth2').prop('disabled', true).val('');
-            $('#coreHeight').prop('disabled', true).val('');
-            $('#LippingThicknessValue').val('');
-            $('#lippingSpeciesid').val('');
-            $('#lippingType').prop('required', false);
-            $('#lippingThickness').prop('required', false);
-            $('#lippingSpecies').prop('required', false);
-        }
-    }
-
-    if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '' || adjustmentLeafWidth2.trim() !== '') {
-
+    if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '') {
         $('#lippingType').prop('disabled', false);
         $('#lippingType').prop('required', true);
         $('#lippingThickness').prop('disabled', false);
@@ -709,6 +682,18 @@ function AdjustmentLipping() {
         $('#coreWidth1').prop('disabled', false);
         $('#coreWidth2').prop('disabled', false);
         $('#coreHeight').prop('disabled', false);
+    } else if(adjustmentLeafWidth2.trim() !== ''){
+        if(doorsetType == 'leaf_and_a_half'){
+            $('#lippingType').prop('disabled', false);
+            $('#lippingType').prop('required', true);
+            $('#lippingThickness').prop('disabled', false);
+            $('#lippingThickness').prop('required', true);
+            $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
+            $('#lippingSpecies').prop('required', true);
+            $('#coreWidth1').prop('disabled', false);
+            $('#coreWidth2').prop('disabled', false);
+            $('#coreHeight').prop('disabled', false);
+        }
     } else {
         $('#lippingType').prop('disabled', true).val('');
         $('#lippingThickness').prop('disabled', true).val('');
