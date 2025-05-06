@@ -1614,7 +1614,7 @@ function changeLippingThickness(){
         let swingType1 = $("#swingType").val();
         let latchType = $('#latchType').val();
         if((doorsetType1 == 'SD' && swingType1 == 'DA') && latchType === "" || (doorsetType1 == 'DD' && swingType1 == 'DA') && latchType === ""){
-            $("#latchType").attr({ 'disabled': false, "required": false });
+            $("#latchType").attr({ 'disabled': true, "required": false });
         } else if(latchType === ""){
             $("#latchType").attr({ 'disabled': false, "required": true });
         } else{
