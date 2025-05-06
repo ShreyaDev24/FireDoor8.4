@@ -47,14 +47,10 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->GlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->FrameHeight,
-                    $value->FrameWidth,
                     $value->Leaf1VPHeight1 - 1,
                     $value->VisionPanelQuantity * 4,
                     $value->Leaf1VPWidth - 1,
-                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2),
-                    '',
-                    ''
+                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)
                 );
 
                 $k++;
@@ -62,7 +58,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         }
 
         $footData = [
-            '','','','','','','','','','','','','','',''
+            '','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -77,13 +73,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             'Timber',
             'Section',
             'Finish on Bead',
-            'Saw Cut L',
-            'Quantity',
             'Saw Cut W',
             'Quantity',
             'Saw Cut L',
-            'Quantity',
-            'Saw Cut W',
             'Quantity'
         ];
 
@@ -97,8 +89,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:L1';
-                $cellRange = 'A2:L2';
+                $cellRange1 = 'A1:H1';
+                $cellRange = 'A2:H2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -119,7 +111,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('L', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('H', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
