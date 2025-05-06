@@ -138,7 +138,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if(id == 'ScallopedHeight'){
-                        getmsginput = 'Scalloped Height should be between 4 - 8mm';
+                        getmsginput = 'Scalloped Height should be between ' + getmininputvalue + '-' + getmaxinputvalue + ' mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

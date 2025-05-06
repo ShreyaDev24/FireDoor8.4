@@ -462,6 +462,10 @@
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#plantonStopWidth").removeAttr('min', '26');
+            $("#plantonStopHeight").removeAttr('min', '12');
+            $("#rebatedWidth").removeAttr('min', '32');
+            $("#rebatedHeight").removeAttr('min', '12');
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
