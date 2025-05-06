@@ -106,7 +106,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedWidth">Rebated Width (min32)
+                                                    <label for="rebatedWidth">Rebated Width <span id="rebatedWidthText"></span>
 
                                                     @if(!empty($tooltip->rebatedWidth))
                                                     <script type="text/javascript">
@@ -115,7 +115,7 @@
                                                     @endif
                                                     </label>
                                                     <label for="Rebated_Width" style="display: none;">Rebated Width</label>
-                                                    <input type="number" name="rebatedWidth" value="@if(isset($Item['RebatedWidth'])){{$Item['RebatedWidth']}}@else{{'0'}}@endif" id="rebatedWidth" class="form-control" @if(empty($Item['RebatedWidth'])){{'readonly'}}@endif min="32">
+                                                    <input type="number" name="rebatedWidth" value="@if(isset($Item['RebatedWidth'])){{$Item['RebatedWidth']}}@else{{'0'}}@endif" id="rebatedWidth" class="form-control" @if(empty($Item['RebatedWidth'])){{'readonly'}}@endif>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">

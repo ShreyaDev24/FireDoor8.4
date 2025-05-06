@@ -803,7 +803,7 @@ function framTypeChangeInputEnableDisable(){
     } else if (framTypeValue == "Rebated_Frame") {
         $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-        $("#rebatedWidth").attr('min', '32');
+        // $("#rebatedWidth").attr('min', '32');
         $("#rebatedHeight").attr('min', '12');
         $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
         $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
@@ -811,6 +811,7 @@ function framTypeChangeInputEnableDisable(){
         $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
+        rebatedWidth();
        // FramePrice('Rebated_Frame');
     }else if (framTypeValue == "Four_sided_Frame") {
         $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -1765,8 +1766,22 @@ function FireRatingChange() {
         scalloppedLippingThickness($("#fireRating").val());
         flatLippingThickness($("#fireRating").val());
         rebatedLippingThickness($("#fireRating").val());
+        rebatedWidth();
     }
     IntumescentSeals();
+}
+
+function rebatedWidth(){
+    if ($("#fireRating").val() == "NFR") {
+        $("#rebatedWidth").attr('min', '35');
+        $("#rebatedWidthText").text('(min 35)');
+    }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+        $("#rebatedWidth").attr('min', '44');
+        $("#rebatedWidthText").text('(min 44)');
+    }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+        $("#rebatedWidth").attr('min', '54');
+        $("#rebatedWidthText").text('(min 54)');
+    }
 }
 
 function doorThicknessSelect(value) {
