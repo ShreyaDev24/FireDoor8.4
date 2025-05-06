@@ -2739,6 +2739,9 @@ function framewidth(){
         var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
     }else{
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
+        if($("#frameType").val() == 'Scalloped'){
+            calsowidth(FrameWidth);
+        }
     }
 
     if($("#frameType").val() == 'Rebated_Frame'){
@@ -2759,6 +2762,12 @@ function framewidth(){
     $("#frameWidth").val(FrameWidth);
     frameHeight();
 }
+function calsowidth(framewidth){
+    let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    let so_width = framewidth + tollerance + tollerance;
+    $("#sOWidth").val(so_width);
+}
+
 
 $("#rebatedHeight").on("keyup", function () {
     framewidth();
