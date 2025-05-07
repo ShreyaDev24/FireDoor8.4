@@ -790,6 +790,7 @@ function framTypeChangeInputEnableDisable(){
         $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
         $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
       //  FramePrice('Plant_on_Stop');
     } else if(framTypeValue == "Scalloped"){
         $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
@@ -800,6 +801,7 @@ function framTypeChangeInputEnableDisable(){
         $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
     } else if (framTypeValue == "Rebated_Frame") {
         $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -821,6 +823,7 @@ function framTypeChangeInputEnableDisable(){
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
+        doorDimensionCalculation()
     }
      else {
         $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -2744,6 +2747,10 @@ function filterSpecies(){
 function framewidth(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
+    var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
+
     var DoorSetType = $('select[name="doorsetType"]').val();
     var frameType = $('select[name="frameType"]').val();
     if (DoorSetType == "SD"){
@@ -2758,18 +2765,54 @@ function framewidth(){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10);
             FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
             console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
+            calsowidth(FrameWidth);
         }
+    }
+
+    if($("#frameType").val() == 'Rebated_Frame'){
+        if (DoorSetType == "SD"){
+            var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
+            console.log(
+                `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = FrameWidth ${FrameWidth}`
+              );
+        }else{
+            var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = FrameWidth ${FrameWidth}`
+              );
+
+        }
+        let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+        let so_width = FrameWidth + tollerance + tollerance;
+        $("#sOWidth").val(so_width);
+        console.log(
+            `${FrameWidth} + ${tollerance} + ${tollerance} = so_width ${so_width}`
+          );
     }
 
     $("#frameWidth").val(FrameWidth);
     frameHeight();
 }
+function calsowidth(framewidth){
+    let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    let so_width = framewidth + tollerance + tollerance;
+    $("#sOWidth").val(so_width);
+}
+
+
+$("#rebatedHeight").on("keyup", function () {
+    framewidth();
+});
 
 function frameHeight(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
     var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
     var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
+    var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
+    var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
     var DoorSetType = $('select[name="doorsetType"]').val();
@@ -2782,6 +2825,22 @@ function frameHeight(){
             $("#frameHeight").val(frameHeight);
         }
     }
+    if($("#frameType").val() == 'Rebated_Frame'){
+        if (foursidedframe.checked) {
+            var frameHeight = FrameThickness - rebatedHeight + FrameThickness - rebatedHeight + (Gap *2) + leafHeightNoOP;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 2) + ${leafHeightNoOP} = frameHeight ${frameHeight}`
+              );
+        }else{
+            var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
+            console.log(
+                `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = frameHeight ${frameHeight}`
+              );
+        }
+
+        $("#frameHeight").val(frameHeight);
+    }
+
 }
 
 function filterHandling() {
