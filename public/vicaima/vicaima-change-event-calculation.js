@@ -777,12 +777,12 @@ function doorDimensionCalculation1(){
     }
     var so_width = parseInt(leafWidth1) + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(gap) * 2;
     if (doortypeValue == 'DD') {
-        so_width = (parseInt(leafWidth1)*2) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
+        so_width = (parseInt(leafWidth1)*2) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
         $("#sOWidth").val(so_width)
     }else if (doortypeValue == 'SD'){
         $("#sOWidth").val(so_width)
     }else{
-        so_width = (parseInt(leafWidth1) + parseInt(leafWidth2)) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
+        so_width = (parseInt(leafWidth1) + parseInt(leafWidth2)) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
         $("#sOWidth").val(so_width)
     }
 

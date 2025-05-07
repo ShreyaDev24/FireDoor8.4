@@ -2808,7 +2808,8 @@ function frameHeight(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
     var FrameThickness = parseInt($('#frameThickness').val(), 10);  // Ensure FrameThickness is a number
     var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
-    var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+    var soheight = parseInt($('input[name="sOHeight"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
     var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
     var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
@@ -2818,12 +2819,20 @@ function frameHeight(){
     var DoorSetType = $('select[name="doorsetType"]').val();
     if (DoorSetType != "SD"){
         if (foursidedframe.checked) {
+            soheight = leafHeightNoOP + Gap + Gap + FrameThickness + FrameThickness + tollerance;
+            $('#sOHeight').val(soheight);
             var frameHeight = leafHeightNoOP + Gap + Gap + FrameThickness + FrameThickness;
             console.log(
                 `${leafHeightNoOP} + ${Gap} + ${Gap} + ${FrameThickness} + ${FrameThickness} = FourSidedFrameHeight ${frameHeight}`
                 );
             $("#frameHeight").val(frameHeight);
+        }else{
+            var plantonStopHeight = soheight - tollerance;
+            $("#frameHeight").val(plantonStopHeight);
         }
+    }else{
+        var plantonStopHeight = soheight - tollerance;
+        $("#frameHeight").val(plantonStopHeight);
     }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
@@ -2832,6 +2841,7 @@ function frameHeight(){
                 `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 2) + ${leafHeightNoOP} = frameHeight ${frameHeight}`
               );
         }else{
+
             var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
             console.log(
                 `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = frameHeight ${frameHeight}`
@@ -2842,6 +2852,7 @@ function frameHeight(){
     }
 
 }
+
 
 function filterHandling() {
     let pageId = pageIdentity();
@@ -5392,6 +5403,9 @@ function doorDimensionCalculation(){
     var leafWidth2 = $("#leafWidth2").val();
     var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
     var leafHeightNoOP = $("#leafHeightNoOP").val();
+    var adjustmentLeafWidth1 = parseInt($('input[name="adjustmentLeafWidth1"]').val(), 10) || 0;
+    var adjustmentLeafWidth2 = parseInt($('input[name="adjustmentLeafWidth2"]').val(), 10) || 0;
+
     var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
     var IsFourSidedFrame = document.getElementById('foursidedframe').checked
     if (leafHeightNoOP == '') {
@@ -5412,12 +5426,16 @@ function doorDimensionCalculation(){
    //  Door leaf W -leaf width  adjustment + gapx2+ToleranceX2+Frame thicknessX2
     var so_width = parseInt(leafWidth1)  - parseInt(adjustmentLeafWidth1) +  parseInt(gap) * 2 + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2;
     if (doortypeValue == 'DD') {
-        so_width = (parseInt(leafWidth1)*2) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
+        so_width = ((parseInt(leafWidth1))) + ((parseInt(leafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+
+        console.log("so_width =", `(${leafWidth1}) + (${leafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafWidth1))) + ((parseInt(leafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
         $("#sOWidth").val(so_width)
     }else if (doortypeValue == 'SD'){
         $("#sOWidth").val(so_width)
     }else{
-        so_width = (parseInt(leafWidth1) + parseInt(leafWidth2)) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
+        so_width = ((parseInt(leafWidth1))) + ((parseInt(leafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+
+        console.log("so_width =", `(${leafWidth1}) + (${leafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafWidth1))) + ((parseInt(leafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
         $("#sOWidth").val(so_width)
     }
 
@@ -5531,19 +5549,24 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
 
         var so_width = parseInt(leafW1) + parseInt(tollerance) * 2 + parseInt(frame_thickness) * 2 + parseInt(gap) * 2;
         if (doortypeValue == 'DD') {
-            so_width = (parseInt(leafW1)*2) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
-            $("#sOWidth").val(so_width - (parseInt(adjustmentLeafWidth1)*2))
+            so_width = ((parseInt(leafW1)) - (parseInt(adjustmentLeafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+            $("#sOWidth").val(so_width);
+
+            console.log("so_width =", `(${leafW1} - ${adjustmentLeafWidth1}) + (${leafW2} - ${adjustmentLeafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafW1)) - (parseInt(adjustmentLeafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
         }else if (doortypeValue == 'SD'){
             $("#sOWidth").val(so_width - parseInt(adjustmentLeafWidth1))
         }else{
-            so_width = (parseInt(leafW1) + parseInt(leafWidth2)) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
-            $("#sOWidth").val(so_width - parseInt(adjustmentLeafWidth1))
+            so_width = ((parseInt(leafW1)) - (parseInt(adjustmentLeafWidth1))) + ((parseInt(leafWidth2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+
+            console.log("so_width =", `(${leafW1} - ${adjustmentLeafWidth1}) + (${leafWidth2} - ${adjustmentLeafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafW1)) - (parseInt(adjustmentLeafWidth1))) + ((parseInt(leafWidth2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
+            $("#sOWidth").val(so_width)
         }
 
         var soHeight = parseInt(leafH) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap)
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
-
+        frameHeight();
     }
+
     if (doortypeValue == 'leaf_and_a_half') {
         if (height_width_doorDimension2.length) {
             var tollerance = $("#tollerance").val();
@@ -5551,9 +5574,13 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
             var gap = $("#gap").val();
             var undercut = $("#undercut").val();
             var leafW2 = height_width_doorDimension2[0].trim();
+            var adjustmentLeafWidth1 = $("#adjustmentLeafWidth1").val();
             var adjustmentLeafWidth2 = $("#adjustmentLeafWidth2").val();
             var adjustmentLeafHeightNoOP = $("#adjustmentLeafHeightNoOP").val();
 
+            if (adjustmentLeafWidth1 == '') {
+                adjustmentLeafWidth1 = 0;
+            }
             if (adjustmentLeafWidth2 == '') {
                 adjustmentLeafWidth2 = 0;
             }
@@ -5571,10 +5598,14 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
             }
             $("#leafWidth2").val(parseInt(leafW2) - parseInt(adjustmentLeafWidth2));
             var leafWidth1 = $("#leafWidth1").val();
-            var so_width = (parseInt(leafW2) + parseInt(leafWidth1)) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 2);
-            $("#sOWidth").val(so_width - parseInt(adjustmentLeafWidth2))
+
+            so_width = ((parseInt(leafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3);
+
+            console.log("so_width =", `(${leafWidth1}) + (${leafW2} - ${adjustmentLeafWidth2}) + (${tollerance}*2) + (${frame_thickness}*2) + (${gap}*3) =`, ((parseInt(leafWidth1))) + ((parseInt(leafW2)) - (parseInt(adjustmentLeafWidth2))) + (parseInt(tollerance) * 2) + (parseInt(frame_thickness) * 2) + (parseInt(gap) * 3));
+            $("#sOWidth").val(so_width)
         }
     }
+
     corewidth1Value();
     doorDimensionCalculation();
 });
