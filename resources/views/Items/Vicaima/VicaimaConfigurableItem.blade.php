@@ -1619,7 +1619,10 @@ function changeLippingThickness(){
                 if(i.id == 'DoorDimensions' && DoorDimensionId == null && DoorDimensionId == undefined && DoorDimensionId == ''){
                     RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> Door Dimensions field is required.</li>';
                 } else {
-                    RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> '+ label +' field is required.</li>';
+                    if(i.id != 'DoorDimensions' ){
+                        RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> '+ label +' field is required.</li>';
+                    }
+
                 }
                 allAreFilled = false;
             }
