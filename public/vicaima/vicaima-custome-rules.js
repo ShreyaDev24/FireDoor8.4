@@ -1782,6 +1782,14 @@ function rebatedWidth(){
         $("#rebatedWidth").attr('min', '54');
         $("#rebatedWidthText").text('(min 54)');
     }
+    let framTypeValue = $('#frameType').val();
+    if (framTypeValue == "Rebated_Frame") {
+        var identifier = $("#rebatedWidth");
+        var value = parseFloat(identifier.val());
+        if (identifier.length && value > 0) {
+            SetBuildOfMaterial(identifier);
+        }
+    }
 }
 
 function doorThicknessSelect(value) {
