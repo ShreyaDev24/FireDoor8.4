@@ -318,3 +318,7 @@
                                 </div>
                             </div>
                         </div>
+                        <input type="hidden" name="fanlightWidthGlass" value="@if(isset($Item['FanLightWidthGlass'])){{$Item['FanLightWidthGlass']}}@endif" id="fanlightWidthGlass">
+                        <input type="hidden" name="fanlightHeightGlass" value="@if(isset($Item['FanLightHeightGlass'])){{$Item['FanLightHeightGlass']}}@endif" id="fanlightHeightGlass">
+                        <input type="hidden" name="opPanelWidth" value="@if(isset($Item['OpPanelWidth'])){{$Item['OpPanelWidth']}}@endif" id="opPanelWidth">
+                        <input type="hidden" name="opPanelHeight" value="@if(isset($Item['OpPanelHeight'])){{$Item['OpPanelHeight']}}@endif" id="opPanelHeight">

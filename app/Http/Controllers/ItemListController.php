@@ -1228,6 +1228,10 @@ class ItemListController extends Controller
                         'OPGlazingBeadSpecies'                  => $request->opGlazingBeadSpecies,
                         'OpBeadThickness'                       => $request->OpBeadThickness,
                         'OpBeadHeight'                          => $request->OpBeadHeight,
+                        'FanLightWidthGlass'                    => $request->fanlightWidthGlass,
+                        'FanLightHeightGlass'                   => $request->fanlightHeightGlass,
+                        'OpPanelWidth'                          => $request->opPanelWidth,
+                        'OpPanelHeight'                         => $request->opPanelHeight,
 
                     //Side Light
                         'SideLight1'                            => $request->sideLight1,
@@ -1267,9 +1271,10 @@ class ItemListController extends Controller
                         'SL2TransomDepth'                       => $request->SL2TransomDepth,
                         'SLtransomHeightFromTop'                => $request->SLtransomHeightFromTop,
                         'SLtransomThickness'                    => $request->SLtransomThickness,
-                        'SlBeadThickness'                  => $request->SlBeadThickness,
-                        'SlBeadHeight'                  => $request->SlBeadHeight,
-
+                        'SlBeadThickness'                       => $request->SlBeadThickness,
+                        'SlBeadHeight'                          => $request->SlBeadHeight,
+                        'SideLight1GlassWidth'                  => $request->sidelight1GlassWidth,
+                        'SideLight2GlassWidth'                  => ($request->copyOfSideLite1 == "Yes")?$request->sidelight1GlassWidth:$request->sidelight2GlassWidth,
                     //Lipping And Intumescent
                         'LippingType'                           => $request->lippingType,
                         'LippingThickness'                      => $request->lippingThickness,
@@ -1321,6 +1326,7 @@ class ItemListController extends Controller
                 // $updateDetails['SvgImage'] = $SvgImage;
                 $updateDetails['SvgImage'] = $request->SvgImage;
                 $updateDetails['VersionId'] = $versionId;
+
             // }
             $item = Item::where('itemId',$id)->update($updateDetails);
             // return redirect('quotation/generate/'.$request->QuotationId.'/'.$versionId)->with('success','Updated configure door successfully.');
@@ -1514,6 +1520,10 @@ class ItemListController extends Controller
                         $item->OPGlazingBeadSpecies = $request->opGlazingBeadSpecies;
                         $item->OpBeadThickness = $request->OpBeadThickness;
                         $item->OpBeadHeight = $request->OpBeadHeight;
+                        $item->OpPanelWidth = $request->opPanelWidth;
+                        $item->OpPanelHeight = $request->opPanelHeight;
+                        $item->FanLightWidthGlass = $request->fanlightWidthGlass;
+                        $item->FanLightHeightGlass = $request->fanlightHeightGlass;
 
                     //Side Light
                         $item->SideLight1 = $request->sideLight1;
@@ -1533,6 +1543,7 @@ class ItemListController extends Controller
                         $item->SL1Transom = $request->SL1Transom;
                         $item->SL1TransomDepth = $request->SL1TransomDepth;
                         $item->SL1transomThickness = $request->SL1transomThickness;
+                        $item->SideLight1GlassWidth = $request->sidelight1GlassWidth;
                         $item->SideLight2 = $request->sideLight2;
                         $item->DoYouWantToCopySameAsSL1 = $request->copyOfSideLite1;
                         $item->SL2GlassIntegrity = ($request->copyOfSideLite1 == "Yes")?$request->SL1GlassIntegrity:$request->SL2GlassIntegrity;
@@ -1555,6 +1566,7 @@ class ItemListController extends Controller
                         $item->SLtransomThickness = $request->SLtransomThickness;
                         $item->SlBeadThickness = $request->SlBeadThickness;
                         $item->SlBeadHeight = $request->SlBeadHeight;
+                        $item->SideLight2GlassWidth = ($request->copyOfSideLite1 == "Yes")?$request->sidelight1GlassWidth:$request->sidelight2GlassWidth;
 
 
                     //Lipping And Intumescent
