@@ -372,6 +372,7 @@
             $('#glazingBeadsHeight').attr('required', true);
             $('#glazingBeadsFixingDetail').attr('required', true);
             $('#glazingBeadSpecies').attr('required', true);
+            visionPanelChange();
         }
 
         if($("#Leaf2VisionPanel-import").data("value") == "Yes"){

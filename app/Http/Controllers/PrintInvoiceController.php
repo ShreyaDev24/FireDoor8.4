@@ -87,8 +87,8 @@ class PrintInvoiceController extends Controller
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
         $SalesContact = 'N/A';
-        if (!empty($quotaion->SalesContact)) {
-            $SalesContact = $quotaion->SalesContact;
+        if (!empty($quotaion->QuotationName)) {
+            $SalesContact = $quotaion->QuotationName;
         }
 
         // PDF 1 ( Introduction PDF )
@@ -1975,7 +1975,7 @@ class PrintInvoiceController extends Controller
                                                 <td><span >' . date('Y-m-d') . '</span></td>
                                                 <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
                                                 <td><span>' . $customer->CstCompanyName . '</span></td>
-                                                <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Sales Contact</span></td>
+                                                <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
                                                 <td><span>' . $SalesContact . '</span></td>
                                             </tr>
                                         </tbody>
@@ -2872,7 +2872,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td><span>' . date('Y-m-d') . '</span></td>
                                     <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
                                     <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
-                                    <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Sales Contact</span></td>
+                                    <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
                                     <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
                                 </tr>
                             </tbody>
@@ -3031,7 +3031,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                                 <td colspan="3"><span>' . $version . '</span></td>
                                                 <td class="tbl_color"><span>Customer</span></td>
                                                 <td><span>' . $customer->CstCompanyName . '</span></td>
-                                                <td class="tbl_color"><span>Sales Contact</span></td>
+                                                <td class="tbl_color"><span>Quote name</span></td>
                                                 <td><span>' . $SalesContact . '</span></td>
                                             </tr>
                                         </tbody>

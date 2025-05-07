@@ -420,6 +420,7 @@
             $("#vP1Height4").val($("#Leaf1VPHeight4-import").data("value"));
             $("#vP1Height5").val($("#Leaf1VPHeight5-import").data("value"));
             $("#leaf1VpAreaSizeM2").val($("#Leaf1VPAreaSizem2-import").data("value"));
+            visionPanelChange();
         }
         if($("#Leaf2VisionPanel-import").data("value") == "Yes"){
             $("select[name=leaf2VisionPanel]").val($("#Leaf2VisionPanel-import").data("value")).trigger('change');
