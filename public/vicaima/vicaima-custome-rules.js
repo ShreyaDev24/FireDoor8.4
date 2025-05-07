@@ -5641,11 +5641,6 @@ function updateDoorDimensions() {
     let thickness = $("#doorThickness").val();
     if ((thickness == '54' && fireRating == 'FD30') || (thickness == '54' && fireRating == 'FD30s')) {
         $("#DoorDimensions").val('');
-    } else {
-        $("#DoorDimensions").removeAttr("required");
-    }
-    if(thickness == ''){
-        $("#DoorDimensions").val('');
     }
 }
 
