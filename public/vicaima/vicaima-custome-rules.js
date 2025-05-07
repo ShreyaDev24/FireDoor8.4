@@ -6046,6 +6046,7 @@ function getSideLightGlass(val , type){
     var sideLight2FrameThickness = $("#sideLight2FrameThickness").val();
     var frameHeight = $("#frameHeight").val();
     var oPHeigth = $("#oPHeigth").val();
+    var OpBeadThickness = $("#OpBeadThickness").val();
     var gap = $("#gap").val();
     if (SL1Width == '') {
         SL1Width = 0;
@@ -6068,12 +6069,16 @@ function getSideLightGlass(val , type){
     if (oPHeigth == '') {
         oPHeigth = 0;
     }
+    if (OpBeadThickness == '') {
+        OpBeadThickness = 0;
+    }
     if(val == 'Yes' && type == 'SideLight1'){
         // SL Glass Width   SL1 Width- SL Frame thicknessX2-GapX2
         calculatesidelight1glasswidth = parseInt(SL1Width) - parseInt(sideLight1FrameThickness) * 2 - parseInt(gap) * 2;
         $("#sidelight1GlassWidth").val(calculatesidelight1glasswidth);
        // SL1 Height Glass    Frame Height +OP Height-gapX2-FL FramethicknessX2
        calculatesidelight1glassHeight = parseInt(frameHeight) + parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+       console.log(frameHeight,oPHeigth,gap,OpBeadThickness)
         $("#sidelight1GlassHeight").val(calculatesidelight1glassHeight);
     }
     if(val == 'Yes' && type == 'SideLight2'){
