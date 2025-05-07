@@ -1609,13 +1609,14 @@ function changeLippingThickness(){
         });
 
         document.getElementById("itemForm").querySelectorAll("[required]").forEach(function(i) {
+            let DoorDimensionId = $("#DoorDimensionId").val();
                 // if (!allAreFilled) return;
             if (!i.value){
                 parentid = $('#'+i.id).parents().eq(6).parent('div').attr('id');
                 $( "a[href='#"+parentid+"']").css({'background':'red'});
                 $('#'+i.id).css({'border':'1px solid red'});
                 label = $('#'+i.id).siblings('label').clone().children().remove().end().text();
-                if(i.id == 'DoorDimensions'){
+                if(i.id == 'DoorDimensions' && DoorDimensionId !== null && DoorDimensionId !== undefined && DoorDimensionId !== ''){
                     RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> Door Dimensions field is required.</li>';
                 } else {
                     RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> '+ label +' field is required.</li>';
