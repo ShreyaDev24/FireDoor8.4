@@ -6193,11 +6193,11 @@ function opFlWidthAndHeight(val){
     }
     if(val == 'Fan_Light'){
          // FL Glass Width   FrameWidth-gapX2-FL FramethicknessX2
-        // FL Glass Height   FrameHeight+OP Height-gapX2-FL FramethicknessX2
+        // FL Glass Height   OP Height-gapX2-FL FramethicknessX2
         var calculateOfFlWidth = parseInt(frameWidth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
         $("#fanlightWidthGlass").val(calculateOfFlWidth);
 
-        var calculateOfFlHeight = parseInt(frameHeight) + parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        var calculateOfFlHeight = parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
         $("#fanlightHeightGlass").val(calculateOfFlHeight);
 
     }
@@ -6205,6 +6205,7 @@ function opFlWidthAndHeight(val){
        // OP Panel width   Frame Width - gapX2-OP Frame thicknessX2
        //OP Panel Height   OPHeight -gapX2-OP Frame thicknessX2
         var calculateOfOpPaelWidth = parseInt(frameWidth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        console.log(frameWidth,gap,OpBeadThickness)
         $("#opPanelWidth").val(calculateOfOpPaelWidth);
         var calculateOfOpPaelHeight = parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
         $("#opPanelHeight").val(calculateOfOpPaelHeight);
@@ -6216,6 +6217,8 @@ function getSideLightGlass(val , type){
     var SL2Width = $("#SL2Width").val();
     var sideLight1FrameThickness = $("#sideLight1FrameThickness").val();
     var sideLight2FrameThickness = $("#sideLight2FrameThickness").val();
+    var frameHeight = $("#frameHeight").val();
+    var oPHeigth = $("#oPHeigth").val();
     var gap = $("#gap").val();
     if (SL1Width == '') {
         SL1Width = 0;
@@ -6232,10 +6235,19 @@ function getSideLightGlass(val , type){
     if (SL2Width == '') {
         SL2Width = 0;
     }
+    if (frameHeight == '') {
+        frameHeight = 0;
+    }
+    if (oPHeigth == '') {
+        oPHeigth = 0;
+    }
     if(val == 'Yes' && type == 'SideLight1'){
         // SL Glass Width   SL1 Width- SL Frame thicknessX2-GapX2
         calculatesidelight1glasswidth = parseInt(SL1Width) - parseInt(sideLight1FrameThickness) * 2 - parseInt(gap) * 2;
-        $("#sidelight2GlassWidth").val(calculatesidelight1glasswidth);
+        $("#sidelight1GlassWidth").val(calculatesidelight1glasswidth);
+       // SL1 Height Glass    Frame Height +OP Height-gapX2-FL FramethicknessX2
+       calculatesidelight1glassHeight = parseInt(frameHeight) + parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        $("#sidelight1GlassHeight").val(calculatesidelight1glassHeight);
     }
     if(val == 'Yes' && type == 'SideLight2'){
         // SL2 Glass Width   SL 2 Width-SL Frame thicknessX2-GapX2

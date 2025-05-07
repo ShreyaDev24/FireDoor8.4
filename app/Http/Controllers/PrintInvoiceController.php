@@ -2792,7 +2792,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <tr>
                                         <td class="dicription_grey">SL Glass Width</td>
                                         <td class="dicription_blank">' . $tt->SideLight1GlassWidth . '</td>
-                                    </tr>';
+                                    </tr>
+                                     <tr>
+                                        <td class="dicription_grey">SL Glass Height</td>
+                                        <td class="dicription_blank">' . $tt->Sidelight1GlassHeight . '</td>
+                                    </tr>
+                                    ';
                                     } else if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
                                      <tr>
