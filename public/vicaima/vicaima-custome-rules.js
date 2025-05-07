@@ -964,6 +964,7 @@ $(document).on('change', '#overpanel', function (e) {
         doorLeafFacingPrice('overpanel1',"Fan_Light");
         doorLeafFacingPrice('overpanel2',"Fan_Light");
         FramePrice('overpanel3');
+        opFlWidthAndHeight("Fan_Light")
     }else{
 
         $("#OpBeadThickness").val(0).attr('readonly',false);
@@ -982,6 +983,8 @@ $(document).on('change', '#overpanel', function (e) {
         $("#overpanel2-section1").addClass("table_row_hide");
         $(".overpanel3_section").removeClass("table_row_show");
         $(".overpanel3_section").addClass("table_row_hide");
+        opFlWidthAndHeight("Overpanel")
+
     }
     // UpdateformulaSoHeightAndWidth($(this).val()) reverted code
     IntumescentSeals();
@@ -1026,9 +1029,15 @@ $("#opGlazingBeadSpecies").change(function () {
 
 $("#sideLight1").change(function(){
     sideLight1Change();
+    if($(this).val() == 'Yes'){
+        getSideLightGlass($(this).val() , 'SideLight1')
+    }
 });
 $("#sideLight2").change(function(){
     sideLight2Change();
+    if($(this).val() == 'Yes'){
+        getSideLightGlass($(this).val() , 'SideLight2')
+    }
 });
 $("#copyOfSideLite1").change(function(){
     copyOfSideLite1Change();
@@ -6137,6 +6146,95 @@ $('#oPHeigth,#SL1Width').on('input', function () {
 //     }
 
 // }
+
+$('#OpBeadThickness,#oPHeigth').on('input', function() {
+    let overpanel = $("#overpanel").val();
+    opFlWidthAndHeight(overpanel); // replace with your actual function
+});
+$('#SL1Width').on('input', function() {
+    let sideLight1 = $("#sideLight1").val();
+    getSideLightGlass(sideLight1,'SideLight1'); // replace with your actual function
+});
+$('#SL2Width').on('input', function() {
+    let sideLight2 = $("#sideLight2").val();
+    getSideLightGlass(sideLight1,'SideLight2'); // replace with your actual function
+});
+
+
+function opFlWidthAndHeight(val){
+    var gap = $("#gap").val();
+    var frameWidth = $("#frameWidth").val();
+    var frameHeight = $("#frameHeight").val();
+    var OpBeadThickness = $("#OpBeadThickness").val();
+    var oPHeigth = $("#oPHeigth").val();
+    console.log(gap,frameWidth,OpBeadThickness)
+    if (gap == '') {
+        gap = 0;
+    }
+    if (frameWidth == '') {
+        frameWidth = 0;
+    }
+    if (frameHeight == '') {
+        frameHeight = 0;
+    }
+    if (OpBeadThickness == '') {
+        OpBeadThickness = 0;
+    }
+    if (oPHeigth == '') {
+        oPHeigth = 0;
+    }
+    if(val == 'Fan_Light'){
+         // FL Glass Width   FrameWidth-gapX2-FL FramethicknessX2
+        // FL Glass Height   FrameHeight+OP Height-gapX2-FL FramethicknessX2
+        var calculateOfFlWidth = parseInt(frameWidth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        $("#fanlightWidthGlass").val(calculateOfFlWidth);
+
+        var calculateOfFlHeight = parseInt(frameHeight) + parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        $("#fanlightHeightGlass").val(calculateOfFlHeight);
+
+    }
+    if(val == 'Overpanel'){
+       // OP Panel width   Frame Width - gapX2-OP Frame thicknessX2
+       //OP Panel Height   OPHeight -gapX2-OP Frame thicknessX2
+        var calculateOfOpPaelWidth = parseInt(frameWidth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        $("#opPanelWidth").val(calculateOfOpPaelWidth);
+        var calculateOfOpPaelHeight = parseInt(oPHeigth) - parseInt(gap) * 2 - parseInt(OpBeadThickness) * 2;
+        $("#opPanelHeight").val(calculateOfOpPaelHeight);
+    }
+}
+
+function getSideLightGlass(val , type){
+    var SL1Width = $("#SL1Width").val();
+    var SL2Width = $("#SL2Width").val();
+    var sideLight1FrameThickness = $("#sideLight1FrameThickness").val();
+    var sideLight2FrameThickness = $("#sideLight2FrameThickness").val();
+    var gap = $("#gap").val();
+    if (SL1Width == '') {
+        SL1Width = 0;
+    }
+    if (sideLight1FrameThickness == '') {
+        sideLight1FrameThickness = 0;
+    }
+    if (gap == '') {
+        gap = 0;
+    }
+    if (sideLight2FrameThickness == '') {
+        sideLight2FrameThickness = 0;
+    }
+    if (SL2Width == '') {
+        SL2Width = 0;
+    }
+    if(val == 'Yes' && type == 'SideLight1'){
+        // SL Glass Width   SL1 Width- SL Frame thicknessX2-GapX2
+        calculatesidelight1glasswidth = parseInt(SL1Width) - parseInt(sideLight1FrameThickness) * 2 - parseInt(gap) * 2;
+        $("#sidelight2GlassWidth").val(calculatesidelight1glasswidth);
+    }
+    if(val == 'Yes' && type == 'SideLight2'){
+        // SL2 Glass Width   SL 2 Width-SL Frame thicknessX2-GapX2
+        calculatesidelight2glasswidth = parseInt(SL2Width) - parseInt(sideLight2FrameThickness) * 2 - parseInt(gap) * 2;
+        $("#SideLight2GlassWidth").val(calculatesidelight2glasswidth);
+    }
+}
 
 
 // 914 update changes
