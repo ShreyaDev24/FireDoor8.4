@@ -5730,6 +5730,8 @@ $(document).on('change','#swingType,#fireRating', function (e) {
             $('#frameThickness').css('border', '');
         }
     }
+    if(swingType == 'DA' && DoorSetType == 'DD'){
+        if(frameThickness < 40){
             $('#frameThickness').attr('min',40);
             $('#frameThickness').val('');
             $('#frameThickness').css({ 'border': '1px solid red' });
