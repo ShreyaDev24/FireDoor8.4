@@ -2673,6 +2673,17 @@ $(document).ready(function(){
         framTypeChangeInputEnableDisable();
     }, 3000)
 
+    let overPanel = $("#overpanel").val();
+    let sideLight1 = $("#sideLight1").val();
+    let sideLight2 = $("#sideLight2").val();
+    opFlWidthAndHeight(overPanel)
+    if(sideLight1 == 'Yes'){
+        getSideLightGlass(sideLight1,'SideLight1');
+    }
+    if(sideLight2 == 'Yes'){
+        getSideLightGlass(sideLight2,'SideLight2');
+    }
+
     setTimeout(function(){
         // var overpanel = $("#overpanel").val(); reverted code
         // var sideLight1 = $("#sideLight1").val();
