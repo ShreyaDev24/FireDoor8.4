@@ -5632,7 +5632,7 @@ function checkOldFirerating(){
     fires = $("#fireRating").val();
     oldfire = $("#fireratingoldvalue").val();
     if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
-        $("#DoorDimensions").attr({required: true }).val('');
+        $("#DoorDimensions").val('');
     }
 }
 
