@@ -731,3 +731,6 @@
         </div>
     </div>
 </div>
+<input type="hidden" name="sidelight1GlassWidth" value="@if(isset($Item['SideLight1GlassWidth'])){{$Item['SideLight1GlassWidth']}}@endif" id="sidelight1GlassWidth">
+<input type="hidden" name="sidelight2GlassWidth" value="@if(isset($Item['SideLight2GlassWidth'])){{$Item['SideLight2GlassWidth']}}@endif" id="sidelight2GlassWidth">
+<input type="hidden" name="sidelight1GlassHeight" value="@if(isset($Item['Sidelight1GlassHeight'])){{$Item['Sidelight1GlassHeight']}}@endif" id="sidelight1GlassHeight">
