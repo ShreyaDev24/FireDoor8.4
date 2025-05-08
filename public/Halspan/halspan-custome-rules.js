@@ -77,10 +77,14 @@ function pageIdentity(){
 
     function frameThicknessChange(){
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
-                $("#frameThickness").attr('min','22');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','27');
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#frameThickness").attr('min','28');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#frameThickness").attr('min','32');
+            }
+            if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','32');
             }
         }else{
             $("#frameThickness").removeAttr('min');
