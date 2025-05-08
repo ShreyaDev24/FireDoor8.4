@@ -902,7 +902,7 @@ function groovesNumbershow(){
         let fanLightOverpanel = $('#overpanel').val();
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
         frameonoff();
@@ -1026,7 +1026,7 @@ function groovesNumbershow(){
         let fanLightOverpanel = $('#overpanel').val();
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
         frameonoff();
@@ -1037,7 +1037,7 @@ function groovesNumbershow(){
       let doorSetType = $(this).val();
       let fireRating = $('#fireRating').val();
 
-      $('.OpHeightMax').html('OP Height (Max-value:600)');
+      $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
      $('#oPHeigth').attr('max',600);
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
@@ -1067,7 +1067,7 @@ function groovesNumbershow(){
         let doorSetType = $('#doorsetType').val();
         let fireRating = $('#fireRating').val();
 
-        $('.OpHeightMax').html('OP Height (Max-value:600)');
+        $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
         $('#oPHeigth').attr('max',600);
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
@@ -1081,7 +1081,7 @@ function groovesNumbershow(){
         }
 
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
     });
