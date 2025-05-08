@@ -104,9 +104,9 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'transomThickness') {
                     getmsginput = 'Transom Thickness should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'opglazingBeadsThickness') {
-                    getmsginput = 'Glazing Beads Thickness should be a minimum of ' + getmininputvalue + '.';
+                    getmsginput = 'Fan Light Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'opglazingBeadsHeight') {
-                    getmsginput = 'Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
+                    getmsginput = 'Fan Light Glazing Beads Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SL1TransomDepth') {
                     getmsginput = 'SL1 Transom Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SL1transomThickness') {
@@ -160,7 +160,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if (id == 'ScallopedHeight') {
                         getmsginput = 'Scalloped Height should be a minimum '+getmininputvalue+ 'mm';
                     }else if (id == 'SlBeadThickness') {
-                        getmsginput = 'SL Bead Thickness should be a minimum depth 20mm';
+                        getmsginput = 'SL Bead Depth should be a minimum depth 20mm';
                     }else if (id == 'SlBeadHeight') {
                         getmsginput = 'SL Bead Height should be a minimum height 20mm';
                     } else if (id == 'frameDepth') {

@@ -104,9 +104,9 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'transomThickness') {
                     getmsginput = 'Transom Thickness should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'opglazingBeadsThickness') {
-                    getmsginput = 'Glazing Beads Thickness should be a minimum of ' + getmininputvalue + '.';
+                    getmsginput = 'Fan Light Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'opglazingBeadsHeight') {
-                    getmsginput = 'Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
+                    getmsginput = 'Fan Light Glazing Beads Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SL1TransomDepth') {
                     getmsginput = 'SL1 Transom Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SL1transomThickness') {
@@ -155,8 +155,12 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'Plant on Stop Width should be a minimum '+getmininputvalue+ 'mm';
                     } else if (id == 'plantonStopHeight') {
                         getmsginput = 'Plant on Stop Height should be a minimum '+getmininputvalue+ 'mm';
+                    } else if (id == 'ScallopedWidth') {
+                        getmsginput = 'Scalloped Width should be a minimum '+getmininputvalue+ 'mm';
+                    } else if (id == 'ScallopedHeight') {
+                        getmsginput = 'Scalloped Height should be a minimum '+getmininputvalue+ 'mm';
                     }else if (id == 'SlBeadThickness') {
-                        getmsginput = 'SL Bead Thickness should be a minimum depth 20mm';
+                        getmsginput = 'SL Bead Depth should be a minimum depth 20mm';
                     }else if (id == 'SlBeadHeight') {
                         getmsginput = 'SL Bead Height should be a minimum height 20mm';
                     } else if (id == 'frameDepth') {
@@ -170,13 +174,15 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
+                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minixmum of 150mm and maximum of 250mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if (id == 'OpBeadThickness') {
                         getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
+                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
+                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
@@ -236,7 +242,6 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
     }
 
     $("#" + name + "-selected").empty().text(ElementValue);
-    // alert("#" + name + "-selected");
     $("#" + name + "-price").empty().text("£" + price);
     $("#" + name + "-section").removeClass("table_row_hide");
     $("#" + name + "-section").addClass("table_row_show");
