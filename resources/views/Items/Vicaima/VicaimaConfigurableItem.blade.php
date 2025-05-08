@@ -459,6 +459,10 @@
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#plantonStopWidth").removeAttr('min', '26');
+            $("#plantonStopHeight").removeAttr('min', '12');
+            $("#rebatedWidth").removeAttr('min', '32');
+            $("#rebatedHeight").removeAttr('min', '12');
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
@@ -1609,13 +1613,21 @@ function changeLippingThickness(){
         });
 
         document.getElementById("itemForm").querySelectorAll("[required]").forEach(function(i) {
+            let DoorDimensionId = $("#DoorDimensionId").val();
                 // if (!allAreFilled) return;
             if (!i.value){
                 parentid = $('#'+i.id).parents().eq(6).parent('div').attr('id');
                 $( "a[href='#"+parentid+"']").css({'background':'red'});
                 $('#'+i.id).css({'border':'1px solid red'});
                 label = $('#'+i.id).siblings('label').clone().children().remove().end().text();
-                RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> '+ label +' field is required.</li>';
+                if(DoorDimensionId){
+                    $("#DoorDimensions").removeAttr("required");
+                }
+                if(i.id == 'DoorDimensions'){
+                    RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> Door Dimensions field is required.</li>';
+                } else {
+                    RequiredFields += '<li><i class="fas fa-exclamation-triangle"></i> '+ label +' field is required.</li>';
+                }
                 allAreFilled = false;
             }
                 // if (i.type === "radio") {

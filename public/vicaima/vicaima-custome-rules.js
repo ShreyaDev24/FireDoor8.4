@@ -473,7 +473,7 @@ function visionPanelChange(){
         $('#glassThickness').attr('required', true);
         $('#glazingBeads').attr('required', true);
         $('#glazingBeadsThickness').attr('required', true);
-        $('#glazingBeadsWidth').attr('required', true);
+        $('#glazingBeadsWidth').attr('required', false);
         $('#glazingBeadsHeight').attr('required', true);
         $('#glazingBeadsFixingDetail').attr('required', true);
         $('#glazingBeadSpecies').attr('required', true);
@@ -5865,7 +5865,7 @@ function checkOldFirerating(){
     fires = $("#fireRating").val();
     oldfire = $("#fireratingoldvalue").val();
     if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
-        $("#DoorDimensions").attr({required: true }).val('');
+        $("#DoorDimensions").val('');
     }
 }
 
@@ -5873,11 +5873,6 @@ function updateDoorDimensions() {
     let fireRating = $("#fireRating").val();
     let thickness = $("#doorThickness").val();
     if ((thickness == '54' && fireRating == 'FD30') || (thickness == '54' && fireRating == 'FD30s')) {
-        $("#DoorDimensions").val('');
-    } else {
-        $("#DoorDimensions").removeAttr("required");
-    }
-    if(thickness == ''){
         $("#DoorDimensions").val('');
     }
 }
@@ -5907,18 +5902,22 @@ $(document).ready(function () {
             var minWidth = 0;
             if (fireRating === 'NFR') {
                 minWidth = 35;
+                 //Scalloped Depth Logic (4 to 6)
+                $('#ScallopedHeight').attr({ min: 4, max: 6 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:6)`);
             } else if (fireRating === 'FD30' || fireRating === 'FD30s') {
                 minWidth = 44;
+                 //Scalloped Depth Logic (4 to 6)
+                $('#ScallopedHeight').attr({ min: 4, max: 6 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:6)`);
             } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
                 minWidth = 54;
+                 //Scalloped Depth Logic (4 to 8)
+                $('#ScallopedHeight').attr({ min: 4, max: 8 });
+                $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
             }
             $('#ScallopedWidth').attr('min', minWidth);
             $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
-
-            //Scalloped Depth Logic (4 to 8)
-            var scallopedDepth = parseFloat($('#ScallopedHeight').val()) || 0;
-            $('#ScallopedHeight').attr({ min: 4, max: 8 });
-            $("#ScallopedLabelDepth").text(`Scalloped Depth (Min:4 Max:8)`);
 
         } else {
                 $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
@@ -6144,3 +6143,51 @@ $('#oPHeigth,#SL1Width').on('input', function () {
 // }
 
 
+// 914 update changes
+$(document).on('change','#swingType,#fireRating', function (e) {
+    let defaultDoorSetType = $('#DoorsetType-import').data('value');
+    let defaultswingType = $('#SwingType-import').data('value');
+    let DoorSetType = $('#doorsetType').val();
+    let swingType = $(this).val();
+    let frameThickness = $('#frameThickness').val();
+    if((defaultDoorSetType == 'SD' &&  DoorSetType == 'DD') || (defaultswingType == 'SA' && swingType == 'DA' || defaultDoorSetType == 'DD' && swingType == 'DA')){
+        if(frameThickness < 40){
+            $('#frameThickness').attr('min',40);
+            $('#frameThickness').val('');
+            $('#frameThickness').css({ 'border': '1px solid red' });
+            swal('Warning', 'FrameThickness should not be less than 40mm');
+        } else {
+            $('#frameThickness').removeAttr('min',40);
+            $('#frameThickness').css('border', '');
+        }
+    }
+    if(swingType == 'DA' && DoorSetType == 'DD'){
+        if(frameThickness < 40){
+            $('#frameThickness').attr('min',40);
+            $('#frameThickness').val('');
+            $('#frameThickness').css({ 'border': '1px solid red' });
+            swal('Warning', 'FrameThickness should not be less than 40mm');
+        } else {
+            $('#frameThickness').removeAttr('min',40);
+            $('#frameThickness').css('border', '');
+        }
+    }
+
+   else if($('#fireRating').val() == 'FD30' || $('#fireRating').val() == 'FD30s'){
+        $('#frameThickness').attr('min',28);
+        $('#frameThickness').val('');
+        $('#frameMaterial').val('');
+        $('#frameThickness').css({ 'border': '1px solid red' });
+        swal('Warning', 'FrameThickness should not be less than 28mm');
+    } else if($('#fireRating').val() == 'FD60' || $('#fireRating').val() == 'FD60s'){
+        $('#frameThickness').attr('min',32);
+        $('#frameThickness').val('');
+        $('#frameMaterial').val('');
+        $('#frameThickness').css({ 'border': '1px solid red' });
+        swal('Warning', 'FrameThickness should not be less than 32mm');
+    } else {
+        $('#frameThickness').removeAttr('min',28);
+        $('#frameThickness').removeAttr('min',32);
+        $('#frameThickness').css('border', '');
+    }
+});
