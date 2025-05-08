@@ -84,7 +84,7 @@ function pageIdentity(){
                 $("#frameThickness").attr('min','32');
             }
             if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','32');
+                $("#frameThickness").attr('min','40');
             }
         }else{
             $("#frameThickness").removeAttr('min');
