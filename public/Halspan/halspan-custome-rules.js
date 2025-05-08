@@ -1198,10 +1198,10 @@ $(document).ready(function() {
             doorLeafFacingPrice('sideLight12',"Yes");
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
-            $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
-            $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
-            $("#sideLight2FrameThickness").attr({'readonly': false, "required": true });
-            $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
+            $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
+            // $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+            $("#sideLight2FrameThickness").attr({'readonly': true, "required": false });
+            // $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
             $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
             $(".sidelight2section").attr({ 'disabled': true, "required": false }).val('');
@@ -1212,7 +1212,6 @@ $(document).ready(function() {
             $("#SL2Transom").attr({ 'disabled': true, "required": false }).val('');
             $("#sideLight12-section1").removeClass("table_row_show");
             $("#sideLight12-section1").addClass("table_row_hide");
-            $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
         }
     }
     $(".SL1").on("change keyup", function() {
@@ -1285,6 +1284,8 @@ $(document).ready(function() {
                 $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": false }).val('');
                 $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": false }).val('');
                 $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': true, "required": false }).val('');
+                $("#SL2GlassIntegrity").attr({ 'readonly': true, "required": false }).val('');
+                $("#sideLight2FrameThickness").attr({ 'readonly': true, "required": false }).val('');
             }
         }
         updateTransomFields();

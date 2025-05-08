@@ -1130,10 +1130,10 @@ function sideLight2Change(isstatus = false){
             $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true });
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'disabled': false, 'readonly': false, "required": true });
-            $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
-            $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
-            $("#sideLight2FrameThickness").attr({'readonly': false, "required": true });
-            $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
+            $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
+            // $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+            $("#sideLight2FrameThickness").attr({'readonly': true, "required": false });
+            // $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
             $("#SL2Transom").attr({ 'disabled': false, "required": true });
         }
         doorLeafFacingPrice('sideLight12',"Yes");
