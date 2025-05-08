@@ -618,7 +618,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL2Depth">SL2 Depth
+                                                    <label for="SL2Depth">SL2 Frame Depth
                                                     @if(!empty($tooltip->SL2Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL2Depth}}'));

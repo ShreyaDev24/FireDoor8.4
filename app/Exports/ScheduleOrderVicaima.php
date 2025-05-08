@@ -692,7 +692,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'SideLight2 Glazing Bead Species ',
             'SL2Width ',
             'SL2Height ',
-            'SL2Depth ',
+            'SL2 Frame Depth ',
             'SL2Transom ',
             'SLtransom Heigh From Top ',
             'SLtransom Thickness ',
