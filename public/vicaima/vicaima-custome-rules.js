@@ -5554,7 +5554,6 @@ function doorDimensionCalculation(){
     console.log(so_height)
 
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
-
     let foursidedframe = document.getElementById("foursidedframe");
     var rebatedHeight = $("#rebatedHeight").val();
     var DoorSetType = $('select[name="doorsetType"]').val();
