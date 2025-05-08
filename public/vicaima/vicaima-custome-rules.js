@@ -179,17 +179,37 @@ function corewidth1Value(){
     });
 
     // var calculate = leafWidth1 - (LippingThicknessAdditionalNumberForCoreWidth1 * lipping_thickness);
-    var calculate = leafWidth1 - (1 * lipping_thickness);
-    var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
-    var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
-    // var calculate = leafWidth1-(randomkey*lipping_thickness);
-
 
     let checkdoorsetType = $('#doorsetType').val();
-    if (checkdoorsetType == 'DD' || checkdoorsetType == 'leaf_and_a_half') {
-        $("#coreWidth2").val(calculateCoreWidth2);
+    var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
+
+    if(checkdoorsetType == 'leaf_and_a_half'){
+        if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
+            var calculate = leafWidth1 - (1 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+
+        } else if ($("#adjustmentLeafWidth1").val()) {
+            var calculate = leafWidth1 - (1 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2;
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+
+        } else if ($("#adjustmentLeafWidth2").val()) {
+            var calculate = leafWidth1;
+            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+        }
+    } else {
+        var calculate = leafWidth1 - (1 * lipping_thickness);
+        var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+        if (checkdoorsetType == 'DD') {
+            $("#coreWidth2").val(calculateCoreWidth2);
+        }
+        $("#coreWidth1").val(calculate);
     }
-    $("#coreWidth1").val(calculate);
     $("#coreHeight").val(calculateCoreHeight);
 }
 
