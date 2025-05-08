@@ -2029,7 +2029,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="SL1Depth" class="">SL1 Depth
+                                            <label for="SL1Depth" class="">SL1 Frame Depth
                                             @if(!empty($tooltip->SL1Depth))
                                             <script type="text/javascript">
                                             document.write(Tooltip('{{$tooltip->SL1Depth}}'));

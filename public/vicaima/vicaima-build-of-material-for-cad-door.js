@@ -162,7 +162,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if (id == 'ScallopedHeight') {
                         getmsginput = 'Scalloped Height should be a minimum '+getmininputvalue+ 'mm';
                     }else if (id == 'SlBeadThickness') {
-                        getmsginput = 'SL Bead Thickness should be a minimum depth 20mm';
+                        getmsginput = 'SL Bead Depth should be a minimum depth 20mm';
                     }else if (id == 'SlBeadHeight') {
                         getmsginput = 'SL Bead Height should be a minimum height 20mm';
                     } else if (id == 'frameDepth') {

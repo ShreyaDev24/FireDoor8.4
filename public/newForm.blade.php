@@ -118,7 +118,7 @@
 
                                         </div>
                                 </div>
-                               
+
                                 <div class="col-md-3">
                                     <div class="position-relative form-group">
                                         <label for="gap" class="">GAP</label>
@@ -210,7 +210,7 @@
                             <div class="tab-content">
                         <div class="card-body">
                            <div class="form-row">
-                           
+
                             <div class="col-md-3">
                                 <div class="position-relative form-group">
                                     <label for="swingType" class="">Leaf 1 Vision Panel</label>
@@ -245,7 +245,7 @@
                                 </div>
                             </div>
 
-                            
+
 
                             <div class="col-md-3">
                                 <div class="position-relative form-group">
@@ -443,7 +443,7 @@
                                                                                                                                                                   <option value="16.8">16.8</option>
                                                                                                                                                                   <option value="23.0">23.0</option>
                                                                                                                                                                   <option value="25.0">25.0</option>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+
                                     </select>
                                     </div>
                             </div>
@@ -501,14 +501,14 @@
                                     <input type="number" min="0" name="glazingBeadSpecies" id="glazingBeadSpecies" class="form-control">
                                     </div>
                             </div>
-                            
-                           
+
+
                         </div>
                         </div>
             </div>
-                               
+
                         </div>
-                      
+
                     </div>
 
                     <div class="main-card mb-3 card">
@@ -630,7 +630,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </select>
                               </div>
                            </div>
-                            
+
                            <div class="col-md-3">
                               <div class="position-relative form-group">
                                 <label for="sideLight1" class="">Side Light 1 (SL1)</label>
@@ -651,7 +651,7 @@
                               <div class="position-relative form-group">
                                 <label for="SideLight1BeadingSpecies" class="">Side Light 1 Beading Species</label>
                                 <input name="SideLight1BeadingSpecies" readonly="" id="SideLight1BeadingSpecies" class="form-control" type="text">
-                                
+
                               </div>
                            </div>
                            <div class="col-md-3">
@@ -668,7 +668,7 @@
                            </div>
                            <div class="col-md-3">
                               <div class="position-relative form-group">
-                                <label for="SL1Depth" class="">SL1 Depth</label>
+                                <label for="SL1Depth" class="">SL1 Frame Depth</label>
                                 <input name="SL1Depth" readonly="" id="SL1Depth" class="form-control" type="text">
                               </div>
                            </div>
@@ -682,7 +682,7 @@
                                                                                                                                                                   <option value="3">3</option>
                                                                                                                                                                   <option value="4">4</option>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </select>
-                               
+
                               </div>
                            </div>
 
@@ -696,8 +696,8 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </select>
                               </div>
                            </div>
-                           
-                          
+
+
                            <div class="col-md-3">
                               <div class="position-relative form-group">
                                 <label for="SL2Width" class="">SL2 Width</label>
@@ -726,15 +726,15 @@
                                                                                                                                                                   <option value="3">3</option>
                                                                                                                                                                   <option value="4">4</option>
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 </select>
-                              
+
                               </div>
                            </div>
                         </div>
                         </div>
                     </div>
             </div>
-                        
-                      
+
+
             </div>
             <div class="main-card mb-3 card">
                         <div class="card-body">
@@ -845,7 +845,7 @@
                               <div class="position-relative form-group">
                                 <label for="meetingStiles" class="">Meeting Stiles</label>
                                 <input name="meetingStiles" id="meetingStiles" class="form-control" type="text">
-                                
+
                               </div>
                            </div>
                            <div class="col-md-3">
@@ -874,7 +874,7 @@
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   </select>
                               </div>
                            </div>
-                         
+
                         </div>
                         </div>
             </div>
@@ -1056,7 +1056,7 @@
                                   <input name="specialFeatureRefs" id="specialFeatureRefs" placeholder="Special Feature Refs" class="form-control" type="text">
                               </div>
                            </div>
-                         
+
                         </div>
                         </div>
                     </div>
@@ -1146,14 +1146,14 @@
                               </div>
                            </div>
 
-                           
+
                         </div>
                         </div>
             </div>
-                               
+
                         </div>
 
-                      
+
         </div>
 
    <div class="main-card mb-3 card">
@@ -1164,7 +1164,7 @@
                         </div>
                         <div class="card-body">
                          <div class="form-row">
-                           
+
 
                            <div class="col-md-3">
                               <div class="position-relative form-group">
@@ -1199,7 +1199,7 @@
                         </div>
                         </div>
             </div>
-                               
+
                         </div>
 
                         <div class="d-block text-right card-footer">
@@ -1207,7 +1207,7 @@
                                 Submit Now
                             </button>
                         </div>
-                      
+
             </div>
 
 

@@ -1386,7 +1386,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="SlBeadThickness">SL Bead Thickness
+                                            <label for="SlBeadThickness">SL Bead Depth
                                                 <script type="text/javascript">
                                                     document.write(Tooltip('@if(!empty($tooltip->SlBeadThickness)){{$tooltip->SlBeadThickness}}@endif'));
                                                 </script>
@@ -1407,7 +1407,7 @@
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="SL1Depth2">SL1 Depth
+                                            <label for="SL1Depth2">SL1 Frame Depth
                                                 <script type="text/javascript">
                                                     document.write(Tooltip('@if(!empty($tooltip->SL1Depth)){{$tooltip->SL1Depth}}@endif'));
                                                 </script>

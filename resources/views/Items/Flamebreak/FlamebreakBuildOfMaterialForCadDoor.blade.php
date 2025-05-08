@@ -1217,7 +1217,7 @@
                 @endif  --}}
             </tr>
             <tr id="SL1Depth-section" class="@if (isset($Item['SL1Depth'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>SL1 Depth</td>
+                <td>SL1 Frame Depth</td>
                 <td id="SL1Depth-selected">@if (isset($Item['SL1Depth'])){{ $Item['SL1Depth'] }}@endif</td>
                 {{--  @if (price_view_vlidator() == 1)
                     <td id="SL1Depth-price">£0.00</td>
