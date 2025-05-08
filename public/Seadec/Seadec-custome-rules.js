@@ -473,7 +473,7 @@ function visionPanelChange(){
         $('#glassThickness').attr('required', true);
         $('#glazingBeads').attr('required', true);
         $('#glazingBeadsThickness').attr('required', true);
-        $('#glazingBeadsWidth').attr('required', true);
+        $('#glazingBeadsWidth').attr('required', false);
         $('#glazingBeadsHeight').attr('required', true);
         $('#glazingBeadsFixingDetail').attr('required', true);
         $('#glazingBeadSpecies').attr('required', true);
