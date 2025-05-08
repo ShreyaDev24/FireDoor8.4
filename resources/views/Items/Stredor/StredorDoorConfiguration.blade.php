@@ -944,6 +944,14 @@ $(document).on('click', '#submit', function(e) {
         } else {
                 $("#frameCostuction").attr({ 'disabled': false, "required": false });
         }
+        let sideLight1 = $("#sideLight1").val();
+        let sideLight2 = $("#sideLight2").val();
+        if(sideLight1 == 'No'){
+            $("#SL1TransomDepth").attr({ 'readonly': true, "required": false });
+        }
+        if(sideLight2 == 'No'){
+            $("#SL2TransomDepth").attr({ 'readonly': true, "required": false });
+        }
 
     document.getElementById("itemForm").querySelectorAll(".form-control").forEach(function(i) {
         $(".optionItem a").css({
