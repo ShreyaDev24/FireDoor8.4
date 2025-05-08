@@ -2868,10 +2868,14 @@ function calsowidth(framewidth){
     $("#sOWidth").val(so_width);
 }
 
+$("#rebatedHeight").on("keyup change", triggerCalculations);
+$("#foursidedframe, #DoorSetType").on("change", triggerCalculations);
 
-$("#rebatedHeight").on("keyup", function () {
+function triggerCalculations() {
     framewidth();
-});
+    doorDimensionCalculation();
+}
+
 
 function frameHeight(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number
@@ -5530,7 +5534,21 @@ function doorDimensionCalculation(){
     console.log(so_height)
 
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
-    console.log(so_height,parseInt(tollerance),'hii')
+
+    let foursidedframe = document.getElementById("foursidedframe");
+    var rebatedHeight = $("#rebatedHeight").val();
+    var DoorSetType = $('select[name="doorsetType"]').val();
+    if (DoorSetType == "SD"){
+        if($("#frameType").val() == 'Rebated_Frame'){
+            if (foursidedframe.checked) {
+                so_height =   parseInt(leafHeightNoOP) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(tollerance);
+                $("#sOHeight").val(so_height);
+
+                console.log("SO height for 4sided rebated frame single door =", `(${leafHeightNoOP}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${tollerance}) = `,so_height);
+
+            }
+        }
+    }
     frameHeight();
 
     let elements = $(this);
@@ -5634,6 +5652,21 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
         var soHeight = parseInt(leafH) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap)
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
         frameHeight();
+    }
+
+    let foursidedframe = document.getElementById("foursidedframe");
+    var rebatedHeight = $("#rebatedHeight").val();
+    var DoorSetType = $('select[name="doorsetType"]').val();
+    if (DoorSetType == "SD"){
+        if($("#frameType").val() == 'Rebated_Frame'){
+            if (foursidedframe.checked) {
+                so_height =   parseInt(leafH) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(tollerance);
+                $("#sOHeight").val(so_height);
+
+                console.log("SO height for 4sided rebated frame single door =", `(${leafH}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${tollerance}) = `,so_height);
+
+            }
+        }
     }
 
     if (doortypeValue == 'leaf_and_a_half') {
