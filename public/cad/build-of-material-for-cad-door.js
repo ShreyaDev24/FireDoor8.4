@@ -126,6 +126,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
                 } else if(id == 'sideLight2FrameThickness'){
                     getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
+                } else if (id == 'SlBeadThickness') {
+                    getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
                 }
 
 

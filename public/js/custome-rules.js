@@ -1010,7 +1010,7 @@ function sideLight1Change(isstatus = false){
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
         $("#SL1Transom").attr('readonly',false);
-        $("#SlBeadThickness").attr('required',true);
+         $("#SlBeadThickness").attr({required: true,min: 20});
         $("#SlBeadHeight").attr('required',true);
 
 

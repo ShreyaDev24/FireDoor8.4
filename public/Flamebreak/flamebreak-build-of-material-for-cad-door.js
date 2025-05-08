@@ -125,6 +125,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL2 Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'ScallopedHeight') {
                     getmsginput = 'Scalloped Height should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SlBeadThickness') {
+                    getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
                 }
 
 

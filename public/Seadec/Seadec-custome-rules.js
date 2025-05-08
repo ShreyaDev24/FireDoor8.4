@@ -1042,7 +1042,7 @@ function sideLight1Change(){
 
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
-        $("#SlBeadThickness").attr('required',true);
+         $("#SlBeadThickness").attr({required: true,min: 20});
         $("#SlBeadHeight").attr('required',true);
         $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
         $("#sideLight1GlazingSystems").attr({ 'readonly': false });
