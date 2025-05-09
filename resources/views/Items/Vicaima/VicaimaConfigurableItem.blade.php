@@ -1635,9 +1635,14 @@ function changeLippingThickness(){
             $(".optionItem a").css({'background':'#3b86ff'});
             $('#'+i.id).css({'border':'1px solid #ced4da'});
         });
+        let DoorDimensionId = $("#DoorDimensionId").val();
+        if(DoorDimensionId == ''){
+            $("#DoorDimensions").attr("required",true);
+        } else {
+            $("#DoorDimensions").removeAttr("required");
+        }
 
         document.getElementById("itemForm").querySelectorAll("[required]").forEach(function(i) {
-            let DoorDimensionId = $("#DoorDimensionId").val();
                 // if (!allAreFilled) return;
             if (!i.value){
                 parentid = $('#'+i.id).parents().eq(6).parent('div').attr('id');
