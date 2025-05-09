@@ -1749,6 +1749,9 @@ function FireRatingChange() {
             if ($("#fireRating").val() == "FD60") {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($('#opglazingBeadsHeight').val() < 37){
+                    $("#opglazingBeadsHeight").val('');
+                }
                 $("#opglazingBeadsHeight").attr('min',37);
             }
 
@@ -1761,6 +1764,9 @@ function FireRatingChange() {
             if ($("#fireRating").val() == 'FD60s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($('#opglazingBeadsHeight').val() < 37){
+                    $("#opglazingBeadsHeight").val('');
+                }
                 $("#opglazingBeadsHeight").attr('min',37);
             }
         }
