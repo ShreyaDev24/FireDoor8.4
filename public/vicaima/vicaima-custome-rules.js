@@ -5905,7 +5905,6 @@ function checkOldFirerating(){
     oldfire = $("#fireratingoldvalue").val();
     if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
         $("#DoorDimensions").val('');
-        $("#DoorDimensions").val('');
         $("#DoorDimensionId").val('');
         $("#doorDimensionHeightWidth").val('');
         swal('Warning', 'DoorDimensions Fields is required');
