@@ -1599,6 +1599,8 @@ function changeLippingThickness(){
         let DoorDimensionId = $("#DoorDimensionId").val();
         if(DoorDimensionId == ''){
             $("#DoorDimensions").attr("required",true);
+        } else {
+            $("#DoorDimensions").removeAttr("required");
         }
 
         document.getElementById("itemForm").querySelectorAll("[required]").forEach(function(i) {
