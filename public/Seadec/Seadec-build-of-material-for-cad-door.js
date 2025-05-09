@@ -127,6 +127,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SlBeadHeight') {
                     getmsginput = 'SL Bead Height should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SL1Depth') {
+                    getmsginput = 'SL1 Frame Depth should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SL2Depth') {
+                    getmsginput = 'SL2 Frame Depth should be a minimum of ' + getmininputvalue + '.';
                 }
 
 

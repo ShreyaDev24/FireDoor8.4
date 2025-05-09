@@ -1071,6 +1071,7 @@ $(document).ready(function() {
             $("#SL1Transom").attr('readonly',false);
             $("#SlBeadThickness").attr({required: true,min: 20});
             $("#SlBeadHeight").attr('required',true);
+            $("#SL1Depth").attr('min', 95);
 
 
 
@@ -1212,6 +1213,7 @@ $(document).ready(function() {
             $("#sideLight12-section1").addClass("table_row_hide");
             $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
         }
+        $("#SL2Depth").attr('min', 95);
     }
     $(".SL1").on("change keyup", function() {
         copyOfSideLite1Change();

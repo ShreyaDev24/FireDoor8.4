@@ -1035,7 +1035,8 @@ function sideLight1Change(){
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
          $("#SlBeadThickness").attr({required: true,min: 20});
-        $("#SlBeadHeight").attr('required',true);
+         $("#SlBeadHeight").attr('required',true);
+            $("#SL1Depth").attr('min', 95);
         $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
         $("#sideLight1GlazingSystems").attr({ 'readonly': false });
         $("#sideLight1FrameThickness").attr({ 'disabled': false, "required": true });
@@ -1160,6 +1161,7 @@ function sideLight2Change(){
         $("#sideLight12-section1").removeClass("table_row_show");
         $("#sideLight12-section1").addClass("table_row_hide");
     }
+    $("#SL2Depth").attr('min', 95);
 }
 
 function copyOfSideLite1Change(){
