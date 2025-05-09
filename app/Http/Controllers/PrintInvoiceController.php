@@ -2099,7 +2099,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 </td>';
 }
 
-               
+
                 // $elevTbl .= '<td style="width:50%;"></td>';
             }
 
@@ -2745,8 +2745,30 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <tr>
                                     <td class="dicription_grey">OP/FL Glazing Bead Species</td>
                                     <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
+                                </tr>';
+                                if($tt->Overpanel == 'Overpanel'){
+                                $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">OP Panel width</td>
+                                    <td class="dicription_blank">' . $tt->OpPanelWidth . '</td>
                                 </tr>
-                            </tbody>
+                                <tr>
+                                    <td class="dicription_grey">OP Panel Height</td>
+                                    <td class="dicription_blank">' . $tt->OpPanelHeight . '</td>
+                                </tr>';
+                                } else if($tt->Overpanel == 'Fan_Light'){
+                                $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">FL Glass Width</td>
+                                    <td class="dicription_blank">' . $tt->FanLightWidthGlass . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">FL Glass Height</td>
+                                    <td class="dicription_blank">' . $tt->FanLightHeightGlass . '</td>
+                                </tr>';
+                                }
+
+                           $elevTbl .= ' </tbody>
                         </table>
                         <table id="WithBorder">
                             <tbody>
@@ -2764,8 +2786,27 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <tr>
                                     <td class="dicription_grey">Glazing Bead Species</td>
                                     <td class="dicription_blank">' . $glazingbeadspecies . '</td>
-                                </tr>
-                            </tbody>
+                                </tr>';
+                                if($tt->SideLight1 == 'Yes'){
+                                    $elevTbl .= '
+                                    <tr>
+                                        <td class="dicription_grey">SL Glass Width</td>
+                                        <td class="dicription_blank">' . $tt->SideLight1GlassWidth . '</td>
+                                    </tr>
+                                     <tr>
+                                        <td class="dicription_grey">SL Glass Height</td>
+                                        <td class="dicription_blank">' . $tt->Sidelight1GlassHeight . '</td>
+                                    </tr>
+                                    ';
+                                    } else if($tt->SideLight2 == 'Yes'){
+                                    $elevTbl .= '
+                                     <tr>
+                                        <td class="dicription_grey">SL2 Glass Width</td>
+                                        <td class="dicription_blank">' . $tt->SideLight2GlassWidth . '</td>
+                                    </tr>';
+                                    }
+
+                            $elevTbl .= '</tbody>
                         </table>
                         <table id="WithBorder">
                             <tbody>
@@ -3043,7 +3084,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                 $elevSideScreenTbl .= '<td ' . $IsLeafEnabled . '>
                 <div class="doorImgBox">
-                   
+
                     <img src="' . $svgFileS . '" class="doorImg" style="">
                 </div>
             </td>
