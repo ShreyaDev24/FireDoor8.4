@@ -493,7 +493,7 @@ function visionPanelChange(){
         $('#glassThickness').attr('required', true);
         $('#glazingBeads').attr('required', true);
         $('#glazingBeadsThickness').attr('required', true);
-        $('#glazingBeadsWidth').attr('required', false);
+        // $('#glazingBeadsWidth').attr('required', true);
         $('#glazingBeadsHeight').attr('required', true);
         $('#glazingBeadsFixingDetail').attr('required', true);
         // $('#glazingBeadSpecies').attr('required', true);
@@ -513,7 +513,6 @@ function visionPanelChange(){
             $("#vP1Height" + i).attr({ 'required': false, 'readonly': true }).val("");
         }
         $('#leaf1VisionPanelShape').val('').attr({ 'readonly': true, 'required': false }).val("");
-
         if($("#leaf2VisionPanel").val() == 'Yes'){
             false
         }else{
@@ -5937,6 +5936,11 @@ function checkOldFirerating(){
     oldfire = $("#fireratingoldvalue").val();
     if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
         $("#DoorDimensions").val('');
+        $("#DoorDimensions").val('');
+        $("#DoorDimensionId").val('');
+        $("#doorDimensionHeightWidth").val('');
+        swal('Warning', 'DoorDimensions Fields is required');
+        $('#DoorDimensions').css({ 'border': '1px solid red' });
     }
 }
 
@@ -5945,6 +5949,10 @@ function updateDoorDimensions() {
     let thickness = $("#doorThickness").val();
     if ((thickness == '54' && fireRating == 'FD30') || (thickness == '54' && fireRating == 'FD30s')) {
         $("#DoorDimensions").val('');
+        $("#DoorDimensionId").val('');
+        $("#doorDimensionHeightWidth").val('');
+        swal('Warning', 'DoorDimensions Fields is required');
+        $('#DoorDimensions').css({ 'border': '1px solid red' });
     }
 }
 
