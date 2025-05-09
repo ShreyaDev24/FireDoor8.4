@@ -772,7 +772,7 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12);
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 37mm)');
           $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
@@ -904,7 +904,7 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12);
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 37mm)');
           $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
