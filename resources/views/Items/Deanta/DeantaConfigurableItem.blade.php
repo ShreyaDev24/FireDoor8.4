@@ -716,7 +716,7 @@ function groovesNumbershow(){
      $('#oPHeigth').attr('max',600);
 
      //side light
-     $('.slBeadThickness').html('SL Bead Thickness');
+     $('.slBeadThickness').html('Side Light Bead Depth');
      $('#SlBeadThickness').removeAttr('min');
      $('.slBeadHeightMin').html('SL Bead Height');
      $('#SlBeadHeight').removeAttr('min');
@@ -735,7 +735,7 @@ function groovesNumbershow(){
            $('#frameDepth').attr({ 'required':false})
 
 
-       if(fireRating == 'FD30'){
+       if(fireRating == 'FD30' || fireRating == 'FD30s'){
 
          // Lipping & Intumescent
            $('#intumescentSealType').attr({ 'required':true})
@@ -753,14 +753,14 @@ function groovesNumbershow(){
           $('.OverPanelTitle').html('Overpanel/Fanlight');
           $('.OpWidthCase').html('OP/FL width');
           $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
           $('#SlBeadThickness').attr('min',20);
          $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
 
        }
 
-       if(fireRating == 'FD60'){
+       if(fireRating == 'FD60' || fireRating == 'FD60s'){
         $('#intumescentSealType').attr({ 'required':true})
            $('#intumescentSealLocation').attr({ 'required':true})
            $('#intumescentSealColor').attr({ 'required':true})
@@ -773,8 +773,8 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12);
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
-          $('#SlBeadThickness').attr('min',20);
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
+          $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
        }
@@ -844,7 +844,7 @@ function groovesNumbershow(){
      $('#oPHeigth').attr('max',600);
 
      //side light
-     $('.slBeadThickness').html('SL Bead Thickness');
+     $('.slBeadThickness').html('Side Light Bead Depth');
      $('#SlBeadThickness').removeAttr('min');
      $('.slBeadHeightMin').html('SL Bead Height');
      $('#SlBeadHeight').removeAttr('min');
@@ -864,7 +864,7 @@ function groovesNumbershow(){
 
 
 
-       if(fireRating == 'FD30'){
+       if(fireRating == 'FD30' || fireRating == 'FD30s'){
 
 
            // Lipping & Intumescent
@@ -883,14 +883,14 @@ function groovesNumbershow(){
           $('.OverPanelTitle').html('Overpanel/Fanlight');
           $('.OpWidthCase').html('OP/FL width');
           $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
           $('#SlBeadThickness').attr('min',20);
          $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
 
        }
 
-       if(fireRating == 'FD60'){
+       if(fireRating == 'FD60' || fireRating == 'FD60s'){
 
            // Lipping & Intumescent
            $('#intumescentSealType').attr({ 'required':true})
@@ -905,8 +905,8 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12);
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
-          $('#SlBeadThickness').attr('min',20);
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
+          $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
        }
