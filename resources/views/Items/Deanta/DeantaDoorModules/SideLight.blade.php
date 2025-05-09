@@ -253,7 +253,7 @@
                                                     @endif
                                                     </label>
                                                     <label for="SlBead_Height" style="display: none;">SL Bead Height</label>
-                                                    <input @if(empty(@$Item['SlBeadHeight'])) readonly @else required @endif name="SlBeadHeight" id="SlBeadHeight" max="600" class="form-control SL1 door-configuration"
+                                                    <input @if(empty(@$Item['SlBeadHeight'])) readonly @else required @endif name="SlBeadHeight" id="SlBeadHeight" class="form-control SL1 door-configuration"
                                                         type="number" value="@if(isset($Item['SlBeadHeight'])){{$Item['SlBeadHeight']}}@endif">
                                                 </div>
                                             </div>

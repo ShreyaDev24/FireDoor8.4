@@ -636,8 +636,6 @@ $(document).ready(function() {
             }
         }
     });
-    sideLight1Change();
-    sideLight2Change();
 });
     $("#lazingIntegrityOrInsulationIntegrity").on('change',function(){
         glazingSystemFIlter($("#fireRating").val());
@@ -1800,6 +1798,7 @@ $(document).ready(function() {
                 $('label[for="gap"]').hide();
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $('#intumescentSealArrangement').removeAttr('required')
+                $("#SlBeadHeight").attr({min: 20});
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -1817,20 +1816,24 @@ $(document).ready(function() {
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                     $("#grooveDepth").attr("max",4);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
                 if($("#fireRating").val()=="FD60"){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
 
                 if($("#fireRating").val()=='FD30s'){
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#grooveDepth").attr("max",4);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
 
                 if($("#fireRating").val()=='FD60s'){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
             }
 

@@ -124,7 +124,9 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'sideLight2GlazingBeadsWidth') {
                     getmsginput = 'SL2 Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SlBeadThickness') {
-                    getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
+                        getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SlBeadHeight') {
+                    getmsginput = 'SL Bead Height should be a minimum of ' + getmininputvalue + '.';
                 }
 
 
