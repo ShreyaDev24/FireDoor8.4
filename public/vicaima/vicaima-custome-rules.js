@@ -5905,6 +5905,8 @@ function checkOldFirerating(){
     oldfire = $("#fireratingoldvalue").val();
     if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
         $("#DoorDimensions").val('');
+        $("#DoorDimensions").val('');
+        $("#DoorDimensionId").val('');
         $("#doorDimensionHeightWidth").val('');
         swal('Warning', 'DoorDimensions Fields is required');
         $('#DoorDimensions').css({ 'border': '1px solid red' });
@@ -5916,6 +5918,8 @@ function updateDoorDimensions() {
     let thickness = $("#doorThickness").val();
     if ((thickness == '54' && fireRating == 'FD30') || (thickness == '54' && fireRating == 'FD30s')) {
         $("#DoorDimensions").val('');
+        $("#DoorDimensionId").val('');
+        $("#doorDimensionHeightWidth").val('');
         swal('Warning', 'DoorDimensions Fields is required');
         $('#DoorDimensions').css({ 'border': '1px solid red' });
     }
