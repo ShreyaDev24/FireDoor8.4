@@ -179,17 +179,37 @@ function corewidth1Value(){
     });
 
     // var calculate = leafWidth1 - (LippingThicknessAdditionalNumberForCoreWidth1 * lipping_thickness);
-    var calculate = leafWidth1 - (1 * lipping_thickness);
-    var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
-    var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
-    // var calculate = leafWidth1-(randomkey*lipping_thickness);
-
 
     let checkdoorsetType = $('#doorsetType').val();
-    if (checkdoorsetType == 'DD' || checkdoorsetType == 'leaf_and_a_half') {
-        $("#coreWidth2").val(calculateCoreWidth2);
+    var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
+
+    if(checkdoorsetType == 'leaf_and_a_half'){
+        if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
+            var calculate = leafWidth1 - (1 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+
+        } else if ($("#adjustmentLeafWidth1").val()) {
+            var calculate = leafWidth1 - (1 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2;
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+
+        } else if ($("#adjustmentLeafWidth2").val()) {
+            var calculate = leafWidth1;
+            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            $("#coreWidth1").val(calculate);
+            $("#coreWidth2").val(calculateCoreWidth2);
+        }
+    } else {
+        var calculate = leafWidth1 - (1 * lipping_thickness);
+        var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+        if (checkdoorsetType == 'DD') {
+            $("#coreWidth2").val(calculateCoreWidth2);
+        }
+        $("#coreWidth1").val(calculate);
     }
-    $("#coreWidth1").val(calculate);
     $("#coreHeight").val(calculateCoreHeight);
 }
 
@@ -473,10 +493,10 @@ function visionPanelChange(){
         $('#glassThickness').attr('required', true);
         $('#glazingBeads').attr('required', true);
         $('#glazingBeadsThickness').attr('required', true);
-        $('#glazingBeadsWidth').attr('required', false);
+        // $('#glazingBeadsWidth').attr('required', true);
         $('#glazingBeadsHeight').attr('required', true);
         $('#glazingBeadsFixingDetail').attr('required', true);
-        $('#glazingBeadSpecies').attr('required', true);
+        // $('#glazingBeadSpecies').attr('required', true);
         doorLeafFacingPrice('leaf1VisionPanel', 'Yes');
         doorLeafFacingPrice('leaf1VisionPanel1', 'Yes');
     } else {
@@ -493,21 +513,16 @@ function visionPanelChange(){
             $("#vP1Height" + i).attr({ 'required': false, 'readonly': true }).val("");
         }
         $('#leaf1VisionPanelShape').val('').attr({ 'readonly': true, 'required': false }).val("");
-
-        if($("#leaf2VisionPanel").val() == 'Yes'){
-            false
-        }else{
-            $('#glazingSystems').attr('required', false);
-            $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
-            $('#glassType').val('').attr('required', false);
-            $('#glazingBeads').val('').attr('required', false);
-            $('#glazingBeadsThickness').val('').attr('required', false);
-            $('#glazingBeadsWidth').val('').attr('required', false);
-            $('#glazingBeadsHeight').val('').attr('required', false);
-            $('#glazingBeadsFixingDetail').val('').attr('required', false);
-            $('#glazingBeadSpecies').val('').attr('required', false);
-            $('#glassThickness').val('').attr('required', false);
-        }
+        $('#glazingSystems').attr('required', false);
+        $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
+        $('#glassType').val('').attr('required', false);
+        $('#glazingBeads').val('').attr('required', false);
+        $('#glazingBeadsThickness').val('').attr('required', false);
+        // $('#glazingBeadsWidth').val('').attr('required', false);
+        $('#glazingBeadsHeight').val('').attr('required', false);
+        $('#glazingBeadsFixingDetail').val('').attr('required', false);
+        $('#glazingBeadSpecies').val('').attr('required', false);
+        $('#glassThickness').val('').attr('required', false);
     }
 }
 
