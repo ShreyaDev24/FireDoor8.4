@@ -1217,7 +1217,7 @@
                 @endif  --}}
             </tr>
             <tr id="SL1Depth-section" class="@if (isset($Item['SL1Depth'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>SL1 Depth</td>
+                <td>SL1 Frame Depth</td>
                 <td id="SL1Depth-selected">@if (isset($Item['SL1Depth'])){{ $Item['SL1Depth'] }}@endif</td>
                 {{--  @if (price_view_vlidator() == 1)
                     <td id="SL1Depth-price">£0.00</td>
@@ -1335,7 +1335,7 @@
                 @endif  --}}
             </tr>
             <tr id="SL2Depth-section" class="@if (isset($Item['SL2Depth'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>SL2 Depth</td>
+                <td>SL2 Frame Depth</td>
                 <td id="SL2Depth-selected">@if (isset($Item['SL2Depth'])){{ $Item['SL2Depth'] }}@endif</td>
                 {{--  @if (price_view_vlidator() == 1)
                     <td id="SL2Depth-price">£0.00</td>

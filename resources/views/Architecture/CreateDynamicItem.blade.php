@@ -1063,7 +1063,7 @@
                    </div>
                    <div class="col-md-3">
                       <div class="position-relative form-group">
-                        <label for="SL1Depth" class="">SL1 Depth</label>
+                        <label for="SL1Depth" class="">SL1 Frame Depth</label>
                         <input name="SL1Depth" readonly id="SL1Depth" class="form-control" type="text">
                       </div>
                    </div>
@@ -1166,7 +1166,7 @@
                    </div>
                    <div class="col-md-3">
                       <div class="position-relative form-group">
-                        <label for="SL2Depth" class="">SL2 Depth</label>
+                        <label for="SL2Depth" class="">SL2 Frame Depth</label>
                         <input name="SL2Depth" readonly id="SL2Depth" class="form-control" type="text">
                       </div>
                    </div>

@@ -20,9 +20,9 @@
                                                         <option value=""> Is side light 1 is active?</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='SideLight1')
-                                                        <option value="{{$row->OptionKey}}" 
-                                                            @if(isset($Item['SideLight1'])) 
-                                                                @if($Item['SideLight1'] == $row->OptionKey) 
+                                                        <option value="{{$row->OptionKey}}"
+                                                            @if(isset($Item['SideLight1']))
+                                                                @if($Item['SideLight1'] == $row->OptionKey)
                                                                     {{'selected'}}
                                                                 @endif
                                                             @elseif($row->OptionKey == "No")
@@ -84,13 +84,13 @@
                                                     </script>
                                                     @endif
 
-                                                        </label>                                                    
+                                                        </label>
                                                         <i class="fa fa-info icon" id="SideLight1GlazingBeadSpeciesIcon"
                                                             onClick=""></i>
                                                         <input type="text" id="SideLight1GlazingBeadSpecies"
                                                             class="form-control" @if(empty($Item['SL1GlazingBeadSpecies'])){{'disabled'}}@endif  value="">
                                                         <input type="hidden" name="SideLight1GlazingBeadSpecies" value="@if(isset($Item['SL1GlazingBeadSpecies'])){{$Item['SL1GlazingBeadSpecies']}}@endif">
-                                                    
+
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -122,7 +122,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL1Depth">SL1 Depth
+                                                    <label for="SL1Depth">SL1 Frame Depth
                                                     @if(!empty($tooltip->SL1Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL1Depth}}'));
@@ -169,11 +169,11 @@
                                                         <option value=""> Is side light 2 is active?</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='SideLight2')
-                                                        <option value="{{$row->OptionKey}}" 
-                                                            @if(isset($Item['SideLight2'])) 
-                                                                @if($Item['SideLight2'] == $row->OptionKey) 
-                                                                    {{'selected'}} 
-                                                                @endif 
+                                                        <option value="{{$row->OptionKey}}"
+                                                            @if(isset($Item['SideLight2']))
+                                                                @if($Item['SideLight2'] == $row->OptionKey)
+                                                                    {{'selected'}}
+                                                                @endif
                                                             @elseif($row->OptionKey == "No")
                                                                 {{'selected'}}
                                                             @endif>{{$row->OptionValue}}</option>
@@ -213,7 +213,7 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <select name="sideLight2GlassType" 
+                                                    <select name="sideLight2GlassType"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'disabled'}}
@@ -243,14 +243,14 @@
                                                     </script>
                                                     @endif
                                                         </label>
-                                                    <select name="SideLight2BeadingType" id="SideLight2BeadingType" 
+                                                    <select name="SideLight2BeadingType" id="SideLight2BeadingType"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'disabled'}}
                                                             @endif
                                                         @else
                                                             {{'disabled'}}
-                                                        @endif 
+                                                        @endif
                                                         class="form-control">
                                                         <option value="">Select Beading Type</option>
                                                         <!-- @foreach($option_data as $row)
@@ -272,21 +272,21 @@
                                                     document.write(Tooltip('{{$tooltip->SideLight2GlazingBeadSpecies}}'));
                                                     </script>
                                                     @endif
-                                                        </label>    
+                                                        </label>
                                                     <i class="fa fa-info icon" id="SideLight2GlazingBeadSpeciesIcon"
                                                         onClick=""></i>
                                                     <input type="text" id="SideLight2GlazingBeadSpecies"
-                                                        class="form-control" 
+                                                        class="form-control"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'disabled'}}
                                                             @endif
                                                         @else
                                                             {{'disabled'}}
-                                                        @endif 
+                                                        @endif
                                                         value="">
                                                     <input type="hidden" name="SideLight2GlazingBeadSpecies" value="@if(isset($Item['SideLight2GlazingBeadSpecies'])){{$Item['SideLight2GlazingBeadSpecies']}}@endif">
-                                                
+
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -298,14 +298,14 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input name="SL2Width" max="600" 
+                                                    <input name="SL2Width" max="600"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'readonly'}}
                                                             @endif
                                                         @else
                                                             {{'readonly'}}
-                                                        @endif 
+                                                        @endif
                                                     id="SL2Width" class="form-control door-configuration"
                                                         type="text" value="@if(isset($Item['SL2Width'])){{$Item['SL2Width']}}@endif">
                                                 </div>
@@ -319,21 +319,21 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input name="SL2Height" 
+                                                    <input name="SL2Height"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'readonly'}}
                                                             @endif
                                                         @else
                                                             {{'readonly'}}
-                                                        @endif 
+                                                        @endif
                                                      id="SL2Height" class="form-control door-configuration"
                                                         type="text" value="@if(isset($Item['SL2Height'])){{$Item['SL2Height']}}@endif">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL2Depth">SL2 Depth
+                                                    <label for="SL2Depth">SL2 Frame Depth
                                                     @if(!empty($tooltip->SL2Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL2Depth}}'));
@@ -347,8 +347,8 @@
                                                             @endif
                                                         @else
                                                             {{'readonly'}}
-                                                        @endif 
-                                                    
+                                                        @endif
+
                                                      id="SL2Depth" class="form-control"
                                                         type="text" value="@if(isset($Item['SL2Depth'])){{$Item['SL2Depth']}}@endif">
                                                 </div>
@@ -363,14 +363,14 @@
                                                     @endif
 
                                                     </label>
-                                                    <select name="SL2Transom" 
+                                                    <select name="SL2Transom"
                                                         @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                                             @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                                                 {{'disabled'}}
                                                             @endif
                                                         @else
                                                             {{'disabled'}}
-                                                        @endif 
+                                                        @endif
                                                     id="SL2Transom" class="form-control">
                                                         <option value="">Select side light 2 transom</option>
                                                         <option value="No">No</option>
@@ -390,10 +390,10 @@
                                                                 document.write(Tooltip('{{$tooltip->SLtransomHeightFromTop}}'));
                                                             </script>
                                                         @endif
-                                                    </label> 
+                                                    </label>
                                                     <input type="text" id="SLtransomHeightFromTop" name="SLtransomHeightFromTop"
                                                             class="form-control" value="@if(isset($Item['SLtransomHeightFromTop'])){{$Item['SLtransomHeightFromTop']}}@endif">
-                                                  
+
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -404,7 +404,7 @@
                                                                 document.write(Tooltip('{{$tooltip->SLtransomThickness}}'));
                                                             </script>
                                                         @endif
-                                                    </label>                                                    
+                                                    </label>
                                                     <input type="number" min="32" id="SLtransomThickness" name="SLtransomThickness"
                                                             class="form-control" value="@if(isset($Item['SLtransomThickness'])){{$Item['SLtransomThickness']}}@endif">
                                                 </div>

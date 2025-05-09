@@ -124,7 +124,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SlBeadThickness">SL Bead Thickness
+                                                    <label for="SlBeadThickness">SL Bead Depth
                                                     @if(!empty($tooltip->SlBeadThickness))
                                                     <script type="text/javascript">
                                                     //(Tooltip('{{$tooltip->SlBeadThickness}}'));
@@ -152,7 +152,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL1Depth">SL1 Depth
+                                                    <label for="SL1Depth">SL1 Frame Depth
                                                     @if(!empty($tooltip->SL1Depth))
                                                     <script type="text/javascript">
                                                     //(Tooltip('{{$tooltip->SL1Depth}}'));
@@ -362,7 +362,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL2Depth">SL2 Depth
+                                                    <label for="SL2Depth">SL2 Frame Depth
                                                     @if(!empty($tooltip->SL2Depth))
                                                     <script type="text/javascript">
                                                     //(Tooltip('{{$tooltip->SL2Depth}}'));
