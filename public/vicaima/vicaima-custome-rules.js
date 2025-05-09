@@ -513,16 +513,20 @@ function visionPanelChange(){
             $("#vP1Height" + i).attr({ 'required': false, 'readonly': true }).val("");
         }
         $('#leaf1VisionPanelShape').val('').attr({ 'readonly': true, 'required': false }).val("");
-        $('#glazingSystems').attr('required', false);
-        $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
-        $('#glassType').val('').attr('required', false);
-        $('#glazingBeads').val('').attr('required', false);
-        $('#glazingBeadsThickness').val('').attr('required', false);
-        // $('#glazingBeadsWidth').val('').attr('required', false);
-        $('#glazingBeadsHeight').val('').attr('required', false);
-        $('#glazingBeadsFixingDetail').val('').attr('required', false);
-        $('#glazingBeadSpecies').val('').attr('required', false);
-        $('#glassThickness').val('').attr('required', false);
+        if($("#leaf2VisionPanel").val() == 'Yes'){
+            false
+        }else{
+            $('#glazingSystems').attr('required', false);
+            $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required', false);
+            $('#glassType').val('').attr('required', false);
+            $('#glazingBeads').val('').attr('required', false);
+            $('#glazingBeadsThickness').val('').attr('required', false);
+            // $('#glazingBeadsWidth').val('').attr('required', false);
+            $('#glazingBeadsHeight').val('').attr('required', false);
+            $('#glazingBeadsFixingDetail').val('').attr('required', false);
+            $('#glazingBeadSpecies').val('').attr('required', false);
+            $('#glassThickness').val('').attr('required', false);
+        }
     }
 }
 
