@@ -1042,9 +1042,9 @@ function sideLight1Change(){
 
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
-         $("#SlBeadThickness").attr({required: true,min: 20});
+          $("#SlBeadThickness").attr('required',true);
          $("#SlBeadHeight").attr('required',true);
-            $("#SL1Depth").attr('min', 95);
+
         $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
         $("#sideLight1GlazingSystems").attr({ 'readonly': false });
         $("#sideLight1FrameThickness").attr({ 'disabled': false, "required": true });
@@ -1169,7 +1169,6 @@ function sideLight2Change(){
         $("#sideLight12-section1").removeClass("table_row_show");
         $("#sideLight12-section1").addClass("table_row_hide");
     }
-    $("#SL2Depth").attr('min', 95);
 }
 
 function copyOfSideLite1Change(){
@@ -1750,7 +1749,7 @@ function FireRatingChange() {
             $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
             $("#SL1Width").removeAttr('max');
             $("#SL2Width").removeAttr('max');
-            $("#SlBeadHeight").attr({min: 20});
+
             MeetingStyle();
         } else {
             $("#SL1Width").attr('max',600);
@@ -1765,24 +1764,22 @@ function FireRatingChange() {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                 $("#grooveDepth").attr("max", 4);
-                $("#SlBeadHeight").attr({min: 20});
+
             }
             if ($("#fireRating").val() == "FD60") {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
-                $("#SlBeadHeight").attr({min: 37});
             }
 
             if ($("#fireRating").val() == 'FD30s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`);
                 $("#grooveDepth").attr("max", 4);
-                $("#SlBeadHeight").attr({min: 20});
+
             }
 
             if ($("#fireRating").val() == 'FD60s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
-                $("#SlBeadHeight").attr({min: 37});
             }
         }
         $('#opGlassIntegrity').val('');
