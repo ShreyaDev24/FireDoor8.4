@@ -187,6 +187,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
                         // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                    } else if (id == 'SL1Depth') {
+                        getmsginput = 'SL1 Depth should be more than ' + getmininputvalue + 'mm.';
+                    } else if (id == 'SL2Depth') {
+                        getmsginput = 'SL2 Depth should be more than ' + getmininputvalue + 'mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
