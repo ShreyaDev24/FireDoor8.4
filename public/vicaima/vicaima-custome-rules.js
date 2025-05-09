@@ -5900,14 +5900,22 @@ function myfunction(){
 }
 
 // 905
-function checkOldFirerating(){
-    fires = $("#fireRating").val();
-    oldfire = $("#fireratingoldvalue").val();
-    if(fires != oldfire && (oldfire == 'FD30' || oldfire == 'FD30s') &&  (fires == 'FD60' || fires == 'FD60s')){
+function checkOldFirerating() {
+    let fires = $("#fireRating").val().trim();
+    let oldfire = $("#fireratingoldvalue").val().trim();
+    console.log(fires != oldfire, (oldfire == 'FD30s' && fires == 'FD60'));
+
+    if (
+        fires !== oldfire &&
+        (oldfire === 'FD30' || oldfire === 'FD30s') &&
+        (fires === 'FD60' || fires === 'FD60s')
+    ){
         $("#DoorDimensions").val('');
         $("#DoorDimensionId").val('');
         $("#doorDimensionHeightWidth").val('');
-        swal('Warning', 'DoorDimensions Fields is required');
+        setTimeout(function () {
+            swal('Warning', 'Door Dimensions Fields is required');
+        }, 4000); // 1 second delay
         $('#DoorDimensions').css({ 'border': '1px solid red' });
     }
 }
