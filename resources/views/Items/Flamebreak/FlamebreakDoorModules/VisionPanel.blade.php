@@ -616,6 +616,7 @@
                             <select name="glassType" id="glassType" option_slug="leaf1_glass_type" class="form-control">
                                 <option value="">Select Glass Type</option>
                             </select>
+                            <input type="hidden" id="glassValueId" value="@if(isset($Item['GlassType'])){{$Item['GlassType']}}@endif">
                         </div>
                     </div>
                     <div class="col-md-6">
