@@ -1818,6 +1818,7 @@ function FireRatingChange() {
         rebatedLippingThickness($("#fireRating").val());
         visionPanelChange();
         rebatedWidth();
+        doorDimensionCalculation();
     }
     IntumescentSeals();
 }
@@ -2824,7 +2825,7 @@ function filterSpecies(){
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
         framewidth();
-        $("#frameHeight").val(so_height - parseInt(tollerance));
+        // $("#frameHeight").val(so_height - parseInt(tollerance));
     }, 500);
 };
 
@@ -5367,7 +5368,7 @@ $("#DoorDimensionsIcon").on("click", function () {
     setTimeout(() => {
         var so_width = parseInt($("#sOWidth").val());
         var so_height = parseInt($("#sOHeight").val());
-        $("#frameHeight").val(so_height - parseInt(tollerance));
+        // $("#frameHeight").val(so_height - parseInt(tollerance));
         framewidth();
     }, 500);
 
@@ -5571,6 +5572,9 @@ function doorDimensionCalculation(){
 
                 console.log("SO height for 4sided rebated frame single door =", `(${leafHeightNoOP}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${tollerance}) = `,so_height);
 
+            }else{
+                var frame_height = $("#frameHeight").val();
+                $("#sOHeight").val(parseInt(frame_height) + parseInt(tollerance));
             }
         }
     }
@@ -5686,11 +5690,14 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
     if (DoorSetType == "SD"){
         if($("#frameType").val() == 'Rebated_Frame'){
             if (foursidedframe.checked) {
-                so_height =   parseInt(leafH) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(tollerance);
+                var so_height =   parseInt(leafH) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(frame_thickness) - parseInt(rebatedHeight) + parseInt(gap) + parseInt(tollerance);
                 $("#sOHeight").val(so_height);
 
                 console.log("SO height for 4sided rebated frame single door =", `(${leafH}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${frame_thickness}) - (${rebatedHeight}) + (${gap}) + (${tollerance}) = `,so_height);
 
+            }else{
+                var frame_height = $("#frameHeight").val();
+                $("#sOHeight").val(parseInt(frame_height) + parseInt(tollerance));
             }
         }
     }
