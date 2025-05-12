@@ -1822,6 +1822,7 @@ $(document).ready(function() {
                 if($("#fireRating").val()=="FD60"){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    checkValidation($("#fireRating").val());
                 }
 
                 if($("#fireRating").val()=='FD30s'){
@@ -1832,6 +1833,7 @@ $(document).ready(function() {
                 if($("#fireRating").val()=='FD60s'){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    checkValidation($("#fireRating").val());
                 }
             }
 
@@ -5941,5 +5943,11 @@ function getSideLightGlass(val , type){
     }
 }
 
+function checkValidation(fireRating){
+    if(fireRating == 'FD60' || fireRating == 'FD60s'){
+        $("#frameMaterial").val('');
+        $("#glassType").attr('required',true);
+    }
+}
 
 
