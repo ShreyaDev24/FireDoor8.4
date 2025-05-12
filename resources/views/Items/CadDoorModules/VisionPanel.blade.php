@@ -742,7 +742,7 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="glazingBeadsHeight" class="">Glazing Beads Width
+                            <label for="glazingBeadsHeight" class="">Glazing Bead Depth
                             @if(!empty($tooltip->glazingBeadsHeight))
                             <script type="text/javascript">
                             document.write(Tooltip('{{$tooltip->glazingBeadsHeight}}'));

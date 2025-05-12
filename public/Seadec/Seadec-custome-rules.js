@@ -1748,6 +1748,7 @@ function FireRatingChange() {
             $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
             $("#SL1Width").removeAttr('max');
             $("#SL2Width").removeAttr('max');
+            $("#glazingBeadsThickness").attr('min',19);
             MeetingStyle();
         } else {
             $("#SL1Width").attr('max',600);
@@ -1762,20 +1763,30 @@ function FireRatingChange() {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                 $("#grooveDepth").attr("max", 4);
+                $("#glazingBeadsThickness").attr('min',19);
             }
             if ($("#fireRating").val() == "FD60") {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($("#glazingBeadsThickness").val() < 30){
+                    $("#glazingBeadsThickness").val('');
+                }
+                $("#glazingBeadsThickness").attr('min',30);
             }
 
             if ($("#fireRating").val() == 'FD30s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`);
                 $("#grooveDepth").attr("max", 4);
+                $("#glazingBeadsThickness").attr('min',19);
             }
 
             if ($("#fireRating").val() == 'FD60s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($("#glazingBeadsThickness").val() < 30){
+                    $("#glazingBeadsThickness").val('');
+                }
+                $("#glazingBeadsThickness").attr('min',30);
             }
         }
         $('#opGlassIntegrity').val('');
