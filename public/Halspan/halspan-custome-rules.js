@@ -6030,7 +6030,9 @@ function getSideLightGlass(val , type){
 }
 
 function checkValidation(fireRating){
+    console.log(fireRating);
     if(fireRating == 'FD60' || fireRating == 'FD60s'){
+        console.log('fireRating');
         $("#frameMaterial").val('');
         $("#glassType").attr('required',true);
     }
