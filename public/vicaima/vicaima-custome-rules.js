@@ -1772,6 +1772,7 @@ $(function () {
 function FireRatingChange() {
     if ($("#fireRating").val() != '') {
         if ($("#fireRating").val() == "NFR") {
+            $("#glazingBeadsThickness").attr('min',19);
             $("#grooveDepth").attr("max", "");
             $("#gap").removeAttr("min");
             $("#gap").removeAttr("max");
@@ -1795,12 +1796,17 @@ function FireRatingChange() {
             $('label[for="gap_NFR"]').css({ 'display': 'none' });
 
             if ($("#fireRating").val() == "FD30") {
+                $("#glazingBeadsThickness").attr('min',19);
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                 $("#grooveDepth").attr("max", 4);
                 $("#opglazingBeadsHeight").attr('min',20);
             }
             if ($("#fireRating").val() == "FD60") {
+                if($("#glazingBeadsThickness").val() < 30){
+                    $("#glazingBeadsThickness").val('');
+                }
+                $("#glazingBeadsThickness").attr('min',30);
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
                 if($('#opglazingBeadsHeight').val() < 37){
@@ -1810,12 +1816,17 @@ function FireRatingChange() {
             }
 
             if ($("#fireRating").val() == 'FD30s') {
+                $("#glazingBeadsThickness").attr('min',19);
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#grooveDepth").attr("max", 4);
                 $("#opglazingBeadsHeight").attr('min',20);
             }
 
             if ($("#fireRating").val() == 'FD60s') {
+                if($("#glazingBeadsThickness").val() < 30){
+                    $("#glazingBeadsThickness").val('');
+                }
+                $("#glazingBeadsThickness").attr('min',30);
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
                 if($('#opglazingBeadsHeight').val() < 37){

@@ -134,6 +134,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL1 Frame Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'SL2Depth') {
                     getmsginput = 'SL2 Frame Depth should be a minimum of ' + getmininputvalue + '.';
+                } else if(id == 'glazingBeadsThickness'){
+                    getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
                 }
 
 
