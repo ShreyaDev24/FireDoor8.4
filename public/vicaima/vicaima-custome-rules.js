@@ -2899,6 +2899,7 @@ function frameHeight(){
     var soheight = parseInt($('input[name="sOHeight"]').val(), 10) || 0;
     var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
     var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0;
     var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
     var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
@@ -2921,6 +2922,14 @@ function frameHeight(){
     }else{
         var plantonStopHeight = soheight - tollerance;
         $("#frameHeight").val(plantonStopHeight);
+    }
+    if($("#frameType").val() == 'Scalloped'){
+        // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
+        var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
+        console.log(FrameThickness , ScallopedHeight , Gap , undercut , leafHeightNoOP)
+        $("#frameHeight").val(frameHeight);
+        var soheight = frameHeight + tollerance;
+          $('#sOHeight').val(soheight);
     }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
