@@ -1847,6 +1847,7 @@ $(document).ready(function() {
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                    checkValidation($("#fireRating").val());
                 }
 
                 if($("#fireRating").val()=='FD30s'){
@@ -1864,6 +1865,7 @@ $(document).ready(function() {
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                    checkValidation($("#fireRating").val());
                 }
             }
 
@@ -6027,5 +6029,11 @@ function getSideLightGlass(val , type){
     }
 }
 
+function checkValidation(fireRating){
+    if(fireRating == 'FD60' || fireRating == 'FD60s'){
+        $("#frameMaterial").val('');
+        $("#glassType").attr('required',true);
+    }
+}
 
 
