@@ -468,29 +468,11 @@
         let newMin;
         if (framTypeValue == "Plant_on_Stop") {
             newMin = 14;
-            $("#plantonStopWidth").attr('min', '14');
             $("#plantonStopHeight").attr('min', '12');
-            $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            if(value == 'NFR' || value == 'FD30'){
-                $("#ScallopedWidth").removeAttr('min', '22');
-            }
-            if(value == 'FD60'){
-                $("#ScallopedWidth").removeAttr('min', '28');
-            }
-            $("#ScallopedHeight").removeAttr('max', '5');
-            $("#ScallopedHeight").removeAttr('min', '12');
-            $("#ScallopedWidth").removeAttr('min', '32');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
@@ -500,29 +482,12 @@
             FramePrice('Plant_on_Stop');
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            if(value == 'NFR' || value == 'FD30'){
-                newMin = 22;
-                $("#ScallopedWidth").attr('min', '22');
-            }
-            if(value == 'FD60'){
-                newMin = 28;
-                $("#ScallopedWidth").attr('min', '28');
-            }
-            // $("#ScallopedHeight").attr('max', '5');
-            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
-
-            $("#plantonStopWidth").removeAttr('min', '14');
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
@@ -531,37 +496,11 @@
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
             $("#rebatedHeight").attr('min', '12');
-                newMin = 32;
-            if(value == 'NFR'){
-                $("#rebatedWidth").attr('min', '35');
-                newMin = 35;
-            }
-            if(value == 'FD30'){
-                $("#rebatedWidth").attr('min', '44');
-                newMin = 44;
-            }
-            if(value == 'FD60'){
-                $("#rebatedWidth").attr('min', '54');
-                newMin = 54;
-            }
-            $("#rebatedWidthLabel").text(`Rebated Width (min ${newMin})`);
             $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
             $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#plantonStopWidth").removeAttr('min', '14');
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            if(value  == 'NFR' || value  == 'FD30'){
-                $("#ScallopedWidth").removeAttr('min', '22');
-            }
-            if(value  == 'FD60'){
-                $("#ScallopedWidth").removeAttr('min', '28');
-            }
-            $("#ScallopedHeight").removeAttr('max', '5');
-            $("#ScallopedHeight").removeAttr('min', '12');
-            $("#ScallopedWidth").removeAttr('min', '32');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
@@ -571,6 +510,7 @@
             FramePrice('Rebated_Frame');
             // frameprice('Rebated_Frame');
         } else {
+
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -587,6 +527,7 @@
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+        rebatedWidth();
         swingTypeFrameType();
 
         $(".form-control").each(function(index) {
