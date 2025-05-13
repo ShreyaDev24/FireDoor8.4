@@ -90,6 +90,7 @@
                                 @endforeach --}}
                             </select>
                         </div>
+                        <input type="hidden" name="savedfirerating" id="savedfirerating" value="@if(isset($Item["FireRating"])){{$Item["FireRating"]}}@else{{''}}@endif">
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
