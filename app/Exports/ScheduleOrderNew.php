@@ -496,7 +496,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $i++;
             $j++;
         }
-        
+
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
             '',
@@ -518,7 +518,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -662,9 +662,9 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'SL1 Glazing Bead Species ',
             'SL1Width ',
             'SL1Height ',
-            'SlBead Thickness ',
+            'SL Bead Depth ',
             'SlBead Height ',
-            'SL1Depth ',
+            'SL1 Frame Depth ',
             'SL1Transom ',
             'SideLight2 ',
             'Do You Want To Copy Same As SL1 ',
@@ -679,7 +679,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'SideLight2 Glazing Bead Species ',
             'SL2Width ',
             'SL2Height ',
-            'SL2Depth ',
+            'SL2 Frame Depth ',
             'SL2Transom ',
             'SLtransom Heigh From Top ',
             'SLtransom Thickness ',
@@ -741,7 +741,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
 
     }
-    
+
     public function registerEvents(): array
     {
 

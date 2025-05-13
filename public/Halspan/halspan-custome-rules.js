@@ -636,8 +636,6 @@ $(document).ready(function() {
             }
         }
     });
-    sideLight1Change();
-    sideLight2Change();
 });
     $("#lazingIntegrityOrInsulationIntegrity").on('change',function(){
         glazingSystemFIlter($("#fireRating").val());
@@ -1081,8 +1079,9 @@ $(document).ready(function() {
             $("#SlBeadThickness").attr('readonly',false);
             $("#SlBeadHeight").attr('readonly',false);
             $("#SL1Transom").attr('readonly',false);
-            $("#SlBeadThickness").attr('required',true);
+            $("#SlBeadThickness").attr({required: true,min: 20});
             $("#SlBeadHeight").attr('required',true);
+            $("#SL1Depth").attr('min', 95);
 
 
 
@@ -1223,6 +1222,7 @@ $(document).ready(function() {
             $("#sideLight12-section1").removeClass("table_row_show");
             $("#sideLight12-section1").addClass("table_row_hide");
         }
+        $("#SL2Depth").attr('min', 95);
     }
     $(".SL1").on("change keyup", function() {
         copyOfSideLite1Change();
@@ -1256,7 +1256,7 @@ $(document).ready(function() {
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlazingBeadsFixingDetail").val());
 
             //end
-            updateGlassType(isstatus = false, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
+            updateGlassType(isstatus, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
 
             var val = $('#sideLight1GlassType').val();
             $("#sidelight1-selected1").empty().text(val);
@@ -1812,6 +1812,7 @@ $(document).ready(function() {
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $('#intumescentSealArrangement').removeAttr('required')
                 $("#glazingBeadsThickness").attr('min',19);
+                $("#SlBeadHeight").attr({min: 20});
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -1830,6 +1831,7 @@ $(document).ready(function() {
                     $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
                 if($("#fireRating").val()=="FD60"){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
@@ -1838,12 +1840,14 @@ $(document).ready(function() {
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
 
                 if($("#fireRating").val()=='FD30s'){
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
 
                 if($("#fireRating").val()=='FD60s'){
@@ -1853,9 +1857,14 @@ $(document).ready(function() {
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
             }
-
+            var identifier = $("#SlBeadHeight");
+            var value = parseFloat(identifier.val());
+            if (identifier.length && value > 0) {
+                SetBuildOfMaterial(identifier);
+            }
             floor_finish_change();
             frameThicknessChange();
             MeetingStyle();

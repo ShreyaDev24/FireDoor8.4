@@ -128,6 +128,14 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                 } else if(id == 'glazingBeadsThickness'){
                     getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
+                } else if (id == 'SlBeadThickness') {
+                        getmsginput = 'SL Bead Depth should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SlBeadHeight') {
+                    getmsginput = 'SL Bead Height should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SL1Depth') {
+                    getmsginput = 'SL1 Frame Depth should be a minimum of ' + getmininputvalue + '.';
+                } else if (id == 'SL2Depth') {
+                    getmsginput = 'SL2 Frame Depth should be a minimum of ' + getmininputvalue + '.';
                 }
 
 

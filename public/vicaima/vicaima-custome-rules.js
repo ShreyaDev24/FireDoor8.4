@@ -1071,8 +1071,9 @@ function sideLight1Change(){
 
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
-        $("#SlBeadThickness").attr('required',true);
-        $("#SlBeadHeight").attr('required',true);
+          $("#SlBeadThickness").attr('required',true);
+         $("#SlBeadHeight").attr('required',true);
+
         $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
         $("#sideLight1GlazingSystems").attr({ 'readonly': false });
         $("#sideLight1FrameThickness").attr({ 'disabled': false, "required": true });

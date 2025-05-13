@@ -239,14 +239,14 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SlBeadThickness">SL Bead Thickness
+                                                    <label for="SlBeadThickness">SL Bead Depth
                                                     @if(!empty($tooltip->SlBeadThickness))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SlBeadThickness}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <label for="SlBead_Thickness" style="display: none;">SL Bead Thickness</label>
+                                                    <label for="SlBead_Thickness" style="display: none;">SL Bead Depth</label>
                                                     <input name="SlBeadThickness" id="SlBeadThickness" @if(empty(@$Item['SlBeadThickness'])) readonly @else required @endif class="form-control SlBeadThickness door-configuration SL1"
                                                         type="text" value="@if(isset($Item['SlBeadThickness'])){{$Item['SlBeadThickness']}}@endif">
                                                 </div>
@@ -261,14 +261,14 @@
                                                     @endif
                                                     </label>
                                                     <label for="SlBead_Height" style="display: none;">SL Bead Height</label>
-                                                    <input @if(empty(@$Item['SlBeadHeight'])) readonly @else required @endif name="SlBeadHeight" id="SlBeadHeight" max="600" class="form-control SL1 door-configuration"
+                                                    <input @if(empty(@$Item['SlBeadHeight'])) readonly @else required @endif name="SlBeadHeight" id="SlBeadHeight" class="form-control SL1 door-configuration"
                                                         type="number" value="@if(isset($Item['SlBeadHeight'])){{$Item['SlBeadHeight']}}@endif">
                                                 </div>
                                             </div>
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL1Depth">SL1 Depth
+                                                    <label for="SL1Depth">SL1 Frame Depth
                                                     @if(!empty($tooltip->SL1Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL1Depth}}'));
@@ -617,7 +617,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL2Depth">SL2 Depth
+                                                    <label for="SL2Depth">SL2 Frame Depth
                                                     @if(!empty($tooltip->SL2Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL2Depth}}'));

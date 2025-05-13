@@ -1018,8 +1018,9 @@ function sideLight1Change(isstatus = false){
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
         $("#SL1Transom").attr('readonly',false);
-        $("#SlBeadThickness").attr('required',true);
-        $("#SlBeadHeight").attr('required',true);
+         $("#SlBeadThickness").attr({required: true,min: 20});
+         $("#SlBeadHeight").attr('required',true);
+            $("#SL1Depth").attr('min', 95);
 
 
 
@@ -1161,6 +1162,7 @@ function sideLight2Change(isstatus = false){
         $("#sideLight12-section1").addClass("table_row_hide");
         $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
     }
+    $("#SL2Depth").attr('min', 95);
 }
 $("#copyOfSideLite1").change(function(){
     copyOfSideLite1Change();
@@ -1192,7 +1194,7 @@ function copyOfSideLite1Change(isstatus = false){
         $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlazingBeadsFixingDetail").val());
 
         //end
-        updateGlassType(isstatus = false, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
+        updateGlassType(isstatus, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
 
         var val = $('#sideLight1GlassType').val();
         $("#sidelight1-selected1").empty().text(val);
@@ -1420,8 +1422,6 @@ function copyOfSideLite1Change(isstatus = false){
             $('input[name="architraveFinishcolor"]').val('');
         }
     });
-    sideLight1Change();
-    sideLight2Change();
     });
 
     let ArcFin = $('#Architrave').val();
@@ -1745,6 +1745,7 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap"]').hide();
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $("#glazingBeadsThickness").attr('min',19);
+                $("#SlBeadHeight").attr({min: 20});
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -1762,6 +1763,7 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
                 if($("#fireRating").val()=="FD60"){
                     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
@@ -1770,12 +1772,14 @@ function copyOfSideLite1Change(isstatus = false){
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
 
                 if($("#fireRating").val()=='FD30s'){
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
+                    $("#SlBeadHeight").attr({min: 20});
                 }
 
                 if($("#fireRating").val()=='FD60s'){
@@ -1785,7 +1789,13 @@ function copyOfSideLite1Change(isstatus = false){
                     }
                     $("#glazingBeadsThickness").attr('min',30);
                     $("#grooveDepth").attr("max",5);
+                    $("#SlBeadHeight").attr({min: 37});
                 }
+            }
+            var identifier = $("#SlBeadHeight");
+            var value = parseFloat(identifier.val());
+            if (identifier.length && value > 0) {
+                SetBuildOfMaterial(identifier);
             }
             frameThicknessChange();
             // $('#SL1GlassIntegrity').val('');

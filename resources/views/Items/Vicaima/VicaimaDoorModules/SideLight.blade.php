@@ -232,14 +232,14 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SlBeadThickness" class="slBeadThickness">SL Bead Thickness
+                                                    <label for="SlBeadThickness" class="slBeadThickness">SL Bead Depth
                                                     @if(!empty($tooltip->SlBeadThickness))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SlBeadThickness}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <label for="SlBead_Thickness" style="display: none;">SL Bead Thickness</label>
+                                                    <label for="SlBead_Thickness" style="display: none;">SL Bead Depth</label>
                                                     <input name="SlBeadThickness" id="SlBeadThickness" @if(empty(@$Item['SlBeadThickness'])) readonly @else required @endif class="form-control SL1 SlBeadThickness door-configuration"
                                                         type="text" value="@if(isset($Item['SlBeadThickness'])){{$Item['SlBeadThickness']}}@endif">
                                                 </div>
@@ -261,7 +261,7 @@
 
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL1Depth">SL1 Depth
+                                                    <label for="SL1Depth">SL1 Frame Depth
                                                     @if(!empty($tooltip->SL1Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL1Depth}}'));
@@ -573,7 +573,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="SL2Depth">SL2 Depth
+                                                    <label for="SL2Depth">SL2 Frame Depth
                                                     @if(!empty($tooltip->SL2Depth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->SL2Depth}}'));
