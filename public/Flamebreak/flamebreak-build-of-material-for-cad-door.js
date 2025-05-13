@@ -183,6 +183,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
+                    } else if(id == 'glazingBeadsThickness'){
+                        getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
