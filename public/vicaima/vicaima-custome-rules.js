@@ -2974,20 +2974,19 @@ function frameHeight(){
     }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
-            var frameHeight = FrameThickness - rebatedHeight + FrameThickness - rebatedHeight + (Gap *2) + leafHeightNoOP;
+            var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
             console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 2) + ${leafHeightNoOP} = frameHeight ${frameHeight}`
-              );
+            `${leafHeightNoOP} + ((${FrameThickness} - ${rebatedHeight}) * 2) + (${Gap} * 2) = 4 sided reabated frameHeight ${frameHeight}`
+            );
+
         }else{
 
             var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
             console.log(
                 `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = frameHeight ${frameHeight}`
               );
-            if (DoorSetType == "SD"){
-                $("#sOHeight").val(parseInt(frameHeight) + tollerance);
-            }
         }
+        $("#sOHeight").val(parseInt(frameHeight) + tollerance);
 
         $("#frameHeight").val(frameHeight);
     }
