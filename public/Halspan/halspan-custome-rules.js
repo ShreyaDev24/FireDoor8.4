@@ -5028,6 +5028,7 @@ $("#doorsetType").on('change',function(){
 $(document).ready(function(){
     setTimeout(function(){
         leafReadonly();
+        sidelightslcheck();
     }, 4000);
     let overPanel = $("#overpanel").val();
     let sideLight1 = $("#sideLight1").val();
@@ -5940,6 +5941,19 @@ $('#SL2Width').on('input', function() {
     getSideLightGlass(sideLight1,'SideLight2'); // replace with your actual function
 });
 
+    let sideLight1 = $("#sideLight1").val();
+    let sideLight2 = $("#sideLight2").val();
+    if(sideLight1 == 'No'){
+        $("#SL1transomThickness").attr('readonly',true);
+        $("#SL1transomThickness").attr('required',false);
+    }
+    if(sideLight2 == 'No'){
+        $("#sideLight2FrameThickness").attr('readonly',true);
+        $("#sideLight2FrameThickness").attr('required',false);
+        $("#SL2GlassIntegrity").attr('disabled',true);
+        $("#SL2GlassIntegrity").attr('required',false);
+    }
+}
 
 function opFlWidthAndHeight(val){
     var gap = $("#gap").val();
