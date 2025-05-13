@@ -850,18 +850,18 @@ function groovesNumbershow(){
        }
 
        let doorSetType = $('#doorsetType').val();
-        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -974,18 +974,18 @@ function groovesNumbershow(){
        }
 
        let doorSetType = $('#doorsetType').val();
-        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -1001,20 +1001,20 @@ function groovesNumbershow(){
       $('.OpHeightMax').html('OP Height (Max-value:600)');
      $('#oPHeigth').attr('max',600);
 
-      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
         let fanLightOverpanel = $('#overpanel').val();
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
 
             $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
@@ -1031,17 +1031,17 @@ function groovesNumbershow(){
         $('.OpHeightMax').html('OP Height (Max-value:600)');
         $('#oPHeigth').attr('max',600);
 
-      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+      if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
           $('.OpHeightMax').html('OP Height (Max-value:2000)');
           $('#oPHeigth').attr('max',2000);
         }
 
-        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if(doorSetType == 'DD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
             $('.OpHeightMax').html('OP Height (Max-value:1500)');
             $('#oPHeigth').attr('max',1500);
         }
 
-        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
+        if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s' ||  fireRating == 'NFR')){
             $('.OpHeightMax').html('OP Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
