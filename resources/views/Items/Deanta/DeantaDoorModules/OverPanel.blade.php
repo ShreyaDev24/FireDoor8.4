@@ -63,7 +63,7 @@
                                             </div> --}}
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="oPWidth" class="OpWidthCase">OP Width
+                                                    <label for="oPWidth" class="OpWidthCase">OP/FL Width
                                                     @if(!empty($tooltip->oPWidth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->oPWidth}}'));
@@ -76,7 +76,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="oPHeigth" class="OpHeightMax">OP Height (Max-value:600)
+                                                    <label for="oPHeigth" class="OpHeightMax">OP/FL Height (Max-value:600)
                                                     @if(!empty($tooltip->oPHeigth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->oPHeigth}}'));
@@ -250,28 +250,28 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opglazingBeadsThickness">Fan Light Glazing Beads Thickness
+                                                    <label for="opglazingBeadsThickness">Fan Light Glazing Beads Height
                                                     @if(!empty($tooltip->opglazingBeadsThickness))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opglazingBeadsThickness}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input Type="number" min="0" name="opglazingBeadsThickness"
+                                                    <input Type="number" min="20" name="opglazingBeadsThickness"
                                                         id="opglazingBeadsThickness" class="form-control"
                                                         value="@if(isset($Item['OPGlazingBeadsThickness'])){{$Item['OPGlazingBeadsThickness']}}@endif">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opglazingBeadsHeight" class="">Fan Light Glazing Beads Width
+                                                    <label for="opglazingBeadsHeight" class="">Fan Light Glazing Beads Depth
                                                     @if(!empty($tooltip->opglazingBeadsHeight))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opglazingBeadsHeight}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input Type="number" min="0" name="opglazingBeadsHeight"
+                                                    <input Type="number" min="20" name="opglazingBeadsHeight"
                                                         id="opglazingBeadsHeight" class="form-control"
                                                         value="@if(isset($Item['OPGlazingBeadsHeight'])){{$Item['OPGlazingBeadsHeight']}}@endif">
                                                 </div>

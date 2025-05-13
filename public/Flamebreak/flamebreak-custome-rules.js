@@ -898,6 +898,8 @@ $(document).ready(function() {
             $("#opglassThickness").attr('required',true);
             $("#opglazingSystemsThickness").attr('required',true);
             $("#oPHeigth").removeAttr("max");
+            $("#OpBeadHeight").attr('min',95);
+            $("#OpBeadThickness").attr('min',44);
             overpanelGlassType();
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
@@ -905,16 +907,22 @@ $(document).ready(function() {
             FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
-            $("#OpBeadThickness").val(0).attr('readonly',true);
-            $("#OpBeadHeight,#transomThickness").val(0).attr('readonly',true);
-            $("#OpBeadThickness").val(0).attr('required',false);
-            $("#OpBeadHeight,#transomThickness").val(0).attr('required',false);
+            $("#transomThickness").val(0).attr('readonly',true);
+            $("#transomThickness").val(0).attr('required',false);
             $("#opTransom").attr({ 'disabled': true, "required": false });
             $("#opglazingBeadsThickness").attr({ 'disabled': true, "required": false });
             $("#opglazingBeadsHeight").attr({ 'disabled': true, "required": false });
             $("#opglazingBeadsFixingDetail").attr({ 'disabled': true, "required": false });
             $("#opglassThickness").attr({ 'disabled': true, "required": false });
             $("#opglazingSystemsThickness").attr({ 'disabled': true, "required": false });
+             //JFDS 896
+             $("#OpBeadThickness").val(0).attr('readonly',false);
+             $("#OpBeadHeight").val(0).attr('readonly',false);
+             $("#OpBeadThickness").val(0).attr('required',true);
+             $("#OpBeadHeight").val(0).attr('required',true);
+             $("#OpBeadHeight").attr('min',95);
+             $("#OpBeadThickness").attr('min',44);
+              //end JFDS 896
             $("#overpanel2-section1").removeClass("table_row_show");
             $("#overpanel2-section1").addClass("table_row_hide");
             $(".overpanel3_section").removeClass("table_row_show");
@@ -1741,6 +1749,7 @@ function copyOfSideLite1Change(isstatus = false){
                 $('#intumescentSealArrangement').removeAttr('required')
                 // $("#doorThickness").hide()
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'> <option value='44'>44</option><option value='54'>54</option></select>")
+                $("#glazingBeadsThickness").attr('min',19);
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
                 // $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
                 MeetingStyle();
@@ -1756,20 +1765,30 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                     $("#grooveDepth").attr("max",4);
+                    $("#glazingBeadsThickness").attr('min',19);
                 }
                 if($("#fireRating").val()=="FD60"){
                     $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    if($("#glazingBeadsThickness").val() < 30){
+                        $("#glazingBeadsThickness").val('');
+                    }
+                    $("#glazingBeadsThickness").attr('min',30);
                 }
 
                 if($("#fireRating").val()=='FD30s'){
                     $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                     $("#grooveDepth").attr("max",4);
+                    $("#glazingBeadsThickness").attr('min',19);
                 }
 
                 if($("#fireRating").val()=='FD60s'){
                     $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
+                    if($("#glazingBeadsThickness").val() < 30){
+                        $("#glazingBeadsThickness").val('');
+                    }
+                    $("#glazingBeadsThickness").attr('min',30);
                 }
             }
 
@@ -5873,3 +5892,43 @@ function getSideLightGlass(val , type){
         $("#SideLight2GlassWidth").val(calculatesidelight2glasswidth);
     }
 }
+$(document).ready(function(){
+    $("#overpanel").change(function () {
+        if($(this).val() == 'Overpanel'){
+            // JFDS 896
+            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+            $("#OpBeadThickness").attr('min',44);
+            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+            $("#OpBeadHeight").attr('min',95);
+        } else if($(this).val() == 'Fan_Light'){  // JFDS 896
+            $("#OpBeadThickness").attr('min',44);
+            $("#OpBeadHeight").attr('min',95);
+            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        } else { // JFDS 896
+            $("#OpBeadThickness").removeAttr('min',44);
+            $("#OpBeadHeight").removeAttr('min',95);
+            $("#OpBeadHeight").attr({ 'disabled': true, required: false });
+            $("#OpBeadThickness").attr({ 'disabled': true, required: false });
+        }
+    });
+
+    let overpanelVal = $("#overpanel").val();
+    if(overpanelVal == 'Overpanel'){
+        // JFDS 896
+        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+        $("#OpBeadThickness").attr('min',44);
+        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        $("#OpBeadHeight").attr('min',95);
+    } else if($(this).val() == 'Fan_Light'){  // JFDS 896
+        $("#OpBeadThickness").attr('min',44);
+        $("#OpBeadHeight").attr('min',95);
+        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+    } else {  // JFDS 896
+        $("#OpBeadHeight").removeAttr('min',44);
+        $("#OpBeadThickness").removeAttr('min',95);
+        $("#OpBeadHeight").attr({ 'disabled': true, required: false });
+        $("#OpBeadThickness").attr({ 'disabled': true, required: false });
+    }
+});

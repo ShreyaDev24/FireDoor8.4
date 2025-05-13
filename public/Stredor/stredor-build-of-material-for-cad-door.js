@@ -189,6 +189,12 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'SL1 Frame Thickness should be a minimum of 44 mm';
                     } else if(id == 'sideLight2FrameThickness'){
                         getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
+                    } else if (id == 'OpBeadThickness') {
+                        getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
+                    } else if (id == 'OpBeadHeight') {
+                        getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
+                    } else if(id == 'glazingBeadsThickness'){
+                        getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
