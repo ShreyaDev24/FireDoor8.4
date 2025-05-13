@@ -565,9 +565,9 @@
     </div>
     <div class="col-md-6">
         <div class="position-relative form-group">
-            <label for="frameDepth">Frame Depth (min 80)</label>
+            <label for="frameDepth">Frame Depth (min 70)</label>
             <input type="text" name="frameDepth" id="frameDepth" class="form-control"
-                value="@if(isset($defaultItemsStandard->FrameDepth)){{$defaultItemsStandard->FrameDepth}}@endif" min="80">
+                value="@if(isset($defaultItemsStandard->FrameDepth)){{$defaultItemsStandard->FrameDepth}}@endif" min="70">
         </div>
     </div>
     <div class="col-md-6">
