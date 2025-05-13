@@ -1796,6 +1796,11 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#glazingBeadsThickness").attr('min',30);
                 }
             }
+            var identifier = $("#SlBeadHeight");
+            var value = parseFloat(identifier.val());
+            if (identifier.length && value > 0) {
+                SetBuildOfMaterial(identifier);
+            }
             frameThicknessChange();
             // $('#opGlassIntegrity').val('');
             // $('#opGlassType').val('');
