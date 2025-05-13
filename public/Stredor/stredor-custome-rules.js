@@ -1775,6 +1775,11 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#SlBeadHeight").attr({min: 37});
                 }
             }
+            var identifier = $("#SlBeadHeight");
+            var value = parseFloat(identifier.val());
+            if (identifier.length && value > 0) {
+                SetBuildOfMaterial(identifier);
+            }
             frameThicknessChange();
             // $('#opGlassIntegrity').val('');
             // $('#opGlassType').val('');
