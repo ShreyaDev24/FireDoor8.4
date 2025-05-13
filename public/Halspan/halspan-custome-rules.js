@@ -4990,6 +4990,7 @@ $("#doorsetType").on('change',function(){
 $(document).ready(function(){
     setTimeout(function(){
         leafReadonly();
+        sidelightslcheck();
     }, 4000);
 });
 
@@ -5825,5 +5826,18 @@ function onlyLipingSpecies(fireRating){
         });
 }
 
+    let sideLight1 = $("#sideLight1").val();
+    let sideLight2 = $("#sideLight2").val();
+    if(sideLight1 == 'No'){
+        $("#SL1transomThickness").attr('readonly',true);
+        $("#SL1transomThickness").attr('required',false);
+    }
+    if(sideLight2 == 'No'){
+        $("#sideLight2FrameThickness").attr('readonly',true);
+        $("#sideLight2FrameThickness").attr('required',false);
+        $("#SL2GlassIntegrity").attr('disabled',true);
+        $("#SL2GlassIntegrity").attr('required',false);
+    }
+}
 
 
