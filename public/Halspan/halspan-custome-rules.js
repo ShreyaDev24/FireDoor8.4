@@ -5825,7 +5825,7 @@ function onlyLipingSpecies(fireRating){
             }
         });
 }
-
+function sidelightslcheck (){
     let sideLight1 = $("#sideLight1").val();
     let sideLight2 = $("#sideLight2").val();
     if(sideLight1 == 'No'){
