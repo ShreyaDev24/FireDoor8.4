@@ -5941,6 +5941,7 @@ $('#SL2Width').on('input', function() {
     getSideLightGlass(sideLight1,'SideLight2'); // replace with your actual function
 });
 
+function sidelightslcheck (){
     let sideLight1 = $("#sideLight1").val();
     let sideLight2 = $("#sideLight2").val();
     if(sideLight1 == 'No'){
