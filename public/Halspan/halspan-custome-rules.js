@@ -1838,7 +1838,11 @@ $(document).ready(function() {
                     $("#SlBeadHeight").attr({min: 37});
                 }
             }
-
+            var identifier = $("#SlBeadHeight");
+            var value = parseFloat(identifier.val());
+            if (identifier.length && value > 0) {
+                SetBuildOfMaterial(identifier);
+            }
             floor_finish_change();
             frameThicknessChange();
             MeetingStyle();
