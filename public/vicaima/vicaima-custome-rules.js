@@ -2944,6 +2944,9 @@ function frameHeight(){
             console.log(
                 `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = frameHeight ${frameHeight}`
               );
+            if (DoorSetType == "SD"){
+                $("#sOHeight").val(parseInt(frameHeight) + tollerance);
+            }
         }
 
         $("#frameHeight").val(frameHeight);
