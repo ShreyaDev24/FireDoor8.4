@@ -1117,10 +1117,10 @@ function sideLight1Change(){
         FramePrice('sideLight3');
     } else {
 
-        $("#SlBeadThickness").val(0).attr('readonly',true);
-        $("#SlBeadHeight").val(0).attr('readonly',true);
-        $("#SlBeadThickness").val(0).attr('required',false);
-        $("#SlBeadHeight").val(0).attr('required',false);
+        $("#SlBeadThickness").attr('readonly',true);
+        $("#SlBeadHeight").attr('readonly',true);
+        $("#SlBeadThickness").attr('required',false);
+        $("#SlBeadHeight").attr('required',false);
 
 
         if($("#sideLight2").val()=="Yes"){
