@@ -967,15 +967,17 @@ $(document).on('change', '#overpanel', function (e) {
     e.preventDefault();
 
     if($("#overpanel").val()=="Fan_Light"){
-        $("#OpBeadThickness").val(0).attr('readonly',false);
+        $("#OpBeadThickness").attr('readonly',false);
         $("#OpBeadHeight").val(0).attr('readonly',false);
         $("#opglazingSystems").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsThickness").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsHeight").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsFixingDetail").attr({ 'disabled': false, "required": true });
-        $("#OpBeadThickness").val(0).attr('required',true);
+        $("#OpBeadThickness").attr('required',true);
         $("#OpBeadHeight").val(0).attr('required',true);
         $("#opglassThickness").attr('required',true);
+        $("#OpBeadHeight").attr('min',95);
+        $("#OpBeadThickness").attr('min',44);
         $("#opglazingSystemsThickness").attr('required',true);
         doorLeafFacingPrice('overpanel',"Fan_Light");
         doorLeafFacingPrice('overpanel1',"Fan_Light");
@@ -984,10 +986,12 @@ $(document).on('change', '#overpanel', function (e) {
         opFlWidthAndHeight("Fan_Light")
     }else{
 
-        $("#OpBeadThickness").val(0).attr('readonly',true);
-        $("#OpBeadHeight").val(0).attr('readonly',true);
-        $("#OpBeadThickness").val(0).attr('required',false);
-        $("#OpBeadHeight").val(0).attr('required',false);
+        $("#OpBeadThickness").attr('readonly',false);
+        $("#OpBeadHeight").val(0).attr('readonly',false);
+        $("#OpBeadThickness").attr('required',true);
+        $("#OpBeadHeight").val(0).attr('required',true);
+        $("#OpBeadHeight").attr('min',95);
+        $("#OpBeadThickness").attr('min',44);
         $("#opglazingSystems").attr({ 'disabled': true, "required": false });
         $("#opglazingBeadsThickness").attr({ 'disabled': true, "required": false });
         $("#opglazingBeadsHeight").attr({ 'disabled': true, "required": false });
@@ -1104,6 +1108,7 @@ function sideLight1Change(){
         $("#SL1Width").attr({ 'readonly': false, "required": true });
         $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());;
         $("#SL1Depth").attr({ 'readonly': false, "required": true });
+        $("#SL1Depth").attr('min',95);
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
         doorLeafFacingPrice('sideLight11',"Yes");
@@ -1111,10 +1116,10 @@ function sideLight1Change(){
         FramePrice('sideLight3');
     } else {
 
-        $("#SlBeadThickness").val(0).attr('readonly',true);
-        $("#SlBeadHeight").val(0).attr('readonly',true);
-        $("#SlBeadThickness").val(0).attr('required',false);
-        $("#SlBeadHeight").val(0).attr('required',false);
+        $("#SlBeadThickness").attr('readonly',true);
+        $("#SlBeadHeight").attr('readonly',true);
+        $("#SlBeadThickness").attr('required',false);
+        $("#SlBeadHeight").attr('required',false);
 
 
         if($("#sideLight2").val()=="Yes"){
@@ -1125,6 +1130,7 @@ function sideLight1Change(){
             $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
+            $("#SL2Depth").attr('min',95);
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
 
             // new changes 12-07-2024
@@ -1175,6 +1181,7 @@ function sideLight2Change(){
             $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
+            $("#SL2Depth").attr('min',95);
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
@@ -1205,6 +1212,7 @@ function copyOfSideLite1Change(){
         // $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
         $("#SL2Depth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
+        $("#SL2Depth").attr('min',95);
         $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
         $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1FrameThickness").val());
 
@@ -1230,16 +1238,18 @@ function copyOfSideLite1Change(){
             $("#SL2Width").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth").attr({ 'readonly': false, "required": true }).val('');
+            $("#SL2Depth").attr('min',95);
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlassThickness").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlassThickness").attr({ 'readonly': true, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'readonly': false }).val('');
-            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': true, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsThickness").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsWidth").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false}).val('');
-            $("#sideLight2FrameThickness").attr({ 'disabled': false, "required": true }).val('');
         }else{
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
@@ -1711,7 +1721,7 @@ $(function () {
 
         $("#leafHeightwithOP").val(0).attr('readonly', true);
         $("#oPWidth").val(0).attr('readonly', true);
-        $("#oPHeigth").val(0).attr('readonly', true);
+        $("#oPHeigth").attr('readonly', true);
         $("#OPLippingThickness").val('').attr('disabled', true);
         $("#transomThickness").val('').attr('disabled', true);
         $("#opTransom").val('').attr('disabled', true);
@@ -1773,6 +1783,7 @@ function FireRatingChange() {
             $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
             $("#SL1Width").removeAttr('max');
             $("#SL2Width").removeAttr('max');
+            $("#opglazingBeadsHeight").attr('min',20);
             MeetingStyle();
         } else {
             $("#SL1Width").attr('max',600);
@@ -1787,20 +1798,30 @@ function FireRatingChange() {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                 $("#grooveDepth").attr("max", 4);
+                $("#opglazingBeadsHeight").attr('min',20);
             }
             if ($("#fireRating").val() == "FD60") {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($('#opglazingBeadsHeight').val() < 37){
+                    $("#opglazingBeadsHeight").val('');
+                }
+                $("#opglazingBeadsHeight").attr('min',37);
             }
 
             if ($("#fireRating").val() == 'FD30s') {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#grooveDepth").attr("max", 4);
+                $("#opglazingBeadsHeight").attr('min',20);
             }
 
             if ($("#fireRating").val() == 'FD60s') {
                 $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                 $("#grooveDepth").attr("max", 5);
+                if($('#opglazingBeadsHeight').val() < 37){
+                    $("#opglazingBeadsHeight").val('');
+                }
+                $("#opglazingBeadsHeight").attr('min',37);
             }
         }
         $('#opGlassIntegrity').val('');
@@ -2766,7 +2787,8 @@ $(document).ready(function(){
         // }
         DoorSetTypeChange();
     }, 200);
-
+    overpanelcheck();
+    sidelightslcheck();
     $("#doorDimensionGroove,#DoorDimensionGrooveLeaf2").removeClass("bg-white");
     $("#doorDimensionGroove,#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true });
 
@@ -4277,11 +4299,13 @@ $("#overpanel1").change(function () {
             $("#OpBeadHeight").val(0).attr('readonly', false);
             $("#OpBeadThickness").val(0).attr('required', true);
             $("#OpBeadHeight").val(0).attr('required', true);
+            $("#oPHeigth").attr('required', true);
         } else {
-            $("#OpBeadThickness").val(0).attr('readonly', true);
+            $("#OpBeadThickness").val(0).attr('readonly', false);
             $("#OpBeadHeight").val(0).attr('readonly', true);
             $("#OpBeadThickness").val(0).attr('required', false);
-            $("#OpBeadHeight").val(0).attr('required', false);
+            $("#OpBeadHeight").val(0).attr('required', true);
+            $("#oPHeigth").attr('required', true);
         }
 
         //$("#leafHeightNoOP").val(0).attr('readonly',false);
@@ -5875,6 +5899,21 @@ $(document).ready(function(){
             $("#opglazingBeadsThickness").attr({ 'disabled': true, required: false }).val('');
             $("#opglazingBeadsHeight").attr({ 'disabled': true, required: false }).val('');
             $("#opglazingBeadsFixingDetail").attr({ 'disabled': true, required: false }).val('');
+            // JFDS 896
+            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+            $("#OpBeadThickness").attr('min',44);
+            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+            $("#OpBeadHeight").attr('min',95);
+        } else if($(this).val() == 'Fan_Light'){  // JFDS 896
+            $("#OpBeadThickness").attr('min',44);
+            $("#OpBeadHeight").attr('min',95);
+            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        } else { // JFDS 896
+            $("#OpBeadThickness").removeAttr('min',44);
+            $("#OpBeadHeight").removeAttr('min',95);
+            $("#OpBeadHeight").attr({ 'disabled': true, required: false });
+            $("#OpBeadThickness").attr({ 'disabled': true, required: false });
         }
     });
 
@@ -5887,6 +5926,21 @@ $(document).ready(function(){
         $("#opglazingBeadsThickness").attr({ 'disabled': true, required: false }).val('');
         $("#opglazingBeadsHeight").attr({ 'disabled': true, required: false }).val('');
         $("#opglazingBeadsFixingDetail").attr({ 'disabled': true, required: false }).val('');
+        // JFDS 896
+        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+        $("#OpBeadThickness").attr('min',44);
+        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        $("#OpBeadHeight").attr('min',95);
+    } else if($(this).val() == 'Fan_Light'){  // JFDS 896
+        $("#OpBeadThickness").attr('min',44);
+        $("#OpBeadHeight").attr('min',95);
+        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+    } else {  // JFDS 896
+        $("#OpBeadHeight").removeAttr('min',44);
+        $("#OpBeadThickness").removeAttr('min',95);
+        $("#OpBeadHeight").attr({ 'disabled': true, required: false });
+        $("#OpBeadThickness").attr({ 'disabled': true, required: false });
     }
 });
 
@@ -6344,3 +6398,32 @@ $(document).on('change','#swingType,#fireRating', function (e) {
         $('#frameThickness').css('border', '');
     }
 });
+function overpanelcheck(){
+    let overpanels = $("#overpanel").val();
+    if(overpanels == 'No'){
+        $("#opglazingSystems").attr('disabled',true)
+        $("#opglazingBeadsThickness").attr('disabled',true)
+        $("#opglazingBeadsHeight").attr('disabled',true)
+        $("#opglazingBeadsFixingDetail").attr('disabled',true)
+    } else if(overpanels == 'Overpanel'){
+        $("#OpBeadThickness").attr('readonly',false);
+        $("#oPHeigth").attr('required',true);
+    }
+}
+
+function sidelightslcheck(){
+    let sideLight1 = $("#sideLight1").val();
+    let sideLight2 = $("#sideLight2").val();
+    if(sideLight1 == 'No'){
+        $("#sideLight1GlazingSystems").attr('disabled',true)
+        $("#sideLight1GlazingBeadsThickness").attr('disabled',true)
+        $("#sideLight1GlazingBeadsWidth").attr('disabled',true)
+        $("#sideLight1GlazingBeadsFixingDetail").attr('disabled',true)
+    }
+    if(sideLight2 == 'No'){
+        $("#sideLight2GlazingSystems").attr('readonly',true)
+        $("#sideLight2GlazingBeadsThickness").attr('readonly',true)
+        $("#sideLight2GlazingBeadsWidth").attr('readonly',true)
+        $("#sideLight2GlazingBeadsFixingDetail").attr('readonly',true)
+    }
+}

@@ -764,7 +764,7 @@ function groovesNumbershow(){
      $('#oPHeigth').attr('max',600);
 
      //side light
-     $('.slBeadThickness').html('SL Bead Thickness');
+     $('.slBeadThickness').html('Side Light Bead Depth');
      $('#SlBeadThickness').removeAttr('min');
      $('.slBeadHeightMin').html('SL Bead Height');
      $('#SlBeadHeight').removeAttr('min');
@@ -801,7 +801,7 @@ function groovesNumbershow(){
           $('.OverPanelTitle').html('Overpanel/Fanlight');
           $('.OpWidthCase').html('OP/FL width');
           $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
           $('#SlBeadThickness').attr('min',20);
          $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
@@ -821,8 +821,8 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
-          $('#SlBeadThickness').attr('min',20);
+          $('.slBeadThickness').html('Side Light Bead Depth (min 37mm)');
+          $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
        }
@@ -863,7 +863,7 @@ function groovesNumbershow(){
         let fanLightOverpanel = $('#overpanel').val();
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
         frameonoff();
@@ -906,7 +906,7 @@ function groovesNumbershow(){
      $('#oPHeigth').attr('max',600);
 
      //side light
-     $('.slBeadThickness').html('SL Bead Thickness');
+     $('.slBeadThickness').html('Side Light Bead Depth');
      $('#SlBeadThickness').removeAttr('min');
      $('.slBeadHeightMin').html('SL Bead Height');
      $('#SlBeadHeight').removeAttr('min');
@@ -945,7 +945,7 @@ function groovesNumbershow(){
           $('.OverPanelTitle').html('Overpanel/Fanlight');
           $('.OpWidthCase').html('OP/FL width');
           $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
+          $('.slBeadThickness').html('Side Light Bead Depth (min 20mm)');
           $('#SlBeadThickness').attr('min',20);
          $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
@@ -967,8 +967,8 @@ function groovesNumbershow(){
           $('#plantonStopHeight').attr('min',12); // JFDS 914
           $('#frame-depth-min').html('(min 70 MM)');
           $('#frameDepth').attr('min',70);
-          $('.slBeadThickness').html('SL Bead Thickness (min 20mm)');
-          $('#SlBeadThickness').attr('min',20);
+          $('.slBeadThickness').html('Side Light Bead Depth (min 37mm)');
+          $('#SlBeadThickness').attr('min',37);
           $('.slBeadHeightMin').html('SL Bead Height (min 20mm)');
           $('#SlBeadHeight').attr('min',20);
        }
@@ -987,7 +987,7 @@ function groovesNumbershow(){
         let fanLightOverpanel = $('#overpanel').val();
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
 
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
         frameonoff();
@@ -998,7 +998,7 @@ function groovesNumbershow(){
       let doorSetType = $(this).val();
       let fireRating = $('#fireRating').val();
 
-      $('.OpHeightMax').html('OP Height (Max-value:600)');
+      $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
      $('#oPHeigth').attr('max',600);
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
@@ -1028,7 +1028,7 @@ function groovesNumbershow(){
         let doorSetType = $('#doorsetType').val();
         let fireRating = $('#fireRating').val();
 
-        $('.OpHeightMax').html('OP Height (Max-value:600)');
+        $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
         $('#oPHeigth').attr('max',600);
 
       if(doorSetType == 'SD' && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
@@ -1042,7 +1042,7 @@ function groovesNumbershow(){
         }
 
         if((doorSetType == 'DD' || doorSetType == 'SD') && fanLightOverpanel == 'Fan_Light'  && (fireRating == 'FD30' || fireRating == 'FD60' || fireRating == 'FD30s' || fireRating == 'FD60s')){
-            $('.OpHeightMax').html('OP Height (Max-value:600)');
+            $('.OpHeightMax').html('OP/FL Height (Max-value:600)');
             $('#oPHeigth').attr('max',600);
         }
     });
