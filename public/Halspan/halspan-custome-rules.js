@@ -5879,14 +5879,14 @@ function onlyLipingSpecies(fireRating){
         });
 }
 function isScallopedFrame(value){
-    if(value == 'Scalloped'){
-        let doorthicknessval = $('#doorThickness').val();
-        if(doorthicknessval){
-            $("#ScallopedWidth").val(doorthicknessval);
-            $("#ScallopedLabel").text(`Scalloped Width (min ${doorthicknessval})`);
-            $("#ScallopedWidth").attr('min', doorthicknessval);
-        }
-    }
+    // if(value == 'Scalloped'){
+    //     let doorthicknessval = $('#doorThickness').val();
+    //     if(doorthicknessval){
+    //         $("#ScallopedWidth").val(doorthicknessval);
+    //         $("#ScallopedLabel").text(`Scalloped Width (min ${doorthicknessval})`);
+    //         $("#ScallopedWidth").attr('min', doorthicknessval);
+    //     }
+    // }
 }
 
 $(document).ready(function(){
