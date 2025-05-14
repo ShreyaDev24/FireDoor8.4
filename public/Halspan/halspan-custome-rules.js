@@ -1897,6 +1897,64 @@ $(document).ready(function() {
 
         }
         IntumescentSeals();
+        rebatedWidth();
+    }
+
+    function rebatedWidth(){
+        let framTypeValue = $('#frameType').val();
+        // if (framTypeValue == "Plant_on_Stop") {
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#plantonStopWidth").attr('min', '26');
+                $("#plantonStopWidthText").text('(min 26)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#plantonStopWidth").attr('min', '26');
+                $("#plantonStopWidthText").text('(min 26)');
+            }else{
+                $("#plantonStopWidth").removeAttr('min');
+                $("#plantonStopWidthText").text('');
+            }
+        // } else if(framTypeValue == "Scalloped"){
+            if ($("#fireRating").val() == "NFR") {
+                $("#ScallopedWidth").attr('min', '35');
+                $("#ScallopedWidthText").text('(min 35)');
+                $("#ScallopedHeight").attr({'min':2,'max':6});
+                $("#ScallopedHeightText").text('(min 2-6mm)');
+            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#ScallopedWidth").attr('min', '44');
+                $("#ScallopedWidthText").text('(min 44)');
+                $("#ScallopedHeight").attr({'min':2,'max':6});
+                $("#ScallopedHeightText").text('(min 2-6mm)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#ScallopedWidth").attr('min', '54');
+                $("#ScallopedWidthText").text('(min 54)');
+                $("#ScallopedHeight").attr({'min':2,'max':8});
+                $("#ScallopedHeightText").text('(min 2-8mm)');
+            }
+        // } else if (framTypeValue == "Rebated_Frame"){
+            if ($("#fireRating").val() == "NFR") {
+                $("#rebatedWidth").attr('min', '35');
+                $("#rebatedWidthText").text('(min 35)');
+            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#rebatedWidth").attr('min', '44');
+                $("#rebatedWidthText").text('(min 44)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#rebatedWidth").attr('min', '54');
+                $("#rebatedWidthText").text('(min 54)');
+            }
+        // }
+       // Call for each input
+        checkAndSetBOM("#ScallopedWidth");
+        checkAndSetBOM("#plantonStopWidth");
+        checkAndSetBOM("#rebatedWidth");
+        checkAndSetBOM("#ScallopedHeight");
+    }
+
+    function checkAndSetBOM(selector) {
+        var identifier = $(selector);
+        var value = parseFloat(identifier.val());
+        if (identifier.length && value > 0) {
+            SetBuildOfMaterial(identifier);
+        }
     }
 
     function doorThicknessSelect(value){
@@ -5029,7 +5087,6 @@ $("#doorsetType").on('change',function(){
 $(document).ready(function(){
     setTimeout(function(){
         leafReadonly();
-        sidelightslcheck();
     }, 4000);
     let overPanel = $("#overpanel").val();
     let sideLight1 = $("#sideLight1").val();

@@ -141,6 +141,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 250mm ';
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                    } else if(id == 'ScallopedHeight'){
+                        getmsginput = 'Scalloped Height should be between ' + getmininputvalue + '-' + getmaxinputvalue + ' mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
@@ -161,8 +163,6 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'Plant on Stop Width should be a minimum '+getmininputvalue+ 'mm';
                     } else if (id == 'ScallopedWidth') {
                         getmsginput = 'Scalloped Width should be a minimum '+getmininputvalue+ 'mm';
-                    } else if (id == 'ScallopedHeight') {
-                        getmsginput = 'Scalloped Height should be a minimum '+getmininputvalue+ 'mm';
                     }else if (id == 'frameDepth') {
                         getmsginput = 'Frame Depth should be a minimum of 70mm';
                     }else if(id == 'rebatedWidth'){
