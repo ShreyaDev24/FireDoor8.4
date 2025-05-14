@@ -188,18 +188,21 @@ function corewidth1Value(){
             var calculate = leafWidth1 - (1 * lipping_thickness);
             var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
             $("#coreWidth1").val(calculate);
+            $("#opCoreWidth").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
 
         } else if ($("#adjustmentLeafWidth1").val()) {
             var calculate = leafWidth1 - (1 * lipping_thickness);
             var calculateCoreWidth2 = leafWidth2;
             $("#coreWidth1").val(calculate);
+            $("#opCoreWidth").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
 
         } else if ($("#adjustmentLeafWidth2").val()) {
             var calculate = leafWidth1;
             var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
             $("#coreWidth1").val(calculate);
+            $("#opCoreWidth").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
         }
     } else {
@@ -209,8 +212,10 @@ function corewidth1Value(){
             $("#coreWidth2").val(calculateCoreWidth2);
         }
         $("#coreWidth1").val(calculate);
+        $("#opCoreWidth").val(calculate);
     }
     $("#coreHeight").val(calculateCoreHeight);
+    $("#opCoreHeight").val(calculateCoreHeight);
 }
 
 // $(document).on('change','#leafHeightNoOP',function(e){
@@ -965,7 +970,7 @@ function ironmongerySetchange(){
 
 $(document).on('change', '#overpanel', function (e) {
     e.preventDefault();
-
+    AdjustmentLipping();
     if($("#overpanel").val()=="Fan_Light"){
         $("#OpBeadThickness").attr('readonly',false);
         $("#OpBeadHeight").val(0).attr('readonly',false);

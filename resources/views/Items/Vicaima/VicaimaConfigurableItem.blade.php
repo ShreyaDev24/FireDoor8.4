@@ -714,6 +714,7 @@ function AdjustmentLipping() {
     let adjustmentLeafWidth1 = $('#adjustmentLeafWidth1').val();
     let adjustmentLeafWidth2 = $('#adjustmentLeafWidth2').val();
     let adjustmentLeafHeightNoOP = $('#adjustmentLeafHeightNoOP').val();
+    let overpanel = $('#overpanel').val();
     let doorsetType = $('#doorsetType').val();
     if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '') {
         $('#lippingType').prop('disabled', false);
@@ -725,18 +726,26 @@ function AdjustmentLipping() {
         $('#coreWidth1').prop('disabled', false);
         $('#coreWidth2').prop('disabled', false);
         $('#coreHeight').prop('disabled', false);
-    } else if(adjustmentLeafWidth2.trim() !== ''){
-        if(doorsetType == 'leaf_and_a_half'){
-            $('#lippingType').prop('disabled', false);
-            $('#lippingType').prop('required', true);
-            $('#lippingThickness').prop('disabled', false);
-            $('#lippingThickness').prop('required', true);
-            $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
-            $('#lippingSpecies').prop('required', true);
-            $('#coreWidth1').prop('disabled', false);
-            $('#coreWidth2').prop('disabled', false);
-            $('#coreHeight').prop('disabled', false);
-        }
+    } else if(overpanel == 'Overpanel'){
+        $('#lippingType').prop('disabled', false);
+        $('#lippingType').prop('required', true);
+        $('#lippingThickness').prop('disabled', false);
+        $('#lippingThickness').prop('required', true);
+        $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
+        $('#lippingSpecies').prop('required', true);
+        $('#coreWidth1').prop('disabled', false);
+        $('#coreWidth2').prop('disabled', false);
+        $('#coreHeight').prop('disabled', false);
+    } else if(adjustmentLeafWidth2.trim() !== '' && doorsetType == 'leaf_and_a_half'){
+        $('#lippingType').prop('disabled', false);
+        $('#lippingType').prop('required', true);
+        $('#lippingThickness').prop('disabled', false);
+        $('#lippingThickness').prop('required', true);
+        $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
+        $('#lippingSpecies').prop('required', true);
+        $('#coreWidth1').prop('disabled', false);
+        $('#coreWidth2').prop('disabled', false);
+        $('#coreHeight').prop('disabled', false);
     } else {
         $('#lippingType').prop('disabled', true).val('');
         $('#lippingThickness').prop('disabled', true).val('');
