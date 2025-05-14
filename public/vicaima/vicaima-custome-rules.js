@@ -6065,6 +6065,9 @@ $(document).ready(function () {
             $('#ScallopedWidth').attr('min', minWidth);
             $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
 
+            checkAndSetBOM("#ScallopedWidth");
+            checkAndSetBOM("#ScallopedHeight");
+
         } else {
                 $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
                 $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
@@ -6083,6 +6086,14 @@ $(document).ready(function () {
     $('#frameType, #fireRating, #ScallopedWidth, #ScallopedHeight, #frameThickness, #doorsetType, #swingType').on('change keyup', enforceScallopedRules);
     enforceScallopedRules(); // Initial run
 });
+
+ function checkAndSetBOM(selector) {
+    var identifier = $(selector);
+    var value = parseFloat(identifier.val());
+    if (identifier.length && value > 0) {
+        SetBuildOfMaterial(identifier);
+    }
+}
 // Attach the function to the change event
 $(document).on("change", "#doorThickness", updateDoorDimensions);
 
