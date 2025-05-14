@@ -709,8 +709,8 @@ $(".change-event-calulation").change(function(){
         if(vP1Height1Value_A > sOHeightValue_A){
             var oldfirerating = $('#FireRating-import').data('value');
             var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
-            console.log(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0)
-            if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0){
+            var Leaf2VisionPanelImport = $('#Leaf2VisionPanel-import').data('value');
+            if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0 && Leaf2VisionPanelImport == 'Yes'){
                 $('#vP1Height1-section').removeClass("table_row_show");
                 $('#vP1Height1').val(Leaf1VPHeight1Import);
             } else {
