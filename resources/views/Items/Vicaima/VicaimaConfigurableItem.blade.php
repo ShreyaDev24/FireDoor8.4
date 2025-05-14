@@ -714,6 +714,8 @@ function AdjustmentLipping() {
         $('#coreWidth1').prop('disabled', true).val('');
         $('#coreWidth2').prop('disabled', true).val('');
         $('#coreHeight').prop('disabled', true).val('');
+        $('#opCoreWidth').prop('disabled', true).val('');
+        $('#opCoreHeight').prop('disabled', true).val('');
         $('#LippingThicknessValue').val('');
         $('#lippingSpeciesid').val('');
         $('#lippingType').prop('required', false);
