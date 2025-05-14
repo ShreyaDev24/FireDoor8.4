@@ -707,9 +707,17 @@ $(".change-event-calulation").change(function(){
     }
     if(vP1Height1Value_A != '' && sOHeightValue_A != ''){
         if(vP1Height1Value_A > sOHeightValue_A){
-            swal('.','Leaf height 1 is never greater than S.O. height.')
-            $('#vP1Height1').val(0);
-            $('#vP1Height1-section').removeClass("table_row_show");
+            var oldfirerating = $('#FireRating-import').data('value');
+            var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
+            console.log(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0)
+            if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0){
+                $('#vP1Height1-section').removeClass("table_row_show");
+                $('#vP1Height1').val(Leaf1VPHeight1Import);
+            } else {
+                swal('.','Leaf height 1 is never greater than S.O. height.')
+                $('#vP1Height1-section').removeClass("table_row_show");
+                $('#vP1Height1').val(0);
+            }
         }
     }
 

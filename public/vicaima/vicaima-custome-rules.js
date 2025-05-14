@@ -1241,20 +1241,13 @@ function copyOfSideLite1Change(){
             $("#SL2Depth").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Depth").attr('min',95);
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlassThickness").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'readonly': false }).val('');
-            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': false, "required": true }).val('');
-
+            $("#sideLight2GlassThickness").attr({ 'readonly': true, "required": true }).val('');
             $("#sideLight2GlazingSystems").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-
+            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': true, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false}).val('');
-            $("#sideLight2FrameThickness").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
@@ -2791,6 +2784,7 @@ $(document).ready(function(){
     if(sideLight2 == 'Yes'){
         getSideLightGlass(sideLight2,'SideLight2');
     }
+
     setTimeout(function(){
         // var overpanel = $("#overpanel").val(); reverted code
         // var sideLight1 = $("#sideLight1").val();
@@ -6439,7 +6433,6 @@ $(document).on('change','#swingType,#fireRating', function (e) {
         $('#frameThickness').css('border', '');
     }
 });
-
 function overpanelcheck(){
     let overpanels = $("#overpanel").val();
     if(overpanels == 'No'){
