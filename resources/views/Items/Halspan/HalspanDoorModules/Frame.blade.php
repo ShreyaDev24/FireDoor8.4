@@ -77,7 +77,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedWidth" id="ScallopedLabel">Scalloped Width <span id="ScallopedWidthText"></span>
+                                                    <label for="rebatedWidth">Scalloped Width <span id="ScallopedWidthText"></span>
 
                                                     @if(!empty($tooltip->ScallopedWidth))
                                                     <script type="text/javascript">
