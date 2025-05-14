@@ -1846,7 +1846,19 @@ $(document).ready(function() {
                 $("#rebatedWidthText").text('(min 54)');
             }
         // }
+       // Call for each input
+        checkAndSetBOM("#ScallopedWidth");
+        checkAndSetBOM("#plantonStopWidth");
+        checkAndSetBOM("#rebatedWidth");
+        checkAndSetBOM("#ScallopedHeight");
+    }
 
+    function checkAndSetBOM(selector) {
+        var identifier = $(selector);
+        var value = parseFloat(identifier.val());
+        if (identifier.length && value > 0) {
+            SetBuildOfMaterial(identifier);
+        }
     }
 
     function doorThicknessSelect(value){
