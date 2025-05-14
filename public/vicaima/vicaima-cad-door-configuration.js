@@ -8104,14 +8104,21 @@ else if (swingType != 'DA' && frameonoff) {
           //    }
           //}
 
+        var oldfirerating = $('#FireRating-import').data('value');
+        var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
+        var Leaf1VPWidthImport = $('#Leaf1VPWidth-import').data('value');
           if (ChangedFieldName == "distanceFromTheEdgeOfDoor") {
               swal('Warning!', "Entered distance from the edge of door of left leaf exceeds the width of left leaf.");
           } else if (ChangedFieldName == "distanceFromTopOfDoor") {
               swal('Warning!', "Entered distance from top of door of left leaf exceeds the height of left leaf.");
           } else if (ChangedFieldName == "distanceBetweenVPs") {
               swal('Warning!', "Entered distance between vps of left leaf exceeds the height of left leaf.");
-          } else {
-              swal('Warning!', "Sum of all vision panel's height should not be greater than leaf's height.");
+        } else if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' ) &&  LeafHeightNoOP == 0){
+            $("#vP1Height1").val(Leaf1VPHeight1Import);
+            $("#vP1Width").val(Leaf1VPWidthImport);
+          }
+          else {
+                swal('Warning!', "Sum of all vision panel's height should not be greater than leaf's height.");
           }
 
       }
