@@ -316,7 +316,7 @@
         $("select[name=latchType]").val($("#LatchType-import").data("value")).trigger("change");
         DoorSetTypeChange();
         filterHandling();
-
+        $('#DoorDimensions').attr('required', true);
         //$("select[name=Handing]").val($("#Handing-import").data("value")).trigger("change");
         $("select[name=OpensInwards]").val($("#OpensInwards-import").data("value")).trigger("change");
         $("#tollerance").val($("#Tollerance-import").data("value")).trigger("change");
