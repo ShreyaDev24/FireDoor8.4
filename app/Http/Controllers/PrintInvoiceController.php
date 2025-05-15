@@ -2591,7 +2591,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                         <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
                                     </tr>
                                     <tr>
-                                        <td class="dicription_grey">Door Dimension</td>
+                                        <td class="dicription_grey">Product code/Size </td>
                                         <td class="dicription_blank">' . $tt->DoorDimensionsCode .' ('. $leafWidth1 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')'. '</td>
                                     </tr>
                                     <tr>
