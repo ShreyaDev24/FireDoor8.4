@@ -710,10 +710,17 @@ $(".change-event-calulation").change(function(){
             var oldfirerating = $('#FireRating-import').data('value');
             var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
             var Leaf1VisionPanelImport = $('#Leaf1VisionPanel-import').data('value');
+            var oldDoorsetTypeImport = $('#DoorsetType-import').data('value');
+            var DoorsetTypeImport = $('#doorsetType').val();
+
             if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0 && Leaf1VisionPanelImport == 'Yes'){
                 $('#vP1Height1-section').removeClass("table_row_show");
                 $('#vP1Height1').val(Leaf1VPHeight1Import);
-            } else {
+            } else if(oldDoorsetTypeImport != DoorsetTypeImport ||  oldfirerating != $("#fireRating").val()){
+                $('#vP1Height1-section').removeClass("table_row_show");
+                $('#vP1Height1').val(Leaf1VPHeight1Import);
+            }
+            else {
                 swal('.','Leaf height 1 is never greater than S.O. height.')
                 $('#vP1Height1-section').removeClass("table_row_show");
                 $('#vP1Height1').val(0);
