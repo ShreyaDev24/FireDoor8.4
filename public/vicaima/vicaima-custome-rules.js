@@ -968,13 +968,13 @@ $(document).on('change', '#overpanel', function (e) {
 
     if($("#overpanel").val()=="Fan_Light"){
         $("#OpBeadThickness").attr('readonly',false);
-        $("#OpBeadHeight").val(0).attr('readonly',false);
+        $("#OpBeadHeight").attr('readonly',false);
         $("#opglazingSystems").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsThickness").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsHeight").attr({ 'disabled': false, "required": true });
         $("#opglazingBeadsFixingDetail").attr({ 'disabled': false, "required": true });
         $("#OpBeadThickness").attr('required',true);
-        $("#OpBeadHeight").val(0).attr('required',true);
+        $("#OpBeadHeight").attr('required',true);
         $("#opglassThickness").attr('required',true);
         $("#OpBeadHeight").attr('min',95);
         $("#OpBeadThickness").attr('min',44);
@@ -987,9 +987,9 @@ $(document).on('change', '#overpanel', function (e) {
     }else{
 
         $("#OpBeadThickness").attr('readonly',false);
-        $("#OpBeadHeight").val(0).attr('readonly',false);
+        $("#OpBeadHeight").attr('readonly',false);
         $("#OpBeadThickness").attr('required',true);
-        $("#OpBeadHeight").val(0).attr('required',true);
+        $("#OpBeadHeight").attr('required',true);
         $("#OpBeadHeight").attr('min',95);
         $("#OpBeadThickness").attr('min',44);
         $("#opglazingSystems").attr({ 'disabled': true, "required": false });
@@ -1869,11 +1869,15 @@ function rebatedWidth(){
     }
     let framTypeValue = $('#frameType').val();
     if (framTypeValue == "Rebated_Frame") {
-        var identifier = $("#rebatedWidth");
-        var value = parseFloat(identifier.val());
-        if (identifier.length && value > 0) {
-            SetBuildOfMaterial(identifier);
-        }
+        checkAndSetBOM("#rebatedWidth");
+    }
+}
+
+ function checkAndSetBOM(selector) {
+    var identifier = $(selector);
+    var value = parseFloat(identifier.val());
+    if (identifier.length && value > 0) {
+        SetBuildOfMaterial(identifier);
     }
 }
 
@@ -4319,16 +4323,16 @@ $("#overpanel1").change(function () {
     } else {
 
         if ($("#overpanel").val() == "Fan_Light") {
-            $("#OpBeadThickness").val(0).attr('readonly', false);
-            $("#OpBeadHeight").val(0).attr('readonly', false);
-            $("#OpBeadThickness").val(0).attr('required', true);
-            $("#OpBeadHeight").val(0).attr('required', true);
+            $("#OpBeadThickness").attr('readonly', false);
+            $("#OpBeadHeight").attr('readonly', false);
+            $("#OpBeadThickness").attr('required', true);
+            $("#OpBeadHeight").attr('required', true);
             $("#oPHeigth").attr('required', true);
         } else {
-            $("#OpBeadThickness").val(0).attr('readonly', false);
-            $("#OpBeadHeight").val(0).attr('readonly', true);
-            $("#OpBeadThickness").val(0).attr('required', false);
-            $("#OpBeadHeight").val(0).attr('required', true);
+            $("#OpBeadThickness").attr('readonly', false);
+            $("#OpBeadHeight").attr('readonly', true);
+            $("#OpBeadThickness").attr('required', false);
+            $("#OpBeadHeight").attr('required', true);
             $("#oPHeigth").attr('required', true);
         }
 
@@ -5972,6 +5976,8 @@ $(document).ready(function(){
         $("#OpBeadHeight").attr({ 'disabled': true, required: false });
         $("#OpBeadThickness").attr({ 'disabled': true, required: false });
     }
+    checkAndSetBOM("#OpBeadHeight");
+    checkAndSetBOM("#OpBeadThickness");
 });
 
 // 905
