@@ -697,23 +697,36 @@ $(".change-event-calulation").change(function(){
     const vP1Height1Value_A = parseFloat($('#vP1Height1').val());
     const sOWidthValue_A = parseFloat($('#sOWidth').val());
     const sOHeightValue_A = parseFloat($('#sOHeight').val());
+    var Leaf1VPWidthImport = $('#Leaf1VPWidth-import').data('value');
+    var oldfirerating = $('#FireRating-import').data('value');
+    var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
+    var Leaf1VisionPanelImport = $('#Leaf1VisionPanel-import').data('value');
+    var oldDoorsetTypeImport = $('#DoorsetType-import').data('value');
+    var DoorsetTypeImport = $('#doorsetType').val();
 
     if(vP1WidthValue_A != '' && sOWidthValue_A != ''){
         if(vP1WidthValue_A > sOWidthValue_A){
-            swal('.','Leaf width 1 is never greater than S.O. width.')
-            $('#vP1Width').val(0);
-            $('#vP1Width-section').removeClass("table_row_show");
+            if(oldDoorsetTypeImport != DoorsetTypeImport ||  oldfirerating != $("#fireRating").val()){
+                $('#vP1Height1-section').removeClass("table_row_show");
+                $('#vP1Height1').val(Leaf1VPWidthImport);
+            } else {
+                swal('.','Leaf width 1 is never greater than S.O. width.')
+                $('#vP1Width').val(0);
+                $('#vP1Width-section').removeClass("table_row_show");
+            }
+
         }
     }
     if(vP1Height1Value_A != '' && sOHeightValue_A != ''){
         if(vP1Height1Value_A > sOHeightValue_A){
-            var oldfirerating = $('#FireRating-import').data('value');
-            var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
-            var Leaf1VisionPanelImport = $('#Leaf1VisionPanel-import').data('value');
             if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' )&& $("#doorLeafFacing").val() == '' &&  LeafHeightNoOP == 0 && Leaf1VisionPanelImport == 'Yes'){
                 $('#vP1Height1-section').removeClass("table_row_show");
                 $('#vP1Height1').val(Leaf1VPHeight1Import);
-            } else {
+            } else if(oldDoorsetTypeImport != DoorsetTypeImport ||  oldfirerating != $("#fireRating").val()){
+                $('#vP1Height1-section').removeClass("table_row_show");
+                $('#vP1Height1').val(Leaf1VPHeight1Import);
+            }
+            else {
                 swal('.','Leaf height 1 is never greater than S.O. height.')
                 $('#vP1Height1-section').removeClass("table_row_show");
                 $('#vP1Height1').val(0);
