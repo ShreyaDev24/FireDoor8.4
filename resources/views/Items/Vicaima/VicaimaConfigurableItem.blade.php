@@ -97,7 +97,7 @@
                     <input type="hidden" name="SvgImage" value=""/>
                     @if(in_array(Auth::user()->UserType, ['1', '2', '3']) && isset($quotation->QuotationStatus) && $quotation->QuotationStatus != 'Ordered' && empty($Item["itemId"]))
                         <div class="float-right">
-                            <button type="button" id="default" onclick="default()" class="btn btn-primary">
+                            <button type="button" id="default" onclick="default()" class="btn btn-primary defaultbutton">
                                 <i class="fas fa-paper-plane"></i> Import Default
                             </button>
                         </div>
@@ -508,6 +508,7 @@
     }
 
     $('#submit').attr({'disabled': true,"readonly":true });
+    $('.defaultbutton').attr({'disabled': true,"readonly":true });
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
     var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
@@ -530,6 +531,7 @@
     $(document).ajaxComplete(function() {
         if(count == 1){
             $('#submit').attr({'disabled': true,"readonly":true });
+            $('.defaultbutton').attr({'disabled': true,"readonly":true });
             count = 0;
         }
     });
@@ -537,6 +539,7 @@
     $( document ).ajaxStop(function() {
         if(counter == 1){
             $('#submit').attr({'disabled': false,"readonly":false });
+            $('.defaultbutton').attr({'disabled': false,"readonly":false });
             counter = 0;
         }
     });
