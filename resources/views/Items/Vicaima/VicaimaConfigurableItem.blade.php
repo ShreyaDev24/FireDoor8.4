@@ -303,6 +303,14 @@
     });
 
     function defaultimport(){
+         $('.loader').empty().css({
+            'display': 'block'
+        });
+        setTimeout(function() {
+               $('.loader').empty().css({
+                    'display': 'none'
+                });
+            }, 5000);
         $("#FrameFinishColor-value").val($("#FrameFinishColor-import").data("value"));
         var handingImportValue = $("#Handing-import").data("value");
         var frameCostuction = $("#DoorFrameConstruction-import").data("value");
@@ -578,7 +586,9 @@
     $( document ).ajaxStop(function() {
         if(counter == 1){
             $('#submit').attr({'disabled': false,"readonly":false });
-            $('.defaultbutton').attr({'disabled': false,"readonly":false });
+            setTimeout(function() {
+              $('.defaultbutton').attr({'disabled': false,"readonly":false });
+            }, 5000);
             counter = 0;
         }
     });

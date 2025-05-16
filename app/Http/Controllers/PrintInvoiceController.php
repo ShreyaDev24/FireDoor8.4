@@ -3388,20 +3388,57 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
             $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
+            // start old code
+            // $pdf = new Fpdi();
+            // $pageCount = $pdf->setSourceFile($mergedFilePath);
 
+            // // Set margins
+            // $pdf->SetMargins(10, 10, 10);
+            // $pdf->SetAutoPageBreak(true, 10);
+
+            // // Disable header and footer completely
+            // $pdf->setPrintHeader(false);
+            // $pdf->setPrintFooter(true);
+
+            // for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+
+            //     $tplId = $pdf->importPage($pageNo);
+            //     $pdf->AddPage();
+            //     $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
+
+            //     // Add page number at bottom center
+            //     $pdf->SetY(-20);
+            //     $pdf->Cell(0, 10, 'Page ' . $pageNo . '/' . $pageCount, 0, 0, 'C');
+            // }
+
+            // // Save the final PDF with page numbers
+            // $outputPath = $PDFfilename;
+            // $pdf->Output($outputPath, 'F');
+
+            // $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+            //end  old code
+
+            // new code
             $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($mergedFilePath);
 
             // Set margins
             $pdf->SetMargins(10, 10, 10);
             $pdf->SetAutoPageBreak(true, 10);
+            // Source file path
+            $pageCount = $pdf->setSourceFile($mergedFilePath);
 
             // Disable header and footer completely
+            // Disable auto page break to avoid pushing content down
+            $pdf->SetAutoPageBreak(false);
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(true);
+            $pdf->setPrintFooter(false);
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+            $pdf->SetMargins(0, 0, 0); // Full-page use
 
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $tplId = $pdf->importPage($pageNo);
                 $pdf->AddPage();
                 $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
@@ -3409,13 +3446,51 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 // Add page number at bottom center
                 $pdf->SetY(-20);
                 $pdf->Cell(0, 10, 'Page ' . $pageNo . '/' . $pageCount, 0, 0, 'C');
+                // Add page number without adding new page or overlapping content
+                $pdf->SetFont('Helvetica', '', 9);
+                $pdf->SetTextColor(0, 0, 0);
+
+                // ✅ Position footer safely above bottom margin
+                $pdf->SetXY(0, -12); // or -15 if needed
+                $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
             }
 
             // Save the final PDF with page numbers
             $outputPath = $PDFfilename;
             $pdf->Output($outputPath, 'F');
-
+            // Save the final PDF
+            $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+            // Source file path
+            $pageCount = $pdf->setSourceFile($mergedFilePath);
+
+            // Disable auto page break to avoid pushing content down
+            $pdf->SetAutoPageBreak(false);
+            $pdf->setPrintHeader(false);
+            $pdf->setPrintFooter(false);
+
+            $pdf->SetMargins(0, 0, 0); // Full-page use
+
+            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
+                $tplId = $pdf->importPage($pageNo);
+                $pdf->AddPage();
+                $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
+
+                // Add page number without adding new page or overlapping content
+                $pdf->SetFont('Helvetica', '', 9);
+                $pdf->SetTextColor(0, 0, 0);
+
+                // ✅ Position footer safely above bottom margin
+                $pdf->SetXY(0, -12); // or -15 if needed
+                $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
+            }
+
+            // Save the final PDF
+            $pdf->Output($PDFfilename, 'F');
+            $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+
+
+            // end code
 
             $quo = Quotation::find($quatationId);
             $quo->quotTag = 1;

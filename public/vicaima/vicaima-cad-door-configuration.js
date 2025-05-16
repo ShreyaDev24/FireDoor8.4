@@ -8108,16 +8108,22 @@ else if (swingType != 'DA' && frameonoff) {
         var Leaf1VPHeight1Import = $('#Leaf1VPHeight1-import').data('value');
         var Leaf1VPWidthImport = $('#Leaf1VPWidth-import').data('value');
         var Leaf1VisionPanelImport = $('#Leaf1VisionPanel-import').data('value');
+        var oldDoorsetTypeImport = $('#DoorsetType-import').data('value');
+        var DoorsetTypeImport = $('#doorsetType').val();
+
           if (ChangedFieldName == "distanceFromTheEdgeOfDoor") {
               swal('Warning!', "Entered distance from the edge of door of left leaf exceeds the width of left leaf.");
           } else if (ChangedFieldName == "distanceFromTopOfDoor") {
               swal('Warning!', "Entered distance from top of door of left leaf exceeds the height of left leaf.");
           } else if (ChangedFieldName == "distanceBetweenVPs") {
               swal('Warning!', "Entered distance between vps of left leaf exceeds the height of left leaf.");
-        } else if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' ) && Leaf1VisionPanelImport == 'Yes' &&  LeafHeightNoOP == 0){
+          } else if(oldfirerating != $("#fireRating").val() &&  ($("#fireRating").val() == 'FD60' || $("#fireRating").val() == 'FD60s' ) && Leaf1VisionPanelImport == 'Yes' &&  LeafHeightNoOP == 0){
             $("#vP1Height1").val(Leaf1VPHeight1Import);
             $("#vP1Width").val(Leaf1VPWidthImport);
-          }
+          } else if(oldDoorsetTypeImport != DoorsetTypeImport ||  oldfirerating != $("#fireRating").val()){
+                $("#vP1Height1").val(Leaf1VPHeight1Import);
+                $("#vP1Width").val(Leaf1VPWidthImport);
+            }
           else {
                 swal('Warning!', "Sum of all vision panel's height should not be greater than leaf's height.");
           }
