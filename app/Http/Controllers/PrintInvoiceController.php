@@ -3420,44 +3420,25 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             // new code
             $pdf = new Fpdi();
-            $pageCount = $pdf->setSourceFile($mergedFilePath);
-
-            // Set margins
-            $pdf->SetMargins(10, 10, 10);
-            $pdf->SetAutoPageBreak(true, 10);
             // Source file path
             $pageCount = $pdf->setSourceFile($mergedFilePath);
-
-            // Disable header and footer completely
             // Disable auto page break to avoid pushing content down
             $pdf->SetAutoPageBreak(false);
             $pdf->setPrintHeader(false);
-            $pdf->setPrintFooter(true);
             $pdf->setPrintFooter(false);
-
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
             $pdf->SetMargins(0, 0, 0); // Full-page use
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $tplId = $pdf->importPage($pageNo);
                 $pdf->AddPage();
                 $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
-
-                // Add page number at bottom center
-                $pdf->SetY(-20);
-                $pdf->Cell(0, 10, 'Page ' . $pageNo . '/' . $pageCount, 0, 0, 'C');
                 // Add page number without adding new page or overlapping content
                 $pdf->SetFont('Helvetica', '', 9);
                 $pdf->SetTextColor(0, 0, 0);
-
                 // ✅ Position footer safely above bottom margin
                 $pdf->SetXY(0, -12); // or -15 if needed
                 $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
             }
-
-            // Save the final PDF with page numbers
-            $outputPath = $PDFfilename;
-            $pdf->Output($outputPath, 'F');
             // Save the final PDF
             $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
@@ -3488,8 +3469,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             // Save the final PDF
             $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
-
-
             // end code
 
             $quo = Quotation::find($quatationId);
@@ -3500,7 +3479,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             foreach ($pdfFiles as $unlinkPath) {
                 unlink($unlinkPath);
-}
+            }
 
         // $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
         // // Merge the PDF File
