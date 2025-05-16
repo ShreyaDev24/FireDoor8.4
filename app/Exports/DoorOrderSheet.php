@@ -80,6 +80,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             if($cutSizeW2 <= 0){
                 $cutSizeW2 = '';
             }
+            $DoorDimensionsCode = '';
+            $DoorDimensionsCode2 = '';
             if(isset($quotation->configurableitems) && $quotation->configurableitems == '1'){
                 $configurableitems = 'Streboard';
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '2'){
@@ -88,6 +90,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $configurableitems = 'Norma';
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
                 $configurableitems = 'Vicaima';
+                $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
+                if($value->DoorsetType != 'SD'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '5'){
                 $configurableitems = 'Seadec';
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '6'){
@@ -107,6 +113,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->LeafThickness,
                 $configurableitems,
                 str_replace('_', ' ', $value->DoorLeafFacing),
+                $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
+                $DoorDimensionsCode2,
                 $cutSizeH,
                 $cutSizeW,
                 $cutSizeW2,
@@ -120,10 +128,36 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $k++;
 
+            if($value->Overpanel == 'Overpanel'){
+                    $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
+                    $data[] = array(
+                    ($value->DoorQuantity) ? $value->DoorQuantity : 1,
+                    $value->doorNumber,
+                    $value->DoorType.' OP LEAF SIZE',
+                    $value->LeafThickness,
+                    $configurableitems,
+                    str_replace('_', ' ', $value->DoorLeafFacing),
+                    $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
+                    $DoorDimensionsCode2,
+                    $cutSizeH,
+                    $cutSizeW,
+                    $cutSizeW2,
+                    $value->LippingThickness,
+                    $LFW,
+                    $LFH,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->LippingType),
+                    ''
+                );
+
+                $k++;
+            }
+
         }
 
         $footData = [
-            '','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -140,6 +174,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             'Door Thickness',
             'Door Mat',
             'Door Finish',
+            'PRODUCT CODE LEAF 1 ',
+            'PRODUCT CODE LEAF 2',
             'Cut Size H',
             'Cut Size W',
             'Cut Size W2',
@@ -160,8 +196,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:O1';
-                $cellRange = 'A2:O2';
+                $cellRange1 = 'A1:Q1';
+                $cellRange = 'A2:Q2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
