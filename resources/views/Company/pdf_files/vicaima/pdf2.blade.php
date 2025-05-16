@@ -62,7 +62,7 @@
 
     .right_txt {
         font-size: 12px;
-        margin-top: 25px !important;
+        margin-top: -120px !important;
         margin-right: 50%;
         position: absolute;
         right: -40%;
