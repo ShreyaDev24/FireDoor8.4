@@ -91,8 +91,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
                 $configurableitems = 'Vicaima';
                 $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
-                if($value->DoorsetType != 'SD'){
+                if($value->DoorsetType == 'leaf_and_a_half'){
                     $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }else if($value->DoorsetType == 'DD'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '5'){
                 $configurableitems = 'Seadec';
