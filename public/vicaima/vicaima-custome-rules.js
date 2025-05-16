@@ -864,6 +864,10 @@ function framTypeChangeInputEnableDisable(){
         // $("#plantonStopHeight").attr('min', '12');
         $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
         $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
+        if($("#plantonStopWidth").val() == 0 || $("#plantonStopHeight").val() == 0){
+            $("#plantonStopWidth").val('');
+            $("#plantonStopHeight").val('');
+        }
         $("#frameTypeDimensions").val('').attr('readonly', false);
         $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -880,6 +884,10 @@ function framTypeChangeInputEnableDisable(){
         $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
         $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+        if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
+            $("#ScallopedWidth").val('');
+            $("#ScallopedHeight").val('');
+        }
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
         $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         doorDimensionCalculation()
@@ -892,6 +900,10 @@ function framTypeChangeInputEnableDisable(){
         $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
         $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
         $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+        if($("#rebatedWidth").val() == 0 || $("#rebatedHeight").val() == 0){
+            $("#rebatedWidth").val('');
+            $("#rebatedHeight").val('');
+        }
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
         $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
         rebatedWidth();
