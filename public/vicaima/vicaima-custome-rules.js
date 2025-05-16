@@ -204,6 +204,13 @@ function corewidth1Value(){
             $("#coreWidth1").val(calculate);
             $("#opCoreWidth").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
+        } else {
+            if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
+                var calculate = leafWidth1 - (1 * lipping_thickness);
+                 $("#coreWidth1").val('');
+                 $("#coreWidth2").val('');
+                 $("#opCoreWidth").val(calculate);
+            }
         }
     } else {
         var calculate = leafWidth1 - (1 * lipping_thickness);
@@ -213,6 +220,15 @@ function corewidth1Value(){
         }
         $("#coreWidth1").val(calculate);
         $("#opCoreWidth").val(calculate);
+        if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
+             $("#coreWidth1").val('');
+             $("#coreWidth2").val('');
+        } else {
+            $("#coreWidth1").val(calculate);
+            if (checkdoorsetType == 'DD') {
+             $("#coreWidth2").val(calculateCoreWidth2);
+            }
+        }
     }
     $("#coreHeight").val(calculateCoreHeight);
     $("#opCoreHeight").val(calculateCoreHeight);
