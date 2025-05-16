@@ -119,6 +119,9 @@ function corewidth1Value(){
     var leafHeight = 0;
     var lipping_thickness = 0;
     var randomkey = 2;
+    var oPHeigth = 0;
+    var OpBeadThickness = 0;
+    var gap = 0;
     // var leafWidth1=0;
     var thisvalue = document.getElementsByClassName("forcoreWidth1");
     for (var i = 0; i < thisvalue.length; i++) {
@@ -155,6 +158,31 @@ function corewidth1Value(){
                 lipping_thickness = parseInt(thisvalue[i].value);
             }
         }
+
+        if (thisvalue[i].name == 'oPHeigth') {
+            if (thisvalue[i].value == '') {
+                oPHeigth = 0;
+            }
+            else {
+                oPHeigth = parseInt(thisvalue[i].value);
+            }
+        }
+        if (thisvalue[i].name == 'OpBeadThickness') {
+            if (thisvalue[i].value == '') {
+                OpBeadThickness = 0;
+            }
+            else {
+                OpBeadThickness = parseInt(thisvalue[i].value);
+            }
+        }
+        if (thisvalue[i].name == 'gap') {
+            if (thisvalue[i].value == '') {
+                gap = 0;
+            }
+            else {
+                gap = parseInt(thisvalue[i].value);
+            }
+        }
     }
 
     var ConfigurableDoorFormula = JSON.parse(ConfigurableDoorFormulaJson);
@@ -182,6 +210,7 @@ function corewidth1Value(){
 
     let checkdoorsetType = $('#doorsetType').val();
     var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
+    var calculateHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
 
     if(checkdoorsetType == 'leaf_and_a_half'){
         if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
@@ -207,9 +236,11 @@ function corewidth1Value(){
         } else {
             if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
                 var calculate = leafWidth1 - (1 * lipping_thickness);
+                var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
                  $("#coreWidth1").val('');
                  $("#coreWidth2").val('');
                  $("#opCoreWidth").val(calculate);
+                 $("#coreHeight").val(calculateCoreHeight);
             }
         }
     } else {
@@ -221,8 +252,10 @@ function corewidth1Value(){
         $("#coreWidth1").val(calculate);
         $("#opCoreWidth").val(calculate);
         if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
+            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
              $("#coreWidth1").val('');
              $("#coreWidth2").val('');
+             $("#coreHeight").val(calculateCoreHeight);
         } else {
             $("#coreWidth1").val(calculate);
             if (checkdoorsetType == 'DD') {
@@ -231,7 +264,7 @@ function corewidth1Value(){
         }
     }
     $("#coreHeight").val(calculateCoreHeight);
-    $("#opCoreHeight").val(calculateCoreHeight);
+    $("#opCoreHeight").val(calculateHeight);
 }
 
 // $(document).on('change','#leafHeightNoOP',function(e){
@@ -6505,3 +6538,35 @@ function sidelightslcheck(){
         $("#sideLight2GlazingBeadsFixingDetail").attr('readonly',true)
     }
 }
+
+$(document).ready(function() {
+    function updateLippingOptions() {
+        var overpanelVal = $("#overpanel").val();
+
+        if (overpanelVal === "Overpanel") {
+            // Hide "Scolloped" option
+            $("#lippingType option").each(function() {
+                console.log($(this).text().trim().toLowerCase())
+                if ($(this).text().trim().toLowerCase() === "scalloped") {
+                    $(this).hide();
+                }
+            });
+
+            // If currently selected is Scolloped, reset it
+            if ($("#lippingType option:selected").text().trim().toLowerCase() === "scalloped") {
+                $("#lippingType").val("");
+            }
+        } else {
+            // Show all options again if overpanel not selected
+            $("#lippingType option").show();
+        }
+    }
+
+    // Initial check
+    updateLippingOptions();
+
+    // Trigger check on change
+    $("#overpanel").change(function() {
+        updateLippingOptions();
+    });
+});
