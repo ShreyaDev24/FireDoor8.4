@@ -130,7 +130,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             if($value->Overpanel == 'Overpanel'){
                     $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
-                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness;
                     $data[] = array(
                     ($value->DoorQuantity) ? $value->DoorQuantity : 1,
                     $value->doorNumber,
