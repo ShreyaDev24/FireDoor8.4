@@ -5396,9 +5396,12 @@ $("#DoorDimensionsIcon").on("click", function () {
         type: "GET",
         data: { door_leaf_facing: door_leaf_facing, door_leaf_finish: door_leaf_finish, leaf_type: leaf_type, firerating, firerating, page_id: 4 },
         success: function (data) {
-            var result = data.map((row) => (
-                `<div class="col-md-2 col-sm-4 col-6 cursor-pointer" data-dismiss="modal" onclick="DoorDimensionValueFill(${row.id},'${row.code}',${row.mm_width},${row.mm_height})"><div class="color_box"><div class="frameMaterialImage"><img width="100%" height="100" src="${base_url}/DoorDimension/${row.image ? row.image : "vicaima_default_doorDimantion.jpg"}"></div><h4>${row.code}-${row.mm_width}x${row.mm_height}</h4></div></div>`
-            ))
+           var result = data.map((row) => {
+            let displayCode = row.code
+                    ? `${row.code}`
+                    : `${leaf_type} ${door_leaf_facing} ${firerating}`;
+            return  `<div class="col-md-2 col-sm-4 col-6 cursor-pointer" data-dismiss="modal" onclick="DoorDimensionValueFill(${row.id},'${displayCode}',${row.mm_width},${row.mm_height})"><div class="color_box"><div class="frameMaterialImage"><img width="100%" height="100" src="${base_url}/DoorDimension/${row.image ? row.image : "vicaima_default_doorDimantion.jpg"}"></div><h4>${displayCode}-${row.mm_width}x${row.mm_height}</h4></div></div>`
+           });
             $("#DoorDimensionBody").empty().append(result)
 
         }
