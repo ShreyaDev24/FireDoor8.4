@@ -5053,7 +5053,7 @@ function intumescentLeafChange(leafTypeId) {
                 doorSize();
 
                 // Additional function call based on the response
-                doorThicknessLeaf(response.leafType);
+                // doorThicknessLeaf(response.leafType);
             },
             error: function(xhr, status, error) {
                 console.log('Error:', error);
