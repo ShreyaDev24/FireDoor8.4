@@ -70,7 +70,7 @@ function pageIdentity(){
                 latch = $(this).val();
             }
         });
-        $('.dsl').html("("+latch+doorsetType+swingType+")");
+        // $('.dsl').html("("+latch+doorsetType+swingType+")");
     });
 
     $("#swingType").change(function(){
@@ -2770,7 +2770,7 @@ $(document).ready(function() {
         }
 
         if(swingType == 'DA'){
-            $('#latchType').siblings('label').children('.dsl').html('');
+            // $('#latchType').siblings('label').children('.dsl').html('');
             $('#latchType option').eq(0).prop('selected', true);
             $('#latchType').attr("disabled",true);
 
