@@ -873,7 +873,7 @@
 
             </tr>
             <tr id="rebatedHeight-section" class="@if (isset($Item['RebatedHeight'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>Rebated Height</td>
+                <td>Rebated Depth</td>
                 <td id="rebatedHeight-selected">@if (isset($Item['RebatedHeight'])){{ $Item['RebatedHeight'] }}@endif</td>
             </tr>
             <tr id="frameWidth-section" class="@if (isset($Item['FrameWidth'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
