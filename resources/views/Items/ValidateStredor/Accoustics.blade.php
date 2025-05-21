@@ -66,15 +66,13 @@
                                                         class="form-control" value="@if (isset($Item['perimeterSeal1'])) {{ $Item['perimeterSeal1'] }} @endif">
                                                     <input type="hidden" name="perimeterSeal1"
                                                         value="@if (isset($Item['perimeterSeal1'])) {{ $Item['perimeterSeal1'] }} @endif">
-
-                                                    <!-- <select name="perimeterSeal1" id="perimeterSeal1" class="form-control"
                                                     @if (isset($Item['Accoustics']))
                                                         @if ($Item['Accoustics'] != 'Yes')
                                                             {{ 'disabled' }}
-                                                @else
+                                                        @else
                                                             {{ 'required' }}
                                                         @endif
-                                            @else
+                                                    @else
                                                         {{ 'disabled' }}
                                                     @endif
                                                     >
@@ -112,52 +110,12 @@
                                                 </div>
                                             </div>
 
-                                         {{--   <div class="col-md-6">
-                                                <div class="position-relative form-group input-icons">
-                                                    <label for="thresholdSeal1">Threshold Seal 1
-                                                        @if (!empty($tooltip->thresholdSeal1))
-                                                            <script type="text/javascript">
-                                                                // document.write(Tooltip('{{ $tooltip->thresholdSeal1 }}'));
-                                                            </script>
-                                                        @endif
-                                                    </label>
-                                                    <i class="fa fa-info icon cursor-pointer "
-                                                        id="thresholdSeal1Icon"></i>
-                                                    <input type="text" readonly id="thresholdSeal1"
-                                                        class="form-control" value="@if (isset($Item['thresholdSeal1'])) {{ $Item['thresholdSeal1'] }} @endif">
-                                                    <input type="hidden" name="thresholdSeal1" value="@if (isset($Item['thresholdSeal1'])) {{ $Item['thresholdSeal1'] }} @endif">
-
-
-
-                                                </div>
-                                            </div>  --}}
-
-                                            {{--
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group input-icons">
-                                                    <label for="thresholdSeal2">Threshold Seal 2
-                                                        @if (!empty($tooltip->thresholdSeal2))
-                                                            <script type="text/javascript">
-                                                                // document.write(Tooltip('{{ $tooltip->thresholdSeal2 }}'));
-                                                            </script>
-                                                        @endif
-                                                    </label>
-                                                    <i class="fa fa-info icon cursor-pointer"
-                                                        id="thresholdSeal2Icon"></i>
-                                                    <input type="text" readonly id="thresholdSeal2"
-                                                        class="form-control" value="@if (isset($Item['thresholdSeal2'])) {{ $Item['thresholdSeal2'] }} @endif">
-                                                    <input type="hidden" name="thresholdSeal2" value="@if (isset($Item['thresholdSeal2'])) {{ $Item['thresholdSeal2'] }} @endif">
-
-
-                                                </div>
-                                            </div> --}}
-
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="accousticsmeetingStiles">Meeting Stiles
                                                         @if (!empty($tooltip->accousticsmeetingStiles))
                                                             <script type="text/javascript">
-                                                                // document.write(Tooltip('{{ $tooltip->accousticsmeetingStiles }}'));
+                                                                document.write(Tooltip('{{ $tooltip->accousticsmeetingStiles }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -166,14 +124,8 @@
                                                     <input type="text" readonly id="accousticsmeetingStiles"
                                                         class="form-control"  value="@if (isset($Item['AccousticsMeetingStiles'])) {{ $Item['AccousticsMeetingStiles'] }} @endif">
                                                     <input type="hidden" name="accousticsmeetingStiles" value="@if (isset($Item['AccousticsMeetingStiles'])) {{ $Item['AccousticsMeetingStiles'] }} @endif">
-
-
-
                                                 </div>
                                             </div>
-
-
-
                                         </div>
                                     </div>
                                 </div>

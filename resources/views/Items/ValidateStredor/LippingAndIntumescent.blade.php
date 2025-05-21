@@ -263,10 +263,7 @@
                             {{--<input type="text" name="intumescentSealArrangement"--}}
                                 {{--id="intumescentSealArrangement" class="form-control">--}}
 
-                            <select name="intumescentSealArrangement" required id="intumescentSealArrangement" class="form-control" option_slug = "intumescentSealArrangement">
-                                <option value="">Select Intumescent Seal
-                                    Arrangement</option>
-                            </select>
+                            <select name="intumescentSealArrangement" required id="intumescentSealArrangement" class="form-control" option_slug = "intumescentSealArrangement"></select>
                         </div>
                     </div>
 

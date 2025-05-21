@@ -49,7 +49,7 @@
                             @endif
                             </label> --}}
                             <select name="OPLippingThickness"
-                                    hidden>
+                                 hidden>
                                 <option value="">Select Op Thickness</option>
                                 <option value="0" selected>0</option>
 
@@ -84,7 +84,9 @@
                             </script>
                             @endif
                                 </label>
-                            <select name="opGlassIntegrity"
+                                <label for="opGlass_Integrity" style="display: none;">Fan Light Glass
+                                Integrity</label>
+                            <select required name="opGlassIntegrity"
                                 id="opGlassIntegrity" class="form-control">
                                 <option value=''> Select OP Glass Integrity</option>
                             </select>
@@ -163,7 +165,7 @@
                     </div>
 
 
-                   {{-- <div class="col-md-6">
+                  {{--  <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="opTransom">OP Transom
                             @if(!empty($tooltip->opTransom))

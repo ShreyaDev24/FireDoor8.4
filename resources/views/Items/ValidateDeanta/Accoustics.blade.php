@@ -67,30 +67,7 @@
                                                     <input type="hidden" name="perimeterSeal1"
                                                         value="@if (isset($Item['perimeterSeal1'])) {{ $Item['perimeterSeal1'] }} @endif">
 
-                                                    <!-- <select name="perimeterSeal1" id="perimeterSeal1" class="form-control"
-                                                    @if (isset($Item['Accoustics']))
-                                                        @if ($Item['Accoustics'] != 'Yes')
-                                                            {{ 'disabled' }}
-                                                @else
-                                                            {{ 'required' }}
-                                                        @endif
-                                            @else
-                                                        {{ 'disabled' }}
-                                                    @endif
-                                                    >
-                                                        <option value="">Select Perimeter Seal 1</option>
-                                                        @foreach ($option_data as $row)
-                                                            @if ($row->UnderAttribute == 'Perimeter_Seal_1')
-                                                                <option value="{{ $row->OptionKey }}"
-                                                                    @if (isset($Item['perimeterSeal1']))
-                                                                        @if ($Item['perimeterSeal1'] == $row->OptionKey)
-                                                                            {{ 'selected' }}
-                                                                        @endif
-                                                                    @endif
-                                                                >{{ $row->OptionValue }}</option>
-                                                            @endif
-                                                        @endforeach
-                                                    </select> -->
+
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -112,7 +89,7 @@
                                                 </div>
                                             </div>
 
-                                         {{--   <div class="col-md-6">
+                                          {{--  <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="thresholdSeal1">Threshold Seal 1
                                                         @if (!empty($tooltip->thresholdSeal1))
@@ -130,9 +107,7 @@
 
 
                                                 </div>
-                                            </div>  --}}
-
-                                            {{--
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="thresholdSeal2">Threshold Seal 2
@@ -151,7 +126,6 @@
 
                                                 </div>
                                             </div> --}}
-
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="accousticsmeetingStiles">Meeting Stiles

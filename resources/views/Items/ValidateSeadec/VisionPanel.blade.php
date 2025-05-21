@@ -16,7 +16,7 @@
                             </script>
                             @endif
                             </label>
-                            <select required name="leaf1VisionPanel" id="leaf1VisionPanel"
+                            <select name="leaf1VisionPanel" id="leaf1VisionPanel"
                                 class="form-control change-event-calulation door-configuration">
                                 <option value=""> Is Vision Panel active? </option>
                                 @foreach($option_data as $row)
@@ -45,7 +45,7 @@
                             </script>
                             @endif
                             </label>
-                            <select required name="leaf1VisionPanelShape" id="leaf1VisionPanelShape"
+                            <select name="leaf1VisionPanelShape" id="leaf1VisionPanelShape"
                                 class="form-control change-event-calulation door-configuration">
                                 <option value="">select any shape </option>
                                 @foreach($option_data as $row)
@@ -131,23 +131,6 @@
                                 name="distanceFromTopOfDoor" id="distanceFromTopOfDoor"
                                 class="form-control door-configuration"
                         value="@if(isset($Item['DistanceFromtopOfDoor'])){{$Item['DistanceFromtopOfDoor']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="distanceFromTopOfDoor">Distance from Bottom of door
-                            @if(!empty($tooltip->distanceFromBottomOfDoor))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->distanceFromBottomOfDoor}}'));
-                            </script>
-                            @endif
-                                </label>
-                            <input type="number"
-                                @if(!isset($Item['DistanceFromBottomOfDoor'])) {{'readonly'}} @endif
-                                min="100"
-                                name="distanceFromBottomOfDoor" id="distanceFromBottomOfDoor"
-                                class="form-control door-configuration"
-                        value="@if(isset($Item['DistanceFromBottomOfDoor'])){{$Item['DistanceFromBottomOfDoor']}}@endif">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -632,7 +615,11 @@
                             </label>
                             <select name="glassType" id="glassType" option_slug="leaf1_glass_type" class="form-control">
                                 <option value="">Select Glass Type</option>
-                                <input type="hidden" id="glassValueId" value="@if(isset($Item['GlassType'])){{$Item['GlassType']}}@endif">
+                                <!-- @foreach($option_data as $row)
+                                @if($row->OptionSlug=='leaf1_glass_type')
+                                <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
+                                @endif
+                                @endforeach -->
                             </select>
                         </div>
                     </div>

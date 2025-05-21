@@ -12,7 +12,7 @@
                             <label for="frameMaterial">Frame Material
                             @if(!empty($tooltip->frameMaterial))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->frameMaterial}}'));
+                            // // document.write(Tooltip('{{$tooltip->frameMaterial}}'));
                             </script>
                             @endif
                             </label>
@@ -31,7 +31,7 @@
                             <label for="frameType">Frame Type
                             @if(!empty($tooltip->frameType))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->frameType}}'));
+                            // // document.write(Tooltip('{{$tooltip->frameType}}'));
                             </script>
                             @endif
 
@@ -52,7 +52,7 @@
 
                             @if(!empty($tooltip->plantonStopWidth))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->plantonStopWidth}}'));
+                            // // document.write(Tooltip('{{$tooltip->plantonStopWidth}}'));
                             </script>
                             @endif
                             </label>
@@ -64,7 +64,7 @@
                             <label for="plantonStopHeight">Plant on Stop Height(min 12)
                             @if(!empty($tooltip->plantonStopHeight))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->plantonStopHeight}}'));
+                            // // document.write(Tooltip('{{$tooltip->plantonStopHeight}}'));
                             </script>
                             @endif
                             </label>
@@ -79,7 +79,7 @@
 
                             @if(!empty($tooltip->ScallopedWidth))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->ScallopedWidth}}'));
+                            // // document.write(Tooltip('{{$tooltip->ScallopedWidth}}'));
                             </script>
                             @endif
                             </label>
@@ -92,7 +92,7 @@
                             <label for="rebatedHeight">Scalloped Depth (max 5)
                             @if(!empty($tooltip->ScallopedHeight))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->ScallopedHeight}}'));
+                            // // document.write(Tooltip('{{$tooltip->ScallopedHeight}}'));
                             </script>
                             @endif
                             </label>
@@ -120,7 +120,7 @@
                             <label for="rebatedHeight">Rebated Height (min 12)
                             @if(!empty($tooltip->rebatedHeight))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->rebatedHeight}}'));
+                            // // document.write(Tooltip('{{$tooltip->rebatedHeight}}'));
                             </script>
                             @endif
                             </label>
@@ -135,7 +135,7 @@
                             <label for="frameTypeDimensions">Dimensions
                             @if(!empty($tooltip->frameTypeDimensions))
                             <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->frameTypeDimensions}}'));
+                            // // document.write(Tooltip('{{$tooltip->frameTypeDimensions}}'));
                             </script>
                             @endif
                             </label>
