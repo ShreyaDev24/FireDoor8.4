@@ -43,6 +43,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         foreach($item as $value){
             if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
                 $data[] = array(
+                    $value->DoorType,
                     $value->doorNumber,
                     $value->GlassThickness,
                     str_replace('_', ' ', $value->GlassType),
@@ -60,7 +61,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         }
 
         $footData = [
-            '','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -71,6 +72,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     public function headings(): array
     {
         $a = [
+            'Door Type',
             'Door Number',
             'Glass Thickness in mm',
             'Glass Type',
@@ -91,8 +93,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:I1';
-                $cellRange = 'A2:I2';
+                $cellRange1 = 'A1:J1';
+                $cellRange = 'A2:J2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -113,7 +115,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('I', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('J', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);

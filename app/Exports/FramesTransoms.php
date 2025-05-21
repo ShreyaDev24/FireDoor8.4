@@ -73,6 +73,7 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
             }
 
             $data[] = array(
+                $value->DoorType,
                 $value->doorNumber,
                 $value->FireRating,
                 $value->LeafThickness,
@@ -103,7 +104,7 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         $footData = [
-            '','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -114,6 +115,7 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
     public function headings(): array
     {
         $a = [
+            'Door Type',
             'Door Number',
             'Fire Rating',
             'Door Thickness',
@@ -148,8 +150,8 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:W1';
-                $cellRange = 'A2:W2';
+                $cellRange1 = 'A1:X1';
+                $cellRange = 'A2:X2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -170,7 +172,7 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('W', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('X', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
