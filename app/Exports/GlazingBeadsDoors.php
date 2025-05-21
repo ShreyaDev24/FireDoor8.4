@@ -43,6 +43,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         foreach($item as $value){
             if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
                 $data[] = array(
+                    $value->DoorType,
                     $value->doorNumber,
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->GlazingBeads),
@@ -58,7 +59,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         }
 
         $footData = [
-            '','','','','','','','','','',''
+            '','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -69,6 +70,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function headings(): array
     {
         $a = [
+            'Door Type',
             'Door Ref',
             'Timber',
             'Section',
@@ -89,8 +91,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:H1';
-                $cellRange = 'A2:H2';
+                $cellRange1 = 'A1:I1';
+                $cellRange = 'A2:I2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -111,7 +113,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('H', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('I', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
