@@ -152,7 +152,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     }else if(id == 'rebatedWidth'){
                         getmsginput = 'Rebated Width should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'rebatedHeight'){
-                        getmsginput = 'Rebated Height should be a minimum '+getmininputvalue+ 'mm';
+                        getmsginput = 'Rebated Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
                         getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
                     } else if(id == 'hinge2Location'){
@@ -184,7 +184,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     }else if(id == 'rebatedWidth'){
                         getmsginput = 'Rebated Width should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'rebatedHeight'){
-                        getmsginput = 'Rebated Height should be a minimum '+getmininputvalue+ 'mm';
+                        getmsginput = 'Rebated Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
                         getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
                     } else if(id == 'hinge2Location'){

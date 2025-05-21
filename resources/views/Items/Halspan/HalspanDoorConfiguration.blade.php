@@ -508,6 +508,7 @@
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             FramePrice('Rebated_Frame');
+            framewidth();
             // frameprice('Rebated_Frame');
         } else {
 
