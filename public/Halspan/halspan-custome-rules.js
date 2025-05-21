@@ -14,6 +14,7 @@ function pageIdentity(){
         setTimeout(function(){
             checkValidation($("#fireRating").val());
         }, 2000);
+        CheckFireRating($(this).val());
     });
 
     $("#doorsetType").change(function(){
