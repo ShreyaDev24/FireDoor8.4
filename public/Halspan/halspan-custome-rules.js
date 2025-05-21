@@ -11,6 +11,7 @@ function pageIdentity(){
 
     $("#fireRating").change(function(){
         FireRatingChange();
+        CheckFireRating($(this).val());
     });
 
     $("#doorsetType").change(function(){
@@ -6015,6 +6016,15 @@ $(document).ready(function(){
         $("#OpBeadThickness").attr({ 'disabled': true, required: false });
     }
 });
-
+// 954
+function CheckFireRating(val){
+    let storeFireRating = $("#fireratingoldvalue").val();
+    if(storeFireRating && val){
+        if(storeFireRating != val){
+             $('#frameMaterial').val('');
+              $('#frameMaterial').css({ 'border': '1px solid red' });
+        }
+    }
+}
 
 
