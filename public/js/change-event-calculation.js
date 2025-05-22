@@ -640,6 +640,7 @@ $(".change-event-calulation").change(function(){
 
          $("#frameWidth").val(soWidth-(parseInt(tollerance)*TolleranceAdditionalNumberForFrameWidth));
          $("#frameHeight").val(soHeight-tollerance);
+         framewidth();
         //  alert(soHeight);
         //  $("#frameDepth").val(soHeight);
          $("#extLinerFinish").val(frameFinish);

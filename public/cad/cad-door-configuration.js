@@ -275,6 +275,7 @@ const render = (CustomElement = null) => {
         var FrameWidthForMap = 0;
 
         $("#frameWidth").val(FrameWidth);
+        framewidth();
         // if(ChangedFieldName == "frameWidth"){
         //     FrameWidth = $('input[name="frameWidth"]').val();
         //     if(FrameWidth != "" && FrameWidth > 0){
