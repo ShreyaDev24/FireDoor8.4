@@ -196,7 +196,7 @@
                             </script>
                             @endif
                             </label>
-                            <input Type="number" min="44" required name="sideLight1FrameThickness"
+                            <input Type="number" min="44" name="sideLight1FrameThickness"
                             id="sideLight1FrameThickness" class="form-control SL1"
                             value="@if(isset($Item['SideLight1FrameThickness'])){{$Item['SideLight1FrameThickness']}}@endif">
                         </div>
@@ -568,7 +568,7 @@
                             </script>
                             @endif
                             </label>
-                            <input Type="number" min="44" required name="sideLight2FrameThickness"
+                            <input Type="number" min="44" name="sideLight2FrameThickness"
                             id="sideLight2FrameThickness" class="form-control sidelight2section"
                             value="@if(isset($Item['SideLight2FrameThickness'])){{$Item['SideLight2FrameThickness']}}@endif">
                         </div>
