@@ -362,6 +362,7 @@ const render = (CustomElement = null) => {
             $("#leafWidth2-section").removeClass("table_row_hide");
             $("#leafWidth2-section").addClass("table_row_show");
         }
+        framewidth();
 
         if ($('#doorsetType').val() == 'leaf_and_a_half') {
             if (Handing == 'Right_Hand_Master_Left_Hand_Slave') {
