@@ -1752,6 +1752,9 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $("#SlBeadHeight").attr({min: 20});
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -1763,6 +1766,9 @@ function copyOfSideLite1Change(isstatus = false){
                 // $("#gap").val('');
                 $('label[for="gap"]').show();
                 $('label[for="gap_NFR"]').css({'display':'none'});
+                $('#intumescentSealType').attr('required', true)
+                $('#intumescentSealLocation').attr('required', true)
+                $('#intumescentSealColor').attr('required', true)
 
                 if($("#fireRating").val()=="FD30"){
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
@@ -5707,6 +5713,9 @@ function LippingIns(fireratings){
         $('#lippingThickness').removeAttr('required')
         $('#lippingSpecies').removeAttr('required')
         $('#intumescentSealArrangement').removeAttr('required')
+        $('#intumescentSealType').removeAttr('required')
+        $('#intumescentSealLocation').removeAttr('required')
+        $('#intumescentSealColor').removeAttr('required')
     }
 }
 
