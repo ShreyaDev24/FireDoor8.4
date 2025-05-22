@@ -5732,6 +5732,9 @@ function LippingIns(fireratings){
         $('#lippingThickness').removeAttr('required')
         $('#lippingSpecies').removeAttr('required')
         $('#intumescentSealArrangement').removeAttr('required')
+        $('#intumescentSealType').removeAttr('required')
+        $('#intumescentSealLocation').removeAttr('required')
+        $('#intumescentSealColor').removeAttr('required')
     }
 }
 
