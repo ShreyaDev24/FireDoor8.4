@@ -333,7 +333,7 @@
 
 </div>
 
-<script src="{{url('/')}}/Halspan/halspan-cad-door-configuration.js"></script>
+<script src="{{url('/')}}/Halspan/common-cad-configuration.js"></script>
 {{-- <script src="{{url('/')}}/Halspan/halspan-build-of-material-for-cad-door.js"></script>
 <script src="{{asset('Halspan/halspan-custome-rules.js')}}"></script>
 <script src="{{asset('Halspan/halspan-change-event-calculation.js')}}"></script>

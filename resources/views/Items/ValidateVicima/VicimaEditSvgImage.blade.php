@@ -250,7 +250,8 @@
 
 
 
-<script src="{{url('/')}}/vicaima/vicaima-cad-door-configuration.js"></script>
+{{-- <script src="{{url('/')}}/vicaima/vicaima-cad-door-configuration.js"></script> --}}
+<script src="{{url('/')}}/Halspan/common-cad-configuration.js"></script>
 
 @if(!empty($Item))
 @foreach($Item as $key => $val)

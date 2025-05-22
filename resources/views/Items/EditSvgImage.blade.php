@@ -305,7 +305,8 @@
 </div>
 
 
-<script src="{{url('/')}}/cad/cad-door-configuration.js"></script>
+{{-- <script src="{{url('/')}}/cad/cad-door-configuration.js"></script> --}}
+<script src="{{url('/')}}/Halspan/common-cad-configuration.js"></script>
 {{--  <script src="{{url('/')}}/cad/build-of-material-for-cad-door.js"></script>  --}}
 {{--  <script src="{{asset('js/custome-rules.js')}}"></script>  --}}
 {{--  <script src="{{asset('js/change-event-calculation.js')}}"></script>  --}}
