@@ -274,7 +274,7 @@ const render = (CustomElement = null) => {
         var FrameWidth = SOWidth - (Tollerance * FrameWidthAdditionalNumber);
         var FrameWidthForMap = 0;
         $("#frameWidth").val(FrameWidth);
-
+        framewidth();
         // if(ChangedFieldName == "frameWidth"){
         //     FrameWidth = $('input[name="frameWidth"]').val();
         //     if(FrameWidth != "" && FrameWidth > 0){
@@ -362,7 +362,7 @@ const render = (CustomElement = null) => {
             $("#leafWidth2-section").removeClass("table_row_hide");
             $("#leafWidth2-section").addClass("table_row_show");
         }
-
+        framewidth();
         if ($('#doorsetType').val() == 'leaf_and_a_half') {
             if (Handing == 'Right_Hand_Master_Left_Hand_Slave') {
                 LeafWidth1 = LeafWidth1 + LeafWidth2;

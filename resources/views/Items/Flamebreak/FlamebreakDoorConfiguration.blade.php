@@ -554,6 +554,7 @@
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             FramePrice('Rebated_Frame');
             // frameprice('Rebated_Frame');
+            framewidth();
         } else {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);

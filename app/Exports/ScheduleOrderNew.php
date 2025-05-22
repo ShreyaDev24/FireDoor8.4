@@ -621,7 +621,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Scalloped Width ',
             'Scalloped Depth ',
             'Rebated Width ',
-            'Rebated Height ',
+            'Rebated Depth  ',
             'Frame Width ',
             'Frame Height ',
             'Frame Depth ',

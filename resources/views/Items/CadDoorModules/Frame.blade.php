@@ -96,7 +96,7 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    {{--  <label for="Rebated_Height" style="display: none;">Rebated Height</label>  --}}
+                                                    {{--  <label for="Rebated_Height" style="display: none;">Rebated Depth</label>  --}}
                                                     <input type="number" @if(empty($Item['ScallopedHeight'])){{'readonly'}}@endif max="5" name="ScallopedHeight" id="ScallopedHeight" class="form-control"
                                                     value="@if(isset($Item['ScallopedHeight'])){{$Item['ScallopedHeight']}}@else{{'0'}}@endif">
                                                 </div>
@@ -117,14 +117,14 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedHeight">Rebated Height (min 12)
+                                                    <label for="rebatedHeight">Rebated Depth (min 12)
                                                     @if(!empty($tooltip->rebatedHeight))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->rebatedHeight}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <label for="Rebated_Height" style="display: none;">Rebated Height</label>
+                                                    <label for="Rebated_Height" style="display: none;">Rebated Depth</label>
                                                     <input type="number" @if(empty($Item['RebatedHeight'])){{'readonly'}}@endif min="12" name="rebatedHeight"
                                                         id="rebatedHeight" class="form-control"
                                                         value="@if(isset($Item['RebatedHeight'])){{$Item['RebatedHeight']}}@else{{'0'}}@endif">
