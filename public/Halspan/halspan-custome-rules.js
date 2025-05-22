@@ -11,6 +11,7 @@ function pageIdentity(){
 
     $("#fireRating").change(function(){
         FireRatingChange();
+        CheckFireRating($(this).val());
     });
 
     $("#doorsetType").change(function(){
@@ -6079,6 +6080,16 @@ function framewidth(){
                 `${sOWidth} - (${tollerance} * ${TolleranceAdditionalNumberForFrameWidth}) = FrameWidth ${sOWidth-(parseInt(tollerance)*TolleranceAdditionalNumberForFrameWidth)}`
               );
     }
+// 954
+function CheckFireRating(val){
+    let storeFireRating = $("#fireratingoldvalue").val();
+    if(storeFireRating && val){
+        if(storeFireRating != val){
+             $('#frameMaterial').val('');
+              $('#frameMaterial').css({ 'border': '1px solid red' });
+        }
+    }
+}
 
 
     frameHeight();

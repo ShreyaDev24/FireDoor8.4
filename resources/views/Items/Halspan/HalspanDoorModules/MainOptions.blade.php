@@ -90,6 +90,7 @@
                                 @endforeach --}}
                             </select>
                         </div>
+                        <input type="hidden" id="fireratingoldvalue" value="{{ isset($Item['FireRating']) ? $Item['FireRating'] : '' }}">
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
