@@ -769,6 +769,7 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             // frameprice('Rebated_Frame');
+            framewidth();
         } else {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -1685,6 +1686,7 @@ function copyOfSideLite1Change(isstatus = false){
 
             //$("#plantonStopHeight").val(plantonStopHeight);
             $("#frameHeight").val(plantonStopHeight);
+            framewidth();
             var frameDepth = $("#sODepth").val()!=''?$("#sODepth").val():0;
 
             $("#leafHeightwithOP").val(0).attr('readonly',true);
@@ -3881,6 +3883,7 @@ function copyOfSideLite1Change(isstatus = false){
             var plantonStopHeight = soheight-tollerance;
             //$("#plantonStopHeight").val(plantonStopHeight);
             $("#frameHeight").val(plantonStopHeight);
+            framewidth();
             var frameDepth = $("#sODepth").val()!=''?$("#sODepth").val():0;
             // $("#frameDepth").val(frameDepth);
             $("#leafHeightwithOP").val(0).attr('readonly',true);
