@@ -50,7 +50,7 @@
                                             <input type="hidden" id="frametypevalue" name="frametypevalue" value="@if(isset($Item['FrameType'])){{$Item['FrameType']}}@endif" >
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="plantonStopWidth" id="plantonStopWidthLabel">Plant on Stop Width(min 20)
+                                                    <label for="plantonStopWidth" id="plantonStopWidthLabel">Plant on Stop Width <span id="plantonStopWidthText"></span>
 
                                                     @if(!empty($tooltip->plantonStopWidth))
                                                     <script type="text/javascript">
@@ -77,7 +77,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedWidth" id="ScallopedLabel">Scalloped Width (min32)
+                                                    <label for="rebatedWidth">Scalloped Width <span id="ScallopedWidthText"></span>
 
                                                     @if(!empty($tooltip->ScallopedWidth))
                                                     <script type="text/javascript">
@@ -91,7 +91,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedHeight">Scalloped Depth (min 12)
+                                                    <label for="rebatedHeight">Scalloped Depth <span id="ScallopedHeightText"></span>
                                                     @if(!empty($tooltip->ScallopedHeight))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->ScallopedHeight}}'));
@@ -105,7 +105,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedWidth" id="rebatedWidthLabel">Rebated Width (min 32)
+                                                    <label for="rebatedWidth" id="rebatedWidthLabel">Rebated Width <span id="rebatedWidthText"></span>
 
                                                     @if(!empty($tooltip->rebatedWidth))
                                                     <script type="text/javascript">
@@ -119,14 +119,14 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="rebatedHeight">Rebated Height (min 12)
+                                                    <label for="rebatedHeight">Rebated Depth (min 12)
                                                     @if(!empty($tooltip->rebatedHeight))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->rebatedHeight}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <label for="Rebated_Height" style="display: none;">Rebated Height</label>
+                                                    <label for="Rebated_Height" style="display: none;">Rebated Depth</label>
                                                     <input type="number" @if(empty($Item['RebatedHeight'])){{'readonly'}}@endif min="12" name="rebatedHeight"
                                                         id="rebatedHeight" class="form-control"
                                                         value="@if(isset($Item['RebatedHeight'])){{$Item['RebatedHeight']}}@else{{'0'}}@endif">
