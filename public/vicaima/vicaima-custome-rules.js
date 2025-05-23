@@ -6139,9 +6139,12 @@ $(document).ready(function () {
             }
             $('#ScallopedWidth').attr('min', minWidth);
             $("#ScallopedLabelWidth").text(`Scalloped Width (min ${minWidth})`);
+            setTimeout(function () {
+                checkAndSetBOM("#ScallopedWidth");
+                checkAndSetBOM("#ScallopedHeight");
+            }, 1000); // 500
 
-            checkAndSetBOM("#ScallopedWidth");
-            checkAndSetBOM("#ScallopedHeight");
+
 
         } else {
                 $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
