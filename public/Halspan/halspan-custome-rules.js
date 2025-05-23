@@ -12,7 +12,7 @@ function pageIdentity(){
     $("#fireRating").change(function(){
         FireRatingChange();
         setTimeout(function(){
-             CheckFireRating($(this).val());
+             CheckFireRating($("#fireRating").val());
         }, 3000);
 
     });
