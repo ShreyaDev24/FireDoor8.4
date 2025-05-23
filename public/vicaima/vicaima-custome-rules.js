@@ -2963,11 +2963,17 @@ function frameHeight(){
         $("#frameHeight").val(plantonStopHeight);
     }
     if($("#frameType").val() == 'Scalloped'){
-        // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
-        // frame height = leaf height +undercut+gap+frame thickness // new
-        var frameHeight = leafHeightNoOP + undercut + Gap +  FrameThickness;
-        console.log(leafHeightNoOP + undercut + Gap+  FrameThickness)
-        $("#frameHeight").val(frameHeight);
+        if (foursidedframe.checked) {
+            // Leaf height + gapX2+ frame thickness X2
+            var frameHeight = leafHeightNoOP + Gap + Gap + FrameThickness + FrameThickness;
+            $("#frameHeight").val(frameHeight);
+        } else {
+            // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
+            // frame height = leaf height +undercut+gap+frame thickness // new
+            var frameHeight = leafHeightNoOP + undercut + Gap +  FrameThickness;
+            $("#frameHeight").val(frameHeight);
+            console.log(leafHeightNoOP , undercut , Gap , FrameThickness)
+        }
         var soheight = frameHeight + tollerance;
         $('#sOHeight').val(soheight);
     }
