@@ -2886,8 +2886,9 @@ function framewidth(){
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
         if(frameType == 'Scalloped'){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0;
-            FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
-            console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
+            FrameWidth = FrameThickness - ScallopedHeight + FrameThickness - ScallopedHeight +  leafWidth1 + leafWidth2 + FrameThickness + Gap + Gap +Gap;
+            console.log(FrameThickness, ScallopedHeight , FrameThickness , ScallopedHeight , leafWidth1 , leafWidth2 , FrameThickness , Gap , Gap , Gap)
+            $("#frameWidth").val(FrameWidth);
             calsowidth(FrameWidth);
         }
     }
