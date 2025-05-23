@@ -1354,20 +1354,20 @@
                         }
                     }
                      // Additional validations
-                    let distanceFromTheEdgeOfDoor = parseFloat($('#distanceFromTheEdgeOfDoor').val());
-                    if (distanceFromTheEdgeOfDoor > 100) {
-                        swal('Warning', 'The minimum distance from the edge of the door is 100mm').then(function() {
-                            location.reload();
-                        });
-                        return;
-                    }
-                        let glassintegrity =  $('#GlassIntegrity-value').data('value');
-                            if (!glassintegrity) {
+                    // let distanceFromTheEdgeOfDoor = parseFloat($('#distanceFromTheEdgeOfDoor').val());
+                    // if (distanceFromTheEdgeOfDoor > 100) {
+                    //     swal('Warning', 'The minimum distance from the edge of the door is 100mm').then(function() {
+                    //         location.reload();
+                    //     });
+                    //     return;
+                    // }
+                    let glassintegrity =  $('#GlassIntegrity-value').data('value');
+                        if (!glassintegrity) {
                             swal('Warning', 'GlassIntegrity is missing').then(function() {
                                 location.reload();
                             });
-                            return;
-                        }
+                        return;
+                    }
                     let glassType =  $('#GlassType-value').data('value');
                         if (!glassType) {
                         swal('Warning', 'GlassType is missing').then(function() {
