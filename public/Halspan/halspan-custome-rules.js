@@ -11,7 +11,10 @@ function pageIdentity(){
 
     $("#fireRating").change(function(){
         FireRatingChange();
-        CheckFireRating($(this).val());
+        setTimeout(function(){
+             CheckFireRating($(this).val());
+        }, 3000);
+
     });
 
     $("#doorsetType").change(function(){
