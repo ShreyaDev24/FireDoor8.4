@@ -2957,8 +2957,7 @@ function framewidth(){
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
         if(frameType == 'Scalloped'){
             let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0;
-            FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
-            calsowidth(FrameWidth);
+            FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
             console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
         }
     }
@@ -3035,11 +3034,12 @@ function frameHeight(){
     }
     if($("#frameType").val() == 'Scalloped'){
         // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
-        var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
-        console.log(FrameThickness , ScallopedHeight , Gap , undercut , leafHeightNoOP)
+        // frame height = leaf height +undercut+gap+frame thickness // new
+        var frameHeight = leafHeightNoOP + undercut + Gap +  FrameThickness;
+        console.log(leafHeightNoOP + undercut + Gap+  FrameThickness)
         $("#frameHeight").val(frameHeight);
         var soheight = frameHeight + tollerance;
-          $('#sOHeight').val(soheight);
+        $('#sOHeight').val(soheight);
     }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {

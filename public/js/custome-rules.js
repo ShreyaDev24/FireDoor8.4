@@ -6107,7 +6107,15 @@ function framewidth(){
 
         }
         $("#frameWidth").val(FrameWidth);
-    }else{
+    } else if($("#frameType").val() == 'Scalloped'){
+        if (DoorSetType == "SD"){
+           var FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
+        } else {
+            var FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
+        }
+        console.log(FrameThickness ,ScallopedHeight , Gap , leafWidth1 , Gap , leafWidth2 , Gap , FrameThickness ,  ScallopedHeight , FrameThickness,FrameWidth)
+        $("#frameWidth").val(FrameWidth);
+    } else{
         var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
         var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
 
