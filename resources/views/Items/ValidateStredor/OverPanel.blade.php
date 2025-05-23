@@ -84,7 +84,7 @@
                             </script>
                             @endif
                                 </label>
-                            <select name="opGlassIntegrity"
+                                <select name="opGlassIntegrity"
                                 id="opGlassIntegrity" class="form-control">
                                 <option value=''> Select OP Glass Integrity</option>
                             </select>
@@ -254,9 +254,7 @@
                             <select required name="opGlazingBeads" id="opGlazingBeads" class="form-control">
                                 <option value="">Select Glazing Beads</option>
                             </select>
-                            {{--  <input type="text" name="opGlazingBeads" readonly
-                                id="opGlazingBeads" class="form-control"
-                                value="@if(isset($Item['OPGlazingBeads'])){{$Item['OPGlazingBeads']}}@endif">  --}}
+
                         </div>
                     </div>
                     <div class="col-md-6">

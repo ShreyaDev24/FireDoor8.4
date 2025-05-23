@@ -144,7 +144,7 @@
                                 </label>
                             <input type="number"
                                 @if(!isset($Item['DistanceFromBottomOfDoor'])) {{'readonly'}} @endif
-                                min="100"
+                                min="200"
                                 name="distanceFromBottomOfDoor" id="distanceFromBottomOfDoor"
                                 class="form-control door-configuration"
                         value="@if(isset($Item['DistanceFromBottomOfDoor'])){{$Item['DistanceFromBottomOfDoor']}}@endif">
@@ -632,8 +632,13 @@
                             </label>
                             <select name="glassType" id="glassType" option_slug="leaf1_glass_type" class="form-control">
                                 <option value="">Select Glass Type</option>
-                                <input type="hidden" id="glassValueId" value="@if(isset($Item['GlassType'])){{$Item['GlassType']}}@endif">
+                                <!-- @foreach($option_data as $row)
+                                @if($row->OptionSlug=='leaf1_glass_type')
+                                <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
+                                @endif
+                                @endforeach -->
                             </select>
+                            <input type="hidden" id="glassValueId" value="@if(isset($Item['GlassType'])){{$Item['GlassType']}}@endif">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -703,11 +708,6 @@
                             </label>
                             <select name="glazingBeads" id="glazingBeads" class="form-control">
                                 <option value="">Select Glazing Beads</option>
-                                <!-- @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf_construction')
-                                <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach -->
                             </select>
                         </div>
                     </div>

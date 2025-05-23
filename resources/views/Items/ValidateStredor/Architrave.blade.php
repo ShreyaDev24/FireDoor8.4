@@ -137,28 +137,6 @@
                                                 </div>
                                             </div>
 
-                                            {{-- <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="architraveDepth">Architrave Depth
-                                                    @if(!empty($tooltip->architraveDepth))
-                                                    <script type="text/javascript">
-                                                    // document.write(Tooltip('{{$tooltip->architraveDepth}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <input name="architraveDepth" id="architraveDepth"
-                                                        @if(isset($Item['Architrave']))
-                                                            @if($Item['Architrave'] != "Yes")
-                                                                {{'readonly'}}
-                                                            @endif
-                                                        @else
-                                                            {{'readonly'}}
-                                                        @endif
-                                                        placeholder="Architrave Depth" class="form-control" type="text"
-                                                        value="@if(isset($Item['ArchitraveDepth'])){{$Item['ArchitraveDepth']}}@endif">
-                                                </div>
-                                            </div> --}}
-
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="architraveFinish">Architrave Finish

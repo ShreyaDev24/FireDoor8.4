@@ -7270,108 +7270,1115 @@ class DoorScheduleController extends Controller
 
     public function editImage1(Request $request)
     {
+        $quotations = Quotation::where('id',$request->quotationId)->first();
+        if($quotations->configurableitems == 2){
+            return $this->halspanValidate($request);
+        } elseif($quotations->configurableitems == 7){
+            return $this->flambreakValidate($request);
+        } elseif($quotations->configurableitems == 8){
+            return $this->stredorValidate($request);
+        } elseif($quotations->configurableitems == 4){
+           return $this->vicimaValidate($request);
+        } elseif($quotations->configurableitems == 5){
+            return $this->seadecValidate($request);
+        } elseif($quotations->configurableitems == 6){
+            return $this->deantaValidate($request);
+        } else{
+            return $this->streboardValidate($request);
+        }
+    }
+
+     public function streboardValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+        $quotations = Quotation::where('id',$request->quotationId)->first();
         $UserIds = CompanyUsers();
-        if ($item === null) {
-            return abort(404);
-        }
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+            // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
-        $item = $item->toArray();
-        // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+            $OptionsData = Option::where(['configurableitems' => 1, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 1], "", "intumescentSealArrangement");
 
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $OptionsData = Option::where(['configurableitems' => 1, 'is_deleted' => 0])->get();
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 1], "", "intumescentSealArrangement");
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
-        // $SelectedLippingSpeciesData = $LippingSpeciesData;
+            $configurationDoor = configurationDoor(1);
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 1, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => 1, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
 
-        $configurationDoor = configurationDoor(1);
-        $UserType = Auth::user()->UserType;
-        if (in_array($UserType, [1, 4])) {
-            $UserId = $item['UserId'];
-            $SelectedOptionsData = $OptionsData;
-            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 1, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-            $ArchitraveType = ArchitraveType::where([$configurationDoor => 1, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-        } else {
-            $UserId = Auth::user()->id;
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => 1, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
 
-            $SelectedOptionsData = GetOptions(['options.configurableitems' => 1, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => 1, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
 
-            $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => 1, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
-
-            $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => 1, 'architrave_type.Status' => 1], "join", "architrave_type");
-        }
-
-
-
-        // dd($OptionsData->toArray());
-
-        $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => 1, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
-
-
-        $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
-        $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
-
-        $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
-        $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => 1, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
 
 
 
-        // dd($SelectedOptionsData);
+            // dd($OptionsData->toArray());
 
-        $ColorData = Color::where(['Status' => 1])->get();
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
-        $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
-        $CompanyId = null;
-        if ($quotation != '') {
-            $CompanyId = $quotation->CompanyId;
-        }
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => 1, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
 
-        // if(!empty($quotation->ProjectId)){
-        //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
-        // } else {
-        //     $setIronmongery = null;
-        // }
-        $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
 
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
 
-        // dd(\Config::get('constants.PossibleSelectedOptions'));
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
-        $returnHTML = view('Items/EditSvgImage', [
-            "QuotationId" => $item["QuotationId"],
-            'Item' => $item,
-            'option_data' => $OptionsData,
-            'selected_option_data' => $SelectedOptionsData,
-            'intumescentSealColor' => $intumescentSealColor,
-            'ArchitraveType' => $ArchitraveType,
-            'intumescentSealArrangement' => $intumescentSealArrangement,
-            'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
-            'lipping_species' => $LippingSpeciesData,
-            'selected_lipping_species' => $SelectedLippingSpeciesData,
-            'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
-            'company_list' => $company_data,
-            'issingleconfiguration' => '1',
-            'versionId' => $request->versionId,
-            'tooltip' => $tooltip,
-            'setIronmongery' => $setIronmongery,
-            'BOMSetting' => $BOMSetting,
-            'quotation' => $quotation,
-        ])->render();
-        $response = [
-            'status' => true,
-            'html' => $returnHTML
+
+
+            // dd($SelectedOptionsData);
+
+            $ColorData = Color::where(['Status' => 1])->get();
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            $tooltip = Tooltip::first();
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            // if(!empty($quotation->ProjectId)){
+            //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
+            // } else {
+            //     $setIronmongery = null;
+            // }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
         ];
 
-        return response()->json(
-            $response,
-            200,
-            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-            JSON_UNESCAPED_UNICODE
-        );
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+            }
+
+            // Dynamically add the additional_info attribute
+            $ironmongery->setAttribute('additional_info', $additionalInfo);
+         }
+
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+            $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
+
+            // dd(\Config::get('constants.PossibleSelectedOptions'));
+
+            $returnHTML = view('Items/EditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '1',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            ])->render();
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+    public function halspanValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+
+
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+
+
+
+            // dd($OptionsData->toArray());
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+
+
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+
+
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+
+
+
+            // dd($SelectedOptionsData);
+
+            $ColorData = Color::where(['Status' => 1])->get();
+
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+
+            $tooltip = Tooltip::first();
+
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+            }
+
+            // Dynamically add the additional_info attribute
+            $ironmongery->setAttribute('additional_info', $additionalInfo);
+         }
+
+
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+
+
+            $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+            // dd(\Config::get('constants.PossibleSelectedOptions'));
+            $returnHTML = view('Items/ValidateHalspan/HalspanEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '2',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+    public function flambreakValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+
+
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+
+
+
+            // dd($OptionsData->toArray());
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+
+
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+
+
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+
+
+
+            // dd($SelectedOptionsData);
+
+            $ColorData = Color::where(['Status' => 1])->get();
+
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+
+            $tooltip = Tooltip::first();
+
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
+
+
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+
+
+            $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+            // dd(\Config::get('constants.PossibleSelectedOptions'));
+            $returnHTML = view('Items/ValidateFlamebreak/FlamebreakEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '7',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+
+    public function stredorValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+
+
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+
+
+
+            // dd($OptionsData->toArray());
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+
+
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+
+
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+
+
+
+            // dd($SelectedOptionsData);
+
+            $ColorData = Color::where(['Status' => 1])->get();
+
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+
+            $tooltip = Tooltip::first();
+
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
+
+
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+
+
+            $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+            // dd(\Config::get('constants.PossibleSelectedOptions'));
+            $returnHTML = view('Items/ValidateStredor/StredorEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '8',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+    public function vicimaValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+            $ColorData = Color::where(['Status' => 1])->get();
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            $tooltip = Tooltip::first();
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            if(auth()->user()->UserType == 2){
+                $userId = [1,auth()->user()->id];
+            }elseif(auth()->user()->UserType == 3){
+                $userId = [1,auth()->user()->CreatedBy];
+            }else{
+                $userId = [];
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+            $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
+            $returnHTML = view('Items/ValidateVicima/VicimaEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '4',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'species' => $species,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+    public function seadecValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+            $ColorData = Color::where(['Status' => 1])->get();
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            $tooltip = Tooltip::first();
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            if(auth()->user()->UserType == 2){
+                $userId = [1,auth()->user()->id];
+            }elseif(auth()->user()->UserType == 3){
+                $userId = [1,auth()->user()->CreatedBy];
+            }else{
+                $userId = [];
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+            $species = DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
+            $returnHTML = view('Items/ValidateSeadec/SeadecEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '5',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'species' => $species,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
+    }
+    public function deantaValidate($request){
+        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $quotations = Quotation::where('id',$request->quotationId)->first();
+            $UserIds = CompanyUsers();
+            if ($item === null) {
+                return abort(404);
+            }
+            $item = $item->toArray();
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+            $configurationDoor = configurationDoor($quotations->configurableitems);
+
+            $UserType = Auth::user()->UserType;
+            if (in_array($UserType, [1, 4])) {
+                $UserId = $item['UserId'];
+                $SelectedOptionsData = $OptionsData;
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+            } else {
+                $UserId = Auth::user()->id;
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+            }
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
+            $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
+            $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+            $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+            $ColorData = Color::where(['Status' => 1])->get();
+            $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            $tooltip = Tooltip::first();
+            $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+            $CompanyId = null;
+            if ($quotation != '') {
+                $CompanyId = $quotation->CompanyId;
+            }
+            if(auth()->user()->UserType == 2){
+                $userId = [1,auth()->user()->id];
+            }elseif(auth()->user()->UserType == 3){
+                $userId = [1,auth()->user()->CreatedBy];
+            }else{
+                $userId = [];
+            }
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
+            $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+            $species = DB::table('leaf_type')->where('Deanta', 6)->where('Status',1)->whereIn('EditBy', $userId)->get();
+            $returnHTML = view('Items/ValidateDeanta/DeantaEditSvgImage', [
+                "QuotationId" => $item["QuotationId"],
+                'Item' => $item,
+                'option_data' => $OptionsData,
+                'selected_option_data' => $SelectedOptionsData,
+                'intumescentSealColor' => $intumescentSealColor,
+                'ArchitraveType' => $ArchitraveType,
+                'intumescentSealArrangement' => $intumescentSealArrangement,
+                'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
+                'color_data' => $ColorData,
+                'lipping_species' => $LippingSpeciesData,
+                'selected_lipping_species' => $SelectedLippingSpeciesData,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'company_list' => $company_data,
+                'issingleconfiguration' => '6',
+                'versionId' => $request->versionId,
+                'tooltip' => $tooltip,
+                'setIronmongery' => $setIronmongery,
+                'BOMSetting' => $BOMSetting,
+                'quotation' => $quotation,
+                'species' => $species,
+            ])->render();
+
+            $response = [
+                'status' => true,
+                'html' => $returnHTML
+            ];
+
+
+            return response()->json(
+                $response,
+                200,
+                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                JSON_UNESCAPED_UNICODE
+            );
     }
 
     public function favoriteItem(Request $request)

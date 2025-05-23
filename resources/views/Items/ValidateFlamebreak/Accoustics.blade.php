@@ -130,9 +130,7 @@
 
 
                                                 </div>
-                                            </div>  --}}
-
-                                            {{--
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="thresholdSeal2">Threshold Seal 2
@@ -151,7 +149,6 @@
 
                                                 </div>
                                             </div> --}}
-
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="accousticsmeetingStiles">Meeting Stiles

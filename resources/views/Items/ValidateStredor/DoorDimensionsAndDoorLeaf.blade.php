@@ -111,7 +111,7 @@
                             <label for="hinge1Location">Hinge 1 Location (Min 100 mm, Max 180 mm)
                                 @if(!empty($tooltip->hing1))
                                    <script type="text/javascript">
-                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                //    document.write(Tooltip('{{$tooltip->gap}}'));
                                    </script>
                                 @endif
                             </label>
@@ -129,7 +129,7 @@
                             <label for="hinge2Location">Hinge 2 Location (Min 200 mm)
                                 @if(!empty($tooltip->hing2))
                                    <script type="text/javascript">
-                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                //    document.write(Tooltip('{{$tooltip->gap}}'));
                                    </script>
                                 @endif
                             </label>
@@ -147,7 +147,7 @@
                             <label for="hinge3Location" id="hinge3LocationLabel">Hinge 3 Location  (Min 150 mm, Max 250 mm)
                                 @if(!empty($tooltip->hing3))
                                    <script type="text/javascript">
-                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                //    document.write(Tooltip('{{$tooltip->gap}}'));
                                    </script>
                                 @endif
                             </label>
@@ -179,12 +179,6 @@
                             @endif
                         </div>
                     </div>
-                    <div class="col-md-6 framehideshow">
-                        <div class="position-relative form-group d-flex">
-                            <label for="fourthHinges">4th Hinges</label>
-                            <input type="checkbox" name="fourthHinges" id="fourthHinges" class="form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['fourthHinges']) && $Item['fourthHinges'] == 1){{'checked'}}@endif>
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="doorLeafFacing">Door Leaf Facing
@@ -194,9 +188,9 @@
                                 </script>
                                 @endif
                             </label>
+
                             <select name="doorLeafFacing" id="doorLeafFacing" option_slug="Door_Leaf_Facing" class="form-control">
                                 <option value="">Select door leaf facing</option>
-
                                 @foreach($selected_option_data as $row)
                                 @if($row->OptionSlug=='Door_Leaf_Facing')
                                 <option value="{{$row->OptionKey}}" @if(isset($Item["DoorLeafFacing"]))

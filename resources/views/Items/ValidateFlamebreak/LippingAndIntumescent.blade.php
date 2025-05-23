@@ -1,4 +1,5 @@
 <!-- LIPPING AND INTUMESCENT  -->
+
 <div class="main-card mb-3 custom_card">
     <div>
         <div class="tab-content">
@@ -16,7 +17,7 @@
                             </script>
                             @endif
                             </label>
-                            <select name="lippingType" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingType" class="form-control">
+                            <select name="lippingType" required id="lippingType" class="form-control">
                                 <option value="">Select Lipping Types</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='lipping_type')
@@ -36,7 +37,7 @@
                             </script>
                             @endif
                             </label>
-                            <select name="lippingThickness" required @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingThickness"
+                            <select name="lippingThickness" required id="lippingThickness"
                                 class="form-control forcoreWidth1 door-configuration" onchange="$('#lippingSpecies').val('')">
                                 <option value="">Select leaping thickness</option>
                                 @foreach($option_data as $row)
@@ -62,8 +63,9 @@
                                 <option value="">Select Lipping Species</option>
                             </select> -->
 
-                                <i class="fa fa-info icon" id="lippingSpeciesIcon"  onClick=""></i>
-                                <input type="text" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif readonly id="lippingSpecies"
+                            <!-- value = "{{ $LippingName->SpeciesName ?? '' }}" for to show lipping name  -->
+                                <i class="fa fa-info icon" id="lippingSpeciesIcon" onClick=""></i>
+                                <input type="text" required readonly id="lippingSpecies" value = "{{ $LippingName->SpeciesName ?? '' }}"
                                     class="form-control bg-white door-configuration">
                                 <input type="hidden" name="lippingSpecies" id="lippingSpeciesid" value="@if(isset($Item['LippingSpecies'])){{$Item['LippingSpecies']}}@endif">
 
@@ -264,8 +266,7 @@
                                 {{--id="intumescentSealArrangement" class="form-control">--}}
 
                             <select name="intumescentSealArrangement" required id="intumescentSealArrangement" class="form-control" option_slug = "intumescentSealArrangement">
-                                <option value="">Select Intumescent Seal
-                                    Arrangement</option>
+                                <option value="">Select Intumescent Seal Arrangement</option>
                             </select>
                         </div>
                     </div>

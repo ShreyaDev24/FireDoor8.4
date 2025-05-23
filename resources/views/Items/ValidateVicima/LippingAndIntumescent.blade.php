@@ -16,7 +16,8 @@
                             </script>
                             @endif
                             </label>
-                            <select name="lippingType" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingType" class="form-control">
+                            <input type="hidden" name="LippingTypeEditValue" id="LippingTypeEditValue" value="@if(isset($Item['LippingType'])) {{ $Item['LippingType'] }} @endif">
+                            <select name="lippingType" id="lippingType" class="form-control">
                                 <option value="">Select Lipping Types</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='lipping_type')
@@ -29,14 +30,15 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="lippingThickness">Lipping Thickness
+                            <label for="lippingThickness">Lipping Thickness (One Edge)
                             @if(!empty($tooltip->lippingThickness))
                             <script type="text/javascript">
                             // document.write(Tooltip('{{$tooltip->lippingThickness}}'));
                             </script>
                             @endif
                             </label>
-                            <select name="lippingThickness" required @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingThickness"
+                            <input type="hidden" name="LippingThicknessValue" id="LippingThicknessValue" value="@if(isset($Item['LippingThickness'])) {{ $Item['LippingThickness'] }} @endif">
+                            <select name="lippingThickness" id="lippingThickness"
                                 class="form-control forcoreWidth1 door-configuration" onchange="$('#lippingSpecies').val('')">
                                 <option value="">Select leaping thickness</option>
                                 @foreach($option_data as $row)
@@ -58,95 +60,12 @@
                             @endif
 
                             </label>
-                            <!-- <select name="lippingSpecies" id="lippingSpecies" class="form-control">
-                                <option value="">Select Lipping Species</option>
-                            </select> -->
 
-                                <i class="fa fa-info icon" id="lippingSpeciesIcon"  onClick=""></i>
-                                <input type="text" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif readonly id="lippingSpecies"
+                                <i class="fa fa-info icon" id="lippingSpeciesIcon" onClick=""></i>
+                                <input type="text" readonly id="lippingSpecies"
                                     class="form-control bg-white door-configuration">
                                 <input type="hidden" name="lippingSpecies" id="lippingSpeciesid" value="@if(isset($Item['LippingSpecies'])){{$Item['LippingSpecies']}}@endif">
 
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="meetingStyle">Meeting Style
-                            @if(!empty($tooltip->meetingStyle))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->meetingStyle}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <select name="meetingStyle"
-                                @if(empty($Item['MeetingStyle'])){{'disabled'}}@endif
-                                id="meetingStyle" class="form-control">
-                                <option value="">Select Meeting Style</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='meeting_style')
-                                <option value="{{$row->OptionKey}}"
-                                    @if(isset($Item['MeetingStyle']))
-                                        @if($Item['MeetingStyle'] == $row->OptionKey)
-                                            {{'selected'}}
-                                        @endif
-                                    @endif
-                                    >{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="scallopedLippingThickness">Scalloped Lipping
-                                Thickness
-                            @if(!empty($tooltip->scallopedLippingThickness))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->scallopedLippingThickness}}'));
-                            </script>
-                            @endif
-
-                                </label>
-                            <select name="scallopedLippingThickness"
-                            @if(empty($Item['ScallopedLippingThickness'])){{'disabled'}}@endif
-                                id="scallopedLippingThickness" class="form-control">
-                                <option value="">Select Scalloped Lipping Thickness</option>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="flatLippingThickness">Flat Lipping Thickness
-                            @if(!empty($tooltip->flatLippingThickness))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->flatLippingThickness}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <select name="flatLippingThickness" @if(empty($Item['FlatLippingThickness'])){{'disabled'}}@endif id="flatLippingThickness"
-                                class="form-control">
-                                <option value="">Select Flat Lipping Thickness</option>
-
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="rebatedLippingThickness">Rebated Lipping
-                                Thickness
-                            @if(!empty($tooltip->rebatedLippingThickness))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->rebatedLippingThickness}}'));
-                            </script>
-                            @endif
-                                </label>
-                            <select name="rebatedLippingThickness" @if(empty($Item['RebatedLippingThickness'])){{'disabled'}}@endif id="rebatedLippingThickness"
-                                class="form-control">
-                                <option value="">Select Rebated Lipping Thickness</option>
-
-                            </select>
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -260,12 +179,9 @@
                             </script>
                             @endif
                                 </label>
-                            {{--<input type="text" name="intumescentSealArrangement"--}}
-                                {{--id="intumescentSealArrangement" class="form-control">--}}
 
-                            <select name="intumescentSealArrangement" required id="intumescentSealArrangement" class="form-control" option_slug = "intumescentSealArrangement">
-                                <option value="">Select Intumescent Seal
-                                    Arrangement</option>
+                            <select name="intumescentSealArrangement" id="intumescentSealArrangement" class="form-control" option_slug = "intumescentSealArrangement">
+                            <option value="">Select Intumescent Seal Arrangement</option>
                             </select>
                         </div>
                     </div>

@@ -229,26 +229,7 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <!-- <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                <label for="ironmongeryFinish">Ironmongery Finish</label>
-                                            <input type="text" name="ironmongeryFinish" id="ironmongeryFinish" placeholder="Ironmongery Finish" class="form-control">
-                                                </div>
-                                            </div> -->
-
-
-
-
-                                            <!-- <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="lockPositionHeight">Lock Position Height</label>
-                                                    <input type="text" name="lockPositionHeight" placeholder="Lock Position Height" id="lockPositionHeight" class="form-control">
-                                                </div>
-                                            </div> -->
-
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
