@@ -2586,18 +2586,26 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
             if($quotaion->configurableitems == 4){
-                $elevTbl .=         '<tr>
-                                        <td class="dicription_grey">Leaf Type</td>
-                                        <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Product code/Size </td>
-                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode .' ('. $leafWidth1 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')'. '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Decorative Groves</td>
-                                        <td class="dicription_blank">' . $tt->groovesNumber . '</td>
+                    $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Leaf Type</td>
+                                    <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Product code/Size </td>
+                                    <td class="dicription_blank">' . $tt->DoorDimensionsCode .' ('. $leafWidth1 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')</td>
+                                </tr>';
+
+                    if ($tt->DoorsetType != 'SD') {
+                        $elevTbl .= '<tr>
+                                        <td class="dicription_grey">Product code2/Size </td>
+                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .' ('. $leafWidth2 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')</td>
                                     </tr>';
+                    }
+
+                    $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_blank">' . $tt->groovesNumber . '</td>
+                                </tr>';
             }else{
             $elevTbl .=         '<tr>
                                     <td class="dicription_grey">Door leaf Finish</td>
