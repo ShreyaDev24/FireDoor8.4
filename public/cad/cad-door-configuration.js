@@ -317,11 +317,25 @@ const render = (CustomElement = null) => {
         var LeafWidth2 = 0;
         var LeafWidth1ForMap = 0;
         var LeafWidth2ForMap = 0;
+        var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
 
         if (DoorSetType == "DD" && withoutFrameId != 1) {
             LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap)) / 2;
+            if($("#frameType").val() == 'Scalloped'){
+                LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (ScallopedHeight * 2) - (GapAdditionalNumber * Gap)) / 2;
+                console.log(
+                    `(${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - (${FrameThickness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight} * 2) - (${GapAdditionalNumber} * ${Gap})) / 2 = LeafWidth1 = LeafWidth2 = ${LeafWidth1}`
+                    );
+
+            }
         } else if (DoorSetType == "SD" && withoutFrameId != 1) {
             LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap);
+            if($("#frameType").val() == 'Scalloped'){
+                LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - ScallopedHeight - (GapAdditionalNumber * Gap);
+                console.log(
+                    `${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - (${FrameThickness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight})  - (${GapAdditionalNumber} * ${Gap}) = LeafWidth1 ${LeafWidth1}`
+                    );
+            }
         } else if (DoorSetType == "leaf_and_a_half") {
             if (withoutFrameId != 1) {
                 LeafWidth1 =parseInt($('input[name="leafWidth1"]').val(), 10);
