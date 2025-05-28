@@ -400,6 +400,8 @@ $(".change-event-calulation").change(function(){
         leafWidth1 - ( lippingThicknessValue_A * 2);
     }
     var withoutFrameId = $("#withoutFrameId").val();
+    var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
+
     if(doorSetType=="DD"){
 
         // console.log("width ===",soWidth);
@@ -410,6 +412,13 @@ $(".change-event-calulation").change(function(){
         FrameThicknessAdditionalNumber = 2;
         GapAdditionalNumber = 3;
         var leafWidth1 = (soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap))/2;
+        if($("#frameType").val() == 'Scalloped'){
+            leafWidth1 = (soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - (ScallopedHeight * 2) - (GapAdditionalNumber * gap)) / 2;
+            console.log(
+                `(${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight} * 2) - (${GapAdditionalNumber} * ${gap})) / 2 = LeafWidth1 = LeafWidth2 = ${leafWidth1}`
+                );
+
+        }
         // $("#leafWidth2").val(leafWidth1).attr('readonly',true);
         // $("#leafWidth1").val(leafWidth1);
 
@@ -429,6 +438,12 @@ $(".change-event-calulation").change(function(){
         FrameThicknessAdditionalNumber = 2;
         GapAdditionalNumber = 2;
         var leafWidth1 = soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap);
+        if($("#frameType").val() == 'Scalloped'){
+            LeafWidth1 = soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - ScallopedHeight - (GapAdditionalNumber * gap);
+            console.log(
+                `${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight})  - (${GapAdditionalNumber} * ${gap}) = LeafWidth1 ${LeafWidth1}`
+                );
+        }
         $("#leafWidth2").val(0).attr('readonly',true);
 
         if($("#leaf2VisionPanel").val() == ""){

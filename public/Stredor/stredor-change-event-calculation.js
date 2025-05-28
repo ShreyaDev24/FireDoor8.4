@@ -400,6 +400,8 @@ $(".change-event-calulation").change(function(){
         leafWidth1 - ( lippingThicknessValue_A * 2);
     }
     var withoutFrameId = $("#withoutFrameId").val();
+    var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
+
     if(doorSetType=="DD"){
 
         // console.log("width ===",soWidth);
@@ -410,6 +412,13 @@ $(".change-event-calulation").change(function(){
         FrameThicknessAdditionalNumber = 2;
         GapAdditionalNumber = 3;
         var leafWidth1 = (soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap))/2;
+        if($("#frameType").val() == 'Scalloped'){
+            leafWidth1 = (soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - (ScallopedHeight * 2) - (GapAdditionalNumber * gap)) / 2;
+            console.log(
+                `(${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight} * 2) - (${GapAdditionalNumber} * ${gap})) / 2 = LeafWidth1 = LeafWidth2 = ${leafWidth1}`
+                );
+
+        }
         // $("#leafWidth2").val(leafWidth1).attr('readonly',true);
         // $("#leafWidth1").val(leafWidth1);
 
@@ -429,6 +438,12 @@ $(".change-event-calulation").change(function(){
         FrameThicknessAdditionalNumber = 2;
         GapAdditionalNumber = 2;
         var leafWidth1 = soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap);
+        if($("#frameType").val() == 'Scalloped'){
+            LeafWidth1 = soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - ScallopedHeight - (GapAdditionalNumber * gap);
+            console.log(
+                `${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight})  - (${GapAdditionalNumber} * ${gap}) = LeafWidth1 ${LeafWidth1}`
+                );
+        }
         $("#leafWidth2").val(0).attr('readonly',true);
 
         if($("#leaf2VisionPanel").val() == ""){
@@ -476,15 +491,14 @@ $(".change-event-calulation").change(function(){
 
         $("#OPLippingThickness").attr({'disabled':false,required:true});
         $("#oPHeigth").attr({'readonly':false,'required':true});
-        $("#SL1Transom").attr('disabled',false);
-        $("#SL1transomThickness").attr('disabled',false);
-        $("#opTransomDepth").attr('disabled',false);
+        $("#opTransom").attr('disabled',false);
+        $("#transomThickness").attr('disabled',false);
         $("#opGlassType").attr({'disabled':false, 'required':true});
         $("#opGlazingBeads").attr({'disabled':false,required:true});
         $("#opGlazingBeadSpecies").attr({'disabled':false,'readonly':false,'required':true});
         $("#opGlassIntegrity").attr({'disabled':false,readonly:false,required:true});
 
-        $("#opGlazingBeadSpeciesIcon").attr("onclick","return  OpenOPglazingModal('OP Glazing Bead Species','opGlazingBeadSpecies')");
+        $("#opGlazingBeadSpeciesIcon").attr("onclick","return  OpenglazingModal('OP Glazing Bead Species','opGlazingBeadSpecies')");
         $("#opGlazingBeadSpeciesIcon").addClass("cursor-pointer");
 
     } else if(overPanel=="Overpanel"){
@@ -503,7 +517,6 @@ $(".change-event-calulation").change(function(){
         $("#oPHeigth").attr({'readonly':false,'required':true});
         $("#opTransom").attr('disabled',false);
         $("#transomThickness").attr('disabled',true);
-        $("#opTransomDepth").attr('disabled',true);
         $("#opGlassType").attr({'disabled':true, 'required':false});
         $("#opGlazingBeads").attr({'disabled':true,required:false});
         $("#opGlassIntegrity").attr({'disabled':true,readonly:true,required:false});
@@ -516,10 +529,6 @@ $(".change-event-calulation").change(function(){
 
         // $("#SL1Height").val(leafHeightNoOP).attr('readonly',true);
         var calculationOfLeafHeight = soHeight-tollerance-framethikness-undercut-gap;
-        let foursidedframe = document.getElementById("foursidedframe");
-        if (foursidedframe.checked) {
-            calculationOfLeafHeight = soHeight - (tollerance *2) - (framethikness * 2) - (gap * 2);
-        }
         if(withoutFrameId == 1){
             $("#leafHeightNoOP").attr('readonly',false);
         }else{
@@ -538,7 +547,6 @@ $(".change-event-calulation").change(function(){
          $("#oPHeigth").attr({'readonly':true ,'required':false});
          $("#opTransom").attr('disabled',true);
          $("#transomThickness").attr({'disabled':true,'required':false});
-         $("#opTransomDepth").attr({'disabled':true,'required':false});
          $("#opGlassType").attr({'disabled':true,'required':false}).val('');
          $("#opGlazingBeads").attr({'disabled':true,'required':false}).val('');
          $("#opGlazingBeadSpecies").attr({'disabled':true,'readonly':true,'required':false}).val('');
@@ -601,7 +609,7 @@ $(".change-event-calulation").change(function(){
                 // alert(vpArea);
                 $("#leaf1VpAreaSizeM2").val(vpArea.toFixed(2));
                 if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
-                    glass_glazing_system();
+                glass_glazing_system()
                 // Sadique Code
                 //    $('#lazingIntegrityOrInsulationIntegrity').val("");
                 //    $('#glassType').val("");
@@ -615,12 +623,12 @@ $(".change-event-calulation").change(function(){
         // if($.inArray( ElementId, ["vP1Width","vP1Height1","vP1Height2","vP1Height3","vP1Height4","vP1Height5","lazingIntegrityOrInsulationIntegrity"] ) !== -1){
 
         if($("#glassType").val() == "" && $("#glassThickness").val() == "" && $("#glazingSystems").val() == ""){
-
-            if($("#lazingIntegrityOrInsulationIntegrity").val() != "" && $("#fireRating").val() != 'NFR'){
-                if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
-                glass_glazing_system();
-            }
             if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
+            if($("#lazingIntegrityOrInsulationIntegrity").val() != "" && $("#fireRating").val() != 'NFR'){
+                glassTypeFilter(true);
+            }else{
+                glassTypeFilter(false);
+            }
             glazingSystemFIlter($("#fireRating").val());
 
         }
