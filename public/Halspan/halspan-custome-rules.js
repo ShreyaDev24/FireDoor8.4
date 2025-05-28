@@ -6212,10 +6212,10 @@ function frameHeight(){
 
         $("#frameHeight").val(frameHeight);
     }else if($("#frameType").val() == 'Scalloped'){
-        var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
+        var frameHeight = soheight - tollerance;
         $("#frameHeight").val(frameHeight);
         console.log(
-                `${FrameThickness} - ${ScallopedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = ScallopedFrameHeight ${frameHeight}`
+                `${soheight} - ${tollerance} = ScallopedFrameHeight ${frameHeight}`
             );
     }else{
         $("#frameHeight").val(soheight-tollerance);
