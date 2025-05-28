@@ -6134,6 +6134,8 @@ function framewidth(){
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
     var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
     var DoorSetType = $('select[name="doorsetType"]').val();
+    var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
 
     if($("#frameType").val() == 'Rebated_Frame'){
         if (DoorSetType == "SD"){
@@ -6150,15 +6152,11 @@ function framewidth(){
         }
         $("#frameWidth").val(FrameWidth);
     } else if($("#frameType").val() == 'Scalloped'){
-        if (DoorSetType == "SD"){
-           var FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
+        var FrameWidth = sOWidth - (tollerance * 2);
            console.log(
-            `${FrameThickness} * 2 - ${ScallopedHeight} + ${leafWidth1} + ${Gap} * 2 = Scalloped_FrameWidth ${FrameWidth}`
+            `${sOWidth} - ${tollerance} * 2 = Scalloped_FrameWidth ${FrameWidth}`
             );
-        } else {
-            var FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
-        }
-        console.log(FrameThickness ,ScallopedHeight , Gap , leafWidth1 , Gap , leafWidth2 , Gap , FrameThickness ,  ScallopedHeight , FrameThickness,FrameWidth)
+
         $("#frameWidth").val(FrameWidth);
     } else{
         var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
