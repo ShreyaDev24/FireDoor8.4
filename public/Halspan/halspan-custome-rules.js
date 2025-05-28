@@ -6032,25 +6032,7 @@ function framewidth(){
     var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
     var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
-
-
     var DoorSetType = $('select[name="doorsetType"]').val();
-    // var frameType = $('select[name="frameType"]').val();
-    // if (DoorSetType == "SD"){
-    //     var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
-    //     if(frameType == 'Scalloped'){
-    //         let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
-    //         FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
-    //     }
-    // }else{
-    //     var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
-    //     if(frameType == 'Scalloped'){
-    //         let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0;
-    //         FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
-    //         console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
-    //         calsowidth(FrameWidth);
-    //     }
-    // }
 
     if($("#frameType").val() == 'Rebated_Frame'){
         if (DoorSetType == "SD"){
@@ -6069,6 +6051,9 @@ function framewidth(){
     } else if($("#frameType").val() == 'Scalloped'){
         if (DoorSetType == "SD"){
            var FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
+           console.log(
+            `${FrameThickness} * 2 - ${ScallopedHeight} + ${leafWidth1} + ${Gap} * 2 = Scalloped_FrameWidth ${FrameWidth}`
+            );
         } else {
             var FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
         }
@@ -6097,6 +6082,7 @@ function framewidth(){
 }
 
 $("#rebatedHeight").on("keyup change", triggerCalculations);
+$("#ScallopedHeight").on("keyup change", triggerCalculations);
 $("#DoorSetType").on("change", triggerCalculations);
 $("#foursidedframe").on("change", triggerCalculations);
 
@@ -6118,14 +6104,6 @@ function frameHeight(){
 
     let foursidedframe = document.getElementById("foursidedframe");
 
-    // if($("#frameType").val() == 'Scalloped'){
-    //     // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
-    //     var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
-    //     console.log(FrameThickness , ScallopedHeight , Gap , undercut , leafHeightNoOP)
-    //     $("#frameHeight").val(frameHeight);
-    //     var soheight = frameHeight + tollerance;
-    //       $('#sOHeight').val(soheight);
-    // }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
             var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
@@ -6141,6 +6119,12 @@ function frameHeight(){
         }
 
         $("#frameHeight").val(frameHeight);
+    }else if($("#frameType").val() == 'Scalloped'){
+        var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
+        $("#frameHeight").val(frameHeight);
+        console.log(
+                `${FrameThickness} - ${ScallopedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = ScallopedFrameHeight ${frameHeight}`
+            );
     }else{
         $("#frameHeight").val(soheight-tollerance);
     }
