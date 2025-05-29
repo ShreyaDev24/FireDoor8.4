@@ -1823,6 +1823,70 @@ function copyOfSideLite1Change(isstatus = false){
             LippingIns($("#fireRating").val());
         }
         IntumescentSeals();
+        rebatedWidth();
+    }
+
+    function rebatedWidth(){
+        let framTypeValue = $('#frameType').val();
+        // if (framTypeValue == "Plant_on_Stop") {
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#plantonStopWidth").attr('min', '26');
+                $("#plantonStopWidthText").text('(min 26)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#plantonStopWidth").attr('min', '26');
+                $("#plantonStopWidthText").text('(min 26)');
+            }else{
+                $("#plantonStopWidth").removeAttr('min');
+                $("#plantonStopWidthText").text('');
+            }
+        // } else if(framTypeValue == "Scalloped"){
+            if ($("#fireRating").val() == "NFR") {
+                $("#ScallopedWidth").attr('min', '35');
+                $("#ScallopedWidthText").text('(min 35)');
+                $("#ScallopedHeight").attr({'min':2,'max':6});
+                $("#ScallopedHeightText").text('(min 2-6mm)');
+            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#ScallopedWidth").attr('min', '44');
+                $("#ScallopedWidthText").text('(min 44)');
+                $("#ScallopedHeight").attr({'min':2,'max':6});
+                $("#ScallopedHeightText").text('(min 2-6mm)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#ScallopedWidth").attr('min', '54');
+                $("#ScallopedWidthText").text('(min 54)');
+                $("#ScallopedHeight").attr({'min':2,'max':8});
+                $("#ScallopedHeightText").text('(min 2-8mm)');
+            }
+        // } else if (framTypeValue == "Rebated_Frame"){
+            if ($("#fireRating").val() == "NFR") {
+                $("#rebatedWidth").attr('min', '35');
+                $("#rebatedWidthText").text('(min 35)');
+            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#rebatedWidth").attr('min', '44');
+                $("#rebatedWidthText").text('(min 44)');
+            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#rebatedWidth").attr('min', '54');
+                $("#rebatedWidthText").text('(min 54)');
+            }
+        // }
+       // Call for each input
+         if (framTypeValue == "Plant_on_Stop") {
+            checkAndSetBOM("#plantonStopWidth");
+            checkAndSetBOM("#plantonStopHeight");
+        } else if(framTypeValue == "Scalloped"){
+            checkAndSetBOM("#ScallopedWidth");
+            checkAndSetBOM("#ScallopedHeight");
+        } else if (framTypeValue == "Rebated_Frame"){
+            checkAndSetBOM("#rebatedWidth");
+            checkAndSetBOM("#rebatedHeight");
+        }
+    }
+
+    function checkAndSetBOM(selector) {
+        var identifier = $(selector);
+        var value = parseFloat(identifier.val());
+        if (identifier.length && value >= 0) {
+            SetBuildOfMaterial(identifier);
+        }
     }
 
     function doorThicknessSelect(value){
@@ -5958,24 +6022,10 @@ function framewidth(){
     var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
     var leafWidth1 = parseInt($('input[name="leafWidth1"]').val(), 10) || 0;
     var leafWidth2 = parseInt($('input[name="leafWidth2"]').val(), 10) || 0;
-
+    var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
     var DoorSetType = $('select[name="doorsetType"]').val();
-    // var frameType = $('select[name="frameType"]').val();
-    // if (DoorSetType == "SD"){
-    //     var FrameWidth =  parseInt($('input[name="leafWidth1"]').val(), 10) + Gap  + Gap + FrameThickness + FrameThickness;
-    //     if(frameType == 'Scalloped'){
-    //         let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
-    //         FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
-    //     }
-    // }else{
-    //     var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10) + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + Gap + Gap + FrameThickness + FrameThickness;
-    //     if(frameType == 'Scalloped'){
-    //         let ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0;
-    //         FrameWidth = FrameThickness - ScallopedHeight + Gap + parseInt($('input[name="leafWidth1"]').val(), 10) + Gap + parseInt($('input[name="leafWidth2"]').val(), 10) + Gap + FrameThickness -  ScallopedHeight;
-    //         console.log( FrameThickness , ScallopedHeight , gap , parseInt($('input[name="leafWidth1"]').val(), 10) , Gap , parseInt($('input[name="leafWidth2"]').val(), 10) , Gap , FrameThickness , ScallopedHeight)
-    //         calsowidth(FrameWidth);
-    //     }
-    // }
+    var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
 
     if($("#frameType").val() == 'Rebated_Frame'){
         if (DoorSetType == "SD"){
@@ -5992,12 +6042,11 @@ function framewidth(){
         }
         $("#frameWidth").val(FrameWidth);
     } else if($("#frameType").val() == 'Scalloped'){
-        if (DoorSetType == "SD"){
-           var FrameWidth = FrameThickness - ScallopedHeight + leafWidth1 + Gap + Gap + FrameThickness;
-        } else {
-            var FrameWidth = FrameThickness - ScallopedHeight + Gap + leafWidth1 + Gap + leafWidth2 + Gap + FrameThickness -  ScallopedHeight + FrameThickness;
-        }
-        console.log(FrameThickness ,ScallopedHeight , Gap , leafWidth1 , Gap , leafWidth2 , Gap , FrameThickness ,  ScallopedHeight , FrameThickness,FrameWidth)
+        var FrameWidth = sOWidth - (tollerance * 2);
+           console.log(
+            `${sOWidth} - ${tollerance} * 2 = Scalloped_FrameWidth ${FrameWidth}`
+            );
+
         $("#frameWidth").val(FrameWidth);
     } else{
         var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
@@ -6018,12 +6067,11 @@ function framewidth(){
                 `${sOWidth} - (${tollerance} * ${TolleranceAdditionalNumberForFrameWidth}) = FrameWidth ${sOWidth-(parseInt(tollerance)*TolleranceAdditionalNumberForFrameWidth)}`
               );
     }
-
-
     frameHeight();
 }
 
 $("#rebatedHeight").on("keyup change", triggerCalculations);
+$("#ScallopedHeight").on("keyup change", triggerCalculations);
 $("#DoorSetType").on("change", triggerCalculations);
 $("#foursidedframe").on("change", triggerCalculations);
 
@@ -6045,14 +6093,6 @@ function frameHeight(){
 
     let foursidedframe = document.getElementById("foursidedframe");
 
-    // if($("#frameType").val() == 'Scalloped'){
-    //     // Frame Thickness-scalloped depth+gap+undercut+leaf height=Frame Height
-    //     var frameHeight = FrameThickness - ScallopedHeight + Gap + undercut + leafHeightNoOP;
-    //     console.log(FrameThickness , ScallopedHeight , Gap , undercut , leafHeightNoOP)
-    //     $("#frameHeight").val(frameHeight);
-    //     var soheight = frameHeight + tollerance;
-    //       $('#sOHeight').val(soheight);
-    // }
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
             var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
@@ -6068,6 +6108,12 @@ function frameHeight(){
         }
 
         $("#frameHeight").val(frameHeight);
+    }else if($("#frameType").val() == 'Scalloped'){
+        var frameHeight = soheight - tollerance;
+        $("#frameHeight").val(frameHeight);
+        console.log(
+                `${soheight} - ${tollerance} = ScallopedFrameHeight ${frameHeight}`
+            );
     }else{
         $("#frameHeight").val(soheight-tollerance);
     }
