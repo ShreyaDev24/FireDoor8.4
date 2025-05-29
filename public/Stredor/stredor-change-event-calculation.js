@@ -413,11 +413,10 @@ $(".change-event-calulation").change(function(){
         GapAdditionalNumber = 3;
         var leafWidth1 = (soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap))/2;
         if($("#frameType").val() == 'Scalloped'){
-            leafWidth1 = (soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - (ScallopedHeight * 2) - (GapAdditionalNumber * gap)) / 2;
+            leafWidth1 = (soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness - (ScallopedHeight * 2)) - (GapAdditionalNumber * gap)) / 2;
             console.log(
-                `(${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight} * 2) - (${GapAdditionalNumber} * ${gap})) / 2 = LeafWidth1 = LeafWidth2 = ${leafWidth1}`
+                `(${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} - (${ScallopedHeight} * 2)) - (${GapAdditionalNumber} * ${gap})) / 2 = LeafWidth1 = LeafWidth2 = ${leafWidth1}`
                 );
-
         }
         // $("#leafWidth2").val(leafWidth1).attr('readonly',true);
         // $("#leafWidth1").val(leafWidth1);
