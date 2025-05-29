@@ -439,11 +439,12 @@ $(".change-event-calulation").change(function(){
         GapAdditionalNumber = 2;
         var leafWidth1 = soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap);
         if($("#frameType").val() == 'Scalloped'){
-            LeafWidth1 = soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness * FrameThicknessAdditionalNumber) - ScallopedHeight - (GapAdditionalNumber * gap);
-            console.log(
-                `${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight})  - (${GapAdditionalNumber} * ${gap}) = LeafWidth1 ${LeafWidth1}`
+                leafWidth1 = soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness - ScallopedHeight) - framethikness - (GapAdditionalNumber * gap);
+                console.log(
+                `${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} - ${ScallopedHeight}) - ${framethikness} - (${GapAdditionalNumber} * ${gap}) = LeafWidth1 ${leafWidth1}`
                 );
-        }
+
+            }
         $("#leafWidth2").val(0).attr('readonly',true);
 
         if($("#leaf2VisionPanel").val() == ""){

@@ -330,10 +330,11 @@ const render = (CustomElement = null) => {
         } else if (DoorSetType == "SD" && withoutFrameId != 1) {
             LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap);
             if($("#frameType").val() == 'Scalloped'){
-                LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - ScallopedHeight - (GapAdditionalNumber * Gap);
+                LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness - ScallopedHeight) - FrameThickness - (GapAdditionalNumber * Gap);
                 console.log(
-                    `${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - (${FrameThickness} * ${FrameThicknessAdditionalNumber}) - (${ScallopedHeight})  - (${GapAdditionalNumber} * ${Gap}) = LeafWidth1 ${LeafWidth1}`
-                    );
+                `${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - (${FrameThickness} - ${ScallopedHeight}) - ${FrameThickness} - (${GapAdditionalNumber} * ${Gap}) = LeafWidth1 ${LeafWidth1}`
+                );
+
             }
         } else if (DoorSetType == "leaf_and_a_half") {
             if (withoutFrameId != 1) {
