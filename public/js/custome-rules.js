@@ -1876,16 +1876,22 @@ function copyOfSideLite1Change(isstatus = false){
             }
         // }
        // Call for each input
-        checkAndSetBOM("#ScallopedWidth");
-        checkAndSetBOM("#plantonStopWidth");
-        checkAndSetBOM("#rebatedWidth");
-        checkAndSetBOM("#ScallopedHeight");
+         if (framTypeValue == "Plant_on_Stop") {
+            checkAndSetBOM("#plantonStopWidth");
+            checkAndSetBOM("#plantonStopHeight");
+        } else if(framTypeValue == "Scalloped"){
+            checkAndSetBOM("#ScallopedWidth");
+            checkAndSetBOM("#ScallopedHeight");
+        } else if (framTypeValue == "Rebated_Frame"){
+            checkAndSetBOM("#rebatedWidth");
+            checkAndSetBOM("#rebatedHeight");
+        }
     }
 
     function checkAndSetBOM(selector) {
         var identifier = $(selector);
         var value = parseFloat(identifier.val());
-        if (identifier.length && value > 0) {
+        if (identifier.length && value >= 0) {
             SetBuildOfMaterial(identifier);
         }
     }
