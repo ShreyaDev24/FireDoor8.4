@@ -197,6 +197,9 @@
                                 <a href="javascript:void(0);" onclick="configurableNon(1);" id="nonConfig"
                                     class="btn btn-primary float-right mx-1 activeNC">Configurable
                                 </a>
+                                <a href="javascript:void(0);" onclick="validationHere();" id="needValidation"
+                                    class="btn btn-primary float-right mx-1">Validate
+                                </a>
                             </div>
                             <div class="main-card mb-3" id="side-screen-section" style="display: none;">
                                 <div class="card-body">
@@ -733,6 +736,8 @@
         </div>
     </div>
 
+    <div id='container'></div>
+
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
     <input type="hidden" name="SideScreenCount" id="SideScreenCount" value="{{ count($SideScreenData) }}" />
     <input type="hidden" name="ManualQuotationStatusvalue" id="ManualQuotationStatusvalue" value="{{ $quotation->ManualQuotationStatus }}" />
@@ -828,6 +833,7 @@
         <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
         <input type="hidden" id="edit_image" value="{{ url('/quotation/edit-image') }}" />
         <input type="hidden" id="edit_image1" value="{{ url('/quotation/edit-image1') }}" />
+        <input type="hidden" id="validateAlls" value="{{ url('/quotation/validateAlls') }}" />
         <input type="hidden" id="favoriteItem" value="{{ url('/quotation/favoriteItem') }}" />
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
@@ -847,7 +853,14 @@
             });
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
+        <script src="{{ url('/') }}/Halspan/new-cad.js"></script> <!-- Then load your custom JS -->
+
+
+        {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
+            var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
+            var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
                 $("#ManualAddForm").modal('show');
@@ -1611,6 +1624,7 @@
                 }
 
             }
+
             function checkForEdit(){
                 const doorsetTypeValue = $('#doorsetType').val();
                 const sOWidthValue = $('#sOWidth').val();
@@ -1781,6 +1795,89 @@
                     }
                 });
             }
+           function validationHere() {
+                const path = window.location.pathname;
+                const segments = path.split('/');
+                const id = segments[3];
+
+                $('.loader').empty().css({ 'display': 'block' });
+
+                $.ajax({
+                    url: $("#validateAlls").val(), // your route URL
+                    method: "POST",
+                    data: {
+                        _token: $("#_token").val(),
+                        quotationId: id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data)
+                        $('.loader').hide(); // hide loader after success
+
+                        if (data.status === 'success') {
+                        //    $.getScript('/Halspan/common-cad-configuration.js');
+
+                            // Loop through items
+
+                                // Either use global variable or function call
+                                generateCADImage(data.items); // ⬅️ Use a function in your JS
+                            // });
+                        // });
+
+                        } else if (data.status === 'error') {
+                            let errorMessages = '';
+
+                            $.each(data.validation_errors, function(doorId, messages) {
+                                errorMessages += `<b>${doorId.replace('_', ' ')}</b><br>`;
+                                messages.forEach(function(msg) {
+                                    errorMessages += `- ${msg}<br>`;
+                                });
+                                errorMessages += '<br>';
+                            });
+
+                            swal("Validation Error", errorMessages, "error");
+                        }
+                    },
+                    error: function(xhr) {
+                        $('.loader').hide(); // hide loader even on error
+
+                        if (xhr.status === 422 && xhr.responseJSON) {
+                            let data = xhr.responseJSON;
+                            let errorMessages = '';
+
+                            $.each(data.validation_errors || {}, function(doorId, messages) {
+                                errorMessages += `<b>${doorId.replace('_', ' ')}</b><br>`;
+                                messages.forEach(function(msg) {
+                                    errorMessages += `- ${msg}<br>`;
+                                });
+                                errorMessages += '<br>';
+                            });
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessages
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong. Please try again.'
+                            });
+                        }
+                    }
+                });
+            }
+            function generateCADImage(val){
+                $('.loader').empty().css({ 'display': 'block' });
+                  totalItemsToSave = val.length;
+                  completedItems = 0;
+
+                 val.forEach(function(item) {
+                     render(null,item);
+                 });
+            }
+
             $(document).on('keyup', '#searchCustomer', function(e) {
                 e.preventDefault();
                 const customerName = $(this).val();

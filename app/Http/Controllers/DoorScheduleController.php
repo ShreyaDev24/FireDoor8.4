@@ -88,6 +88,7 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use App\Models\DoorFrameConstruction;
 use App\Exports\cuttingListExport;
+use Illuminate\Support\Facades\Validator;
 
 class DoorScheduleController extends Controller
 {
@@ -4078,6 +4079,7 @@ class DoorScheduleController extends Controller
 
             // Configurable Items
             $configurableItem = ConfigurableItems::orderBy('orderBy','ASC')->get();
+            $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
             $configItem = '';
             foreach ($configurableItem as $ci) {
                 if (!empty($Quotation->configurableitems)) {
@@ -4197,6 +4199,63 @@ class DoorScheduleController extends Controller
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
             }
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
+            $IronmongeryInfoSet = [
+                'Hinges',
+                'FloorSpring',
+                'LocksAndLatches',
+                'FlushBolts',
+                'ConcealedOverheadCloser',
+                'PullHandles',
+                'PushHandles',
+                'KickPlates',
+                'DoorSelectors',
+                'PanicHardware',
+                'Doorsecurityviewer',
+                'Morticeddropdownseals',
+                'Facefixeddropseals',
+                'ThresholdSeal',
+                'AirTransferGrill',
+                'Letterplates',
+                'CableWays',
+                'SafeHinge',
+                'LeverHandle',
+                'DoorSinage',
+                'FaceFixedDoorCloser',
+                'Thumbturn',
+                'KeyholeEscutchen',
+                'DoorStops',
+                'Cylinders'
+            ];
+
+            // Process the data and merge
+            foreach ($setIronmongery as $ironmongery) {
+                $additionalInfo = []; // Temporary array to hold additional info
+
+                foreach ($IronmongeryInfoSet as $valIronmongery) {
+                    // Check if the property exists and is not empty
+                    if (!empty($ironmongery->$valIronmongery)) {
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                    ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                        }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
@@ -4232,7 +4291,9 @@ class DoorScheduleController extends Controller
                 'Favorite' => $Favorite,
                 'ProjectsAddress' => $ProjectsAddress,
                 'nonConfigData' => $nonConfigData,
-                'ProjectId' => $Quotation->ProjectId
+                'ProjectId' => $Quotation->ProjectId,
+                'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+                'setIronmongery' => $setIronmongery,
             ]);
         } else {
             return redirect()->route('quotation/list');
@@ -7450,7 +7511,7 @@ class DoorScheduleController extends Controller
             );
     }
     public function halspanValidate($request){
-        $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
+            $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
             $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
@@ -8836,9 +8897,173 @@ class DoorScheduleController extends Controller
         $quotation = Quotation::where('quotation.id',$quotationId)->first();
         $vid = ['selectVersionID'=>0,'selectVersion'=>0];
         if($vid > 0){
-            $QV = QuotationVersion::where('id',$versionID)->first();
+            $QV = QuotationVersion::where('id',operator: $versionID)->first();
             $vid = $QV->version;
         }
         return Excel::download(new cuttingListExport($quotationId,$versionID), "CutList ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+    }
+
+    public function validateAlls(Request $request)
+    {
+        // dd('Hii');
+        $quotation = Quotation::find($request->quotationId);
+        $items = Item::where('QuotationId', $request->quotationId)->get();
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
+        $errors = [];
+
+        // If no items found, return 404
+        if ($items->isEmpty()) {
+            return abort(404, 'No items found for this quotation.');
+        }
+
+        // Loop through each item (door) to validate
+        foreach ($items as $index => $door) {
+            if($door->configurableitems == '1' || $door->configurableitems == '2' || $door->configurableitems == '7' || $door->configurableitems == '8') {
+                $rules = [
+                    'DoorType' => 'required',
+                    'IntumescentLeafType' => 'required',
+                    'FireRating' => 'required',
+                    'DoorsetType' => 'required',
+                    'SwingType' => 'required',
+                    'OpensInwards' => 'required',
+                    'Tollerance' => 'required|numeric|max:20',
+                    'Undercut' => 'required',
+                    'FloorFinish' => 'required',
+                    'GAP' => 'required|numeric|between:2,4',
+                    'FrameThickness' => 'required|numeric|min:22',
+                    'Handing' => 'required',
+                    'SOWidth' => 'required|numeric',
+                    'SOHeight' => 'required|numeric',
+                    'SOWallThick' => 'required|numeric',
+                ];
+            } else {
+                $rules = [
+                    'DoorType' => 'required',
+                    'FireRating' => 'required',
+                    'DoorsetType' => 'required',
+                    'SwingType' => 'required',
+                    'OpensInwards' => 'required',
+                    'Tollerance' => 'required|numeric|max:20',
+                    'Undercut' => 'required',
+                    'FloorFinish' => 'required',
+                    'GAP' => 'required|numeric|between:2,4',
+                    'FrameThickness' => 'required|numeric|min:22',
+                    'Handing' => 'required',
+                    'SOWidth' => 'required|numeric',
+                    'SOHeight' => 'required|numeric',
+                    'SOWallThick' => 'required|numeric',
+                ];
+            }
+
+
+        // Optional Section: Vision Panel
+        if($door['visionPanelWidth'] == "Yes"){
+            $rules['Leaf1VisionPanelShape'] = 'required';
+            $rules['VisionPanelQuantity'] = 'required';
+            $rules['DistanceFromTheEdgeOfDoor'] = 'required';
+            $rules['Leaf1VPWidth'] = 'required';
+            $rules['Leaf1VPHeight1'] = 'required';
+            $rules['GlassThickness'] = 'required';
+            $rules['GlazingBeadsThickness'] = 'required';
+            $rules['glazingBeadsHeight'] = 'required';
+            $rules['glazingBeadsFixingDetail'] = 'required';
+            $rules['GlazingSystems'] = 'required';
+            $rules['GlassIntegrity'] = 'required';
+            $rules['GlassType'] = 'required';
+            $rules['GlazingBeads'] = 'required';
+        }
+
+
+        // Optional Section: Frame
+        if (!empty($door['FrameMaterial'])) {
+            $rules['FrameMaterial'] = 'required';
+            $rules['FrameType'] = 'required';
+            if($door['FrameType'] == 'Scalloped'){
+                $rules['ScallopedWidth'] = 'required|numeric';
+                $rules['ScallopedHeight'] = 'required|numeric';
+            } else if($door['FrameType'] == 'Plant_on_Stop'){
+                $rules['PlantonStopWidth'] = 'required|numeric';
+                $rules['PlantonStopHeight'] = 'required|numeric';
+            } else if($door['FrameType'] == 'Rebated_Frame'){
+                $rules['RebatedWidth'] = 'required|numeric';
+                $rules['RebatedHeight'] = 'required|numeric';
+            }
+            $rules['FrameDepth'] = 'required|numeric';
+            $rules['DoorFrameConstruction'] = 'required';
+        }
+
+         // Optional Section: Overpanel
+        if ($door['Overpanel'] == 'Overpanel') {
+            $rules['OPHeigth'] = 'required';
+            $rules['OpBeadThickness'] = 'required';
+            $rules['OpBeadHeight'] = 'required';
+        }
+
+          // Optional Section: Fanlight
+        if ($door['Overpanel'] == 'Fan_Light') {
+            $rules['OPHeigth'] = 'required';
+            $rules['OpBeadThickness'] = 'required';
+            $rules['OpBeadHeight'] = 'required';
+            $rules['opGlassIntegrity'] = 'required';
+            $rules['OPGlassType'] = 'required';
+            $rules['OPGlassThickness'] = 'required';
+            $rules['OPGlazingSystems'] = 'required';
+            $rules['OPGlazingSystemsThickness'] = 'required';
+            $rules['OPGlazingBeads'] = 'required';
+            $rules['OPGlazingBeadsThickness'] = 'required';
+            $rules['OPGlazingBeadsHeight'] = 'required';
+            $rules['OPGlazingBeadsFixingDetail'] = 'required';
+            $rules['OPGlazingBeadSpecies'] = 'required';
+        }
+
+        // Optional Section: Lipping
+        if (!empty($door['FireRating'])) {
+            $rules['IntumescentLeapingSealType'] = 'required';
+            $rules['IntumescentLeapingSealLocation'] = 'required';
+            $rules['IntumescentLeapingSealColor'] = 'required';
+            $rules['IntumescentLeapingSealArrangement'] = 'required';
+        }
+
+         if ($door['accoustics'] == 'Yes') {
+            $rules['rWdBRating'] = 'required';
+            $rules['perimeterSeal1'] = 'required';
+            $rules['perimeterSeal2'] = 'required';
+        }
+
+        // Optional Section: Architrave
+        if ($door['Architrave'] == 'Yes') {
+            $rules['ArchitraveMaterial'] = 'required';
+            $rules['ArchitraveType'] = 'required';
+            $rules['ArchitraveWidth'] = 'required';
+            $rules['ArchitraveHeight'] = 'required';
+            $rules['ArchitraveFinish'] = 'required';
+            $rules['ArchitraveSetQty'] = 'required';
+        }
+
+        // Validate the current door
+         $validator = Validator::make($door->toArray(), $rules);
+
+        if ($validator->fails()) {
+            $errors["door_Type_" . $door->DoorType] = $validator->errors()->all();
+        }
+
+        }
+
+        // If there are validation errors, return them as JSON
+        if (!empty($errors)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Some doors have missing or invalid fields.',
+                'validation_errors' => $errors,
+            ]);
+        }
+
+        // If all validations pass
+        return response()->json([
+            'status' => 'success',
+            'message' => 'All doors passed validation.',
+            'items' => $items,
+            'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+        ]);
     }
 }
