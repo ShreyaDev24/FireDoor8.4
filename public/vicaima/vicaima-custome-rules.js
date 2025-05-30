@@ -210,7 +210,8 @@ function corewidth1Value(){
 
     let checkdoorsetType = $('#doorsetType').val();
     var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
-    var calculateHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
+    var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2);
+    console.log(oPHeigth,gap,OpBeadThickness,calculateHeight);
 
     if(checkdoorsetType == 'leaf_and_a_half'){
         if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
