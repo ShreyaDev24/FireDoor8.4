@@ -276,6 +276,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/store-excel', [App\Http\Controllers\DoorScheduleController::class,'storexcel'])->name('quotation/store-excel');
     Route::post('/edit-image', [App\Http\Controllers\DoorScheduleController::class,'editImage'])->name('quotation/edit-image');
     Route::post('/edit-image1', [App\Http\Controllers\DoorScheduleController::class,'editImage1'])->name('quotation/edit-image1');
+    Route::post('/validateAlls', [App\Http\Controllers\DoorScheduleController::class,'validateAlls'])->name('quotation/validateAlls');
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');
