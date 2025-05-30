@@ -497,7 +497,7 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="maxNumberOfGroove"> Maximum Number of Groove Laef2
+                            <label for="maxNumberOfGroove"> Maximum Number of Groove Leaf2
                                 @if(!empty($tooltip->maxNumberOfGroove))
                                 <script type="text/javascript">
                                 document.write(Tooltip('{{$tooltip->maxNumberOfGroove}}'));

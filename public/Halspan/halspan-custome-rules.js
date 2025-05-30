@@ -3082,50 +3082,6 @@ $(document).ready(function() {
                     }
 
                     if(doorLeafFacing=="Laminate" || doorLeafFacing=="PVC"){
-                        if(doorLeafFacing=="Laminate"){
-                            $("#decorativeGroves,#DecorativeGrovesLeaf2").attr({'disabled':true});
-                            $('#decorativeGroves,#DecorativeGrovesLeaf2 option:first').prop('selected', true);
-                            $("#grooveLocation,#GrooveLocationLeaf2").attr({'disabled':true});
-                            $("#IsSameAsDecorativeGroves1").attr({'disabled':true});
-                            $('#grooveLocation,#GrooveLocationLeaf2 option:first').prop('selected', true);
-                            $("#grooveWidth,#GrooveWidthLeaf2").val(0).attr({'disabled':true});
-                            $("#grooveDepth,#GrooveDepthLeaf2").val(0).attr({'disabled':true});
-                            $("#numberOfGroove,#NumberOfGrooveLeaf2").val(0).attr({'disabled':true});
-                            $("#numberOfVerticalGroove,#NumberOfVerticalGrooveLeaf2").val(0).attr({'disabled':true});
-                            $("#decorativeGroves,#DecorativeGrovesLeaf2").removeAttr('required')
-                            $("#numberOfHorizontalGroove,#NumberOfHorizontalGrooveLeaf2").val(0).attr({'disabled':true});
-
-                        }else{
-
-                            var doorsetType = $("#doorsetType").val();
-                            if(doorsetType == 'SD'){
-                                $("#DecorativeGrovesLeaf2").attr({'required':false});
-                                $("#DecorativeGrovesLeaf2").attr({'disabled':true});
-                            }else{
-                                $("#DecorativeGrovesLeaf2").attr({'required':true});
-                                $("#DecorativeGrovesLeaf2").attr({'disabled':false});
-                            }
-                            $("#decorativeGroves").attr({'required':true});
-                            $("#decorativeGroves").attr({'disabled':false});
-                        }
-
-                        if (DecorativeGrovesValue != null) {
-                            DecorativeGrovesValue = $("#DecorativeGroves-value").data("value");
-                            if(DecorativeGrovesValue == ""){
-                                $("#decorativeGroves").val('No');
-                            }
-                        }else{
-                            // $("#decorativeGroves").val('');
-                        }
-                        if (DecorativeGrovesLeaf2Value != null) {
-                            DecorativeGrovesLeaf2Value = $("#DecorativeGrovesLeaf2-value").data("value");
-                            if(DecorativeGrovesLeaf2Value == ""){
-                                $("#DecorativeGrovesLeaf2").val('No');
-                            }
-                        }else{
-                            // $("#decorativeGroves").val('');
-                        }
-
                         var color = result.color;
                         $("#ralColorModalLabel").text("Door Leaf Finish");
                         if (DoorLeafFinishValue != null) {
@@ -3151,34 +3107,6 @@ $(document).ready(function() {
 
                     // }else if(doorLeafFacing=="Veneer" || doorLeafFacing=="Kraft_Paper" || doorLeafFacing=="Playwood"){
                     }else{
-
-                        $("#decorativeGroves").attr({'required':true});
-                        $("#decorativeGroves").attr({'disabled':false});
-                        var doorsetType = $("#doorsetType").val();
-                        if(doorsetType == 'SD'){
-                            $("#DecorativeGrovesLeaf2").attr({'required':false});
-                            $("#DecorativeGrovesLeaf2").attr({'disabled':true});
-                        }else{
-                            $("#DecorativeGrovesLeaf2").attr({'required':true});
-                            $("#DecorativeGrovesLeaf2").attr({'disabled':false});
-                        }
-                        if (DecorativeGrovesValue != null) {
-                            DecorativeGrovesValue = $("#DecorativeGroves-value").data("value");
-                            if(DecorativeGrovesValue == ""){
-                                $("#decorativeGroves").val('No');
-                            }
-                        }else{
-                            // $("#decorativeGroves").val('No');
-                        }
-                        if (DecorativeGrovesLeaf2Value != null) {
-                            DecorativeGrovesLeaf2Value = $("#DecorativeGrovesLeaf2-value").data("value");
-                            if(DecorativeGrovesLeaf2Value == ""){
-                                $("#DecorativeGrovesLeaf2").val('No');
-                            }
-                        }else{
-                            // $("#decorativeGroves").val('No');
-                        }
-
                         var color ='';
                         var color = result.color;
 
