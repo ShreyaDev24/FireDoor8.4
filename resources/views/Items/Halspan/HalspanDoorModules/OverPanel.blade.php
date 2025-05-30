@@ -70,7 +70,7 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input name="oPWidth" id="oPWidth" readonly class="form-control oPWidth door-configuration"
+                                                    <input name="oPWidth" id="oPWidth" readonly class="form-control oPWidth door-configuration forcoreWidth1"
                                                         type="text" value="@if(isset($Item['OPWidth'])){{$Item['OPWidth']}}@endif">
                                                 </div>
                                             </div>
@@ -129,7 +129,7 @@
                                                     @endif
 
                                                     </label>
-                                                    <input required  name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration"
+                                                    <input required  name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration forcoreWidth1"
                                                         type="number" value="@if(isset($Item['OPHeigth'])){{$Item['OPHeigth']}}@endif">
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                                     @endif
                                                     </label>
                                                     <label for="OpBead_Thickness" style="display: none;">Fan Light/ Over Panel Frame Thickness</label>
-                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(empty(@$Item['OpBeadThickness'])) readonly @else required @endif class="form-control OpBeadThickness door-configuration"
+                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(empty(@$Item['OpBeadThickness'])) readonly @else required @endif class="form-control OpBeadThickness door-configuration forcoreWidth1"
                                                         type="text" value="@if(isset($Item['OpBeadThickness'])){{$Item['OpBeadThickness']}}@endif"  min="1">
                                                 </div>
                                             </div>
