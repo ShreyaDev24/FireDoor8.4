@@ -133,6 +133,7 @@ function pageIdentity(){
         var gap = 0;
         var oPWidth = 0;
         var oPHeigth = 0;
+        var doorsetType = $("#doorsetType").val();
         // var leafWidth1=0;
         var thisvalue = document.getElementsByClassName("forcoreWidth1");
         for (var i = 0; i < thisvalue.length; i++) {
@@ -228,9 +229,7 @@ function pageIdentity(){
         var calculateCoreWidth2 = leafWidth2-(LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
         var calculateCoreHeight = leafHeight-(LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
         var opCoreWidthcalculate =  oPWidth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
-        console.log(oPWidth ,OpBeadThickness  , gap ,lipping_thickness,'hiime')
         var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
-        console.log(oPHeigth , OpBeadThickness , gap ,lipping_thickness,'newtserwey')
         // var calculate = leafWidth1-(randomkey*lipping_thickness);
         // OP Width -OP frame thicknessX2-GapX2-Lipping ticknessX2
         // OP height-OP framethicknessX2-GapX2- lipping thicknessx2
@@ -240,7 +239,13 @@ function pageIdentity(){
             $("#coreWidth2").val(calculateCoreWidth2);
         }
         if($("#overpanel").val() == 'Overpanel'){
-            $("#opCoreWidth").val(opCoreWidthcalculate);
+            if(doorsetType == 'SD'){
+                $("#opCoreWidth").val(calculate);
+            } else {
+                opCoreWidthcalculates = calculate + calculateCoreWidth2 + gap;
+                $("#opCoreWidth").val(opCoreWidthcalculates);
+            }
+
             $("#opCoreHeight").val(opCoreHeightcalculate);
         }
         $("#coreWidth1").val(calculate);
@@ -6219,34 +6224,3 @@ function frameHeight(){
         $("#frameHeight").val(soheight-tollerance);
     }
 }
-$(document).ready(function() {
-    function updateLippingOptions() {
-        var overpanelVal = $("#overpanel").val();
-
-        if (overpanelVal === "Overpanel") {
-            // Hide "Scolloped" option
-            $("#lippingType option").each(function() {
-                console.log($(this).text().trim().toLowerCase())
-                if ($(this).text().trim().toLowerCase() === "concealed lipping") {
-                    $(this).hide();
-                }
-            });
-
-            // If currently selected is Scolloped, reset it
-            if ($("#lippingType option:selected").text().trim().toLowerCase() === "concealed lipping") {
-                $("#lippingType").val("");
-            }
-        } else {
-            // Show all options again if overpanel not selected
-            $("#lippingType option").show();
-        }
-    }
-
-    // Initial check
-    updateLippingOptions();
-
-    // Trigger check on change
-    $("#overpanel").change(function() {
-        updateLippingOptions();
-    });
-});
