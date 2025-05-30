@@ -210,8 +210,8 @@ function corewidth1Value(){
 
     let checkdoorsetType = $('#doorsetType').val();
     var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
-    var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2);
-    console.log(oPHeigth,gap,OpBeadThickness,calculateHeight);
+    var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - lipping_thickness;
+    console.log(oPHeigth,gap,OpBeadThickness,lipping_thickness,calculateHeight);
 
     if(checkdoorsetType == 'leaf_and_a_half'){
         if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
@@ -252,19 +252,39 @@ function corewidth1Value(){
         }
         $("#coreWidth1").val(calculate);
         $("#opCoreWidth").val(calculate);
-        if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
-            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
-             $("#coreWidth1").val('');
-             $("#coreWidth2").val('');
-             $("#coreHeight").val(calculateCoreHeight);
-        } else {
-            $("#coreWidth1").val(calculate);
-            if (checkdoorsetType == 'DD') {
-             $("#coreWidth2").val(calculateCoreWidth2);
+        var adjustmentLeafWidth1 = parseInt($('input[name="adjustmentLeafWidth1"]').val(), 10) || 0;
+        var adjustmentLeafWidth2 = parseInt($('input[name="adjustmentLeafWidth2"]').val(), 10) || 0;
+        var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+
+
+        if($("#overpanel").val() == 'Overpanel'){
+
+            if((adjustmentLeafWidth1 == 0)){
+                $("#coreWidth1").val('');
+            }else{
+                $("#coreWidth1").val(calculate);
             }
+            if((adjustmentLeafHeightNoOP == 0)){
+                $("#coreHeight").val('');
+            }else{
+                var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
+                $("#coreHeight").val(calculateCoreHeight);
+            }
+
+            if((adjustmentLeafWidth2 == 0)){
+                $("#coreWidth2").val('');
+            }else{
+                if (checkdoorsetType == 'DD') {
+                    $("#coreWidth2").val(calculateCoreWidth2);
+                }
+            }
+        } else {
+            $("#coreWidth1").val('');
+            $("#coreWidth2").val('');
+            $("#coreHeight").val('');
         }
     }
-    $("#coreHeight").val(calculateCoreHeight);
+    // $("#coreHeight").val(calculateCoreHeight);
     $("#opCoreHeight").val(calculateHeight);
 }
 
