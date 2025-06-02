@@ -6126,20 +6126,27 @@ function framewidth(){
     var DoorSetType = $('select[name="doorsetType"]').val();
     var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
     var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    // JFDS-952 task old one
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (DoorSetType == "SD"){
+    //         var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
+    //         console.log(
+    //             `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
+    //     }else{
+    //         var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
 
+    //     }
+    //     $("#frameWidth").val(FrameWidth);
+    // }
+    // JFDS-952 task old one end
+    // Below one 987 updated version same for all door set type
+    // Frame Width is calculated SO width -TolleranceX2
     if($("#frameType").val() == 'Rebated_Frame'){
-        if (DoorSetType == "SD"){
-            var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
-            console.log(
-                `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
-              );
-        }else{
-            var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
-              );
-
-        }
+        var FrameWidth = sOWidth - (tollerance * 2);
         $("#frameWidth").val(FrameWidth);
     } else if($("#frameType").val() == 'Scalloped'){
         var FrameWidth = sOWidth - (tollerance * 2);
@@ -6192,7 +6199,25 @@ function frameHeight(){
     var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
+    // JFDS-952 task old one end
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (foursidedframe.checked) {
+    //         var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
+    //         console.log(
+    //         `${leafHeightNoOP} + ((${FrameThickness} - ${rebatedHeight}) * 2) + (${Gap} * 2) = 4 sided reabated frameHeight ${frameHeight}`
+    //         );
 
+    //     }else{
+    //         var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
+    //         );
+    //     }
+
+    //     $("#frameHeight").val(frameHeight);
+    // }
+    // Below one 987 updated version same for all door set type
+    // Frame Height is calculated SO height -ToleranceX1
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
             var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
@@ -6201,10 +6226,8 @@ function frameHeight(){
             );
 
         }else{
-            var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
-            );
+            var frameHeight = soheight - tollerance;
+            console.log( soheight,tollerance,frameHeight);
         }
 
         $("#frameHeight").val(frameHeight);
