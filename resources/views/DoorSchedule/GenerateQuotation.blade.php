@@ -1868,15 +1868,27 @@
                     }
                 });
             }
-            function generateCADImage(val){
-                $('.loader').empty().css({ 'display': 'block' });
-                  totalItemsToSave = val.length;
-                  completedItems = 0;
+           function generateCADImage(val) {
+                // $('.loader').empty().css({ 'display': 'block' });
+                totalItemsToSave = val.length;
+                completedItems = 0;
 
-                 val.forEach(function(item) {
-                     render(null,item);
-                 });
+                processItemsSequentially(val, 0);
             }
+
+            function processItemsSequentially(dataList, index) {
+                  $('.loader').empty().css({ 'display': 'block' });
+                if (index >= dataList.length) return;
+
+                const item = dataList[index];
+
+                render(null, item);
+
+                setTimeout(() => {
+                    processItemsSequentially(dataList, index + 1);
+                }, 1500); // Wait enough time for render & save
+            }
+
 
             $(document).on('keyup', '#searchCustomer', function(e) {
                 e.preventDefault();

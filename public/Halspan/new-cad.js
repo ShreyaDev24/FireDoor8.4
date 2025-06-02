@@ -43,7 +43,7 @@ var svg = d3.select("#container")
 
 var DoorUrl = $("#door_url").text();
 let imageUtil = {};
-//    console.log('Calling render with:', item, formValues);
+//    // console.log('Calling render with:', item, formValues);
 window.render = (CustomElement = null,formValues = {}) => {
 
     let element = null;
@@ -59,7 +59,7 @@ window.render = (CustomElement = null,formValues = {}) => {
     }
 
     // Proceed with the rest of your logic
-    console.log('ChangedFieldName:', ChangedFieldName);
+    // console.log('ChangedFieldName:', ChangedFieldName);
     function createLine(color, strokeWidth, x1, y1, x2, y2) {
         svg.append('line')
             .style("stroke", color)            // set line color
@@ -156,7 +156,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         //SOHeightForMap = NumberChanger(SOHeight);
         SOHeightForMap = SOHeight / 5;
     }
- console.log(SOHeight)
+ // console.log(SOHeight)
     if ((iy + SOHeightForMap) >= 780) {
         shape = document.getElementsByTagName("svg")[0];
         shape.setAttribute("viewBox", "0 0 780 " + (iy + SOHeightForMap + 100));
@@ -214,7 +214,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         var hingeLocation4 = (formValues.hinge4Location > 0) ? parseInt(formValues.hinge4Location, 10) : 0;
         var hingeCenter = formValues.hingeCenterCheck ? 1 : 0;
 
-        // console.log(hingeLocation1,hingeLocation2,hingeLocation3,hingeLocation4)
+        // // console.log(hingeLocation1,hingeLocation2,hingeLocation3,hingeLocation4)
         var FrameWidthAdditionalNumber = 2;
 
 
@@ -244,7 +244,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             if (elem.slug == "undercut") {
                 UnderCutAdditionalNumber = parseFloat((FormulaAdditionalData.undercut != "") ? FormulaAdditionalData.undercut : 0);
             }
-            console.log(UnderCutAdditionalNumber)
+            // console.log(UnderCutAdditionalNumber)
 
             if (elem.slug == "op_width") {
                 OPTolleranceAdditionalNumber = parseFloat((FormulaAdditionalData.tolerance != "") ? FormulaAdditionalData.tolerance : 1);
@@ -320,7 +320,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         }
 
         var UnderCut = 0;
-        console.log(FloorFinish,'jiiii')
+        // console.log(FloorFinish,'jiiii')
         if (FloorFinish > 0) {
             if (formValues.FireRating == 'FD30' || formValues.FireRating == 'FD60') {
                 UnderCut = FloorFinish + 8;
@@ -398,7 +398,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             if (LeafWidth1 != "" && LeafWidth1 > 0) {
                 LeafWidth1ForMap = LeafWidth1 / 5;
             }
-            console.log(LeafWidth1ForMap,'test',LeafWidth1)
+            // console.log(LeafWidth1ForMap,'test',LeafWidth1)
 
             LeafWidth1 = parseInt(formValues.LeafWidth1, 10)
 
@@ -419,7 +419,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
             LeafHeightNoOPForMap = (Number(LeafHeightNoOP) + UnderCut) / 5;
         }
-        console.log(LeafHeightNoOPForMap,'thtsts')
+        // console.log(LeafHeightNoOPForMap,'thtsts')
 
         if (LeafHeightNoOP > 0) {
             $("#leafHeightNoOP-selected").empty().text(LeafHeightNoOP);
@@ -439,7 +439,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             TotalSideGap = ((Tollerance * TolleranceAdditionalNumber) + (FrameThickness * FrameThicknessAdditionalNumber) + (GapAdditionalNumber * Gap)) / 2;
             LeftGapForLeaf1 = RightGapForLeaf1 = TotalSideGap / 5;
         }
-        // console.log(Tollerance , TolleranceAdditionalNumber,FrameThickness , FrameThicknessAdditionalNumber,GapAdditionalNumber ,Gap)
+        // // console.log(Tollerance , TolleranceAdditionalNumber,FrameThickness , FrameThicknessAdditionalNumber,GapAdditionalNumber ,Gap)
 
         var TotalDoorWidth = 0;
         var RemainingGap = 0;
@@ -458,8 +458,8 @@ window.render = (CustomElement = null,formValues = {}) => {
                 LeafWidth1ForMap = LeafWidth1ForMap - RemainingGap;
             }
         }
-           console.log(FrameThicknessForMap,GapForMap,LeafWidth1ForMap,GapForMap,FrameThicknessForMap,TotalDoorWidth,'me')
-        // console.log(TotalDoorWidth)
+           // console.log(FrameThicknessForMap,GapForMap,LeafWidth1ForMap,GapForMap,FrameThicknessForMap,TotalDoorWidth,'me')
+        // // console.log(TotalDoorWidth)
 
         var SideLightPanel1Width = 0;
         var SideLightPanel1WidthToShow = 0;
@@ -565,7 +565,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             var OverPanelWidthToShow = SOWidth - GapForOverPanel;
             var OverPanelWidth = OverPanelWidthToShow / 5;
 
-            var OverPanelHeight = formValues.OpPanelHeight
+            var OverPanelHeight = formValues.OPHeigth;
             var OverPanelHeightToShow = 0;
             // if(OverPanelHeight == ""){
             //     OverPanelHeight = 0;
@@ -574,7 +574,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             // if (OverPanelHeight > 600) {
             //     OverPanelHeight = 0;
             // }
-
+            // console.log(formValues.oPHeigth)
             OverPanelHeightToShow = OverPanelHeight;
             if (OverPanelHeight > 0) {
                 OverPanelHeight = OverPanelHeight / 5;
@@ -607,7 +607,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                 hngLctn4Y = hngLctn1Y + (((hngLctn3Y - hngLctn1Y) / 3) * 2) - 20;
             }
         }
-        console.log(hngLctn1Y,hngLctn2Y)
+        // console.log(hngLctn1Y,hngLctn2Y)
 
         let hinge1hieght = hingeLocation1 > 0 ? hingeLocation1 : 25 * 5;
         let hinge2hieght = hingeLocation2 > 0 ? hingeLocation2 : ((90 * 5) - hinge1hieght); // 102mm HINGE HEIGHT
@@ -617,7 +617,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         let hinge4FCenter = LeafHeightNoOP - (hinge3hieght + hinge2hieght + hinge1hieght) - (102 * 3);
         let hinge4SCenter = LeafHeightNoOP - (hinge3hieght + hinge4hieght + hinge2hieght + hinge1hieght) - (102 * 4);
 
-        // console.log(hinge1hieght, hinge2hieght, hinge3hieght, hinge4hieght, 'llllllllllllllllllll')
+        // // console.log(hinge1hieght, hinge2hieght, hinge3hieght, hinge4hieght, 'llllllllllllllllllll')
 
         if (hingeCenter == 1) {
             let centerHeight = LeafHeightNoOP - (hinge1hieght + hinge3hieght);// REMOVE 2 HINGE HEIGHT
@@ -646,7 +646,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         }
 
         if (SideLightPanel1 == "Yes") {
-            // console.log(FrameThicknessForMap, 'llllllllllllll')
+            // // console.log(FrameThicknessForMap, 'llllllllllllll')
             if (OverPanelHeight) {
                 svg.append('rect') //outer sidepanel rect
                     .attr('x', ix)
@@ -956,7 +956,7 @@ window.render = (CustomElement = null,formValues = {}) => {
 
         var IronmongerySet = $('select[name="ironmongerySet"]').val();
         var IronmongeryID = $('select[name="IronmongeryID"]').val();
-
+        console.log(IsOverPanelActive,OverPanelWidth,FrameThicknessForMap,GapForMap,OverPanelHeight)
 
         if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
 
@@ -979,11 +979,11 @@ window.render = (CustomElement = null,formValues = {}) => {
 
 
             if (ShowMeasurements) {
-                // console.log(OverPanelHeight, 'OverPanelHeight')
+                // // console.log(OverPanelHeight, 'OverPanelHeight')
                 if (OverPanelHeight > 0) {
 
                     if (OverPanelHeight > 40) {
-                        // console.log(OverPanelHeight, 'oooooooooooooooooooOverPanelHeight')
+                        // // console.log(OverPanelHeight, 'oooooooooooooooooooOverPanelHeight')
 
                         svg.append("text")           //Text of Width of over panel of door
                             .style("fill", "black")      // make the text black
@@ -1156,7 +1156,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                 .attr('height', 20)
                 .attr('stroke', 'black')
                 .attr('fill', 'black');
-            // console.log("925", GapForMap, hngLctn1Y, ix + FrameThicknessForMap)
+            // // console.log("925", GapForMap, hngLctn1Y, ix + FrameThicknessForMap)
             svg.append('rect')
                 .attr('x', ix + FrameThicknessForMap)
                 // .attr('y', iy + TopFrameHeight + GapForMap + 100)
@@ -1317,7 +1317,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                 .attr("font-size", 10)
                 .attr("x", ix + (FrameWidthForMap / 2))         // set x position of left side of text
                 .attr("y", iy - 65)         // set y position of bottom of text
-                .text(SOWidth);   // define the text to display
+                .text(FrameWidth);   // define the text to display
             //Text of Width of Outer frame of door
 
             svg.append('line') //measurement line from top right
@@ -1529,7 +1529,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             .attr('height', LeafHeightNoOPForMap)
             .attr('stroke', 'black')
             .attr('fill', '#EBECE6');
-   console.log(FrameThicknessForMap,GapForMap,TopFrameHeight,LeafWidth1ForMap,LeafHeightNoOPForMap,'hiii')
+   // console.log(FrameThicknessForMap,GapForMap,TopFrameHeight,LeafWidth1ForMap,LeafHeightNoOPForMap,'hiii')
 
         /* Hinges */
 
@@ -2758,7 +2758,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         }
 
         // HINGES LINE END
-
+        console.log(swingType)
         if ((swingType && swingType == 'DA') || !frameonoff) {
         } else if (DoorSetType == 'SD' && Handing == 'Right') {
             svg.append('rect')
@@ -2788,7 +2788,9 @@ window.render = (CustomElement = null,formValues = {}) => {
 
             hingelinex = ix + SOWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 20;
             hingetextx = hingelinex + 1;
+
         } else {
+
             //visible hinges with gap
             svg.append('rect')
                 .attr('x', ix + FrameThicknessForMap - 1)
@@ -2797,7 +2799,8 @@ window.render = (CustomElement = null,formValues = {}) => {
                 .attr('height', 20)
                 .attr('stroke', 'black')
                 .attr('fill', '#C8C8BC');
-            // console.log("925", GapForMap, hngLctn1Y, ix + FrameThicknessForMap)
+                console.log(ix + FrameThicknessForMap - 1 ,hngLctn1Y)
+            // // console.log("925", GapForMap, hngLctn1Y, ix + FrameThicknessForMap)
             svg.append('rect')
                 .attr('x', ix + FrameThicknessForMap - 1)
                 // .attr('y', iy + TopFrameHeight + GapForMap + 100)
@@ -2814,6 +2817,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                 .attr('height', 20)
                 .attr('stroke', 'black')
                 .attr('fill', '#C8C8BC');
+                 console.log(hngLctn4Y)
 
             hingelinex = ix - SideLightPanel2WidthSpaceForVerticalLines - 30;
             hingetextx = hingelinex - 28;
@@ -2846,7 +2850,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                     .attr('height', 20)
                     .attr('stroke', 'black')
                     .attr('fill', '#C8C8BC');
-                // console.log("4Th hinge")
+                // // console.log("4Th hinge")
             }
         }
 
@@ -2924,7 +2928,7 @@ window.render = (CustomElement = null,formValues = {}) => {
             ParsedIronmongerySet.forEach(function (elem, index) {
                 if (elem.id == IronmongeryID) {
 
-                    console.log(elem.additional_info);
+                    // console.log(elem.additional_info);
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
@@ -2967,14 +2971,14 @@ window.render = (CustomElement = null,formValues = {}) => {
                         const ConcealedOverheadCloserData = elem.additional_info.find((item) => item.Category === "ConcealedOverheadCloser");
                         ConcealedOverheadCloserWidth = ConcealedOverheadCloserData.staticWidth
                         ConcealedOverheadCloserHeight = ConcealedOverheadCloserData.staticHeight
-                        // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
+                        // // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
                     }
                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
                         IsFaceFixedDoorClosersEnable = true;
                         const FaceFixedDoorCloserData = elem.additional_info.find((item) => item.Category === "FaceFixedDoorClosers");
                         FaceFixedDoorClosersWidth = FaceFixedDoorCloserData.staticWidth
                         FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData.staticHeight
-                        // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
+                        // // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
                     }
 
                     if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
@@ -2991,7 +2995,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                         PushHandleHeight = PushHandlesData.staticHeight
                         PushHandleDistanceFromBottomOfDoor = PushHandlesData.distanceFromBottomOfDoor
                         PushHandleDistanceFromLeadingEdgeOfDoor = PushHandlesData.distanceFromLeadingEdgeOfDoor
-                        // console.log("PushhandlesData: ", PushHandleHeight, PushHandleDistanceFromBottomOfDoor, PushHandleDistanceFromLeadingEdgeOfDoor)
+                        // // console.log("PushhandlesData: ", PushHandleHeight, PushHandleDistanceFromBottomOfDoor, PushHandleDistanceFromLeadingEdgeOfDoor)
                     }
 
                     if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
@@ -2999,7 +3003,7 @@ window.render = (CustomElement = null,formValues = {}) => {
                         const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
                         LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
                         LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor
-                        // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
+                        // // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
                     }
 
                     if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
@@ -3473,6 +3477,7 @@ window.render = (CustomElement = null,formValues = {}) => {
         var DistanceBetweenVPsForLeaf1 = DistanceBetweenVPsMinValue;
         var DistanceFromTopOfDoorForLeaf1 = DistanceFromTopOfDoorMinValue;
         var DistanceFromTheEdgeOfDoorForLeaf1 = DistanceFromTheEdgeOfDoorMinValue;
+        console.log(Leaf1VisionPanel)
 
         if (Leaf1VisionPanel == "Yes") {
             if (ChangedFieldName == "leaf1VisionPanel") {
@@ -4267,7 +4272,7 @@ const distanceFromEdge=[lockDistanceFromEdge,cylinderDistanceFromEdge,thumbturnD
     const uniqueDistancesFromEdge=Array.from(new Set(distanceFromEdge)).filter(num => num !== 0);
 
     function conditionalRenderItem(distance, label, distanceFromEdge, textdistanceRightHinge, linedistanceRightHinge,textdistanceLeftHinge,linedistanceLeftHinge) {
-        // console.log(distanceFromEdge,distance,'lllllllllllllllllllllllllllllllll')
+        // // console.log(distanceFromEdge,distance,'lllllllllllllllllllllllllllllllll')
         if (distance !== 0) { // Check if the distance is not zero
             renderItem(distance, label,distanceFromEdge,textdistanceRightHinge,linedistanceRightHinge,textdistanceLeftHinge,linedistanceLeftHinge);
         }
@@ -4308,7 +4313,7 @@ const distanceFromEdge=[lockDistanceFromEdge,cylinderDistanceFromEdge,thumbturnD
                 .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - textdistanceRightHinge}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2))})`)
                 .text(label);
         } else {
-            // console.log(FrameThicknessForMap,GapForMap,LeafWidth1ForMap,edgeDistance)
+            // // console.log(FrameThicknessForMap,GapForMap,LeafWidth1ForMap,edgeDistance)
             svg.append("circle")
                 .style("stroke", "black")
                 .style("fill", "grey")
@@ -4355,7 +4360,7 @@ const distanceFromEdge=[lockDistanceFromEdge,cylinderDistanceFromEdge,thumbturnD
         }
     } else if (uniqueDistances.length === 2) {
         // Two distances are the same; show one item for each unique distance
-        console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
+        // console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
         if(uniqueDistancesFromEdge.length ===1){
 
             conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5, uniqueDistancesFromEdge[0],215, 210,245,250);
@@ -7603,7 +7608,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     }
                 } else if (uniqueDistances.length === 2) {
                     // Two distances are the same; show one item for each unique distance
-                    console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
+                    // console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
                     if(uniqueDistancesFromEdge.length === 1){
 
                         conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],160,165,160,165);
@@ -7671,7 +7676,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
             if (AreVPsEqualSizesForLeaf1 != "Yes") {
 
-                Leaf1VisionPanel1Height = $('input[name="vP1Height1"]').val();
+                Leaf1VisionPanel1Height = formValues.Leaf1VPHeight1;
                 if (Leaf1VisionPanel1Height == "") {
                     Leaf1VisionPanel1Height = 0;
                 } else {
@@ -7681,7 +7686,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     }
                 }
 
-                Leaf1VisionPanel2Height = $('input[name="vP1Height2"]').val();
+                Leaf1VisionPanel2Height = formValues.Leaf1VPHeight2;
                 if (Leaf1VisionPanel2Height == "") {
                     Leaf1VisionPanel2Height = 0;
                 } else {
@@ -7691,7 +7696,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     }
                 }
 
-                Leaf1VisionPanel3Height = $('input[name="vP1Height3"]').val();
+                Leaf1VisionPanel3Height = formValues.Leaf1VPHeight3;
                 if (Leaf1VisionPanel3Height == "") {
                     Leaf1VisionPanel3Height = 0;
                 } else {
@@ -7701,7 +7706,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     }
                 }
 
-                Leaf1VisionPanel4Height = $('input[name="vP1Height4"]').val();
+                Leaf1VisionPanel4Height = formValues.Leaf1VPHeight4;
                 if (Leaf1VisionPanel4Height == "") {
                     Leaf1VisionPanel4Height = 0;
                 } else {
@@ -7711,7 +7716,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     }
                 }
 
-                Leaf1VisionPanel5Height = $('input[name="vP1Height5"]').val();
+                Leaf1VisionPanel5Height = formValues.Leaf1VPHeight5;
                 if (Leaf1VisionPanel5Height == "") {
                     Leaf1VisionPanel5Height = 0;
                 } else {
@@ -7722,7 +7727,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                 }
 
             } else {
-                var VP1Height1 = $('input[name="vP1Height1"]').val();
+                var VP1Height1 = formValues.Leaf1VPHeight1;
                 if (VP1Height1 == "") {
                     VP1Height1 = 0;
                 } else {
@@ -7827,11 +7832,6 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                 TotalHeightOfVisionPanelForLeftLeaf = parseFloat(TotalHeightOfVisionPanelForLeftLeaf) + parseFloat(DistanceBetweenVPsForLeaf1) + parseFloat(Leaf1VisionPanel5Height);
             }
 
-            // alert(TotalWidthOfVisionPanelForLeftLeaf + "-" + LeafWidth1ForMap + "-" + TotalHeightOfVisionPanelForLeftLeaf + "-" + LeafHeightNoOPForMap);
-
-            //console.log(RemainingWidthOfVisionPanelForLeftLeaf+ '--' +DistanceFromTheEdgeOfDoorForLeaf1ToShow);
-            // console.log(LeafWidth1 + '--' + DistanceFromTheEdgeOfDoorMinValue + '--' + Leaf1VisionPanelWidthToShow);
-
             if (RemainingWidthOfVisionPanelForLeftLeaf < DistanceFromTheEdgeOfDoorMinValue) {
 
                 if (VisionPanelShape == "Rectangle") {
@@ -7850,17 +7850,12 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     DistanceFromTheEdgeOfDoorForLeaf1 = DistanceFromTheEdgeOfDoorMinValue / 5;
 
                     $('input[name="distanceFromTheEdgeOfDoor"]').val(DistanceFromTheEdgeOfDoorMinValue);
-
-                    // var NewLeaf1VisionPanelWidth = LeafWidth1 - (parseFloat(DistanceFromTheEdgeOfDoorForLeaf1ToShow) * 2);
-                    // Leaf1VisionPanelWidth = NewLeaf1VisionPanelWidth/5;
-                    // Leaf1VisionPanelWidthToShow = NewLeaf1VisionPanelWidth;
-                    // $("#vP1Width").val(NewLeaf1VisionPanelWidth);
                 } else {
                     //swal('Warning!',"Distance of vision panel from left edge should not be less than the distance from right edge.");
                 }
             }
 
-            // console.log(TotalHeightOfVisionPanelForLeftLeaf + '--' + RemainingHeightOfLeaf);
+            // // console.log(TotalHeightOfVisionPanelForLeftLeaf + '--' + RemainingHeightOfLeaf);
 
             if (TotalHeightOfVisionPanelForLeftLeaf >= RemainingHeightOfLeaf) {
 
@@ -7878,10 +7873,10 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
                 var NewLeaf1VisionPanelHeight = (LeafHeightNoOP - ((KickPlatesHeight * 5) + 3)) - ((parseFloat(DistanceFromTopOfDoorForLeaf1ToShow) * 2) + (parseFloat(DistanceBetweenVPsForLeaf1ToShow) * NumberOfVps));
                 //alert(NewLeaf1VisionPanelHeight);
-                // console.log(NewLeaf1VisionPanelHeight);
+                // // console.log(NewLeaf1VisionPanelHeight);
                 NewLeaf1VisionPanelHeight = Math.floor(NewLeaf1VisionPanelHeight / VisionPanelQuantityForLeaf1);
 
-                // console.log(NewLeaf1VisionPanelHeight);
+                // // console.log(NewLeaf1VisionPanelHeight);
 
                 if (KickPlatesHeight > 0) {
                     NewLeaf1VisionPanelHeight = NewLeaf1VisionPanelHeight - 3;
@@ -7904,9 +7899,6 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     Leaf1VisionPanelWidthToShow = NewLeaf1VisionPanelHeight;
                     $("#vP1Width").val(NewLeaf1VisionPanelHeight);
                 }
-
-                // console.log(NewLeaf1VisionPanelHeight);
-                //alert(NewLeaf1VisionPanelHeight);
 
                 Leaf1VisionPanel1Height = NewLeaf1VisionPanelHeight / 5;
                 Leaf1VisionPanel1HeightToShow = NewLeaf1VisionPanelHeight;
@@ -7935,56 +7927,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     Leaf1VisionPanel5HeightToShow = NewLeaf1VisionPanelHeight;
                     $("#vP1Height5").val(NewLeaf1VisionPanelHeight);
                 }
-                //}
-                //else if(VisionPanelShape == "Rectangle"){
-                //    if(VisionPanelQuantityForLeaf1 == 2){
-                //        Leaf1VisionPanel2Height = 0;
-                //        Leaf1VisionPanel2HeightToShow = 0;
-                //        $("#vP1Height2").val(0);
-                //    }else if(VisionPanelQuantityForLeaf1 > 1){
-                //        if(ChangedFieldName == "vP1Height2"){
-                //            Leaf1VisionPanel2Height = 0;
-                //            Leaf1VisionPanel2HeightToShow = 0;
-                //            $("#vP1Height2").val(0);
-                //        }
-                //    }
-                //
-                //    if(VisionPanelQuantityForLeaf1 == 3){
-                //        Leaf1VisionPanel3Height = 0;
-                //        Leaf1VisionPanel3HeightToShow = 0;
-                //        $("#vP1Height3").val(0);
-                //    }else if(VisionPanelQuantityForLeaf1 > 2){
-                //        if(ChangedFieldName == "vP1Height3"){
-                //            Leaf1VisionPanel3Height = 0;
-                //            Leaf1VisionPanel3HeightToShow = 0;
-                //            $("#vP1Height3").val(0);
-                //        }
-                //    }
-                //
-                //    if(VisionPanelQuantityForLeaf1 == 4){
-                //        Leaf1VisionPanel4Height = 0;
-                //        Leaf1VisionPanel4HeightToShow = 0;
-                //        $("#vP1Height4").val(0);
-                //    }else if(VisionPanelQuantityForLeaf1 > 3){
-                //        if(ChangedFieldName == "vP1Height4"){
-                //            Leaf1VisionPanel4Height = 0;
-                //            Leaf1VisionPanel4HeightToShow = 0;
-                //            $("#vP1Height4").val(0);
-                //        }
-                //    }
-                //
-                //    if(VisionPanelQuantityForLeaf1 == 5){
-                //        Leaf1VisionPanel5Height = 0;
-                //        Leaf1VisionPanel5HeightToShow = 0;
-                //        $("#vP1Height5").val(0);
-                //    }else if(VisionPanelQuantityForLeaf1 > 4){
-                //        if(ChangedFieldName == "vP1Height5"){
-                //            Leaf1VisionPanel5Height = 0;
-                //            Leaf1VisionPanel5HeightToShow = 0;
-                //            $("#vP1Height5").val(0);
-                //        }
-                //    }
-                //}
+
 
                 if (ChangedFieldName == "distanceFromTheEdgeOfDoor") {
                     swal('Warning!', "Entered distance from the edge of door of left leaf exceeds the width of left leaf.");
@@ -8054,9 +7997,10 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     .attr('width', Leaf1VisionPanelWidth)
                     .attr('height', Leaf1VisionPanel1Height)
                     .attr('stroke', 'black')
-                    .attr('fill', '#fff');
+                    .attr('fill', 'red');
             }
 
+            console.log(DistanceXForLeaf1VPShape,DistanceYForLeaf1VPShape,Leaf1VisionPanelWidth,Leaf1VisionPanel1Height)
             if (Leaf1VisionPanel1Height && Leaf1VisionPanelWidth) {
                 /* Horizontal Line for vision panel */
                 if (ShowMeasurements) {
@@ -8371,7 +8315,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                         const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                         const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                         const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                        // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
 
                         if (VisionPanelQuantityForLeaf1 == 1) {
                             svg.append('line')
@@ -8507,7 +8451,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                         const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                         const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                         const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                        // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
 
                         if (VisionPanelQuantityForLeaf1 == 1) {
                             svg.append('line')
@@ -8545,7 +8489,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             .attr("fill", "#fff")
                             .style("stroke", "black")
                             .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log("2609", Leaf1VisionPanel1Height)
+                        // // console.log("2609", Leaf1VisionPanel1Height)
                     } else if (VisionPanelShape == "Circle") {
                         svg.append("circle")
                             .style("stroke", "black")
@@ -8562,7 +8506,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             .attr('stroke', 'black')
                             .attr('fill', '#fff');
                     }
-
+                    console.log(ShowMeasurements)
                     if (ShowMeasurements) {
 
                         /* Vertical Line for vision panel */
@@ -8616,7 +8560,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -8666,7 +8610,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 .attr("marker-end", "url(#arrowRight)");
 
                                 const here=$('input[name="vP1Height2"]').val()
-                        console.log(here,$('input[name="vP1Height2"]').val(),'kkkkkkkkkkkkk')
+                        // console.log(here,$('input[name="vP1Height2"]').val(),'kkkkkkkkkkkkk')
                         svg.append("text")            // append text
                         .style("fill", "black")      // set text color
                         .style("writing-mode", WritingMode) // set the writing mode
@@ -8693,7 +8637,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -8795,7 +8739,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -8861,7 +8805,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -8898,7 +8842,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             .attr("fill", "#fff")
                             .style("stroke", "black")
                             .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log("2850")
+                        // // console.log("2850")
                     } else if (VisionPanelShape == "Circle") {
                         svg.append("circle")
                             .style("stroke", "black")
@@ -8967,7 +8911,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -9033,7 +8977,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -9070,7 +9014,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             .attr("fill", "#fff")
                             .style("stroke", "black")
                             .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log(DistanceXForLeaf1VPShape, "DistanceXForLeaf1VPShape 2960")
+                        // // console.log(DistanceXForLeaf1VPShape, "DistanceXForLeaf1VPShape 2960")
                     } else if (VisionPanelShape == "Circle") {
                         svg.append("circle")
                             .style("stroke", "black")
@@ -9175,7 +9119,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -9241,7 +9185,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                                 const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
                                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
                                 svg.append('line')
                                     .style("stroke", "black")
                                     .style("stroke-width", 0.5)
@@ -9297,7 +9241,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
         if (DoorSetType == "DD") {
 
-            var Leaf2VisionPanel = $('select[name="leaf2VisionPanel"]').val();
+            var Leaf2VisionPanel = formValues.Leaf2VisionPanel
             if (Leaf2VisionPanel == "Yes") {
 
                 if (AreVPsEqualSizesForLeaf2 == "Yes") {
@@ -9313,7 +9257,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                 var DistanceFromTopOfDoorMinValueforLeaf2 = parseFloat($('input[name="distanceFromTopOfDoorforLeaf2"]').attr("min"));
                 var DistanceFromTheEdgeOfDoorMinValueforLeaf2 = parseFloat($('input[name="distanceFromTheEdgeOfDoorforLeaf2"]').attr("min"));
 
-                var VPSameAsLeaf1 = $('select[name="vpSameAsLeaf1"]').val();
+                var VPSameAsLeaf1 = formValues.sVPSameAsLeaf1;
                 if (VPSameAsLeaf1 != "Yes") {
 
 
@@ -9337,7 +9281,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                         }
                     }
 
-                    Leaf2VisionPanelWidth = $('input[name="vP2Width"]').val();
+                    Leaf2VisionPanelWidth = formValues.Leaf2VPWidth;
                     if (Leaf2VisionPanelWidth == "") {
                         Leaf2VisionPanelWidth = 0;
                     } else {
@@ -9347,8 +9291,8 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                         }
                     }
 
-                    AreVPsEqualSizesForLeaf2 = $('select[name="AreVPsEqualSizesForLeaf2"]').val();
-                    VisionPanelQuantityForLeaf2 = $('select[name="visionPanelQuantityforLeaf2"]').val();
+                    AreVPsEqualSizesForLeaf2 = formValues.AreVPsEqualSizesForLeaf2;
+                    VisionPanelQuantityForLeaf2 = formValues.Leaf2VisionPanelQuantity;
                     if (VisionPanelQuantityForLeaf2 == "") {
                         VisionPanelQuantityForLeaf2 = 1;
                     } else {
@@ -9447,7 +9391,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
                     if (AreVPsEqualSizesForLeaf2 == "No") {
 
-                        Leaf2VisionPanel1Height = $('input[name="vP2Height1"]').val();
+                        Leaf2VisionPanel1Height = formValues.Leaf2VPHeight1;
                         if (Leaf2VisionPanel1Height == "") {
                             Leaf2VisionPanel1Height = 0;
                         } else {
@@ -9457,7 +9401,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             }
                         }
 
-                        Leaf2VisionPanel2Height = $('input[name="vP2Height2"]').val();
+                        Leaf2VisionPanel2Height = formValues.Leaf2VPHeight2;
                         if (Leaf2VisionPanel2Height == "") {
                             Leaf2VisionPanel2Height = 0;
                         } else {
@@ -9467,7 +9411,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             }
                         }
 
-                        Leaf2VisionPanel3Height = $('input[name="vP2Height3"]').val();
+                        Leaf2VisionPanel3Height = formValues.Leaf2VPHeight3;
                         if (Leaf2VisionPanel3Height == "") {
                             Leaf2VisionPanel3Height = 0;
                         } else {
@@ -9477,7 +9421,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             }
                         }
 
-                        Leaf2VisionPanel4Height = $('input[name="vP2Height4"]').val();
+                        Leaf2VisionPanel4Height = formValues.Leaf2VPHeight4;
                         if (Leaf2VisionPanel4Height == "") {
                             Leaf2VisionPanel4Height = 0;
                         } else {
@@ -9487,7 +9431,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             }
                         }
 
-                        Leaf2VisionPanel5Height = $('input[name="vP2Height5"]').val();
+                        Leaf2VisionPanel5Height = formValues.Leaf2VPHeight5;
                         if (Leaf2VisionPanel5Height == "") {
                             Leaf2VisionPanel5Height = 0;
                         } else {
@@ -9499,7 +9443,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
                     } else {
 
-                        var VP2Height1 = $('input[name="vP2Height1"]').val();
+                        var VP2Height1 = formValues.Leaf2VPHeight1;
                         if (VP2Height1 == "") {
                             VP2Height1 = 0;
                         } else {
@@ -9606,7 +9550,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     TotalHeightOfVisionPanelForRightLeaf = parseFloat(TotalHeightOfVisionPanelForRightLeaf) + parseFloat(DistanceBetweenVPsForLeaf2) + parseFloat(Leaf2VisionPanel5Height);
                 }
 
-                // console.log(RemainingWidthOfVisionPanelForRightLeaf + "--" + DistanceFromTheEdgeOfDoorMinValueforLeaf2);
+                // // console.log(RemainingWidthOfVisionPanelForRightLeaf + "--" + DistanceFromTheEdgeOfDoorMinValueforLeaf2);
 
                 if (RemainingWidthOfVisionPanelForRightLeaf < DistanceFromTheEdgeOfDoorMinValueforLeaf2) {
 
@@ -9864,7 +9808,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                             .attr("fill", "#fff")
                             .style("stroke", "black")
                             .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
-                        // console.log(DistanceXForLeaf2VPShape, "DistanceXForLeaf2VPShape")
+                        // // console.log(DistanceXForLeaf2VPShape, "DistanceXForLeaf2VPShape")
                     } else if (VisionPanelShape == "Circle") {
                         svg.append("circle")
                             .style("stroke", "black")
@@ -10190,7 +10134,8 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
 
             if(IsOverPanelActive != "" && IsOverPanelActive != "No"){
-                var THeight = FrameHeight + OverPanelHeightToShow + FrameThickness;
+                var THeight = Number(FrameHeight) + Number(OverPanelHeightToShow) + Number(FrameThickness);
+                console.log(THeight)
                 if(THeight >= 2950){
                     swal('.','The overall height of the door and fanlight exceeds 2950 mm')
                 }
@@ -10205,6 +10150,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     .attr("y2", iy + FrameHeightForMap + OverPanelHeight)
                     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                     .attr("marker-end", "url(#arrowRight)")
+                    console.log(FrameHeightForMap , OverPanelHeight)
 
                 svg.append("text") // append text
                     .style("fill", "black") // make the text black
@@ -10212,8 +10158,8 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + (FrameHeightForMap / 2)) // set y position
                     .attr("font-size", 10)
                     .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 123}, ${iy + (TopFrameHeight - FrameThicknessForMap) + (FrameHeightForMap / 2)})`) // rotate 45 degrees
-                    .text(FrameHeight + OverPanelHeightToShow); // define the text to display
-
+                    .text(Number(FrameHeight) + Number(OverPanelHeightToShow)); // define the text to display
+                    console.log(FrameHeight,OverPanelHeightToShow)
 
                 svg.append('line')
                     .style("stroke", "black")
@@ -10330,7 +10276,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                 if (IsLeverHandlesEnable ) {
 
 
-                    // console.log(LeafWidth2ForMap,LeafWidth1ForMap,'width.............................')
+                    // // console.log(LeafWidth2ForMap,LeafWidth1ForMap,'width.............................')
                     if(LeafWidth2ForMap<LeafWidth1ForMap){
                         svg.append("circle")
                                             .style("stroke", "black")
@@ -10424,7 +10370,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
         }
 
         // d3.select("svg").remove();
-        // console.log(d3.select('svg').node())
+        // // console.log(d3.select('svg').node())
         // var svgData = d3.select('svg').node();
         // //get svg source.
         // var serializer = new XMLSerializer();
@@ -10466,9 +10412,11 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
             // Convert to base64
             var encodedData = "data:image/svg+xml;base64," + window.btoa(source);
-            // console.log("✅ Correct SVG Data:", source); // Should look like full SVG
-            run(encodedData,formValues);  // or $('input[name="SvgImage"]').val(encodedData);
-        }, 1000);
+
+            // 🔁 Call run with the correct item (formValues)
+            run(encodedData, formValues);
+
+    }, 500);
 
 
 
@@ -10618,7 +10566,7 @@ function saveCadImage(pngSrc, item) {
         });
         return false;
     }
-    console.log(leafWidth1,calculationOfLeafHeight)
+    // console.log(leafWidth1,calculationOfLeafHeight)
         $.ajax({
             url: $('#store2').val(),
             type: 'POST',
