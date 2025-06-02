@@ -212,29 +212,32 @@ function corewidth1Value(){
     var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - lipping_thickness;
     console.log(oPHeigth,gap,OpBeadThickness,lipping_thickness,calculateHeight);
     var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
+    var adjustmentLeafWidth1 = parseInt($('input[name="adjustmentLeafWidth1"]').val(), 10) || 0;
+    var adjustmentLeafWidth2 = parseInt($('input[name="adjustmentLeafWidth2"]').val(), 10) || 0;
 
     if(checkdoorsetType == 'leaf_and_a_half'){
+        if((adjustmentLeafHeightNoOP != 0)){
+            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
+            $("#coreHeight").val(calculateCoreHeight);
+        }
+
         if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
             var calculate = leafWidth1 - (1 * lipping_thickness);
             var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
             $("#coreWidth1").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
 
-        } else if ($("#adjustmentLeafWidth1").val()) {
+        }else if ($("#adjustmentLeafWidth1").val()) {
             var calculate = leafWidth1 - (1 * lipping_thickness);
             var calculateCoreWidth2 = leafWidth2;
             $("#coreWidth1").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
-
         } else if ($("#adjustmentLeafWidth2").val()) {
             var calculate = leafWidth1;
             var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
             $("#coreWidth1").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
-        } else if((adjustmentLeafHeightNoOP != 0)){
-            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
-            $("#coreHeight").val(calculateCoreHeight);
-        }else {
+        }  else {
             if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
                  $("#coreWidth1").val('');
                  $("#coreWidth2").val('');
@@ -245,7 +248,7 @@ function corewidth1Value(){
         var calculate = leafWidth1 - (1 * lipping_thickness);
         var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
         if (checkdoorsetType == 'DD') {
-            $("#coreWidth2").val(calculateCoreWidth2);
+            $("#coreWidth2").val(calculate);
         }
         $("#coreWidth1").val(calculate);
         var adjustmentLeafWidth1 = parseInt($('input[name="adjustmentLeafWidth1"]').val(), 10) || 0;
@@ -267,21 +270,26 @@ function corewidth1Value(){
             $("#coreWidth2").val('');
         }else{
             if (checkdoorsetType == 'DD') {
-                $("#coreWidth2").val(calculateCoreWidth2);
+                $("#coreWidth2").val(calculate);
             }
         }
     }
 
-    var calculate = leafWidth1 - (1 * lipping_thickness);
+
     if($("#overpanel").val() === 'Overpanel'){
-        $("#opCoreWidth").val(calculate);
+        if(checkdoorsetType == 'leaf_and_a_half' || checkdoorsetType == 'DD'){
+            var calculate = leafWidth1 + leafWidth2 + gap;
+            $("#opCoreWidth").val(calculate);
+        }else{
+            var calculate = leafWidth1 - (1 * lipping_thickness);
+            $("#opCoreWidth").val(calculate);
+        }
         $("#opCoreHeight").val(calculateHeight);
     } else {
         $("#opCoreHeight").val('');
         $("#opCoreWidth").val('');
     }
     // $("#coreHeight").val(calculateCoreHeight);
-
 }
 
 $("#doorLeafFacing").change(function () {

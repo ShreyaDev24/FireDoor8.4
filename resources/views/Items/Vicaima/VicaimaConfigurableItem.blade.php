@@ -1242,6 +1242,11 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     FramePrice('overpanel3');
     @endif
 
+    @if(isset($Item['Overpanel']))
+    corewidth1Value();
+    @endif
+
+
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
     sideLight1Change();
     doorLeafFacingPrice('sideLight1',"{{$Item['SideLight1']}}");
