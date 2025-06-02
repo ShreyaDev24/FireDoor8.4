@@ -7997,7 +7997,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                     .attr('width', Leaf1VisionPanelWidth)
                     .attr('height', Leaf1VisionPanel1Height)
                     .attr('stroke', 'black')
-                    .attr('fill', 'red');
+                    .attr('fill', '#fff');
             }
 
             console.log(DistanceXForLeaf1VPShape,DistanceYForLeaf1VPShape,Leaf1VisionPanelWidth,Leaf1VisionPanel1Height)
