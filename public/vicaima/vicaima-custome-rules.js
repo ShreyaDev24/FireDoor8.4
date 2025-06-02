@@ -217,7 +217,7 @@ function corewidth1Value(){
 
     if(checkdoorsetType == 'leaf_and_a_half'){
         if((adjustmentLeafHeightNoOP != 0)){
-            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
+            var calculateCoreHeight = leafHeight - lipping_thickness;
             $("#coreHeight").val(calculateCoreHeight);
         }
 
@@ -263,7 +263,7 @@ function corewidth1Value(){
         if((adjustmentLeafHeightNoOP == 0)){
             $("#coreHeight").val('');
         }else{
-            var calculateCoreHeight = oPHeigth - OpBeadThickness - OpBeadThickness - gap - gap;
+            var calculateCoreHeight = leafHeight - lipping_thickness;
             $("#coreHeight").val(calculateCoreHeight);
         }
         if((adjustmentLeafWidth2 == 0)){
