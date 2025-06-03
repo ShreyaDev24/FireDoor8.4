@@ -73,6 +73,7 @@ function swingTypeFrameType(){
         $('#foursidedframe').prop('disabled', false);
     }
     framTypeChangeInputEnableDisable();
+    frameThicknessChange();
 }
 
 

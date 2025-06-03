@@ -85,8 +85,20 @@ function pageIdentity(){
         }else{
             $("#frameThickness").removeAttr('min');
         }
-        var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        if($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD30s'){
+            let framTypeValue = $('#frameType').val();
+            if (framTypeValue == "Plant_on_Stop" || framTypeValue == "Rebated_Frame") {
+                $("#frameThickness").attr('min','30');
+            }else{
+                if($("#swingType").val() == "SA"){
+                    $("#frameThickness").attr('min','32');
+                }else if($("#swingType").val() == "DA"){
+                    $("#frameThickness").attr('min','37');
+                }
+            }
+        }
+
+        checkAndSetBOM("#frameThickness");
     }
 
     $(document).on('change','#latchType',function(e){
