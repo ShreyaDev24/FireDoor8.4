@@ -791,6 +791,7 @@ $(document).ready(function() {
 
             $("#ScallopedWidth").attr('min', newMin);
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+            $("#ScallopedHeight").attr({'min':2,'max':6});
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
 
