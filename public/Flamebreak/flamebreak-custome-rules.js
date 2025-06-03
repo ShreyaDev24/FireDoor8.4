@@ -776,8 +776,18 @@ $(document).ready(function() {
             FramePrice('Plant_on_Stop');
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            newMin = 32;
-            $("#ScallopedWidth").attr('min', '32');
+           if(value == 'NFR'){
+                $("#ScallopedWidth").attr('min', '35');
+                newMin = 35;
+            }
+            if(value == 'FD30'){
+                $("#ScallopedWidth").attr('min', '44');
+                newMin = 44;
+            }
+            if(value == 'FD60'){
+                $("#ScallopedWidth").attr('min', '54');
+                newMin = 54;
+            }
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
             // $("#ScallopedHeight").attr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });

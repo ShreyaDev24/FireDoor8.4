@@ -773,7 +773,18 @@ $(document).ready(function() {
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            newMin = 15;
+            if(value == 'NFR'){
+                $("#ScallopedWidth").attr('min', '35');
+                newMin = 35;
+            }
+            if(value == 'FD30'){
+                $("#ScallopedWidth").attr('min', '44');
+                newMin = 44;
+            }
+            if(value == 'FD60'){
+                $("#ScallopedWidth").attr('min', '54');
+                newMin = 54;
+            }
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
             $("#ScallopedWidth").attr('min', '15');
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
