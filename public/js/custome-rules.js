@@ -788,10 +788,17 @@ $(document).ready(function() {
             }
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
-            let newMin;
-            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
-                $("#ScallopedWidth").attr('min', '32');
-                newMin = 32;
+            if(value == 'NFR'){
+                $("#ScallopedWidth").attr('min', '35');
+                newMin = 35;
+            }
+            if(value == 'FD30'){
+                $("#ScallopedWidth").attr('min', '44');
+                newMin = 44;
+            }
+            if(value == 'FD60'){
+                $("#ScallopedWidth").attr('min', '54');
+                newMin = 54;
             }
             // $("#ScallopedHeight").attr('max', '5');
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
