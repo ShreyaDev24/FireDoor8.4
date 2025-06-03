@@ -76,21 +76,30 @@ function pageIdentity(){
     });
 
    function frameThicknessChange(){
+        let newmin = 0;
         if($("#fireRating").val() != "NFR"){
             if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
-                $("#frameThickness").attr('min','28');
+                newmin = '28';
+                $("#frameThickness").attr('min',newmin);
             }
             if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
-                $("#frameThickness").attr('min','32');
+                newmin = '32';
+                $("#frameThickness").attr('min',newmin);
             }
             if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','40');
+                newmin = '40';
+               $("#frameThickness").attr('min',newmin);
+                if($("#frameThickness").val() < 40){
+                    $("#frameThickness").val('');
+                     $('#frameThickness').css({ 'border': '1px solid red' });
+                }
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
         var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        SetBuildOfMaterial(identifier);
+        swal('Warning', 'FrameThickness should not be less than' +newmin+ 'mm');
+        // SetBuildOfMaterial(identifier);
     }
 
     $(document).on('change','#latchType',function(e){
