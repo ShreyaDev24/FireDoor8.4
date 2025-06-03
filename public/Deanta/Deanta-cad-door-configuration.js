@@ -5344,7 +5344,7 @@ else if (swingType != 'DA' && frameonoff) {
 
       var DistanceOfDoorSinageFromTop = 1800 / 5;
 
-      if (IsDoorSinageEnable && DoorSetType == "SD") {
+   if (IsDoorSinageEnable && DoorSetType == "SD") {
           if (LeafWidth1ForMap > 32) {
 
               if (DoorSignageCentered == 1) {
@@ -5487,9 +5487,9 @@ else if (swingType != 'DA' && frameonoff) {
                       svg.append("text")            // append text
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
-                          .attr("x", ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10))    // set x position
+                          .attr("x", ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) + 5)    // set x position
                           .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25})`) // rotate
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25})`) // rotate
                           .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
                   } else {
 
@@ -5548,8 +5548,8 @@ else if (swingType != 'DA' && frameonoff) {
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
                           .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10))    // set x position
-                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) + 5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25})`) // rotate
+                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) + 5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
                           .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
                   }
               }
