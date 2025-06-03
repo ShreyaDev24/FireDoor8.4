@@ -928,8 +928,12 @@ $(document).on('click', '#submit', function(e) {
         } else {
             $("#Handing").attr({ 'disabled': false, "required": false });
         }
+        let doorsetType1 = $("#doorsetType").val();
+        let swingType1 = $("#swingType").val();
         let latchType = $('#latchType').val();
-        if(latchType === ""){
+        if((doorsetType1 == 'SD' && swingType1 == 'DA') && latchType === "" || (doorsetType1 == 'DD' && swingType1 == 'DA') && latchType === ""){
+            $("#latchType").attr({ 'disabled': true, "required": false });
+        } else if(latchType === ""){
             $("#latchType").attr({ 'disabled': false, "required": true });
         } else{
             $("#latchType").attr({ 'disabled': false, "required": false });
