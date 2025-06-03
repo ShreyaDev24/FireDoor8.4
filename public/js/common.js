@@ -65,7 +65,8 @@ function swingTypeFrameType(){
         // Refresh Select2 UI
         $("#frameType").trigger("change");
     }else if($("#swingType").val() == 'SA'){
-        $("select[name=frameType]").val('Plant_on_Stop').trigger("change");
+        let frameType = $("#frametypevalue").val();
+        $("select[name=frameType]").val(frameType).trigger("change");
         $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
         $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
         $("#frameType option[value='Scalloped']").prop("disabled", true);

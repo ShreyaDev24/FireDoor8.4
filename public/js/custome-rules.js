@@ -750,6 +750,11 @@ $(document).ready(function() {
             $("#plantonStopHeight").attr('min', '12');
             $("#plantonStopWidth").attr('min', '20');
             $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
+             if(value == 'FD30' || value == 'FD30s'){
+                $("#plantonStopWidth").attr('min', '28');
+                newMin = 28;
+                $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
+            }
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
 
@@ -765,6 +770,10 @@ $(document).ready(function() {
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
+            if($("#plantonStopWidth").val() == 0 || $("#plantonStopHeight").val() == 0){
+                $("#plantonStopWidth").val('');
+                $("#plantonStopHeight").val('');
+            }
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
             let newMin;
@@ -789,6 +798,10 @@ $(document).ready(function() {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
+            if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
+                $("#ScallopedWidth").val('');
+                $("#ScallopedHeight").val('');
+            }
             $("#frameTypeDimensions").val('').attr('readonly', false);
 
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
@@ -821,6 +834,11 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+
+            if($("#rebatedWidth").val() == 0 || $("#rebatedHeight").val() == 0){
+                $("#rebatedWidth").val('');
+                $("#rebatedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
@@ -1892,8 +1910,8 @@ function copyOfSideLite1Change(isstatus = false){
         let framTypeValue = $('#frameType').val();
         // if (framTypeValue == "Plant_on_Stop") {
             if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#plantonStopWidth").attr('min', '26');
                 $("#plantonStopWidthText").text('(min 26)');
