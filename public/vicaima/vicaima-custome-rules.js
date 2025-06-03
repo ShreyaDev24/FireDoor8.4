@@ -219,11 +219,13 @@ function corewidth1Value(){
         if((adjustmentLeafHeightNoOP != 0)){
             var calculateCoreHeight = leafHeight - lipping_thickness;
             $("#coreHeight").val(calculateCoreHeight);
+        }else{
+            $("#coreHeight").val('');
         }
 
         if ($("#adjustmentLeafWidth1").val() && $("#adjustmentLeafWidth2").val()) {
             var calculate = leafWidth1 - (1 * lipping_thickness);
-            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2 - lipping_thickness;
             $("#coreWidth1").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
 
@@ -234,14 +236,13 @@ function corewidth1Value(){
             $("#coreWidth2").val(calculateCoreWidth2);
         } else if ($("#adjustmentLeafWidth2").val()) {
             var calculate = leafWidth1;
-            var calculateCoreWidth2 = leafWidth2 - (LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
+            var calculateCoreWidth2 = leafWidth2 - lipping_thickness;
             $("#coreWidth1").val(calculate);
             $("#coreWidth2").val(calculateCoreWidth2);
         }  else {
             if($("#overpanel").val() == 'Overpanel' && ($("#adjustmentLeafWidth2").val() == '') || ($("#adjustmentLeafWidth1").val() == '')){
                  $("#coreWidth1").val('');
                  $("#coreWidth2").val('');
-                 $("#coreHeight").val('');
             }
         }
     } else {
