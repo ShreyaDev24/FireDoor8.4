@@ -803,7 +803,7 @@ $(document).ready(function() {
                 $("#rebatedWidth").attr('min', '44');
                 newMin = 44;
             }
-            if(value == 'FD60' || value == 'FD30s'){
+            if(value == 'FD60' || value == 'FD60s'){
                 $("#rebatedWidth").attr('min', '54');
                 newMin = 54;
             }
