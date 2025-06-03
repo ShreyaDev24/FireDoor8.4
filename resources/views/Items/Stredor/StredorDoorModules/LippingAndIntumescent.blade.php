@@ -189,6 +189,32 @@
                                 class="form-control coreWidth1" value="@if(isset($Item['CoreHeight'])){{$Item['CoreHeight']}}@endif">
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="coreWidth1">OP Core Width
+                            @if(!empty($tooltip->opCoreWidth))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->opCoreWidth}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input type="number" min="1" readonly id="opCoreWidth" name="opCoreWidth"
+                                class="form-control coreWidth1" value="@if(isset($Item['OPCoreWidth'])){['OPCoreWidth']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="coreHeight">OP Core Height
+                            @if(!empty($tooltip->opCoreHeight))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->opCoreHeight}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input type="number" min="1" readonly id="opCoreHeight" name="opCoreHeight"
+                                class="form-control coreWidth1" value="@if(isset($Item['OPCoreHeight']))['OPCoreHeight']}}@endif">
+                        </div>
+                 </div>
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">

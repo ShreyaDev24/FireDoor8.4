@@ -275,7 +275,7 @@
                             </label>
                             <label for="gap_NFR" style="display: none;">GAP</label>
                             <input type="number" min="2" max="4" id="gap" name="gap" value="@if(isset($Item["GAP"])){{$Item["GAP"]}}@else{{''}}@endif"
-                                class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration" required>
+                                class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration forcoreWidth1" required>
                         </div>
                     </div>
                     <div class="col-md-6 framehideshow">
