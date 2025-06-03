@@ -93,12 +93,6 @@ function pageIdentity(){
             let framTypeValue = $('#frameType').val();
             if (framTypeValue == "Plant_on_Stop" || framTypeValue == "Rebated_Frame") {
                 $("#frameThickness").attr('min','30');
-            }else{
-                if($("#swingType").val() == "SA"){
-                    $("#frameThickness").attr('min','32');
-                }else if($("#swingType").val() == "DA"){
-                    $("#frameThickness").attr('min','37');
-                }
             }
         }
 
@@ -874,6 +868,7 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+        frameThicknessChange();
     }
 
     $(document).on('change','#frameDepth',function(e){
