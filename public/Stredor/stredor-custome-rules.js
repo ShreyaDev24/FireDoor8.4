@@ -742,12 +742,11 @@ $(document).ready(function() {
         }
         let framTypeValue = $('#frameType').val();
         let value = $('#fireRating').val();
-        let newMin;
         if (framTypeValue == "Plant_on_Stop") {
-            newMin = 15;
-            $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
-            $("#plantonStopWidth").attr('min', '15');
+            let newMin = 20;
             $("#plantonStopHeight").attr('min', '12');
+            $("#plantonStopWidth").attr('min', '20');
+            $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
 
@@ -758,50 +757,51 @@ $(document).ready(function() {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
-            $("#ScallopedWidth").removeAttr('min', '15');
-            // $("#ScallopedHeight").attr('max', '5');
+            $("#ScallopedWidth").removeAttr('min', '32');
+            $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
-
-            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
-            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            newMin = 15;
-            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
-            $("#ScallopedWidth").attr('min', '15');
-            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
+            let newMin;
+            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
+                $("#ScallopedWidth").attr('min', '32');
+                newMin = 32;
+            }
             // $("#ScallopedHeight").attr('max', '5');
+            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
+            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
 
+            $("#plantonStopWidth").removeAttr('min', '20');
+            $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").removeAttr('min', '15');
-            $("#plantonStopHeight").removeAttr('min', '12');
 
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").removeAttr('min', '12');
             $("#rebatedWidth").removeAttr('min', '35');
             $("#rebatedWidth").removeAttr('min', '44');
             $("#rebatedWidth").removeAttr('min', '54');
+            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
+
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
             $("#rebatedHeight").attr('min', '12');
+            let newMin = 32;
             if(value == 'NFR'){
                 $("#rebatedWidth").attr('min', '35');
                 newMin = 35;
             }
-            if(value == 'FD30'){
+            if(value == 'FD30' || value == 'FD30s'){
                 $("#rebatedWidth").attr('min', '44');
                 newMin = 44;
             }
-            if(value == 'FD60'){
+            if(value == 'FD60' || value == 'FD60s'){
                 $("#rebatedWidth").attr('min', '54');
                 newMin = 54;
             }
@@ -811,11 +811,11 @@ $(document).ready(function() {
 
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").removeAttr('min', '15');
+            $("#plantonStopWidth").removeAttr('min', '20');
             $("#plantonStopHeight").removeAttr('min', '12');
 
-            $("#ScallopedWidth").removeAttr('min', '15');
-            // $("#ScallopedHeight").attr('max', '5');
+            $("#ScallopedWidth").removeAttr('min', '32');
+            $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
@@ -824,7 +824,7 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
             // frameprice('Rebated_Frame');
             framewidth();
-        } else {
+        }else {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -841,7 +841,6 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
-
     }
 
     $(document).on('change','#frameDepth',function(e){
@@ -6008,20 +6007,27 @@ function framewidth(){
     var DoorSetType = $('select[name="doorsetType"]').val();
     var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
     var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    // JFDS-952 task old one
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (DoorSetType == "SD"){
+    //         var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
+    //         console.log(
+    //             `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
+    //     }else{
+    //         var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
 
+    //     }
+    //     $("#frameWidth").val(FrameWidth);
+    // }
+    // JFDS-952 task old one end
+    // Below one 987 updated version same for all door set type
+    // Frame Width is calculated SO width -TolleranceX2
     if($("#frameType").val() == 'Rebated_Frame'){
-        if (DoorSetType == "SD"){
-            var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
-            console.log(
-                `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
-              );
-        }else{
-            var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
-              );
-
-        }
+        var FrameWidth = sOWidth - (tollerance * 2);
         $("#frameWidth").val(FrameWidth);
     } else if($("#frameType").val() == 'Scalloped'){
         var FrameWidth = sOWidth - (tollerance * 2);
@@ -6074,7 +6080,25 @@ function frameHeight(){
     var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
+    // JFDS-952 task old one end
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (foursidedframe.checked) {
+    //         var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
+    //         console.log(
+    //         `${leafHeightNoOP} + ((${FrameThickness} - ${rebatedHeight}) * 2) + (${Gap} * 2) = 4 sided reabated frameHeight ${frameHeight}`
+    //         );
 
+    //     }else{
+    //         var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
+    //         );
+    //     }
+
+    //     $("#frameHeight").val(frameHeight);
+    // }
+    // Below one 987 updated version same for all door set type
+    // Frame Height is calculated SO height -ToleranceX1
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
             var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
@@ -6083,10 +6107,8 @@ function frameHeight(){
             );
 
         }else{
-            var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
-            );
+            var frameHeight = soheight - tollerance;
+            console.log( soheight,tollerance,frameHeight);
         }
 
         $("#frameHeight").val(frameHeight);
