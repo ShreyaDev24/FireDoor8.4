@@ -75,18 +75,22 @@ function pageIdentity(){
         frameThicknessChange();
     });
 
-    function frameThicknessChange(){
+   function frameThicknessChange(){
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#frameThickness").attr('min','28');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#frameThickness").attr('min','32');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','37');
+            }
+            if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','40');
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
         var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        SetBuildOfMaterial(identifier);
     }
 
     $(document).on('change','#latchType',function(e){
