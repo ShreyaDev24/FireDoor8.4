@@ -10,67 +10,47 @@
             </div>
             <div>
                 <div class="form-row">
-                    {{--  <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="leafConstruction">Leaf Construction
-                                @if(!empty($tooltip->leafConstruction))
-                                <script type="text/javascript">
-                                // document.write(Tooltip('{{$tooltip->leafConstruction}}'));
-                                </script>
-                                @endif
-                            </label>
-                            <select name="leafConstruction" id="leafConstruction" class="form-control" required>
-                                <option value="">Select any Leaf Construction</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf_construction')
-                                <option value="{{$row->OptionKey}}" @if(isset($Item['LeafConstruction']))
-                                    @if($Item["LeafConstruction"]==$row->OptionKey){{'selected'}} @endif
-                                    @endif>{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>  --}}
                     <div class="col-md-12">
-                        <div class="position-relative form-group d-flex">
-                            <label for="Dropseal">Four Sided Frame</label>
-                            <input type="checkbox" name="FourSidedFrame" id="foursidedframe" class="change-event-calulation form-control custom-checkbox" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['FourSidedFrame']) && $Item['FourSidedFrame'] == 1){{'checked'}}@endif>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="doorType">Door Type
-                                @if(!empty($tooltip->doorType))
-                                <script type="text/javascript">
-                                // document.write(Tooltip('{{$tooltip->doorType}}'));
-                                </script>
-                                @endif
-                            </label>
-                            <input type="text" name="doorType" id="doorType" placeholder="Enter door type"
-                                value="@if(isset($Item['DoorType'])){{$Item['DoorType']}}@else{{''}}@endif"
-                                class="form-control" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                     <div class="position-relative form-group">
-                         <label for="intumescentLeafType">Leaf Type
-                             @if(!empty($tooltip->intumescentLeafType))
-                             <script type="text/javascript">
-                             // document.write(Tooltip('{{$tooltip->intumescentLeafType}}'));
-                             </script>
-                             @endif
-                         </label>
-                         <select name="intumescentLeafType" id="intumescentLeafType" class="form-control intumescentLeafchange" required>
-                             <option value="">Select Leaf Type</option>
-                             @foreach($leafTypeIntumescentseal as $row)
-                                 <option value="{{$row->id}}" @if(isset($Item["IntumescentLeafType"]))
-                                     @if($Item["IntumescentLeafType"]==$row->id){{'selected'}} @endif
-                                     @endif>{{$row->leaf_type_key}} ({{$row->leaf_type_value}})</option>
-                                 @endforeach
-                         </select>
+                         <div class="position-relative form-group d-flex">
+                             <label for="Dropseal">Four Sided Frame</label>
+                             <input type="checkbox" name="FourSidedFrame" id="foursidedframe" class="change-event-calulation form-control custom-checkbox" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['FourSidedFrame']) && $Item['FourSidedFrame'] == 1){{'checked'}}@endif>
+                         </div>
                      </div>
-                 </div>
-                 <div class="col-md-6">
+                     <div class="col-md-6">
+                         <div class="position-relative form-group">
+                             <label for="leafConstruction">Leaf Type</label>
+                             <select name="leafConstruction" id="leafConstruction" class="form-control changeLeaftype" required>
+                                 <option value="">Select any Leaf Construction</option>
+                                 @foreach($species as $row)
+                                 <option value="{{$row->LeafType}}"
+                                     @if(isset($Item['LeafConstruction']))
+                                         @if($Item["LeafConstruction"]==$row->Key)
+                                             {{'selected'}}
+                                         @elseif($Item["LeafConstruction"]!=$row->Key && $Item["LeafConstruction"]==$row->LeafType)
+                                             {{'selected'}}
+                                         @endif
+                                     @endif
+                                 >{{$row->LeafType}}</option>
+                             @endforeach
+
+                             </select>
+                         </div>
+                     </div>
+                     <div class="col-md-6">
+                         <div class="position-relative form-group">
+                             <label for="doorType">Door Type
+                                 @if(!empty($tooltip->doorType))
+                                 <script type="text/javascript">
+                                 // document.write(Tooltip('{{$tooltip->doorType}}'));
+                                 </script>
+                                 @endif
+                             </label>
+                             <input type="text" name="doorType" id="doorType" placeholder="Enter door type"
+                                 value="@if(isset($Item['DoorType'])){{$Item['DoorType']}}@else{{''}}@endif"
+                                 class="form-control" required>
+                         </div>
+                     </div>
+                    <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="fireRating">Fire Rating
                                 @if(!empty($tooltip->fireRating))
@@ -81,13 +61,13 @@
                             </label>
                             <select name="fireRating" id="fireRating" class="form-control change-event-calulation" required>
                                 <option value="">Select fire rating</option>
-                               {{-- @foreach($option_data as $row)
+                                @foreach($option_data as $row)
                                 @if($row->OptionSlug=='fire_rating')
                                 <option value="{{$row->OptionKey}}" @if(isset($Item["FireRating"]))
                                     @if($Item["FireRating"]==$row->OptionKey){{'selected'}} @endif
                                     @endif>{{$row->OptionValue}}</option>
                                 @endif
-                                @endforeach --}}
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -195,30 +175,6 @@
                             </select>
                         </div>
                     </div>
-                    {{-- NO NEED TO ADD COC --}}
-                    {{-- COMMENT DATE 29-11-2023  --}}
-                    {{-- <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="COC">COC
-
-                                @if(!empty($tooltip->COC))
-                                <script type="text/javascript">
-                                // document.write(Tooltip('{{$tooltip->COC}}'));
-                                </script>
-                                @endif
-                            </label>
-                            <select name="COC" id="COC" class="form-control" required>
-                                <option value="">Select COC</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='COC')
-                                <option value="{{$row->OptionKey}}" @if(!empty($Item['COC']))
-                                    @if($Item['COC']==$row->OptionKey) {{'selected'}} @endif
-                                    @endif>{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> --}}
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="tollerance">Tollerance
@@ -228,7 +184,7 @@
                                 </script>
                                 @endif
                             </label>
-                            <input required type="number" min="0" max="20" step="any" id="tollerance" value="@if(isset($Item["Tollerance"])){{$Item["Tollerance"]}}@else{{''}}@endif" name="tollerance"
+                            <input required type="number" min="0" max="20" id="tollerance" value="@if(isset($Item["Tollerance"])){{$Item["Tollerance"]}}@else{{''}}@endif" name="tollerance"
                                 class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration" required>
                         </div>
                     </div>
@@ -259,7 +215,7 @@
                                 // document.write(Tooltip('{{$tooltip->floorFinish}}'));
                                 </script>
                                 @endif
-                             </label>
+                            </label>
                             <input type="number" id="floorFinish" name="floorFinish" value="@if(isset($Item["FloorFinish"])){{$Item["FloorFinish"]}}@else{{''}}@endif"
                                 class="form-control change-event-calulation forundercut door-configuration" required>
                         </div>
@@ -287,17 +243,8 @@
                                 </script>
                                 @endif
                             </label>
-                            {{-- <select name="frameThickness"
-                                class="form-control change-event-calulation door-configuration" id="frameThickness" required>
-                                <option value="" @if(isset($Item["FrameThickness"])) @if($Item["FrameThickness"]==""
-                                    ) {{'selected'}} @endif @endif>Select Frame thickness</option>
-                                <option value="30" @if(isset($Item["FrameThickness"]))
-                                    @if($Item["FrameThickness"]=="30" ) {{'selected'}} @endif @endif>30</option>
-                                <option value="32" @if(isset($Item["FrameThickness"]))
-                                    @if($Item["FrameThickness"]=="32" ) {{'selected'}} @endif @endif>32</option>
-                            </select> --}}
                             <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($Item["FrameThickness"])){{$Item["FrameThickness"]}}@else{{''}}@endif"
-                                class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                                class="form-control change-event-calulation door-configuration" required maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -347,6 +294,3 @@
         </div>
     </div>
 </div>
-
-<input type="hidden" id="currentLeafType" value="{{ isset($Item['IntumescentLeafType']) ? $Item['IntumescentLeafType'] : '' }}">
-<input type="hidden" id="currentFireRating" value="{{ isset($Item['FireRating']) ? $Item['FireRating'] : '' }}">

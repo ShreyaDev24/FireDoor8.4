@@ -16,7 +16,7 @@
                             </script>
                             @endif
                             </label>
-                            <select name="sideLight1" id="sideLight1" class="form-control door-configuration" required>
+                            <select name="sideLight1" id="sideLight1" class="form-control door-configuration">
                                 <option value=""> Is side light 1 is active?</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='SideLight1')
@@ -35,37 +35,6 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="SL1Height" readonly>SL1 Height
-                            @if(!empty($tooltip->SL1Height))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL1Height}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL1Height" @if(empty($Item['SL1Height'])){{'readonly'}}@endif id="SL1Height" class="form-control door-configuration"
-                                type="text" value="@if(isset($Item['SL1Height'])){{$Item['SL1Height']}}@endif">
-                        </div>
-                    </div>
-
-
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="opGlassInopGlassIntegritytegrity">Side Light 1 Glass
-                                Integrity
-                            @if(!empty($tooltip->SL1GlassIntegrity))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL1GlassIntegrity}}'));
-                            </script>
-                            @endif
-                                </label>
-                            <select name="SL1GlassIntegrity" @if(empty($Item['SL1GlassIntegrity'])){{'disabled'}}@endif
-                                id="SL1GlassIntegrity" class="form-control">
-                                <option value=''> Select Side Light 1 Glass Integrity</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
                             <label for="sideLight1GlassType">Side Light 1 Glass Type
                             @if(!empty($tooltip->sideLight1GlassType))
                             <script type="text/javascript">
@@ -76,6 +45,11 @@
                             <select name="sideLight1GlassType" @if(empty($Item['SideLight1GlassType'])){{'disabled'}}@endif id="sideLight1GlassType"
                                 class="form-control">
                                 <option value="">Select Glass Type</option>
+                                <!-- @foreach($option_data as $row)
+                                @if($row->OptionSlug=='leaf1_glass_type')
+                                <option value="{{$row->OptionKey}}" @if(isset($Item['SideLight1GlassType'])) @if($Item['SideLight1GlassType'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
+                                @endif
+                                @endforeach -->
                             </select>
                         </div>
                     </div>
@@ -93,20 +67,7 @@
                                 value="@if(isset($Item['SideLight1GlassThickness'])){{$Item['SideLight1GlassThickness']}}@endif">
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="SL1Width">SL1 Width
-                            @if(!empty($tooltip->SL1Width))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL1Width}}'));
-                            </script>
-                            @endif
 
-                            </label>
-                            <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control door-configuration"
-                                type="text" value="@if(isset($Item['SL1Width'])){{$Item['SL1Width']}}@endif">
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="sideLight1GlazingSystems">Side Light 1 Glazing Systems
@@ -116,7 +77,10 @@
                             </script>
                             @endif
                             </label>
-                            <input type="text" readonly name="sideLight1GlazingSystems" class="form-control" id="sideLight1GlazingSystems" value="@if(isset($Item['SideLight1GlazingSystems'])){{$Item['SideLight1GlazingSystems']}}@endif">
+                            <select name="sideLight1GlazingSystems" id="sideLight1GlazingSystems" option_slug="leaf1_glazing_systems" class="form-control">
+                                <option value=""> Select Glazing Systems</option>
+                            </select>
+                            <input type="hidden" id="sideLight1GlazingSystemsvalue" value="@if(isset($Item['SideLight1GlazingSystems'])){{$Item['SideLight1GlazingSystems']}}@endif">
                         </div>
                     </div>
 
@@ -166,7 +130,7 @@
                             </script>
                             @endif
                             </label>
-                            <input Type="number" min="0" name="sideLight1GlazingBeadsThickness" @if(empty(@$Item['SideLight1GlazingBeadsThickness'])) readonly @endif
+                            <input Type="number" min="0" name="sideLight1GlazingBeadsThickness"
                                     id="sideLight1GlazingBeadsThickness" class="form-control"
                                     value="@if(isset($Item['SideLight1GlazingBeadsThickness'])){{$Item['SideLight1GlazingBeadsThickness']}}@endif">
                         </div>
@@ -182,7 +146,7 @@
                             @endif
                             </label>
                             <input Type="number" min="0" name="sideLight1GlazingBeadsWidth"
-                            id="sideLight1GlazingBeadsWidth" class="form-control" @if(empty(@$Item['SideLight1GlazingBeadsWidth'])) readonly @endif
+                            id="sideLight1GlazingBeadsWidth" class="form-control"
                             value="@if(isset($Item['SideLight1GlazingBeadsWidth'])){{$Item['SideLight1GlazingBeadsWidth']}}@endif">
                         </div>
                     </div>
@@ -197,12 +161,11 @@
                                 </script>
                                 @endif
                             </label>
-                            <input type="text" name="sideLight1GlazingBeadsFixingDetail" readonly
+                            <input type="text" name="sideLight1GlazingBeadsFixingDetail"
                             id="sideLight1GlazingBeadsFixingDetail" class="form-control"
                             value="@if(isset($Item['SideLight1GlazingBeadsFixingDetail'])){{$Item['SideLight1GlazingBeadsFixingDetail']}}@endif">
                         </div>
                     </div>
-
                     <div class="col-md-6">
                         <div class="position-relative form-group input-icons">
                             <label for="SideLight1GlazingBeadSpecies">Glazing Bead
@@ -224,7 +187,36 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="SlBeadThickness">SL Bead Thickness
+                            <label for="SL1Width">SL1 Width  (Max-value:600)
+                            @if(!empty($tooltip->SL1Width))
+                            <script type="text/javascript">
+                            // document.write(Tooltip('{{$tooltip->SL1Width}}'));
+                            </script>
+                            @endif
+
+                            </label>
+                            <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control door-configuration"
+                                type="text" value="@if(isset($Item['SL1Width'])){{$Item['SL1Width']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="SL1Height" readonly>SL1 Height
+                            @if(!empty($tooltip->SL1Height))
+                            <script type="text/javascript">
+                            // document.write(Tooltip('{{$tooltip->SL1Height}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input name="SL1Height" @if(empty($Item['SL1Height'])){{'readonly'}}@endif id="SL1Height" class="form-control door-configuration"
+                                type="text" value="@if(isset($Item['SL1Height'])){{$Item['SL1Height']}}@endif">
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="SlBeadThickness" class="slBeadThickness">SL Bead Thickness
                             @if(!empty($tooltip->SlBeadThickness))
                             <script type="text/javascript">
                             // document.write(Tooltip('{{$tooltip->SlBeadThickness}}'));
@@ -238,7 +230,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="SlBeadHeight">SL Bead Height
+                            <label for="SlBeadHeight" class="slBeadHeightMin">SL Bead Height
                             @if(!empty($tooltip->SlBeadHeight))
                             <script type="text/javascript">
                             // document.write(Tooltip('{{$tooltip->SlBeadHeight}}'));
@@ -260,7 +252,7 @@
                             </script>
                             @endif
                             </label>
-                            <input name="SL1Depth" @if(empty($Item['SL1Depth'])){{'readonly'}}@endif id="SL1Depth" class="form-control"
+                            <input name="SL1Depth" readonly @if(empty($Item['SL1Depth'])){{'readonly'}}@endif id="SL1Depth" class="form-control"
                                 type="text" value="@if(isset($Item['SL1Depth'])){{$Item['SL1Depth']}}@endif">
                         </div>
                     </div>
@@ -273,7 +265,7 @@
                             </script>
                             @endif
                             </label>
-                            <select name="SL1Transom" @if(empty($Item['SL1Transom'])){{'disabled'}}@endif id="SL1Transom" class="form-control" readonly>
+                            <select name="SL1Transom" @if(empty($Item['SL1Transom'])){{'disabled'}}@endif id="SL1Transom" class="form-control">
                                 <option value="">Select side light 1 transom</option>
                                 <option value="No">No</option>
                                 @foreach($option_data as $row)
@@ -284,32 +276,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="SL1Transom">SL1 Transom Depth
-                            @if(!empty($tooltip->SL1Transom))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL1Transom}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL1TransomDepth" id="SL1TransomDepth" class="form-control" @if(empty($Item['SL1TransomDepth'])){{'readonly'}}@endif
-                                type="text" value="@if(isset($Item['SL1TransomDepth'])){{$Item['SL1TransomDepth']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="transomThickness">SL1 Transom Thickness
-                            @if(!empty($tooltip->transomThickness))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->transomThickness}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL1transomThickness" id="SL1transomThickness"  class="form-control"
-                            type="text" @if(empty($Item['SL1transomThickness'])){{'readonly'}}@endif  value="@if(isset($Item['SL1transomThickness'])){{$Item['SL1transomThickness']}}@endif">
-                        </div>
-                    </div>
+
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="sideLight2">Side Light 2 (SL2)
@@ -320,7 +287,7 @@
                             @endif
 
                             </label>
-                            <select name="sideLight2" id="sideLight2" class="form-control door-configuration" required>
+                            <select name="sideLight2" id="sideLight2" class="form-control door-configuration">
                                 <option value=""> Is side light 2 is active?</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='SideLight2')
@@ -359,45 +326,6 @@
                             </select>
                         </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="SL2Height">SL2 Height
-                            @if(!empty($tooltip->SL2Height))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL2Height}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL2Height"
-                                @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-                                    @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
-                                        {{'readonly'}}
-                                    @endif
-                                @else
-                                    {{'readonly'}}
-                                @endif
-                             id="SL2Height" class="form-control door-configuration"
-                                type="text" value="@if(isset($Item['SL2Height'])){{$Item['SL2Height']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="opGlassInopGlassIntegritytegrity">Side Light 2 Glass
-                                Integrity
-                            @if(!empty($tooltip->SL2GlassIntegrity))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL2GlassIntegrity}}'));
-                            </script>
-                            @endif
-                                </label>
-                            <select name="SL2GlassIntegrity" @if(empty($Item['SL2GlassIntegrity'])){{'disabled'}}@endif
-                                id="SL2GlassIntegrity" class="form-control">
-                                <option value=''> Select Side Light 1 Glass Integrity</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="sideLight2GlassType">Side Light 2 Glass Type
@@ -418,6 +346,11 @@
                                 id="sideLight2GlassType"
                                 class="form-control">
                                 <option value="">Select Glass Type</option>
+                                <!-- @foreach($option_data as $row)
+                @if($row->OptionSlug=='leaf1_glass_type')
+                  <option value="{{$row->OptionKey}}"  @if(isset($Item['SideLight2GlassType'])) @if($Item['SideLight2GlassType'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
+                @endif
+                @endforeach -->
                             </select>
                         </div>
                     </div>
@@ -438,28 +371,6 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="SL2Width">SL2 Width
-                            @if(!empty($tooltip->SL2Width))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL2Width}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL2Width" max="600"
-                                @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-                                    @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
-                                        {{'readonly'}}
-                                    @endif
-                                @else
-                                    {{'readonly'}}
-                                @endif
-                            id="SL2Width" class="form-control door-configuration"
-                                type="text" value="@if(isset($Item['SL2Width'])){{$Item['SL2Width']}}@endif">
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
                             <label for="sideLight2GlazingSystems">Side Light 2 Glazing Systems
                             @if(!empty($tooltip->sideLight2GlazingSystems))
                             <script type="text/javascript">
@@ -467,11 +378,10 @@
                             </script>
                             @endif
                             </label>
-                            {{--  <select name="sideLight2GlazingSystems" id="sideLight2GlazingSystems" option_slug="leaf1_glazing_systems" class="form-control sidelight2section">
+                            <select name="sideLight2GlazingSystems" id="sideLight2GlazingSystems" option_slug="leaf1_glazing_systems" class="form-control sidelight2section">
                                 <option value=""> Select Glazing Systems</option>
-                            </select>  --}}
-                            <input type="text" id="sideLight2GlazingSystems" name="sideLight2GlazingSystems" readonly class="form-control sidelight2section" value="@if(isset($Item['SideLight2GlazingSystems'])){{$Item['SideLight2GlazingSystems']}}@endif">
-                        </div>
+                            </select>
+                            <input type="hidden" id="sideLight2GlazingSystemsvalue" value="@if(isset($Item['SideLight2GlazingSystems'])){{$Item['SideLight2GlazingSystems']}}@endif">                                                </div>
                     </div>
 
                     <div class="col-md-6">
@@ -585,7 +495,48 @@
 
                         </div>
                     </div>
-
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="SL2Width">SL2 Width (Max-value:600)
+                            @if(!empty($tooltip->SL2Width))
+                            <script type="text/javascript">
+                            // document.write(Tooltip('{{$tooltip->SL2Width}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input name="SL2Width" max="600"
+                                @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
+                                    @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
+                                        {{'readonly'}}
+                                    @endif
+                                @else
+                                    {{'readonly'}}
+                                @endif
+                            id="SL2Width" class="form-control door-configuration"
+                                type="text" value="@if(isset($Item['SL2Width'])){{$Item['SL2Width']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="SL2Height">SL2 Height
+                            @if(!empty($tooltip->SL2Height))
+                            <script type="text/javascript">
+                            // document.write(Tooltip('{{$tooltip->SL2Height}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input name="SL2Height"
+                                @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
+                                    @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
+                                        {{'readonly'}}
+                                    @endif
+                                @else
+                                    {{'readonly'}}
+                                @endif
+                             id="SL2Height" class="form-control door-configuration"
+                                type="text" value="@if(isset($Item['SL2Height'])){{$Item['SL2Height']}}@endif">
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="SL2Depth">SL2 Depth
@@ -595,7 +546,7 @@
                             </script>
                             @endif
                             </label>
-                            <input name="SL2Depth"
+                            <input name="SL2Depth" readonly
                                 @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
                                     @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
                                         {{'readonly'}}
@@ -638,32 +589,6 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="SL1Transom">SL2 Transom Depth
-                            @if(!empty($tooltip->SL2Transom))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->SL2Transom}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL2TransomDepth" id="SL2TransomDepth" class="form-control" @if(empty($Item['SL2TransomDepth'])){{'readonly'}}@endif
-                                type="text" value="@if(isset($Item['SL2TransomDepth'])){{$Item['SL2TransomDepth']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="transomThickness">SL2 Transom Thickness
-                            @if(!empty($tooltip->transomThickness))
-                            <script type="text/javascript">
-                            // document.write(Tooltip('{{$tooltip->transomThickness}}'));
-                            </script>
-                            @endif
-                            </label>
-                            <input name="SL2transomThickness" id="SL2transomThickness"  class="form-control"
-                            type="text" @if(empty($Item['SL2transomThickness'])){{'readonly'}}@endif  value="@if(isset($Item['SL2transomThickness'])){{$Item['SL2transomThickness']}}@endif">
-                        </div>
-                    </div>
-                    <div class="col-md-6">
                         <div class="position-relative form-group input-icons">
                             <label for="SLtransomHeightFromTop">Transom height from top
                                 @if(!empty($tooltip->SLtransomHeightFromTop))
@@ -678,7 +603,7 @@
 
                         </div>
                     </div>
-                    {{--  <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="position-relative form-group input-icons">
                             <label for="SLtransomThickness">Transom Thickness (Min 32mm)
                                 @if(!empty($tooltip->SLtransomThickness))
@@ -691,8 +616,7 @@
                             <input type="number" min="32" id="SLtransomThickness" name="SLtransomThickness"
                                     class="form-control" value="@if(isset($Item['SLtransomThickness'])){{$Item['SLtransomThickness']}}@endif">
                         </div>
-                    </div>  --}}
-
+                    </div>
                 </div>
             </div>
         </div>

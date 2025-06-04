@@ -13,7 +13,7 @@
                                                                         <label for="Vehicle Type">Vehicle Type
                                                                         @if(!empty($tooltip->VehicleType))
                                                                             <script type="text/javascript">
-                                                                            // document.write(Tooltip('{{$tooltip->VehicleType}}'));
+                                                                            document.write(Tooltip('{{$tooltip->VehicleType}}'));
                                                                             </script>
                                                                             @endif
                                                                         </label>
@@ -30,7 +30,7 @@
                                                                         <label for="deliveryTime">Delivery Time
                                                                         @if(!empty($tooltip->deliveryTime))
                                                                             <script type="text/javascript">
-                                                                            // document.write(Tooltip('{{$tooltip->deliveryTime}}'));
+                                                                            document.write(Tooltip('{{$tooltip->deliveryTime}}'));
                                                                             </script>
                                                                             @endif
                                                                         </label>
@@ -46,7 +46,7 @@
                                                                         <label for="packaging">Packaging
                                                                         @if(!empty($tooltip->packaging))
                                                                             <script type="text/javascript">
-                                                                            // document.write(Tooltip('{{$tooltip->packaging}}'));
+                                                                            document.write(Tooltip('{{$tooltip->packaging}}'));
                                                                             </script>
                                                                             @endif
                                                                         </label>

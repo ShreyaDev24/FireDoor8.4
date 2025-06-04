@@ -134,11 +134,11 @@
                                 @endif
                             </label>
                             <div id="hinge_location_div">
-                                @if(!empty($Item['hinge2Location']))
-                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge2Location'])){{$Item['hinge2Location']}}@endif" min="200">
-                                @else
-                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
-                                @endif
+                            @if(!empty($Item['hinge2Location']))
+                            <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge2Location'])){{$Item['hinge2Location']}}@endif" min="200">
+                            @else
+                            <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
+                            @endif
                             </div>
                         </div>
                     </div>

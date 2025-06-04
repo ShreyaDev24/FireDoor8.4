@@ -12,6 +12,9 @@
     display: none;
 }
 
+
+
+
 /* ul.nav.nav-tabs.border-0 {
     position: fixed;
     z-index: 1;
@@ -66,6 +69,12 @@
 .td-align3{
     width: 15%
 }
+.custom-checkbox {
+        margin: 2px -4px 10px 12px;
+        border: 1px solid #ced4da;
+        height: 15px;
+        width: 15px;
+    }
 </style>
 
 <div class="app-main__outer">
@@ -82,7 +91,7 @@
         <script>
         function Tooltip(tooltipValue) {
             let TooltipCode2 =
-                '<i class="fa fa-info-circle field_info tooltip" aria-hidden="true"><span class="tooltiptext info_tooltip">' +
+                '<i class="fa fa-info-circle field_info tooltip Species_icon" aria-hidden="true"><span class="tooltiptext info_tooltip">' +
                 tooltipValue + '</span></i>';
             return TooltipCode2;
         }
@@ -114,16 +123,15 @@
                                             Panel</a>
                                         <input type="hidden" value="988px">
                                     </li>
-                                    <li class="optionItem">
+                                    <li class="optionItem framehideshow">
                                         <a class="btn btn-primary" data-toggle="tab" href="#frame-section">Frame</a>
                                         <input type="hidden" value="2039px">
                                     </li>
-                                    <li class="optionItem">
-                                        <a class="btn btn-primary" data-toggle="tab" href="#over-panel-section">Over
-                                            Panel Section</a>
+                                    <li class="optionItem framehideshow">
+                                        <a class="btn btn-primary" data-toggle="tab" href="#over-panel-section">Overpanel/Fanlight</a>
                                         <input type="hidden" value="2656px">
                                     </li>
-                                    <li class="optionItem">
+                                    <li class="optionItem framehideshow">
                                         <a class="btn btn-primary" data-toggle="tab" href="#side-light-section">Side
                                             Light</a>
                                         <input type="hidden" value="2958px">
@@ -138,7 +146,7 @@
                                             href="#acoustics-section">Acoustics</a>
                                         <input type="hidden" value="3892px">
                                     </li>
-                                    <li class="optionItem">
+                                    <li class="optionItem framehideshow">
                                         <a class="btn btn-primary" data-toggle="tab"
                                             href="#architrave-section">Architrave</a>
                                         <input type="hidden" value="3840px">
@@ -158,80 +166,94 @@
 
                 <div class="item-form">
                     <form id="itemForm" enctype="multipart/form-data">
-                        <input type="hidden" name="pageIdentity" id="pageIdentity" value="1">
+                        <input type="hidden" name="pageIdentity" id="pageIdentity" value="7">
                         <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
-
+                        <input type="hidden" name="SvgImage" value="" />
+                        @if(in_array(Auth::user()->UserType, ['1', '2', '3']) && isset($quotation->QuotationStatus) && $quotation->QuotationStatus != 'Ordered' && empty($Item["itemId"]))
+                            <div class="float-right">
+                                <button type="button" id="default" onclick="default()" class="btn btn-primary">
+                                    <i class="fas fa-paper-plane"></i> Import Default
+                                </button>
+                            </div>
+                        @endif
                         <div class="tab-content">
                             <div id="main-options-section" class="tab-pane active">
-                                @include("Items.EditSvg.MainOptions")
+                                @include("Items.ValidateFlamebreak.MainOptions")
                             </div>
 
                             <div id="door-dimensions-n-door-leaf-section" class="tab-pane fade">
-                                @include("Items.EditSvg.DoorDimensionsAndDoorLeaf")
+                                @include("Items.ValidateFlamebreak.DoorDimensionsAndDoorLeaf")
                             </div>
 
                             <div id="vision-panel-section" class="tab-pane fade">
-                                @include("Items.EditSvg.VisionPanel")
+                                @include("Items.ValidateFlamebreak.VisionPanel")
                             </div>
 
-                            <div id="frame-section" class="tab-pane fade">
-                                @include("Items.EditSvg.Frame")
+                            <div id="frame-section" class="tab-pane fade framehideshow">
+                                @include("Items.ValidateFlamebreak.Frame")
                             </div>
 
-                            <div id="over-panel-section" class="tab-pane fade">
-                                @include("Items.EditSvg.OverPanel")
+                            <div id="over-panel-section" class="tab-pane fade framehideshow">
+                                @include("Items.ValidateFlamebreak.OverPanel")
                             </div>
 
-                            <div id="side-light-section" class="tab-pane fade">
-                                @include("Items.EditSvg.SideLight")
+                            <div id="side-light-section" class="tab-pane fade framehideshow">
+                                @include("Items.ValidateFlamebreak.SideLight")
                             </div>
 
                             <div id="lipping-and-intumescent-section" class="tab-pane fade">
-                                @include("Items.EditSvg.LippingAndIntumescent")
+                                @include("Items.ValidateFlamebreak.LippingAndIntumescent")
                             </div>
 
                             <div id="acoustics-section" class="tab-pane fade">
-                                @include("Items.EditSvg.Accoustics")
+                                @include("Items.ValidateFlamebreak.Accoustics")
 
                             </div>
 
-                            <div id="architrave-section" class="tab-pane fade">
-                                @include("Items.EditSvg.Architrave")
+                            <div id="architrave-section" class="tab-pane fade framehideshow">
+                                @include("Items.ValidateFlamebreak.Architrave")
                             </div>
 
                             <div id="transport-section" class="tab-pane fade">
-                                <!-- @include("Items.EditSvg.Transport") -->
+                                <!-- @include("Items.ValidateFlamebreak.Transport") -->
                             </div>
                         </div>
 
 
 
-
-                        <div hidden id="glazing-system-filter">{{url('items/glazing-system-filter')}}</div>
-                        <div hidden id="fire-rating-filter">{{url('items/fire-rating-filter')}}</div>
-                        <div hidden id="glazing-beads-filter">{{url('items/glazing-beads-filter')}}</div>
-                        <div hidden id="glass-type-filter">{{url('items/glass-type-filter')}}</div>
-                        <div hidden id="glazing-thikness-filter">{{url('items/glazing-thikness-filter')}}</div>
-                        <div hidden id="frame-material-filter">{{url('items/frame-material-filter')}}</div>
-                        <div hidden id="scallopped-lipping-thickness">{{url('items/scallopped-lipping-thickness')}}
+                        <div hidden id="overpanel-glass-filter">{{route('items/overpanel-glass-filter')}}</div>
+                        <div hidden id="overpanel-glass-type-filter">{{route('items/overpanel-glass-type-filter')}}</div>
+                        <div hidden id="glazing-system-filter">{{route('items/glazing-system-filter')}}</div>
+                        <div hidden id="architrave-system-filter">{{route('items/architrave-system-filter')}}</div>
+                        <div hidden id="fire-rating-filter">{{route('items/fire-rating-filter')}}</div>
+                        <div hidden id="glass-glazing-filter">{{route('items/glass-glazing-filter')}}</div>
+                        <div hidden id="glazing-filter">{{route('items/glazing-filter')}}</div>
+                        <div hidden id="glazing-beads-filter">{{route('items/glazing-beads-filter')}}</div>
+                        <div hidden id="glass-type-filter">{{route('items/glass-type-filter')}}</div>
+                        <div hidden id="glazing-thikness-filter">{{route('items/glazing-thikness-filter')}}</div>
+                        <div hidden id="frame-material-filter">{{route('items/frame-material-filter')}}</div>
+                        <div hidden id="scallopped-lipping-thickness">{{route('items/scallopped-lipping-thickness')}}
                         </div>
-                        <div hidden id="flat-lipping-thickness">{{url('items/flat-lipping-thickness')}}</div>
-                        <div hidden id="rebated-lipping-thickness">{{url('items/rebated-lipping-thickness')}}</div>
-                        <div hidden id="door-thickness-filter">{{url('items/door-thickness-filter')}}</div>
-                        <div hidden id="door-leaf-face-value-filter">{{url('items/door-leaf-face-value-filter')}}
+                        <div hidden id="flat-lipping-thickness">{{route('items/flat-lipping-thickness')}}</div>
+                        <div hidden id="rebated-lipping-thickness">{{route('items/rebated-lipping-thickness')}}</div>
+                        <div hidden id="door-thickness-filter">{{route('items/door-thickness-filter')}}</div>
+                        <div hidden id="door-leaf-face-value-filter">{{route('items/door-leaf-face-value-filter')}}
                         </div>
-                        <div hidden id="ral-color-filter">{{url('items/ral-color-filter')}}</div>
+                        <div hidden id="ral-color-filter">{{route('items/ral-color-filter')}}</div>
                         <div hidden id="filter-iron-mongery-category">
-                            {{url('ironmongery-info/filter-iron-mongery-category')}}
+                            {{route('ironmongery-info/filter-iron-mongery-category')}}
                         </div>
                         <div hidden id="url">{{url('/')}}</div>
-                        <div hidden id="get-handing-options">{{url('items/get-handing-options')}}</div>
-                        <div hidden id="Filterintumescentseals">{{url('items/Filterintumescentseals')}}</div>
-                        <div hidden id="opGlassTypeFilterUrl">{{url('opGlassTypeFilterUrl')}}</div>
-                        <div hidden id="doorStandardPrice">{{url('doorStandardPrice')}}</div>
-                        <div hidden id="IronmongeryIDPrice">{{url('IronmongeryIDPrice')}}</div>
-                        <div hidden id="generalLabourCost">{{url('generalLabourCost')}}</div>
-                        <div hidden id="FrameCost">{{url('FrameCost')}}</div>
+                        <div hidden id="get-handing-options">{{route('items/get-handing-options')}}</div>
+                        <div hidden id="Filterintumescentseals">{{route('Filterintumescentseals')}}</div>
+                        <div hidden id="opGlassTypeFilterUrl">{{route('opGlassTypeFilterUrl')}}</div>
+                        <div hidden id="doorStandardPrice">{{route('doorStandardPrice')}}</div>
+                        <div hidden id="IronmongeryIDPrice">{{route('IronmongeryIDPrice')}}</div>
+                        <div hidden id="generalLabourCost">{{route('generalLabourCost')}}</div>
+                        <div hidden id="FrameCost">{{route('FrameCost')}}</div>
+                        <div hidden id="fanlightBeadsFilter">{{route('options/filterFanLightBeading')}}</div>
+                        <div hidden id="sidelightBeadsFilter">{{route('options/filterSideLightBeading')}}</div>
+                        <div hidden id="liping-glazing-system-filter">{{route('items/liping-glazing-system-filter')}}</div>
                         <input type="hidden" id="fireRating" value="{{ $Item["FireRating"]}}">
                 </div>
             </div>
@@ -240,8 +262,13 @@
                     <ul class="nav nav-tabs border-0 float-left">
                         <li class="optionItem">
                             <a href="{{url('quotation/generate')}}/{{$QuotationId}}/{{ ($versionId !== null)?$versionId:0 }}"
-                                class="door_submit" style="margin-left: 20px;margin-right: 20px">
+                                class="door_submit">
                                 <i class="fas fa-arrow-left"></i>
+                            </a>
+                        </li>
+                        <li class="optionItem">
+                            <a class="btn btn-primary active" data-toggle="tab" href="#door">
+                                <i class="fa fa-image" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li class="optionItem">
@@ -250,24 +277,25 @@
                             </a>
                         </li>
                         <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#door">
-                                <i class="fa fa-image" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="optionItem">
                             <a class="btn btn-primary" data-toggle="tab" href="#doorPrice" id="doorPriceCalculate">
-                                <i class="fa fa-dollar" aria-hidden="true"></i>
+                                <i class="fa fa-gbp" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="optionItem">
-                            <a href="javascript:void(0);" class="btn btn-primary active" onClick="render();"
-                                style="margin-right: 10px">Render Image</a>
+                        <li>
+                            <a href="javascript:void(0);" class="btn-sm btn btn-primary active" onClick="render();" style="margin: 0px 10px 0px 5px;">Render Image</a>
                         </li>
 
-                        <li class="optionItem">
+                        <li class="optionItem d-flex align-items-center">
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="change-dimension" checked>
-                                <label class="form-check-label" for="change-dimension">Turn dimensions on/off</label>
+                                <label class="form-check-label cursor-pointer" for="change-dimension">Dimensions On/Off</label>
+                            </div>
+                        </li>
+                        <li class="optionItem d-flex align-items-center">
+                            <div class="form-check" style="margin-left: 10px;">
+                                <input type="checkbox" class="form-check-input" id="frameonoff" @if(isset($Item["FrameOnOff"]) && $Item["FrameOnOff"] == 1){{ 'checked' }}@else{{''}}@endif>
+                                <label class="form-check-label cursor-pointer" for="frameonoff">Frame  On/Off</label>
+                                <input type="hidden" name="FrameOnOff" id="withoutFrameId" value="@if(isset($Item["FrameOnOff"])){{$Item["FrameOnOff"]}}@else{{''}}@endif">
                             </div>
                         </li>
                     </ul>
@@ -275,7 +303,7 @@
                     @if(isset($quotation->QuotationStatus))
                     @if($quotation->QuotationStatus != 'Ordered')
                     <div class="float-right">
-                        <button type="button" id="submit" class="btn btn-success active" style="margin-right: 10px">
+                        <button type="button" id="submit" class="btn btn-success active">
                             <i class="fas fa-paper-plane"></i> @if(!empty($Item["itemId"])){{ 'Update Now' }} @else
                             {{'Submit Now'}} @endif
                         </button>
@@ -302,28 +330,27 @@
             </div>
         </div>
     </div>
+
 </div>
 
-
-{{-- <script src="{{url('/')}}/cad/cad-door-configuration.js"></script> --}}
+{{-- <script src="{{url('/')}}/Flamebreak/flamebreak-cad-door-configuration.js"></script> --}}
 <script src="{{url('/')}}/Halspan/common-cad-configuration.js"></script>
-{{--  <script src="{{url('/')}}/cad/build-of-material-for-cad-door.js"></script>  --}}
-{{--  <script src="{{asset('js/custome-rules.js')}}"></script>  --}}
-{{--  <script src="{{asset('js/change-event-calculation.js')}}"></script>  --}}
+{{-- <script src="{{url('/')}}/Halspan/halspan-build-of-material-for-cad-door.js"></script>
+<script src="{{asset('Halspan/halspan-custome-rules.js')}}"></script>
+<script src="{{asset('Halspan/halspan-change-event-calculation.js')}}"></script>
+<script src="{{asset('js/common.js')}}"></script> --}}
 
 @if(!empty($Item))
 @foreach($Item as $key => $val)
 <div id="{{$key}}-value" data-value="{{$val}}" hidden=""></div>
 @endforeach
 @endif
-
 @endsection
 
 
 @section("js")
 <script>
-    var fireRating = $('#fireRating').val();
-    $('#fireRating').val('FD30s');
+var fireRating = $('#fireRating').val();
 var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
 var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
 var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
@@ -343,6 +370,10 @@ var possibleSelectedOptionsJson = JSON.stringify(<?=json_encode(\Config::get('co
 
 //var BomDoorCoresJson = JSON.stringify(<?//= json_encode($BOMDoorCores); ?>);
 
+
+
+
+
 $(document).on('click', '.optionItem', function() {
     let ScrolHeight = $(this).children('input').val();
     // alert($("#opDiv").scrollTop() + " px");
@@ -357,7 +388,7 @@ $(document).on('click', '.optionItem', function() {
         $('#AccousticModalLabel').html(AccousticModalLabel);
         let pageIdentity = $('#pageIdentity').val();
         $.ajax({
-            url:"{{url('showAccoustic')}}",
+            url:"{{route('showAccoustic')}}",
             type:"POST",
             data:{'pageId':pageIdentity ,'id':id,'UnderAttribute':UnderAttribute ,'AccousticModalLabel':AccousticModalLabel},
             success:function(response){
@@ -379,7 +410,7 @@ $(document).on('click', '.optionItem', function() {
 
 
 @endsection
-<!-- Universal Modal -->
+
 <div class="modal fade bd-example-modal-lg" id="UniversalModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -403,7 +434,7 @@ $(document).on('click', '.optionItem', function() {
         </div>
     </div>
 </div>
-<!-- Modal Acoustic-->
+
 <div class="modal fade bd-example-modal-lg" id="AccousticModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -444,7 +475,77 @@ $(document).on('click', '.optionItem', function() {
     </div>
 </div>
 
+<div class="modal fade bd-example-modal-lg" id="OPglazingModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="OPglazingModalLabel">All OP Glazing</h5>
+                <button type="button" class="btn btn-default btn-close" data-dismiss="modal"
+                    aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inputId">
+                <div id="OPglazingModalBody">
 
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="SL1glazingModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="SL1glazingModalLabel">All SL1 Glazing</h5>
+                <button type="button" class="btn btn-default btn-close" data-dismiss="modal"
+                    aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inputId">
+                <div id="SL1glazingModalBody">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="SL2glazingModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="SL2glazingModalLabel">All SL2 Glazing</h5>
+                <button type="button" class="btn btn-default btn-close" data-dismiss="modal"
+                    aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inputId">
+                <div id="SL2glazingModalBody">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade bd-example-modal-lg" id="frameMaterialModal" tabindex="-1" role="dialog"
     aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -480,6 +581,29 @@ $(document).on('click', '.optionItem', function() {
             <div class="modal-body">
                 <input type="hidden" id="inputId">
                 <div id="glazingModalBody">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bd-example-modal-lg" id="LipingModal" tabindex="-1" role="dialog"
+    aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="LipingModalLabel">All Glazing</h5>
+                <button type="button" class="btn btn-default btn-close" data-dismiss="modal"
+                    aria-label="Close">X</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="inputId">
+                <div id="LipingModalBody">
 
                 </div>
             </div>
