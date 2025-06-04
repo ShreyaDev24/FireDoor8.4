@@ -776,6 +776,10 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#plantonStopWidth").val() == 0 || $("#plantonStopHeight").val() == 0){
+                $("#plantonStopWidth").val('');
+                $("#plantonStopHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
@@ -813,6 +817,10 @@ $(document).ready(function() {
             $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
+                $("#ScallopedWidth").val('');
+                $("#ScallopedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
@@ -844,6 +852,10 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#rebatedWidth").val() == 0 || $("#rebatedHeight").val() == 0){
+                $("#rebatedWidth").val('');
+                $("#rebatedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
