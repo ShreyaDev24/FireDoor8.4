@@ -6151,7 +6151,7 @@ function framewidth(){
     frameHeight();
 }
 
-$("#rebatedHeight").on("keyup change", triggerCalculations);
+$("#rebatedHeight,#sOWidth").on("keyup change", triggerCalculations);
 $("#ScallopedHeight").on("keyup change", triggerCalculations);
 $("#DoorSetType").on("change", triggerCalculations);
 $("#foursidedframe").on("change", triggerCalculations);
@@ -6206,7 +6206,7 @@ function frameHeight(){
 
         $("#frameHeight").val(frameHeight);
     }else if($("#frameType").val() == 'Scalloped'){
-         var frameHeight = soheight - tollerance;
+        var frameHeight = soheight - tollerance;
         $("#frameHeight").val(frameHeight);
         console.log(
                 `${soheight} - ${tollerance} = ScallopedFrameHeight ${frameHeight}`
