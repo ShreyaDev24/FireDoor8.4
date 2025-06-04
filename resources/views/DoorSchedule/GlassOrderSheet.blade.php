@@ -107,7 +107,7 @@
                         <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
                         @if($value->VisionPanelQuantity == 2)
                             <td>1</td>
-                            <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 - 10 : $value->Leaf1VPHeight2 - 5 }}</td>
+                            <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 - 8 : $value->Leaf1VPHeight2 - 5 }}</td>
                             <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
                             <td>1</td>
                         @else
