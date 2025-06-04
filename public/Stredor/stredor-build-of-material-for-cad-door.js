@@ -51,8 +51,13 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
         if (name != "accoustics") {
             if (TagName && typeof TagName === "string" && TagName.toLowerCase() === "select") {
                 var e = document.getElementById(id);
-                ActualValue = e.options[e.selectedIndex].value;
-                ElementValue = e.options[e.selectedIndex].text;
+
+                if (e && e.options && e.selectedIndex >= 0) {
+                    ActualValue = e.options[e.selectedIndex].value;
+                    ElementValue = e.options[e.selectedIndex].text;
+                } else {
+                    console.warn(`Element with id "${id}" not found or not a valid select element.`);
+                }
             } else {
                 // These fields should give a warning if you enter a number higher than the set max number
                 const InputValue = parseFloat($("#" + id).val());

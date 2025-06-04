@@ -466,15 +466,18 @@
         $("#architraveFinishcolor").val($("#ArchitraveFinishColor-import").data("value"));
         $("select[name=architraveSetQty]").val($("#ArchitraveSetQty-import").data("value"));
         architrave(1);
-       framTypeChangeInputEnableDisable();
-       rebatedWidth();
         swingTypeFrameType();
 
         $(".form-control").each(function(index) {
             const element = $(this);
-            setTimeout(function() {
-                SetBuildOfMaterial(element);
-            }, index * 100); // Delay increases by 100ms for each element
+
+            // Check if the element is required
+            const isRequired = element.prop("required") || element.hasClass("required");
+            if (isRequired) {
+                setTimeout(function() {
+                    SetBuildOfMaterial(element);
+                }, index * 100); // Delay increases by 100ms for each element
+            }
         });
     }
 

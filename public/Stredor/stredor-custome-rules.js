@@ -805,7 +805,9 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+       setTimeout(function() {
         rebatedWidth();
+    }, 500); // Delay increases by 100ms for each element
     }
 
     $(document).on('change','#frameDepth',function(e){
@@ -1848,11 +1850,11 @@ function copyOfSideLite1Change(isstatus = false){
         let framTypeValue = $('#frameType').val();
         // if (framTypeValue == "Plant_on_Stop") {
             if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else{
                 $("#plantonStopWidth").removeAttr('min');
                 $("#plantonStopWidthText").text('');
