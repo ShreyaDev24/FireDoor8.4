@@ -197,6 +197,9 @@
                                 <a href="javascript:void(0);" onclick="configurableNon(1);" id="nonConfig"
                                     class="btn btn-primary float-right mx-1 activeNC">Configurable
                                 </a>
+                                <a href="javascript:void(0);" onclick="validationHere();" id="needValidation"
+                                    class="btn btn-primary float-right mx-1">Validate
+                                </a>
                             </div>
                             <div class="main-card mb-3" id="side-screen-section" style="display: none;">
                                 <div class="card-body">
@@ -476,8 +479,8 @@
                                                                     </li>
                                                                     <li><a onclick="remove_item('{{ $row->id }}')"
                                                                             href="#">Remove</a></li>
-                                                                    {{--  <li><a onclick="edit_image1('{{ $row->itemId }}')"
-                                                                            href="javascript:void(0);">Validate</a></li>  --}}
+                                                                     <li><a onclick="edit_image1('{{ $row->itemId }}')"
+                                                                            href="javascript:void(0);">Validate</a></li>
                                                                 </ul>
                                                             </div>
                                                         </td>
@@ -733,6 +736,8 @@
         </div>
     </div>
 
+    <div id='container'></div>
+
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
     <input type="hidden" name="SideScreenCount" id="SideScreenCount" value="{{ count($SideScreenData) }}" />
     <input type="hidden" name="ManualQuotationStatusvalue" id="ManualQuotationStatusvalue" value="{{ $quotation->ManualQuotationStatus }}" />
@@ -828,6 +833,7 @@
         <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
         <input type="hidden" id="edit_image" value="{{ url('/quotation/edit-image') }}" />
         <input type="hidden" id="edit_image1" value="{{ url('/quotation/edit-image1') }}" />
+        <input type="hidden" id="validateAlls" value="{{ url('/quotation/validateAlls') }}" />
         <input type="hidden" id="favoriteItem" value="{{ url('/quotation/favoriteItem') }}" />
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
@@ -847,7 +853,14 @@
             });
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
+        <script src="{{ url('/') }}/Halspan/new-cad.js"></script> <!-- Then load your custom JS -->
+
+
+        {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
+            var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
+            var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
                 $("#ManualAddForm").modal('show');
@@ -1188,13 +1201,14 @@
                 }
             }
             function edit_image1(element) {
+
                 $('.loader').empty().css({
                     'display': 'block'
                 });
                 var versionId = $('#versionId').val();
                 var quotationId = $('#quotationId').val();
+
                 $.ajax({
-                    // async: false,
                     url: $("#edit_image1").val(),
                     method: "POST",
                     data: {
@@ -1205,26 +1219,449 @@
                     },
                     dataType: "Json",
                     success: function(data) {
+                        console.log(data)
                         if (data.status == true) {
+                            console.log(data)
                             //user_jobs div defined on page
                             $('.loader').empty().css({
                                 'display': 'block'
                             });
+                            console.log(data.html)
                             $('#user_jobs').empty().html(data.html);
                             setTimeout(function() {
                                 //editSvg()
-                                IntumescentSeals()
+                                ValidatesMainForm();
+                                // IntumescentSeals()
                             }, 4000);
+                        }
+                        else{
+                            console.log('hooo')
                         }
                     }
                 });
             }
+            function pageIdentity(){
+                return $('#pageIdentity').val();
+            }
+            function ValidatesMainForm() {
+                // Main Option form
+                $pageId = pageIdentity();
+                let fields;
+                if($pageId == 1 || $pageId == 2 || $pageId == 7 || $pageId == 8){
+                    fields = {
+                        doorType: 'Door Type',
+                        intumescentLeafType: 'Leaf type',
+                        currentFireRating: 'Fire rating',
+                        doorsetType: 'DoorSet Type',
+                        swingType: 'Swing Type',
+                        OpensInwards: 'Pull Towards',
+                        tollerance: 'Tollerance',
+                        undercut: 'Undercut',
+                        floorFinish: 'Floor Finish',
+                        gap: 'Gap',
+                        frameThickness: 'Frame Thickness'
+                    };
+                } else {
+                    fields = {
+                        leafConstruction: 'Leaf Type',
+                        doorType: 'Door Type',
+                        fireRating: 'Fire rating',
+                        doorsetType: 'DoorSet Type',
+                        swingType: 'Swing Type',
+                        OpensInwards: 'Pull Towards',
+                        tollerance: 'Tollerance',
+                        undercut: 'Undercut',
+                        floorFinish: 'Floor Finish',
+                        gap: 'Gap',
+                        frameThickness: 'Frame Thickness'
+                    };
+                }
+                for (let field in fields) {
+                    let value = $('#' + field).val();
+
+                    // Ensure required fields are not empty
+                    if (!value) {
+                        swal('Warning', fields[field] + ' is missing').then(function() {
+                            location.reload();
+                        });
+                        return; // Stop execution after the first missing field is found
+                    }
+                }
+                let handing = $('#Handing-value').data('value'); // Get Handing from data-value
+                if (!handing) {
+                    swal('Warning', 'Handing is missing').then(function() {
+                        location.reload();
+                    });
+                    return;
+                }
+                // Convert values to numbers for validation
+                let tolerance = parseFloat($('#tollerance').val());
+                let gap = parseFloat($('#gap').val());
+                let frameThickness = parseFloat($('#frameThickness').val());
+                // Additional validations
+                if (tolerance > 20) {
+                    swal('Warning', 'Tolerance should not be more than 20').then(function() {
+                        location.reload();
+                    });
+                    return;
+                }
+                if (gap < 2 || gap > 4) {
+                    swal('Warning', 'Gap should be between 2 - 4 mm').then(function() {
+                        location.reload();
+                    });
+                    return;
+                }
+                if (frameThickness < 22) {
+                    swal('Warning', 'Frame Thickness should not be less than 22 mm').then(function() {
+                        location.reload();
+                    });
+                    return;
+                }
+                // If all fields are filled and pass validation, proceed
+                setTimeout(function() {
+                    ValidatesDoorDimesnionAndLeaf();
+                }, 2000);
+            }
+            function ValidatesDoorDimesnionAndLeaf(){
+                let fields = {
+                    sOWidth: 'S.O Width',
+                    sOHeight: 'S.O Height',
+                    sODepth: 'S.O Depth',
+                };
+                for (let field in fields) {
+                    let value = $('#' + field).val();
+                    // Ensure required fields are not empty
+                    if (!value) {
+                        swal('Warning', fields[field] + ' is missing').then(function() {
+                            location.reload();
+                        });
+                        return; // Stop execution after the first missing field is found
+                    }
+                }
+                setTimeout(function() {
+                    ValidatesVisionPanel();
+                }, 2000);
+            }
+            function ValidatesVisionPanel(){
+                let visionpanel = $("#leaf1VisionPanel").val();
+                if(visionpanel == 'Yes'){
+                        let fields = {
+                        leaf1VisionPanelShape: 'Vision Panel Shape',
+                        visionPanelQuantity: 'Vision Panel Quantity',
+                        distanceFromTheEdgeOfDoor: 'Distance from the edge',
+                        vP1Width: 'Leaf 1 VP Width',
+                        vP1Height1: 'Leaf 1 VP Height (1)',
+                        glassThickness: 'Glass Thickness',
+                        glazingBeadsThickness: 'Glazing Beads Height',
+                        glazingBeadsHeight: 'Glazing Beads Width',
+                        glazingBeadsFixingDetail: 'Glazing Bead Fixing Detail',
+                    };
+                    for (let field in fields) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                     // Additional validations
+                    // let distanceFromTheEdgeOfDoor = parseFloat($('#distanceFromTheEdgeOfDoor').val());
+                    // if (distanceFromTheEdgeOfDoor > 100) {
+                    //     swal('Warning', 'The minimum distance from the edge of the door is 100mm').then(function() {
+                    //         location.reload();
+                    //     });
+                    //     return;
+                    // }
+                    let glassintegrity =  $('#GlassIntegrity-value').data('value');
+                        if (!glassintegrity) {
+                            swal('Warning', 'GlassIntegrity is missing').then(function() {
+                                location.reload();
+                            });
+                        return;
+                    }
+                    let glassType =  $('#GlassType-value').data('value');
+                        if (!glassType) {
+                        swal('Warning', 'GlassType is missing').then(function() {
+                            location.reload();
+                        });
+                        return;
+                    }
+                    let glasssystem =  $('#GlazingSystems-value').data('value');
+                        if (!glasssystem) {
+                        swal('Warning', 'Glazing Systems is missing').then(function() {
+                            location.reload();
+                        });
+                        return;
+                    }
+                    let glassbeads =  $('#GlazingBeads-value').data('value');
+                        if (!glassbeads) {
+                        swal('Warning', 'Glazing Beads is missing').then(function() {
+                            location.reload();
+                        });
+                        return;
+                    }
+                }
+
+                setTimeout(function() {
+                    ValidatesFrame();
+                }, 2000);
+            }
+            function ValidatesFrame(){
+                $pageId = pageIdentity();
+                let fields = {
+                    frameMaterial: 'Frame Material',
+                    frameType: 'Frame Type',
+                    frameDepth: 'Frame Depth ',
+                };
+                for (let field in fields) {
+                    let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                }
+                if($pageId == 1 || $pageId == 2 || $pageId == 7 || $pageId == 8){
+                    let frameDepth = parseFloat($('#frameDepth').val());
+                    if (frameDepth > 70) {
+                        swal('Warning', 'Frame Depth should be a minimum of 70mm').then(function() {
+                            location.reload();
+                        });
+                        return;
+                    }
+                }
+                let frameType = $("#frameType").val();
+                if(frameType == 'Rebated_Frame'){
+                    let fieldsRebated_Frame = {
+                        rebatedWidth: 'Rebated Width',
+                        rebatedHeight: 'Rebated Height',
+                    };
+                    for (let field in fieldsRebated_Frame) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                if(frameType == 'Plant_on_Stop'){
+                    let fieldsPlant_on_Stop = {
+                        plantonStopWidth: 'Plant on Stop Width',
+                        plantonStopHeight: 'Plant on Stop Height',
+                    };
+                    for (let field in fieldsPlant_on_Stop) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                if(frameType == 'Scalloped'){
+                    let fieldsScalloped = {
+                        ScallopedWidth: 'Scalloped Width',
+                        ScallopedHeight: 'Scalloped Depth',
+                    };
+                    for (let field in fieldsScalloped) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                setTimeout(function() {
+                    ValidatesOpandFl();
+                }, 2000);
+            }
+            function ValidatesOpandFl(){
+                let overpanel = $('#overpanel').val();
+                if(overpanel == 'Fan_Light'){
+                    let fields = {
+                        opGlassIntegrity: 'Fan Light Glass Integrity',
+                        opGlassType: 'Fan Light Glass Type',
+                        opglassThickness: 'Fan Light Glass Thickness',
+                        opglazingSystemsThickness: 'Fan Light Glazing System Thickness',
+                        opGlazingBeads: 'Fan Light Glazing Beads',
+                        opglazingBeadsThickness: 'Fan Light Glazing Beads Thicknesss',
+                        opglazingBeadsHeight: 'Fan Light Glazing Beads Width',
+                        opglazingBeadsFixingDetail: 'Fan Light Glazing Bead Fixing Detail',
+                        opGlazingBeadSpecies: 'Fan Light Glazing Bead Species',
+                    };
+                    for (let field in fields) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                setTimeout(function() {
+                    // ValidatesSidelight(); // i skip to validate sidelight for now
+                    ValidatesLippingAndIntumescent();
+                }, 2000);
+            }
+
+            function ValidatesLippingAndIntumescent(){
+                $pageId = pageIdentity();
+                let fields;
+                if($pageId != '4'){
+                    fields = {
+                        lippingType: 'Lipping Type',
+                        lippingThickness: 'Lipping Thickness',
+                        lippingSpeciesid: 'Lipping Species',
+                    };
+                }
+                else{
+                    fields = {
+                        intumescentSealType: 'Intumescent Seal Type',
+                        intumescentSealLocation: 'Intumescent Seal Location',
+                        intumescentSealColor: 'Intumescent Seal Color',
+                    };
+                }
+
+                for (let field in fields) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                }
+                if($pageId == 1 || $pageId == 2 || $pageId == 7 || $pageId == 8){
+                    let incu =  $('#IntumescentLeapingSealArrangement-value').data('value');
+                        if (!incu) {
+                        swal('Warning', 'Intumescent Seal Arrangement is missing').then(function() {
+                            location.reload();
+                        });
+                        return;
+                }
+                } else{
+                    let intumescentSealArrangement =  $('#IntumescentLeapingSealArrangement-value').data('value');
+                        if (!intumescentSealArrangement) {
+                        swal('Warning', 'Intumescent Seal Arrangement is missing').then(function() {
+                            location.reload();
+                        });
+                        return;
+                }
+                }
+                setTimeout(function() {
+                    ValidatesAccoustics();
+                }, 2000);
+            }
+            function ValidatesAccoustics(){
+                let accoustics = $('#accoustics').val();
+                if(accoustics == 'Yes'){
+                    let fields = {
+                    rWdBRating: 'rW dB Rating',
+                    perimeterSeal1: 'Perimeter Seal 1',
+                    perimeterSeal2: 'Perimeter Seal 2',
+                    };
+                    for (let field in fields) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                setTimeout(function() {
+                    ValidatesArchitrave();
+                }, 2000);
+            }
+            function ValidatesArchitrave(){
+                pageId = pageIdentity();
+                let Architrave = $('#Architrave').val();
+                if(Architrave == 'Yes'){
+                    let fields = {
+                    architraveMaterial: 'Architrave Material',
+                    architraveType: 'Architrave Type',
+                    architraveWidth: 'Architrave Width',
+                    architraveHeight: 'Architrave Thickness',
+                    architraveFinish: 'Architrave Finish',
+                    architraveSetQty: 'Architrave Set Qty',
+                    };
+                    for (let field in fields) {
+                        let value = $('#' + field).val();
+                        // Ensure required fields are not empty
+                        if (!value) {
+                            swal('Warning', fields[field] + ' is missing').then(function() {
+                                location.reload();
+                            });
+                            return; // Stop execution after the first missing field is found
+                        }
+                    }
+                }
+                if(pageId == 4 || pageId == 5 || pageId == 6){
+                    setTimeout(function() {
+                        checkForEdit();
+                    }, 2000);
+                } else {
+                    setTimeout(function() {
+                        IntumescentSeals();
+                    }, 2000);
+                }
+
+            }
+
+            function checkForEdit(){
+                const doorsetTypeValue = $('#doorsetType').val();
+                const sOWidthValue = $('#sOWidth').val();
+                const sOHeightValue = $('#sOHeight').val();
+                const tollerance = $('#tollerance').val();
+                const framethikness = $('#frameThickness').val();
+                const undercut = $('#undercut').val();
+                const gap = $('#gap').val();
+                    if (doorsetTypeValue == "DD") {
+                        TolleranceAdditionalNumber = 2;
+                        FrameThicknessAdditionalNumber = 2;
+                        GapAdditionalNumber = 3;
+                        var leafWidth1 = (sOWidthValue - (tollerance * TolleranceAdditionalNumber) - (framethikness *
+                            FrameThicknessAdditionalNumber) - (GapAdditionalNumber * gap)) / 2;
+                    } else if (doorsetTypeValue == "SD") {
+                            TolleranceAdditionalNumber = 2;
+                            FrameThicknessAdditionalNumber = 2;
+                            GapAdditionalNumber = 2;
+                            var leafWidth1 = sOWidthValue - (tollerance * TolleranceAdditionalNumber) - (framethikness *
+                                FrameThicknessAdditionalNumber) - (GapAdditionalNumber * gap);
+                    } else {
+                            TolleranceAdditionalNumber = 2;
+                            FrameThicknessAdditionalNumber = 2;
+                            GapAdditionalNumber = 3;
+                            var leafWidth1 = 0;
+                    }
+                    var calculationOfLeafHeight = sOHeightValue - tollerance - framethikness - undercut - gap;
+                    editSvg(leafWidth1, calculationOfLeafHeight);
+            }
+
             function IntumescentSeals() {
-                let pageId = 1;
+
+                let pageId = pageIdentity();
                 const latchTypeValue = $('#latchType').val(); // L,UL
                 const swingTypeValue = $('#swingType').val(); // SA,DA
                 const doorsetTypeValue = $('#doorsetType').val(); // SD,DD
-                const fireRatingValue = $('#fireRating').val(); // FD30
+                const fireRatingValue = $('#currentFireRating').val(); // FD30
                 const overpanelValue2 = $('#overpanel').val(); // Yes
                 const leafWidth1Value = $('#leafWidth1').val();
                 const leafHeightNoOPValue = $('#leafHeightNoOP').val();
@@ -1273,37 +1710,18 @@
                     GapAdditionalNumber = 3;
                     var leafWidth1 = 0;
                 }
-                //if(leafWidth1 != leafWidth1Value){
-                //  swal('Warning','Invalid value for Leaf Width 1!').then(function(){
-                //    location.reload();
-                //});
-                //return false;
-                //}
+                const intumescentsealsleaftype = $('#intumescentLeafType').val();
                 var calculationOfLeafHeight = sOHeightValue - tollerance - framethikness - undercut - gap;
-                //if(calculationOfLeafHeight != leafHeightNoOPValue){
-                //  swal('Warning','Invalid value for Leaf Height!').then(function(){
-                //    location.reload();
-                //  });
-                //  return false;
-                //}
-                // console.log($aa);
+                if(pageId == 4 || pageId == 5 || pageId == 6){
+                   return editSvg(leafWidth1, calculationOfLeafHeight);
+                }
                 if (fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '') {
                     $.ajax({
                         url: $("#Filterintumescentseals").text(),
-                        method: "POST",
-                        dataType: "Json",
-                        data: {
-                            pageId: pageId,
-                            SelectedValue: SelectedValue,
-                            fireRatingValue: fireRatingValue,
-                            intumescentseals: $aa,
-                            leafWidth1Value: leafWidth1,
-                            leafHeightNoOPValue: calculationOfLeafHeight,
-                            doorLeafFacingValueNew: doorLeafFacingValueNew,
-                            frameMaterialNew: frameMaterialNew,
-                            _token: $("#_token").val()
-                        },
-                        success: function(result) {
+                        method:"POST",
+                        dataType:"Json",
+                        data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRatingValue,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype, _token:$("#_token").val()},
+                        success: function(result){
                             if (result.status == 'ok') {
                                 editSvg(leafWidth1, calculationOfLeafHeight);
                             } else if (result.status == 'error2') {
@@ -1377,6 +1795,101 @@
                     }
                 });
             }
+           function validationHere() {
+                const path = window.location.pathname;
+                const segments = path.split('/');
+                const id = segments[3];
+
+                $('.loader').empty().css({ 'display': 'block' });
+
+                $.ajax({
+                    url: $("#validateAlls").val(), // your route URL
+                    method: "POST",
+                    data: {
+                        _token: $("#_token").val(),
+                        quotationId: id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        console.log(data)
+                        $('.loader').hide(); // hide loader after success
+
+                        if (data.status === 'success') {
+                        //    $.getScript('/Halspan/common-cad-configuration.js');
+
+                            // Loop through items
+
+                                // Either use global variable or function call
+                                generateCADImage(data.items); // ⬅️ Use a function in your JS
+                            // });
+                        // });
+
+                        } else if (data.status === 'error') {
+                            let errorMessages = '';
+
+                            $.each(data.validation_errors, function(doorId, messages) {
+                                errorMessages += `<b>${doorId.replace('_', ' ')}</b><br>`;
+                                messages.forEach(function(msg) {
+                                    errorMessages += `- ${msg}<br>`;
+                                });
+                                errorMessages += '<br>';
+                            });
+
+                            swal("Validation Error", errorMessages, "error");
+                        }
+                    },
+                    error: function(xhr) {
+                        $('.loader').hide(); // hide loader even on error
+
+                        if (xhr.status === 422 && xhr.responseJSON) {
+                            let data = xhr.responseJSON;
+                            let errorMessages = '';
+
+                            $.each(data.validation_errors || {}, function(doorId, messages) {
+                                errorMessages += `<b>${doorId.replace('_', ' ')}</b><br>`;
+                                messages.forEach(function(msg) {
+                                    errorMessages += `- ${msg}<br>`;
+                                });
+                                errorMessages += '<br>';
+                            });
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Validation Error',
+                                html: errorMessages
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Something went wrong. Please try again.'
+                            });
+                        }
+                    }
+                });
+            }
+           function generateCADImage(val) {
+                // $('.loader').empty().css({ 'display': 'block' });
+                totalItemsToSave = val.length;
+                completedItems = 0;
+
+                processItemsSequentially(val, 0);
+            }
+
+            function processItemsSequentially(dataList, index) {
+                  $('.loader').empty().css({ 'display': 'block' });
+                if (index >= dataList.length) return;
+
+                const item = dataList[index];
+
+                render(null, item);
+
+                setTimeout(() => {
+                    processItemsSequentially(dataList, index + 1);
+                }, 1500); // Wait enough time for render & save
+            }
+
+
             $(document).on('keyup', '#searchCustomer', function(e) {
                 e.preventDefault();
                 const customerName = $(this).val();

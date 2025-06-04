@@ -12,7 +12,7 @@
                             <label for="leaf1VisionPanel">Leaf 1 Vision Panel
                             @if(!empty($tooltip->leaf1VisionPanel))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->leaf1VisionPanel}}'));
+                            // document.write(Tooltip('{{$tooltip->leaf1VisionPanel}}'));
                             </script>
                             @endif
                             </label>
@@ -41,7 +41,7 @@
                             <label for="leaf1VisionPanelShape">Vision Panel Shape
                             @if(!empty($tooltip->leaf1VisionPanelShape))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->leaf1VisionPanelShape}}'));
+                            // document.write(Tooltip('{{$tooltip->leaf1VisionPanelShape}}'));
                             </script>
                             @endif
                             </label>
@@ -66,7 +66,7 @@
                             <label for="visionPanelQuantity">Vision Panel Quantity
                             @if(!empty($tooltip->visionPanelQuantity))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->visionPanelQuantity}}'));
+                            // document.write(Tooltip('{{$tooltip->visionPanelQuantity}}'));
                             </script>
                             @endif
                             </label>
@@ -94,7 +94,7 @@
                             <label for="AreVPsEqualSizes">Are VP's equal sizes?
                             @if(!empty($tooltip->AreVPsEqualSizes))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->AreVPsEqualSizes}}'));
+                            // document.write(Tooltip('{{$tooltip->AreVPsEqualSizes}}'));
                             </script>
                             @endif
                             </label>
@@ -121,7 +121,7 @@
                             <label for="distanceFromTopOfDoor">Distance from top of door
                             @if(!empty($tooltip->distanceFromTopOfDoor))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceFromTopOfDoor}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceFromTopOfDoor}}'));
                             </script>
                             @endif
                                 </label>
@@ -135,11 +135,28 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
+                            <label for="distanceFromTopOfDoor">Distance from Bottom of door
+                            @if(!empty($tooltip->distanceFromBottomOfDoor))
+                            <script type="text/javascript">
+                            // document.write(Tooltip('{{$tooltip->distanceFromBottomOfDoor}}'));
+                            </script>
+                            @endif
+                                </label>
+                            <input type="number"
+                                @if(!isset($Item['DistanceFromBottomOfDoor'])) {{'readonly'}} @endif
+                                min="100"
+                                name="distanceFromBottomOfDoor" id="distanceFromBottomOfDoor"
+                                class="form-control door-configuration"
+                        value="@if(isset($Item['DistanceFromBottomOfDoor'])){{$Item['DistanceFromBottomOfDoor']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
                             <label for="distanceFromTheEdgeOfDoor">Distance from the
                                 edge
                             @if(!empty($tooltip->distanceFromTheEdgeOfDoor))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceFromTheEdgeOfDoor}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceFromTheEdgeOfDoor}}'));
                             </script>
                             @endif
                                 </label>
@@ -154,7 +171,7 @@
                             <label for="distanceBetweenVPs">Distance between VP's
                             @if(!empty($tooltip->distanceBetweenVPs))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceBetweenVPs}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceBetweenVPs}}'));
                             </script>
                             @endif
                             </label>
@@ -171,7 +188,7 @@
                             <label for="vP1Width">Leaf 1 VP Width
                                 @if(!empty($tooltip->vP1Width))
                                     <script type="text/javascript">
-                                        //(Tooltip('{{$tooltip->vP1Width}}'));
+                                        // document.write(Tooltip('{{$tooltip->vP1Width}}'));
                                     </script>
                                 @endif
                             </label>
@@ -189,7 +206,7 @@
                             <label for="vP1Height1">Leaf 1 VP Height (1)
                             @if(!empty($tooltip->vP1Height1))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP1Height1}}'));
+                            // document.write(Tooltip('{{$tooltip->vP1Height1}}'));
                             </script>
                             @endif
                             </label>
@@ -208,7 +225,7 @@
 
                             @if(!empty($tooltip->vP1Height2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP1Height2}}'));
+                            // document.write(Tooltip('{{$tooltip->vP1Height2}}'));
                             </script>
                             @endif
                             </label>
@@ -226,7 +243,7 @@
                             <label for="vP1Height3">Leaf 1 VP Height (3)
                             @if(!empty($tooltip->vP1Height3))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP1Height3}}'));
+                            // document.write(Tooltip('{{$tooltip->vP1Height3}}'));
                             </script>
                             @endif
                             </label>
@@ -244,7 +261,7 @@
                             <label for="vP1Height4">Leaf 1 VP Height (4)
                             @if(!empty($tooltip->vP1Height4))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP1Height4}}'));
+                            // document.write(Tooltip('{{$tooltip->vP1Height4}}'));
                             </script>
                             @endif
                             </label>
@@ -262,7 +279,7 @@
                             <label for="vP1Height5">Leaf 1 VP Height (5)
                             @if(!empty($tooltip->vP1Height5))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP1Height5}}'));
+                            // document.write(Tooltip('{{$tooltip->vP1Height5}}'));
                             </script>
                             @endif
                             </label>
@@ -281,7 +298,7 @@
 
                             @if(!empty($tooltip->leaf1VpAreaSizeM2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->leaf1VpAreaSizeM2}}'));
+                            // document.write(Tooltip('{{$tooltip->leaf1VpAreaSizeM2}}'));
                             </script>
                             @endif
                             </label>
@@ -298,7 +315,7 @@
                             <label for="leaf2VisionPanel">Leaf 2 Vision Panel
                                 @if(!empty($tooltip->leaf2VisionPanel))
                                     <script type="text/javascript">
-                                        //(Tooltip('{{$tooltip->leaf2VisionPanel}}'));
+                                        // document.write(Tooltip('{{$tooltip->leaf2VisionPanel}}'));
                                     </script>
                                 @endif
                             </label>
@@ -331,7 +348,7 @@
                             <label for="vpSameAsLeaf1">Is VP same as Leaf 1?
                                 @if(!empty($tooltip->vpSameAsLeaf1))
                                     <script type="text/javascript">
-                                        //(Tooltip('{{$tooltip->vpSameAsLeaf1}}'));
+                                        // document.write(Tooltip('{{$tooltip->vpSameAsLeaf1}}'));
                                     </script>
                                 @endif
                             </label>
@@ -360,7 +377,7 @@
 
                             @if(!empty($tooltip->visionPanelQuantityforLeaf2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->visionPanelQuantityforLeaf2}}'));
+                            // document.write(Tooltip('{{$tooltip->visionPanelQuantityforLeaf2}}'));
                             </script>
                             @endif
                                 </label>
@@ -390,7 +407,7 @@
                                 2?
                             @if(!empty($tooltip->AreVPsEqualSizesForLeaf2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->AreVPsEqualSizesForLeaf2}}'));
+                            // document.write(Tooltip('{{$tooltip->AreVPsEqualSizesForLeaf2}}'));
                             </script>
                             @endif
                                 </label>
@@ -419,7 +436,7 @@
                             <label for="distanceFromTopOfDoorforLeaf2">Distance from top of door for Leaf 2
                             @if(!empty($tooltip->distanceFromTopOfDoorforLeaf2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceFromTopOfDoorforLeaf2}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceFromTopOfDoorforLeaf2}}'));
                             </script>
                             @endif
                                 </label>
@@ -437,7 +454,7 @@
                                 edge for Leaf 2
                             @if(!empty($tooltip->distanceFromTheEdgeOfDoorforLeaf2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceFromTheEdgeOfDoorforLeaf2}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceFromTheEdgeOfDoorforLeaf2}}'));
                             </script>
                             @endif
 
@@ -456,7 +473,7 @@
                                 VP's
                             @if(!empty($tooltip->distanceBetweenVPsforLeaf2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->distanceBetweenVPsforLeaf2}}'));
+                            // document.write(Tooltip('{{$tooltip->distanceBetweenVPsforLeaf2}}'));
                             </script>
                             @endif
                                 </label>
@@ -473,7 +490,7 @@
                             <label for="vP2Width">Leaf 2 VP Width
                             @if(!empty($tooltip->vP2Width))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Width}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Width}}'));
                             </script>
                             @endif
 
@@ -492,7 +509,7 @@
                             <label for="vP2Height1">Leaf 2 VP Height (1)
                             @if(!empty($tooltip->vP2Height1))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Height1}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Height1}}'));
                             </script>
                             @endif
 
@@ -511,7 +528,7 @@
                             <label for="vP2Height2">Leaf 2 VP Height (2)
                             @if(!empty($tooltip->vP2Height2))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Height2}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Height2}}'));
                             </script>
                             @endif
 
@@ -530,7 +547,7 @@
                             <label for="vP2Height3">Leaf 2 VP Height (3)
                             @if(!empty($tooltip->vP2Height3))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Height3}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Height3}}'));
                             </script>
                             @endif
                             </label>
@@ -548,7 +565,7 @@
                             <label for="vP2Height4">Leaf 2 VP Height (4)
                             @if(!empty($tooltip->vP2Height4))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Height4}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Height4}}'));
                             </script>
                             @endif
                             </label>
@@ -566,7 +583,7 @@
                             <label for="vP2Height5">Leaf 2 VP Height (5)
                             @if(!empty($tooltip->vP2Height5))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->vP2Height5}}'));
+                            // document.write(Tooltip('{{$tooltip->vP2Height5}}'));
                             </script>
                             @endif
                             </label>
@@ -593,7 +610,7 @@
                                 Integrity
                             @if(!empty($tooltip->lazingIntegrityOrInsulationIntegrity))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->lazingIntegrityOrInsulationIntegrity}}'));
+                            // document.write(Tooltip('{{$tooltip->lazingIntegrityOrInsulationIntegrity}}'));
                             </script>
                             @endif
                                 </label>
@@ -609,17 +626,13 @@
                             <label for="glassType">Glass Type
                             @if(!empty($tooltip->glassType))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glassType}}'));
+                            // document.write(Tooltip('{{$tooltip->glassType}}'));
                             </script>
                             @endif
                             </label>
                             <select name="glassType" id="glassType" option_slug="leaf1_glass_type" class="form-control">
                                 <option value="">Select Glass Type</option>
-                                <!-- @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1_glass_type')
-                                <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach -->
+                                <input type="hidden" id="glassValueId" value="@if(isset($Item['GlassType'])){{$Item['GlassType']}}@endif">
                             </select>
                         </div>
                     </div>
@@ -628,11 +641,13 @@
                             <label for="glassThickness">Glass Thickness
                             @if(!empty($tooltip->glassThickness))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glassThickness}}'));
+                            // document.write(Tooltip('{{$tooltip->glassThickness}}'));
                             </script>
                             @endif
                             </label>
-                            <select name="glassThickness" id="glassThickness" class="form-control"></select>
+                            {{--  <select name="glassThickness" id="glassThickness" class="form-control"></select>  --}}
+                            <input type="text" readonly name="glassThickness" id="glassThickness" class="form-control"
+                                value="@if(isset($Item['GlassThickness'])){{$Item['GlassThickness']}}@endif">
                         </div>
                     </div>
 
@@ -641,7 +656,7 @@
                             <label for="glazingSystems">Glazing Systems
                             @if(!empty($tooltip->glazingSystems))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingSystems}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingSystems}}'));
                             </script>
                             @endif
                             </label>
@@ -662,7 +677,7 @@
                                 Thickness
                             @if(!empty($tooltip->glazingSystemsThickness))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingSystemsThickness}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingSystemsThickness}}'));
                             </script>
                             @endif
 
@@ -681,7 +696,7 @@
 
                             @if(!empty($tooltip->glazingBeads))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeads}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeads}}'));
                             </script>
                             @endif
 
@@ -698,10 +713,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="glazingBeadsThickness">Glazing Beads Thickness
+                            <label for="glazingBeadsThickness">Glazing Beads Height
                             @if(!empty($tooltip->glazingBeadsThickness))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeadsThickness}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeadsThickness}}'));
                             </script>
                             @endif
                             </label>
@@ -715,7 +730,7 @@
                             <label for="glazingBeadsWidth">Glazing Beads Width
                             @if(!empty($tooltip->glazingBeadsWidth))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeadsWidth}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeadsWidth}}'));
                             </script>
                             @endif
                             </label> --}}
@@ -730,7 +745,7 @@
                             <label for="glazingBeadsHeight" class="">Glazing Beads Width
                             @if(!empty($tooltip->glazingBeadsHeight))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeadsHeight}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeadsHeight}}'));
                             </script>
                             @endif
                             </label>
@@ -746,7 +761,7 @@
                                 Detail
                             @if(!empty($tooltip->glazingBeadsFixingDetail))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeadsFixingDetail}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeadsFixingDetail}}'));
                             </script>
                             @endif
 
@@ -761,7 +776,7 @@
                             <label for="glazingBeadSpecies">Glazing Bead Species
                             @if(!empty($tooltip->glazingBeadSpecies))
                             <script type="text/javascript">
-                            //(Tooltip('{{$tooltip->glazingBeadSpecies}}'));
+                            // document.write(Tooltip('{{$tooltip->glazingBeadSpecies}}'));
                             </script>
                             @endif
 

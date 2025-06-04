@@ -688,6 +688,7 @@ function AdjustmentLipping() {
     let adjustmentLeafWidth1 = $('#adjustmentLeafWidth1').val();
     let adjustmentLeafWidth2 = $('#adjustmentLeafWidth2').val();
     let adjustmentLeafHeightNoOP = $('#adjustmentLeafHeightNoOP').val();
+    let overpanel = $('#overpanel').val();
     let doorsetType = $('#doorsetType').val();
     if (adjustmentLeafWidth1.trim() !== '' || adjustmentLeafHeightNoOP.trim() !== '') {
         $('#lippingType').prop('disabled', false);
@@ -699,18 +700,26 @@ function AdjustmentLipping() {
         $('#coreWidth1').prop('disabled', false);
         $('#coreWidth2').prop('disabled', false);
         $('#coreHeight').prop('disabled', false);
-    } else if(adjustmentLeafWidth2.trim() !== ''){
-        if(doorsetType == 'leaf_and_a_half'){
-            $('#lippingType').prop('disabled', false);
-            $('#lippingType').prop('required', true);
-            $('#lippingThickness').prop('disabled', false);
-            $('#lippingThickness').prop('required', true);
-            $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
-            $('#lippingSpecies').prop('required', true);
-            $('#coreWidth1').prop('disabled', false);
-            $('#coreWidth2').prop('disabled', false);
-            $('#coreHeight').prop('disabled', false);
-        }
+    } else if(overpanel == 'Overpanel'){
+        $('#lippingType').prop('disabled', false);
+        $('#lippingType').prop('required', true);
+        $('#lippingThickness').prop('disabled', false);
+        $('#lippingThickness').prop('required', true);
+        $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
+        $('#lippingSpecies').prop('required', true);
+        $('#coreWidth1').prop('disabled', false);
+        $('#coreWidth2').prop('disabled', false);
+        $('#coreHeight').prop('disabled', false);
+    } else if(adjustmentLeafWidth2.trim() !== '' && doorsetType == 'leaf_and_a_half'){
+        $('#lippingType').prop('disabled', false);
+        $('#lippingType').prop('required', true);
+        $('#lippingThickness').prop('disabled', false);
+        $('#lippingThickness').prop('required', true);
+        $('#lippingSpecies').prop('disabled', false).addClass("bg-white");
+        $('#lippingSpecies').prop('required', true);
+        $('#coreWidth1').prop('disabled', false);
+        $('#coreWidth2').prop('disabled', false);
+        $('#coreHeight').prop('disabled', false);
     } else {
         $('#lippingType').prop('disabled', true).val('');
         $('#lippingThickness').prop('disabled', true).val('');
@@ -718,6 +727,8 @@ function AdjustmentLipping() {
         $('#coreWidth1').prop('disabled', true).val('');
         $('#coreWidth2').prop('disabled', true).val('');
         $('#coreHeight').prop('disabled', true).val('');
+        $('#opCoreWidth').prop('disabled', true).val('');
+        $('#opCoreHeight').prop('disabled', true).val('');
         $('#LippingThicknessValue').val('');
         $('#lippingSpeciesid').val('');
         $('#lippingType').prop('required', false);
@@ -1243,6 +1254,11 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     doorLeafFacingPrice('overpanel2',"{{$Item['Overpanel']}}");
     FramePrice('overpanel3');
     @endif
+
+    @if(isset($Item['Overpanel']))
+    corewidth1Value();
+    @endif
+
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
     sideLight1Change();

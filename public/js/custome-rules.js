@@ -748,6 +748,11 @@ $(document).ready(function() {
             $("#plantonStopHeight").attr('min', '12');
             $("#plantonStopWidth").attr('min', '20');
             $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
+             if(value == 'FD30' || value == 'FD30s'){
+                $("#plantonStopWidth").attr('min', '28');
+                newMin = 28;
+                $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
+            }
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
 
@@ -763,10 +768,14 @@ $(document).ready(function() {
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
+            if($("#plantonStopWidth").val() == 0 || $("#plantonStopHeight").val() == 0){
+                $("#plantonStopWidth").val('');
+                $("#plantonStopHeight").val('');
+            }
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
             let newMin;
-            if(value == 'FD60' || value == 'FD30'){
+            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
                 $("#ScallopedWidth").attr('min', '32');
                 newMin = 32;
             }
@@ -787,6 +796,10 @@ $(document).ready(function() {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
+            if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
+                $("#ScallopedWidth").val('');
+                $("#ScallopedHeight").val('');
+            }
             $("#frameTypeDimensions").val('').attr('readonly', false);
 
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
@@ -798,11 +811,11 @@ $(document).ready(function() {
                 $("#rebatedWidth").attr('min', '35');
                 newMin = 35;
             }
-            if(value == 'FD30'){
+            if(value == 'FD30' || value == 'FD30s'){
                 $("#rebatedWidth").attr('min', '44');
                 newMin = 44;
             }
-            if(value == 'FD60'){
+            if(value == 'FD60' || value == 'FD60s'){
                 $("#rebatedWidth").attr('min', '54');
                 newMin = 54;
             }
@@ -819,6 +832,11 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+
+            if($("#rebatedWidth").val() == 0 || $("#rebatedHeight").val() == 0){
+                $("#rebatedWidth").val('');
+                $("#rebatedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
@@ -1803,6 +1821,10 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $("#glazingBeadsThickness").attr('min',19);
                 $("#SlBeadHeight").attr({min: 20});
+                $('#intumescentSealArrangement').removeAttr('required')
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -1814,6 +1836,10 @@ function copyOfSideLite1Change(isstatus = false){
                 // $("#gap").val('');
                 $('label[for="gap"]').show();
                 $('label[for="gap_NFR"]').css({'display':'none'});
+                $('#intumescentSealArrangement').attr('required', true)
+                $('#intumescentSealType').attr('required', true)
+                $('#intumescentSealLocation').attr('required', true)
+                $('#intumescentSealColor').attr('required', true)
 
                 if($("#fireRating").val()=="FD30"){
                     // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
@@ -1884,8 +1910,8 @@ function copyOfSideLite1Change(isstatus = false){
         let framTypeValue = $('#frameType').val();
         // if (framTypeValue == "Plant_on_Stop") {
             if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#plantonStopWidth").attr('min', '26');
                 $("#plantonStopWidthText").text('(min 26)');
@@ -6061,20 +6087,27 @@ function framewidth(){
     var DoorSetType = $('select[name="doorsetType"]').val();
     var sOWidth = parseInt($('input[name="sOWidth"]').val(), 10) || 0;
     var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    // JFDS-952 task old one
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (DoorSetType == "SD"){
+    //         var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
+    //         console.log(
+    //             `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
+    //     }else{
+    //         var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
+    //           );
 
+    //     }
+    //     $("#frameWidth").val(FrameWidth);
+    // }
+    // JFDS-952 task old one end
+    // Below one 987 updated version same for all door set type
+    // Frame Width is calculated SO width -TolleranceX2
     if($("#frameType").val() == 'Rebated_Frame'){
-        if (DoorSetType == "SD"){
-            var FrameWidth = (FrameThickness * 2) - (rebatedHeight * 2) + (Gap * 2) + leafWidth1;
-            console.log(
-                `${FrameThickness} * 2 - ${rebatedHeight} * 2 + ${Gap} * 2 + ${leafWidth1} = Rebated_FrameWidth ${FrameWidth}`
-              );
-        }else{
-            var FrameWidth = FrameThickness - rebatedHeight +  FrameThickness - rebatedHeight + (Gap * 3) + leafWidth1 + leafWidth2;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${FrameThickness} - ${rebatedHeight} + (${Gap} * 3) + ${leafWidth1} + ${leafWidth2} = Rebated_FrameWidth ${FrameWidth}`
-              );
-
-        }
+        var FrameWidth = sOWidth - (tollerance * 2);
         $("#frameWidth").val(FrameWidth);
     } else if($("#frameType").val() == 'Scalloped'){
         var FrameWidth = sOWidth - (tollerance * 2);
@@ -6127,7 +6160,25 @@ function frameHeight(){
     var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
 
     let foursidedframe = document.getElementById("foursidedframe");
+    // JFDS-952 task old one end
+    // if($("#frameType").val() == 'Rebated_Frame'){
+    //     if (foursidedframe.checked) {
+    //         var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
+    //         console.log(
+    //         `${leafHeightNoOP} + ((${FrameThickness} - ${rebatedHeight}) * 2) + (${Gap} * 2) = 4 sided reabated frameHeight ${frameHeight}`
+    //         );
 
+    //     }else{
+    //         var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
+    //         console.log(
+    //             `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
+    //         );
+    //     }
+
+    //     $("#frameHeight").val(frameHeight);
+    // }
+    // Below one 987 updated version same for all door set type
+    // Frame Height is calculated SO height -ToleranceX1
     if($("#frameType").val() == 'Rebated_Frame'){
         if (foursidedframe.checked) {
             var frameHeight = leafHeightNoOP + ((FrameThickness - rebatedHeight) * 2) + (Gap *2);
@@ -6136,10 +6187,8 @@ function frameHeight(){
             );
 
         }else{
-            var frameHeight = FrameThickness - rebatedHeight + Gap + undercut + leafHeightNoOP;
-            console.log(
-                `${FrameThickness} - ${rebatedHeight} + ${Gap} + ${undercut} + ${leafHeightNoOP} = Rebated_FrameHeight ${frameHeight}`
-            );
+            var frameHeight = soheight - tollerance;
+            console.log( soheight,tollerance,frameHeight);
         }
 
         $("#frameHeight").val(frameHeight);

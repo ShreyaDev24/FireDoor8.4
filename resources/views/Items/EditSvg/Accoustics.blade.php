@@ -13,7 +13,7 @@
                                                     <label for="accoustics">Acoustics
                                                         @if (!empty($tooltip->accoustics))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->accoustics }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->accoustics }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -42,7 +42,7 @@
                                                     <label for="rWdBRating">rW dB Rating
                                                         @if (!empty($tooltip->rWdBRating))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->rWdBRating }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->rWdBRating }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -55,7 +55,7 @@
                                                     <label for="perimeterSeal1">Perimeter Seal 1
                                                         @if (!empty($tooltip->perimeterSeal1))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->perimeterSeal1 }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->perimeterSeal1 }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -98,7 +98,7 @@
                                                     <label for="perimeterSeal2">Perimeter Seal 2
                                                         @if (!empty($tooltip->perimeterSeal2))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->perimeterSeal2 }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->perimeterSeal2 }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -112,12 +112,12 @@
                                                 </div>
                                             </div>
 
-                                            <div class="col-md-6">
+                                         {{--   <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="thresholdSeal1">Threshold Seal 1
                                                         @if (!empty($tooltip->thresholdSeal1))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->thresholdSeal1 }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->thresholdSeal1 }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -130,13 +130,15 @@
 
 
                                                 </div>
-                                            </div>
+                                            </div>  --}}
+
+                                            {{--
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="thresholdSeal2">Threshold Seal 2
                                                         @if (!empty($tooltip->thresholdSeal2))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->thresholdSeal2 }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->thresholdSeal2 }}'));
                                                             </script>
                                                         @endif
                                                     </label>
@@ -148,13 +150,14 @@
 
 
                                                 </div>
-                                            </div>
+                                            </div> --}}
+
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
                                                     <label for="accousticsmeetingStiles">Meeting Stiles
                                                         @if (!empty($tooltip->accousticsmeetingStiles))
                                                             <script type="text/javascript">
-                                                                //(Tooltip('{{ $tooltip->accousticsmeetingStiles }}'));
+                                                                // document.write(Tooltip('{{ $tooltip->accousticsmeetingStiles }}'));
                                                             </script>
                                                         @endif
                                                     </label>

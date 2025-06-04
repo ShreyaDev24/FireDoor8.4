@@ -7,12 +7,12 @@
             </div>
             <div>
                 <div class="form-row">
-                    <div class="col-md-6">
+                    <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="sOWidth" class="">S.O Width
                                 @if(!empty($tooltip->sOWidth))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->sOWidth}}'));
+                                // document.write(Tooltip('{{$tooltip->sOWidth}}'));
                                 </script>
                                 @endif
                             </label>
@@ -21,12 +21,12 @@
                                 class="form-control  change-event-calulation door-configuration" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="sOHeight" class="">S.O Height
                                 @if(!empty($tooltip->sOHeight))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->sOHeight}}'));
+                                // document.write(Tooltip('{{$tooltip->sOHeight}}'));
                                 </script>
                                 @endif
                             </label>
@@ -35,12 +35,12 @@
                                 class="form-control change-event-calulation door-configuration" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="sODepth" class="">S.O Depth
                                 @if(!empty($tooltip->sODepth))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->sODepth}}'));
+                                // document.write(Tooltip('{{$tooltip->sODepth}}'));
                                 </script>
                                 @endif
                             </label>
@@ -53,7 +53,7 @@
                             <label for="leafWidth1">Leaf Width 1
                                 @if(!empty($tooltip->leafWidth1))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->leafWidth1}}'));
+                                // document.write(Tooltip('{{$tooltip->leafWidth1}}'));
                                 </script>
                                 @endif
                             </label>
@@ -67,7 +67,7 @@
                             <label for="leafWidth2">Leaf Width 2
                                 @if(!empty($tooltip->leafWidth2))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->leafWidth2}}'));
+                                // document.write(Tooltip('{{$tooltip->leafWidth2}}'));
                                 </script>
                                 @endif
                             </label>
@@ -81,7 +81,7 @@
                             <label for="leafHeightNoOP" class="">Leaf Height
                                 @if(!empty($tooltip->leafHeightNoOP))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->leafHeightNoOP}}'));
+                                // document.write(Tooltip('{{$tooltip->leafHeightNoOP}}'));
                                 </script>
                                 @endif
                             </label>
@@ -95,7 +95,7 @@
                             <label for="doorThickness">Door Thickness (mm)
                                 @if(!empty($tooltip->doorThickness))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->doorThickness}}'));
+                                // document.write(Tooltip('{{$tooltip->doorThickness}}'));
                                 </script>
                                 @endif
                             </label>
@@ -105,12 +105,92 @@
                             </div>
                         </div>
                     </div>
+                    {{-- ADD HINGE LOCATION (15-12-2023) --}}
+                    <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group">
+                            <label for="hinge1Location">Hinge 1 Location (Min 100 mm, Max 180 mm)
+                                @if(!empty($tooltip->hing1))
+                                   <script type="text/javascript">
+                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                   </script>
+                                @endif
+                            </label>
+                            <div id="hinge_location_div">
+                            @if(!empty($Item['hinge1Location']))
+                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge1Location'])){{$Item['hinge1Location']}}@endif" min="100" max="180">
+                            @else
+                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif" min="100" max="180">
+                            @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group">
+                            <label for="hinge2Location">Hinge 2 Location (Min 200 mm)
+                                @if(!empty($tooltip->hing2))
+                                   <script type="text/javascript">
+                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                   </script>
+                                @endif
+                            </label>
+                            <div id="hinge_location_div">
+                                @if(!empty($Item['hinge2Location']))
+                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge2Location'])){{$Item['hinge2Location']}}@endif" min="200">
+                                @else
+                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group">
+                            <label for="hinge3Location" id="hinge3LocationLabel">Hinge 3 Location  (Min 150 mm, Max 250 mm)
+                                @if(!empty($tooltip->hing3))
+                                   <script type="text/javascript">
+                                   // document.write(Tooltip('{{$tooltip->gap}}'));
+                                   </script>
+                                @endif
+                            </label>
+                            <div id="hinge_location_div">
+                            @if(!empty($Item['hinge3Location']))
+                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge3Location'])){{$Item['hinge3Location']}}@endif" min="150" max="250">
+                            @else
+                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif" min="150" max="250">
+                            @endif
+
+                            </div>
+                        </div>
+                    </div>
+                    <div id="hing4LocationDiv" class="col-md-6 d-none framehideshow">
+                        <div class="position-relative form-group ">
+                            <label for="hinge4Location" id="hinge4LocationLabel">Hinge 3 Location (Min 200 mm)</label>
+                            <div id="hinge_location_div">
+                            <input type="number" name="hinge4Location" id="hinge4Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge4Location'])){{$Item['hinge4Location']}}@endif" min="200">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group d-flex">
+                            <label for="hingeCenterCheck">Hinge Center</label>
+                            @if(!empty($Item['hinge3Location']))
+                            <input type="checkbox" name="hingeCenterCheck" id="hingeCenterCheck" class="change-event-calulation form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['hingeCenterCheck']) && $Item['hingeCenterCheck'] == 1){{'checked'}}@endif>
+                            @else
+                            <input type="checkbox" name="hingeCenterCheck" id="hingeCenterCheck" class="change-event-calulation form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($hinge_location) && $hinge_location->hingeCenterCheck == 1){{'checked'}}@endif>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group d-flex">
+                            <label for="fourthHinges">4th Hinges</label>
+                            <input type="checkbox" name="fourthHinges" id="fourthHinges" class="form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['fourthHinges']) && $Item['fourthHinges'] == 1){{'checked'}}@endif>
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="doorLeafFacing">Door Leaf Facing
                                 @if(!empty($tooltip->doorLeafFacing))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->doorLeafFacing}}'));
+                                // document.write(Tooltip('{{$tooltip->doorLeafFacing}}'));
                                 </script>
                                 @endif
                             </label>
@@ -121,7 +201,18 @@
                                 @if($row->OptionSlug=='Door_Leaf_Facing')
                                 <option value="{{$row->OptionKey}}" @if(isset($Item["DoorLeafFacing"]))
                                     @if($Item["DoorLeafFacing"]==$row->OptionKey){{'selected'}} @endif
-                                    @endif>{{$row->OptionValue}}</option>
+                                    @endif>{{$row->OptionValue}}
+                                </option>
+                                @endif
+                                @endforeach
+                                @foreach($option_data as $row)
+                                @if($row->OptionKey != 'Kraft_Paper')
+                                @if($row->OptionSlug=='Door_Leaf_Facing')
+                                <option value="{{$row->OptionKey}}" @if(isset($Item["DoorLeafFacing"]))
+                                    @if($Item["DoorLeafFacing"]==$row->OptionKey){{'selected'}} @endif
+                                    @endif>{{$row->OptionValue}}
+                                </option>
+                                @endif
                                 @endif
                                 @endforeach
                             </select>
@@ -132,7 +223,7 @@
                             <label for="doorLeafFacingValue">Brand
                                 @if(!empty($tooltip->doorLeafFacingValue))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->doorLeafFacingValue}}'));
+                                // document.write(Tooltip('{{$tooltip->doorLeafFacingValue}}'));
                                 </script>
                                 @endif
                             </label>
@@ -146,7 +237,7 @@
                             <label for="doorLeafFacing">Door Leaf Finish
                                 @if(!empty($tooltip->doorLeafFacing))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->doorLeafFacing}}'));
+                                // document.write(Tooltip('{{$tooltip->doorLeafFacing}}'));
                                 </script>
                                 @endif
                             </label>
@@ -167,7 +258,7 @@
                             <label for="doorLeafFinishColor">Door Leaf Finish Color
                                 @if(!empty($tooltip->doorLeafFinishColor))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->doorLeafFinishColor}}'));
+                                // document.write(Tooltip('{{$tooltip->doorLeafFinishColor}}'));
                                 </script>
                                 @endif
                             </label>
@@ -180,7 +271,7 @@
                             <label for="decorativeGroves">Decorative Groves
                                 @if(!empty($tooltip->decorativeGroves))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->decorativeGroves}}'));
+                                // document.write(Tooltip('{{$tooltip->decorativeGroves}}'));
                                 </script>
                                 @endif
                             </label>
@@ -206,7 +297,7 @@
                             <label for="grooveLocation">Groove Location
                                 @if(!empty($tooltip->grooveLocation))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->grooveLocation}}'));
+                                // document.write(Tooltip('{{$tooltip->grooveLocation}}'));
                                 </script>
                                 @endif
                             </label>
@@ -227,7 +318,7 @@
                             <label for="grooveWidth">Groove Width(Max 10 mm)
                                 @if(!empty($tooltip->grooveWidth))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->grooveWidth}}'));
+                                // document.write(Tooltip('{{$tooltip->grooveWidth}}'));
                                 </script>
                                 @endif
                             </label>
@@ -240,7 +331,7 @@
                             <label for="grooveDepth">Groove Depth
                                 @if(!empty($tooltip->grooveDepth))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->grooveDepth}}'));
+                                // document.write(Tooltip('{{$tooltip->grooveDepth}}'));
                                 </script>
                                 @endif
                             </label>
@@ -253,7 +344,7 @@
                             <label for="maxNumberOfGroove"> Maximum Number of Groove
                                 @if(!empty($tooltip->maxNumberOfGroove))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->maxNumberOfGroove}}'));
+                                // document.write(Tooltip('{{$tooltip->maxNumberOfGroove}}'));
                                 </script>
                                 @endif
                             </label>
@@ -268,7 +359,7 @@
                             <label for="numberOfGroove">Number of Grooves
                                 @if(!empty($tooltip->numberOfGroove))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->numberOfGroove}}'));
+                                // document.write(Tooltip('{{$tooltip->numberOfGroove}}'));
                                 </script>
                                 @endif
                             </label>
@@ -283,7 +374,7 @@
                             <label for="numberOfVerticalGroove">No. of Vertical Grooves(Max 4)
                                 @if(!empty($tooltip->numberOfVerticalGroove))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->numberOfVerticalGroove}}'));
+                                // document.write(Tooltip('{{$tooltip->numberOfVerticalGroove}}'));
                                 </script>
                                 @endif
                             </label>
@@ -299,7 +390,7 @@
                             <label for="numberOfHorizontalGroove">No. of Horizontal Grooves(Max 4)
                                 @if(!empty($tooltip->numberOfHorizontalGroove))
                                 <script type="text/javascript">
-                                //(Tooltip('{{$tooltip->numberOfHorizontalGroove}}'));
+                                // document.write(Tooltip('{{$tooltip->numberOfHorizontalGroove}}'));
                                 </script>
                                 @endif
                             </label>
