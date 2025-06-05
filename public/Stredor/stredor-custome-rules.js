@@ -5711,24 +5711,24 @@ function filter_sidelight_beads(fireRating){
 }
 
 // JFDS-700
-$(document).ready(function () {
-    $("#SL1Transom, #SL2Transom").change(function() {
-        updateTransomFields(); // Ensure fields are set correctly on page load
-    });
-});
+// $(document).ready(function () {
+//     $("#SL1Transom, #SL2Transom").change(function() {
+//         updateTransomFields(); // Ensure fields are set correctly on page load
+//     });
+// });
 
-function updateTransomFields() {
-    toggleField("#SL1Transom", "#SL1TransomDepth");
-    toggleField("#SL2Transom", "#SL2TransomDepth");
-}
+// function updateTransomFields() {
+//     toggleField("#SL1Transom", "#SL1TransomDepth");
+//     toggleField("#SL2Transom", "#SL2TransomDepth");
+// }
 
-function toggleField(transomSelector, depthSelector) {
-    if ($(transomSelector).val() === "No") {
-        $(depthSelector).prop({ required: false, disabled: true });
-    } else {
-        $(depthSelector).prop({ required: true, disabled: false });
-    }
-}
+// function toggleField(transomSelector, depthSelector) {
+//     if ($(transomSelector).val() === "No") {
+//         $(depthSelector).prop({ required: false, disabled: true });
+//     } else {
+//         $(depthSelector).prop({ required: true, disabled: false });
+//     }
+// }
 
 //JFDS-709
 function LippingIns(fireratings){
