@@ -120,21 +120,23 @@
                             $cutSizeW = $value->LeafWidth1;
                             $LFW = $cutSizeW;
                         }else{
-                            $cutSizeW = (($value->LeafWidth1 + $AdjustmentLeafWidth1) - $AdjustmentLeafWidth1 - $value->LippingThickness);
+                            $cutSizeW = (floatval($value->LeafWidth1 ?? 0) + floatval($AdjustmentLeafWidth1 ?? 0)) - floatval($AdjustmentLeafWidth1 ?? 0) - floatval($value->LippingThickness ?? 0);
                             $LFW = $cutSizeW + $value->LippingThickness;
                         }
 
                         if($AdjustmentLeafWidth2 == 0){
                             $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2): '';
                         }else{
-                            $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? (($value->LeafWidth2 + $AdjustmentLeafWidth2) - $AdjustmentLeafWidth2 - $value->LippingThickness): '';
+                           $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 !== null && $value->LeafWidth2 !== ''
+                            ? (floatval($value->LeafWidth2) + floatval($AdjustmentLeafWidth2) - floatval($AdjustmentLeafWidth2) - floatval($value->LippingThickness))
+                            : '';
                         }
 
                         if($AdjustmentLeafHeightNoOP == 0){
                             $cutSizeH = $value->LeafHeight;
                             $LFH = $cutSizeH;
                         }else{
-                            $cutSizeH = (($value->LeafHeight + $AdjustmentLeafHeightNoOP)  - $AdjustmentLeafHeightNoOP - $value->LippingThickness);
+                            $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
                             $LFH = $cutSizeH + $value->LippingThickness;
                         }
                     }
