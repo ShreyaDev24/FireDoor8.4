@@ -5757,7 +5757,6 @@ function filter_sidelight_beads(fireRating){
 }
 
 // JFDS-700
-    });
 // $(document).ready(function () {
 //     $("#SL1Transom, #SL2Transom").change(function() {
 //         updateTransomFields(); // Ensure fields are set correctly on page load
