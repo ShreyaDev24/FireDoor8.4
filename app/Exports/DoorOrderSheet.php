@@ -73,7 +73,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $cutSizeH = $value->LeafHeight;
                     $LFH = $cutSizeH;
                 }else{
-                    $cutSizeH = (($value->LeafHeight + $AdjustmentLeafHeightNoOP)  - $AdjustmentLeafHeightNoOP - $value->LippingThickness);
+                    $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
+
                     $LFH = $cutSizeH + $value->LippingThickness;
                 }
             }
