@@ -59,7 +59,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $cutSizeW = $value->LeafWidth1;
                     $LFW = $cutSizeW;
                 }else{
-                    $cutSizeW = (($value->LeafWidth1 + $AdjustmentLeafWidth1) - $AdjustmentLeafWidth1 - $value->LippingThickness);
+                    $cutSizeW = (floatval($value->LeafWidth1 ?? 0) + floatval($AdjustmentLeafWidth1 ?? 0)) - floatval($AdjustmentLeafWidth1 ?? 0) - floatval($value->LippingThickness ?? 0);
                     $LFW = $cutSizeW + $value->LippingThickness;
                 }
 
