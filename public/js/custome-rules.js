@@ -6165,7 +6165,7 @@ $(document).ready(function () {
             $('#submit').attr({'disabled': true,"readonly":true });
             setTimeout(() => {
                 $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
-                $$('#submit').attr({'disabled': false,"readonly":false });
+                $('#submit').attr({'disabled': false,"readonly":false });
             }, 25000);
         }
    }
