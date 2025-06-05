@@ -5305,10 +5305,10 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         glassType = (id == null)?$("#opGlassType").val():id;
     }
     if(type == "sideLight1GlassType"){
-        glassType = (id == null)?$("#sideLight1GlassType").val():id;
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
     }
     if(type == "sideLight2GlassType"){
-        glassType = (id == null)?$("#sideLight2GlassType").val():id;
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
