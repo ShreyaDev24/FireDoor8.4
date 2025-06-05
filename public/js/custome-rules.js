@@ -104,7 +104,7 @@ function pageIdentity(){
             }
         }
 
-        checkAndSetBOM("#frameThickness");
+        checkAndSetBOM("#frameThickness"); // project list not working
     }
 
     $(document).on('change','#latchType',function(e){
