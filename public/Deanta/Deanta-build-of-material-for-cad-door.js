@@ -276,10 +276,6 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
         $("#undercut-section").addClass("table_row_show");
     }
 
-    if (name == "sOWidth") {
-        ShowLeafsWidth();
-    }
-
 }
 
 function SetPrice(OptionsObj, id, ActualValue, type = "non_selected") {

@@ -281,10 +281,6 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
         $("#undercut-section").addClass("table_row_show");
     }
 
-    if (name == "sOWidth") {
-        ShowLeafsWidth();
-    }
-
     if($('#fireRating').val()== 'NFR'){
         $('#lippingType').removeAttr('required')
         $('#lippingThickness').removeAttr('required')
