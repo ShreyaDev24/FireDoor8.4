@@ -66,7 +66,9 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 if($AdjustmentLeafWidth2 == 0){
                     $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2): '';
                 }else{
-                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? (($value->LeafWidth2 + $AdjustmentLeafWidth2) - $AdjustmentLeafWidth2 - $value->LippingThickness): '';
+                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 !== null && $value->LeafWidth2 !== ''
+                    ? (floatval($value->LeafWidth2) + floatval($AdjustmentLeafWidth2) - floatval($AdjustmentLeafWidth2) - floatval($value->LippingThickness))
+                    : '';
                 }
 
                 if($AdjustmentLeafHeightNoOP == 0){
