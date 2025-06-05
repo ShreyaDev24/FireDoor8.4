@@ -426,9 +426,29 @@ input[type=number]::-webkit-outer-spin-button {
         // })
     })
 
+    // async function removeMe(dis) {
+    //     let id = $(dis).attr('data-id');
+    //     $(`#${id}`).remove();
+    //     setTimeout(() => {
+    //         syncRequire($(dis).attr('data-main-id'));
+    //         TotalPrice();
+    //     }, 500);
+    // }
+
     async function removeMe(dis) {
         let id = $(dis).attr('data-id');
-        $(`#${id}`).remove();
+        // Normalize ID casing: convert "LocksAndLatches" to "LocksandLatches"
+        id = id.replace('LocksAndLatches', 'LocksandLatches');
+        id = id.replace('DoorSinage', 'DoorSignage');
+        id = id.replace('AirTransferGrill', 'Airtransfergrills');
+        id = id.replace('FaceFixedDoorCloser', 'FaceFixedDoorClosers');
+        id = id.replace('KeyholeEscutchen', 'KeyholeEscutcheon');
+        const target = document.getElementById(id);
+        if (target) {
+            target.remove();
+        } else {
+            console.warn(`Element with ID '${id}' not found`);
+        }
         setTimeout(() => {
             syncRequire($(dis).attr('data-main-id'));
             TotalPrice();
