@@ -1001,6 +1001,14 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
+            setTimeout(function(){
+                if($("#sideLight1").val() == 'Yes'){
+                    SideLightHeight('sideLight1');
+                }
+                if($("#sideLight2").val() == 'Yes'){
+                    SideLightHeight('sideLight2');
+                }
+            }, 1000)
             // frameprice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -1525,6 +1533,15 @@ function copyOfSideLite1Change(isstatus = false){
             $('input[name="architraveFinishcolor"]').val('');
         }
     });
+    setTimeout(function(){
+        if($("#sideLight1").val() == 'Yes'){
+            SideLightHeight('sideLight1');
+        }
+        if($("#sideLight2").val() == 'Yes'){
+            SideLightHeight('sideLight2');
+        }
+    }, 1000)
+
     });
 
     let ArcFin = $('#Architrave').val();
@@ -1776,11 +1793,13 @@ function copyOfSideLite1Change(isstatus = false){
             // $("#leafHeightNoOP").val(leafHeightNoOP).attr('readonly',true);
 
             if($("#sideLight1").val() == "Yes"){
-                $("#SL1Height").val(leafHeightNoOP).attr({'readonly':true, "required": true });
+                $("#SL1Height").attr({'readonly':true, "required": true });
+                SideLightHeight('sideLight1');
             }
 
             if($("#sideLight2").val() == "Yes"){
-                $("#SL2Height").val(leafHeightNoOP).attr({'readonly':true, "required": true });
+                $("#SL2Height").attr({'readonly':true, "required": true });
+                 SideLightHeight('sideLight2');
             }
             var plantonStopHeight = soheight-tollerance;
 
@@ -3980,7 +3999,7 @@ function copyOfSideLite1Change(isstatus = false){
             }
             var leafHeightNoOP = soheight-tollerance-framethikness-undercut-gap;
             // $("#leafHeightNoOP").val(leafHeightNoOP).attr('readonly',true);
-            $("#SL1Height").val(leafHeightNoOP).attr('readonly',true);
+            $("#SL1Height").attr('readonly',true);
             var plantonStopHeight = soheight-tollerance;
             //$("#plantonStopHeight").val(plantonStopHeight);
             $("#frameHeight").val(plantonStopHeight);
@@ -4562,9 +4581,20 @@ $("#SlBeadThickness, #SlBeadHeight,#SL1Width, #SL1Height").on("keyup",function()
     }
 });
 
-$("#oPHeigth, #oPWidth,#OpBeadThickness, #OpBeadHeight").on("keyup",function(){
+$("#oPWidth,#OpBeadThickness, #OpBeadHeight").on("keyup",function(){
     if($("#overpanel").val()=="Fan_Light"){
         doorLeafFacingPrice('overpanel2',"Fan_Light");
+    }
+});
+$("#oPHeigth").on("keyup",function(){
+    if($("#overpanel").val()=="Fan_Light"){
+        doorLeafFacingPrice('overpanel2',"Fan_Light");
+    }
+    if($("#sideLight1").val() == 'Yes'){
+        SideLightHeight('sideLight1');
+    }
+    if($("#sideLight2").val() == 'Yes'){
+        SideLightHeight('sideLight2');
     }
 });
 
@@ -6318,8 +6348,11 @@ function SideLightHeight(type){
       $("#SL1Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        console.log(oPHeigth)
         let slHeight = frameHeight + oPHeigth;
-        $("#SL1Height").val(slHeight);
+        setTimeout(function(){
+            $("#SL1Height").val(slHeight);
+        },1000);
       }
     }
     if(type == 'sideLight2'){
@@ -6327,7 +6360,10 @@ function SideLightHeight(type){
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
         let s2Height = frameHeight + oPHeigth;
-        $("#SL2Height").val(s2Height);
+         setTimeout(function(){
+            $("#SL2Height").val(s2Height);
+        },1000);
+
       }
     }
 }
