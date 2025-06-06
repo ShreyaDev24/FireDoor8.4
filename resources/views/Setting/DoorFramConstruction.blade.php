@@ -24,14 +24,14 @@
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <div class="card-header">
-                        <h5 class="card-title" style="margin-top: 10px">Door Frame Construction Setting</h5>
+                        <h6 class="card-title font-weight-bold" style="margin-top: 10px">Manufacturing Setting</h6>
                     </div>
                     <form action="{{route('storeDoorFrameConstruction')}}" method="post">
                         {{ csrf_field() }}
                             <input type="hidden" name="currencyUpdate" value="{{$users}}">
 
                             <div class="row">
-                                <div class="h6 col-12">
+                                <div class="h6 col-12 font-weight-bold">
                                     Half Lapped Joint
                                 </div>
                                 <div class="col-md-6">
@@ -49,7 +49,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="h6 col-12">
+                                <div class="h6 col-12 font-weight-bold">
                                     Mitre Joint
                                 </div>
                                 <div class="col-md-6">
@@ -67,7 +67,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="h6 col-12">
+                                <div class="h6 col-12 font-weight-bold">
                                     Mortice & Tenon Joint
                                 </div>
                                 <div class="col-md-6">
@@ -85,7 +85,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="h6 col-12">
+                                <div class="h6 col-12 font-weight-bold">
                                     Butt Joint
                                 </div>
                                 <div class="col-md-6">
@@ -103,7 +103,7 @@
                             </div>
 
                             <div class="row">
-                                <div class="h6 col-12">
+                                <div class="h6 col-12 font-weight-bold">
                                     Hinge Location
                                 </div>
                                 <div class="col-md-6">
@@ -131,6 +131,481 @@
                                     </div>
                                 </div>
                             </div>
+
+                           <div class="row">
+                                <div class="h6 col-12 font-weight-bold">DOOR FRAME CONSTRUCTION SETTINGS</div>
+
+                                <!-- HALF LIPPED JOINT -->
+                                <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_halfLippedWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="doorFrame_halfLippedWidth" id="doorFrame_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_halfLippedWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_halfLippedHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="doorFrame_halfLippedHeight" id="doorFrame_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_halfLippedHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MITRE JOINT -->
+                                <div class="col-12 font-weight-bold">MITRE JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mitreWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="doorFrame_mitreWidth" id="doorFrame_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mitreWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mitreHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="doorFrame_mitreHeight" id="doorFrame_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mitreHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 1 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mortice1Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="doorFrame_mortice1Width" id="doorFrame_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice1Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mortice1Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="doorFrame_mortice1Height" id="doorFrame_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice1Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 2 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mortice2Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="doorFrame_mortice2Width" id="doorFrame_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice2Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="doorFrame_mortice2Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="doorFrame_mortice2Height" id="doorFrame_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice2Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="h6 col-12 font-weight-bold">DOOR FRAME PLANT ON STOP CONSTRUCTION SETTINGS</div>
+
+                                <!-- HALF LIPPED JOINT -->
+                                <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_halfLippedWidth">PLANT ON HEAD WIDTH</label>
+                                        <input type="number" name="plantOn_halfLippedWidth" id="plantOn_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_halfLippedWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_halfLippedHeight">PLANT ON HEAD HEIGHT</label>
+                                        <input type="number" name="plantOn_halfLippedHeight" id="plantOn_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_halfLippedHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MITRE JOINT -->
+                                <div class="col-12 font-weight-bold">MITRE JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mitreWidth">PLANT ON HEAD WIDTH</label>
+                                        <input type="number" name="plantOn_mitreWidth" id="plantOn_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mitreWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mitreHeight">PLANT ON HEAD HEIGHT</label>
+                                        <input type="number" name="plantOn_mitreHeight" id="plantOn_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mitreHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 1 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mortice1Width">PLANT ON HEAD WIDTH</label>
+                                        <input type="number" name="plantOn_mortice1Width" id="plantOn_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice1Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mortice1Height">PLANT ON HEAD HEIGHT</label>
+                                        <input type="number" name="plantOn_mortice1Height" id="plantOn_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice1Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 2 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mortice2Width">PLANT ON HEAD WIDTH</label>
+                                        <input type="number" name="plantOn_mortice2Width" id="plantOn_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice2Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="plantOn_mortice2Height">PLANT ON HEAD HEIGHT</label>
+                                        <input type="number" name="plantOn_mortice2Height" id="plantOn_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice2Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="h6 col-12 font-weight-bold">SIDE LIGHT FRAME CONSTRUCTION SETTINGS</div>
+
+                                <!-- HALF LIPPED JOINT -->
+                                <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_halfLippedWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="sideLight_halfLippedWidth" id="sideLight_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_halfLippedWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_halfLippedHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="sideLight_halfLippedHeight" id="sideLight_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_halfLippedHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MITRE JOINT -->
+                                <div class="col-12 font-weight-bold">MITRE JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mitreWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="sideLight_mitreWidth" id="sideLight_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mitreWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mitreHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="sideLight_mitreHeight" id="sideLight_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mitreHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 1 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mortice1Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="sideLight_mortice1Width" id="sideLight_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice1Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mortice1Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="sideLight_mortice1Height" id="sideLight_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice1Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 2 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mortice2Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="sideLight_mortice2Width" id="sideLight_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice2Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLight_mortice2Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="sideLight_mortice2Height" id="sideLight_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice2Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="row">
+                                <div class="h6 col-12 font-weight-bold">
+                                    FANLIGHT / OVER PANEL FRAME CONSTRUCTION
+                                </div>
+
+                                <!-- HALF LIPPED JOINT -->
+                                <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightHalfLippedWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="fanlightHalfLippedWidth" id="fanlightHalfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightHalfLippedWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightHalfLippedHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="fanlightHalfLippedHeight" id="fanlightHalfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightHalfLippedHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MITRE JOINT -->
+                                <div class="col-12 font-weight-bold">MITRE JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMitreWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="fanlightMitreWidth" id="fanlightMitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMitreWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMitreHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="fanlightMitreHeight" id="fanlightMitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMitreHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 1 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMortice1Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="fanlightMortice1Width" id="fanlightMortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice1Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMortice1Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="fanlightMortice1Height" id="fanlightMortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice1Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- MORTICE AND TENON JOINT 2 -->
+                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMortice2Width">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="fanlightMortice2Width" id="fanlightMortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice2Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightMortice2Height">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="fanlightMortice2Height" id="fanlightMortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice2Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                             <!-- VP GLASS SIZE ADJUSTMENT -->
+                                <div class="h6 col-12 mt-4  font-weight-bold">
+                                    VP GLASS SIZE ADJUSTMENT
+                                </div>
+
+                                <!-- NRF or FD30 -->
+                                <div class="col-12 font-weight-bold">VP GLASS SIZE (NRF or FD30)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpWidthNRF">VP GLASS WIDTH NRF OR FD30 <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="vpWidthNRF" id="vpWidthNRF" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpWidthNRF}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpHeightNRF">VP GLASS HEIGHT NRF OR FD30 <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="vpHeightNRF" id="vpHeightNRF" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpHeightNRF}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">VP GLASS SIZE (FD60)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpWidthFD60">VP GLASS WIDTH FD60 <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="vpWidthFD60" id="vpWidthFD60" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpWidthFD60}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpHeightFD60">VP GLASS HEIGHT FD60 <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="vpHeightFD60" id="vpHeightFD60" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpHeightFD60}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="h6 col-12  font-weight-bold">
+                                    SIDE LIGHT 1 & 2 GLASS SIZE ADJUSTMENT
+                                </div>
+
+                                <!-- SIDE LIGHT GLASS WIDTH - NRF or FD30 -->
+                                <div class="col-12 font-weight-bold">SIDE LIGHT GLASS WIDTH NRF OR FD30 - CAN BE ONLY</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLightWidthFD30">SIDE LIGHT GLASS WIDTH</label>
+                                        <input type="number" name="sideLightWidthFD30" id="sideLightWidthFD30" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLightWidthFD30}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLightHeightFD30">SIDE LIGHT GLASS HEIGHT</label>
+                                        <input type="number" name="sideLightHeightFD30" id="sideLightHeightFD30" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLightHeightFD30}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- SIDE LIGHT GLASS WIDTH - FD60 -->
+                                <div class="col-12 font-weight-bold">SIDE LIGHT GLASS WIDTH FD60 - CAN BE ONLY</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLightWidthFD60">SIDE LIGHT GLASS WIDTH</label>
+                                        <input type="number" name="sideLightWidthFD60" id="sideLightWidthFD60" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLightWidthFD60}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideLightHeightFD60">SIDE LIGHT GLASS HEIGHT</label>
+                                        <input type="number" name="sideLightHeightFD60" id="sideLightHeightFD60" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLightHeightFD60}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="h6 col-12 font-weight-bold">
+                                    FANLIGHT GLASS / OP LEAF ADJUSTMENT
+                                </div>
+
+                                <!-- NRF or FD30 -->
+                                <div class="col-12 font-weight-bold">FANLIGHT GLASS OR OP LEAF SIZE (NRF OR FD30)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightNrfWidth">FANLIGHT GLASS OR OP LEAF SIZE WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="fanlightNrfWidth" id="fanlightNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNrfWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightNrfHeight">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="fanlightNrfHeight" id="fanlightNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNrfHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">FANLIGHT GLASS OR OP LEAF SIZE (FD60)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightFd60Width">FANLIGHT GLASS OR OP LEAF SIZE WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="fanlightFd60Width" id="fanlightFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFd60Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightFd60Height">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="fanlightFd60Height" id="fanlightFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFd60Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- VP GLASSING BEAD SIZE ADJUSTMENT -->
+                                <div class="h6 col-12 mt-4 font-weight-bold">
+                                    VP GLASSING BEAD SIZE ADJUSTMENT
+                                </div>
+
+                                <!-- NRF or FD30 -->
+                                <div class="col-12 font-weight-bold">VP GLASSING BEAD SIZE (NRF OR FD30)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpBeadNrfWidth">VP GLASSING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadNrfWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpBeadNrfHeight">VP GLASSING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadNrfHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">VP GLASSING BEAD SIZE (FD60)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpBeadFd60Width">VP GLASSING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadFd60Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpBeadFd60Height">VP GLASSING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadFd60Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- SIDE LIGHT 1 & 2 GLASSING BEAD SIZE ADJUSTMENT -->
+                                <div class="h6 col-12 mt-4 font-weight-bold">
+                                    SIDE LIGHT 1 & 2 GLASSING BEAD SIZE ADJUSTMENT
+                                </div>
+
+                                <!-- NRF or FD30 -->
+                                <div class="col-12 font-weight-bold">SIDE LIGHT 1 & 2 GLASSING BEAD SIZE (NRF OR FD30)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideBeadNrfWidth">SIDE LIGHT GLASSING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="sideBeadNrfWidth" id="sideBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadNrfWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideBeadNrfHeight">SIDE LIGHT GLASSING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="sideBeadNrfHeight" id="sideBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadNrfHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">SIDE LIGHT 1 & 2 GLASSING BEAD SIZE (FD60)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideBeadFd60Width">SIDE LIGHT GLASSING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="sideBeadFd60Width" id="sideBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadFd60Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="sideBeadFd60Height">SIDE LIGHT GLASSING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <input type="number" name="sideBeadFd60Height" id="sideBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadFd60Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="h6 col-12 font-weight-bold">
+                                    FANLIGHT / OP GLAZING BEAD ADJUSTMENT
+                                </div>
+
+                                <!-- NRF OR FD30 -->
+                                <div class="col-12 font-weight-bold">FANLIGHT / OP GLASSING BEAD SIZE - NRF OR FD30</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightNRFWidth">FANLIGHT / OP GLASSING BEAD SIZE WIDTH NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="fanlightNRFWidth" id="fanlightNRFWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNRFWidth}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightNRFHeight">FANLIGHT / OP GLASSING BEAD SIZE HEIGHT NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="fanlightNRFHeight" id="fanlightNRFHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNRFHeight}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">FANLIGHT / OP GLASSING BEAD SIZE - FD60</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightFD60Width">FANLIGHT / OP GLASSING BEAD SIZE WIDTH FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="fanlightFD60Width" id="fanlightFD60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFD60Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="fanlightFD60Height">FANLIGHT / OP GLASSING BEAD SIZE HEIGHT FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
+                                        <input type="number" name="fanlightFD60Height" id="fanlightFD60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFD60Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
 
                             <div class="form-btn">
                                 <button type="submit" class="position-relative form-group btn-wide btn btn-success" style="margin-left: auto; float: right;">Update</button>
