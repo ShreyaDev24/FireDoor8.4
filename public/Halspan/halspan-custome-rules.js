@@ -1132,6 +1132,7 @@ $(document).ready(function() {
             doorLeafFacingPrice('sideLight2',"Yes");
             FramePrice('sideLight3');
             updateTransomFields();
+            SideLightHeight('sideLight1');
         } else {
 
             $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1213,6 +1214,7 @@ $(document).ready(function() {
             }
             updateTransomFields();
             doorLeafFacingPrice('sideLight12',"Yes");
+             SideLightHeight('sideLight2');
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
@@ -1919,7 +1921,7 @@ $(document).ready(function() {
                 $("#ScallopedWidthText").text('(min 35)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
                 $("#ScallopedHeightText").text('(min 2-6mm)');
-            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+            }else if(($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" ) && framTypeValue == "Scalloped"){
                 $("#ScallopedWidth").attr('min', '44');
                 $("#ScallopedWidthText").text('(min 44)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
@@ -6151,6 +6153,27 @@ function CheckFireRating(val){
              $('#frameMaterial').val('');
               $('#frameMaterial').css({ 'border': '1px solid red' });
         }
+    }
+}
+
+// JFDS 1000
+function SideLightHeight(type){
+    let frameHeight = parseInt($('input[name="frameHeight"]').val(), 10) || 0;
+    if(type == 'sideLight1'){
+      $("#SL1Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        let slHeight = frameHeight + oPHeigth;
+        $("#SL1Height").val(slHeight);
+      }
+    }
+    if(type == 'sideLight2'){
+      $("#SL2Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        let s2Height = frameHeight + oPHeigth;
+        $("#SL2Height").val(s2Height);
+      }
     }
 }
 
