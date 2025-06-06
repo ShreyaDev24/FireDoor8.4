@@ -5317,10 +5317,10 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         glassType = (id == null)?$("#opGlassType").val():id;
     }
     if(type == "sideLight1GlassType"){
-        glassType = (id == null)?$("#sideLight1GlassType").val():id;
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
     }
     if(type == "sideLight2GlassType"){
-        glassType = (id == null)?$("#sideLight2GlassType").val():id;
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
@@ -5735,23 +5735,28 @@ function filter_sidelight_beads(fireRating){
 
 // JFDS-700
 $(document).ready(function () {
-    $("#SL1Transom, #SL2Transom").change(function() {
-        updateTransomFields(); // Ensure fields are set correctly on page load
-    });
+   if($("#sideLight1").val() == 'Yes'){
+    let SL1Transom = $("#SL1Transom").val();
+    let Beading1TypeOld = $("#Beading1TypeOld").val();
+    let SideLight1BeadingType = $("#SideLight1BeadingType").val();
+        if(SL1Transom == 'No'){
+            $("#SL1TransomDepth").attr({required: false, readonly: true })
+        }
+        if (!SideLight1BeadingType) {
+            $('#submit').attr({'disabled': true,"readonly":true });
+            setTimeout(() => {
+                $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
+                $$('#submit').attr({'disabled': false,"readonly":false });
+            }, 25000);
+        }
+   }
+   if($("#sideLight2").val() == 'Yes'){
+    let SL2Transom = $("#SL2Transom").val();
+        if(SL2Transom == 'No'){
+            $("#SL2TransomDepth").attr({required: false, readonly: true })
+        }
+   }
 });
-
-function updateTransomFields() {
-    toggleField("#SL1Transom", "#SL1TransomDepth");
-    toggleField("#SL2Transom", "#SL2TransomDepth");
-}
-
-function toggleField(transomSelector, depthSelector) {
-    if ($(transomSelector).val() === "No") {
-        $(depthSelector).prop({ required: false, disabled: true });
-    } else {
-        $(depthSelector).prop({ required: true, disabled: false });
-    }
-}
 
 //JFDS-709
 function LippingIns(fireratings){
