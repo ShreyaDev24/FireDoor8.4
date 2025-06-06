@@ -132,7 +132,9 @@ class UserController extends Controller
 
         $user->UserType = 3;
         if (isset($request->update)){
-        $user->password =  Hash::make($request->password);
+            $user->password =  Hash::make($request->password);
+        } else {
+            $user->password =  Hash::make($request->password);
         }
 
         $user->CreatedBy = Auth::user()->id;

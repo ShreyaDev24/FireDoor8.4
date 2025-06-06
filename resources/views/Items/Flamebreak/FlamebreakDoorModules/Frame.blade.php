@@ -212,7 +212,7 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <select name="frameFinish" id="frameFinish"
+                                                    <select name="frameFinish" required id="frameFinish"
                                                         class="form-control change-event-calulation">
                                                         <option value="">Select Frame finish</option>
                                                         @foreach($option_data as $row)

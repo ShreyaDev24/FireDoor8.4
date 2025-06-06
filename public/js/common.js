@@ -73,7 +73,11 @@ function swingTypeFrameType(){
         // $("#frameType").val('').trigger('change');
         $('#foursidedframe').prop('disabled', false);
     }
-    framTypeChangeInputEnableDisable();
+
+    setTimeout(function() {
+        framTypeChangeInputEnableDisable();
+    frameThicknessChange();
+    }, 500); // Delay increases by 100ms for each element
 }
 
 

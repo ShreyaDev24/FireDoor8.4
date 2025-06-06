@@ -75,18 +75,36 @@ function pageIdentity(){
         frameThicknessChange();
     });
 
-    function frameThicknessChange(){
+   function frameThicknessChange(){
+        let newmin = 0;
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
-                $("#frameThickness").attr('min','32');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','37');
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                newmin = '28';
+                $("#frameThickness").attr('min',newmin);
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                newmin = '32';
+                $("#frameThickness").attr('min',newmin);
+            }
+            if($("#swingType").val() == "DA"){
+                newmin = '40';
+               $("#frameThickness").attr('min',newmin);
+                if($("#frameThickness").val() < 40){
+                    $("#frameThickness").val('');
+                     $('#frameThickness').css({ 'border': '1px solid red' });
+                }
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
-        var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        if($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD30s'){
+            let framTypeValue = $('#frameType').val();
+            if (framTypeValue == "Plant_on_Stop" || framTypeValue == "Rebated_Frame") {
+                $("#frameThickness").attr('min','30');
+            }
+        }
+
+        checkAndSetBOM("#frameThickness");
     }
 
     $(document).on('change','#latchType',function(e){
@@ -775,12 +793,19 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
             let newMin;
-            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
-                $("#ScallopedWidth").attr('min', '32');
-                newMin = 32;
+            if (value == 'NFR') {
+                newMin = 35;
+            } else if (value == 'FD30') {
+                newMin = 44;
+            } else if (value == 'FD60') {
+                newMin = 54;
+            } else {
+                newMin = 44; // default value if none match
             }
-            // $("#ScallopedHeight").attr('max', '5');
+
+            $("#ScallopedWidth").attr('min', newMin);
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+            $("#ScallopedHeight").attr({'min':2,'max':6});
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
 
@@ -860,6 +885,7 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+        frameThicknessChange();
     }
 
     $(document).on('change','#frameDepth',function(e){
@@ -5783,24 +5809,24 @@ function filter_sidelight_beads(fireRating){
 }
 
 // JFDS-700
-$(document).ready(function () {
-    $("#SL1Transom, #SL2Transom").change(function() {
-        updateTransomFields(); // Ensure fields are set correctly on page load
-    });
-});
+// $(document).ready(function () {
+//     $("#SL1Transom, #SL2Transom").change(function() {
+//         updateTransomFields(); // Ensure fields are set correctly on page load
+//     });
+// });
 
-function updateTransomFields() {
-    toggleField("#SL1Transom", "#SL1TransomDepth");
-    toggleField("#SL2Transom", "#SL2TransomDepth");
-}
+// function updateTransomFields() {
+//     toggleField("#SL1Transom", "#SL1TransomDepth");
+//     toggleField("#SL2Transom", "#SL2TransomDepth");
+// }
 
-function toggleField(transomSelector, depthSelector) {
-    if ($(transomSelector).val() === "No") {
-        $(depthSelector).prop({ required: false, disabled: true });
-    } else {
-        $(depthSelector).prop({ required: true, disabled: false });
-    }
-}
+// function toggleField(transomSelector, depthSelector) {
+//     if ($(transomSelector).val() === "No") {
+//         $(depthSelector).prop({ required: false, disabled: true });
+//     } else {
+//         $(depthSelector).prop({ required: true, disabled: false });
+//     }
+// }
 
 //JFDS-709
 function LippingIns(fireratings){
@@ -6202,3 +6228,26 @@ function frameHeight(){
         $("#frameHeight").val(soheight-tollerance);
     }
 }
+$(document).ready(function () {
+   if($("#sideLight1").val() == 'Yes'){
+    let SL1Transom = $("#SL1Transom").val();
+    let Beading1TypeOld = $("#Beading1TypeOld").val();
+    let SideLight1BeadingType = $("#SideLight1BeadingType").val();
+        if(SL1Transom == 'No'){
+            $("#SL1TransomDepth").attr({required: false, readonly: true })
+        }
+        if (!SideLight1BeadingType) {
+            $('#submit').attr({'disabled': true,"readonly":true });
+            setTimeout(() => {
+                $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
+                $('#submit').attr({'disabled': false,"readonly":false });
+            }, 25000);
+        }
+   }
+   if($("#sideLight2").val() == 'Yes'){
+    let SL2Transom = $("#SL2Transom").val();
+        if(SL2Transom == 'No'){
+            $("#SL2TransomDepth").attr({required: false, readonly: true })
+        }
+   }
+});

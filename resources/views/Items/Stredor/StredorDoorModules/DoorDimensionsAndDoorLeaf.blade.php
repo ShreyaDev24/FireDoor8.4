@@ -189,7 +189,7 @@
                                 @endif
                             </label>
 
-                            <select name="doorLeafFacing" id="doorLeafFacing" option_slug="Door_Leaf_Facing" class="form-control">
+                            <select name="doorLeafFacing" id="doorLeafFacing" option_slug="Door_Leaf_Facing" class="form-control" required>
                                 <option value="">Select door leaf facing</option>
                                 @foreach($selected_option_data as $row)
                                 @if($row->OptionSlug=='Door_Leaf_Facing')
@@ -236,7 +236,7 @@
                                 @endif
                             </label>
                             <select name="doorLeafFinish" id="doorLeafFinish" option_slug="door_leaf_finish"
-                                class="form-control doorLeafFinishSelect">
+                                class="form-control doorLeafFinishSelect" required>
                                 <option value="">Select door leaf finish</option>
                             </select>
                         </div>

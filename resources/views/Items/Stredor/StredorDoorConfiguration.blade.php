@@ -466,120 +466,18 @@
         $("#architraveFinishcolor").val($("#ArchitraveFinishColor-import").data("value"));
         $("select[name=architraveSetQty]").val($("#ArchitraveSetQty-import").data("value"));
         architrave(1);
-
-        let framTypeValue = $("#FrameType-import").data("value");
-        let value = $("#FireRating-import").data("value");
-        let newMin;
-        if (framTypeValue == "Plant_on_Stop") {
-            newMin = 15;
-            $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
-            $("#plantonStopWidth").attr('min', '15');
-            $("#plantonStopHeight").attr('min', '12');
-            $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
-            $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#ScallopedWidth").removeAttr('min', '15');
-            $("#ScallopedHeight").removeAttr('max', '5');
-            $("#ScallopedHeight").removeAttr('min', '12');
-            $("#ScallopedWidth").removeAttr('min', '32');
-            $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#frameTypeDimensions").val('').attr('readonly', false);
-
-            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
-            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            // frameprice('Plant_on_Stop');
-        } else if(framTypeValue == "Scalloped"){
-            newMin = 15;
-            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
-            $("#ScallopedWidth").attr('min', '15');
-            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
-            // $("#ScallopedHeight").attr('max', '5');
-            $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").removeAttr('min', '15');
-            $("#plantonStopHeight").removeAttr('min', '12');
-
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
-
-            $("#frameTypeDimensions").val('').attr('readonly', false);
-            $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
-            $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
-        } else if (framTypeValue == "Rebated_Frame") {
-            $("#rebatedHeight").attr('min', '12');
-            if(value == 'NFR'){
-                $("#rebatedWidth").attr('min', '35');
-                newMin = 35;
-            }
-            if(value == 'FD30'){
-                $("#rebatedWidth").attr('min', '44');
-                newMin = 44;
-            }
-            if(value == 'FD60'){
-                $("#rebatedWidth").attr('min', '54');
-                newMin = 54;
-            }
-            $("#rebatedWidthLabel").text(`Rebated Width (min ${newMin})`);
-            $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
-            $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").removeAttr('min', '15');
-            $("#plantonStopHeight").removeAttr('min', '12');
-
-            $("#ScallopedWidth").attr('min', '15');
-            $("#ScallopedHeight").removeAttr('max', '5');
-            $("#ScallopedHeight").removeAttr('min', '12');
-            $("#ScallopedWidth").removeAttr('min', '32');
-            $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#frameTypeDimensions").val('').attr('readonly', false);
-            $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
-            $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            // frameprice('Rebated_Frame');
-            framewidth();
-        } else {
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").val(0);
-            $("#plantonStopHeight").val(0);
-            $("#frameTypeDimensions").val(0).attr('readonly', true);
-            $("#plantonStopWidth").attr({ 'readonly': true, 'required': false });
-            $("#plantonStopHeight").attr({ 'readonly': true, 'required': false });
-            $(".Plant_on_Stop_section").removeClass("table_row_show");
-            $(".Plant_on_Stop_section").addClass("table_row_hide");
-            $(".Rebated_Frame_section").removeClass("table_row_show");
-            $(".Rebated_Frame_section").addClass("table_row_hide");
-            $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
-            $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
-        }
-       rebatedWidth();
         swingTypeFrameType();
 
         $(".form-control").each(function(index) {
             const element = $(this);
-            setTimeout(function() {
-                SetBuildOfMaterial(element);
-            }, index * 100); // Delay increases by 100ms for each element
+
+            // Check if the element is required
+            const isRequired = element.prop("required") || element.hasClass("required");
+            if (isRequired) {
+                setTimeout(function() {
+                    SetBuildOfMaterial(element);
+                }, index * 100); // Delay increases by 100ms for each element
+            }
         });
     }
 
@@ -928,8 +826,12 @@ $(document).on('click', '#submit', function(e) {
         } else {
             $("#Handing").attr({ 'disabled': false, "required": false });
         }
+        let doorsetType1 = $("#doorsetType").val();
+        let swingType1 = $("#swingType").val();
         let latchType = $('#latchType').val();
-        if(latchType === ""){
+        if((doorsetType1 == 'SD' && swingType1 == 'DA') && latchType === "" || (doorsetType1 == 'DD' && swingType1 == 'DA') && latchType === ""){
+            $("#latchType").attr({ 'disabled': true, "required": false });
+        } else if(latchType === ""){
             $("#latchType").attr({ 'disabled': false, "required": true });
         } else{
             $("#latchType").attr({ 'disabled': false, "required": false });

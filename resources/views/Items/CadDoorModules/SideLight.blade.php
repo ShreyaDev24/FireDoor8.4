@@ -155,6 +155,7 @@
                                                         @endif
                                                         @endforeach -->
                                                     </select>
+                                                    <input type="hidden" name="Beading1TypeOld" value="@if(isset($Item['BeadingType'])){{$Item['BeadingType']}}@endif" id="Beading1TypeOld">
                                                 </div>
                                             </div>
                                           {{--  <div class="col-md-6">

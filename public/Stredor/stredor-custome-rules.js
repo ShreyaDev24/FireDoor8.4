@@ -77,16 +77,26 @@ function pageIdentity(){
 
     function frameThicknessChange(){
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#frameThickness").attr('min','28');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#frameThickness").attr('min','32');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','37');
+            }
+            if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','40');
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
-        var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        if($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD30s'){
+            let framTypeValue = $('#frameType').val();
+            if (framTypeValue == "Plant_on_Stop" || framTypeValue == "Rebated_Frame") {
+                $("#frameThickness").attr('min','30');
+            }
+        }
+
+        checkAndSetBOM("#frameThickness");
     }
 
     $(document).on('change','#latchType',function(e){
@@ -743,46 +753,29 @@ $(document).ready(function() {
         let framTypeValue = $('#frameType').val();
         let value = $('#fireRating').val();
         if (framTypeValue == "Plant_on_Stop") {
-            let newMin = 20;
+            newMin = 14;
             $("#plantonStopHeight").attr('min', '12');
             $("#plantonStopWidth").attr('min', '20');
             $("#plantonStopWidthLabel").text(`Plant on Stop Width (min ${newMin})`);
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
-
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#ScallopedWidth").removeAttr('min', '32');
-            $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
+            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
+            $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
+            FramePrice('Plant_on_Stop');
+            // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            let newMin;
-            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
-                $("#ScallopedWidth").attr('min', '32');
-                newMin = 32;
-            }
-            // $("#ScallopedHeight").attr('max', '5');
-            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
-
-            $("#plantonStopWidth").removeAttr('min', '20');
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-
-            $("#rebatedHeight").removeAttr('min', '12');
-            $("#rebatedWidth").removeAttr('min', '35');
-            $("#rebatedWidth").removeAttr('min', '44');
-            $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
@@ -792,39 +785,22 @@ $(document).ready(function() {
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
             $("#rebatedHeight").attr('min', '12');
-            let newMin = 32;
-            if(value == 'NFR'){
-                $("#rebatedWidth").attr('min', '35');
-                newMin = 35;
-            }
-            if(value == 'FD30' || value == 'FD30s'){
-                $("#rebatedWidth").attr('min', '44');
-                newMin = 44;
-            }
-            if(value == 'FD60' || value == 'FD60s'){
-                $("#rebatedWidth").attr('min', '54');
-                newMin = 54;
-            }
-            $("#rebatedWidthLabel").text(`Rebated Width (min ${newMin})`);
             $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
             $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
-
+            $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#plantonStopWidth").removeAttr('min', '20');
-            $("#plantonStopHeight").removeAttr('min', '12');
-
-            $("#ScallopedWidth").removeAttr('min', '32');
-            $("#ScallopedHeight").removeAttr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            // frameprice('Rebated_Frame');
+            FramePrice('Rebated_Frame');
             framewidth();
-        }else {
+            // frameprice('Rebated_Frame');
+        } else {
+
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
@@ -841,6 +817,10 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+        frameThicknessChange();
+        setTimeout(function() {
+            rebatedWidth();
+        }, 500); // Delay increases by 100ms for each element
     }
 
     $(document).on('change','#frameDepth',function(e){
@@ -1883,11 +1863,11 @@ function copyOfSideLite1Change(isstatus = false){
         let framTypeValue = $('#frameType').val();
         // if (framTypeValue == "Plant_on_Stop") {
             if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
-                $("#plantonStopWidth").attr('min', '26');
-                $("#plantonStopWidthText").text('(min 26)');
+                $("#plantonStopWidth").attr('min', '28');
+                $("#plantonStopWidthText").text('(min 28)');
             }else{
                 $("#plantonStopWidth").removeAttr('min');
                 $("#plantonStopWidthText").text('');
@@ -5304,10 +5284,10 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         glassType = (id == null)?$("#opGlassType").val():id;
     }
     if(type == "sideLight1GlassType"){
-        glassType = (id == null)?$("#sideLight1GlassType").val():id;
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
     }
     if(type == "sideLight2GlassType"){
-        glassType = (id == null)?$("#sideLight2GlassType").val():id;
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
@@ -5722,23 +5702,28 @@ function filter_sidelight_beads(fireRating){
 
 // JFDS-700
 $(document).ready(function () {
-    $("#SL1Transom, #SL2Transom").change(function() {
-        updateTransomFields(); // Ensure fields are set correctly on page load
-    });
+   if($("#sideLight1").val() == 'Yes'){
+    let SL1Transom = $("#SL1Transom").val();
+    let Beading1TypeOld = $("#Beading1TypeOld").val();
+    let SideLight1BeadingType = $("#SideLight1BeadingType").val();
+        if(SL1Transom == 'No'){
+            $("#SL1TransomDepth").attr({required: false, readonly: true })
+        }
+        if (!SideLight1BeadingType) {
+            $('#submit').attr({'disabled': true,"readonly":true });
+            setTimeout(() => {
+                $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
+                $$('#submit').attr({'disabled': false,"readonly":false });
+            }, 25000);
+        }
+   }
+   if($("#sideLight2").val() == 'Yes'){
+    let SL2Transom = $("#SL2Transom").val();
+        if(SL2Transom == 'No'){
+            $("#SL2TransomDepth").attr({required: false, readonly: true })
+        }
+   }
 });
-
-function updateTransomFields() {
-    toggleField("#SL1Transom", "#SL1TransomDepth");
-    toggleField("#SL2Transom", "#SL2TransomDepth");
-}
-
-function toggleField(transomSelector, depthSelector) {
-    if ($(transomSelector).val() === "No") {
-        $(depthSelector).prop({ required: false, disabled: true });
-    } else {
-        $(depthSelector).prop({ required: true, disabled: false });
-    }
-}
 
 //JFDS-709
 function LippingIns(fireratings){
