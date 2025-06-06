@@ -127,7 +127,7 @@
                                 </label>
                             <input type="number"
                                 @if(!isset($Item['DistanceFromtopOfDoor'])) {{'readonly'}} @endif
-                                min="50"
+                                min="100"
                                 name="distanceFromTopOfDoor" id="distanceFromTopOfDoor"
                                 class="form-control door-configuration"
                         value="@if(isset($Item['DistanceFromtopOfDoor'])){{$Item['DistanceFromtopOfDoor']}}@endif">
