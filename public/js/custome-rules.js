@@ -75,18 +75,31 @@ function pageIdentity(){
         frameThicknessChange();
     });
 
-    function frameThicknessChange(){
+   function frameThicknessChange(){
+        let newmin = 0;
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
-                $("#frameThickness").attr('min','32');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','37');
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                newmin = '28';
+                $("#frameThickness").attr('min',newmin);
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                newmin = '32';
+                $("#frameThickness").attr('min',newmin);
+            }
+            if($("#swingType").val() == "DA"){
+                newmin = '40';
+               $("#frameThickness").attr('min',newmin);
+                if($("#frameThickness").val() < 40){
+                    $("#frameThickness").val('');
+                     $('#frameThickness').css({ 'border': '1px solid red' });
+                }
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
         var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        swal('Warning', 'FrameThickness should not be less than' +newmin+ 'mm');
+        // SetBuildOfMaterial(identifier);
     }
 
     $(document).on('change','#latchType',function(e){
@@ -775,12 +788,19 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
             let newMin;
-            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
-                $("#ScallopedWidth").attr('min', '32');
-                newMin = 32;
+            if (value == 'NFR') {
+                newMin = 35;
+            } else if (value == 'FD30') {
+                newMin = 44;
+            } else if (value == 'FD60') {
+                newMin = 54;
+            } else {
+                newMin = 44; // default value if none match
             }
-            // $("#ScallopedHeight").attr('max', '5');
+
+            $("#ScallopedWidth").attr('min', newMin);
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+            $("#ScallopedHeight").attr({'min':2,'max':6});
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
 
