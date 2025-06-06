@@ -77,16 +77,20 @@ function pageIdentity(){
 
     function frameThicknessChange(){
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#frameThickness").attr('min','28');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#frameThickness").attr('min','32');
-            }else if($("#swingType").val() == "DA"){
-                $("#frameThickness").attr('min','37');
+            }
+            if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','40');
             }
         }else{
             $("#frameThickness").removeAttr('min');
         }
         var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        // SetBuildOfMaterial(identifier);  // error coming on project list have to check with shreya i just comment these part for fix these issue
+        SetBuildOfMaterial(identifier);
     }
 
     $(document).on('change','#latchType',function(e){
@@ -765,10 +769,19 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
         } else if(framTypeValue == "Scalloped"){
             let newMin;
-            if(value == 'FD60' || value == 'FD30' || value == 'FD30s' || value == 'FD60s'){
-                $("#ScallopedWidth").attr('min', '32');
-                newMin = 32;
+            if (value == 'NFR') {
+                newMin = 35;
+            } else if (value == 'FD30') {
+                newMin = 44;
+            } else if (value == 'FD60') {
+                newMin = 54;
+            } else {
+                newMin = 44; // default value if none match
             }
+            $("#ScallopedWidth").attr('min', newMin);
+            $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+            $("#ScallopedHeight").attr({'min':2,'max':6});
+            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
             // $("#ScallopedHeight").attr('max', '5');
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });

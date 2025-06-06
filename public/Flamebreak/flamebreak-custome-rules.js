@@ -77,10 +77,14 @@ function pageIdentity(){
 
     function frameThicknessChange(){
         if($("#fireRating").val() != "NFR"){
-            if($("#swingType").val() == "SA"){
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+                $("#frameThickness").attr('min','28');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#frameThickness").attr('min','32');
-            }else{
-                $("#frameThickness").attr('min','37');
+            }
+            if($("#swingType").val() == "DA"){
+                $("#frameThickness").attr('min','40');
             }
         }else{
             $("#frameThickness").removeAttr('min');
@@ -765,6 +769,10 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#plantonStopWidth").val() == 0 || $("#plantonStopHeight").val() == 0){
+                $("#plantonStopWidth").val('');
+                $("#plantonStopHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
@@ -772,9 +780,20 @@ $(document).ready(function() {
             FramePrice('Plant_on_Stop');
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
-            newMin = 32;
-            $("#ScallopedWidth").attr('min', '32');
+           let newMin;
+            if (value == 'NFR') {
+                newMin = 35;
+            } else if (value == 'FD30') {
+                newMin = 44;
+            } else if (value == 'FD60') {
+                newMin = 54;
+            } else {
+                newMin = 44; // default value if none match
+            }
+
+            $("#ScallopedWidth").attr('min', newMin);
             $("#ScallopedLabel").text(`Scalloped Width (min ${newMin})`);
+            $("#ScallopedHeight").attr({'min':2,'max':6});
             // $("#ScallopedHeight").attr('max', '5');
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
@@ -791,6 +810,10 @@ $(document).ready(function() {
             $("#rebatedWidth").removeAttr('min', '54');
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
+                $("#ScallopedWidth").val('');
+                $("#ScallopedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").removeClass("table_row_show");
@@ -822,6 +845,10 @@ $(document).ready(function() {
             $("#ScallopedHeight").removeAttr('min', '12');
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            if($("#rebatedWidth").val() == 0 || $("#rebatedHeight").val() == 0){
+                $("#rebatedWidth").val('');
+                $("#rebatedHeight").val('');
+            }
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
