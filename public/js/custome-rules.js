@@ -97,9 +97,14 @@ function pageIdentity(){
         }else{
             $("#frameThickness").removeAttr('min');
         }
-        var identifier = $("#frameThickness"); // Or specify a specific selector if needed
-        swal('Warning', 'FrameThickness should not be less than' +newmin+ 'mm');
-        // SetBuildOfMaterial(identifier);
+        if($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD30s'){
+            let framTypeValue = $('#frameType').val();
+            if (framTypeValue == "Plant_on_Stop" || framTypeValue == "Rebated_Frame") {
+                $("#frameThickness").attr('min','30');
+            }
+        }
+
+        checkAndSetBOM("#frameThickness");
     }
 
     $(document).on('change','#latchType',function(e){
@@ -880,6 +885,7 @@ $(document).ready(function() {
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section,#rebatedWidth-section,#rebatedHeight-section").addClass("table_row_hide");
         }
+        frameThicknessChange();
     }
 
     $(document).on('change','#frameDepth',function(e){
