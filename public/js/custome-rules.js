@@ -104,7 +104,7 @@ function pageIdentity(){
             }
         }
 
-        checkAndSetBOM("#frameThickness");
+        // checkAndSetBOM("#frameThickness");
     }
 
     $(document).on('change','#latchType',function(e){
