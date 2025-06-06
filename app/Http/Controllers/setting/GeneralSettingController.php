@@ -256,12 +256,21 @@ class GeneralSettingController extends Controller
                 $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
                     ->where('DoorFrameConstruction', $mainKey)
                     ->first();
-
                 if ($doorFrameConst) {
-                    $doorFrameConst->update($values);
+                    $doorFrameConst->hinge1Location = $values['hinge1Location'];
+                    $doorFrameConst->hinge2Location = $values['hinge2Location'];
+                    $doorFrameConst->hinge3Location = $values['hinge3Location'];
+                    $doorFrameConst->hingeCenterCheck = $values['hingeCenterCheck'];
+                    $doorFrameConst->save();
                 } else {
-                    $doorFrame = new DoorFrameConstruction($values);
+                    $doorFrame = new DoorFrameConstruction;
                     $doorFrame->DoorFrameConstruction = $mainKey;
+                    if($mainKey === 'Hinge_Location'){
+                        $doorFrame->hinge1Location = $values['hinge1Location'];
+                        $doorFrame->hinge2Location = $values['hinge2Location'];
+                        $doorFrame->hinge3Location = $values['hinge3Location'];
+                        $doorFrame->hingeCenterCheck = $values['hingeCenterCheck'];
+                    }
                     $doorFrame->UserId = $userId;
                     $doorFrame->save();
                 }
