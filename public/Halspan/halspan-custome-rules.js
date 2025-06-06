@@ -1914,17 +1914,17 @@ $(document).ready(function() {
                 $("#plantonStopWidthText").text('');
             }
         // } else if(framTypeValue == "Scalloped"){
-            if ($("#fireRating").val() == "NFR") {
+            if ($("#fireRating").val() == "NFR" && framTypeValue == "Scalloped") {
                 $("#ScallopedWidth").attr('min', '35');
                 $("#ScallopedWidthText").text('(min 35)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
                 $("#ScallopedHeightText").text('(min 2-6mm)');
-            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+            }else if(($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s") && framTypeValue == "Scalloped"){
                 $("#ScallopedWidth").attr('min', '44');
                 $("#ScallopedWidthText").text('(min 44)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
                 $("#ScallopedHeightText").text('(min 2-6mm)');
-            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+            }else if(($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s") && framTypeValue == "Scalloped"){
                 $("#ScallopedWidth").attr('min', '54');
                 $("#ScallopedWidthText").text('(min 54)');
                 $("#ScallopedHeight").attr({'min':2,'max':8});
