@@ -1214,7 +1214,7 @@ $(document).ready(function() {
             }
             updateTransomFields();
             doorLeafFacingPrice('sideLight12',"Yes");
-             SideLightHeight('sideLight2');
+            SideLightHeight('sideLight2');
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
