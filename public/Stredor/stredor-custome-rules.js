@@ -1099,6 +1099,7 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight2',"Yes");
         FramePrice('sideLight3');
         updateTransomFields();
+        SideLightHeight('sideLight1');
     } else {
 
         $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1180,6 +1181,7 @@ function sideLight2Change(isstatus = false){
         }
         doorLeafFacingPrice('sideLight12',"Yes");
         updateTransomFields();
+        SideLightHeight('sideLight2');
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
@@ -6168,5 +6170,25 @@ function frameHeight(){
             );
     }else{
         $("#frameHeight").val(soheight-tollerance);
+    }
+}
+// JFDS 1000
+function SideLightHeight(type){
+    let frameHeight = parseInt($('input[name="frameHeight"]').val(), 10) || 0;
+    if(type == 'sideLight1'){
+      $("#SL1Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        let slHeight = frameHeight + oPHeigth;
+        $("#SL1Height").val(slHeight);
+      }
+    }
+    if(type == 'sideLight2'){
+      $("#SL2Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        let s2Height = frameHeight + oPHeigth;
+        $("#SL2Height").val(s2Height);
+      }
     }
 }
