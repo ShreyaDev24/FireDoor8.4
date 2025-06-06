@@ -140,13 +140,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_halfLippedWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_halfLippedWidth" id="doorFrame_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_halfLippedWidth}}@endif">
+                                        <input type="number" name="doorFrame_halfLippedWidth" id="doorFrame_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.HalfLipped'])){{$allSettings['DoorFrame.HalfLipped']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_halfLippedHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_halfLippedHeight" id="doorFrame_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_halfLippedHeight}}@endif">
+                                        <input type="number" name="doorFrame_halfLippedHeight" id="doorFrame_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.HalfLipped'])){{$allSettings['DoorFrame.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -155,13 +155,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mitreWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mitreWidth" id="doorFrame_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mitreWidth}}@endif">
+                                        <input type="number" name="doorFrame_mitreWidth" id="doorFrame_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mitre'])){{$allSettings['DoorFrame.Mitre']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mitreHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mitreHeight" id="doorFrame_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mitreHeight}}@endif">
+                                        <input type="number" name="doorFrame_mitreHeight" id="doorFrame_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mitre'])){{$allSettings['DoorFrame.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -170,13 +170,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mortice1Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mortice1Width" id="doorFrame_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice1Width}}@endif">
+                                        <input type="number" name="doorFrame_mortice1Width" id="doorFrame_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mortice1'])){{$allSettings['DoorFrame.Mortice1']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mortice1Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mortice1Height" id="doorFrame_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice1Height}}@endif">
+                                        <input type="number" name="doorFrame_mortice1Height" id="doorFrame_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mortice1'])){{$allSettings['DoorFrame.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -185,13 +185,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mortice2Width" id="doorFrame_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice2Width}}@endif">
+                                        <input type="number" name="doorFrame_mortice2Width" id="doorFrame_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mortice2'])){{$allSettings['DoorFrame.Mortice2']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="doorFrame_mortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mortice2Height" id="doorFrame_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->doorFrame_mortice2Height}}@endif">
+                                        <input type="number" name="doorFrame_mortice2Height" id="doorFrame_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mortice2'])){{$allSettings['DoorFrame.Mortice2']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -204,13 +204,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_halfLippedWidth">PLANT ON HEAD WIDTH</label>
-                                        <input type="number" name="plantOn_halfLippedWidth" id="plantOn_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_halfLippedWidth}}@endif">
+                                        <input type="number" name="plantOn_halfLippedWidth" id="plantOn_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.HalfLipped'])){{$allSettings['PlantOn.HalfLipped']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_halfLippedHeight">PLANT ON HEAD HEIGHT</label>
-                                        <input type="number" name="plantOn_halfLippedHeight" id="plantOn_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_halfLippedHeight}}@endif">
+                                        <input type="number" name="plantOn_halfLippedHeight" id="plantOn_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.HalfLipped'])){{$allSettings['PlantOn.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -219,13 +219,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mitreWidth">PLANT ON HEAD WIDTH</label>
-                                        <input type="number" name="plantOn_mitreWidth" id="plantOn_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mitreWidth}}@endif">
+                                        <input type="number" name="plantOn_mitreWidth" id="plantOn_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mitre'])){{$allSettings['PlantOn.Mitre']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mitreHeight">PLANT ON HEAD HEIGHT</label>
-                                        <input type="number" name="plantOn_mitreHeight" id="plantOn_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mitreHeight}}@endif">
+                                        <input type="number" name="plantOn_mitreHeight" id="plantOn_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mitre'])){{$allSettings['PlantOn.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -234,13 +234,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mortice1Width">PLANT ON HEAD WIDTH</label>
-                                        <input type="number" name="plantOn_mortice1Width" id="plantOn_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice1Width}}@endif">
+                                        <input type="number" name="plantOn_mortice1Width" id="plantOn_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mortice1'])){{$allSettings['PlantOn.Mortice1']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mortice1Height">PLANT ON HEAD HEIGHT</label>
-                                        <input type="number" name="plantOn_mortice1Height" id="plantOn_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice1Height}}@endif">
+                                        <input type="number" name="plantOn_mortice1Height" id="plantOn_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mortice1'])){{$allSettings['PlantOn.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -249,13 +249,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mortice2Width">PLANT ON HEAD WIDTH</label>
-                                        <input type="number" name="plantOn_mortice2Width" id="plantOn_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice2Width}}@endif">
+                                        <input type="number" name="plantOn_mortice2Width" id="plantOn_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mortice2'])){{$allSettings['PlantOn.Mortice2']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="plantOn_mortice2Height">PLANT ON HEAD HEIGHT</label>
-                                        <input type="number" name="plantOn_mortice2Height" id="plantOn_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->plantOn_mortice2Height}}@endif">
+                                        <input type="number" name="plantOn_mortice2Height" id="plantOn_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mortice2'])){{$allSettings['PlantOn.Mortice2']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -268,13 +268,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_halfLippedWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="sideLight_halfLippedWidth" id="sideLight_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_halfLippedWidth}}@endif">
+                                        <input type="number" name="sideLight_halfLippedWidth" id="sideLight_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.HalfLipped'])){{$allSettings['SideLight.HalfLipped']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_halfLippedHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="sideLight_halfLippedHeight" id="sideLight_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_halfLippedHeight}}@endif">
+                                        <input type="number" name="sideLight_halfLippedHeight" id="sideLight_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.HalfLipped'])){{$allSettings['SideLight.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -283,13 +283,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mitreWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="sideLight_mitreWidth" id="sideLight_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mitreWidth}}@endif">
+                                        <input type="number" name="sideLight_mitreWidth" id="sideLight_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.Mitre'])){{$allSettings['SideLight.Mitre']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mitreHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="sideLight_mitreHeight" id="sideLight_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mitreHeight}}@endif">
+                                        <input type="number" name="sideLight_mitreHeight" id="sideLight_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mitre'])){{$allSettings['SideLight.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -298,13 +298,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mortice1Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="sideLight_mortice1Width" id="sideLight_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice1Width}}@endif">
+                                        <input type="number" name="sideLight_mortice1Width" id="sideLight_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.Mortice1'])){{$allSettings['SideLight.Mortice1']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mortice1Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="sideLight_mortice1Height" id="sideLight_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice1Height}}@endif">
+                                        <input type="number" name="sideLight_mortice1Height" id="sideLight_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mortice1'])){{$allSettings['SideLight.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -313,13 +313,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="sideLight_mortice2Width" id="sideLight_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice2Width}}@endif">
+                                        <input type="number" name="sideLight_mortice2Width" id="sideLight_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.Mortice2'])){{$allSettings['SideLight.Mortice2']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLight_mortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="sideLight_mortice2Height" id="sideLight_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLight_mortice2Height}}@endif">
+                                        <input type="number" name="sideLight_mortice2Height" id="sideLight_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mortice2'])){{$allSettings['SideLight.Mortice2']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -335,13 +335,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightHalfLippedWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="fanlightHalfLippedWidth" id="fanlightHalfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightHalfLippedWidth}}@endif">
+                                        <input type="number" name="fanlightHalfLippedWidth" id="fanlightHalfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.HalfLipped'])){{$allSettings['Fanlight.HalfLipped']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightHalfLippedHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="fanlightHalfLippedHeight" id="fanlightHalfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightHalfLippedHeight}}@endif">
+                                        <input type="number" name="fanlightHalfLippedHeight" id="fanlightHalfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.HalfLipped'])){{$allSettings['Fanlight.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -350,13 +350,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMitreWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="fanlightMitreWidth" id="fanlightMitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMitreWidth}}@endif">
+                                        <input type="number" name="fanlightMitreWidth" id="fanlightMitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.Mitre'])){{$allSettings['Fanlight.Mitre']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMitreHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="fanlightMitreHeight" id="fanlightMitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMitreHeight}}@endif">
+                                        <input type="number" name="fanlightMitreHeight" id="fanlightMitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mitre'])){{$allSettings['Fanlight.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -365,13 +365,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMortice1Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="fanlightMortice1Width" id="fanlightMortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice1Width}}@endif">
+                                        <input type="number" name="fanlightMortice1Width" id="fanlightMortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.Mortice1'])){{$allSettings['Fanlight.Mortice1']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMortice1Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="fanlightMortice1Height" id="fanlightMortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice1Height}}@endif">
+                                        <input type="number" name="fanlightMortice1Height" id="fanlightMortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mortice1'])){{$allSettings['Fanlight.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -380,13 +380,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="fanlightMortice2Width" id="fanlightMortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice2Width}}@endif">
+                                        <input type="number" name="fanlightMortice2Width" id="fanlightMortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.Mortice2'])){{$allSettings['Fanlight.Mortice2']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightMortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="fanlightMortice2Height" id="fanlightMortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightMortice2Height}}@endif">
+                                        <input type="number" name="fanlightMortice2Height" id="fanlightMortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mortice2'])){{$allSettings['Fanlight.Mortice2']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -402,13 +402,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpWidthNRF">VP GLASS WIDTH NRF OR FD30 <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="vpWidthNRF" id="vpWidthNRF" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpWidthNRF}}@endif">
+                                        <input type="number" name="vpWidthNRF" id="vpWidthNRF" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($allSettings['VisionPanel.NRF'])){{$allSettings['VisionPanel.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpHeightNRF">VP GLASS HEIGHT NRF OR FD30 <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="vpHeightNRF" id="vpHeightNRF" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpHeightNRF}}@endif">
+                                        <input type="number" name="vpHeightNRF" id="vpHeightNRF" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($allSettings['VisionPanel.NRF'])){{$allSettings['VisionPanel.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -417,13 +417,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpWidthFD60">VP GLASS WIDTH FD60 <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="vpWidthFD60" id="vpWidthFD60" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpWidthFD60}}@endif">
+                                        <input type="number" name="vpWidthFD60" id="vpWidthFD60" class="form-control" placeholder="Enter Width" min="0" value="@if(!empty($allSettings['VisionPanel.FD60'])){{$allSettings['VisionPanel.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpHeightFD60">VP GLASS HEIGHT FD60 <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="vpHeightFD60" id="vpHeightFD60" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($frame_settings)){{$frame_settings->vpHeightFD60}}@endif">
+                                        <input type="number" name="vpHeightFD60" id="vpHeightFD60" class="form-control" placeholder="Enter Height" min="0" value="@if(!empty($allSettings['VisionPanel.FD60'])){{$allSettings['VisionPanel.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -438,13 +438,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLightWidthFD30">SIDE LIGHT GLASS WIDTH</label>
-                                        <input type="number" name="sideLightWidthFD30" id="sideLightWidthFD30" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLightWidthFD30}}@endif">
+                                        <input type="number" name="sideLightWidthFD30" id="sideLightWidthFD30" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLightFD.FD30'])){{$allSettings['SideLightFD.FD30']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLightHeightFD30">SIDE LIGHT GLASS HEIGHT</label>
-                                        <input type="number" name="sideLightHeightFD30" id="sideLightHeightFD30" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLightHeightFD30}}@endif">
+                                        <input type="number" name="sideLightHeightFD30" id="sideLightHeightFD30" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLightFD.FD30'])){{$allSettings['SideLightFD.FD30']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -453,13 +453,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLightWidthFD60">SIDE LIGHT GLASS WIDTH</label>
-                                        <input type="number" name="sideLightWidthFD60" id="sideLightWidthFD60" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideLightWidthFD60}}@endif">
+                                        <input type="number" name="sideLightWidthFD60" id="sideLightWidthFD60" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLightFD.FD60'])){{$allSettings['SideLightFD.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideLightHeightFD60">SIDE LIGHT GLASS HEIGHT</label>
-                                        <input type="number" name="sideLightHeightFD60" id="sideLightHeightFD60" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideLightHeightFD60}}@endif">
+                                        <input type="number" name="sideLightHeightFD60" id="sideLightHeightFD60" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLightFD.FD60'])){{$allSettings['SideLightFD.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -474,13 +474,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightNrfWidth">FANLIGHT GLASS OR OP LEAF SIZE WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="fanlightNrfWidth" id="fanlightNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNrfWidth}}@endif">
+                                        <input type="number" name="fanlightNrfWidth" id="fanlightNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightSize.NRF'])){{$allSettings['FanlightSize.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightNrfHeight">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="fanlightNrfHeight" id="fanlightNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNrfHeight}}@endif">
+                                        <input type="number" name="fanlightNrfHeight" id="fanlightNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightSize.NRF'])){{$allSettings['FanlightSize.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -489,13 +489,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightFd60Width">FANLIGHT GLASS OR OP LEAF SIZE WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="fanlightFd60Width" id="fanlightFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFd60Width}}@endif">
+                                        <input type="number" name="fanlightFd60Width" id="fanlightFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightSize.FD60'])){{$allSettings['FanlightSize.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightFd60Height">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="fanlightFd60Height" id="fanlightFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFd60Height}}@endif">
+                                        <input type="number" name="fanlightFd60Height" id="fanlightFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightSize.FD60'])){{$allSettings['FanlightSize.FD60']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -509,13 +509,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadNrfWidth">VP GLASSING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadNrfWidth}}@endif">
+                                        <input type="number" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadNrfHeight">VP GLASSING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadNrfHeight}}@endif">
+                                        <input type="number" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -524,13 +524,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadFd60Width">VP GLASSING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadFd60Width}}@endif">
+                                        <input type="number" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadFd60Height">VP GLASSING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->vpBeadFd60Height}}@endif">
+                                        <input type="number" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -544,13 +544,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideBeadNrfWidth">SIDE LIGHT GLASSING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="sideBeadNrfWidth" id="sideBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadNrfWidth}}@endif">
+                                        <input type="number" name="sideBeadNrfWidth" id="sideBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideBeadNrfHeight">SIDE LIGHT GLASSING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="sideBeadNrfHeight" id="sideBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadNrfHeight}}@endif">
+                                        <input type="number" name="sideBeadNrfHeight" id="sideBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -559,13 +559,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideBeadFd60Width">SIDE LIGHT GLASSING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="sideBeadFd60Width" id="sideBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadFd60Width}}@endif">
+                                        <input type="number" name="sideBeadFd60Width" id="sideBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="sideBeadFd60Height">SIDE LIGHT GLASSING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" name="sideBeadFd60Height" id="sideBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->sideBeadFd60Height}}@endif">
+                                        <input type="number" name="sideBeadFd60Height" id="sideBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -580,13 +580,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightNRFWidth">FANLIGHT / OP GLASSING BEAD SIZE WIDTH NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="fanlightNRFWidth" id="fanlightNRFWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNRFWidth}}@endif">
+                                        <input type="number" name="fanlightNRFWidth" id="fanlightNRFWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightNRFHeight">FANLIGHT / OP GLASSING BEAD SIZE HEIGHT NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="fanlightNRFHeight" id="fanlightNRFHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightNRFHeight}}@endif">
+                                        <input type="number" name="fanlightNRFHeight" id="fanlightNRFHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -595,13 +595,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightFD60Width">FANLIGHT / OP GLASSING BEAD SIZE WIDTH FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="fanlightFD60Width" id="fanlightFD60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFD60Width}}@endif">
+                                        <input type="number" name="fanlightFD60Width" id="fanlightFD60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="fanlightFD60Height">FANLIGHT / OP GLASSING BEAD SIZE HEIGHT FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" name="fanlightFD60Height" id="fanlightFD60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($frame_settings)){{$frame_settings->fanlightFD60Height}}@endif">
+                                        <input type="number" name="fanlightFD60Height" id="fanlightFD60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
