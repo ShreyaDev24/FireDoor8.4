@@ -48,6 +48,7 @@
                                                         @endforeach
                                                     </select>
                                                 </div>
+                                                <input type="hidden" id="frametypevalue" name="frametypevalue" value="@if(isset($Item['FrameType'])){{$Item['FrameType']}}@endif" >
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">

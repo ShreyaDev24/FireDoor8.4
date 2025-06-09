@@ -54,6 +54,7 @@ $(document).on('click','#swingType',function(e){
 });
 
 function swingTypeFrameType(){
+    const url = window.location.href;
     if($("#swingType").val() == 'DA'){
         $("select[name=frameType]").val('Scalloped').trigger("change");
         $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
@@ -73,11 +74,15 @@ function swingTypeFrameType(){
         // $("#frameType").val('').trigger('change');
         $('#foursidedframe').prop('disabled', false);
     }
-
-    setTimeout(function() {
-        framTypeChangeInputEnableDisable();
-    frameThicknessChange();
-    }, 500); // Delay increases by 100ms for each element
+    if (
+        !url.includes("edit-vicaima-door-core-item") &&
+        !url.includes("add-vicaima-door-core-item")
+    ) {
+        setTimeout(function () {
+            framTypeChangeInputEnableDisable();
+            frameThicknessChange();
+        }, 500);
+    }
 }
 
 
