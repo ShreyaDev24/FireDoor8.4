@@ -172,6 +172,18 @@ $(document).on('change','#doorsetType',function(e){
     doorsetTypeDecorativeGroves1();
 });
 
+$(document).on('change', '#frameDepth', function(e) {
+    var sODepth = parseFloat($('#sODepth').val());
+    var frameDepth = parseFloat($('#frameDepth').val());
+
+    // Only check if both are valid numbers
+    if (!isNaN(sODepth) && !isNaN(frameDepth)) {
+        if (frameDepth <= sODepth) {
+            swal('Warning', 'The Frame Depth is greater than or equal to the SO Depth.');
+        }
+    }
+});
+
 function doorsetTypeDecorativeGroves1(id = null){
     var doorsetType = (id == null)?$("#doorsetType").val():id;
     if(doorsetType == 'SD'){
