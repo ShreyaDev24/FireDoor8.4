@@ -854,8 +854,11 @@
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
         <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
-        <script src="{{ url('/') }}/Halspan/new-cad.js"></script> <!-- Then load your custom JS -->
-
+        @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
+            <script src="{{ url('/') }}/Halspan/new-cad.js"></script>
+        @else
+            <script src="{{ url('/') }}/vicaima/validate-all-cad.js"></script>
+        @endif
 
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
