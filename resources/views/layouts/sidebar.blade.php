@@ -1099,7 +1099,7 @@
                                 <li class="submm-{{ (Request::segment(2) == 'DoorFrameConstruction') ? 'active' : ''}}">
                                     <a href="{{route('DoorFrameConstruction')}}">
                                         <i class="metismenu-icon"></i>
-                                        Door Frame Construction
+                                        Manufacturing Settings
                                     </a>
                                 </li>
                                 {{--  <li class="submm-{{ (Request::segment(2) == 'quotation-prefix') ? 'active' : ''}}">
