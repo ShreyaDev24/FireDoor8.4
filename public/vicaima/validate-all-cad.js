@@ -89,11 +89,11 @@ window.render = (CustomElement = null,formValues = {}) => {
 
     ChangedFieldName = element ? element.attr("name") : null;
 
-    if (!$("#change-dimension").prop('checked')){
-        // WritingMode = "tb";
-        ShowMeasurements = false;
-    }
-     var frameonoff = 1;
+    // if (!$("#change-dimension").prop('checked')){
+    //     // WritingMode = "tb";
+    //     ShowMeasurements = false;
+    // }
+    var frameonoff = 1;
     if (formValues.FrameOnOff != 0) {
         frameonoff = 0;
     }
@@ -136,7 +136,6 @@ window.render = (CustomElement = null,formValues = {}) => {
         SOWidth = 0;
     }else{
         SOWidth = parseFloat(SOWidth);
-        //SOWidthForMap = NumberChanger(SOWidth);
         SOWidthForMap = SOWidth / 5;
     }
 
@@ -165,6 +164,7 @@ window.render = (CustomElement = null,formValues = {}) => {
     }
 
     var Handing = formValues.Handing;
+    // console.log(Handing)
 
 
     if(SOWidth > 0 && SOHeight > 0){
@@ -1243,9 +1243,9 @@ window.render = (CustomElement = null,formValues = {}) => {
       .attr("y", 87)
       .text("102 mm / Hinge");
 
-
+console.log(ShowMeasurements)
   if (ShowMeasurements) {
-
+console.log(ShowMeasurements)
       //arrow
       svg.append("svg:defs").append("svg:marker")
           .attr("id", "verticalMarket")
@@ -1310,6 +1310,7 @@ window.render = (CustomElement = null,formValues = {}) => {
           .attr("x", ix + (FrameWidthForMap / 2))         // set x position of left side of text
           .attr("y", iy - 65)         // set y position of bottom of text
           .text(framewidthToShow);   // define the text to display
+          console.log(framewidthToShow)
       //Text of Width of Outer frame of door
       //  console.log(framewidthToShow,FrameWidthForMap)
 
@@ -7897,7 +7898,7 @@ else if (swingType != 'DA' && frameonoff) {
               .attr('width', Leaf1VisionPanelWidth)
               .attr('height', Leaf1VisionPanel1Height)
               .attr('stroke', 'black')
-              .attr('fill', 'red');
+              .attr('fill', '#fff');
       }
 
       if (Leaf1VisionPanel1Height && Leaf1VisionPanelWidth) {
