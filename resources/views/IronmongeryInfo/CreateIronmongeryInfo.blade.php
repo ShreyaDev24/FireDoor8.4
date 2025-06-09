@@ -582,7 +582,6 @@ dd($IronmongeryInfo);
                         }
 
                          if (selectedCategory === 'DoorSignage') {
-                            alert('vkm');
                             $('input[name="distanceFromBottomOfDoor"]')
                             .prop('disabled', false)
                             .attr('required', true)
