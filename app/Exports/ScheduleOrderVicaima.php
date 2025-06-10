@@ -239,6 +239,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $SL1GlazingBeadsThickness = $item[$i]->SideLight1GlazingBeadsThickness;
             $SL1GlazingBeadsWidth = $item[$i]->SideLight1GlazingBeadsWidth;
             $SL1GlazingBeadsFixingDetail = $item[$i]->SideLight1GlazingBeadsFixingDetail;
+            $SideLight1FrameThickness = $item[$i]->SideLight1FrameThickness;
             //end
             $SideLight2 = $item[$i]->SideLight2;
             $DoYouWantToCopySameAsSL1 = $item[$i]->DoYouWantToCopySameAsSL1;
@@ -258,6 +259,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
              $SL2GlazingBeadsThickness = $item[$i]->SideLight2GlazingBeadsThickness;
              $SL2GlazingBeadsWidth = $item[$i]->SideLight2GlazingBeadsWidth;
              $SL2GlazingBeadsFixingDetail = $item[$i]->SideLight2GlazingBeadsFixingDetail;
+             $SideLight2FrameThickness = $item[$i]->SideLight2FrameThickness;
              //end
 
             //Lipping & Intumescent
@@ -453,6 +455,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $SlBeadHeight,
                 $SL1Depth,
                 $SL1Transom,
+                $SideLight1FrameThickness,
                 $SideLight2,
                 $DoYouWantToCopySameAsSL1,
                 $SideLight2GlassType,
@@ -470,6 +473,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $SL2Transom,
                 $SLtransomHeightFromTop,
                 $SLtransomThickness,
+                $SideLight2FrameThickness,
                 $LippingType,
                 $LippingThickness,
                 $LippingSpecies,
@@ -517,7 +521,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -679,6 +683,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'SlBead Height ',
             'SL1 Frame Depth ',
             'SL1Transom ',
+            'SL1 Frame Thickness',
             'SideLight2 ',
             'Do You Want To Copy Same As SL1 ',
             'SideLight2 Glass Type ',
@@ -696,6 +701,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'SL2Transom ',
             'SLtransom Heigh From Top ',
             'SLtransom Thickness ',
+            'SL2 Frame Thickness',
             'Lipping Type ',
             'Lipping Thickness ',
             'Lipping Species ',
@@ -761,7 +767,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GO1'; // All headers
+                $cellRange = 'A1:GQ1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -783,7 +789,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GO1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GQ1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },

@@ -2919,6 +2919,7 @@ class DoorScheduleController extends Controller
                     $SlBeadHeight = trim((string) $row[$j++]);
                     $SL1Depth = trim((string) $row[$j++]);
                     $SL1Transom = trim((string) $row[$j++]);
+                    $SideLight1FrameThickness = trim((string) $row[$j++]);
                     $SideLight2 = trim((string) $row[$j++]);
                     $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
                     $SideLight2GlassType = trim((string) $row[$j++]);
@@ -2940,6 +2941,7 @@ class DoorScheduleController extends Controller
                     $SL2Transom = trim((string) $row[$j++]);
                     $SLtransomHeightFromTop = trim((string) $row[$j++]);
                     $SLtransomThickness = trim((string) $row[$j++]);
+                    $SideLight2FrameThickness = trim((string) $row[$j++]);
                     $LippingType = trim((string) $row[$j++]);
                     $LippingThickness = trim((string) $row[$j++]);
                     $LippingSpecies = trim((string) $row[$j++]);
@@ -3208,6 +3210,7 @@ class DoorScheduleController extends Controller
                                 $aa->SlBeadHeight = floatval($SlBeadHeight);
                                 $aa->SL1Depth = floatval($SL1Depth);
                                 $aa->SL1Transom = floatval($SL1Transom);
+                                $aa->SideLight1FrameThickness = floatval($SideLight1FrameThickness);
                                 $aa->SideLight2 = $SideLight2;
                                 $aa->DoYouWantToCopySameAsSL1 = $DoYouWantToCopySameAsSL1;
                                 $aa->SideLight2GlassType = $SideLight2GlassType;
@@ -3229,6 +3232,7 @@ class DoorScheduleController extends Controller
                                 $aa->SL2Transom = floatval($SL2Transom);
                                 $aa->SLtransomHeightFromTop = floatval($SLtransomHeightFromTop);
                                 $aa->SLtransomThickness = floatval($SLtransomThickness);
+                                $aa->SideLight2FrameThickness = floatval($SideLight2FrameThickness);
                                 $aa->Architrave = $Architrave;
                                 $aa->ArchitraveMaterial = lippingSpeciesId($ArchitraveMaterial);
                                 $aa->ArchitraveType = $ArchitraveType;
@@ -3443,6 +3447,7 @@ class DoorScheduleController extends Controller
                             $item->SL1Height = $aa->SL1Height;
                             $item->SL1Depth = $aa->SL1Depth;
                             $item->SL1Transom = $aa->SL1Transom;
+                            $item->SideLight1FrameThickness = $aa->SideLight1FrameThickness;
                             $item->sideLight2 = $aa->SideLight2;
                             $item->copyOfSideLite1 = $aa->DoYouWantToCopySameAsSL1;
                             $item->SideLight2GlassType = $aa->SideLight2GlassType;
@@ -3466,6 +3471,7 @@ class DoorScheduleController extends Controller
                             $item->SLtransomThickness = $aa->SLtransomThickness;
                             $item->SlBeadThickness = $aa->SlBeadThickness;
                             $item->SlBeadHeight = $aa->SlBeadHeight;
+                            $item->SideLight2FrameThickness = $aa->SideLight2FrameThickness;
 
                             //Lipping And Intumescent
                             $item->lippingType = $aa->LippingType;
