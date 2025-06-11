@@ -342,6 +342,11 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/add-vicaima-door-core-item/{id}/{vid}',[App\Http\Controllers\VicaimaController::class,'add_vicaima_door_core'])->name('addVicaimaDoorCoreItem');
     Route::get('/edit-vicaima-door-core-item/{id}/{vid}',[App\Http\Controllers\VicaimaController::class,'edit_vicaima_door_core'])->name('editVicaimaDoorCoreItem');
 
+    //MMM Door
+    Route::get('/add-MMM-door-core-item/{id}', [App\Http\Controllers\MMMController::class,'add_MMM_door_core'])->name('addMMMDoorCoreItem');
+    Route::get('/add-MMM-door-core-item/{id}/{vid}',[App\Http\Controllers\MMMController::class,'add_MMM_door_core'])->name('addMMMDoorCoreItem');
+    Route::get('/edit-MMM-door-core-item/{id}/{vid}',[App\Http\Controllers\MMMController::class,'edit_MMM_door_core'])->name('editMMMDoorCoreItem');
+
     //Seadec door
     Route::get('/add-seadec-cad-item/{id}', [App\Http\Controllers\SeadecController::class,'addseadecCadItem'])->name('quotation/add-seadec-cad-item');
     Route::get('/add-seadec-cad-item/{id}/{vid}', [App\Http\Controllers\SeadecController::class,'addseadecCadItem'])->name('quotation/add-seadec-cad-item');

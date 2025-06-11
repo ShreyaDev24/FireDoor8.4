@@ -182,7 +182,7 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursid
     $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
     if($type == "Frame"){
-        if($configurationDoor == 2 || $configurationDoor == 3 || $configurationDoor == 4 || $configurationDoor == 5 || $configurationDoor == 6){
+        if($configurationDoor == 2 || $configurationDoor == 3 || $configurationDoor == 4 || $configurationDoor == 5 || $configurationDoor == 6 || $configurationDoor == 9){
             if ($fireRating=="FD30" || $fireRating=="FD30s") {
                 $lippingSpecies = GetOptions([
                     ["lipping_species.Status", "=", 1],

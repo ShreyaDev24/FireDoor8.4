@@ -1054,6 +1054,8 @@ function ConfigurationURL($configurableitems,string $itemId,string $version_id){
             $url = url('quotation/edit-flamebreak-cad-item/'.$itemId.'/'.$version_id);
         } elseif ($configurableitems == 8) {
             $url = url('quotation/edit-stredor-cad-item/'.$itemId.'/'.$version_id);
+        } elseif ($configurableitems == 9) {
+            $url = url('quotation/edit-MMM-cad-item/'.$itemId.'/'.$version_id);
         }
 
     } else {
@@ -4998,6 +5000,9 @@ function configurationDoor($pageId): string{
     elseif($pageId == 8){
         $configurableitems = "Stredor";
     }
+    elseif($pageId == 9){
+        $configurableitems = "MMM";
+    }
 
     return $configurableitems;
 }
@@ -5063,6 +5068,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Architrave Type</th>
                         <th>Action</th>
                         '.$priceText.'
@@ -5089,6 +5095,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -5100,7 +5107,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editArchitraveType('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','".$value->VicaimaDoorCore. "','".$value->Seadec. "','".$value->Deanta. "','".$value->Flamebreak. "','".$value->Stredor. "','". $value->ArchitraveType . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editArchitraveType('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','".$value->VicaimaDoorCore. "','".$value->Seadec. "','".$value->Deanta. "','".$value->MMM. "','".$value->Flamebreak. "','".$value->Stredor. "','". $value->ArchitraveType . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -5129,6 +5136,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.$value->ArchitraveType.'</td>
                         <td>'.$action.'</td>
                         '.$costtext.'
@@ -5191,6 +5199,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Option</th>
                         <th>Name</th>
                         <th>Action</th>
@@ -5219,6 +5228,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $cost = '';
                     if ($authdata->id != 1 && $value->selectedPrice !== null) {
                         $disable = '';
@@ -5234,7 +5244,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorLeafFacing('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','" . $value->Deanta. "','" . $value->Flamebreak. "','" . $value->Stredor. "','" . $value->doorLeafFacing . "','" . $value->doorLeafFacingValue . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorLeafFacing('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','" . $value->Deanta. "','".$value->MMM. "','" . $value->Flamebreak. "','" . $value->Stredor. "','" . $value->doorLeafFacing . "','" . $value->doorLeafFacingValue . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -5264,6 +5274,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                             <td class="text-center">'.$VicaimaDoorCore.'</td>
                             <td class="text-center">'.$seadec.'</td>
                             <td class="text-center">'.$deanta.'</td>
+                            <td class="text-center">'.$MMM.'</td>
                             <td><b>'.$value->doorLeafFacing.'</b></td>
                             <td>'.$value->doorLeafFacingValue.'</td>
                             <td>'.$action.'</td>
@@ -5329,6 +5340,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Option</th>
                         <th>Name</th>
                         <th class="text-center">Image</th>
@@ -5359,6 +5371,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -5370,7 +5383,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editAccoustics('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore . "','". $value->Seadec . "','". $value->Deanta . "','". $value->Flamebreak . "','". $value->Stredor . "','" . $value->UnderAttribute . "','" . $value->Accoustics . "','" . $value->file . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editAccoustics('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore . "','". $value->Seadec . "','". $value->Deanta . "','".$value->MMM. "','". $value->Flamebreak . "','". $value->Stredor . "','" . $value->UnderAttribute . "','" . $value->Accoustics . "','" . $value->file . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -5399,6 +5412,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.str_replace('_', ' ',$value->UnderAttribute).'</td>
                         <td>'.$value->Accoustics.'</td>
                         <td class="text-center"><img src = "'.url('/').'/uploads/Options/'.$value->file.'" style="width:13%"></td>
@@ -5462,6 +5476,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Intumescent Seal Color</th>
                         <th>Action</th>
                     </tr>
@@ -5488,6 +5503,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
@@ -5503,7 +5519,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editIntumescentSealColor('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','". $value->Deanta. "','". $value->Flamebreak. "','". $value->Stredor. "','" . $value->IntumescentSealColor . "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editIntumescentSealColor('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','". $value->Deanta. "','".$value->MMM. "','". $value->Flamebreak. "','". $value->Stredor. "','" . $value->IntumescentSealColor . "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -5531,6 +5547,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.$value->IntumescentSealColor.'</td>
                         <td>'.$action.'</td>
 
@@ -5675,6 +5692,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>NFR</th>
                         <th>FD30</th>
                         <th>FD60</th>
@@ -5705,6 +5723,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     // $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
@@ -5720,7 +5739,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlazingSystem('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','". $value->Deanta. "','".$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlazingSystem . "','" . $value->GlazingBeadFixingDetail . "',".$value->VPAreaSize.",'".$value->selectedPrice. "','" .$value->selectedId. "','" .$value->GlazingThickness. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlazingSystem('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','". $value->VicaimaDoorCore. "','" . $value->Seadec. "','". $value->Deanta. "','".$value->MMM. "','".$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlazingSystem . "','" . $value->GlazingBeadFixingDetail . "',".$value->VPAreaSize.",'".$value->selectedPrice. "','" .$value->selectedId. "','" .$value->GlazingThickness. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -5745,6 +5764,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td class="text-center">'.$NFR.'</td>
                         <td class="text-center">'.$FD30.'</td>
                         <td class="text-center">'.$FD60.'</td>
@@ -5947,6 +5967,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                         <th>Vicaima</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Leaf Type</th>
                         <th>Action</th>
                         '.$priceText.'
@@ -5964,6 +5985,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                     $cost = '<div class="input-group">
@@ -5975,7 +5997,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editLeafType('.$value->id.",'" .$value->NormaDoorCore. "','" .$value->VicaimaDoorCore. "','".$value->Seadec. "','" .$value->Deanta. "','" .$value->LeafType . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editLeafType('.$value->id.",'" .$value->NormaDoorCore. "','" .$value->VicaimaDoorCore. "','".$value->Seadec. "','" .$value->Deanta. "','".$value->MMM. "','" .$value->LeafType . "','".$value->selectedPrice. "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -6000,6 +6022,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.$value->LeafType.'</td>
                         <td>'.$action.'</td>
                         '.$costtext.'
@@ -6025,7 +6048,8 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
     ->where(function ($query): void {
         $query->whereNotNull('glass_type.VicaimaDoorCore')
               ->orWhereNotNull('glass_type.Seadec')
-              ->orWhereNotNull('glass_type.Deanta');
+              ->orWhereNotNull('glass_type.Deanta')
+              ->orWhereNotNull('glass_type.MMM');
     })
     ->wherein('glass_type.EditBy', $UserId)
     ->select('glass_type.*','selected_glass_type.selectedPrice','selected_glass_type.id as selectedId','selected_glass_type.editBy')
@@ -6064,6 +6088,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                         <th>Vicaima Door core</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>NFR</th>
                         <th>FD30</th>
                         <th>FD60</th>
@@ -6087,6 +6112,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
@@ -6102,7 +6128,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                     if (($value->EditBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlassType('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','" .$value->VicaimaDoorCore. "','".$value->Seadec. "','".$value->Deanta. "','".$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlassIntegrity . "','" . $value->GlassType . "',".$value->GlassThickness.','.$value->VpAreaSize.",'".$value->selectedPrice. "','" .$value->selectedId. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlassType('.$value->id.",'".$value->Streboard. "','" .$value->Halspan. "','" .$value->NormaDoorCore. "','" .$value->VicaimaDoorCore. "','".$value->Seadec. "','".$value->Deanta. "','".$value->MMM. "','".$value->NFR. "','" .$value->FD30. "','" .$value->FD60. "','" . $value->GlassIntegrity . "','" . $value->GlassType . "',".$value->GlassThickness.','.$value->VpAreaSize.",'".$value->selectedPrice. "','" .$value->selectedId. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -6127,6 +6153,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td class="text-center">'.$NFR.'</td>
                         <td class="text-center">'.$FD30.'</td>
                         <td class="text-center">'.$FD60.'</td>
@@ -6485,6 +6512,7 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                         <th>Vicaima</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>UnderAttribute</th>
                         <th>Door Leaf Finish</th>
                         <th>PRICE PER L/M</th>
@@ -6552,6 +6580,12 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                         $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
 
+                    if($value->configurableitems == 9){
+                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                    }else{
+                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                    }
+
                     $cost = '';
                     if($authdata->id != 1 && $value->SelectedOptionCost !== null){
                     $cost = '<div class="input-group">
@@ -6572,6 +6606,7 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$vicaima.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.str_replace('_', ' ', $value->UnderAttribute).'</td>
                         <td>'.$value->OptionValue.'</td>
                         <td>'.$cost.'</td>
@@ -6641,6 +6676,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
                         <th>Vicaima</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>UnderAttribute</th>
                         <th>Door Leaf Finish</th>
                         <th>PRICE PER L/M</th>
@@ -6702,6 +6738,12 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
                         $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
 
+                    if($value->configurableitems == 9){
+                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                    }else{
+                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                    }
+
                     $cost = '';
                     if($authdata->id != 1 && $value->SelectedOptionCost !== null){
                     $cost = '<div class="input-group">
@@ -6722,6 +6764,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.str_replace('_', ' ', $value->UnderAttribute).'</td>
                         <td>'.$value->OptionValue.'</td>
                         <td>'.$cost.'</td>
@@ -6779,6 +6822,7 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                         <th>Vicaima</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>Door Leaf Finish</th>
                         <th>PRICE PER L/M</th>
                     </tr>
@@ -6843,6 +6887,11 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                     }else{
                         $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
+                    if($value->configurableitems == 9){
+                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                    }else{
+                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                    }
 
                     $cost = '';
                     if($authdata->id != 1 && $value->SelectedOptionCost !== null){
@@ -6864,6 +6913,7 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$vicaima.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td>'.$value->OptionValue.'</td>
                         <td>'.$cost.'</td>
                     </tr>';
@@ -6919,6 +6969,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>FireRating</th>
                         <th>Leaf Type</th>
                         <th>Code</th>
@@ -6968,6 +7019,12 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                         $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
 
+                    if($value->configurableitems == 9){
+                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                    }else{
+                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                    }
+
                     $cost = '';
                     if($authdata->id != 1 && $value->selected_cost !== null){
                     $cost = '<div class="input-group">
@@ -7009,6 +7066,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td class="text-center">'.$value->fire_rating.'</td>
                         <td class="text-center">'.$value->leaf_type.'</td>
                         <td class="text-center">'.$value->code.'</td>
@@ -7386,6 +7444,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                         <th>VicaimaDoorCore</th>
                         <th>Seadec</th>
                         <th>Deanta</th>
+                        <th>MMM</th>
                         <th>FireRating</th>
                         <th>Configu ration</th>
                         <th>Width</th>
@@ -7402,7 +7461,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
 
                 $i = 1;
                 foreach($aa as $value){
-                    if($value->configurableitems == 4 || $value->configurableitems == 5 || $value->configurableitems == 6){
+                    if($value->configurableitems == 4 || $value->configurableitems == 5 || $value->configurableitems == 6 || $value->configurableitems == 9){
 
                     $selectedOption = SelectedIntumescentSeals2::where([ 'intumescentseals2_id' => $value->id, 'selected_intumescentseals2_user_id' => $authdata->id])->count();
 
@@ -7430,6 +7489,12 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                         $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
                     }else{
                         $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                    }
+
+                    if($value->configurableitems == 9){
+                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                    }else{
+                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
                     }
 
                     $cost = '';
@@ -7469,6 +7534,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                         <td class="text-center">'.$VicaimaDoorCore.'</td>
                         <td class="text-center">'.$seadec.'</td>
                         <td class="text-center">'.$deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td class="text-center">'.$value->firerating.'</td>
                         <td class="text-center">'.$value->configuration.'</td>
                         <td>'.$value->Point1height.' - '.$value->Point2height.'</td>

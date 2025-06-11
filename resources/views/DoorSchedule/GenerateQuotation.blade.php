@@ -753,6 +753,8 @@
         value="{{ url('/quotation/add-norma-door-core-item') }}" />
     <input type="hidden" name="add_vicaima_url" id="add_vicaima_url"
         value="{{ url('/quotation/add-vicaima-door-core-item') }}" />
+    <input type="hidden" name="add_MMM_url" id="add_mmm_url"
+        value="{{ url('/quotation/add-MMM-door-core-item') }}" />
     <input type="hidden" name="add_seadec_url" id="add_seadec_url"
         value="{{ url('/quotation/add-seadec-cad-item') }}" />
     <input type="hidden" name="add_deanta_url" id="add_deanta_url"
@@ -2131,6 +2133,13 @@
                         window.location.href = add_vicaima_url + '/' + quotationId + '/' + currentVersion;
                     } else {
                         window.location.href = add_vicaima_url + '/' + quotationId;
+                    }
+                } else if (type == 9) { // for 9 MMM
+                    var add_mmm_url = $("#add_mmm_url").val();
+                    if (currentVersion != 0) {
+                        window.location.href = add_mmm_url + '/' + quotationId + '/' + currentVersion;
+                    } else {
+                        window.location.href = add_mmm_url + '/' + quotationId;
                     }
                 } else if (type == 5) { // for 4 seadec
                     var add_seadec_url = $("#add_seadec_url").val();

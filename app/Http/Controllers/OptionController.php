@@ -2801,7 +2801,7 @@ class OptionController extends Controller
             }
 
             return $data;
-        } elseif (isset($request->page_id) && in_array((int)$request->page_id, [4, 5, 6], true) &&
+        } elseif (isset($request->page_id) && in_array((int)$request->page_id, [4, 5, 6, 9], true) &&
         !empty($request->door_leaf_facing) && !empty($request->leaf_type) && !empty($request->firerating)){
             $fireRating = fireRatingDoor($request->firerating);
             $data = $fireRating !== 'NFR'? GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing,'door_dimension.fire_rating' => $fireRating], "join","DoorDimension") : GetOptions(['door_dimension.configurableitems' => $request->page_id ,'door_dimension.leaf_type' => $request->leaf_type,'door_dimension.door_leaf_facing' => $request->door_leaf_facing], "join","DoorDimension");
@@ -3162,14 +3162,15 @@ class OptionController extends Controller
                     $doorConfiguration = 3;
                 }elseif(strcasecmp($DoorType,"Vicaima") == 0){
                     $doorConfiguration = 4;
+                }elseif(strcasecmp($DoorType,"MMM") == 0){
+                    $doorConfiguration = 9;
                 }elseif(strcasecmp($DoorType,"Seadec") == 0){
                     $doorConfiguration = 5;
                 }elseif(strcasecmp($DoorType,"Deanta") == 0){
                     $doorConfiguration = 6;
-                 }elseif(strcasecmp($DoorType,"Flamebreak") == 0){
+                }elseif(strcasecmp($DoorType,"Flamebreak") == 0){
                     $doorConfiguration = 7;
-                }
-                elseif(strcasecmp($DoorType,"Stredor") == 0){
+                }elseif(strcasecmp($DoorType,"Stredor") == 0){
                     $doorConfiguration = 8;
                 }
 
@@ -3440,6 +3441,7 @@ class OptionController extends Controller
                     $data->VicaimaDoorCore = null;
                     $data->Seadec = null;
                     $data->Deanta = null;
+                    $data->MMM = null;
 
                     // Set selected door core(s)
                     if (!empty($request->normaDoorCore)) {
@@ -3456,6 +3458,10 @@ class OptionController extends Controller
 
                     if (!empty($request->deantaDoorCore)) {
                         $data->Deanta = 6;
+                    }
+
+                    if (!empty($request->MMM)) {
+                        $data->MMM = 9;
                     }
 
                     // Common fields
@@ -3510,6 +3516,7 @@ class OptionController extends Controller
                     $data->Deanta = NULL;
                     $data->Flamebreak = NULL;
                     $data->Stredor = NULL;
+                    $data->MMM = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
@@ -3526,6 +3533,10 @@ class OptionController extends Controller
 
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
+                        }
+
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
                         }
 
                         if($config[$m] == '5'){
@@ -3621,7 +3632,8 @@ class OptionController extends Controller
                         $selectedOption = new SelectedGlazingSystem();
                     }
 
-                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
+                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;$data->MMM = null;
+
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
@@ -3639,6 +3651,11 @@ class OptionController extends Controller
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
                         }
+
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
+                        }
+
 
                         if($config[$m] == '5'){
                             $data->Seadec = 5;
@@ -3841,7 +3858,8 @@ class OptionController extends Controller
                             $selectedOption = new SelectedArchitraveType();
                         }
 
-                        $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
+                        $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;$data->MMM = null;
+
                         $counter = count($config);
                         for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
@@ -3858,6 +3876,10 @@ class OptionController extends Controller
 
                             if($config[$m] == '4'){
                                 $data->VicaimaDoorCore = 4;
+                            }
+
+                            if($config[$m] == '9'){
+                                $data->MMM = 9;
                             }
 
                             if($config[$m] == '5'){
@@ -3930,7 +3952,8 @@ class OptionController extends Controller
                         $selectedOption = new SelectedAccoustics();
                     }
 
-                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
+                    $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;$data->MMM = null;
+
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
@@ -3947,6 +3970,10 @@ class OptionController extends Controller
 
                         if($config[$m] == '4'){
                             $data->VicaimaDoorCore = 4;
+                        }
+
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
                         }
 
                         if($config[$m] == '5'){
