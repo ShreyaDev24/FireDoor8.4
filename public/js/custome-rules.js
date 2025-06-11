@@ -1143,7 +1143,7 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight1',"Yes");
         doorLeafFacingPrice('sideLight11',"Yes");
         doorLeafFacingPrice('sideLight2',"Yes");
-        FramePrice('sideLight3');
+        // FramePrice('sideLight3');
         updateTransomFields();
         SideLightHeight('sideLight1');
     } else {
@@ -5779,11 +5779,11 @@ function filter_sidelight_beads(fireRating){
 
                     for(var i =0; i<length;i++){
                         if (BeadingTypeValue) {
-                            BeadingTypeValue = $("#SideLight1BeadingType-value").data("value");
+                            SideLight1BeadingType = $("#BeadingType-value").data("value");
                             var BeadingTypeSelected = "";
-
-                            if(BeadingTypeValue == data[i].OptionKey){
+                            if(SideLight1BeadingType == data[i].OptionKey){
                                 BeadingTypeSelected = "selected";
+                                console.log(BeadingTypeSelected)
                             }
                             SideLight1BeadingTypeInnerHtml += '<option value="'+data[i].OptionKey+'" '+ BeadingTypeSelected +'>'+data[i].OptionValue+'</option>';
                         } else {
