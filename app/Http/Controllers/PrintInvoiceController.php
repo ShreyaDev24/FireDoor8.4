@@ -2806,7 +2806,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                         <td class="dicription_blank">' . $tt->SL1Height . '</td>
                                     </tr>
                                     ';
-                                    } else if($tt->SideLight2 == 'Yes'){
+                                    }
+                                     if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
