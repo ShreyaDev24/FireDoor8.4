@@ -5649,6 +5649,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
     })->where(function ($query): void {
         $query->whereNotNull('glazing_system.VicaimaDoorCore')
               ->orWhereNotNull('glazing_system.Seadec')
+              ->orWhereNotNull('glazing_system.MMM')
               ->orWhereNotNull('glazing_system.Deanta');
     })
     ->wherein('glazing_system.editBy', $UserId)
@@ -5932,6 +5933,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
     ->where(function ($query): void {
         $query->whereNotNull('leaf_type.VicaimaDoorCore')
               ->orWhereNotNull('leaf_type.Seadec')
+              ->orWhereNotNull('leaf_type.MMM')
               ->orWhereNotNull('leaf_type.Deanta');
     })
     ->wherein('leaf_type.EditBy', $UserId)

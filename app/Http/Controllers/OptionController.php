@@ -3780,7 +3780,7 @@ class OptionController extends Controller
                             $selectedOption = new SelectedIntumescentSealColor();
                         }
 
-                        $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;
+                        $data->Streboard = NULL;$data->Halspan = NULL;$data->NormaDoorCore = NULL;$data->VicaimaDoorCore = NULL;$data->Seadec = NULL;$data->Deanta = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;$data->MMM = NULL;
                         $counter = count($config);
                         for($m = 0; $m < $counter; $m++){
                             if($config[$m] == '1'){
@@ -3809,6 +3809,10 @@ class OptionController extends Controller
 
                             if($config[$m] == '8'){
                                 $data->Stredor = 8;
+                            }
+
+                            if($config[$m] == '9'){
+                                $data->MMM = 9;
                             }
                         }
 
@@ -4030,7 +4034,7 @@ class OptionController extends Controller
                 $DoorLeafFacingPrice = $request->DoorLeafFacingPrice;
                 $key = str_replace(' ', '_', $DoorLeafFacingName);
 
-                if( ($request->Streboard || $request->Halspan || $request->NormaDoorCore || $request->VicaimaDoorCore || $request->SeadecDoorCore || $request->deantaDoorCore || $request->Flamebreak || $request->Stredor) && !empty($DoorLeafOption)  &&  !empty($DoorLeafFacingName)){
+                if( ($request->Streboard || $request->Halspan || $request->NormaDoorCore || $request->VicaimaDoorCore || $request->SeadecDoorCore || $request->deantaDoorCore || $request->MMM || $request->Flamebreak || $request->Stredor) && !empty($DoorLeafOption)  &&  !empty($DoorLeafFacingName)){
                     if(!empty($request->id)){
                         //update in DoorLeafFacing and SelectedDoorLeafFacing table
                         $data = DoorLeafFacing::find($request->id);
@@ -4053,6 +4057,7 @@ class OptionController extends Controller
                     $data->VicaimaDoorCore = $request->filled('VicaimaDoorCore') ? 4 : null;
                     $data->Seadec = $request->filled('SeadecDoorCore') ? 5 : null;
                     $data->Deanta = $request->filled('deantaDoorCore') ? 6 : null;
+                    $data->MMM = $request->filled('MMM') ? 9 : null;
                     $data->Flamebreak = $request->filled('Flamebreak') ? 7 : null;
                     $data->Stredor = $request->filled('Stredor') ? 8 : null;
 
