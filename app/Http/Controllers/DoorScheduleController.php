@@ -3654,10 +3654,12 @@ class DoorScheduleController extends Controller
         $quotationId = $request->quotationId;
         $versionID = $request->version;
         $MaxVersion = QuotationVersion::where('quotation_id', $quotationId)->max('version');
+        $adjustDiscountPrice = QuotationVersion::where('quotation_id', $quotationId)->where('id',$versionID)->value('discountQuotation');
         $QuotationVersionItems = QuotationVersionItems::where('version_id', $versionID)->get();
         if ($QuotationVersionItems !== null) {
             $QuotationVersion = new QuotationVersion();
             $QuotationVersion->quotation_id = $quotationId;
+            $QuotationVersion->discountQuotation = $adjustDiscountPrice ?? 0;
             $QuotationVersion->version = ($MaxVersion + 1);
             if ($QuotationVersion->save()) {
 
