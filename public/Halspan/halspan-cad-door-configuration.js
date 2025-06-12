@@ -8304,1053 +8304,1013 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
                 // var RemainedSpaceInLeaf1 = LeafWidth1 - (DistanceFromTheEdgeOfDoorForLeaf1ToShow + Leaf1VisionPanelWidthToShow);
                 var RemainedSpaceInLeaf1 = DistanceFromTheEdgeOfDoorForLeaf1ToShow;
 
-                if (ShowMeasurements) {
+              
+          if (ShowMeasurements) {
 
 
-                    if (Handing == 'Right') {
-                        svg.append("text")            // append text
-                            .style("fill", "black")      // make the text black
-                            .attr("font-size", 10)
-                            .attr("x", ix + LeftGapForLeaf1 + ((RemainedSpaceInLeaf1 / 5) / 2) - 7)         // set x position of left side of text
-                            .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2) - 10)         // set y position of bottom of text
-                            .text(RemainedSpaceInLeaf1);   // define the text to display
+            if (Handing == 'Right') {
+                svg.append("text")            // append text
+                    .style("fill", "black")      // make the text black
+                    .attr("font-size", 10)
+                    .attr("x", ix + LeftGapForLeaf1 + ((RemainedSpaceInLeaf1 / 5) / 2) - 7)         // set x position of left side of text
+                    .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2) - 10)         // set y position of bottom of text
+                    .text(RemainedSpaceInLeaf1);   // define the text to display
 
-                        svg.append('line')
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", ix + LeftGapForLeaf1)
+                    .attr("y1", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
+                    .attr("x2", DistanceXForLeaf1VPShape)
+                    .attr("y2", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
+                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                    .attr("marker-end", "url(#arrowRight)");
+            } else {
+                svg.append("text")           //
+                    .style("fill", "black")
+                    .attr("font-size", 10)
+                    .attr("x", DistanceXForLeaf1VPShape + parseFloat(Leaf1VisionPanelWidth) + ((RemainedSpaceInLeaf1 / 5) / 2) - 7)
+                    .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2) - 10)
+                    .text(RemainedSpaceInLeaf1);
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", DistanceXForLeaf1VPShape + parseFloat(Leaf1VisionPanelWidth))
+                    .attr("y1", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
+                    .attr("x2", ix + LeafWidth1ForMap + LeftGapForLeaf1)
+                    .attr("y2", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)");
+            }
+
+            /* Horizontal Line for vision panel */
+
+            /* Vertical Line for vision panel */
+            if (Handing == 'Right') {
+                //default distance from top (vission panel)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("y2", DistanceYForLeaf1VPShape)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)");
+
+                svg.append("text")
+                    .style("fill", "black")
+                    .style("writing-mode", WritingMode)
+                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("font-size", 10)
+                    .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2))
+                    .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2) + 7})`)
+                    .text(DistanceFromTopOfDoorForLeaf1ToShow);
+
+
+                if ((Leaf1VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
+                    svg.append('line')   // yellow
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25)
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5})`)
+                        .text(Leaf1VisionPanel1HeightToShow);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15)
+                        .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+
+                    svg.append('line')   //
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+
+
+                } else {  // when height of vission pannel is more then half of height of inner frame
+                    if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
+                        // ix - 15 - SideLightPanel1WidthSpaceForVerticalLines
+
+                        svg.append('line')   // yellow
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + LeftGapForLeaf1)
-                            .attr("y1", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
-                            .attr("x2", DistanceXForLeaf1VPShape)
-                            .attr("y2", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
+                            .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y1", DistanceYForLeaf1VPShape)
+                            .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
-                    } else {
-                        svg.append("text")           //
-                            .style("fill", "black")
-                            .attr("font-size", 10)
-                            .attr("x", DistanceXForLeaf1VPShape + parseFloat(Leaf1VisionPanelWidth) + ((RemainedSpaceInLeaf1 / 5) / 2) - 7)
-                            .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2) - 10)
-                            .text(RemainedSpaceInLeaf1);
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", DistanceXForLeaf1VPShape + parseFloat(Leaf1VisionPanelWidth))
-                            .attr("y1", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
-                            .attr("x2", ix + LeafWidth1ForMap + LeftGapForLeaf1)
-                            .attr("y2", DistanceYForLeaf1VPShape + (Leaf1VisionPanel1Height / 2))
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)");
-                    }
 
-                    /* Horizontal Line for vision panel */
-
-                    /* Vertical Line for vision panel */
-                    if (Handing == 'Right') {
-                        //default distance from top (vission panel)
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", DistanceYForLeaf1VPShape)
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)");
-
-                        svg.append("text")
-                            .style("fill", "black")
-                            .style("writing-mode", WritingMode)
-                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("font-size", 10)
-                            .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2))
-                            .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2) + 7})`)
-                            .text(DistanceFromTopOfDoorForLeaf1ToShow);
-
-
-                        if ((Leaf1VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
-                            svg.append('line')   // yellow
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode)
-                                .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25)
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5})`)
-                                .text(Leaf1VisionPanel1HeightToShow);
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15)
-                                .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-
-                            svg.append('line')   //
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-
-
-                        } else {  // when height of vission pannel is more then half of height of inner frame
-                            if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
-                                // ix - 15 - SideLightPanel1WidthSpaceForVerticalLines
-
-                                svg.append('line')   // yellow
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                                    .attr("y1", DistanceYForLeaf1VPShape)
-                                    .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                                    .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + 20)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)         // set y position of bottom of text
-                                    .text(Leaf1VisionPanel1HeightToShow);   // define the text to display
-                            } else {
-                                svg.append('line')   // yellow
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + 20)
-                                    .attr("y1", DistanceYForLeaf1VPShape)
-                                    .attr("x2", DistanceXForLeaf1VPShape + 20)
-                                    .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                    .attr("marker-start", "url(#arrowLeft)")
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                svg.append("text")
-                                    .style("fill", "black")
-                                    .style("writing-mode", WritingMode)
-                                    .attr("x", DistanceXForLeaf1VPShape + 10)
-                                    .attr("font-size", 10)
-                                    .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
-                                    .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + 10}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
-                                    .text(Leaf1VisionPanel1HeightToShow);
-
-                            }
-                        }
-
-
-
-
-                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                        // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-
-                        if (VisionPanelQuantityForLeaf1 == 1) {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", iy + SOHeightForMap)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-                                svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                .attr("font-size", 10)
-                                .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                        }
-
-
-
-
-
-                    } else {
-                        //default distance from top (vission panel)
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", DistanceYForLeaf1VPShape)
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)");
-
-                        svg.append("text")
-                            .style("fill", "black")
-                            .style("writing-mode", WritingMode)
-                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("font-size", 10)
-                            .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2))
-                            .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2) + 7})`)
-                            .text(DistanceFromTopOfDoorForLeaf1ToShow);
-
-
-                        if ((Leaf1VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
-                            svg.append('line')   // yellow
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape - 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode)
-                                .attr("x", DistanceXForLeaf1VPShape - 25)
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2))
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 15}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
-                                .text(Leaf1VisionPanel1HeightToShow);
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height)
-                                .attr("x2", DistanceXForLeaf1VPShape - 15)
-                                .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-
-                            svg.append('line')   //
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 15)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-
-
-                        } else {  // when height of vission pannel is more then half of height of inner frame
-
-                            if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
-                                // ix - 15 - SideLightPanel1WidthSpaceForVerticalLines
-
-                                svg.append('line')   // yellow
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                                    .attr("y1", DistanceYForLeaf1VPShape)
-                                    .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                                    .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + 20)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)         // set y position of bottom of text
-                                    .text(Leaf1VisionPanel1HeightToShow);   // define the text to display
-                            } else {
-                                svg.append('line')   // yellow
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + 20)
-                                    .attr("y1", DistanceYForLeaf1VPShape)
-                                    .attr("x2", DistanceXForLeaf1VPShape + 20)
-                                    .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                    .attr("marker-start", "url(#arrowLeft)")
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                svg.append("text")
-                                    .style("fill", "black")
-                                    .style("writing-mode", WritingMode)
-                                    .attr("x", DistanceXForLeaf1VPShape + 10)
-                                    .attr("font-size", 10)
-                                    .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
-                                    .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + 10}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
-                                    .text(Leaf1VisionPanel1HeightToShow);
-
-                            }
-                        }
-
-
-
-
-                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                        // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-
-                        if (VisionPanelQuantityForLeaf1 == 1) {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", iy + SOHeightForMap)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-                                svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                .attr("font-size", 10)
-                                .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                        }
-
-
-
-
-                    }
-                }
-                /* Vertical Line for vision panel */
-
-                if (VisionPanelQuantityForLeaf1 > 1) {
-
-                    DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height + DistanceBetweenVPsForLeaf1;
-
-                    if (VisionPanelShape == "Diamond") {
-                        svg.append('path')
-                            .attr('d', DiamondDimension)
-                            .attr("fill", "#fff")
-                            .style("stroke", "black")
-                            .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log("2609", Leaf1VisionPanel1Height)
-                    } else if (VisionPanelShape == "Circle") {
-                        svg.append("circle")
-                            .style("stroke", "black")
-                            .style("fill", "#fff")
-                            .attr("r", CircleRadius)
-                            .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
-                            .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
-                    } else {
-                        svg.append('rect')
-                            .attr('x', DistanceXForLeaf1VPShape)
-                            .attr('y', DistanceYForLeaf1VPShape)
-                            .attr('width', Leaf1VisionPanelWidth)
-                            .attr('height', parseFloat(Leaf1VisionPanel2Height))
-                            .attr('stroke', 'black')
-                            .attr('fill', '#fff');
-                    }
-
-                    if (ShowMeasurements) {
-
-                        /* Vertical Line for vision panel */
-                        if (Handing == 'Right') {
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of the text
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of the text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5) // set y position
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel2HeightToShow);
-
-
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height);
-
-                            if (Leaf1VisionPanel2Height && VisionPanelQuantityForLeaf1 == 2) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                            }
-                        } else {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of the text
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of the text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape - 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                                const here=$('input[name="vP1Height2"]').val()
-                        console.log(here,$('input[name="vP1Height2"]').val(),'kkkkkkkkkkkkk')
                         svg.append("text")            // append text
-                        .style("fill", "black")      // set text color
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + 20)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)         // set y position of bottom of text
+                            .text(Leaf1VisionPanel1HeightToShow);   // define the text to display
+                    } else {
+                        svg.append('line')   // yellow
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + 20)
+                            .attr("y1", DistanceYForLeaf1VPShape)
+                            .attr("x2", DistanceXForLeaf1VPShape + 20)
+                            .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)");
+
+                        svg.append("text")
+                            .style("fill", "black")
+                            .style("writing-mode", WritingMode)
+                            .attr("x", DistanceXForLeaf1VPShape + 10)
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
+                            .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + 10}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
+                            .text(Leaf1VisionPanel1HeightToShow);
+
+                    }
+                }
+
+
+
+
+                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+
+                if (VisionPanelQuantityForLeaf1 == 1) {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", iy + SOHeightForMap- (FrameThickness/5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+                        svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
                         .style("writing-mode", WritingMode) // set the writing mode
-                        .attr("x",  DistanceXForLeaf1VPShape - 15) // set x position of text
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
                         .attr("font-size", 10)
-                        .attr("y", DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 ) // set y position of text
-                        .attr("transform", `rotate(-90, ${ DistanceXForLeaf1VPShape - 15}, ${DistanceYForLeaf1VPShape+(Leaf1VisionPanel2Height/2) + 5 })`)
-                        .text(here);
-
-                            svg.append("black")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape - 10) // set x position
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2)) // set y position
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel2HeightToShow);
-
-
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height);
-                            if (Leaf1VisionPanel2Height && VisionPanelQuantityForLeaf1 == 2) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                            }
-                        }
-
-                    }
-
+                        .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                        .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
                 }
 
-                if (VisionPanelQuantityForLeaf1 > 2) {
 
-                    DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
-                        + Leaf1VisionPanel2Height + DistanceBetweenVPsForLeaf1;
 
-                    if (VisionPanelShape == "Diamond") {
-                        svg.append('path')
-                            .attr('d', DiamondDimension)
-                            .attr("fill", "#fff")
+
+
+            } else {
+                //default distance from top (vission panel)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("y2", DistanceYForLeaf1VPShape)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)");
+
+                svg.append("text")
+                    .style("fill", "black")
+                    .style("writing-mode", WritingMode)
+                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                    .attr("font-size", 10)
+                    .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2))
+                    .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2) + 7})`)
+                    .text(DistanceFromTopOfDoorForLeaf1ToShow);
+
+
+                if ((Leaf1VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
+                    svg.append('line')   // yellow
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape - 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf1VPShape - 25)
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2))
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 15}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
+                        .text(Leaf1VisionPanel1HeightToShow);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height)
+                        .attr("x2", DistanceXForLeaf1VPShape - 15)
+                        .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+
+                    svg.append('line')   //
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 15)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+
+
+                } else {  // when height of vission pannel is more then half of height of inner frame
+
+                    if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
+                        // ix - 15 - SideLightPanel1WidthSpaceForVerticalLines
+
+                        svg.append('line')   // yellow
                             .style("stroke", "black")
-                            .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                    } else if (VisionPanelShape == "Circle") {
-                        svg.append("circle")
-                            .style("stroke", "black")
-                            .style("fill", "#fff")
-                            .attr("r", CircleRadius)
-                            .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
-                            .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y1", DistanceYForLeaf1VPShape)
+                            .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + 20)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)         // set y position of bottom of text
+                            .text(Leaf1VisionPanel1HeightToShow);   // define the text to display
                     } else {
-                        svg.append('rect')
-                            .attr('x', DistanceXForLeaf1VPShape)
-                            .attr('y', DistanceYForLeaf1VPShape)
-                            .attr('width', parseFloat(Leaf1VisionPanelWidth))
-                            .attr('height', parseFloat(Leaf1VisionPanel3Height))
-                            .attr('stroke', 'black')
-                            .attr('fill', '#fff');
+                        svg.append('line')   // yellow
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + 20)
+                            .attr("y1", DistanceYForLeaf1VPShape)
+                            .attr("x2", DistanceXForLeaf1VPShape + 20)
+                            .attr("y2", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)");
+
+                        svg.append("text")
+                            .style("fill", "black")
+                            .style("writing-mode", WritingMode)
+                            .attr("x", DistanceXForLeaf1VPShape + 10)
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2) + 5)
+                            .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + 10}, ${DistanceYForLeaf1VPShape + (parseFloat(Leaf1VisionPanel1Height) / 2)})`)
+                            .text(Leaf1VisionPanel1HeightToShow);
+
                     }
-
-                    if (ShowMeasurements) {
-
-                        /* Vertical Line for vision panel */
-                        if (Handing == 'Right') {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode)
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow);
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel3HeightToShow);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height);
-                            if (Leaf1VisionPanel3Height && VisionPanelQuantityForLeaf1 == 3) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-
-                            }
-                        } else {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")
-                                .style("fill", "black")
-                                .style("writing-mode", WritingMode)
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow);
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape - 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape - 10) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel3HeightToShow);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height);
-
-                            if (Leaf1VisionPanel3Height && VisionPanelQuantityForLeaf1 == 3) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                            }
-
-                        }
-
-                        /* Vertical Line for vision panel */
-                    }
-
                 }
 
-                if (VisionPanelQuantityForLeaf1 > 3) {
-
-                    DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
-                        + Leaf1VisionPanel3Height + DistanceBetweenVPsForLeaf1;
-
-                    if (VisionPanelShape == "Diamond") {
-                        svg.append('path')
-                            .attr('d', DiamondDimension)
-                            .attr("fill", "#fff")
-                            .style("stroke", "black")
-                            .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log("2850")
-                    } else if (VisionPanelShape == "Circle") {
-                        svg.append("circle")
-                            .style("stroke", "black")
-                            .style("fill", "#fff")
-                            .attr("r", CircleRadius)
-                            .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
-                            .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
-                    } else {
-                        svg.append('rect')
-                            .attr('x', DistanceXForLeaf1VPShape)
-                            .attr('y', DistanceYForLeaf1VPShape)
-                            .attr('width', parseFloat(Leaf1VisionPanelWidth))
-                            .attr('height', parseFloat(Leaf1VisionPanel4Height))
-                            .attr('stroke', 'black')
-                            .attr('fill', '#fff');
-                    }
-
-                    if (ShowMeasurements) {
-                        /* Vertical Line for vision panel */
-                        if (Handing == 'Right') {
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // display text
 
 
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
 
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel4HeightToShow);
+                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
 
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height);
-
-                            if (Leaf1VisionPanel4Height && VisionPanelQuantityForLeaf1 == 4) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                            }
-
-                        } else {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // display text
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape - 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)");
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape - 10) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel4HeightToShow);
-                            // define the text to display
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height);
-                            if (Leaf1VisionPanel4Height && VisionPanelQuantityForLeaf1 == 4) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-                            }
-
-                        }
-
-                        /* Vertical Line for vision panel */
-                    }
-
+                if (VisionPanelQuantityForLeaf1 == 1) {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", iy + SOHeightForMap- (FrameThickness/5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+                        svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                        .attr("font-size", 10)
+                        .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                        .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
                 }
 
-                if (VisionPanelQuantityForLeaf1 > 4) {
-                    DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
-                        + Leaf1VisionPanel4Height + DistanceBetweenVPsForLeaf1;
 
-                    if (VisionPanelShape == "Diamond") {
-                        svg.append('path')
-                            .attr('d', DiamondDimension)
-                            .attr("fill", "#fff")
+
+
+            }
+        }
+        /* Vertical Line for vision panel */
+
+        if (VisionPanelQuantityForLeaf1 > 1) {
+
+            DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape + Leaf1VisionPanel1Height + DistanceBetweenVPsForLeaf1;
+
+            if (VisionPanelShape == "Diamond") {
+                svg.append('path')
+                    .attr('d', DiamondDimension)
+                    .attr("fill", "#fff")
+                    .style("stroke", "black")
+                    .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
+                // console.log("2609", Leaf1VisionPanel1Height)
+            } else if (VisionPanelShape == "Circle") {
+                svg.append("circle")
+                    .style("stroke", "black")
+                    .style("fill", "#fff")
+                    .attr("r", CircleRadius)
+                    .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
+                    .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
+            } else {
+                svg.append('rect')
+                    .attr('x', DistanceXForLeaf1VPShape)
+                    .attr('y', DistanceYForLeaf1VPShape)
+                    .attr('width', Leaf1VisionPanelWidth)
+                    .attr('height', parseFloat(Leaf1VisionPanel2Height))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#fff');
+            }
+
+            if (ShowMeasurements) {
+
+                /* Vertical Line for vision panel */
+                if (Handing == 'Right') {
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of the text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of the text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel2HeightToShow);
+
+
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height);
+
+                    if (Leaf1VisionPanel2Height && VisionPanelQuantityForLeaf1 == 2) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
                             .style("stroke", "black")
-                            .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
-                        // console.log(DistanceXForLeaf1VPShape, "DistanceXForLeaf1VPShape 2960")
-                    } else if (VisionPanelShape == "Circle") {
-                        svg.append("circle")
-                            .style("stroke", "black")
-                            .style("fill", "#fff")
-                            .attr("r", CircleRadius)
-                            .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
-                            .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
-                    } else {
-                        svg.append('rect')
-                            .attr('x', DistanceXForLeaf1VPShape)
-                            .attr('y', DistanceYForLeaf1VPShape)
-                            .attr('width', parseFloat(Leaf1VisionPanelWidth))
-                            .attr('height', parseFloat(Leaf1VisionPanel5Height))
-                            .attr('stroke', 'black')
-                            .attr('fill', '#fff');
-                    }
-
-                    if (ShowMeasurements) {
-
-                        /* Vertical Line for vision panel */
-                        if (Handing == 'Right') {
-
-                            // svg.append('line')
-                            //     .style("stroke", "black")
-                            //     .style("stroke-width", 0.5)
-                            //     .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                            //     .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
-                            //     .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                            //     .attr("y2", DistanceYForLeaf1VPShape)
-                            //     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                            //     .attr("marker-end", "url(#arrowRight)")
-
-                            // svg.append("text")            // append text
-                            //     .style("fill", "black")      // make the text black
-                            //     .style("writing-mode", WritingMode) // set the writing mode
-                            //     .attr("x", ix - 40 - SideLightPanel1WidthSpaceForVerticalLines)         // set x position of left side of text
-                            //     .attr("font-size", 10)
-                            //     .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5)         // set y position of bottom of text
-                            //     .text(DistanceBetweenVPsForLeaf1ToShow);   // define the text to display
-
-                            // svg.append('line')
-                            //     .style("stroke", "black")
-                            //     .style("stroke-width", 0.5)
-                            //     .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                            //     .attr("y1", DistanceYForLeaf1VPShape)
-                            //     .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
-                            //     .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
-                            //     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                            //     .attr("marker-end", "url(#arrowRight)");
-
-                            // svg.append("text")            // append text
-                            //     .style("fill", "black")      // make the text black
-                            //     .style("writing-mode", WritingMode) // set the writing mode
-                            //     .attr("x", ix - 40 - SideLightPanel1WidthSpaceForVerticalLines)         // set x position of left side of text
-                            //     .attr("font-size", 10)
-                            //     .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5)        // set y position of bottom of text
-                            //     .text(Leaf1VisionPanel5HeightToShow);   // define the text to display
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)")
-
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
                             svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)")
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25)         // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5)        // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel5HeightToShow);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height);
-
-                            if (Leaf1VisionPanel5Height && VisionPanelQuantityForLeaf1 == 5) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-
-                                    svg.append("text")            // append text
-                                    .style("fill", "black")      // make the text black
-                                    .style("writing-mode", WritingMode) // set the writing mode
-                                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
-                                    .attr("font-size", 10)
-                                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                    .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
-
-                            }
-                        } else {
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
-                                .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                .attr("y2", DistanceYForLeaf1VPShape)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)")
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // set text color
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
-                                .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
-
-
-                            svg.append('line')
-                                .style("stroke", "black")
-                                .style("stroke-width", 0.5)
-                                .attr("x1", DistanceXForLeaf1VPShape - 10)
-                                .attr("y1", DistanceYForLeaf1VPShape)
-                                .attr("x2", DistanceXForLeaf1VPShape - 10)
-                                .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
-                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                .attr("marker-end", "url(#arrowRight)")
-
-                            svg.append("text")            // append text
-                                .style("fill", "black")      // make the text black
-                                .style("writing-mode", WritingMode) // set the writing mode
-                                .attr("x", DistanceXForLeaf1VPShape - 10)         // set x position of text
-                                .attr("font-size", 10)
-                                .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2))        // set y position of text
-                                .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5})`)
-                                .text(Leaf1VisionPanel5HeightToShow);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
-                            createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height);
-                            if (Leaf1VisionPanel5Height && VisionPanelQuantityForLeaf1 == 5) {
-
-                                const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
-                                const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
-                                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
-                                // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
-                                    .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                                    .attr("y2", iy + SOHeightForMap)
-                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                                    .attr("marker-end", "url(#arrowRight)");
-                                     svg.append("text")            // append text
                             .style("fill", "black")      // make the text black
                             .style("writing-mode", WritingMode) // set the writing mode
                             .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
                             .attr("font-size", 10)
-                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-(Leaf1VisionPanel2Height*5));
+                          
+                    }
+                } else {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
 
-                            }
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of the text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of the text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
 
-                        }
 
-                        /* Vertical Line for vision panel */
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape - 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape - 10) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2)) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel2Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel2HeightToShow);
+
+
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height);
+                    if (Leaf1VisionPanel2Height && VisionPanelQuantityForLeaf1 == 2) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-(Leaf1VisionPanel2Height*5));
+                    }
+                }
+
+            }
+
+        }
+
+        if (VisionPanelQuantityForLeaf1 > 2) {
+
+            DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
+                + Leaf1VisionPanel2Height + DistanceBetweenVPsForLeaf1;
+
+            if (VisionPanelShape == "Diamond") {
+                svg.append('path')
+                    .attr('d', DiamondDimension)
+                    .attr("fill", "#fff")
+                    .style("stroke", "black")
+                    .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
+            } else if (VisionPanelShape == "Circle") {
+                svg.append("circle")
+                    .style("stroke", "black")
+                    .style("fill", "#fff")
+                    .attr("r", CircleRadius)
+                    .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
+                    .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
+            } else {
+                svg.append('rect')
+                    .attr('x', DistanceXForLeaf1VPShape)
+                    .attr('y', DistanceYForLeaf1VPShape)
+                    .attr('width', parseFloat(Leaf1VisionPanelWidth))
+                    .attr('height', parseFloat(Leaf1VisionPanel3Height))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#fff');
+            }
+
+            if (ShowMeasurements) {
+
+                /* Vertical Line for vision panel */
+                if (Handing == 'Right') {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow);
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel3HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height);
+                    if (Leaf1VisionPanel3Height && VisionPanelQuantityForLeaf1 == 3) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5) - (Leaf1VisionPanel2Height * 5)-(Leaf1VisionPanel3Height * 5)  );
+
+                    }
+                } else {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1)
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow);
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape - 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape - 10) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel3Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel3HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height);
+
+                    if (Leaf1VisionPanel3Height && VisionPanelQuantityForLeaf1 == 3) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                                                      .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5) - (Leaf1VisionPanel2Height * 5)-(Leaf1VisionPanel3Height * 5)  );
+
                     }
 
                 }
+
+                /* Vertical Line for vision panel */
+            }
+
+        }
+
+        if (VisionPanelQuantityForLeaf1 > 3) {
+
+            DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
+                + Leaf1VisionPanel3Height + DistanceBetweenVPsForLeaf1;
+
+            if (VisionPanelShape == "Diamond") {
+                svg.append('path')
+                    .attr('d', DiamondDimension)
+                    .attr("fill", "#fff")
+                    .style("stroke", "black")
+                    .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
+                // console.log("2850")
+            } else if (VisionPanelShape == "Circle") {
+                svg.append("circle")
+                    .style("stroke", "black")
+                    .style("fill", "#fff")
+                    .attr("r", CircleRadius)
+                    .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
+                    .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
+            } else {
+                svg.append('rect')
+                    .attr('x', DistanceXForLeaf1VPShape)
+                    .attr('y', DistanceYForLeaf1VPShape)
+                    .attr('width', parseFloat(Leaf1VisionPanelWidth))
+                    .attr('height', parseFloat(Leaf1VisionPanel4Height))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#fff');
+            }
+
+            if (ShowMeasurements) {
+                /* Vertical Line for vision panel */
+                if (Handing == 'Right') {
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // display text
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel4HeightToShow);
+
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height);
+
+                    if (Leaf1VisionPanel4Height && VisionPanelQuantityForLeaf1 == 4) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5) -  (Leaf1VisionPanel4Height * 5));
+                    }
+
+                } else {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // display text
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape - 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape - 10) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel4Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel4HeightToShow);
+                    // define the text to display
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height);
+                    if (Leaf1VisionPanel4Height && VisionPanelQuantityForLeaf1 == 4) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5) -  (Leaf1VisionPanel4Height * 5));
+
+                    }
+
+                }
+
+                /* Vertical Line for vision panel */
+            }
+
+        }
+
+        if (VisionPanelQuantityForLeaf1 > 4) {
+            DistanceYForLeaf1VPShape = DistanceYForLeaf1VPShape
+                + Leaf1VisionPanel4Height + DistanceBetweenVPsForLeaf1;
+
+            if (VisionPanelShape == "Diamond") {
+                svg.append('path')
+                    .attr('d', DiamondDimension)
+                    .attr("fill", "#fff")
+                    .style("stroke", "black")
+                    .attr("transform", "translate(" + DistanceXForLeaf1VPShape + "," + DistanceYForLeaf1VPShape + ")");
+                // console.log(DistanceXForLeaf1VPShape, "DistanceXForLeaf1VPShape 2960")
+            } else if (VisionPanelShape == "Circle") {
+                svg.append("circle")
+                    .style("stroke", "black")
+                    .style("fill", "#fff")
+                    .attr("r", CircleRadius)
+                    .attr("cx", DistanceXForLeaf1VPShape + CircleRadius)
+                    .attr("cy", DistanceYForLeaf1VPShape + CircleRadius);
+            } else {
+                svg.append('rect')
+                    .attr('x', DistanceXForLeaf1VPShape)
+                    .attr('y', DistanceYForLeaf1VPShape)
+                    .attr('width', parseFloat(Leaf1VisionPanelWidth))
+                    .attr('height', parseFloat(Leaf1VisionPanel5Height))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#fff');
+            }
+
+            if (ShowMeasurements) {
+
+                /* Vertical Line for vision panel */
+                if (Handing == 'Right') {
+
+                    
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25)         // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5)        // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 25}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel5HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height);
+
+                    if (Leaf1VisionPanel5Height && VisionPanelQuantityForLeaf1 == 5) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5)-  (Leaf1VisionPanel4Height * 5)-  (Leaf1VisionPanel5Height * 5));
+
+                    }
+                } else {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1))
+                        .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf1VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${(DistanceYForLeaf1VPShape - DistanceBetweenVPsForLeaf1) + (DistanceBetweenVPsForLeaf1 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf1ToShow); // define the text to display
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf1VPShape - 10)
+                        .attr("y1", DistanceYForLeaf1VPShape)
+                        .attr("x2", DistanceXForLeaf1VPShape - 10)
+                        .attr("y2", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf1VPShape - 10)         // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2))        // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape - 10}, ${DistanceYForLeaf1VPShape + (Leaf1VisionPanel5Height / 2) + 5})`)
+                        .text(Leaf1VisionPanel5HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf1VPShape - 15, DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height, DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2), DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height);
+                    if (Leaf1VisionPanel5Height && VisionPanelQuantityForLeaf1 == 5) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel1Height) * (VisionPanelQuantityForLeaf1)) + parseFloat(Leaf1VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
+                            .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+                             svg.append("text")            // append text
+                    .style("fill", "black")      // make the text black
+                    .style("writing-mode", WritingMode) // set the writing mode
+                    .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                    .attr("font-size", 10)
+                    .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5)-  (Leaf1VisionPanel4Height * 5)-  (Leaf1VisionPanel5Height * 5));
+                   
+
+                    }
+
+                }
+
+                /* Vertical Line for vision panel */
+            }
+
+        }
             }
         }
 
