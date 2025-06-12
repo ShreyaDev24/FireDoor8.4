@@ -8456,15 +8456,16 @@ const render = (CustomElement = null) => {
                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
                 // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-
+  
                 if (VisionPanelQuantityForLeaf1 == 1) {
+                  
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
                         .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                         .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
                         .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                        .attr("y2", iy + SOHeightForMap- (FrameThickness/5))
+                        .attr("y2", iy + SOHeightForMap)
                         .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                         .attr("marker-end", "url(#arrowRight)");
                         svg.append("text")            // append text
@@ -8473,7 +8474,7 @@ const render = (CustomElement = null) => {
                         .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
                         .attr("font-size", 10)
                         .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                        .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) - (VisionPanelQuantityForLeaf1 * (Leaf1VisionPanel1Height * 5)));
+                        .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5));
                 }
 
 
@@ -8500,7 +8501,7 @@ const render = (CustomElement = null) => {
                     .attr("font-size", 10)
                     .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2))
                     .attr("transform", `rotate(-90, ${DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2)}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf1 / 2) + 7})`)
-                    .text(DistanceFromTopOfDoorForLeaf1ToShow);
+                    .text(DistanceFromTopOfDoorValue);
 
 
                 if ((Leaf1VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
@@ -8600,7 +8601,7 @@ const render = (CustomElement = null) => {
                         .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                         .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
                         .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                        .attr("y2", iy + SOHeightForMap- (FrameThickness/5))
+                        .attr("y2", iy + SOHeightForMap)
                         .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                         .attr("marker-end", "url(#arrowRight)");
                         svg.append("text")            // append text
@@ -8707,7 +8708,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
                             svg.append("text")            // append text
@@ -8774,7 +8775,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel2Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
 
@@ -8876,7 +8877,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
                             svg.append("text")            // append text
@@ -8942,7 +8943,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel3Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
                             svg.append("text")            // append text
@@ -9049,7 +9050,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
 
@@ -9116,7 +9117,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel4Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
 
@@ -9224,7 +9225,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
 
@@ -9290,7 +9291,7 @@ const render = (CustomElement = null) => {
                             .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                             .attr("y1", DistanceYForLeaf1VPShape + Leaf1VisionPanel5Height)
                             .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                            .attr("y2", iy + SOHeightForMap  - (FrameThickness/5))
+                            .attr("y2", iy + SOHeightForMap )
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)");
                              svg.append("text")            // append text
