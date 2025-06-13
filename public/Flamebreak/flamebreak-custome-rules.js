@@ -994,6 +994,14 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
+            setTimeout(function(){
+                if($("#sideLight1").val() == 'Yes'){
+                    SideLightHeight('sideLight1');
+                }
+                if($("#sideLight2").val() == 'Yes'){
+                    SideLightHeight('sideLight2');
+                }
+            }, 1000)
             FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -1149,7 +1157,7 @@ function sideLight1Change(isstatus = false){
         }
 
         $("#SL1Width").attr({ 'readonly': false, "required": true });
-        $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
+        $("#SL1Height").attr({ 'readonly': true, "required": true });
         $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
@@ -1157,6 +1165,7 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight2',"Yes");
         FramePrice('sideLight3');
         updateTransomFields();
+        SideLightHeight('sideLight1');
     } else {
 
         $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1238,6 +1247,7 @@ function sideLight2Change(isstatus = false){
         }
         updateTransomFields();
         doorLeafFacingPrice('sideLight12',"Yes");
+        SideLightHeight('sideLight2');
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
@@ -1515,6 +1525,14 @@ function copyOfSideLite1Change(isstatus = false){
                 $('input[name="architraveFinishcolor"]').val('');
             }
         });
+        setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
     });
 
     let ArcFin = $('#Architrave').val();
@@ -1767,11 +1785,13 @@ function copyOfSideLite1Change(isstatus = false){
             // $("#leafHeightNoOP").val(leafHeightNoOP).attr('readonly',true);
 
             if($("#sideLight1").val() == "Yes"){
-                $("#SL1Height").val(leafHeightNoOP).attr({'readonly':true, "required": true });
+                $("#SL1Height").attr({'readonly':true, "required": true });
+                 SideLightHeight('sideLight1');
             }
 
             if($("#sideLight2").val() == "Yes"){
-                $("#SL2Height").val(leafHeightNoOP).attr({'readonly':true, "required": true });
+                $("#SL2Height").attr({'readonly':true, "required": true });
+                SideLightHeight('sideLight2');
             }
             var plantonStopHeight = soheight-tollerance;
 
@@ -3966,7 +3986,7 @@ function copyOfSideLite1Change(isstatus = false){
             }
             var leafHeightNoOP = soheight-tollerance-framethikness-undercut-gap;
             // $("#leafHeightNoOP").val(leafHeightNoOP).attr('readonly',true);
-            $("#SL1Height").val(leafHeightNoOP).attr('readonly',true);
+            $("#SL1Height").attr('readonly',true);
             var plantonStopHeight = soheight-tollerance;
             //$("#plantonStopHeight").val(plantonStopHeight);
             $("#frameHeight").val(plantonStopHeight);
@@ -4561,9 +4581,20 @@ $("#SlBeadThickness, #SlBeadHeight,#SL1Width, #SL1Height").on("keyup",function()
     }
 });
 
-$("#oPHeigth, #oPWidth,#OpBeadThickness, #OpBeadHeight").on("keyup",function(){
+$("#oPWidth,#OpBeadThickness, #OpBeadHeight").on("keyup",function(){
     if($("#overpanel").val()=="Fan_Light"){
         doorLeafFacingPrice('overpanel2',"Fan_Light");
+    }
+});
+$("#oPHeigth").on("keyup",function(){
+    if($("#overpanel").val()=="Fan_Light"){
+        doorLeafFacingPrice('overpanel2',"Fan_Light");
+    }
+    if($("#sideLight1").val() == 'Yes'){
+        SideLightHeight('sideLight1');
+    }
+    if($("#sideLight2").val() == 'Yes'){
+        SideLightHeight('sideLight2');
     }
 });
 
@@ -6150,5 +6181,31 @@ function frameHeight(){
             );
     }else{
         $("#frameHeight").val(soheight-tollerance);
+    }
+}
+// JFDS 1000
+function SideLightHeight(type){
+    let frameHeight = parseInt($('input[name="frameHeight"]').val(), 10) || 0;
+    if(type == 'sideLight1'){
+      $("#SL1Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        console.log(oPHeigth)
+        let slHeight = frameHeight + oPHeigth;
+        setTimeout(function(){
+            $("#SL1Height").val(slHeight);
+        },1000);
+      }
+    }
+    if(type == 'sideLight2'){
+      $("#SL2Height").val(frameHeight);
+      if($("#overpanel").val() != 'No'){
+        let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
+        let s2Height = frameHeight + oPHeigth;
+         setTimeout(function(){
+            $("#SL2Height").val(s2Height);
+        },1000);
+
+      }
     }
 }
