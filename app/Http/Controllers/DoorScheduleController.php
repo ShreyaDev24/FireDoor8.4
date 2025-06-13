@@ -2784,6 +2784,7 @@ class DoorScheduleController extends Controller
                     $DoorDimensionId = trim((string) $row[$j++]);
                     $DoorDimensionId2 = trim((string) $row[$j++]);
                     $DoorDimension = trim((string) $row[$j++]);
+                    $DoorDimensionCode = trim((string) $row[$j++]);
                     $SOHeight = trim((string) $row[$j++]);
                     $SOWidth = trim((string) $row[$j++]);
                     $SOWallThick = trim((string) $row[$j++]);
@@ -3056,6 +3057,7 @@ class DoorScheduleController extends Controller
                             $aa->DoorDimensions = $DoorDimensionId;
                             $aa->DoorDimensions2 = $DoorDimensionId2 ?? 0;
                             $aa->DoorDimensionsCode = $DoorDimension;
+                            $aa->DoorDimensionsCode2 = $DoorDimensionCode;
                             $aa->AdjustmentLeafWidth1 = $LeafWidth1Adjustment;
                             $aa->AdjustmentLeafWidth2 = $LeafWidth2Adjustment;
                             $aa->AdjustmentLeafHeightNoOP = $LeafHeightAdjustment;
@@ -3294,6 +3296,7 @@ class DoorScheduleController extends Controller
                             $item->DoorDimensions = $aa->DoorDimensions;
                             $item->DoorDimensions2 = $aa->DoorDimensions2;
                             $item->DoorDimensionsCode = $aa->DoorDimensionsCode;
+                            $item->DoorDimensionsCode2 = $aa->DoorDimensionsCode2;
                             $item->AdjustmentLeafWidth1 = $aa->AdjustmentLeafWidth1;
                             $item->AdjustmentLeafWidth2 = $aa->AdjustmentLeafWidth2;
                             $item->AdjustmentLeafHeightNoOP = $aa->AdjustmentLeafHeightNoOP;
@@ -3645,10 +3648,12 @@ class DoorScheduleController extends Controller
         $quotationId = $request->quotationId;
         $versionID = $request->version;
         $MaxVersion = QuotationVersion::where('quotation_id', $quotationId)->max('version');
+        $adjustDiscountPrice = QuotationVersion::where('quotation_id', $quotationId)->where('id',$versionID)->value('discountQuotation');
         $QuotationVersionItems = QuotationVersionItems::where('version_id', $versionID)->get();
         if ($QuotationVersionItems !== null) {
             $QuotationVersion = new QuotationVersion();
             $QuotationVersion->quotation_id = $quotationId;
+            $QuotationVersion->discountQuotation = $adjustDiscountPrice ?? 0;
             $QuotationVersion->version = ($MaxVersion + 1);
             if ($QuotationVersion->save()) {
 

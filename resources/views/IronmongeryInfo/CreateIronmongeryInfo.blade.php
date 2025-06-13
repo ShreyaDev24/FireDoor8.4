@@ -285,12 +285,12 @@ dd($IronmongeryInfo);
                                             </div>
                                             <div id="" class="col-md-6">
                                                 <div class="position-relative form-group"><label for="distanceFromBottomOfDoor" class="">Distance from bottom of door<span class="text-danger">*</span></label>
-                                                    <input name="distanceFromBottomOfDoor" value="@if(isset($IronmongeryInfo->distanceFromBottomOfDoor)){{$IronmongeryInfo->distanceFromBottomOfDoor}}@else{{old('distanceFromBottomOfDoor')}}@endif" required placeholder="Enter Distance from bottom of door" type="number" min="0" step="0.01" pattern='[0-9]+(\\.[0-9][0-9]?)?' class="form-control">
+                                                    <input name="distanceFromBottomOfDoor" value="@if(isset($IronmongeryInfo->distanceFromBottomOfDoor)){{$IronmongeryInfo->distanceFromBottomOfDoor}}@else{{old('distanceFromBottomOfDoor')}}@endif" required placeholder="Enter Distance from bottom of door" type="number" class="form-control">
                                                 </div>
                                             </div>
                                             <div id="" class="col-md-6">
                                                 <div class="position-relative form-group"><label for="distanceFromLeadingEdgeOfDoor" class="">Distance from leading edge of door<span class="text-danger">*</span></label>
-                                                    <input name="distanceFromLeadingEdgeOfDoor" value="@if(isset($IronmongeryInfo->distanceFromLeadingEdgeOfDoor)){{$IronmongeryInfo->distanceFromLeadingEdgeOfDoor}}@else{{old('distanceFromLeadingEdgeOfDoor')}}@endif" required placeholder="Enter Distance from leading edge" type="number" min="0" step="0.01" pattern='[0-9]+(\\.[0-9][0-9]?)?' class="form-control">
+                                                    <input name="distanceFromLeadingEdgeOfDoor" value="@if(isset($IronmongeryInfo->distanceFromLeadingEdgeOfDoor)){{$IronmongeryInfo->distanceFromLeadingEdgeOfDoor}}@else{{old('distanceFromLeadingEdgeOfDoor')}}@endif" required placeholder="Enter Distance from leading edge" type="number"  step="0.01" class="form-control">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -544,11 +544,7 @@ dd($IronmongeryInfo);
                         }
 
                         // Rule (c)
-                        if (selectedCategory === 'DoorSignage') {
-                            $('input[name="distanceFromBottomOfDoor"]').val(1550).prop('readonly', true);
-                        } else {
-                            $('input[name="distanceFromBottomOfDoor"]').prop('readonly', false);
-                        }
+
 
                         // Rule (d)
                         if (selectedCategory === 'Morticeddropdownseals') {
@@ -583,6 +579,16 @@ dd($IronmongeryInfo);
                             $('input[name="distanceFromBottomOfDoor"]').removeAttr('min max').prop('readonly', false);
                             $('input[name="distanceFromLeadingEdgeOfDoor"]').removeAttr('max').prop('readonly', false);
                             $('input[name="staticHeight"]').removeAttr('min').prop('readonly', false);
+                        }
+
+                         if (selectedCategory === 'DoorSignage') {
+                            $('input[name="distanceFromBottomOfDoor"]')
+                            .prop('disabled', false)
+                            .attr('required', true)
+                            .attr('min', 1500)
+                            .attr('max', 2000);
+                        } else {
+                            $('input[name="distanceFromBottomOfDoor"]').removeAttr('min max').prop('readonly', false);
                         }
                     }
 
