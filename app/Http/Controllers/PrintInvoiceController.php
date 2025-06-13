@@ -2757,22 +2757,22 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 if($tt->Overpanel == 'Overpanel'){
                                 $elevTbl .= '
                                 <tr>
-                                    <td class="dicription_grey">OP Panel width</td>
-                                    <td class="dicription_blank">' . $tt->OpPanelWidth . '</td>
+                                    <td class="dicription_grey">OP Panel Width</td>
+                                    <td class="dicription_blank">' . $tt->OPWidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">OP Panel Height</td>
-                                    <td class="dicription_blank">' . $tt->OpPanelHeight . '</td>
+                                    <td class="dicription_blank">' . $tt->OPHeigth . '</td>
                                 </tr>';
                                 } else if($tt->Overpanel == 'Fan_Light'){
                                 $elevTbl .= '
                                 <tr>
-                                    <td class="dicription_grey">FL Glass Width</td>
-                                    <td class="dicription_blank">' . $tt->FanLightWidthGlass . '</td>
+                                    <td class="dicription_grey">FL Width</td>
+                                    <td class="dicription_blank">' . $tt->OPWidth . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">FL Glass Height</td>
-                                    <td class="dicription_blank">' . $tt->FanLightHeightGlass . '</td>
+                                    <td class="dicription_grey">FL Height</td>
+                                    <td class="dicription_blank">' . $tt->OPHeigth . '</td>
                                 </tr>';
                                 }
 
@@ -2798,20 +2798,26 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 if($tt->SideLight1 == 'Yes'){
                                     $elevTbl .= '
                                     <tr>
-                                        <td class="dicription_grey">SL Glass Width</td>
-                                        <td class="dicription_blank">' . $tt->SideLight1GlassWidth . '</td>
+                                        <td class="dicription_grey">SL1 Width</td>
+                                        <td class="dicription_blank">' . $tt->SL1Width . '</td>
                                     </tr>
                                      <tr>
-                                        <td class="dicription_grey">SL Glass Height</td>
-                                        <td class="dicription_blank">' . $tt->Sidelight1GlassHeight . '</td>
+                                        <td class="dicription_grey">SL1 Height</td>
+                                        <td class="dicription_blank">' . $tt->SL1Height . '</td>
                                     </tr>
                                     ';
-                                    } else if($tt->SideLight2 == 'Yes'){
+                                    }
+                                     if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
                                      <tr>
-                                        <td class="dicription_grey">SL2 Glass Width</td>
-                                        <td class="dicription_blank">' . $tt->SideLight2GlassWidth . '</td>
-                                    </tr>';
+                                        <td class="dicription_grey">SL2 Width</td>
+                                        <td class="dicription_blank">' . $tt->SL2Width . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">SL2 Height</td>
+                                        <td class="dicription_blank">' . $tt->SL2Height . '</td>
+                                    </tr>
+                                    ';
                                     }
 
                             $elevTbl .= '</tbody>
