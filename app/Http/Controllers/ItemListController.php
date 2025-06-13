@@ -987,6 +987,8 @@ class ItemListController extends Controller
                 '7' => FlamebreakBomCalculation($request),
                 // Stredor DOOR
                 '8' => StredorBomCalculation($request),
+                 // MMM DOOR
+                '9' => MMMBomCalculation($request),
                 // STAREBOARD AND ALL
                 default => BomCalculation($request),
             };

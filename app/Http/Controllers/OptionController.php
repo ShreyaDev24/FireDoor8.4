@@ -1806,7 +1806,7 @@ class OptionController extends Controller
                 case 'intumescentSealArrangement':
 
                     // $delete_id = array();
-                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('intumescentseals2_id', $keys)->delete();
+                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6,9])->whereNotIn('intumescentseals2_id', $keys)->delete();
                     // foreach ($keys as $key) {
                     //     $electedOption = array();
                     //     $electedOption = SettingIntumescentSeals2::Where('id', $key)->select('*')->first();
@@ -1854,7 +1854,7 @@ class OptionController extends Controller
                     break;
 
                 case 'intumescentSealArrangementCustome':
-                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('intumescentseals2_id', $keys)->delete();
+                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6,9])->whereNotIn('intumescentseals2_id', $keys)->delete();
 
                         foreach ($keys as $key) {
                             $electedOption = [];
@@ -2233,7 +2233,7 @@ class OptionController extends Controller
             }
 
             if ($className == 'intumescentSealArrangement') {
-                SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [3,4,5,6])->delete();
+                SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereIn('selected_configurableitems', [3,4,5,6,9])->delete();
             }
 
             if ($className == 'intumescentSealArrangementCustome') {
@@ -2370,7 +2370,7 @@ class OptionController extends Controller
 
             switch ($className) {
                 case 'door_dimension_custome':
-                    SelectedDoordimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->whereNotIn('doordimension_id', $keys)->delete();
+                    SelectedDoordimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6,9])->whereNotIn('doordimension_id', $keys)->delete();
                     foreach ($keys as $key) {
                         $electedOption = [];
                         $electedOption = DoorDimension::Where('id', $key)->select('*')->first();
@@ -2422,7 +2422,7 @@ class OptionController extends Controller
             echo json_encode(["status" => "ok", "msg" => "options are updated"]);
         } else {
             if ($className == 'door_dimension_custome') {
-                SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6])->delete();
+                SelectedDoorDimension::where(['doordimension_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6,9])->delete();
             }
 
             echo json_encode(["status" => "ok", "msg" => "please check options"]);
@@ -2828,7 +2828,7 @@ class OptionController extends Controller
     {
         if (
             $request->has('page_id') &&
-            in_array((int)$request->page_id, [4, 5, 6]) &&
+            in_array((int)$request->page_id, [4, 5, 6, 9]) &&
             $request->filled('door_leaf_facing') &&
             $request->filled('leaf_type') &&
             $request->filled('firerating') &&
@@ -3172,6 +3172,8 @@ class OptionController extends Controller
                     $doorConfiguration = 7;
                 }elseif(strcasecmp($DoorType,"Stredor") == 0){
                     $doorConfiguration = 8;
+                }elseif(strcasecmp($DoorType,"MMM") == 0){
+                    $doorConfiguration = 9;
                 }
 
                 $leafType = [];
@@ -3554,6 +3556,9 @@ class OptionController extends Controller
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
                         }
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
+                        }
                     }
 
                     $data->NFR = NULL;
@@ -3671,6 +3676,9 @@ class OptionController extends Controller
 
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
+                        }
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
                         }
                     }
 

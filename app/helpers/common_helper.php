@@ -1055,7 +1055,7 @@ function ConfigurationURL($configurableitems,string $itemId,string $version_id){
         } elseif ($configurableitems == 8) {
             $url = url('quotation/edit-stredor-cad-item/'.$itemId.'/'.$version_id);
         } elseif ($configurableitems == 9) {
-            $url = url('quotation/edit-MMM-cad-item/'.$itemId.'/'.$version_id);
+            $url = url('quotation/edit-MMM-door-core-item/'.$itemId.'/'.$version_id);
         }
 
     } else {
@@ -4516,7 +4516,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $description = '[Fan Light Glass] '.str_replace('_', ' ', $request->opGlassType).'| '. $request->oPWidth.'mm x '. $request->oPHeigth.'mm';
         $category = 'Glass';
         $frame_unit = 'Area M2';
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
             $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->opGlassType)->first();
             $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
         }
@@ -4536,7 +4536,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $category = 'Glass';
         $frame_unit = 'Area M2';
         //   dd($configurationDoor);
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
           $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->sideLight1GlassType)->first();
           $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
         }
@@ -4562,7 +4562,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
             $category = 'Glass';
             $frame_unit = 'Area M2';
 
-            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
                 $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$sideLight2GlassType)->first();
                 $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
             }
@@ -4647,7 +4647,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
     }
 
     if ($request->overpanel == 'Fan_Light' && (!empty($request->issingleconfiguration) && !empty($request->opglazingSystems))) {
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
             $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->opglazingSystems)->first();
             $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
         }
@@ -4668,7 +4668,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
     }
 
     if ($request->sideLight1 == 'Yes' && (!empty($request->issingleconfiguration) && !empty($request->sideLight1GlazingSystems))) {
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
             $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->sideLight1GlazingSystems)->first();
             // dd($request->sideLight1GlazingSystems);
             $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
@@ -4694,7 +4694,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
         $sideLight2GlazingSystems = ($request->copyOfSideLite1 == "Yes")?$request->sideLight1GlazingSystems : $request->sideLight2GlazingSystems;
         if(!empty($request->issingleconfiguration) && !empty($sideLight2GlazingSystems)){
 
-            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta'){
+            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
                 $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$sideLight2GlazingSystems)->first();
                 $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
             }
@@ -6935,7 +6935,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
     })->
     wherein('door_dimension.editBy', $UserId)
     ->select('door_dimension.*','selected_doordimension.selected_cost','selected_doordimension.id as selectedId','selected_doordimension.doordimension_user_id')
-    ->orderBy('door_dimension.configurableitems', 'ASC')->orderBy('door_dimension.fire_rating', 'ASC')->orderBy('door_dimension.mm_width', 'ASC')->orderBy('door_dimension.mm_height', 'ASC')->whereIn('door_dimension.configurableitems', [4,5,6])->where('door_dimension.is_deleted', '0')->get();
+    ->orderBy('door_dimension.configurableitems', 'ASC')->orderBy('door_dimension.fire_rating', 'ASC')->orderBy('door_dimension.mm_width', 'ASC')->orderBy('door_dimension.mm_height', 'ASC')->whereIn('door_dimension.configurableitems', [4,5,6,9])->where('door_dimension.is_deleted', '0')->get();
 
      // count glasstype tbl for GlassType according to admin or company admin
     $countOption = DoorDimension::wherein('door_dimension.editBy', $UserId)->where('is_deleted',0)->count();
@@ -7391,7 +7391,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
              ->where('selected_intumescentseals2.selected_intumescentseals2_user_id', '=', $authdata->id);
      })->
      wherein('setting_intumescentseals2.editBy', $UserId)
-     ->whereIn('setting_intumescentseals2.configurableitems', [4,5,6])
+     ->whereIn('setting_intumescentseals2.configurableitems', [4,5,6,9])
      ->select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selectedId','selected_intumescentseals2.selected_cost','selected_intumescentseals2.selected_intumescentseals2_user_id')
      ->orderBy('setting_intumescentseals2.firerating', 'ASC')
      ->orderBy('setting_intumescentseals2.brand', 'ASC')->orderBy('setting_intumescentseals2.intumescentSeals', 'ASC')->orderBy('setting_intumescentseals2.firerating', 'ASC')->get();

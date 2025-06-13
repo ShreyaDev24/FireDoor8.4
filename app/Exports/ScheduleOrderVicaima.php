@@ -65,6 +65,9 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             if($item[$i]->configurableitems == 6){
                 $configurableitems = 'Deanta';
             }
+            if($item[$i]->configurableitems == 9){
+                $configurableitems = 'MMM';
+            }
 
         //Item master info
             $FrameOnOff = $item[$i]->FrameOnOff ?? 0;

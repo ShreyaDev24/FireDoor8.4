@@ -1615,7 +1615,7 @@
                         }
                     }
                 }
-                if(pageId == 4 || pageId == 5 || pageId == 6){
+                if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
                     setTimeout(function() {
                         checkForEdit();
                     }, 2000);
@@ -1714,7 +1714,7 @@
                 }
                 const intumescentsealsleaftype = $('#intumescentLeafType').val();
                 var calculationOfLeafHeight = sOHeightValue - tollerance - framethikness - undercut - gap;
-                if(pageId == 4 || pageId == 5 || pageId == 6){
+                if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
                    return editSvg(leafWidth1, calculationOfLeafHeight);
                 }
                 if (fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '') {
@@ -2656,7 +2656,7 @@
                 var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6){
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
                         window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
                     }else{
                         window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
@@ -2672,7 +2672,7 @@
                 var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6){
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
                         window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                     }else{
                         window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;

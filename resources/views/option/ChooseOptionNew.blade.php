@@ -2265,7 +2265,7 @@ dd(1);
     // leaf type only for custome door
     $('input[name="configurableitems"]').change(function() {
         let confi = $(this).val();
-        if (confi == '3' || confi == '4' || confi == '5' || confi == '6') {
+        if (confi == '3' || confi == '4' || confi == '5' || confi == '6' || confi == '9') {
             $('.customedoor').css('display', 'none');
         }
     });
@@ -2274,7 +2274,7 @@ dd(1);
     // Your code here
     let confi = $('input[name="configurableitems"]:checked').val();
     console.log(confi,'test3')
-    if (confi == '3' || confi == '4' || confi == '5' || confi == '6') {
+    if (confi == '3' || confi == '4' || confi == '5' || confi == '6' || confi == '9') {
             $('.customedoor').css('display', 'none');
         }
     });
@@ -3208,7 +3208,7 @@ dd(1);
         $("input[name=mm_width]").val(mm_width);
         $("input[name=mm_height]").attr('required',true);
         $("input[name=mm_width]").attr('required',true);
-        if(configurableitems == 3 || configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+        if(configurableitems == 3 || configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
             $(".configurableitemsdoordimension").trigger("click");
             $(".leaf_type_door").css("display", "block");
             $("select[name=leaf_type]").val(leaf_type);
@@ -3220,7 +3220,7 @@ dd(1);
             $("#leaf_type").attr('required',true);
             $("#inch_height").attr('required',true);
             $("#inch_width").attr('required',true);
-            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
 
                 $("#door_leaf_finish").attr('required',false);
                 $("#doorLeafFinish").css("display", "none");
@@ -3487,7 +3487,7 @@ $(document).ready(function () {
             $(".leaf_type_door").css("display", "none");
             $("#image").attr({"required":false});
         }else{
-            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
                 $("#doorLeafFinish").css("display", "none");
                 $("#door_leaf_finish").attr('required',false);
                 $('#leaf_type').val('');
@@ -3550,7 +3550,7 @@ $(document).ready(function () {
 
 
 
-                    if (configurableitems == 4 || configurableitems == 5 || configurableitems == 6) {
+                    if (configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9) {
 
                         $('.doorLeafType').css('display', 'block');
             $('.doorLeafFacingExistingOption').css('display', 'none');
@@ -3600,7 +3600,7 @@ $(document).ready(function() {
             $(".leaf_type_door").css("display", "none");
             $("#image").attr({"required":false});
         }else{
-            if($(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6){
+            if($(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6 || $(this).val() == 9){
                 $("#doorLeafFinish").css("display", "none");
                 $("#door_leaf_finish").attr('required',false);
             }else{
