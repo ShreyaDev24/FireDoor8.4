@@ -753,6 +753,8 @@
         value="{{ url('/quotation/add-norma-door-core-item') }}" />
     <input type="hidden" name="add_vicaima_url" id="add_vicaima_url"
         value="{{ url('/quotation/add-vicaima-door-core-item') }}" />
+    <input type="hidden" name="add_MMM_url" id="add_mmm_url"
+        value="{{ url('/quotation/add-MMM-door-core-item') }}" />
     <input type="hidden" name="add_seadec_url" id="add_seadec_url"
         value="{{ url('/quotation/add-seadec-cad-item') }}" />
     <input type="hidden" name="add_deanta_url" id="add_deanta_url"
@@ -1616,7 +1618,7 @@
                         }
                     }
                 }
-                if(pageId == 4 || pageId == 5 || pageId == 6){
+                if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
                     setTimeout(function() {
                         checkForEdit();
                     }, 2000);
@@ -1715,7 +1717,7 @@
                 }
                 const intumescentsealsleaftype = $('#intumescentLeafType').val();
                 var calculationOfLeafHeight = sOHeightValue - tollerance - framethikness - undercut - gap;
-                if(pageId == 4 || pageId == 5 || pageId == 6){
+                if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
                    return editSvg(leafWidth1, calculationOfLeafHeight);
                 }
                 if (fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '') {
@@ -2134,6 +2136,13 @@
                         window.location.href = add_vicaima_url + '/' + quotationId + '/' + currentVersion;
                     } else {
                         window.location.href = add_vicaima_url + '/' + quotationId;
+                    }
+                } else if (type == 9) { // for 9 MMM
+                    var add_mmm_url = $("#add_mmm_url").val();
+                    if (currentVersion != 0) {
+                        window.location.href = add_mmm_url + '/' + quotationId + '/' + currentVersion;
+                    } else {
+                        window.location.href = add_mmm_url + '/' + quotationId;
                     }
                 } else if (type == 5) { // for 4 seadec
                     var add_seadec_url = $("#add_seadec_url").val();
@@ -2650,7 +2659,7 @@
                 var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6){
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
                         window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
                     }else{
                         window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
@@ -2666,7 +2675,7 @@
                 var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6){
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
                         window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                     }else{
                         window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;

@@ -711,7 +711,7 @@ class ItemListController extends Controller
     }
 
     public function faceGrooveImage(Request $request): void{
-        if($request->decorativeGroves == 'Yes' && ($request->pageId == 4 || $request->pageId == 5 || $request->pageId == 6)){
+        if($request->decorativeGroves == 'Yes' && ($request->pageId == 4 || $request->pageId == 5 || $request->pageId == 6 || $request->pageId == 9)){
             $face_grooves = DB::table('face_grooves')->get();
            // dd($face_grooves);
             if(!empty($face_grooves) && count( $face_grooves)){
@@ -987,6 +987,8 @@ class ItemListController extends Controller
                 '7' => FlamebreakBomCalculation($request),
                 // Stredor DOOR
                 '8' => StredorBomCalculation($request),
+                 // MMM DOOR
+                '9' => MMMBomCalculation($request),
                 // STAREBOARD AND ALL
                 default => BomCalculation($request),
             };

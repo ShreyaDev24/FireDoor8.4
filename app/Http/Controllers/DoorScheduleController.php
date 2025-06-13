@@ -913,7 +913,7 @@ class DoorScheduleController extends Controller
         $csv_data = Excel::toArray(new DoorScheduleImport, request()->file('csv_file'));
         $ConfigurationType = $request->ConfigurationType;
 
-        if ($request->ConfigurationType == 4 || $request->ConfigurationType == 5 || $request->ConfigurationType == 6) {
+        if ($request->ConfigurationType == 4 || $request->ConfigurationType == 5 || $request->ConfigurationType == 6 || $request->ConfigurationType == 9) {
             return view('DoorSchedule/vicaima_import_fields', ['csv_data' => $csv_data, 'quotationId' => $quotationId, 'vid' => $vid, 'ConfigurationType' => $ConfigurationType]);
         } else {
             return view('DoorSchedule/import_fields', ['csv_data' => $csv_data, 'quotationId' => $quotationId, 'vid' => $vid, 'ConfigurationType' => $ConfigurationType]);
@@ -947,7 +947,7 @@ class DoorScheduleController extends Controller
         $DoorNumber = $request->DoorNumber;
         $count = count($request->DoorNumber);
 
-        if($request->pageType == 4 || $request->pageType == 5 || $request->pageType == 6){
+        if($request->pageType == 4 || $request->pageType == 5 || $request->pageType == 6 || $request->pageType == 9){
 
             $i = 0;
             $quotation = Quotation::where('id', $quotationId)->first();
@@ -1917,6 +1917,8 @@ class DoorScheduleController extends Controller
                 $configurableitems = 7;
             }elseif($data[0][1][1] == 'Stredor'){
                 $configurableitems = 8;
+            }elseif($data[0][1][1] == 'MMM'){
+                $configurableitems = 9;
             }
 
             if($quotation->configurableitems != $configurableitems && $quotation->configurableitems != null){
@@ -2673,6 +2675,8 @@ class DoorScheduleController extends Controller
                                 7 => FlamebreakBomCalculation($item),
                                 // Stredor DOOR
                                 8 => StredorBomCalculation($item),
+                                9 => MMMBomCalculation($item),
+
                                 // STAREBOARD AND ALL
                                 1 => BomCalculation($item),
                             };
@@ -2743,7 +2747,7 @@ class DoorScheduleController extends Controller
                 return redirect()->back()->with('success', $error3 . $error . $error2);
                 // return redirect('quotation/request/'.$quotationId.'/'.$versionId)->with('success','Excel file is imported successfully.'.$error);
 
-            } elseif ($configurableitems == 4 || $configurableitems == 5 || $configurableitems == 6) {
+            } elseif ($configurableitems == 4 || $configurableitems == 5 || $configurableitems == 6 || $configurableitems == 9) {
 
                 $quotation->configurableitems = $configurableitems;
                 $quotation->save();
@@ -3555,6 +3559,8 @@ class DoorScheduleController extends Controller
                                 7 => FlamebreakBomCalculation($item),
                                 // Stredor DOOR
                                 8 => StredorBomCalculation($item),
+                                 // Stredor DOOR
+                                9 => MMMBomCalculation($item),
                                 // STAREBOARD AND ALL
                                 1 => BomCalculation($item),
                             };
