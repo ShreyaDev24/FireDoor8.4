@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use App\Models\Item;
 use App\Models\Project;
 use App\Models\Quotation;
+use App\Models\DoorDimension;
 use App\Models\LippingSpecies;
 use App\Models\CustomerContact;
 use App\Models\QuotationVersion;
@@ -66,6 +67,21 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $configurableitems = 'Deanta';
             }
 
+            if ($item[$i]->DoorsetType == 'leaf_and_a_half') {
+                $door = DoorDimension::find($item[$i]->DoorDimensions);
+                $door1 = DoorDimension::find($item[$i]->DoorDimensions2);
+                if (!$door || empty($door->code)) {
+                    $door_dimension_code1 = $item[$i]->LeafConstruction.' '. $item[$i]->DoorLeafFacing.' '.$item[$i]->FireRating;
+                } else {
+                    $door_dimension_code1 = $item[$i]->DoorDimensionsCode;
+                }
+                if (!$door1 || empty($door1->code)) {
+                    $door_dimension_code2 = $item[$i]->LeafConstruction.' '.$item[$i]->DoorLeafFacing.' '.$item[$i]->FireRating;
+                } else {
+                    $door_dimension_code2 = $item[$i]->DoorDimensionsCode2;
+                }
+            }
+
         //Item master info
             $FrameOnOff = $item[$i]->FrameOnOff ?? 0;
             $Floor = $item[$i]->floor;
@@ -99,7 +115,13 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         //Door Dimensions & Door Leaf
             $DoorDimensions = $item[$i]->DoorDimensions;
             $DoorDimensions2 = $item[$i]->DoorDimensions2 ?? 0;
-            $DoorDimensionsCode = $item[$i]->DoorDimensionsCode;
+            if ($item[$i]->DoorsetType == 'leaf_and_a_half') {
+                $DoorDimensionsCode = $door_dimension_code1;
+                $DoorDimensionsCode2 = $door_dimension_code2;
+            } else {
+                $DoorDimensionsCode = $item[$i]->DoorDimensionsCode;
+                $DoorDimensionsCode2 = $item[$i]->DoorDimensionsCode2;
+            }
             $AdjustmentLeafWidth1 = $item[$i]->AdjustmentLeafWidth1;
             $AdjustmentLeafWidth2 = $item[$i]->AdjustmentLeafWidth2;
             $AdjustmentLeafHeightNoOP = $item[$i]->AdjustmentLeafHeightNoOP;
@@ -330,6 +352,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $DoorDimensions,
                 $DoorDimensions2,
                 $DoorDimensionsCode,
+                $DoorDimensionsCode2,
                 $SOHeight,
                 $SOWidth,
                 $SOWallThick,
@@ -517,7 +540,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -561,6 +584,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Door Dimension Id ',
             'Door Dimension(leafandhalf) Id ',
             'Door Dimensions ',
+            'Door Dimensions Code 2',
             'SOHeight ',
             'SOWidth ',
             'SOWallThick ',
@@ -761,7 +785,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GO1'; // All headers
+                $cellRange = 'A1:GP1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -783,7 +807,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GO1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GP1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
