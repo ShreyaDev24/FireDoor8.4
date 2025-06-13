@@ -3181,18 +3181,21 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#doorLeafFacingValue").empty().append(innerHtml);
                     if(doorLeafFacing=='Kraft_Paper'){
                         $("#doorLeafFacingValue").attr({'disabled':true});
+                        $("#doorLeafFacingValue").attr({'required':false});
                         var noFacingValue='';
                         noFacingValue+='<option value="">No Door facing Value found</option>';
                         $("#doorLeafFacingValue").empty().append(noFacingValue);
                     } else if(doorLeafFacing=='Raw'){    // JFDS 893
                         $("#doorLeafFacingValue").attr({'disabled':true});
+                        $("#doorLeafFinish").attr({'required':false});
                         var noFacingValue='';
                         noFacingValue+='<option value="">No Door facing Value found</option>';
                         $("#doorLeafFacingValue").empty().append(noFacingValue);
                         $("#doorLeafFinish").attr({'disabled':true});
-                        $("#doorLeafFinish").attr({'required':false});
+
                     } else{
                         $("#doorLeafFacingValue").attr({'disabled':false});
+                        $("#doorLeafFacingValue").attr({'required':true});
                         $("#doorLeafFinishColor").removeClass("bg-white");
                         $("#doorLeafFinishColor").val('').attr({'disabled':true});
                         $("#doorLeafFinishColorIcon").attr("onclick","");
