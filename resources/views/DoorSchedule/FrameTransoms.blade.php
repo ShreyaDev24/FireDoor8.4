@@ -142,6 +142,29 @@
                         $stopleg2 = $value->FrameHeight - $value->FrameThickness;
                         $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
                     }
+                    if($value->FrameType == 'Plant_on_Stop'){
+                        if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                            if(!empty($allSettings['PlantOn.HalfLipped'])){
+                                $stophead += $allSettings['PlantOn.HalfLipped']->Width;
+                                $stopleg2 += $allSettings['PlantOn.HalfLipped']->Height;
+                            }
+                        }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                            if(!empty($allSettings['PlantOn.Mitre'])){
+                                $stophead += $allSettings['PlantOn.Mitre']->Width;
+                                $stopleg2 += $allSettings['PlantOn.Mitre']->Height;
+                            }
+                        }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                            if(!empty($allSettings['PlantOn.Mortice1'])){
+                                $stophead += $allSettings['PlantOn.Mortice1']->Width;
+                                $stopleg2 += $allSettings['PlantOn.Mortice1']->Height;
+                            }
+                        }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                            if(!empty($allSettings['PlantOn.Butt'])){
+                                $stophead += $allSettings['PlantOn.Butt']->Width;
+                                $stopleg2 += $allSettings['PlantOn.Butt']->Height;
+                            }
+                        }
+                    }
                 @endphp
                 <tr>
                     <td>{{ $value->doorNumber }}</td>

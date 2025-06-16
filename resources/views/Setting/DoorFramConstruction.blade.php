@@ -181,17 +181,17 @@
                                 </div>
 
                                 <!-- MORTICE AND TENON JOINT 2 -->
-                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <div class="col-12 font-weight-bold">Butt Joint</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="doorFrame_mortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mortice2Width" id="doorFrame_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mortice2'])){{$allSettings['DoorFrame.Mortice2']->Width}}@endif">
+                                        <label for="doorFrame_buttWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="doorFrame_buttWidth" id="doorFrame_buttWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Butt'])){{$allSettings['DoorFrame.Butt']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="doorFrame_mortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mortice2Height" id="doorFrame_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mortice2'])){{$allSettings['DoorFrame.Mortice2']->Height}}@endif">
+                                        <label for="doorFrame_buttHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="doorFrame_buttHeight" id="doorFrame_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Butt'])){{$allSettings['DoorFrame.Butt']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -203,13 +203,13 @@
                                 <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_halfLippedWidth">PLANT ON HEAD WIDTH</label>
+                                        <label for="plantOn_halfLippedWidth">PLANT ON STOP HEAD/BOTTOM WIDTH</label>
                                         <input type="number" name="plantOn_halfLippedWidth" id="plantOn_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.HalfLipped'])){{$allSettings['PlantOn.HalfLipped']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_halfLippedHeight">PLANT ON HEAD HEIGHT</label>
+                                        <label for="plantOn_halfLippedHeight">PLANT ON STOP HEAD/BOTTOM HEIGHT</label>
                                         <input type="number" name="plantOn_halfLippedHeight" id="plantOn_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.HalfLipped'])){{$allSettings['PlantOn.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
@@ -218,13 +218,13 @@
                                 <div class="col-12 font-weight-bold">MITRE JOINT</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mitreWidth">PLANT ON HEAD WIDTH</label>
+                                        <label for="plantOn_mitreWidth">PLANT ON STOP HEAD/BOTTOM WIDTH</label>
                                         <input type="number" name="plantOn_mitreWidth" id="plantOn_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mitre'])){{$allSettings['PlantOn.Mitre']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mitreHeight">PLANT ON HEAD HEIGHT</label>
+                                        <label for="plantOn_mitreHeight">PLANT ON STOP HEAD/BOTTOM HEIGHT</label>
                                         <input type="number" name="plantOn_mitreHeight" id="plantOn_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mitre'])){{$allSettings['PlantOn.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
@@ -233,29 +233,29 @@
                                 <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mortice1Width">PLANT ON HEAD WIDTH</label>
+                                        <label for="plantOn_mortice1Width">PLANT ON STOP HEAD/BOTTOM WIDTH</label>
                                         <input type="number" name="plantOn_mortice1Width" id="plantOn_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mortice1'])){{$allSettings['PlantOn.Mortice1']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mortice1Height">PLANT ON HEAD HEIGHT</label>
+                                        <label for="plantOn_mortice1Height">PLANT ON STOP HEAD/BOTTOM HEIGHT</label>
                                         <input type="number" name="plantOn_mortice1Height" id="plantOn_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mortice1'])){{$allSettings['PlantOn.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
 
-                                <!-- MORTICE AND TENON JOINT 2 -->
-                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <!-- Butt Joint -->
+                                <div class="col-12 font-weight-bold">Butt Joint</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mortice2Width">PLANT ON HEAD WIDTH</label>
-                                        <input type="number" name="plantOn_mortice2Width" id="plantOn_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Mortice2'])){{$allSettings['PlantOn.Mortice2']->Width}}@endif">
+                                        <label for="plantOn__buttWidth">PLANT ON STOP HEAD/BOTTOM WIDTH</label>
+                                        <input type="number" name="plantOn__buttWidth" id="plantOn__buttWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['PlantOn.Butt'])){{$allSettings['PlantOn.Butt']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="plantOn_mortice2Height">PLANT ON HEAD HEIGHT</label>
-                                        <input type="number" name="plantOn_mortice2Height" id="plantOn_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Mortice2'])){{$allSettings['PlantOn.Mortice2']->Height}}@endif">
+                                        <label for="plantOn__buttHeight">PLANT ON STOP HEAD/BOTTOM HEIGHT</label>
+                                        <input type="number" name="plantOn__buttHeight" id="plantOn__buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['PlantOn.Butt'])){{$allSettings['PlantOn.Butt']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -308,18 +308,18 @@
                                     </div>
                                 </div>
 
-                                <!-- MORTICE AND TENON JOINT 2 -->
-                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <!-- Butt Joint -->
+                                <div class="col-12 font-weight-bold">Butt Joint</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_mortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="sideLight_mortice2Width" id="sideLight_mortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.Mortice2'])){{$allSettings['SideLight.Mortice2']->Width}}@endif">
+                                        <label for="sideLight_buttWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="sideLight_buttWidth" id="sideLight_buttWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideLight.Butt'])){{$allSettings['SideLight.Butt']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_mortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="sideLight_mortice2Height" id="sideLight_mortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mortice2'])){{$allSettings['SideLight.Mortice2']->Height}}@endif">
+                                        <label for="sideLight_buttHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="sideLight_buttHeight" id="sideLight_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Butt'])){{$allSettings['SideLight.Butt']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -375,18 +375,18 @@
                                     </div>
                                 </div>
 
-                                <!-- MORTICE AND TENON JOINT 2 -->
-                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
+                                <!-- Butt Joint -->
+                                <div class="col-12 font-weight-bold">Butt Joint</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightMortice2Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="fanlightMortice2Width" id="fanlightMortice2Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.Mortice2'])){{$allSettings['Fanlight.Mortice2']->Width}}@endif">
+                                        <label for="fanlight_buttWidth">FRAME HEAD WIDTH</label>
+                                        <input type="number" name="fanlight_buttWidth" id="fanlight_buttWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['Fanlight.Butt'])){{$allSettings['Fanlight.Butt']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightMortice2Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="fanlightMortice2Height" id="fanlightMortice2Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mortice2'])){{$allSettings['Fanlight.Mortice2']->Height}}@endif">
+                                        <label for="fanlight_buttHeight">FRAME HEAD HEIGHT</label>
+                                        <input type="number" name="fanlight_buttHeight" id="fanlight_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Butt'])){{$allSettings['Fanlight.Butt']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
