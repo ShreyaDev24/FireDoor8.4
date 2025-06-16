@@ -86,9 +86,9 @@ class GeneralSettingController extends Controller
                     'width' => $request->input('doorFrame_mortice1Width'),
                     'height' => $request->input('doorFrame_mortice1Height'),
                 ],
-                'Mortice2' => [
-                    'width' => $request->input('doorFrame_mortice2Width'),
-                    'height' => $request->input('doorFrame_mortice2Height'),
+                'Butt' => [
+                    'width' => $request->input('doorFrame_buttWidth'),
+                    'height' => $request->input('doorFrame_buttHeight'),
                 ],
             ],
 
@@ -106,9 +106,9 @@ class GeneralSettingController extends Controller
                     'width' => $request->input('plantOn_mortice1Width'),
                     'height' => $request->input('plantOn_mortice1Height'),
                 ],
-                'Mortice2' => [
-                    'width' => $request->input('plantOn_mortice2Width'),
-                    'height' => $request->input('plantOn_mortice2Height'),
+                'Butt' => [
+                    'width' => $request->input('plantOn__buttWidth'),
+                    'height' => $request->input('plantOn__buttHeight'),
                 ],
             ],
             // Side Light Panels
@@ -125,9 +125,9 @@ class GeneralSettingController extends Controller
                     'width' => $request->input('sideLight_mortice1Width'),
                     'height' => $request->input('sideLight_mortice1Height'),
                 ],
-                'Mortice2' => [
-                    'width' => $request->input('sideLight_mortice2Width'),
-                    'height' => $request->input('sideLight_mortice2Height'),
+                'Butt' => [
+                    'width' => $request->input('sideLight_buttWidth'),
+                    'height' => $request->input('sideLight_buttHeight'),
                 ],
             ],
 
@@ -145,9 +145,9 @@ class GeneralSettingController extends Controller
                     'width' => $request->input('fanlightMortice1Width'),
                     'height' => $request->input('fanlightMortice1Height'),
                 ],
-                'Mortice2' => [
-                    'width' => $request->input('fanlightMortice2Width'),
-                    'height' => $request->input('fanlightMortice2Height'),
+                'Butt' => [
+                    'width' => $request->input('fanlight_buttWidth'),
+                    'height' => $request->input('fanlight_buttHeight'),
                 ],
             ],
             // Vision Panels
