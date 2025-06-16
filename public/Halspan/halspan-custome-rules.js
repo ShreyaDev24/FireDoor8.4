@@ -1946,7 +1946,7 @@ $(document).ready(function() {
                 $("#ScallopedWidthText").text('(min 35)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
                 $("#ScallopedHeightText").text('(min 2-6mm)');
-            }else if(($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s") && framTypeValue == "Scalloped"){
+            }else if(($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" ) && framTypeValue == "Scalloped"){
                 $("#ScallopedWidth").attr('min', '44');
                 $("#ScallopedWidthText").text('(min 44)');
                 $("#ScallopedHeight").attr({'min':2,'max':6});
