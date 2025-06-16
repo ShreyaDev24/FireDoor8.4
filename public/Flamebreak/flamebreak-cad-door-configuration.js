@@ -1790,7 +1790,7 @@ const render = (CustomElement = null) => {
                             .attr("x", hingetextx-48)
                             .attr("font-size", 10)
                             .attr("y", hngLctn2Y + 20 + ((hngLctn4Y - (hngLctn2Y + 20)) / 2) + 5)
-                            .text(parseFloat((hinge4SCenter + Gap + FrameThickness).toFixed(1)));
+                            .text(parseFloat((hinge4SCenter).toFixed(1)));
 
                         // Hinge 3 2nd line
                         svg.append('line')
@@ -1867,7 +1867,7 @@ const render = (CustomElement = null) => {
                             .attr("x", hingetextx-48)
                             .attr("font-size", 10)
                             .attr("y", hngLctn2Y + 20 + ((hngLctn3Y - (hngLctn2Y + 20)) / 2) + 5)
-                            .text(parseFloat((hinge4FCenter + Gap + FrameThickness).toFixed(1)));
+                            .text(parseFloat((hinge4FCenter).toFixed(1)));
 
                         svg.append('line')//measurement line hing
                             .style("stroke", "black")
@@ -1906,7 +1906,27 @@ const render = (CustomElement = null) => {
                             .attr("y2", hngLctn3Y)
                     }
 
-                    // Hinge 4 line
+                       if (IsFourSidedFrame == true) {
+ // Hinge 4 line
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", hingelinex-50)
+                        .attr("x2", hingelinex-50)
+                        .attr("y1", (hngLctn3Y + 20))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line') // hinge 4 joining line bottom
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("x2", hingelinex + rightHingeOffset + 5-60)
+                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                       }else{
+ // Hinge 4 line
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -1917,6 +1937,17 @@ const render = (CustomElement = null) => {
                         .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                         .attr("marker-end", "url(#arrowRight)")
 
+                        svg.append('line') // hinge 4 joining line bottom
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("x2", hingelinex + rightHingeOffset + 5-60)
+                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+                       }
+
+                   
+
                     svg.append('line') // hinge 4 joining line top
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -1925,13 +1956,7 @@ const render = (CustomElement = null) => {
                         .attr("y1", (hngLctn3Y + 20))
                         .attr("y2", hngLctn3Y + 20)
 
-                    svg.append('line') // hinge 4 joining line bottom
-                        .style("stroke", "black")
-                        .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                        .attr("x2", hingelinex + rightHingeOffset + 5-60)
-                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
-                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+                    
 
                     // Hinge 4 text
                     svg.append("text")
@@ -2107,7 +2132,7 @@ const render = (CustomElement = null) => {
                             .attr("x", hingetextx)
                             .attr("font-size", 10)
                             .attr("y", hngLctn2Y + 20 + ((hngLctn4Y - (hngLctn2Y + 20)) / 2) + 5)
-                            .text(parseFloat((hinge4SCenter + Gap + FrameThickness).toFixed(1)));
+                            .text(parseFloat((hinge4SCenter).toFixed(1)));
 
                         // Hinge 3 2nd line
                         svg.append('line')
@@ -2184,7 +2209,7 @@ const render = (CustomElement = null) => {
                             .attr("x", hingetextx)
                             .attr("font-size", 10)
                             .attr("y", hngLctn2Y + 20 + ((hngLctn3Y - (hngLctn2Y + 20)) / 2) + 5)
-                            .text(parseFloat((hinge4FCenter + Gap + FrameThickness).toFixed(1)));
+                            .text(parseFloat((hinge4FCenter).toFixed(1)));
 
                         svg.append('line')//measurement line hing
                             .style("stroke", "black")
@@ -2223,7 +2248,27 @@ const render = (CustomElement = null) => {
                             .attr("y2", hngLctn3Y)
                     }
 
-                    // Hinge 4 line
+   if (IsFourSidedFrame == true) {
+       svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", hingelinex)
+                        .attr("x2", hingelinex)
+                        .attr("y1", (hngLctn3Y + 20))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+
+                          svg.append('line') // hinge 4 joining line bottom
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("x2", hingelinex + rightHingeOffset + 5)
+                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+   }else{
+  // Hinge 4 line
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -2234,6 +2279,17 @@ const render = (CustomElement = null) => {
                         .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                         .attr("marker-end", "url(#arrowRight)")
 
+
+                          svg.append('line') // hinge 4 joining line bottom
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("x2", hingelinex + rightHingeOffset + 5)
+                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+   }
+
+                  
                     svg.append('line') // hinge 4 joining line top
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -2242,13 +2298,7 @@ const render = (CustomElement = null) => {
                         .attr("y1", (hngLctn3Y + 20))
                         .attr("y2", hngLctn3Y + 20)
 
-                    svg.append('line') // hinge 4 joining line bottom
-                        .style("stroke", "black")
-                        .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                        .attr("x2", hingelinex + rightHingeOffset + 5)
-                        .attr("y1", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
-                        .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
+                  
 
                     // Hinge 4 text
                     svg.append("text")
@@ -2431,7 +2481,7 @@ const render = (CustomElement = null) => {
                         .attr("x", hingetextx + 70)
                         .attr("font-size", 10)
                         .attr("y", hngLctn2Y + 20 + ((hngLctn4Y - (hngLctn2Y + 20)) / 2) + 5)
-                        .text(parseFloat((hinge4SCenter + Gap + FrameThickness).toFixed(1))
+                        .text(parseFloat((hinge4SCenter).toFixed(1))
                         );
 
                     // Hinge 3 2nd line
@@ -2517,7 +2567,7 @@ const render = (CustomElement = null) => {
                         .attr("x", hingetextx + 70)
                         .attr("font-size", 10)
                         .attr("y", hngLctn2Y + 20 + ((hngLctn3Y - (hngLctn2Y + 20)) / 2) + 5)
-                        .text(parseFloat((hinge4FCenter + Gap + FrameThickness).toFixed(1)));
+                        .text(parseFloat((hinge4FCenter).toFixed(1)));
 
                     svg.append('line')//measurement line hing
                         .style("stroke", "black")
@@ -2547,7 +2597,27 @@ const render = (CustomElement = null) => {
                         .attr("y2", hngLctn2Y + 20)
                 }
 
-                // Hinge 4 line
+                   if (IsFourSidedFrame == true) {
+ // Hinge 4 line
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", hingelinex + 60)
+                    .attr("x2", hingelinex + 60)
+                    .attr("y1", (hngLctn3Y + 20))
+                    .attr("y2", iy + ((FrameHeight) / 5)+(OverPanelHeight ?? 0)- (FrameThickness/5))
+                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                    .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line') // hinge 4 joining line bottom
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", ix + FrameThicknessForMap - 1)
+                    .attr("x2", hingelinex - 5 + 70)
+                    .attr("y1", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0)- (FrameThickness/5))
+                    .attr("y2", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0)- (FrameThickness/5))
+                   }else{
+ // Hinge 4 line
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
@@ -2558,6 +2628,17 @@ const render = (CustomElement = null) => {
                     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                     .attr("marker-end", "url(#arrowRight)")
 
+                    svg.append('line') // hinge 4 joining line bottom
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", ix + FrameThicknessForMap - 1)
+                    .attr("x2", hingelinex - 5 + 70)
+                    .attr("y1", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0))
+                    .attr("y2", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0))
+                   }
+
+               
+
                 svg.append('line') // hinge 4 joining line top
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
@@ -2566,13 +2647,7 @@ const render = (CustomElement = null) => {
                     .attr("y1", (hngLctn3Y + 20))
                     .attr("y2", hngLctn3Y + 20)
 
-                svg.append('line') // hinge 4 joining line bottom
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap - 1)
-                    .attr("x2", hingelinex - 5 + 70)
-                    .attr("y1", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0))
-                    .attr("y2", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0))
+                
 
                 // Hinge 4 text
                 svg.append("text")
@@ -2720,7 +2795,7 @@ const render = (CustomElement = null) => {
                         .attr("x", hingetextx)
                         .attr("font-size", 10)
                         .attr("y", hngLctn2Y + 20 + ((hngLctn4Y - (hngLctn2Y + 20)) / 2) + 5)
-                        .text(parseFloat((hinge4SCenter + Gap + FrameThickness).toFixed(1))
+                        .text(parseFloat((hinge4SCenter ).toFixed(1))
                         );
 
                     // Hinge 3 2nd line
@@ -2789,7 +2864,7 @@ const render = (CustomElement = null) => {
                         .attr("x", hingetextx)
                         .attr("font-size", 10)
                         .attr("y", hngLctn2Y + 20 + ((hngLctn3Y - (hngLctn2Y + 20)) / 2) + 5)
-                        .text(parseFloat((hinge4FCenter + Gap + FrameThickness).toFixed(1)));
+                        .text(parseFloat((hinge4FCenter ).toFixed(1)));
 
                     svg.append('line')//measurement line hing
                         .style("stroke", "black")
@@ -2813,7 +2888,23 @@ const render = (CustomElement = null) => {
                     createLine("black", 0.5, hingelinex - 5, hngLctn2Y + 20, ix + FrameThicknessForMap - 1, hngLctn2Y + 20);
                 }
 
-                // Hinge 4 line
+                 if (IsFourSidedFrame == true) {
+// Hinge 4 line
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", hingelinex)
+                    .attr("x2", hingelinex)
+                    .attr("y1", (hngLctn3Y + 20))
+                    .attr("y2", iy + ((FrameHeight) / 5)+(OverPanelHeight ?? 0)-(Gap) - (FrameThickness/5))
+                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                    .attr("marker-end", "url(#arrowRight)")
+
+                     // hinge 4 joining line bottom
+                createLine("black", 0.5, ix + FrameThicknessForMap - 1, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)-(Gap) - (FrameThickness/5), hingelinex - 5, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0)-(Gap) - (FrameThickness/5));
+
+                 }else{
+// Hinge 4 line
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
@@ -2824,12 +2915,15 @@ const render = (CustomElement = null) => {
                     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                     .attr("marker-end", "url(#arrowRight)")
 
+                     // hinge 4 joining line bottom
+                createLine("black", 0.5, ix + FrameThicknessForMap - 1, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0), hingelinex - 5, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0));
+
+                 }
+                
                 // hinge 4 joining line top
                 createLine("black", 0.5, hingelinex - 5, hngLctn3Y + 20, ix + FrameThicknessForMap - 1, hngLctn3Y + 20);
 
-                // hinge 4 joining line bottom
-                createLine("black", 0.5, ix + FrameThicknessForMap - 1, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0), hingelinex - 5, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0));
-
+               
                 // Hinge 4 text
                 svg.append("text")
                     .style("fill", "black")
