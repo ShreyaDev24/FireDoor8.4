@@ -46,6 +46,9 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
+        $mitre_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mitre_Joint')->first();
+        $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
+        $butt_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
         $k = 1;
         $data = [];
@@ -61,16 +64,27 @@ class FramesTransoms implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $FrameType = $value->RebatedHeight;
             }
             $stopleg2 = $leg - floatval($FrameType) - 0;
+
+            $Height = 0;
+            $Width = 0;
             if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
-                if ($halflapedjoint->Height > 0) {
-                    $leg = $value->FrameHeight - $value->FrameThickness + $halflapedjoint->Height;
-                } else {
-                    $leg = $value->FrameHeight - $value->FrameThickness + $halflapedjoint->Height;
-                }
-                $head = $value->FrameWidth - $halflapedjoint->Width;
-                $stopleg2 = $value->FrameHeight - $value->FrameThickness;
-                $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+                $Height = $halflapedjoint->Height ?? 0;
+                $Width = $halflapedjoint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                $Height = $mitre_joint->Height ?? 0;
+                $Width = $mitre_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                $Height = $mortice_tenon_joint->Height ?? 0;
+                $Width = $mortice_tenon_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                $Height = $butt_joint->Height ?? 0;
+                $Width = $butt_joint->Width ?? 0;
             }
+
+            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $head = $value->FrameWidth - $Width;
+            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
 
             if($value->FrameType == 'Plant_on_Stop'){
                 if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
