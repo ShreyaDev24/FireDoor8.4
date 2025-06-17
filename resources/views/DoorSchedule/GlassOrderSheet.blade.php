@@ -90,11 +90,22 @@
                         </tr>
                     @endif
                     @if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
+                    @php
+                        if(!empty($allSettings['VisionPanel.NRF'])){
+                            $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
+                            $VisionPanelHeightNFR = $allSettings['VisionPanel.NRF']->Height;
+                        }
+                        if(!empty($allSettings['VisionPanel.FD60'])){
+                            $VisionPanelWidthFD60 = $allSettings['VisionPanel.FD60']->Width;
+                            $VisionPanelHeightFD60 = $allSettings['VisionPanel.FD60']->Height;
+                        }
+                    @endphp
+
                     <tr>
                         <td>{{ $value->doorNumber }}</td>
                         <td>{{ $value->GlassThickness }}</td>
                         <td>{{ str_replace('_', ' ', $value->GlassType) }}</td>
-                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 10 : $value->Leaf1VPHeight1 - 5 }}</td>
+                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR }}</td>
                         @php
                             if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
                                 $wdth = 5;
@@ -104,7 +115,7 @@
                                 $wdth = 0;
                             }
                         @endphp
-                        <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
+                        <td>{{ ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60) }}</td>
                         @if($value->VisionPanelQuantity == 2)
                             <td>1</td>
                             <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 - 10 : $value->Leaf1VPHeight2 - 5 }}</td>

@@ -11,6 +11,7 @@ use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use App\Models\Item;
 use App\Models\Project;
+use App\Models\User;
 use App\Models\Quotation;
 use App\Models\DoorFrameConstruction;
 use App\Models\BOMCalculation;
@@ -38,17 +39,36 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
         $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.FrameMaterial')->where('QuotationId',$this->id)->where('VersionId',$this->vid)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderBy('items.itemId','ASC')->get();
 
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
         $k = 1;
         $data = [];
         foreach($item as $value){
             if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+
+                if(!empty($allSettings['VisionPanel.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['VisionPanel.NRF']->Height;
+                }
+                if(!empty($allSettings['VisionPanel.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['VisionPanel.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['VisionPanel.FD60']->Height;
+                }
+
                 $data[] = array(
                     $value->doorNumber,
                     $value->GlassThickness,
                     str_replace('_', ' ', $value->GlassType),
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 8 : $value->Leaf1VPHeight1 - 5,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth - 5) :
-                    (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? ($value->Leaf1VPWidth - 8) : $value->Leaf1VPWidth),
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
+
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
                     $value->VisionPanelQuantity,
                     '',
                     '',
