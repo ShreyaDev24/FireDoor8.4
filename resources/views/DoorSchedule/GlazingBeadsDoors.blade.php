@@ -34,15 +34,15 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="12">Glazing Beads for Doors BOM</th>
+                <th colspan="8">Glazing Beads for Doors BOM</th>
             </tr>
             <tr>
                 <th>Ref</th>
-                <td colspan="3">{{ $quotation->QuotationGenerationId }}</td>
+                <td colspan="2">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
-                <td colspan="3">{{ $quotation->projectname }}</td>
-                <th colspan="2">Prepared By</th>
-                <td colspan="2">{{ $userName }}</td>
+                <td colspan="2">{{ $quotation->projectname }}</td>
+                <th>Prepared By</th>
+                <td>{{ $userName }}</td>
             </tr>
             <tr>
                 <th>Revision</th>
@@ -50,15 +50,15 @@
                 <th>Date</th>
                 <td>{{ $today }}</td>
                 <th>Main Contractor</th>
-                <td colspan="3">{{ $quotation->CstCompanyName }}</td>
-                <th colspan="2">Sales Contact</th>
-                <td colspan="2">{{ $quotation->SalesContact }}</td>
+                <td>{{ $quotation->CstCompanyName }}</td>
+                <th>Sales Contact</th>
+                <td>{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="12">Text</th>
+                <th colspan="8">Text</th>
             </tr>
             <tr>
-                <th colspan="12">Items</th>
+                <th colspan="8">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -71,21 +71,13 @@
                         <th>TIMBER</th>
                         <th>SECTION</th>
                         <th>FINISH ON BEAD</th>
-                        <th>SAW CUT L</th>
-                        <th>QUANT</th>
                         <th>SAW CUT W</th>
                         <th>QUANT</th>
                         <th>SAW CUT L</th>
-                        <th>QUANT</th>
-                        <th>SAW CUT W</th>
                         <th>QUANT</th>
                     </tr>
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -106,20 +98,16 @@
                     }
                 @endphp
                 @if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
-                    <tr>
-                        <td>{{ $value->doorNumber }}</td>
-                        <td>{{ $value->SpeciesName }}</td>
-                        <td>{{ str_replace('_', ' ', $value->GlazingBeads) }}</td>
-                        <td>{{ str_replace('_', ' ', $value->DoorLeafFinish) }}</td>
-                        <td>{{ $value->FrameHeight }}</td>
-                        <td>{{ $value->FrameWidth }}</td>
-                        <td>{{ ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60) }}</td>
-                        <td>{{ $value->VisionPanelQuantity * 4 }}</td>
-                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR}}</td>
-                        <td>{{ $value->VisionPanelQuantity * 4 }}</td>
-                        <td></td>
-                        <td></td>
-                    </tr>
+                <tr>
+                    <td>{{ $value->doorNumber }}</td>
+                    <td>{{ $value->SpeciesName }}</td>
+                    <td>{{ str_replace('_', ' ', $value->GlazingBeads) }}</td>
+                    <td>{{ str_replace('_', ' ', $value->DoorLeafFinish) }}</td>
+                    <td>{{ ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60) }}</td>
+                    <td>{{ $value->VisionPanelQuantity * 4 }}</td>
+                    <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR}}</td>
+                    <td>{{ ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)}}</td>
+                </tr>
                 @endif
             @endforeach
         </tbody>
