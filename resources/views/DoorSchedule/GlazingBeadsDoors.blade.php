@@ -39,6 +39,7 @@
             <tr>
                 <th>Ref</th>
                 <td colspan="2">{{ $quotation->QuotationGenerationId }}</td>
+                <td colspan="2">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="2">{{ $quotation->projectname }}</td>
                 <th>Prepared By</th>
@@ -87,15 +88,25 @@
                         <td></td>
                     </tr>
                 @endif
+                @php
+                    if(!empty($allSettings['VPBead.NRF'])){
+                        $VisionPanelWidthNFR = $allSettings['VPBead.NRF']->Width;
+                        $VisionPanelHeightNFR = $allSettings['VPBead.NRF']->Height;
+                    }
+                    if(!empty($allSettings['VPBead.FD60'])){
+                        $VisionPanelWidthFD60 = $allSettings['VPBead.FD60']->Width;
+                        $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
+                    }
+                @endphp
                 @if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
                 <tr>
                     <td>{{ $value->doorNumber }}</td>
                     <td>{{ $value->SpeciesName }}</td>
                     <td>{{ str_replace('_', ' ', $value->GlazingBeads) }}</td>
                     <td>{{ str_replace('_', ' ', $value->DoorLeafFinish) }}</td>
-                    <td>{{ $value->Leaf1VPHeight1 - 1 }}</td>
+                    <td>{{ ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60) }}</td>
                     <td>{{ $value->VisionPanelQuantity * 4 }}</td>
-                    <td>{{ $value->Leaf1VPWidth - 1}}</td>
+                    <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR}}</td>
                     <td>{{ ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)}}</td>
                 </tr>
                 @endif
