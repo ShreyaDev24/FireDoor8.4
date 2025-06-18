@@ -443,6 +443,8 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/projectfetchCurrency', [App\Http\Controllers\DoorScheduleController::class,'projectfetchCurrency'])->name('projectfetchCurrency');
 
     Route::get('/door-list-show/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'doorListShow'])->name('quotation/door-list-show');
+    Route::get('/assign-certification/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'assignPlotAndCertification'])->name('quotation/assign-certification');
+    Route::get('/side-screen-certification/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'sideScreenCertification'])->name('quotation/side-screen-certification');
     Route::post('/door-list-delete', [App\Http\Controllers\DoorScheduleController::class,'doorListDelete'])->name('quotation/door-list-delete');
 });
 
@@ -634,7 +636,7 @@ Route::prefix('order')->group(function (): void{
     Route::get('/ommanual/{id}/{vid}', [App\Http\Controllers\order\OMMAnualController::class,'ommanual'])->name('ommanual');
     Route::get('/generate/{id}', [App\Http\Controllers\order\OrderController::class,'OrderDetails'])->name('order/generate/');
     Route::get('/pdf-test', [App\Http\Controllers\order\OrderController::class,'pdf_test'])->name('order/pdf-test');
-
+    Route::post('/save-certification', [App\Http\Controllers\order\OrderController::class, 'assignStore'])->name('certification.store');
     // all data export for Order
     Route::get('/orderlistAllExport', [App\Http\Controllers\order\OrderController::class,'orderlistAllExport'])->name('orderlistAllExport');
     //end
