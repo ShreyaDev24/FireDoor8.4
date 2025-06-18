@@ -176,9 +176,9 @@ $(document).on('change', '#frameDepth', function(e) {
     var sODepth = parseFloat($('#sODepth').val());
     var frameDepth = parseFloat($('#frameDepth').val());
 
-    // Only check if both are valid numbers
+    // Only show warning when frameDepth is greater than or equal to sODepth
     if (!isNaN(sODepth) && !isNaN(frameDepth)) {
-        if (frameDepth <= sODepth) {
+        if (frameDepth >= sODepth) {
             swal('Warning', 'The Frame Depth is greater than or equal to the SO Depth.');
         }
     }
