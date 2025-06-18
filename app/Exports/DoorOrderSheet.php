@@ -116,6 +116,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $data[] = array(
                 ($value->DoorQuantity) ? $value->DoorQuantity : 1,
+                $value->plot_ref_no,
+                $value->certification_no,
                 $value->doorNumber,
                 $value->DoorType,
                 $value->LeafThickness,
@@ -141,6 +143,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness;
                     $data[] = array(
                     ($value->DoorQuantity) ? $value->DoorQuantity : 1,
+                    $value->plot_ref_no,
+                    $value->certification_no,
                     $value->doorNumber,
                     $value->DoorType.' OP LEAF SIZE',
                     $value->LeafThickness,
@@ -165,7 +169,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         $footData = [
-            '','','','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -177,6 +181,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         $a = [
             'Total Doors',
+            'Plot Number/Ref',
+            'IFC/Certifire No/Q mark Plug',
             'Door Number',
             'Door Type',
             'Door Thickness',
@@ -204,8 +210,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:Q1';
-                $cellRange = 'A2:Q2';
+                $cellRange1 = 'A1:S1';
+                $cellRange = 'A2:S2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,

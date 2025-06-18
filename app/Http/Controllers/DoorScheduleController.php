@@ -8732,6 +8732,99 @@ class DoorScheduleController extends Controller
             return redirect()->route('quotation/add');
         }
     }
+    public function assignPlotAndCertification($id, string $vid)
+    {
+        //door list this will show all records with that door type is not created in add door type form
+        $cc = '';
+        if (isset($id)) {
+            if ($vid > 0) {
+                $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where('QuotationId', $id)->where('VersionId', $vid)->select('item_master.*', 'items.*')->orderBy('items.itemId', 'ASC')->get();
+
+            } else {
+                $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
+            }
+
+            $q = Quotation::select('configurableitems')->where('id', $id)->first();
+            $i = 1;
+            $tbl = '';
+
+            foreach ($aa as $row) {
+                $doorNumber = '';
+                if (!empty($row->doorNumber)) {
+                    $doorNumber = '<td><a href="' . ConfigurationURL($q->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
+                    // $assign = '<td><a onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')" href="javascript:void(0);" class="btn btn-success">Assign <i class="fa fa-edit"></i></a></td>';
+                    $assign = '<td><a href="javascript:void(0);" class="btn btn-success" onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')">Assign <i class="fa fa-edit"></i></a></td>';
+
+
+                } else {
+                    $doorNumber = '<td></td>';
+                    $assign = '<td><a onclick="doorListAjax(' . $row->itemId . ',0,' . $vid . ')" href="javascript:void(0);" class="btn btn-success">Assign <i class="fa fa-edit"></i></a></td>';
+                }
+
+                $tbl .=
+                    '
+                <tr>
+                    <td>' . $i . '</td>
+                    ' . $doorNumber . '
+                    <td>' . $row->DoorType . '</td>
+                    <td>' . $row->FireRating . '</td>
+                    <td>' . $row->plot_ref_no . '</td>
+                    <td>' . $row->certification_no . '</td>
+                    ' .  $assign . '
+                </tr>';
+                $i++;
+            }
+            return view('DoorSchedule.AssignDoorList', ['tbl' => $tbl, 'vid' => $vid]);
+        } else {
+            return redirect()->route('quotation/add');
+        }
+    }
+
+    public function sideScreenCertification($id, string $vid){
+
+       $cc = '';
+        if (isset($id)) {
+            if ($vid > 0) {
+
+                $aa = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where('side_screen_items.QuotationId', $id)->where('side_screen_items.VersionId', $vid)->select('side_screen_item_master.*', 'side_screen_items.*')->orderBy('side_screen_items.id', 'ASC')->get();
+            } else {
+                $aa = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where('side_screen_items.QuotationId', $id)->select('side_screen_item_master.*', 'side_screen_items.*','side_screen_items.id as screenItemId')->orderBy('side_screen_items.id', 'ASC')->get();
+            }
+
+            $q = Quotation::select('configurableitems')->where('id', $id)->first();
+            $i = 1;
+            $tbl = '';
+
+            foreach ($aa as $row) {
+                $screenType = '';
+                if (!empty($row->ScreenType)) {
+                    $screenType =  $row->ScreenType;
+                    $assign = '<td><a href="javascript:void(0);" class="btn btn-success" onclick="sidescreendoorListAjax(' . $row->screenItemId . ',' . $row->id . ',' . $vid . ')">Assign <i class="fa fa-edit"></i></a></td>';
+
+
+                } else {
+                    $screenType = '<td></td>';
+                    $assign = '<td><a onclick="sidescreendoorListAjax(' . $row->screenItemId . ',0,' . $vid . ')" href="javascript:void(0);" class="btn btn-success">Assign <i class="fa fa-edit"></i></a></td>';
+                }
+
+                $tbl .=
+                    '
+                <tr>
+                    <td>' . $i . '</td>
+                    ' . $screenType . '
+                    <td>' . $row->FireRating . '</td>
+                    <td>' . $row->GlazingType . '</td>
+                    <td>' . $row->plot_ref_no . '</td>
+                    <td>' . $row->certification_no . '</td>
+                    ' .  $assign . '
+                </tr>';
+                $i++;
+            }
+            return view('DoorSchedule.SideScreenAssignDoorList', ['tbl' => $tbl, 'vid' => $vid]);
+        } else {
+            return redirect()->route('quotation/add');
+        }
+    }
 
     public function doorListDelete(Request $request)
     {

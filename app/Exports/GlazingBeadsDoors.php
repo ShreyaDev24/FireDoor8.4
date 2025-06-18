@@ -63,6 +63,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $data[] = array(
                     $value->DoorType,
                     $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->GlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
@@ -77,7 +79,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         }
 
         $footData = [
-            '','','','','','','','','','','',''
+            '','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -90,6 +92,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $a = [
             'Door Type',
             'Door Ref',
+            'Plot Number/Ref',
+            'IFC/Certifire No/Q mark Plug',
             'Timber',
             'Section',
             'Finish on Bead',
@@ -109,8 +113,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:I1';
-                $cellRange = 'A2:I2';
+                $cellRange1 = 'A1:K1';
+                $cellRange = 'A2:K2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -131,7 +135,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('I', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('K', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);

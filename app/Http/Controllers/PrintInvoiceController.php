@@ -614,11 +614,11 @@ class PrintInvoiceController extends Controller
 
             if($quotaion->configurableitems == 4){
                 $a .= '<tr>
-                            <td>' . $i . '</td>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
-                            <td>' . $show->DoorQuantity . '</td>
                             <td>' . $show->SOHeight . '</td>
                             <td>' . $show->SOWidth . '</td>
                             <td>' . $show->SOWallThick . '</td>
@@ -676,11 +676,11 @@ class PrintInvoiceController extends Controller
             }else{
 
                 $a .= '<tr>
-                            <td>' . $i . '</td>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
-                            <td>' . $show->DoorQuantity . '</td>
                             <td>' . $show->SOHeight . '</td>
                             <td>' . $show->SOWidth . '</td>
                             <td>' . $show->SOWallThick . '</td>

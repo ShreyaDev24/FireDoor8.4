@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 // use View;
 use App\Models\Item;
+use App\Models\ItemMaster;
+use App\Models\SideScreenItemMaster;
 use App\Models\Quotation;
 use App\Models\QuotationVersion;
 use App\Models\QuotationVersionItems;
@@ -780,6 +782,26 @@ $sn++;
         [
             'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
+    }
+
+    public function assignStore(Request $request){
+        if($request->sidescreen == 'yes'){
+            $updateAssign = SideScreenItemMaster::find($request->itemmaster_id);
+            if($updateAssign){
+                $updateAssign->plot_ref_no = $request->plot_ref_no;
+                $updateAssign->certification_no = $request->certification_no;
+                $updateAssign->update();
+                return redirect()->back()->with('success', 'Certification saved successfully.');
+            }
+        } else{
+            $updateAssign = ItemMaster::find($request->itemmaster_id);
+            if($updateAssign){
+                $updateAssign->plot_ref_no = $request->plot_ref_no;
+                $updateAssign->certification_no = $request->certification_no;
+                $updateAssign->update();
+                return redirect()->back()->with('success', 'Certification saved successfully.');
+            }
+        }
     }
 
 }
