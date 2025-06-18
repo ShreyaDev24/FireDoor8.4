@@ -95,6 +95,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                     $data[] = [
                         $k,
+                        $value->plot_ref_no,
                         $value->certification_no,
                         $screenNumber,
                         $ScreenType,

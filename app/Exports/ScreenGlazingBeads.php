@@ -99,6 +99,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
 
                     $data[] = [
                         $k,
+                        $value->plot_ref_no,
                         $value->certification_no,
                         $screenNumber,
                         $ScreenType,
@@ -171,7 +172,6 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
     {
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:L1';
                 $cellRange1 = 'A1:N1';
                 $cellRange = 'A2:N2';
                 $styleArray = [
