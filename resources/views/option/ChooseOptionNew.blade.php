@@ -984,7 +984,7 @@ dd(1);
                             @if(Auth::user()->UserType != 1)
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
-                                    <label for="glasstype">Glass Price<span class="text-danger">*</span></label>
+                                    <label for="glasstype">Glazing System Price<span class="text-danger">*</span></label>
                                     <input type="number" name="glazingPrice" id="glazingPrice" min="0"
                                         placeholder="Enter Glazing System Price" class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
@@ -1073,7 +1073,7 @@ dd(1);
                             @if(Auth::user()->UserType != 1)
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
-                                    <label for="glasstype">Glass Price<span class="text-danger">*</span></label>
+                                    <label for="glasstype">Glazing System Price<span class="text-danger">*</span></label>
                                     <input type="number" name="glazingPrice" id="glazingPrice" min="0"
                                         placeholder="Enter Glazing System Price" class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
@@ -2100,7 +2100,7 @@ dd(1);
                             @if(Auth::user()->UserType != 1)
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
-                                    <label for="glasstype">Glass Price<span class="text-danger">*</span></label>
+                                    <label for="glasstype">Glazing System Price<span class="text-danger">*</span></label>
                                     <input type="number" name="glazingPrice" id="glazingPrice" min="0"
                                         placeholder="Enter Glazing System Price" class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
