@@ -9071,4 +9071,16 @@ class DoorScheduleController extends Controller
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
         ]);
     }
+
+    public function storeConfigurableITEM(Request $request){
+        $QuotationIdData = Quotation::get();
+        foreach($QuotationIdData as $quotation){
+            $item = Item::where(['QuotationId' => $quotation->id])->get();
+            foreach($item as $data){
+                Item::where('itemId', $data->itemId)->update([
+                    'configurableitems' => $quotation->configurableitems
+                ]);
+            }
+        }
+    }
 }

@@ -253,6 +253,7 @@ Route::prefix('options')->group(function (): void {
 });
 
 Route::prefix('quotation')->group(function (): void {
+    Route::get('/storeConfigurableITEM', [App\Http\Controllers\DoorScheduleController::class,'storeConfigurableITEM'])->name('quotation/storeConfigurableITEM');
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
     Route::post('/store', [App\Http\Controllers\DoorScheduleController::class,'store'])->name('quotation/store');
     Route::get('/list', [App\Http\Controllers\DoorScheduleController::class,'quotationList'])->name('quotation/list');
