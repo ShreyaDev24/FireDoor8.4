@@ -1862,7 +1862,7 @@ function copyOfSideLite1Change(isstatus = false){
                 $('#intumescentSealArrangement').removeAttr('required')
                 $("#SlBeadHeight").attr({min: 20});
                 // $("#doorThickness").hide()
-                $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'> <option value='44'>44</option><option value='54'>54</option></select>")
+                $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
                 $("#glazingBeadsThickness").attr('min',19);
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
                 // $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
@@ -1876,14 +1876,14 @@ function copyOfSideLite1Change(isstatus = false){
                 $('#intumescentSealArrangement').attr('required', true)
 
                 if($("#fireRating").val()=="FD30"){
-                    $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
+                    $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
                     $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
                     $("#SlBeadHeight").attr({min: 20});
                 }
                 if($("#fireRating").val()=="FD60"){
-                    $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
+                    $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
                     $("#grooveDepth").attr("max",5);
                     if($("#glazingBeadsThickness").val() < 30){
                         $("#glazingBeadsThickness").val('');
@@ -1893,14 +1893,14 @@ function copyOfSideLite1Change(isstatus = false){
                 }
 
                 if($("#fireRating").val()=='FD30s'){
-                    $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
+                    $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`);
                     $("#grooveDepth").attr("max",4);
                     $("#glazingBeadsThickness").attr('min',19);
                     $("#SlBeadHeight").attr({min: 20});
                 }
 
                 if($("#fireRating").val()=='FD60s'){
-                    $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`);
+                    $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="54">`)
                     $("#grooveDepth").attr("max",5);
                     if($("#glazingBeadsThickness").val() < 30){
                         $("#glazingBeadsThickness").val('');
@@ -5184,10 +5184,10 @@ function intumescentLeafChange(leafTypeId) {
 
 function doorThicknessLeaf(values) {
     // $("#door_thickness_div").empty().append(`<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="${values.door_thickness}">`);
-    const doorThicknessOptions = `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="${values.door_thickness}">`;
+    // const doorThicknessOptions = `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="${values.door_thickness}">`;
 
-    // Clear and update the door thickness div for all cases
-    $("#door_thickness_div").empty().append(doorThicknessOptions);
+    // // Clear and update the door thickness div for all cases
+    // $("#door_thickness_div").empty().append(doorThicknessOptions);
 
  }
 
