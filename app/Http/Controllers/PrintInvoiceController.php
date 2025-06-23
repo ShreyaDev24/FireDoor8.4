@@ -3411,6 +3411,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
             $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
+
+            $quo = Quotation::find($quatationId);
+            $quo->quotTag = 1;
+            $quo->save();
+
             // start old code
             // $pdf = new Fpdi();
             // $pageCount = $pdf->setSourceFile($mergedFilePath);
