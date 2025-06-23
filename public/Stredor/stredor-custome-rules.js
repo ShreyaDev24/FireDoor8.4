@@ -453,16 +453,16 @@ function pageIdentity(){
             }
             $('#leaf1VisionPanelShape').val('').attr({'readonly':true,'required':false}).val("");
             if($("#leaf2VisionPanel").val() == 'Yes'){
-                $('#glazingSystems').attr('required',false);
-                $('#glassType').attr('required',false);
-                $('#glazingBeads').attr('required',false);
-                $('#glazingBeadsThickness').attr('required',false);
-                $('#glazingBeadsWidth').attr('required',false);
-                $('#glazingBeadsHeight').attr('required',false);
-                $('#glazingBeadsFixingDetail').attr('required',false);
-                $('#glazingBeadSpecies').attr('required',false);
-                $('#glassThickness').attr('required',false);
-                $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
+                $('#glazingSystems').attr('required',true);
+                $('#glassType').attr('required',true);
+                $('#glazingBeads').attr('required',true);
+                $('#glazingBeadsThickness').attr('required',true);
+                $('#glazingBeadsWidth').attr('required',true);
+                $('#glazingBeadsHeight').attr('required',true);
+                $('#glazingBeadsFixingDetail').attr('required',true);
+                $('#glazingBeadSpecies').attr('required',true);
+                $('#glassThickness').attr('required',true);
+                $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
             }else{
                 $('#glazingSystems').attr('required',false);
                 $('#glassType').val('').attr('required',false);
@@ -480,7 +480,7 @@ function pageIdentity(){
 
 // Vision Panel
 $(document).ready(function() {
-    $("#leaf1VisionPanel").change(function(){
+    $("#leaf1VisionPanel,#leaf2VisionPanel").change(function(){
         visionPanelChange();
     });
 
