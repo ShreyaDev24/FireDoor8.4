@@ -1137,7 +1137,7 @@ function sideLight1Change(isstatus = false){
         }
 
         $("#SL1Width").attr({ 'readonly': false, "required": true });
-        $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
+        $("#SL1Height").attr({ 'readonly': true, "required": true });
         $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
@@ -6246,7 +6246,7 @@ function SideLightHeight(type){
         let slHeight = frameHeight + oPHeigth;
         setTimeout(function(){
             $("#SL1Height").val(slHeight);
-        },1000);
+        },3000);
       }
     }
     if(type == 'sideLight2'){
@@ -6256,7 +6256,7 @@ function SideLightHeight(type){
         let s2Height = frameHeight + oPHeigth;
          setTimeout(function(){
             $("#SL2Height").val(s2Height);
-        },1000);
+        },3000);
 
       }
     }
