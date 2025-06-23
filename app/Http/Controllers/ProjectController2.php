@@ -112,8 +112,6 @@ class ProjectController2 extends Controller
 
     public function getProjectList(Request $request): array
     {
-
-  //dd($request->all());
         $from = $request->from;
         $limit = $request->limit;
 

@@ -1070,6 +1070,7 @@ class ItemListController extends Controller
             $updateDetails = [
                 //item (update)
                     //Main Options
+                        'configurableitems'                     => $request->pageIdentity,
                         'IntumescentLeafType'                   => $request->intumescentLeafType,
                         'LeafConstruction'                      => $request->leafConstruction,
                         'DoorType'                              => $doorType,
@@ -1346,9 +1347,9 @@ class ItemListController extends Controller
             // checking configurableitems is empty or not
             // if empty then only these code work
             // it update `quotation` table. These tells about Strebord or Halspan door for perticular quotation
-            if(empty($Quotation->configurableitems)){
-                Quotation::where('id',$QuotationId)->update(["configurableitems" => $pageIdentity]);
-            }
+            // if(empty($Quotation->configurableitems)){
+            //     Quotation::where('id',$QuotationId)->update(["configurableitems" => $pageIdentity]);
+            // }
 
             // insert
             $item = new Item();
@@ -1368,6 +1369,7 @@ class ItemListController extends Controller
                     // $item->DoorQuantity = 1;
                     //Main Options
                         $item->LeafConstruction = $request->leafConstruction;
+                        $item->configurableitems = $request->pageIdentity;
                         $item->IntumescentLeafType = $request->intumescentLeafType;
                         $item->DoorType = $request->doorType;
                         $item->FireRating = $request->fireRating;

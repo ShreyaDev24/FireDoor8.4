@@ -3960,7 +3960,7 @@ class DoorScheduleController extends Controller
                 $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
                     ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
                     ->where('quotation_version_items.version_id', $vId)
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
+                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.configurableitems', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
                     ->get();
 
                 // Total Door Price
@@ -3975,7 +3975,7 @@ class DoorScheduleController extends Controller
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             } else {
                 $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
+                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'items.configurableitems', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
                     ->where(['items.QuotationId' => $Id])->get();
 
                 // Total Door Price
