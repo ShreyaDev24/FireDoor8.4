@@ -52,6 +52,10 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         $data = [];
         foreach($item as $value){
             if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
 
                 if(!empty($allSettings['VisionPanel.NRF'])){
                     $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
@@ -110,8 +114,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:I1';
-                $cellRange = 'A2:I2';
+                $cellRange1 = 'A1:M1';
+                $cellRange = 'A2:M2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -132,7 +136,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('I', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('M', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);

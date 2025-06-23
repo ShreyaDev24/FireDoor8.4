@@ -88,6 +88,10 @@
                     </tr>
                 @endif
                 @php
+                    $VisionPanelWidthNFR = 0;
+                    $VisionPanelHeightNFR = 0;
+                    $VisionPanelWidthFD60 = 0;
+                    $VisionPanelHeightFD60 = 0;
                     if(!empty($allSettings['VPBead.NRF'])){
                         $VisionPanelWidthNFR = $allSettings['VPBead.NRF']->Width;
                         $VisionPanelHeightNFR = $allSettings['VPBead.NRF']->Height;

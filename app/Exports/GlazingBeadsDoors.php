@@ -52,6 +52,10 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $data = [];
         foreach($item as $value){
             if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
                 if(!empty($allSettings['VPBead.NRF'])){
                     $VisionPanelWidthNFR = $allSettings['VPBead.NRF']->Width;
                     $VisionPanelHeightNFR = $allSettings['VPBead.NRF']->Height;
