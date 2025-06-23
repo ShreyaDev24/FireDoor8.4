@@ -91,6 +91,10 @@
                     @endif
                     @if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
                     @php
+                        $VisionPanelWidthNFR = 0;
+                        $VisionPanelHeightNFR = 0;
+                        $VisionPanelWidthFD60 = 0;
+                        $VisionPanelHeightFD60 = 0;
                         if(!empty($allSettings['VisionPanel.NRF'])){
                             $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
                             $VisionPanelHeightNFR = $allSettings['VisionPanel.NRF']->Height;
