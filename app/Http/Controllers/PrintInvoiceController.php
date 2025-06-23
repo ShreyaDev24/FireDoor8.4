@@ -2604,10 +2604,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->DoorDimensionsCode .'</td>
                                 </tr>';
 
-                    if ($tt->DoorsetType != 'SD') {
+                    if ($tt->DoorsetType != 'SD' || $tt->DoorsetType != 'leaf_and_a_half') {
                         $elevTbl .= '<tr>
-                                        <td class="dicription_grey">Product code2/Size </td>
-                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .' ('. $leafWidth2 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')</td>
+                                        <td class="dicription_grey">Product code2 </td>
+                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .'</td>
                                     </tr>';
                     }
 
