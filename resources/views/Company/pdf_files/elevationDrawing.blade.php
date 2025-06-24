@@ -924,7 +924,163 @@ margin-left: -12px;
             margin-left: 189px !important;
         }
 
+       .scalloped-Left-1{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 65px;
+    margin-top: 23px;
+       }
+       .scalloped-Left-1::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: -20px;
+    right: 67px;
+       }
+       .scalloped-Left-2{
+       position: absolute;
+    width: 100px;
+    font-size: 13px;
+    margin-left: -36px;
+    margin-top: 5px;
+    transform: rotate(270deg);
+    color: red;
+       }
+        .scalloped-Left-2::after{
+      content: "";
+    position: absolute;
+    width: 119px;
+    height: 1px;
+    background: #e71111;
+    top: 19px;
+    right: 40px;
+       }
 
+       .scalloped-Left-3{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 65px;
+    margin-top: 23px;
+       }
+       .scalloped-Left-3::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: 98px;
+    right: 67px;
+       }
+
+        .scalloped-Right-1-VP{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 37px;
+    margin-top: 29px;
+       }
+       .scalloped-Right-1-VP::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: -20px;
+    right: -533px;
+       }
+       .scalloped-Right-2-VP{
+       position: absolute;
+    width: 100px;
+    font-size: 13px;
+    margin-left: 597px;
+    margin-top: 12px;
+    transform: rotate(270deg);
+    color: red;
+       }
+        .scalloped-Right-2-VP::after{
+      content: "";
+    position: absolute;
+    width: 119px;
+    height: 1px;
+    background: #e71111;
+    top: -5px;
+    right: 40px;
+       }
+
+       .scalloped-Right-3-VP{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 38px;
+    margin-top: 29px;
+       }
+       .scalloped-Right-3-VP::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: 98px;
+    right: -533px;
+       }
+
+       
+        .scalloped-Right-1{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 65px;
+    margin-top: 23px;
+       }
+       .scalloped-Right-1::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: -20px;
+    right: -533px;
+       }
+       .scalloped-Right-2{
+       position: absolute;
+    width: 100px;
+    font-size: 13px;
+    margin-left: 624px;
+    margin-top: 5px;
+    transform: rotate(270deg);
+    color: red;
+       }
+        .scalloped-Right-2::after{
+      content: "";
+    position: absolute;
+    width: 119px;
+    height: 1px;
+    background: #e71111;
+    top: -5px;
+    right: 40px;
+       }
+
+       .scalloped-Right-3{
+         position: absolute;
+    width: 64px;
+    font-size: 8px;
+   margin-left: 65px;
+    margin-top: 23px;
+       }
+       .scalloped-Right-3::after{
+        content: "";
+    position: absolute;
+    width: 35px;
+    height: 1px;
+    background: #e71111;
+    top: 98px;
+    right: -533px;
+       }
+       
 
         /* .Door_right_strip_SD.sidelight {
             margin-left: -35.5px !important;
