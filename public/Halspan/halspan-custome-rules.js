@@ -2558,7 +2558,9 @@ $(document).ready(function() {
                         for(var j =0; j<leepingSpecieslength;j++){
                             if(FrameMaterialValue != null){
                                 FrameMaterialValue = $("#FrameMaterial-value").data("value");
-                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
+                                 let storeFireRating = $("#savedfirerating").val();
+                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id && fireRating == storeFireRating){
+                                    alert('dfjn');
                                     $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
                                 }
                             }
@@ -6267,12 +6269,18 @@ function frameHeight(){
 }
 
 // 954
-function CheckFireRating(val){
-    let storeFireRating = $("#fireratingoldvalue").val();
-    if(storeFireRating && val){
-        if(storeFireRating != val){
-             $('#frameMaterial').val('');
-              $('#frameMaterial').css({ 'border': '1px solid red' });
+function CheckFireRating(val) {
+    let storeFireRating = $("#savedfirerating").val();
+    alert(storeFireRating);
+
+    if (storeFireRating && val) {
+        if (storeFireRating != val) {
+            $('#frameMaterial').prop('readonly', false); // remove readonly temporarily
+            $('#frameMaterial').val('');
+            $('#frameMaterial').prop('readonly', true);  // reapply readonly
+
+            $('#frameMaterialNew').val('');
+            $('#frameMaterial').css({ 'border': '1px solid red' });
         }
     }
 }
