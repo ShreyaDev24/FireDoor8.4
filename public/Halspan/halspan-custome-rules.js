@@ -2553,7 +2553,6 @@ $(document).ready(function() {
                                 FrameMaterialValue = $("#FrameMaterial-value").data("value");
                                  let storeFireRating = $("#savedfirerating").val();
                                 if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id && fireRating == storeFireRating){
-                                    alert('dfjn');
                                     $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
                                 }
                             }
@@ -6179,7 +6178,6 @@ function frameHeight(){
 // 954
 function CheckFireRating(val) {
     let storeFireRating = $("#savedfirerating").val();
-    alert(storeFireRating);
 
     if (storeFireRating && val) {
         if (storeFireRating != val) {
