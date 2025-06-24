@@ -11,7 +11,25 @@ function pageIdentity(){
 
     $("#fireRating").change(function(){
         FireRatingChange();
+        setTimeout(function(){
+                CheckFireRating($("#fireRating").val());
+            }, 3000);
     });
+
+    function CheckFireRating(val) {
+        let storeFireRating = $("#savedfirerating").val();
+
+        if (storeFireRating && val) {
+            if (storeFireRating != val) {
+                $('#frameMaterial').prop('readonly', false); // remove readonly temporarily
+                $('#frameMaterial').val('');
+                $('#frameMaterial').prop('readonly', true);  // reapply readonly
+
+                $('#frameMaterialNew').val('');
+                $('#frameMaterial').css({ 'border': '1px solid red' });
+            }
+        }
+    }
 
     $("#doorsetType").change(function(){
         DoorSetTypeChange();
@@ -2522,7 +2540,8 @@ function copyOfSideLite1Change(isstatus = false){
                         for(var j =0; j<leepingSpecieslength;j++){
                             if(FrameMaterialValue != null){
                                 FrameMaterialValue = $("#FrameMaterial-value").data("value");
-                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
+                                let storeFireRating = $("#savedfirerating").val();
+                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id && fireRating == storeFireRating){
                                     $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
                                 }
                             }
