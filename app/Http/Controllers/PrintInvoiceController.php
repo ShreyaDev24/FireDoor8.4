@@ -922,11 +922,25 @@ class PrintInvoiceController extends Controller
                 $FrameTypeRight = \Config::get('constants.base64Images.FrameRebatedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
             } elseif (!empty($tt->FrameType) && $tt->FrameType == "Scalloped") {
-                // if (!empty($tt->FrameType) && $tt->FrameType != "Scalloped") {
-                $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
+                if($show->DoorsetType == "SD"){
+                if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                  $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
+                  $FrameTypeRight = \Config::get('constants.base64Images.ScallopedStraight');
+                  $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                } else {
+                  $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
+                  $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
+                  $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                }}else{
+                    $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                 $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                // }
+                }
+                // $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
+                // $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
+                // $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
+                // $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                
             }
 
             $FixedSpaceBlock = \Config::get('constants.base64Images.FixedSpaceBlock');
@@ -944,12 +958,26 @@ class PrintInvoiceController extends Controller
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedLeft;
+                            
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
-                    $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
-                    $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                  
+                    
+                     if(($show->DoorsetType == "SD")){
+                       if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                          $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
+                          $FrameImageStructureRight = $FixedSpaceBlock;
+                       }else{
+                           $FrameImageStructureLeft = $FixedSpaceBlock;
+                           $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                       }   
+                    }else{
+                           $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
+                           $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                    }
                 } else {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                     
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                 $FrameImageStructureLeft = $FixedSpaceBlock;
@@ -968,16 +996,27 @@ class PrintInvoiceController extends Controller
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
-                    $FullBlock = $FixedSpaceBlockScallopedLeft;
+                    $FullBlock = $FixedSpaceBlockScallopedLeft; 
+                                 
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
-                    // $FullBlock =$FixedSpaceBlockScallopedLeft;
-                    $FullBlock =$FixedSpaceBlockScallopedRight;
+                    
+                   if(($show->DoorsetType == "SD")){
+                       if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                           $FullBlock =$FixedSpaceBlockScallopedLeft;
+                       }else{
+                          $FullBlock =$FixedSpaceBlockScallopedRight;
+                       }   
+                    }else{
+                          $FullBlock =$FixedSpaceBlockScallopedRight;
+                    }
+                      
                 } else {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
                     $FullBlock =$FixedSpaceBlockScallopedRight;
+                      
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $leaf1RemainingWidth) {
                 $FrameImageStructureLeftLeaf1 = $FixedSpaceBlock;
@@ -1036,7 +1075,7 @@ class PrintInvoiceController extends Controller
                                     width: 6px;
                                     box-shadow: none;
                                     margin-left:'. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door'? '15' : '3')) .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : ((empty($tt->Handing) && $tt->Handing == "Left")?'13':'14')) : ($tt->IntumescentLeapingSealLocation == 'Door'? '15' : '3')) .'px;
                                     margin-top: 25px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // dd("985");
@@ -1134,7 +1173,9 @@ class PrintInvoiceController extends Controller
 
                     $DoorFrameImage .= '<div  style="position: absolute; top: '. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7') .'px;left: -44px;">
-                                        <img style="width:76px;" src="' . $FrameTypeLeft . '" alt="">
+                                        <img style="width:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing == "Left") ? '77' : '67') .'px; height:'. (
+    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : 'auto') .';" src="' . $FrameTypeLeft . '" alt="">
                                     </div>
                                 </div>';
 
@@ -1143,14 +1184,14 @@ class PrintInvoiceController extends Controller
                         $DoorFrameImage .= '<div style="position: relative;top: 12px;">
                                     <img style="
                                         width: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '155' : '165') .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ?  '155' : '165') .'px;
                                         position: relative;
                                         top: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '5' : '-17') .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left"))?'-17': '5') : '-17') .'px;
                                         left: '. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '26' : '15') .'px;'
                                            .
-        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ' height: 65px;' : '') .
+        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes"))? 'height: 116px;' :'height: 65px;') : '') .
         '" src="' . $FrameImageStructureLeft . '" alt="">
                                     </div>
                                     <div style="width:430px;">
@@ -1169,13 +1210,13 @@ class PrintInvoiceController extends Controller
                                             ' .(($tt->FireRating == 'FD30') ?
                             'width: 125px;
                              margin-top: '. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '118' : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '68')) .'px;
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left")&& ($show->Leaf1VisionPanel == "Yes"))?'71': '118') : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((!empty($tt->Handing) && $tt->Handing != "Left")?'62':'111') : '68')) .'px;
                                                 height:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : '82') .'px;' :
                             'width: 108px; margin-left: '. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? '0' : '4') .'px;
                                                 margin-top: '. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '118' : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '69')) .'px;
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ?( ($tt->Handing != "Left")?'66':'118')  : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '69')) .'px;
                                                 height:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '80'))) .'px;' . '" src="' . $VisionPanelGlazingImageStructure . '" alt="">
 
@@ -1197,7 +1238,7 @@ class PrintInvoiceController extends Controller
                                              'width: '. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? '117' : '125') .'px;
                                                  margin-top: '. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '135' : '132') :  ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124' : '121')) .'px;
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left")&& ($show->Leaf1VisionPanel == "Yes"))? '135':'135') : '132') :  ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124' : '121')) .'px;
                                                  margin-left: '. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') : '34') .'px;
                                                 height: '. (
@@ -1232,15 +1273,16 @@ class PrintInvoiceController extends Controller
 
                         //     }
                         // }
+                    //    dd((in_array($tt->FireRating, ["FD60", "FD60s"])),'jhgjhg');
                         $DoorFrameImage .= '   <div style="position: relative;position: absolute;top: 7px;left:475px;"><img style="width: '. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '158' : '170') .'px;
                                         position: relative;
                                         bottom: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '5') .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing != "Left")? (($show->Leaf1VisionPanel == "Yes")? '-22':'2'):  '1') : (($show->Leaf1VisionPanel == "Yes")?'2':'-22')  )  .'px;
                                         left: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-32' : '-31') .'px;'
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((empty($tt->Handing) && $tt->Handing == "Left")?'-32': '-30') : '-31') .'px;'
                                            .
-        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? 'height:65px;' : '') .
+        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing == "Left")? (($show->Leaf1VisionPanel == "Yes")? ((in_array($tt->FireRating, ["FD60", "FD60s"]))?'height:112px;': 'height:112px;'):'height:109px;') : 'height:65px;' )  : '') .
         '" src="' . $FrameImageStructureRight . '" alt="">
                                     </div>';
                     } else {
@@ -1266,7 +1308,8 @@ class PrintInvoiceController extends Controller
                         $DoorFrameImage .= '<img style="width: 575px;
                         position: relative;
                         top: -17px;
-                        left: 11px;height: 108px;" src="' . $FullBlock . '" alt="">
+                        left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing != "Left") ? '27' : '25') .'px;height: 108px;" src="' . $FullBlock . '" alt="">
                                 </div>';
                     }
 
@@ -1285,8 +1328,8 @@ class PrintInvoiceController extends Controller
                                         width: 6px;
                                         box-shadow: none;
                                         margin-left: '. (
-                                            !empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : '-35.5') : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
-                                        margin-top: 40px;"></div>';
+                                            !empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : (!empty($tt->Handing) && $tt->Handing != "Left"? (($show->Leaf1VisionPanel == "Yes")?'-31.5':'-5.5') :(($show->Leaf1VisionPanel == "Yes")?'-34.5':'-6.5')) ) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
+                                        margin-top:'.(!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left") &&($show->Leaf1VisionPanel == "Yes")?'50':'41'  ).'px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // class="'.$redstripRightCommonClass.'"
                             $DoorFrameImage .= '<div  style="border: 0.5px solid black;
@@ -1297,7 +1340,7 @@ class PrintInvoiceController extends Controller
                                         width: 6px;
                                         box-shadow: none;
                                         margin-left: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : '-35.5') : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left" )?( ($tt->Handing != "Left")? '-34.5':'-5.5' ): ((in_array($tt->FireRating, ["FD60", "FD60s"]))? (($show->Leaf1VisionPanel == "Yes")?'-35.5':'-5.5' ): '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
                                         margin-top: 30px;"></div>
 
                                         <div style="border: 0.5px solid black;
@@ -1308,7 +1351,7 @@ class PrintInvoiceController extends Controller
                                         width: 6px;
                                         box-shadow: none;
                                         margin-left: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : '-35.5') : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left" )?( ($tt->Handing != "Left")? '-34.5':'-5.5' ):((in_array($tt->FireRating, ["FD60", "FD60s"]))?(($show->Leaf1VisionPanel == "Yes")?'-35.5':'-5.5' ): '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
                                         margin-top: 57px;"></div>';
                         }
                     }
@@ -1316,11 +1359,16 @@ class PrintInvoiceController extends Controller
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
+                    // dd($tt->Handing);
                     if($tt->FrameType !== null){
-                    $DoorFrameImage .= '<div style="position: absolute;top: 21px;right: -27px;">
-                                        <img style="width: 77px;
+                    $DoorFrameImage .= '<div style="position: absolute;top:  '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && $tt->Handing != "Left" && ($show->Leaf1VisionPanel == "Yes") ) ? '28' :'21' ).'px;right: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing == "Left")? (($show->Leaf1VisionPanel == "Yes")?'-40':'-69') :(($show->Leaf1VisionPanel == "Yes")?'-32':'-60')) : '-27') .'px;">
+                                        <img style="width:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing != "Left") ? '77' : '77') .'px;
                                         margin-top: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-53' : '-1') .'px;" src="' .  $FrameTypeRight . '" alt="">
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-53' : '-1') .'px; height:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : 'auto') .';" src="' .  $FrameTypeRight . '" alt="">
                                     </div>
                                 </div>
                             ';
@@ -2152,13 +2200,29 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     case "SD":
                         if($tt->FrameOnOff != 1){
                         $elevTbl .= '<tr>
-                                    <td class="mytabledata_sd" colspan="2" style="">
-                                    <p class="frame_dd_t1_sd_' . $tt->FrameType . ' frame_dd_t1_sd_'.$sidelight.'">' . $tt->FrameDepth . 'mm</p>
-                                    <p class="frame_dd_t2_sd_' . $tt->FrameType . ' frame_dd_t2_sd_'.$sidelight.'">' . $tt->FrameThickness . 'mm</p>
+                                    <td class="mytabledata_sd"  colspan="2" style="">
+                                    <p class="frame_dd_t1_sd_' . $tt->FrameType . ' frame_dd_t1_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'637':'660' ) : '') .'px;
+                                            margin-top:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'22px !important':'' ) : '') .'">' . $tt->FrameDepth . 'mm</p>
+                                    <p class="frame_dd_t2_sd_' . $tt->FrameType . ' frame_dd_t2_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ? ( ($show->Leaf1VisionPanel == "Yes")?'626':'653' ) : '') .'px">' . $tt->FrameThickness . 'mm</p>
                                     <p style="'.(($tt->FrameType == 'Rebated_Frame')?'display: none;':'').'" class="frame_dd_t3_sd_' . $tt->FrameType . ' frame_dd_t3_sd_'.$sidelight.'">' . $FrameTypeWidth . 'mm</p>
-                                    <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
-                                    <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'">' . $tt->LeafThickness . '</p>';
+                                    <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?   ( ($show->Leaf1VisionPanel == "Yes")?'587':'613' ) : '') .'px;
+                                            margin-top:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'158px !important':'' ) : '') .' ">' . $FrameTypeHeight . 'mm</p>
+                                    <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'530':'550' ) : '') .'px">' . $tt->LeafThickness . '</p>';
                         }
+
+                      if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
+                           $elevTbl .= '
+                                <p class="scalloped-'.$tt->Handing.'-1'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'"  ></p>
+                                <p class="scalloped-'.$tt->Handing.'-2'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" >'.$tt->ScallopedWidth.'</p>
+                                <p class="scalloped-'.$tt->Handing.'-3'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" ></p>';
+                       }
+                        
 
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
                                         <p class="frame_sd_t1">-' . $FrameMaterial . '</p>
