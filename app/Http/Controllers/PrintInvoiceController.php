@@ -2960,6 +2960,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <thead>
                     <tr>
                         <th>Door / Screen No</th>
+                        <th>Assign Plot Ref</th>
+                        <th>Certification No</th>
                         <th>Quality Check- CNC</th>
                         <th>Quality Check- VP</th>
                         <th>Quality Check- Assembly</th>
@@ -2972,6 +2974,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 foreach ($DoorNumber as $bb) {
                     $elevTbl .=  '<tr>
                         <td>' . $bb->doorNumber . '</td>
+                        <td>' . $bb->plot_ref_no . '</td>
+                        <td>' . $bb->certification_no . '</td>
                         <td></td>
                         <td></td>
                         <td></td>
