@@ -148,6 +148,7 @@ input[type=number]::-webkit-outer-spin-button {
                             <div class="card-header">
                                 <h5 class="card-title" style="margin-top: 10px">Fitting Hardware/Ironmongery </h5>
                                 <input type="hidden" id="ironIronmongerydata">
+                                <input type="hidden" id="miscellaneousIronmongerydata">
                                 <input type="hidden" id="currency">
                             </div>
                             <div class="">
@@ -196,6 +197,7 @@ input[type=number]::-webkit-outer-spin-button {
                                                 $category = 'LocksAndLatches';
                                             }
                                         @endphp
+
                                         <div class="col-md-3 mt-3" id="main-{{ $val['category'] }}">
                                             <div class="position-relative form-group">
                                                 <div class="d-flex justify-content-between">
@@ -230,11 +232,14 @@ input[type=number]::-webkit-outer-spin-button {
                                             </div>
                                             <div class="text_style {{ $val['msg'] }}" id="{{ $val['msg'] }}"></div>
                                         </div>
+
+
                                         {{-- <div id="appendData{{ $val['category'] }}"></div> --}}
                                     @endforeach
+                                    {{-- <input type="text" id="selectedIronmongery" class="form-control" readonly value=""> --}}
                                 @else
-
                                     @foreach ($list as $val)
+
 
                                     @php
                                         $category = $val['category'];
@@ -344,6 +349,7 @@ input[type=number]::-webkit-outer-spin-button {
                                                 <div class="input-icons">
                                                     <div class="input-group">
                                                         <div class="input-group-prepend">
+
                                                             <div class="input-group-text">
                                                                 <i class="fa fa-info icon" id="{{ $val['data_fill'] }}" onClick="IronMongery('{{ $val['category'] }}','{{ $val['name'] }}', this)"></i>
                                                             </div>
@@ -408,10 +414,12 @@ input[type=number]::-webkit-outer-spin-button {
                 success: function(result){ console.log(result)
                     if(result.status=="ok"){
                         $("#ironIronmongerydata").val(JSON.stringify(result.data));
+                        $("#miscellaneousIronmongerydata").val(JSON.stringify(result.miscellaneousdata));
                         $("#currency").val(result.currency);
                         // alert(result.data)
                     }else{
                         $("#ironIronmongerydata").html('');
+                        $("#miscellaneousIronmongerydata").html('');
                     }
                 }
             });
@@ -512,12 +520,17 @@ input[type=number]::-webkit-outer-spin-button {
             ironCategoryName = 'Push Plates';
         }
         var data = $("#ironIronmongerydata").val();
+        var miscellaneousdata = $("#miscellaneousIronmongerydata").val();
         var currency = $("#currency").val();
 
         if(data!=''){
             data =  JSON.parse(data);
+            miscellaneousdata =  JSON.parse(miscellaneousdata);
+
             var lenght = data.length;
+            var lenght1 = miscellaneousdata.length;
             innerHtml = '';
+            innerHtml1 = '';
             for(var index = 0; index<lenght;index++){
                 if(data[index].Category==ironCategoryType){
                     if(data[index].Category == 'PushHandles'){
@@ -533,7 +546,6 @@ input[type=number]::-webkit-outer-spin-button {
                     innerHtml+='<b>'+currency+data[index].Price+'</b>';
                     innerHtml+='<b>'+data[index].Category+'</b>';
                     innerHtml+='</div>';
-                    // innerHtml+='<a href="javascript:void(0);" onClick="makeOption('+data[index].id+',\''+data[index].Name+'\',\''+data[index].Code+'\',\''+ironCategoryType+'\','+data[index].Price+')" class="product_edit" id="product_edit">Select</a>';
                     let name = data[index].Name.replace(/"/g, '&quot;'); // Replace double quotes with &quot;
                     innerHtml += '<a href="javascript:void(0);" onClick="makeOption(' +
                                     data[index].id + ', \'' + name + '\', \'' +
@@ -542,16 +554,49 @@ input[type=number]::-webkit-outer-spin-button {
                     innerHtml+='</div></div>';
                 }
             }
+            for(var index = 0; index<lenght1;index++){
+                if(miscellaneousdata[index].MiscellaneousCategory==ironCategoryType){
+                    if(miscellaneousdata[index].MiscellaneousCategory == 'PushHandles'){
+                        miscellaneousdata[index].MiscellaneousCategory = 'PushPlates';
+                    }
+                    var image1 = "{{url('/')}}/uploads/miscellaneousInfo/"+miscellaneousdata[index].MiscellaneousImage;
+                    innerHtml1+=' <h5 class="mb-3" style="font-weight: 600;">Miscellaneous</h5>';
+                    innerHtml1+=' <div class="row">';
+                    innerHtml1+=' <div class="col-md-4 col-sm-6 col-6">';
+                    innerHtml1+='<div class="product_holder">';
+                    innerHtml1+='<div class="product_img"><img src="'+image1+'"></div>';
+                    innerHtml1+='<a class="product_name" href="#"><span>'+miscellaneousdata[index].MiscellaneousCode+'-</span> '+miscellaneousdata[index].MiscellaneousName+'</a>';
+                    innerHtml1+='<div class="product_face">';
+                    innerHtml1+='<b>'+miscellaneousdata[index].MiscellaneousFireRating+'</b>';
+                    innerHtml1+='<b>'+currency+miscellaneousdata[index].MiscellaneousPrice+'</b>';
+                    innerHtml1+='<b>'+miscellaneousdata[index].MiscellaneousCategory+'</b>';
+                    innerHtml1+='</div>';
+                    // let name1 = miscellaneousdata[index].MiscellaneousName.replace(/"/g, '&quot;'); // Replace double quotes with &quot;
+                    // innerHtml1 += '<a href="javascript:void(0);" onClick="InputOption(' +
+                    //                 miscellaneousdata[index].id + ', \'' + name1 + '\', \'' +
+                    //                 miscellaneousdata[index].MiscellaneousCode + '\', \'' + ironCategoryType + '\', ' +
+                    //                 miscellaneousdata[index].MiscellaneousPrice + ')" class="product_edit" id="product_edit">Select</a>';
+                    innerHtml1+='</div></div></div>';
+                }
+            }
+
             if(innerHtml==''){
                 innerHtml+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
+
+            }
+            if(innerHtml1==''){
+                innerHtml1+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
 
             }
         } else {
             innerHtml = '';
             innerHtml+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
+            innerHtml1 = '';
+            innerHtml1+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
         }
         currendDis = dis;
         $("#content").empty().append(innerHtml);
+        $("#mincontent").empty().append(innerHtml1);
         $("#modalTitle").empty().append('Select '+ironCategoryName);
         $("#iron").modal('show');
     }
@@ -567,6 +612,11 @@ input[type=number]::-webkit-outer-spin-button {
         TotalPrice();
 
 
+    }
+    function InputOption(id,name,code,category,price){
+        const formatted = `ID: ${id}, Code: ${code}, Name: ${name}, Category: ${category}, Price: ${price}`;
+        $("#selectedIronmongery").val(formatted);
+        $("#iron").modal('hide');
     }
 
     $(document).on('change','.qty',function(){
@@ -1128,6 +1178,7 @@ $('input[name=discountprice]').empty().val(parseFloat(totPrice).toFixed(2));
             </div>
             <div class="modal-body">
                 <div class="row" id="content"></div>
+                <div id="mincontent"></div>
             </div>
             <div class="modal-footer">
                 <!-- <button type="button" class="btn btn-primary">Save changes</button> -->

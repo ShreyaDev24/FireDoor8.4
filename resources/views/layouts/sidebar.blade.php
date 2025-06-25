@@ -519,6 +519,12 @@
                                     <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
                                     <a href="{{route('ironmongery-info/records',[0])}}">List</a>
                                     </li>
+                                    <li class="submm-{{ (Request::segment(3) == 'add-miscellaneous') ? 'active' : ''}}">
+                                        <a href="{{route('ironmongery-info/add-miscellaneous')}}">Add Miscellaneous</a>
+                                    </li>
+                                    <li class="submm-{{ (Request::segment(3) == 'records-miscellaneous') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/records-miscellaneous',[0])}}">List Miscellaneous</a>
+                                    </li>
                                 </ul>
                             </li>
                             {{--  <li>
@@ -1160,6 +1166,12 @@
                                         </li>
                                         <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
                                             <a href="{{route('ironmongery-info/records',[0])}}">List</a>
+                                        </li>
+                                        <li class="submm-{{ (Request::segment(3) == 'add-miscellaneous') ? 'active' : ''}}">
+                                            <a href="{{route('ironmongery-info/add-miscellaneous')}}">Add Miscellaneous</a>
+                                        </li>
+                                         <li class="submm-{{ (Request::segment(3) == 'records-miscellaneous') ? 'active' : ''}}">
+                                            <a href="{{route('ironmongery-info/records-miscellaneous',[0])}}">List Miscellaneous</a>
                                         </li>
                                     </ul>
                                 </li>
