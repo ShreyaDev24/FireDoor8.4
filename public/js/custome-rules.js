@@ -742,11 +742,11 @@ $(document).ready(function() {
     });
 
     $("#sideLight1GlassType").change(function(){
-        OverpanelGlassTypeChange(null,'sideLight1GlassType',false);
+        OverpanelGlassTypeChange($("#sideLight1GlassType").val(),'sideLight1GlassType',false);
     });
 
     $("#sideLight2GlassType").change(function(){
-        OverpanelGlassTypeChange(null,'sideLight2GlassType',false);
+        OverpanelGlassTypeChange($("#sideLight2GlassType").val(),'sideLight2GlassType',false);
     });
 
     //getting glazing thikness filter using glazing systems
@@ -5452,10 +5452,10 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         glassType = (id == null)?$("#opGlassType").val():id;
     }
     if(type == "sideLight1GlassType"){
-        glassType = (id == null)?$("#sideLight1GlassType").val():id;
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
     }
     if(type == "sideLight2GlassType"){
-        glassType = (id == null)?$("#sideLight2GlassType").val():id;
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
@@ -5468,7 +5468,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         let pageId = pageIdentity();
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
-        if(fireRatingValue != null){
+        if(fireRatingValue != null && isStatus){
             fireRatingValue = $("#FireRating-value").data("value");
             if(fireRatingValue != ""){
                 fireRating = fireRatingValue;
