@@ -310,6 +310,8 @@ const render = (CustomElement = null) => {
             } else {
                 UnderCut = $('#undercut').val();
             }
+        }else{
+            UnderCut = $('#undercut').val();
         }
 
         var LeafWidth1 = 0;
