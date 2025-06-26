@@ -1190,7 +1190,7 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight2',"Yes");
         // FramePrice('sideLight3');
         updateTransomFields();
-        SideLightHeight('sideLight1');
+
     } else {
 
         $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1244,6 +1244,8 @@ function sideLight1Change(isstatus = false){
         $(".sideLight3_section").removeClass("table_row_show");
         $(".sideLight3_section").addClass("table_row_hide");
     }
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 $("#sideLight2").change(function(){
     sideLight2Change();
@@ -1272,7 +1274,7 @@ function sideLight2Change(isstatus = false){
         }
         doorLeafFacingPrice('sideLight12',"Yes");
         updateTransomFields();
-        SideLightHeight('sideLight2');
+
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
@@ -1292,6 +1294,8 @@ function sideLight2Change(isstatus = false){
         $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
     }
     $("#SL2Depth").attr('min', 95);
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 $("#copyOfSideLite1").change(function(){
     copyOfSideLite1Change();
