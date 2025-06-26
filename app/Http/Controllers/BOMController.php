@@ -1336,6 +1336,8 @@ class BOMController extends Controller
         }
 
         $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
+
+        $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
         $mitre_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mitre_Joint')->first();
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
@@ -1464,9 +1466,9 @@ class BOMController extends Controller
                 $ProjectName = $project->ProjectName;
             }
 
-            if (!empty($version)) {
-                $version = $version;
-            }
+            // if (!empty($version)) {
+            //     $version = $version;
+            // }
 
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
@@ -1481,9 +1483,9 @@ class BOMController extends Controller
 
             $bomVersion = BOMCalculation::where('QuotationId',$id)->get()->first();
             if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }else{
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$versionID)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$versionID)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }
             $elevTbl = '';
             $elevTbl  = '
@@ -1537,6 +1539,8 @@ class BOMController extends Controller
                 <tr style="background: #ddd; border: 1px solid black;">
                     <th style="border: 1px solid black; padding: 5px;">S.No</th>
                     <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                    <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                    <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                     <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                     <th style="border: 1px solid black; padding: 5px;">Frame Location</th>
                     <th style="border: 1px solid black; padding: 5px;">Frame Material/Finish</th>
@@ -1567,6 +1571,8 @@ class BOMController extends Controller
             $elevTbl .= '<tr>
                 <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                 <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
                 <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
                 <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
                 <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
@@ -1649,6 +1655,8 @@ class BOMController extends Controller
                             <tr style="background: #ddd; border: 1px solid black;">
                                 <th style="border: 1px solid black; padding: 5px;">S.No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glazing Beads</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glazing Bead Species</th>
@@ -1679,6 +1687,8 @@ class BOMController extends Controller
                         $glazingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->FireRating . ' </td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
@@ -1764,6 +1774,8 @@ class BOMController extends Controller
                             <tr style="background: #ddd; border: 1px solid black;">
                                 <th style="border: 1px solid black; padding: 5px;">S.No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Core</th>
                                 <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
@@ -1790,6 +1802,8 @@ class BOMController extends Controller
                             <tr style="background: #ddd; border: 1px solid black;">
                                 <th style="border: 1px solid black; padding: 5px;">S.No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Core</th>
                                 <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
@@ -1827,6 +1841,8 @@ class BOMController extends Controller
                             $lipingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
                             <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
@@ -1850,6 +1866,8 @@ class BOMController extends Controller
                             $lipingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
                             <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
@@ -1940,6 +1958,8 @@ class BOMController extends Controller
                             <tr style="background: #ddd; border: 1px solid black;">
                                 <th style="border: 1px solid black; padding: 5px;">S.No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glass Type</th>
                                 <th style="border: 1px solid black; padding: 5px;">Vision Panel Size</th>
@@ -1967,6 +1987,8 @@ class BOMController extends Controller
                         $glassTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' .$i++. '</td>
                             <td style="border: 1px solid black; padding: 5px;">' .$value->DoorType. '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
                             <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
                             <td style="border: 1px solid black; padding: 5px;">'. (isset($words[1]) ? str_replace('_', ' ',  $words[1]) : '').'</td>
                             <td style="border: 1px solid black; padding: 5px;">'. ($words[2] ?? '').'</td>
