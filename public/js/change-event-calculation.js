@@ -540,11 +540,13 @@ $(".change-event-calulation").change(function(){
         }
 
         if($("#sideLight1").val() == "Yes"){
-            $("#SL1Height").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
+            SideLightHeight('sideLight1');
+            $("#SL1Height").attr({'readonly':true, "required": true });
         }
 
         if($("#sideLight2").val() == "Yes"){
-            $("#SL2Height").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
+            SideLightHeight('sideLight2');
+            $("#SL2Height").attr({'readonly':true, "required": true });
         }
 
          $("#OPLippingThickness").attr({'disabled':true,'required':false});
