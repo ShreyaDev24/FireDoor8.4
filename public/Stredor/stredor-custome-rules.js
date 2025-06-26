@@ -935,14 +935,6 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
-            setTimeout(function(){
-                if($("#sideLight1").val() == 'Yes'){
-                    SideLightHeight('sideLight1');
-                }
-                if($("#sideLight2").val() == 'Yes'){
-                    SideLightHeight('sideLight2');
-                }
-            }, 1000)
             // frameprice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -966,7 +958,11 @@ $(document).ready(function() {
             $("#overpanel2-section1").addClass("table_row_hide");
             $(".overpanel3_section").removeClass("table_row_show");
             $(".overpanel3_section").addClass("table_row_hide");
-            setTimeout(function(){
+        }
+
+        addValidation($(this).val())
+        IntumescentSeals();
+        setTimeout(function(){
             if($("#sideLight1").val() == 'Yes'){
                 SideLightHeight('sideLight1');
             }
@@ -974,10 +970,6 @@ $(document).ready(function() {
                 SideLightHeight('sideLight2');
             }
         }, 1000)
-        }
-
-        addValidation($(this).val())
-        IntumescentSeals();
     });
     function addValidation(value){
         if(value == 'Overpanel'){
@@ -1287,6 +1279,8 @@ function copyOfSideLite1Change(isstatus = false){
         }
     }
     updateTransomFields();
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 
 // Lipping And Intumescent
