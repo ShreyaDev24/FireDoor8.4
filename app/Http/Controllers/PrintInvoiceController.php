@@ -922,7 +922,8 @@ class PrintInvoiceController extends Controller
                 $FrameTypeRight = \Config::get('constants.base64Images.FrameRebatedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
             } elseif (!empty($tt->FrameType) && $tt->FrameType == "Scalloped") {
-                if($show->DoorsetType == "SD"){
+              
+                if($tt->DoorsetType == "SD"){
                 if(!empty($tt->Handing) && $tt->Handing == "Left"){
                   $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                   $FrameTypeRight = \Config::get('constants.base64Images.ScallopedStraight');
@@ -931,7 +932,8 @@ class PrintInvoiceController extends Controller
                   $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
                   $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                   $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                }}else{
+                }}
+                else{
                     $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                 $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
@@ -962,7 +964,7 @@ class PrintInvoiceController extends Controller
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                   
                     
-                     if(($show->DoorsetType == "SD")){
+                     if(($tt->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                           $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                           $FrameImageStructureRight = $FixedSpaceBlock;
@@ -1002,7 +1004,7 @@ class PrintInvoiceController extends Controller
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
                     
-                   if(($show->DoorsetType == "SD")){
+                   if(($tt->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                            $FullBlock =$FixedSpaceBlockScallopedLeft;
                        }else{
