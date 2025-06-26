@@ -969,14 +969,7 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
-            setTimeout(function(){
-                if($("#sideLight1").val() == 'Yes'){
-                    SideLightHeight('sideLight1');
-                }
-                if($("#sideLight2").val() == 'Yes'){
-                    SideLightHeight('sideLight2');
-                }
-            }, 1000)
+
             FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -1005,6 +998,14 @@ $(document).ready(function() {
         }
         addValidation($(this).val())
         IntumescentSeals();
+        setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
     });
     function addValidation(value){
         if(value == 'Overpanel'){
@@ -1317,6 +1318,8 @@ $(document).ready(function() {
                 $("#sideLight2FrameThickness").attr({ 'readonly': true, "required": false }).val('');
             }
         }
+        SideLightHeight('sideLight1');
+        SideLightHeight('sideLight2');
         updateTransomFields();
     }
 
