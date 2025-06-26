@@ -234,6 +234,7 @@ dd($IronmongeryInfo);
                                                         "Keyhole Escutcheon",
                                                         "Door Stops",
                                                         "Cylinders",
+                                                        "Miscellaneous"
                                                         ];
 
                                                         if(isset($IronmongeryInfo->CategoryFieldsJSON)){
@@ -589,6 +590,32 @@ dd($IronmongeryInfo);
                             .attr('max', 2000);
                         } else {
                             $('input[name="distanceFromBottomOfDoor"]').removeAttr('min max').prop('readonly', false);
+                        }
+
+                        if (['Miscellaneous'].includes(selectedCategory)) {
+                            $('input[name="staticWidth"]')
+                                .prop('readonly', true)
+                                .prop('required', false);
+                            $('input[name="staticHeight"]')
+                                .prop('readonly', true)
+                                .prop('required', false);
+                            $('input[name="staticDepth"]')
+                                .prop('readonly', true)
+                                .prop('required', false);
+                            $('input[name="distanceFromBottomOfDoor"]')
+                                .prop('readonly', true)
+                                .prop('required', false);
+                            $('input[name="distanceFromLeadingEdgeOfDoor"]')
+                                .prop('readonly', true)
+                                .prop('required', false);
+                            $('input[name="centered"]').prop('disabled', true);
+                        } else {
+                            $('input[name="staticWidth"]').prop('readonly', false);
+                            $('input[name="staticHeight"]').prop('readonly', false);
+                            $('input[name="staticDepth"]').prop('readonly', false);
+                            $('input[name="distanceFromBottomOfDoor"]').prop('readonly', false);
+                            $('input[name="distanceFromLeadingEdgeOfDoor"]').prop('readonly', false);
+                            $('input[name="centered"]').prop('disabled', false);
                         }
                     }
 

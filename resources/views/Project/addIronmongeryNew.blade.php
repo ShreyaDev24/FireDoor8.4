@@ -530,7 +530,6 @@ input[type=number]::-webkit-outer-spin-button {
             var lenght = data.length;
             var lenght1 = miscellaneousdata.length;
             innerHtml = '';
-            innerHtml1 = '';
             for(var index = 0; index<lenght;index++){
                 if(data[index].Category==ironCategoryType){
                     if(data[index].Category == 'PushHandles'){
@@ -554,49 +553,19 @@ input[type=number]::-webkit-outer-spin-button {
                     innerHtml+='</div></div>';
                 }
             }
-            for(var index = 0; index<lenght1;index++){
-                if(miscellaneousdata[index].MiscellaneousCategory==ironCategoryType){
-                    if(miscellaneousdata[index].MiscellaneousCategory == 'PushHandles'){
-                        miscellaneousdata[index].MiscellaneousCategory = 'PushPlates';
-                    }
-                    var image1 = "{{url('/')}}/uploads/miscellaneousInfo/"+miscellaneousdata[index].MiscellaneousImage;
-                    innerHtml1+=' <h5 class="mb-3" style="font-weight: 600;">Miscellaneous</h5>';
-                    innerHtml1+=' <div class="row">';
-                    innerHtml1+=' <div class="col-md-4 col-sm-6 col-6">';
-                    innerHtml1+='<div class="product_holder">';
-                    innerHtml1+='<div class="product_img"><img src="'+image1+'"></div>';
-                    innerHtml1+='<a class="product_name" href="#"><span>'+miscellaneousdata[index].MiscellaneousCode+'-</span> '+miscellaneousdata[index].MiscellaneousName+'</a>';
-                    innerHtml1+='<div class="product_face">';
-                    innerHtml1+='<b>'+miscellaneousdata[index].MiscellaneousFireRating+'</b>';
-                    innerHtml1+='<b>'+currency+miscellaneousdata[index].MiscellaneousPrice+'</b>';
-                    innerHtml1+='<b>'+miscellaneousdata[index].MiscellaneousCategory+'</b>';
-                    innerHtml1+='</div>';
-                    // let name1 = miscellaneousdata[index].MiscellaneousName.replace(/"/g, '&quot;'); // Replace double quotes with &quot;
-                    // innerHtml1 += '<a href="javascript:void(0);" onClick="InputOption(' +
-                    //                 miscellaneousdata[index].id + ', \'' + name1 + '\', \'' +
-                    //                 miscellaneousdata[index].MiscellaneousCode + '\', \'' + ironCategoryType + '\', ' +
-                    //                 miscellaneousdata[index].MiscellaneousPrice + ')" class="product_edit" id="product_edit">Select</a>';
-                    innerHtml1+='</div></div></div>';
-                }
-            }
+
 
             if(innerHtml==''){
                 innerHtml+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
 
             }
-            if(innerHtml1==''){
-                innerHtml1+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
 
-            }
         } else {
             innerHtml = '';
             innerHtml+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
-            innerHtml1 = '';
-            innerHtml1+='<div class=" col-md-12 alert alert-danger" role="alert"> No '+ ironCategoryName.toLowerCase() +' found </div>'
         }
         currendDis = dis;
         $("#content").empty().append(innerHtml);
-        $("#mincontent").empty().append(innerHtml1);
         $("#modalTitle").empty().append('Select '+ironCategoryName);
         $("#iron").modal('show');
     }
