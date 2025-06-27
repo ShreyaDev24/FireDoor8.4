@@ -246,6 +246,7 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Door Number',
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
+            'Door Type',
             'Fire Rating',
             'Door Thickness',
             'Frame Material',
@@ -258,8 +259,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Scalloped Width',
             'Scalloped Depth',
             'Frame Depth',
-            'Thresh Thickness',
-            'Thresh Material',
             'Leg x2',
             'Head',
             'Stop Leg x 2',
@@ -268,9 +267,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Bottom- 4 Sided Frame',
             'Handing',
             'Finish',
-            'Lock Type 1',
-            'Lock Type 2',
-            'Exitex Aluminum Cills',
             'Undercut',
             'Transom',
             'Mullion',
@@ -302,6 +298,7 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
                 $value->doorNumber,
                 $value->plot_ref_no,
                 $value->certification_no,
+                $value->DoorType,
                 $value->FireRating,
                 $value->LeafThickness,
                 $value->SpeciesName,
@@ -314,8 +311,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
                 $value->ScallopedWidth,
                 $value->ScallopedHeight,
                 $value->FrameDepth,
-                '', // Empty column
-                '', // Empty column
                 $leg,
                 $head,
                 $stopleg2,
@@ -324,9 +319,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
                 '', // Empty column
                 $value->Handing,
                 str_replace('_', ' ', $value->FrameFinish),
-                '', // Empty column
-                '', // Empty column
-                '', // Empty column
                 $value->Undercut,
                  '', // Empty column
                 '', // Empty column
@@ -360,8 +352,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Scalloped Width',
             'Scalloped Depth',
             'Frame Depth',
-            'Thresh Thickness',
-            'Thresh Material',
             'Leg x2',
             'Head',
             'Stop Leg x 2',
@@ -370,9 +360,6 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Bottom- 4 Sided Frame',
             'Handing',
             'Finish',
-            'Lock Type 1',
-            'Lock Type 2',
-            'Exitex Aluminum Cills',
             'Undercut',
             'Transom',
             'Mullion',
@@ -396,7 +383,7 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
                     '',
                     '',
                     '',
-                    '','','','','','',''.'','','','','','','','','','','','','','','',''
+                    '','','','','','',''.'','','','','','','','','',''
                 ];
          }
 
@@ -433,7 +420,7 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
 
                     // Auto-size all columns A to AF
                     $col = 'A';
-                    while ($col !== 'AG') {
+                    while ($col !== 'AB') {
                         $sheet->getColumnDimension($col)->setAutoSize(true);
                         $col++;
                     }
@@ -479,13 +466,13 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
 
                         // Apply green top and bottom border to title rows
                         if (in_array($val, ['Door Order Sheet', 'Frames and Transoms', 'SCREEN INFO'])) {
-                            $sheet->mergeCells("A{$i}:AF{$i}");
-                            $sheet->getStyle("A{$i}:AF{$i}")->applyFromArray($mainTitleStyle);
+                            $sheet->mergeCells("A{$i}:AB{$i}");
+                            $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($mainTitleStyle);
                         }
 
                         // Apply red bottom border to heading rows
                         if (in_array($val, ['Door Number', 'SCREEN NO'])) {
-                            $sheet->getStyle("A{$i}:AF{$i}")->applyFromArray($headerRowStyle);
+                            $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($headerRowStyle);
                         }
                     }
                 },
