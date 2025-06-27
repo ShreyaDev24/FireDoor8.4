@@ -112,6 +112,7 @@
                                             <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
                                             <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
                                             <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
+                                            <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
                                             <li><a
@@ -817,6 +818,8 @@
         value="{{ url('/quotation/ExportSideScreen') }}" />
     <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
         value="{{ url('/quotation/cuttingList') }}" />
+    <input type="hidden" name="allGlazingBeadsUrl" id="allGlazingBeadsUrl"
+        value="{{ url('/quotation/allGlazingBeadsExport') }}" />
     <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
         value="{{ url('/quotation/ExportIronmongery') }}" />
     <input type="hidden" name="excelexportVicaimaUrl" id="excelexportVicaimaUrl"
@@ -2210,6 +2213,17 @@
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            allGlazingBeadsExport = function() {
+                var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
