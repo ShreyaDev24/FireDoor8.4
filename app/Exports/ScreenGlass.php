@@ -95,6 +95,8 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                     $data[] = [
                         $k,
+                        $value->plot_ref_no,
+                        $value->certification_no,
                         $screenNumber,
                         $ScreenType,
                         $glasspane,
@@ -121,6 +123,8 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         $a = [
             'S.No',
+            'Plot Number/Ref',
+            'IFC/Certifire No/Q mark Plug',
             'Screen Number',
             'Screen Type',
             'Glass Panes ',
@@ -141,8 +145,8 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:H1';
-                $cellRange = 'A2:H2';
+                $cellRange1 = 'A1:J1';
+                $cellRange = 'A2:J2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,

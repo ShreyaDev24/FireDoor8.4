@@ -1166,7 +1166,7 @@ function ExportSideScreen($id,$version){
         $vid = $QV->version;
     }
 
-    $result = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $id, 'side_screen_items.VersionId' => $version])->select('side_screen_items.*','side_screen_item_master.screenNumber')->get();
+    $result = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $id, 'side_screen_items.VersionId' => $version])->select('side_screen_items.*','side_screen_item_master.screenNumber','side_screen_item_master.plot_ref_no','side_screen_item_master.certification_no')->get();
 
     return $result;
 }

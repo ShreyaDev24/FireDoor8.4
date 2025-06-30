@@ -8553,9 +8553,9 @@ const render = (CustomElement = null) => {
                 const spaceBetweenShapes = (VisionPanelQuantityForLeaf1 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
                 // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
-  
+
                 if (VisionPanelQuantityForLeaf1 == 1) {
-                  
+
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -9462,7 +9462,7 @@ const render = (CustomElement = null) => {
                 /* Vertical Line for vision panel */
                 if (Handing == 'Right') {
 
-                    
+
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -10596,7 +10596,7 @@ const render = (CustomElement = null) => {
 
 
             if(IsOverPanelActive != "" && IsOverPanelActive != "No"){
-                var THeight = FrameHeight + OverPanelHeightToShow + FrameThickness;
+                var THeight = FrameHeight + OverPanelHeightToShow;
                 if(THeight >= 2950){
                     swal('.','The overall height of the door and fanlight exceeds 2950 mm')
                 }

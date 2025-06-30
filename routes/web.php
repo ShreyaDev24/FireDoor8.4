@@ -395,7 +395,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/generateBOMPrint' , [App\Http\Controllers\BOMController::class,'BomCalculationPrint'])->name('generateBOMPrint');
     Route::post('/ScreengenerateBOMPrint' , [App\Http\Controllers\BOMController::class,'ScreenBomCalculationPrint'])->name('ScreengenerateBOMPrint');
     Route::post('/DoorOrderSheetUrl' , [App\Http\Controllers\BOMController::class,'DoorOrderSheetUrl'])->name('DoorOrderSheetUrl');
-    Route::get('/QualityControlPrint/{qid}/{v}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
+    Route::get('/QualityControlPrint/{id}/{vid}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
 
     Route::post('/FrameTransomsUrl' , [App\Http\Controllers\BOMController::class,'FrameTransomsUrl'])->name('FrameTransomsUrl');
 
@@ -419,6 +419,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
     Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');
+    Route::get('/allGlazingBeadsExport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'allGlazingBeadsExport'])->name('allGlazingBeadsExport');
     Route::get('/excelexportVicaimaUrl/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelexportVicaima'])->name('excelexportVicaima');
     Route::get('/ExportIronmongery/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportIronmongery'])->name('ExportIronmongery');
 
@@ -443,6 +444,8 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/projectfetchCurrency', [App\Http\Controllers\DoorScheduleController::class,'projectfetchCurrency'])->name('projectfetchCurrency');
 
     Route::get('/door-list-show/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'doorListShow'])->name('quotation/door-list-show');
+    Route::get('/assign-certification/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'assignPlotAndCertification'])->name('quotation/assign-certification');
+    Route::get('/side-screen-certification/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'sideScreenCertification'])->name('quotation/side-screen-certification');
     Route::post('/door-list-delete', [App\Http\Controllers\DoorScheduleController::class,'doorListDelete'])->name('quotation/door-list-delete');
 });
 
@@ -552,6 +555,13 @@ Route::prefix('ironmongery-info')->group(function (): void{
     Route::get('/IronmongeryExport', [App\Http\Controllers\IronmongeryInfo::class,'IronmongeryExport'])->name('IronmongeryExport');
     Route::post('/IronmongeryImport', [App\Http\Controllers\IronmongeryInfo::class,'IronmongeryImport'])->name('IronmongeryImport');
     Route::get('/IronmongeryTableInsert', [App\Http\Controllers\IronmongeryInfo::class,'IronmongeryTableInsert'])->name('IronmongeryTableInsert');
+
+    // miscellaneous route
+    Route::get('/add-miscellaneous', [App\Http\Controllers\IronmongeryInfo::class,'addMiscellaneous'])->name('ironmongery-info/add-miscellaneous');
+    Route::post('/store-miscellaneous', [App\Http\Controllers\IronmongeryInfo::class,'StoreMiscellaneous'])->name('ironmongery-info/store-miscellaneous');
+    Route::get('/records-miscellaneous/{id}', [App\Http\Controllers\IronmongeryInfo::class,'miscellaneousRecords'])->name('ironmongery-info/records-miscellaneous');
+    Route::get('/update-miscellaneous/{id}', [App\Http\Controllers\IronmongeryInfo::class,'addMiscellaneous'])->name('ironmongery-info/update-miscellaneous/');
+    Route::post('/miscellaneous-delete/{id}', [App\Http\Controllers\IronmongeryInfo::class,'miscellaneousDelete'])->name('ironmongery-info/miscellaneous-delete');
 });
 
 
@@ -634,7 +644,7 @@ Route::prefix('order')->group(function (): void{
     Route::get('/ommanual/{id}/{vid}', [App\Http\Controllers\order\OMMAnualController::class,'ommanual'])->name('ommanual');
     Route::get('/generate/{id}', [App\Http\Controllers\order\OrderController::class,'OrderDetails'])->name('order/generate/');
     Route::get('/pdf-test', [App\Http\Controllers\order\OrderController::class,'pdf_test'])->name('order/pdf-test');
-
+    Route::post('/save-certification', [App\Http\Controllers\order\OrderController::class, 'assignStore'])->name('certification.store');
     // all data export for Order
     Route::get('/orderlistAllExport', [App\Http\Controllers\order\OrderController::class,'orderlistAllExport'])->name('orderlistAllExport');
     //end

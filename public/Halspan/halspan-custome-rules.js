@@ -454,16 +454,16 @@ function pageIdentity(){
             }
             $('#leaf1VisionPanelShape').val('').attr({'readonly':true,'required':false}).val("");
             if($("#leaf2VisionPanel").val() == 'Yes'){
-                $('#glazingSystems').attr('required',false);
-                $('#glassType').attr('required',false);
-                $('#glazingBeads').attr('required',false);
-                $('#glazingBeadsThickness').attr('required',false);
-                $('#glazingBeadsWidth').attr('required',false);
-                $('#glazingBeadsHeight').attr('required',false);
-                $('#glazingBeadsFixingDetail').attr('required',false);
-                $('#glazingBeadSpecies').attr('required',false);
-                $('#glassThickness').attr('required',false);
-                $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
+                $('#glazingSystems').attr('required',true);
+                $('#glassType').attr('required',true);
+                $('#glazingBeads').attr('required',true);
+                $('#glazingBeadsThickness').attr('required',true);
+                $('#glazingBeadsWidth').attr('required',true);
+                $('#glazingBeadsHeight').attr('required',true);
+                $('#glazingBeadsFixingDetail').attr('required',true);
+                $('#glazingBeadSpecies').attr('required',true);
+                $('#glassThickness').attr('required',true);
+                $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
             }else{
                 $('#glazingSystems').attr('required',false);
                 $('#glassType').val('').attr('required',false);
@@ -481,7 +481,7 @@ function pageIdentity(){
 
 // Vision Panel
 $(document).ready(function() {
-    $("#leaf1VisionPanel").change(function(){
+    $("#leaf1VisionPanel,#leaf2VisionPanel").change(function(){
         visionPanelChange();
     });
 
@@ -715,11 +715,11 @@ $(document).ready(function() {
     });
 
     $("#sideLight1GlassType").change(function(){
-        OverpanelGlassTypeChange(null,'sideLight1GlassType',false);
+        OverpanelGlassTypeChange($("#sideLight1GlassType").val(),'sideLight1GlassType',false);
     });
 
     $("#sideLight2GlassType").change(function(){
-        OverpanelGlassTypeChange(null,'sideLight2GlassType',false);
+        OverpanelGlassTypeChange($("#sideLight2GlassType").val(),'sideLight2GlassType',false);
     });
 
     //getting glazing thikness filter using glazing systems
@@ -968,14 +968,7 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
-            setTimeout(function(){
-                if($("#sideLight1").val() == 'Yes'){
-                    SideLightHeight('sideLight1');
-                }
-                if($("#sideLight2").val() == 'Yes'){
-                    SideLightHeight('sideLight2');
-                }
-            }, 1000)
+
             FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -1004,6 +997,14 @@ $(document).ready(function() {
         }
         addValidation($(this).val())
         IntumescentSeals();
+        setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
     });
     function addValidation(value){
         if(value == 'Overpanel'){
@@ -1140,7 +1141,6 @@ $(document).ready(function() {
             doorLeafFacingPrice('sideLight2',"Yes");
             FramePrice('sideLight3');
             updateTransomFields();
-            SideLightHeight('sideLight1');
         } else {
 
             $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1194,6 +1194,8 @@ $(document).ready(function() {
             $(".sideLight3_section").removeClass("table_row_show");
             $(".sideLight3_section").addClass("table_row_hide");
         }
+        SideLightHeight('sideLight1');
+        SideLightHeight('sideLight2');
     }
     $("#sideLight2").change(function(){
         sideLight2Change();
@@ -1222,7 +1224,6 @@ $(document).ready(function() {
             }
             updateTransomFields();
             doorLeafFacingPrice('sideLight12',"Yes");
-            SideLightHeight('sideLight2');
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
@@ -1241,6 +1242,8 @@ $(document).ready(function() {
             $("#sideLight12-section1").addClass("table_row_hide");
         }
         $("#SL2Depth").attr('min', 95);
+        SideLightHeight('sideLight1');
+        SideLightHeight('sideLight2');
     }
     $(".SL1").on("change keyup", function() {
         copyOfSideLite1Change();
@@ -1316,6 +1319,8 @@ $(document).ready(function() {
                 $("#sideLight2FrameThickness").attr({ 'readonly': true, "required": false }).val('');
             }
         }
+        SideLightHeight('sideLight1');
+        SideLightHeight('sideLight2');
         updateTransomFields();
     }
 
@@ -2551,7 +2556,8 @@ $(document).ready(function() {
                         for(var j =0; j<leepingSpecieslength;j++){
                             if(FrameMaterialValue != null){
                                 FrameMaterialValue = $("#FrameMaterial-value").data("value");
-                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
+                                 let storeFireRating = $("#savedfirerating").val();
+                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id && fireRating == storeFireRating){
                                     $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
                                 }
                             }
@@ -5343,6 +5349,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
             glassType = glassTypeValue;
         }
     }
+    console.log(glassType,id,type,isstatus);
     if(glassType != ''){
         let pageId = pageIdentity();
         let fireRating =$("#fireRating").val();
@@ -5565,7 +5572,8 @@ function updateGlassType(isStatus = false, type, heightSelector, integritySelect
     let pageId = pageIdentity();
     let fireRating = $("#fireRating").val();
     var fireRatingValue = document.getElementById('FireRating-value');
-    if(fireRatingValue != null){
+    let storeFireRating = $("#savedfirerating").val();
+    if(fireRatingValue != null && isStatus){
         fireRatingValue = $("#FireRating-value").data("value");
         if(fireRatingValue != ""){
             fireRating = fireRatingValue;
@@ -6175,12 +6183,17 @@ function frameHeight(){
 }
 
 // 954
-function CheckFireRating(val){
-    let storeFireRating = $("#fireratingoldvalue").val();
-    if(storeFireRating && val){
-        if(storeFireRating != val){
-             $('#frameMaterial').val('');
-              $('#frameMaterial').css({ 'border': '1px solid red' });
+function CheckFireRating(val) {
+    let storeFireRating = $("#savedfirerating").val();
+
+    if (storeFireRating && val) {
+        if (storeFireRating != val) {
+            $('#frameMaterial').prop('readonly', false); // remove readonly temporarily
+            $('#frameMaterial').val('');
+            $('#frameMaterial').prop('readonly', true);  // reapply readonly
+
+            $('#frameMaterialNew').val('');
+            $('#frameMaterial').css({ 'border': '1px solid red' });
         }
     }
 }

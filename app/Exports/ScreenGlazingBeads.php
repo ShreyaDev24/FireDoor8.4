@@ -99,6 +99,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
 
                     $data[] = [
                         $k,
+                        $value->plot_ref_no,
+                        $value->certification_no,
                         $screenNumber,
                         $ScreenType,
                         $glasspane.' Width',
@@ -114,6 +116,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                     $k++;
                     $data[] = [
                         $k,
+                        $value->plot_ref_no,
+                        $value->certification_no,
                         $screenNumber,
                         $ScreenType,
                         $glasspane.' Height',
@@ -144,6 +148,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
     {
         $a = [
             'S.No',
+            'Plot Number/Ref',
+            'IFC/Certifire No/Q mark Plug',
             'Screen No ',
             'Screen Type',
             'Glazing Bead Location',
@@ -166,8 +172,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
     {
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:L1';
-                $cellRange = 'A2:L2';
+                $cellRange1 = 'A1:N1';
+                $cellRange = 'A2:N2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
