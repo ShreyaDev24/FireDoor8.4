@@ -1013,14 +1013,6 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
-            setTimeout(function(){
-                if($("#sideLight1").val() == 'Yes'){
-                    SideLightHeight('sideLight1');
-                }
-                if($("#sideLight2").val() == 'Yes'){
-                    SideLightHeight('sideLight2');
-                }
-            }, 1000)
             FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
@@ -1047,6 +1039,14 @@ $(document).ready(function() {
         }
         addValidation($(this).val())
         IntumescentSeals();
+        setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
     });
 
     function addValidation(value){
@@ -1184,7 +1184,6 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight2',"Yes");
         FramePrice('sideLight3');
         updateTransomFields();
-        SideLightHeight('sideLight1');
     } else {
 
         $("#SlBeadThickness").val(0).attr('readonly',true);
@@ -1238,6 +1237,8 @@ function sideLight1Change(isstatus = false){
         $(".sideLight3_section").removeClass("table_row_show");
         $(".sideLight3_section").addClass("table_row_hide");
     }
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 $("#sideLight2").change(function(){
     sideLight2Change();
@@ -1266,7 +1267,6 @@ function sideLight2Change(isstatus = false){
         }
         updateTransomFields();
         doorLeafFacingPrice('sideLight12',"Yes");
-        SideLightHeight('sideLight2');
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
@@ -1285,6 +1285,8 @@ function sideLight2Change(isstatus = false){
         $("#sideLight12-section1").addClass("table_row_hide");
     }
     $("#SL2Depth").attr('min', 95);
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 $("#copyOfSideLite1").change(function(){
     copyOfSideLite1Change();
@@ -1356,6 +1358,8 @@ function copyOfSideLite1Change(isstatus = false){
         }
     }
     updateTransomFields();
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 
 // Lipping And Intumescent

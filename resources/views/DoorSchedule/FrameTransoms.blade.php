@@ -8,7 +8,8 @@
     <title>Bill Of Material</title>
     <style>
         @page {
-            size: 1260pt 660pt;
+             size: A2 landscape;
+            margin: 20pt;
         }
 
         table {
@@ -34,39 +35,43 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="24">Frames & Transoms BOM</th>
+                <th colspan="30">Frames & Transoms BOM</th>
             </tr>
             <tr>
-                <th colspan="3">Ref</th>
-                <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
-                <th colspan="4">Project</th>
-                <td colspan="4">{{ $quotation->projectname }}</td>
-                <th colspan="5">Prepared By</th>
+                <th colspan="6">Ref</th>
+                <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
+                <th colspan="6">Project</th>
+                <td colspan="5">{{ $quotation->projectname }}</td>
+                <th colspan="4">Prepared By</th>
                 <td colspan="4">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="2">Revision</th>
-                <td colspan="2">{{ $item[0]->VersionId }}</td>
-                <th colspan="2">Date</th>
-                <td colspan="2">{{ $today }}</td>
-                <th colspan="3">Main Contractor</th>
-                <td colspan="4">{{ $quotation->CstCompanyName }}</td>
-                <th colspan="5">Sales Contact</th>
+                <th colspan="4">Revision</th>
+                <td colspan="4">{{ $item[0]->VersionId }}</td>
+                <th colspan="4">Date</th>
+                <td colspan="3">{{ $today }}</td>
+                <th colspan="4">Main Contractor</th>
+                <td colspan="3">{{ $quotation->CstCompanyName }}</td>
+                <th colspan="4">Sales Contact</th>
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="24">Text</th>
+                <th colspan="30">Text</th>
             </tr>
             <tr>
-                <th colspan="24">Items</th>
+                <th colspan="30">Items</th>
             </tr>
             @php
                 $i = 0;
             @endphp
+
             @foreach ($item as $value)
                 @if ($i++ == 0)
                     <tr>
                         <th>Door Number</th>
+                        <th>Plot Number/Ref</th>
+                        <th>IFC/Certifire No/Q mark Plug</th>
+                        <th>Door Type</th>
                         <th>Fire Rating</th>
                         <th>Door Thickness</th>
                         <th>Door Size</th>
@@ -74,22 +79,24 @@
                         <th>O/A Frame H</th>
                         <th>O/A Frame W</th>
                         <th>Frame Thickness</th>
-                        <th>Plant on Stop</th>
+                        <th>Plant on stop thickness</th>
+                        <th>Plant on stop Width</th>
+                        <th>Rebate Width</th>
+                        <th>Rebate Depth</th>
+                        <th>Scalloped Width</th>
+                        <th>Scalloped Depth</th>
                         <th>Frame Depth</th>
-                        <!-- <th>Frame & Ranson Trench</th> -->
-                        <th>Thresh Thickness</th>
-                        <th>Thresh Material</th>
-                        <th>Leg</th>
+                        <th>Leg x 2</th>
                         <th>Head</th>
                         <th>Stop Leg x 2</th>
                         <th>Stop Head</th>
                         <th>Stop Bottom</th>
+                        <th>Bottom- 4 Sided Frame</th>
                         <th>Handing</th>
                         <th>Finish</th>
-                        <th>Lock Type 1</th>
-                        <th>Lock Type 2</th>
-                        <th>Exitex Aliuminum Cills</th>
                         <th>Undercut</th>
+                        <th>Transom</th>
+                        <th>Mullion</th>
                         <th>Notes</th>
                     </tr>
                     <tr style="background:#00B0F0">
@@ -117,7 +124,12 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        {{-- <td></td> --}}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endif
                 @php
@@ -179,6 +191,9 @@
                 @endphp
                 <tr>
                     <td>{{ $value->doorNumber }}</td>
+                    <td>{{ $value->plot_ref_no }}</td>
+                    <td>{{ $value->certification_no }}</td>
+                    <td>{{ $value->DoorType }}</td>
                     <td>{{ $value->FireRating }}</td>
                     <td>{{ $value->LeafThickness }}</td>
                     <td> <p style="width: 100px;">{{ $value->LeafWidth1 }} × {{ $value->LeafHeight }}</p></td>
@@ -186,15 +201,18 @@
                     <td>{{ $value->FrameHeight }}</td>
                     <td>{{ $value->FrameWidth }}</td>
                     <td>{{ $value->FrameThickness }}</td>
-                    <td>{{ $FrameType }}</td>
+                    <td>{{ $value->PlantonStopHeight }}</td>
+                    <td>{{ $value->PlantonStopWidth }}</td>
+                    <td>{{ $value->RebatedWidth }}</td>
+                    <td>{{ $value->RebatedHeight }}</td>
+                    <td>{{ $value->ScallopedWidth }}</td>
+                    <td>{{ $value->ScallopedHeight }}</td>
                     <td>{{ $value->FrameDepth }}</td>
-                    <!-- <td></td> -->
-                    <td></td>
-                    <td></td>
                     <td>{{ $leg }}</td>
                     <td>{{ $head }}</td>
                     <td>{{ $stopleg2 }}</td>
                     <td>{{ $stophead }}</td>
+                    <td></td>
                     <td></td>
                     @if($value->Handing == 'Left_Hand_Master_Right_Hand_Slave')
                     <td><p style="width: 120px;">Left Hand Master Right Hand Slave</p></td>
@@ -204,10 +222,9 @@
                     <td>{{ $value->Handing }}</td>
                     @endif
                     <td>{{ str_replace('_', ' ', $value->FrameFinish) }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
                     <td>{{ $value->Undercut }}</td>
+                    <td></td>
+                    <td></td>
                     <td>{{ $value->SpecialFeatureRefs }}</td>
                 </tr>
             @endforeach

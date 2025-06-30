@@ -2038,6 +2038,8 @@ $sn++;
         $item->DoorStopsQty = implode(',',array_filter($request->DoorStopsQty, 'strlen'));
         $item->Cylinders = implode(',',array_filter($request->CylindersValue, 'strlen'));
         $item->CylindersQty = implode(',',array_filter($request->CylindersQty, 'strlen'));
+        $item->Miscellaneous = implode(',',array_filter($request->MiscellaneousValue, 'strlen'));
+        $item->MiscellaneousQty = implode(',',array_filter($request->MiscellaneousQty, 'strlen'));
         $item->totalprice = $request->totalprice;
         $item->discountprice = $request->discountprice;
         $item->updated_at = date('Y-m-d H:i:s');
@@ -2139,6 +2141,7 @@ $sn++;
         $KeyholeEscutchen = null;
         $DoorStops = null;
         $Cylinders = null;
+        $Miscellaneous = null;
         $HingesPrice = null;
         $FloorSpringPrice = null;
         $LocksandLatchesPrice = null;
@@ -2164,6 +2167,7 @@ $sn++;
         $KeyholeEscutchenPrice = null;
         $DoorStopsPrice = null;
         $CylindersPrice = null;
+        $MiscellaneousPrice = null;
 
         if(!empty($item->Hinges)){
             $result = ironmongeryGetCodeName($item->Hinges);
@@ -2339,6 +2343,13 @@ $sn++;
             $CylindersPrice = $result['price'];
             $list = $this->setValue("CylindersKey", $list, $Cylinders, $CylindersPrice);
         }
+        if(!empty($item->Miscellaneous)){
+            $result = ironmongeryGetCodeName($item->Miscellaneous);
+            $Miscellaneous = $result['name'];
+            $MiscellaneousPrice = $result['price'];
+            $list = $this->setValue("MiscellaneousKey", $list, $Miscellaneous, $MiscellaneousPrice);
+        }
+
 
 
         return view('Project.addIronmongeryNew',['tooltip' => $tooltip,'pid' => $pid,'item'=> $item,'Hinges' => $Hinges , 'FloorSpring' => $FloorSpring,'LocksAndLatches' => $LocksAndLatches, 'FlushBolts' => $FlushBolts , 'ConcealedOverheadCloser' => $ConcealedOverheadCloser , 'PullHandles' => $PullHandles , 'PushHandles' => $PushHandles , 'KickPlates' => $KickPlates , 'DoorSelectors' => $DoorSelectors , 'PanicHardware' => $PanicHardware , 'Doorsecurityviewer' => $Doorsecurityviewer , 'Morticeddropdownseals' => $Morticeddropdownseals , 'Facefixeddropseals' => $Facefixeddropseals , 'ThresholdSeal' => $ThresholdSeal , 'AirTransferGrill' => $AirTransferGrill , 'Letterplates' => $Letterplates , 'CableWays' => $CableWays , 'SafeHinge' => $SafeHinge , 'LeverHandle' => $LeverHandle , 'DoorSinage' => $DoorSinage , 'FaceFixedDoorCloser' => $FaceFixedDoorCloser , 'Thumbturn' => $Thumbturn , 'KeyholeEscutchen' => $KeyholeEscutchen,
@@ -2370,6 +2381,8 @@ $sn++;
         'DoorStopsPrice' => $DoorStopsPrice,
         'Cylinders' => $Cylinders,
         'CylindersPrice' => $CylindersPrice,
+        'Miscellaneous' => $Miscellaneous,
+        'MiscellaneousPrice' => $MiscellaneousPrice,
         'list' => $list,
         ]);
 

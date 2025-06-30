@@ -88,6 +88,7 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use App\Models\DoorFrameConstruction;
 use App\Exports\cuttingListExport;
+use App\Exports\AllGlazingBeadsExport;
 use Illuminate\Support\Facades\Validator;
 
 class DoorScheduleController extends Controller
@@ -9011,6 +9012,17 @@ class DoorScheduleController extends Controller
             $vid = $QV->version;
         }
         return Excel::download(new cuttingListExport($quotationId,$versionID), "CutList ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
+    }
+
+    public function allGlazingBeadsExport($quotationId,$versionID)
+    {
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',operator: $versionID)->first();
+            $vid = $QV->version;
+        }
+        return Excel::download(new AllGlazingBeadsExport($quotationId,$versionID), "GlazingBleads Sheet ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 
     public function validateAlls(Request $request)

@@ -44,6 +44,7 @@ use App\Models\IntumescentSealLeafType;
 use App\Models\QuotationContactInformation;
 use App\Models\GlazingSystem;
 use App\Models\SettingCurrency;
+use App\Models\QuotationSiteDeliveryAddress;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use App\Jobs\{GenerateQuotationPDF,pdf1,pdf2,pdf3andpdf4_2,pdf4,pdf6,pdf8};
 
@@ -214,6 +215,106 @@ class PrintInvoiceController extends Controller
         $path2 = public_path() . '/allpdfFile';
         $fileName2 = $id . '2' . '.' . 'pdf';
         $pdf2->save($path2 . '/' . $fileName2);
+
+        $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
+        $QuotationSiteDeliveryAddress = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->first();
+        $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
+
+        $htmlPreview = '<p><span style="font-size:36px"><strong>' .$project->ProjectName.'</strong></span></p>
+
+            <p><span style="font-size:36px"><strong>' .$quotaion->QuotationGenerationId.' -&nbsp;&nbsp; Delivery Summary </strong></span></p>
+
+            <p>&nbsp;</p>
+            <table class="table table-bordered">
+                <tr>
+                    <td class="tbl_color"><span>Address 1</span></td>
+                    <td colspan="3">
+                        <span>' . (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')) . '</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Address 2</span></td>
+                    <td colspan="3">
+                        <span>' . (!empty($QuotationSiteDeliveryAddress->Address2) ? $QuotationSiteDeliveryAddress->Address2 : (!empty($ProjectsAddress->AddressLine2) ? $ProjectsAddress->AddressLine2 : '')) . '</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Country</span></td>
+                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>City</span></td>
+                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Postal Code</span></td>
+                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->PostalCode) ? $QuotationSiteDeliveryAddress->PostalCode : (!empty($ProjectsAddress->PostalCode) ? $ProjectsAddress->PostalCode : '')) . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Delivery Restrictions</span></td>
+                    <td colspan="3"><span>' . ($QuotationShipToInformation->DeliveryRestrictions ?? '') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Wagon Preference</span></td>
+                    <td colspan="3">
+                        <span>';
+                            $wagonOptions = [
+                                '40ft_Artic_Curtain_Side' => '40ft Artic Curtain Side',
+                                '26t_Rigid_Curtain_Side' => '26t Rigid Curtain Side',
+                                '18t_Rigid_Curtain_Side' => '18t Rigid Curtain Side',
+                                '7.5t_Curtain_Side' => '7.5t Curtain Side',
+                                '1t_Box_Van_Curtain_Side' => '1t Box Van Curtain Side',
+                                'Pallet' => 'Pallet',
+                                'Moffit_Off_Load' => 'Moffit Off Load',
+                                'Tail_Lift_Offload' => 'Tail Lift Offload',
+                                'Retractable_Roof' => 'Retractable Roof (Crane Off Load)'
+                            ];
+                            $wagon = $QuotationShipToInformation->WagonPreference ?? '';
+                            $htmlPreview .= $wagonOptions[$wagon] ?? '';
+            $htmlPreview .= '</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Booking Notice & Contact</span></td>
+                    <td colspan="3"><span>' . ($QuotationShipToInformation->Booking ?? '') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Delivery Policy</span></td>
+                    <td colspan="3"><span>' . ($QuotationShipToInformation->Deliverypolicy ?? '') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>FORS Requirement - Silver</span></td>
+                    <td><span>' . ($QuotationShipToInformation->silver ?? 'No') . '</span></td>
+                    <td class="tbl_color"><span>FORS Requirement - Gold</span></td>
+                    <td><span>' . ($QuotationShipToInformation->gold ?? 'No') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Off-loading Requirements</span></td>
+                    <td colspan="3"><span>' . ($QuotationShipToInformation->Offloading ?? '') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>No. of Deliveries</span></td>
+                    <td><span>' . ($QuotationShipToInformation->NoOfDeliveries ?? '') . '</span></td>
+                    <td class="tbl_color"><span>Actual No. of Deliveries</span></td>
+                    <td><span>' . ($QuotationShipToInformation->ActualNoOfDeliveries ?? '') . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Cost Per Delivery</span></td>
+                    <td><span>' . ($QuotationShipToInformation->Costperdelivery ?? '') . '</span></td>
+                    <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
+                    <td><span>' . ($QuotationShipToInformation->AverageNoDoorsetsperdrop ?? '') . '</span></td>
+                </tr>
+            </table>';
+
+        $pdf2_1 = PDF::loadView('Company.pdf_files.quotationDeliverypdf', ['comapnyDetail' => $comapnyDetail,'htmlPreview' => $htmlPreview]);
+
+        // return $pdf2->download('file2.pdf');
+        $path2_1 = public_path() . '/allpdfFile';
+        $fileName2_1 = $id . '2_1' . '.' . 'pdf';
+        $pdf2_1->save($path2_1 . '/' . $fileName2_1);
+
+
+
 
         // for getting margin
         $userIds = CompanyUsers();
@@ -922,7 +1023,8 @@ class PrintInvoiceController extends Controller
                 $FrameTypeRight = \Config::get('constants.base64Images.FrameRebatedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
             } elseif (!empty($tt->FrameType) && $tt->FrameType == "Scalloped") {
-                if($show->DoorsetType == "SD"){
+
+                if($tt->DoorsetType == "SD"){
                 if(!empty($tt->Handing) && $tt->Handing == "Left"){
                   $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                   $FrameTypeRight = \Config::get('constants.base64Images.ScallopedStraight');
@@ -931,7 +1033,8 @@ class PrintInvoiceController extends Controller
                   $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
                   $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                   $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                }}else{
+                }}
+                else{
                     $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                 $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
@@ -940,7 +1043,7 @@ class PrintInvoiceController extends Controller
                 // $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
                 // $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
                 // $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                
+
             }
 
             $FixedSpaceBlock = \Config::get('constants.base64Images.FixedSpaceBlock');
@@ -958,10 +1061,10 @@ class PrintInvoiceController extends Controller
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedLeft;
-                            
+
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
-                  
-                    
+
+
                      if(($show->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                           $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
@@ -969,7 +1072,7 @@ class PrintInvoiceController extends Controller
                        }else{
                            $FrameImageStructureLeft = $FixedSpaceBlock;
                            $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
-                       }   
+                       }
                     }else{
                            $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                            $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
@@ -977,7 +1080,7 @@ class PrintInvoiceController extends Controller
                 } else {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
-                     
+
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                 $FrameImageStructureLeft = $FixedSpaceBlock;
@@ -996,27 +1099,27 @@ class PrintInvoiceController extends Controller
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
-                    $FullBlock = $FixedSpaceBlockScallopedLeft; 
-                                 
+                    $FullBlock = $FixedSpaceBlockScallopedLeft;
+
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
-                    
+
                    if(($show->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                            $FullBlock =$FixedSpaceBlockScallopedLeft;
                        }else{
                           $FullBlock =$FixedSpaceBlockScallopedRight;
-                       }   
+                       }
                     }else{
                           $FullBlock =$FixedSpaceBlockScallopedRight;
                     }
-                      
+
                 } else {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
                     $FullBlock =$FixedSpaceBlockScallopedRight;
-                      
+
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $leaf1RemainingWidth) {
                 $FrameImageStructureLeftLeaf1 = $FixedSpaceBlock;
@@ -2222,7 +2325,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <p class="scalloped-'.$tt->Handing.'-2'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" >'.$tt->ScallopedWidth.'</p>
                                 <p class="scalloped-'.$tt->Handing.'-3'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" ></p>';
                        }
-                        
+
 
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
                                         <p class="frame_sd_t1">-' . $FrameMaterial . '</p>
@@ -3439,6 +3542,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
+                public_path() . '/allpdfFile' . '/' . $fileName2_1,
                 public_path() . '/allpdfFile' . '/' . $fileName3,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
@@ -3451,6 +3555,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
+                public_path() . '/allpdfFile' . '/' . $fileName2_1,
                 public_path() . '/allpdfFile' . '/' . $fileName3,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
@@ -3464,6 +3569,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
+                public_path() . '/allpdfFile' . '/' . $fileName2_1,
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName5,
             ];

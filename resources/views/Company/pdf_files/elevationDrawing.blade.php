@@ -259,7 +259,7 @@
         .visionpanel_t2 {
             position: absolute;
             width: 90px;
-            font-size: 8px;
+            font-size: 7px;
             margin-left: 10px;
             margin-top: 190px;
         }

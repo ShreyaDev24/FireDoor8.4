@@ -1,0 +1,144 @@
+<?php
+
+namespace App\Exports;
+
+use Maatwebsite\Excel\Concerns\FromCollection;
+use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithTitle;
+use Maatwebsite\Excel\Events\AfterSheet;
+use App\Models\Item;
+use App\Models\Quotation;
+
+class VisionPanelGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle
+{
+    protected $id,$vid,$result;
+
+    function __construct($id,$vid,$result) {
+        $this->id = $id;
+        $this->vid = $vid;
+        $this->result = $result;
+    }
+
+    public function collection()
+    {
+        $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id', $this->id)->first();
+
+        $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.GlazingBeadSpecies')->where('QuotationId', $this->id)->where('VersionId',$this->vid)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderBy('items.itemId','ASC')->get();
+
+        $k = 1;
+        $data = [];
+        foreach($item as $value){
+            if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 && $value->Leaf1VisionPanel == 'Yes'){
+                    $LeafVPHeightQty = $value->VisionPanelQuantity * 4;
+
+                $data[] = array(
+                    $value->doorNumber,
+                    $value->DoorType,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->GlazingBeads),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsHeight,
+                    str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->Leaf1VPWidth,
+                    $LeafVPHeightQty,
+                    $value->Leaf1VPHeight1 ?? '',
+                    $value->Leaf1VPHeight1 ? 4 : '',
+                    $value->Leaf1VPHeight2 ?? '',
+                    $value->Leaf1VPHeight2 ? 4 : '',
+                    $value->Leaf1VPHeight3 ?? '',
+                    $value->Leaf1VPHeight3 ? 4 : '',
+                    $value->Leaf1VPHeight4 ?? '',
+                    $value->Leaf1VPHeight4 ? 4 : '',
+                    $value->Leaf1VPHeight5 ?? '',
+                    $value->Leaf1VPHeight5 ? 4 : '',
+                );
+
+                $k++;
+            }
+        }
+
+        $footData = [
+            '','','','','','','','','','','','','','','','','','',''
+        ];
+
+        $allData = [$data,$footData];
+
+        return collect($allData);
+    }
+
+    public function headings(): array
+    {
+        $a = [
+            'Door Ref',
+            'Door Type',
+            'Timber',
+            'Profile',
+            'Glazing Bead Height',
+            'Glazing Bead Depth',
+            'Finish on Bead',
+            'VP1 W',
+            'QTY',
+            'VP1 H',
+            'QTY',
+            'VP2 H',
+            'QTY',
+            'VP3 H',
+            'QTY',
+            'VP4 H',
+            'QTY',
+            'VP5 H',
+            'QTY',
+        ];
+
+
+        $b = ['Vision Panel Glazing Beads'];
+
+        $d = [$b,$a];
+        return $d;
+    }
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class    => function(AfterSheet $event) {
+                $cellRange1 = 'A1:S1';
+                $cellRange = 'A2:S2';
+                $styleArray = [
+                    'font' => [
+                        'bold' => true,
+                    ],
+                    'background' => [
+                        'color'=> '#000000'
+                    ],
+                    'alignment' => [
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'borders' => [
+                        'outline' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'color' => ['argb' => 'FF0000'],
+                        ],
+                    ],
+
+                ];
+                $event->sheet->mergeCells($cellRange1);
+                $columns = range('S', 'O'); // 'O' should be replaced with the last column you need
+
+                foreach ($columns as $column) {
+                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                }
+
+
+                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
+                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
+                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
+            },
+        ];
+    }
+
+    public function title(): string
+    {
+        return 'Vision Panel Glazing Beads';
+    }
+}

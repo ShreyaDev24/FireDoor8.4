@@ -56,33 +56,16 @@ class ResetPasswordController extends Controller
 
     public function change_password(request $request){
 
-        if(Auth::user()->UserType == "2" && !empty($request->id)){
-
+        if(Auth::user()->UserType == "2"){
             $id = $request->id;
-
-            $data = User::where([['id',"=", $id],['id',"=", Auth::user()->id]])->first();
-
+            $data = User::where([['id',"=", Auth::user()->main_id]])->first();
             if($data){
-
                 $data->password = Hash::make($request->password);
                 $data->save();
-
-//                $flash = 'updated';
-//                $request->session()->flash($flash, 'data');
-
-                if($data->UserType =='3'){
-
-                    return redirect('user/details/'.$id);
-
-                }else{
-                    return redirect()->route('company/profile');
-                }
-
+                return redirect()->route('company/profile');
             }else{
                 return redirect("/");
             }
-
-
         }else{
 
             $id = Auth::user()->id;

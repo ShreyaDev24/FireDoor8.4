@@ -74,7 +74,7 @@
                         <th>FINISH ON BEAD</th>
                         <th>SAW CUT W</th>
                         <th>QUANT</th>
-                        <th>SAW CUT L</th>
+                        <th>VP4 H</th>
                         <th>QUANT</th>
                     </tr>
                     <tr style="background:#00B0F0">
@@ -105,6 +105,7 @@
                 @if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
                 <tr>
                     <td>{{ $value->doorNumber }}</td>
+                    <td>{{ $value->DoorType }}</td>
                     <td>{{ $value->SpeciesName }}</td>
                     <td>{{ str_replace('_', ' ', $value->GlazingBeads) }}</td>
                     <td>{{ str_replace('_', ' ', $value->DoorLeafFinish) }}</td>

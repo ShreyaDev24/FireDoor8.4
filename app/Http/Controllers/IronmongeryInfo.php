@@ -19,6 +19,8 @@ use App\Models\Option;
 use App\Models\AddIronmongery;
 use App\Models\IronmongeryName;
 use App\Models\SettingCurrency;
+use App\Models\MiscellaneousInfo;
+use App\Models\SelectedMiscellaneous;
 use App\Imports\DoorScheduleImport;
 use DB;
 use URL;
@@ -698,11 +700,17 @@ class IronmongeryInfo extends Controller
         if($userType=="1" ||$userType=="4"){
             $data = IronmongeryInfoModel::join('selected_ironmongery','selected_ironmongery.ironmongery_id','ironmongery_info.id')
                                         ->where('ironmongery_info.Category',$request->ironCategoryType)->orderBy('ironmongery_info.id','desc')->get();
+            $miscellaneousdata = MiscellaneousInfo::join('selected_miscellaneous','selected_miscellaneous.miscellaneous_id','miscellaneous_info.id')
+                                        ->where('miscellaneous_info.MiscellaneousCategory',$request->ironCategoryType)->orderBy('miscellaneous_info.id','desc')->get();
         }else{
 
             $data = IronmongeryInfoModel::join('selected_ironmongery','selected_ironmongery.ironmongery_id','ironmongery_info.id')
                                         ->wherein( 'selected_ironmongery.UserId', $useTbl )
                                         ->orderBy('ironmongery_info.Category','ASC')->orderBy('ironmongery_info.id','desc')
+                                        ->get();
+            $miscellaneousdata = MiscellaneousInfo::join('selected_miscellaneous','selected_miscellaneous.miscellaneous_id','miscellaneous_info.id')
+                                        ->wherein( 'selected_miscellaneous.user_id', $useTbl )
+                                        ->orderBy('miscellaneous_info.MiscellaneousCategory','ASC')->orderBy('miscellaneous_info.id','desc')
                                         ->get();
 
             // $data = IronmongeryInfoModel::wherein('UserId',$useTbl)->orderBy('id','desc')->get();
@@ -716,7 +724,7 @@ class IronmongeryInfo extends Controller
         }
 
         if(count((array)$data)!="0"){
-            echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency]);
+            echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency,"miscellaneousdata"=>$miscellaneousdata]);
         }else{
             echo json_encode(["status"=>"error","data"=>'']);
         }
@@ -766,8 +774,292 @@ class IronmongeryInfo extends Controller
             return 'success';
         }
 
+        public function addMiscellaneous($id=""){
+            if (Auth::user()->UserType == 2) {
+                $myAdminGroup = getMyCreatedAdmins();
+                $userId = $myAdminGroup;
+                }else{
+
+                    $user = auth()->user();
+
+                    $userId = [$user->id];
+                }
+
+            $option = Option::distinct()->where(['OptionSlug'=>'fire_rating','configurableitems'=>1])->get(['OptionKey','OptionValue']);
+            if(!empty($id)){
+
+                if(Auth::user()->id==1){
+                    $IronmongeryInfo = MiscellaneousInfo::where('MiscellaneousGeneratedKey',$id)->first();
+                }
+                else{
+                    $IronmongeryInfo = MiscellaneousInfo::whereIn('UserId', $userId)->where(['MiscellaneousGeneratedKey' => $id])->first();
+                }
+                if(isset($IronmongeryInfo->CategoryFieldsJSON)){
+                    $categoryFieldsArray = json_decode($IronmongeryInfo->CategoryFieldsJSON);
+                }
+
+                if(!empty($IronmongeryInfo) && (array)$IronmongeryInfo !== []){
+                    return view('IronmongeryInfo.CreateMiscellaneous',['IronmongeryInfo' => $IronmongeryInfo, 'option' => $option]);
+                } else {
+                    return redirect()->route('ironmongery-info/records-miscellaneous');
+                }
+            } else {
+
+                return view('IronmongeryInfo.CreateMiscellaneous',['option' => $option]);
+            }
+        }
+
+        public function StoreMiscellaneous(Request $request){
+             $useId = CompanyUsers();
+                if(!empty($request->MiscellaneousFireRating[0]) && !empty($request->MiscellaneousCategory) && !empty($request->MiscellaneousName) && !empty($request->MiscellaneousCode) && !empty($request->MiscellaneousDescription) && !empty($request->MiscellaneousPrice) && !empty($request->MiscellaneousSupplier)){
+                    if (isset($request->update)){
+                        if(Auth::user()->id==1){
+                            $MiscellaneousInfo = MiscellaneousInfo::where([ 'MiscellaneousGeneratedKey' => $request->update ])->first();
+                        }
+                        else{
+                            $MiscellaneousInfo = MiscellaneousInfo::where('UserId', Auth::user()->id)->where(['MiscellaneousGeneratedKey' => $request->update ])->first();
+                        }
+
+                        $count = count($request->MiscellaneousFireRating);
+                        $i = 0;
+                        // while($count > $i){
+                            $firerating = $request->MiscellaneousFireRating[$i];
+
+                            $Finishescount = count($request->MiscellaneousFinishes);
+                            $k = $Finishescount - 1;
+                            $j = 0;
+                            $Finishes = '';
+                            while($Finishescount > $j){
+                                if($k == $j){
+                                    $Finishes .= $request->MiscellaneousFinishes[$j];
+                                } else {
+                                    $Finishes .= $request->MiscellaneousFinishes[$j].",";
+                                }
+
+                            $j++;
+                            }
+
+                            $Fireratingcount = count($request->MiscellaneousFireRating);
+                            $l = $Fireratingcount - 1;
+                            $m = 0;
+                            if(!empty($MiscellaneousInfo)){
+
+
+                                if($request->hasFile('MiscellaneousImage')){
+                                    $file = $request->file('MiscellaneousImage');
+                                    $ImageName = rando().$file->getClientOriginalName();
+                                    $filepath = public_path('uploads/miscellaneousInfo/');
+                                    $ImageExtension = $file->getClientOriginalExtension();
+                                    if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
+                                        return redirect('IronmongeryInfo/update/'.$request->update);die;
+                                    }
+
+                                    $file->move($filepath,$ImageName);
+                                    $MiscellaneousInfo->MiscellaneousImage = $ImageName;
+                                }
+
+                                if($request->hasFile('MiscellaneousPdfSpecification')){
+                                    $file = $request->file('MiscellaneousPdfSpecification');
+                                    $PdfSpecificationName = rando().$file->getClientOriginalName();
+                                    $filepath = public_path('uploads/miscellaneousInfo/');
+                                    $PdfSpecificationExtension = $file->getClientOriginalExtension();
+                                    if(!in_array($PdfSpecificationExtension,["pdf", "PDF"])){
+                                        File::delete($filepath.$MiscellaneousInfo->Image);
+                                        return redirect('ironmongery-info/update/'.$request->update);die;
+                                    }
+
+                                    $file->move($filepath,$PdfSpecificationName);
+                                    File::delete($filepath.$MiscellaneousInfo->MiscellaneousPdfSpecification);
+                                    File::delete($filepath.$MiscellaneousInfo->MiscellaneousImage);
+                                    $MiscellaneousInfo->MiscellaneousPdfSpecification = $PdfSpecificationName;
+                                }
 
 
 
 
+                                // $MiscellaneousInfo->configurableitems = $request->configurableitems;
+                                $MiscellaneousInfo->MiscellaneousCategory = $request->MiscellaneousCategory;
+                                $MiscellaneousInfo->MiscellaneousName = $request->MiscellaneousName;
+                                $MiscellaneousInfo->MiscellaneousCode = $request->MiscellaneousCode;
+                                // $MiscellaneousInfo->Dimensions = $request->Dimensions;
+                                $MiscellaneousInfo->MiscellaneousDescription = $request->MiscellaneousDescription;
+                                $MiscellaneousInfo->MiscellaneousFinishes = $Finishes;
+                                $MiscellaneousInfo->MiscellaneousFireRating = implode(",",$request->MiscellaneousFireRating);
+                                // $MiscellaneousInfo->FireRating = $firerating;
+                                $MiscellaneousInfo->MiscellaneousFireCartNoUK = $request->MiscellaneousFireCartNoUK;
+                                $MiscellaneousInfo->MiscellaneousFireCartNoEU = $request->MiscellaneousFireCartNoEU;
+                                $MiscellaneousInfo->MiscellaneousPrice = $request->MiscellaneousPrice;
+                                $MiscellaneousInfo->Miscellaneousintumescentseal_fd30 = $request->Miscellaneousintumescentseal_fd30;
+                                $MiscellaneousInfo->Miscellaneousintumescentseal_fd30_price = $request->Miscellaneousintumescentseal_fd30_price;
+
+                                $MiscellaneousInfo->Miscellaneousintumescentseal_fd60 = $request->Miscellaneousintumescentseal_fd60;
+                                $MiscellaneousInfo->Miscellaneousintumescentseal_fd60_price = $request->Miscellaneousintumescentseal_fd60_price;
+
+                                $MiscellaneousInfo->MiscellaneousManMinutes = $request->MiscellaneousManMinutes;
+                                $MiscellaneousInfo->MiscellaneousMachineMinutes = $request->MiscellaneousMachineMinutes;
+
+                                $MiscellaneousInfo->MiscellaneousSupplier = $request->MiscellaneousSupplier;
+                                $MiscellaneousInfo->MiscellaneousStatus = $request->MiscellaneousStatus;
+                                $MiscellaneousInfo->save();
+                            }
+
+                            $i++;
+                        // }
+
+
+
+                        $IronmongeryInfoId = $MiscellaneousInfo->id;
+                        if(!empty($IronmongeryInfoId)){
+                            return redirect()->back()->with('success', 'The Ironmongery Info update successfully!');
+                        }
+                    } else {
+
+
+                        if($request->hasFile('MiscellaneousImage')){
+                            $file = $request->file('MiscellaneousImage');
+                            $ImageName = rando().$file->getClientOriginalName();
+                            $filepath = public_path('uploads/miscellaneousInfo/');
+                            $ImageExtension = $file->getClientOriginalExtension();
+                            if(!in_array($ImageExtension,["jpg", "jpeg", "png", "jpg", "JPG", "JPEG", "PNG"])){
+                                return redirect('ironmongery-info/create');die;
+                            }
+
+                            $file->move($filepath,$ImageName);
+                        }
+
+
+
+
+                        $count = count($request->MiscellaneousFireRating);
+                        $i = 0;
+                        // while($count > $i){
+                            $firerating = $request->MiscellaneousFireRating[$i];
+
+                            $Finishescount = count($request->MiscellaneousFinishes);
+                            $k = $Finishescount - 1;
+                            $j = 0;
+                            $Finishes = '';
+                            while($Finishescount > $j){
+                                if($k == $j){
+                                    $Finishes .= $request->MiscellaneousFinishes[$j];
+                                } else {
+                                    $Finishes .= $request->MiscellaneousFinishes[$j].",";
+                                }
+
+                            $j++;
+                            }
+
+                            $MiscellaneousInfo = new MiscellaneousInfo();
+                            $MiscellaneousInfo->UserId = Auth::user()->id;
+                            $MiscellaneousInfo->MiscellaneousGeneratedKey = rando();
+                            $MiscellaneousInfo->MiscellaneousImage = $ImageName;
+                            $MiscellaneousInfo->MiscellaneousCategory = $request->MiscellaneousCategory;
+                            $MiscellaneousInfo->MiscellaneousName = $request->MiscellaneousName;
+                            $MiscellaneousInfo->MiscellaneousCode = $request->MiscellaneousCode;
+                            // $MiscellaneousInfo->Dimensions = $request->Dimensions;
+                            $MiscellaneousInfo->MiscellaneousDescription = $request->MiscellaneousDescription;
+                            $MiscellaneousInfo->MiscellaneousFinishes = $Finishes;
+                            $MiscellaneousInfo->MiscellaneousFireRating = implode(",",$request->MiscellaneousFireRating);
+                            // $MiscellaneousInfo->FireRating = $firerating;
+                            $MiscellaneousInfo->MiscellaneousFireCartNoUK = $request->MiscellaneousFireCartNoUK;
+                            $MiscellaneousInfo->MiscellaneousFireCartNoEU = $request->MiscellaneousFireCartNoEU;
+                            $MiscellaneousInfo->MiscellaneousPrice = $request->MiscellaneousPrice;
+
+                            $MiscellaneousInfo->Miscellaneousintumescentseal_fd30 = $request->Miscellaneousintumescentseal_fd30;
+                            $MiscellaneousInfo->Miscellaneousintumescentseal_fd30_price = $request->Miscellaneousintumescentseal_fd30_price;
+
+                            $MiscellaneousInfo->Miscellaneousintumescentseal_fd60 = $request->Miscellaneousintumescentseal_fd60;
+                            $MiscellaneousInfo->Miscellaneousintumescentseal_fd60_price = $request->Miscellaneousintumescentseal_fd60_price;
+
+                            $MiscellaneousInfo->MiscellaneousManMinutes = $request->MiscellaneousManMinutes;
+                            $MiscellaneousInfo->MiscellaneousMachineMinutes = $request->MiscellaneousMachineMinutes;
+
+                            $MiscellaneousInfo->MiscellaneousSupplier = $request->MiscellaneousSupplier;
+                            if ($request->hasFile('MiscellaneousPdfSpecification')) {
+                                $file = $request->file('MiscellaneousPdfSpecification');
+                                $PdfSpecificationName = rando().$file->getClientOriginalName();
+                                $filepath = public_path('uploads/miscellaneousInfo/');
+                                $PdfSpecificationExtension = $file->getClientOriginalExtension();
+
+                                if (!in_array($PdfSpecificationExtension, ["pdf", "PDF"])) {
+                                    return redirect('ironmongery-info/create');
+                                }
+
+                                $file->move($filepath, $PdfSpecificationName);
+                                $MiscellaneousInfo->MiscellaneousPdfSpecification = $PdfSpecificationName;
+                            }
+                            $MiscellaneousInfo->MiscellaneousStatus	 = $request->MiscellaneousStatus;
+                            $MiscellaneousInfo->save();
+
+                            $i++;
+                        // }
+                        // dd($MiscellaneousInfo);
+                        if(auth::user()->UserType != 1){
+                            $selectedIronMongry = new SelectedMiscellaneous();
+                            $selectedIronMongry->miscellaneous_id = $MiscellaneousInfo->id;
+                            $selectedIronMongry->user_id = auth()->user()->id;
+                            $selectedIronMongry->save();
+                        }
+
+                        $IronmongeryInfoId = $MiscellaneousInfo->id;
+
+                        if(!empty( $IronmongeryInfoId)){
+                            // return redirect('ironmongery-info/records');
+                            return redirect()->back()->with('success', 'The Ironmongery Info inserted successfully!');
+                        }
+                    }
+                }else{
+                    return redirect()->back()->with('error', 'Please fill required field!');
+                }
+
+                return null;
+        }
+
+    public function miscellaneousRecords($GeneratedKey){
+         $user = Auth::user();
+
+        $UserId = [$user->id];
+
+        $ConfigurableItems = ConfigurableItems::get();
+        if($GeneratedKey == 0){
+            $data = MiscellaneousInfo::whereIn('UserId', $UserId)->orderBy('MiscellaneousCategory','ASC')->orderBy('id','desc')->get();
+        }else{
+            $data = MiscellaneousInfo::whereIn('UserId', $UserId )->where(['MiscellaneousGeneratedKey' => $GeneratedKey])->orderBy('MiscellaneousCategory','ASC')->orderBy('id','desc')->get();
+        }
+
+        if(Auth::user()->id==1){
+            $currency = '';
+        }else{
+            $SettingCurrency = SettingCurrency::whereIn('UserId',$UserId)->get()->first();
+            $currency = empty($SettingCurrency) ? "£" : QuotationCurrency($SettingCurrency['currency']);
+        }
+
+        $IronmongeryName = IronmongeryName::where('status',1)->orderby('category','asc')->get();
+        foreach ($IronmongeryName as $val){
+            $categoryArray[$val->name] = $val->field_list;
+        }
+
+
+        return view('IronmongeryInfo.MiscellaneousList',['data' => $data, 'ConfigurableItems' => $ConfigurableItems, 'currency' => $currency, 'categoryArray' => $categoryArray]);
+    }
+
+    public function miscellaneousDelete(Request $request, $id){
+        if (Auth::user()->UserType == 2) {
+                $myAdminGroup = getMyCreatedAdmins();
+                $useTbl = $myAdminGroup;
+                // $useTbl = array_merge(['1'], $myAdminGroup);
+                }else{
+
+                    $user = auth()->user();
+
+                    $useTbl = [$user->id];
+                }
+
+            $iron_mongery_info = MiscellaneousInfo::where('id',$id)->first();
+            $selected_iron_mongery = SelectedMiscellaneous::where('miscellaneous_id',$id)->get();
+            MiscellaneousInfo::where('id',$id)->whereIn('UserId',$useTbl)->delete();
+            SelectedMiscellaneous::where('miscellaneous_id',$iron_mongery_info->id)
+            ->whereIn('user_id',$useTbl)->delete();
+            return 'success';
+    }
 }
