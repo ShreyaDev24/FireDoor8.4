@@ -4600,8 +4600,8 @@ class OptionController extends Controller
 
     public function glassconfigvalue(Request $request){
         $configurationDoor = configurationDoor($request->confi);
-        $data['GlassType'] = GlassType::where('status',1)->where($configurationDoor,$request->confi)->get();
-        $data['GlazingSystem'] = GlazingSystem::where('status',1)->where($configurationDoor,$request->confi)->get();
+        $data['GlassType'] = GlassType::where('status',1)->where($configurationDoor,$request->confi)->where($request->fireratingGlassGlazing,$request->fireratingGlassGlazing)->get();
+        $data['GlazingSystem'] = GlazingSystem::where('status',1)->where($configurationDoor,$request->confi)->where($request->fireratingGlassGlazing,$request->fireratingGlassGlazing)->get();
         return response()->json($data);
     }
 

@@ -854,10 +854,19 @@ dd(1);
                             <div class="col-md-12">
                                 <div class="position-relative form-group options">
                                     <label for="glasstype " class="d-block">Configuration<span class="text-danger">*</span></label>
-                                    <input type="radio" name="config" id="glassconfigvalue" class="form-group  ml-3 option-style" value="1" required>Streboard
-                                    <input type="radio" name="config" id="glassconfigvalue"  class="form-group  ml-3 option-style" value="2" required>Halspan
-                                    <input type="radio" name="config" id="glassconfigvalue"  class="form-group  ml-3 option-style" value="7" required>Flamebreak
-                                    <input type="radio" name="config" id="glassconfigvalue"  class="form-group  ml-3 option-style" value="8" required>Stredor
+                                    <input type="radio" name="configGlassGlazing" class="form-group  ml-3 option-style" value="1" required>Streboard
+                                    <input type="radio" name="configGlassGlazing" class="form-group  ml-3 option-style" value="2" required>Halspan
+                                    <input type="radio" name="configGlassGlazing" class="form-group  ml-3 option-style" value="7" required>Flamebreak
+                                    <input type="radio" name="configGlassGlazing" class="form-group  ml-3 option-style" value="8" required>Stredor
+                                </div>
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="position-relative form-group firerating-options">
+                                    <label for="glasstype" class="d-block">Fire Rating<span class="text-danger">*</span></label>
+                                    <input type="radio" name="fireratingGlassGlazing" class="form-group  ml-3 option-style" value="NFR" required>NFR
+                                    <input type="radio" name="fireratingGlassGlazing" class="form-group  ml-3 option-style" value="FD30" required>FD30
+                                    <input type="radio" name="fireratingGlassGlazing" class="form-group  ml-3 option-style" value="FD60" required>FD60
                                 </div>
                             </div>
 
@@ -894,6 +903,20 @@ dd(1);
                                 <div class="position-relative form-group">
                                     <label for="glasstype">VP Area Size<span class="text-danger">*</span></label>
                                     <input type="number" min="0" name="vpareasize" placeholder="Enter VPAreaSize"
+                                        class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group">
+                                    <label for="glasstype">Max VP Width<span class="text-danger">*</span></label>
+                                    <input type="number" min="0" name="vpWidth" id="vpWidth" placeholder="Enter Max VP Width"
+                                        class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group">
+                                    <label for="glasstype">Max VP Height<span class="text-danger">*</span></label>
+                                    <input type="number" min="0" name="vpHeight" id="vpHeight" placeholder="Enter Max VP Height"
                                         class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
                             </div>
@@ -2263,46 +2286,55 @@ dd(1);
 
     // take value of glass type and glazing system according door
 
-    $(document).on('change', '#glassconfigvalue', function() {
-        let confi = $(this).val();
-        $.ajax({
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            url: "{{url('options/glassconfigvalue')}}",
-            method: "POST",
-            dataType: "Json",
-            data: {
-                confi: confi,
-                _token: "{{ csrf_token() }}"
-            },
-            success: function(result) {
-                console.log(result);
-
-                // Update Glass Type select field
-                let glassTypeSelect = $('select[name="GlassType"]');
-                glassTypeSelect.empty(); // Clear existing options
-                glassTypeSelect.append('<option value="">Select Glass Type</option>');
-                if (result.GlassType && result.GlassType.length) {
-                    result.GlassType.forEach(function(item) {
-                        glassTypeSelect.append(`<option value="${item.GlassType}">${item.GlassType}</option>`);
-                    });
-                }
-
-                // Update Glazing System select field
-                let glazingSystemSelect = $('select[name="glazingSystem"]');
-                glazingSystemSelect.empty(); // Clear existing options
-                glazingSystemSelect.append('<option value="">Select Glazing System</option>');
-                if (result.GlazingSystem && result.GlazingSystem.length) {
-                    result.GlazingSystem.forEach(function(item) {
-                        glazingSystemSelect.append(`<option value="${item.GlazingSystem}">${item.GlazingSystem}</option>`);
-                    });
-                }
-            },
-            error: function(xhr, status, error) {
-                console.error("Error:", error);
+    $(document).on('change', 'input[name="configGlassGlazing"],input[name="fireratingGlassGlazing"]', function() {
+        setTimeout(function () {
+            let confi = $('input[name="configGlassGlazing"]:checked').val();
+            let fireratingGlassGlazing = $('input[name="fireratingGlassGlazing"]:checked').val();
+            if(fireratingGlassGlazing == 'FD60'){
+                $('#vpHeight').hide();
+                $('#vpWidth').hide();
             }
-        });
+
+            $.ajax({
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                url: "{{url('options/glassconfigvalue')}}",
+                method: "POST",
+                dataType: "Json",
+                data: {
+                    confi: confi,
+                    fireratingGlassGlazing: fireratingGlassGlazing,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(result) {
+                    console.log(result);
+
+                    // Update Glass Type select field
+                    let glassTypeSelect = $('select[name="GlassType"]');
+                    glassTypeSelect.empty(); // Clear existing options
+                    glassTypeSelect.append('<option value="">Select Glass Type</option>');
+                    if (result.GlassType && result.GlassType.length) {
+                        result.GlassType.forEach(function(item) {
+                            glassTypeSelect.append(`<option value="${item.GlassType}">${item.GlassType}</option>`);
+                        });
+                    }
+
+                    // Update Glazing System select field
+                    let glazingSystemSelect = $('select[name="glazingSystem"]');
+                    glazingSystemSelect.empty(); // Clear existing options
+                    glazingSystemSelect.append('<option value="">Select Glazing System</option>');
+                    if (result.GlazingSystem && result.GlazingSystem.length) {
+                        result.GlazingSystem.forEach(function(item) {
+                            glazingSystemSelect.append(`<option value="${item.GlazingSystem}">${item.GlazingSystem}</option>`);
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error:", error);
+                }
+            });
+        }, 10); // a short delay allows the input to fully register the change
     });
 
     function editGlassGlazing(configurable,GlassType,GlazingSystem){
