@@ -2674,6 +2674,15 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
             }
 
+            $OPFLHeight = 'N/A';
+            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
+                $opHeight = is_numeric($tt->OPHeigth) ? $tt->OPHeigth : 0;
+                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                $gap = is_numeric($tt->GAP) ? $tt->GAP : 0;
+
+                $OPFLHeight = $opHeight - $beadThickness - $beadThickness - $gap;
+            }
+
             $elevTbl .= '</table>
 
                     </div>
@@ -2925,21 +2934,21 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">OP Panel Width</td>
-                                    <td class="dicription_blank">' . $tt->OPWidth . '</td>
+                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">OP Panel Height</td>
-                                    <td class="dicription_blank">' . $tt->OPHeigth . '</td>
+                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
                                 </tr>';
                                 } else if($tt->Overpanel == 'Fan_Light'){
                                 $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">FL Width</td>
-                                    <td class="dicription_blank">' . $tt->OPWidth . '</td>
+                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Height</td>
-                                    <td class="dicription_blank">' . $tt->OPHeigth . '</td>
+                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
                                 </tr>';
                                 }
 
