@@ -36,6 +36,16 @@
 
                                         <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
                                         <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
+                                        <li>
+                                            <a href="{{ url('quotation/assign-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
+                                                Assign Plot Ref/Certification No
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="{{ url('quotation/side-screen-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
+                                              Side Screen Assign Plot Ref/ Certification No
+                                            </a>
+                                        </li>
                                         {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                         {{--  <li><a href="javascript:void(0);" onClick="SendToClient();">Send To Client</a></li>  --}}

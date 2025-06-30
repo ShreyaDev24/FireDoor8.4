@@ -64,6 +64,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $screenDim = $FrameDimensions[$FrameLocation];
                 $data[] = [
                     $j++,
+                    $value->plot_ref_no,
+                    $value->certification_no,
                     $screenNumber,
                     $ScreenType,
                     $FrameLocation,
@@ -86,6 +88,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                     $data[] = [
                         $j,
+                        $value->plot_ref_no,
+                        $value->certification_no,
                         $screenNumber,
                         $ScreenType,
                         $FrameLocation,
@@ -110,6 +114,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                     $data[] = [
                         $j,
+                        $value->plot_ref_no,
+                        $value->certification_no,
                         $screenNumber,
                         $ScreenType,
                         $FrameLocation,
@@ -130,6 +136,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 $data[] = [
                     $j,
+                    $value->plot_ref_no,
+                    $value->certification_no,
                     $screenNumber,
                     $ScreenType,
                     $FrameLocation,
@@ -157,6 +165,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         $a = [
             'S.No',
+            'Plot Number/Ref',
+            'IFC/Certifire No/Q mark Plug',
             'Screen No ',
             'Screen Type',
             'Frame Location',
@@ -178,8 +188,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:I1';
-                $cellRange = 'A2:I2';
+                $cellRange1 = 'A1:K1';
+                $cellRange = 'A2:K2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -209,6 +219,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $event->sheet->getColumnDimension('G')->setAutoSize(true);
                 $event->sheet->getColumnDimension('H')->setAutoSize(true);
                 $event->sheet->getColumnDimension('I')->setAutoSize(true);
+                $event->sheet->getColumnDimension('J')->setAutoSize(true);
+                $event->sheet->getColumnDimension('K')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);

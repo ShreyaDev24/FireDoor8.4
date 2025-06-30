@@ -7,23 +7,11 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
-use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use App\Models\Item;
-use App\Models\Project;
 use App\Models\Quotation;
-use App\Models\DoorFrameConstruction;
-use App\Models\BOMCalculation;
-use Carbon\Carbon;
-use App\Models\Company;
-use App\Models\SideScreenItemMaster;
-use Auth;
 
-class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTitle
+class FanLightGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
-    /**
-    * @return \Illuminate\Support\Collection
-    */
     protected $id,$vid,$result;
 
     function __construct($id,$vid,$result) {
@@ -41,18 +29,19 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $k = 1;
         $data = [];
         foreach($item as $value){
-            if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+            if ($value->Overpanel == 'Fan_Light'){
                 $data[] = array(
                     $value->doorNumber,
-                    $value->plot_ref_no,
-                    $value->certification_no,
+                    $value->DoorType,
                     $value->SpeciesName,
-                    str_replace('_', ' ', $value->GlazingBeads),
+                    str_replace('_', ' ', $value->OPGlazingBeads),
+                    $value->OPGlazingBeadsThickness,
+                    $value->OPGlazingBeadsHeight,
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->Leaf1VPHeight1 - 1,
-                    $value->VisionPanelQuantity * 4,
-                    $value->Leaf1VPWidth - 1,
-                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)
+                    $value->OPWidth,
+                    4,
+                    $value->OPHeigth,
+                    4
                 );
 
                 $k++;
@@ -60,7 +49,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         }
 
         $footData = [
-            '','','','','','','','','','','','',''
+            '','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -72,19 +61,20 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         $a = [
             'Door Ref',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
+            'Door Type',
             'Timber',
-            'Section',
+            'Profile',
+            'Glazing Bead Height',
+            'Glazing Bead Depth',
             'Finish on Bead',
-            'Saw Cut W',
-            'Quantity',
-            'Saw Cut L',
-            'Quantity'
+            'FL1 W',
+            'QTY',
+            'FL1 H',
+            'QTY',
         ];
 
 
-        $b = ['Glazing Beads for Doors'];
+        $b = ['Fan Light Glazing Beads'];
 
         $d = [$b,$a];
         return $d;
@@ -93,8 +83,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:J1';
-                $cellRange = 'A2:J2';
+                $cellRange1 = 'A1:K1';
+                $cellRange = 'A2:K2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -115,7 +105,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('J', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('K', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
@@ -131,6 +121,6 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
     public function title(): string
     {
-        return 'Glazing Beads for Doors';
+        return 'Fan Light Glazing Beads';
     }
 }

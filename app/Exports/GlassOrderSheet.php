@@ -44,6 +44,9 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
                 $data[] = array(
                     $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->DoorType,
+                    $value->certification_no,
                     $value->GlassThickness,
                     str_replace('_', ' ', $value->GlassType),
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 8 : $value->Leaf1VPHeight1 - 5,
@@ -60,7 +63,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         }
 
         $footData = [
-            '','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','','','',
         ];
 
         $allData = [$data,$footData];
@@ -72,6 +75,9 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     {
         $a = [
             'Door Number',
+            'Plot Number/Ref',
+            'Door Number',
+            'IFC/Certifire No/Q mark Plug',
             'Glass Thickness in mm',
             'Glass Type',
             'Cut Height Bottom Panel',
@@ -91,8 +97,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:I1';
-                $cellRange = 'A2:I2';
+                $cellRange1 = 'A1:L1';
+                $cellRange = 'A2:L2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -113,7 +119,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('I', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('L', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);

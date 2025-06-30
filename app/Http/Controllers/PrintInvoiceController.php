@@ -715,11 +715,11 @@ class PrintInvoiceController extends Controller
 
             if($quotaion->configurableitems == 4){
                 $a .= '<tr>
-                            <td>' . $i . '</td>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
-                            <td>' . $show->DoorQuantity . '</td>
                             <td>' . $show->SOHeight . '</td>
                             <td>' . $show->SOWidth . '</td>
                             <td>' . $show->SOWallThick . '</td>
@@ -777,11 +777,11 @@ class PrintInvoiceController extends Controller
             }else{
 
                 $a .= '<tr>
-                            <td>' . $i . '</td>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
-                            <td>' . $show->DoorQuantity . '</td>
                             <td>' . $show->SOHeight . '</td>
                             <td>' . $show->SOWidth . '</td>
                             <td>' . $show->SOWallThick . '</td>
@@ -3127,6 +3127,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <thead>
                     <tr>
                         <th>Door / Screen No</th>
+                        <th>Assign Plot Ref</th>
+                        <th>Certification No</th>
                         <th>Quality Check- CNC</th>
                         <th>Quality Check- VP</th>
                         <th>Quality Check- Assembly</th>
@@ -3139,6 +3141,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 foreach ($DoorNumber as $bb) {
                     $elevTbl .=  '<tr>
                         <td>' . $bb->doorNumber . '</td>
+                        <td>' . $bb->plot_ref_no . '</td>
+                        <td>' . $bb->certification_no . '</td>
                         <td></td>
                         <td></td>
                         <td></td>
