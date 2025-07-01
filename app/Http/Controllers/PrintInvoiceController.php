@@ -1381,7 +1381,7 @@ class PrintInvoiceController extends Controller
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '158' : '170') .'px;
                                         position: relative;
                                         bottom: '. (
-                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing != "Left")? (($show->Leaf1VisionPanel == "Yes")? '-22':'2'):  '1') : (($show->Leaf1VisionPanel == "Yes")?'2':'-22')  )  .'px;
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing != "Left")? (($show->Leaf1VisionPanel == "Yes")? '-22':'2'):  '1') : (($tt->Leaf1VisionPanel == "Yes")?'2':'-22')  )  .'px;
                                         left: '. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((empty($tt->Handing) && $tt->Handing == "Left")?'-32': '-30') : '-31') .'px;'
                                            .
