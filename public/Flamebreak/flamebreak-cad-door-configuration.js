@@ -587,6 +587,7 @@ const render = (CustomElement = null) => {
             var OverPanelWidth = OverPanelWidthToShow / 5;
 
             var OverPanelHeight = $('input[name="oPHeigth"]').val();
+             var OpFrameThickness = $('input[name="OpBeadThickness"]').val();
             var OverPanelHeightToShow = 0;
             // if(OverPanelHeight == ""){
             //     OverPanelHeight = 0;
@@ -1061,7 +1062,7 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 35)         // set x position of left side of text
                             .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (FrameThickness + Gap));   // define the text to display
+                             .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
                         //Text of Width of Outer frame of door
 
                         svg.append('line')//measurement line of height of over panel of door
@@ -1111,7 +1112,7 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)         // set x position of left side of text
                             .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (FrameThickness + Gap));   // define the text to display
+                             .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
                         //Text of Width of Outer frame of door
 
                         svg.append('line')//measurement line of height of over panel of door
