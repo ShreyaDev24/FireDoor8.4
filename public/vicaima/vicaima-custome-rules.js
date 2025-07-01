@@ -2859,6 +2859,10 @@ $(document).ready(function(){
         filterSpecies();
         frameMaterialFilter($("#fireRating").val());
         framTypeChangeInputEnableDisable();
+        var doorsetType = $('#doorsetType').val();
+        if(doorsetType){
+            visionPanel2Off(doorsetType);
+        }
     }, 3000)
     sideLight1Change()
     sideLight2Change()
@@ -6637,5 +6641,23 @@ function SideLightHeight(type){
         let s2Height = frameHeight + oPHeigth;
         $("#SL2Height").val(s2Height);
       }
+    }
+}
+
+
+// After copying data, if the doorset type is changed from 'DD' or 'leaf_and_a_half' to 'SD' and Vision Panel 2 is ON, it will automatically turn OFF Vision Panel 2
+$("#doorsetType").on('change',function(){
+    visionPanel2Off($(this).val());
+});
+
+function visionPanel2Off(door){
+   let doorold = $("#oldFirerating").val();
+    if((doorold != '' && doorold == 'DD' && door == 'SD') || (doorold != '' && doorold == 'leaf_and_a_half' && door == 'SD')){
+        let visionpanel2  = $("#leaf2VisionPanel").val();
+        if(visionpanel2 == 'Yes'){
+            $("#leaf2VisionPanel").val('No').trigger("change");
+            $("#distanceFromTopOfDoorforLeaf2").val('');
+            $("#distanceFromTheEdgeOfDoorforLeaf2").val('');
+        }
     }
 }
