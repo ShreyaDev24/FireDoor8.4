@@ -5582,6 +5582,8 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
             <th>Glass Type</th>
             <th>Glazing System</th>
             <th>VP Area Size</th>
+            <th>VP Width</th>
+            <th>VP Height</th>
             <th>Action</th>
         </tr>
     </thead>
@@ -5622,6 +5624,8 @@ $i = 1;
         <td>'.$value->GlassType.'</td>
         <td>'.$value->GlazingSystem.'</td>
         <td>'.$value->VPAreaSize.'</td>
+        <td>'.$value->VPWidth.'</td>
+        <td>'.$value->VPHeight.'</td>
         <td>'.$action.'</td>
         </tr>';
     }
