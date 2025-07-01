@@ -906,14 +906,14 @@ dd(1);
                                         class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 vpSize">
                                 <div class="position-relative form-group">
                                     <label for="glasstype">Max VP Width<span class="text-danger">*</span></label>
                                     <input type="number" min="0" name="vpWidth" id="vpWidth" placeholder="Enter Max VP Width"
                                         class="form-control" pattern="[0-9]+([\.,][0-9]+)?" step="0.01" required>
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 vpSize">
                                 <div class="position-relative form-group">
                                     <label for="glasstype">Max VP Height<span class="text-danger">*</span></label>
                                     <input type="number" min="0" name="vpHeight" id="vpHeight" placeholder="Enter Max VP Height"
@@ -2291,8 +2291,13 @@ dd(1);
             let confi = $('input[name="configGlassGlazing"]:checked').val();
             let fireratingGlassGlazing = $('input[name="fireratingGlassGlazing"]:checked').val();
             if(fireratingGlassGlazing == 'FD60'){
-                $('#vpHeight').hide();
-                $('#vpWidth').hide();
+                $('.vpSize').show();
+                $('#vpHeight').val(0);
+                $('#vpWidth').val(0);
+            }else{
+                $('.vpSize').hide();
+                $('#vpHeight').val(0);
+                $('#vpWidth').val(0);
             }
 
             $.ajax({
@@ -2337,8 +2342,16 @@ dd(1);
         }, 10); // a short delay allows the input to fully register the change
     });
 
-    function editGlassGlazing(configurable,GlassType,GlazingSystem){
+    function editGlassGlazing(configurable,FireRating,GlassType,GlazingSystem){
         let confi = configurable;
+        let fireratingGlassGlazing = FireRating;
+        if(fireratingGlassGlazing == 'FD60'){
+                $('.vpSize').show();
+            }else{
+                $('.vpSize').hide();
+                $('#vpHeight').val(0);
+                $('#vpWidth').val(0);
+            }
         $.ajax({
             headers: {
                 'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -2348,6 +2361,7 @@ dd(1);
             dataType: "Json",
             data: {
                 confi: confi,
+                fireratingGlassGlazing: fireratingGlassGlazing,
                 _token: "{{ csrf_token() }}"
             },
             success: function(result) {
@@ -2700,8 +2714,11 @@ dd(1);
         $('#add_intumescent_seals_arrangement_form')[0].reset();
         $('#add_glazingtype_form')[0].reset();
         $('#glazingTypeAddFormcustome_form')[0].reset();
-        $('#add_GlassGlazingType')[0].reset();
         $('#add_Intumescent_form')[0].reset();
+        var form = $('#add_GlassGlazingType_form')[0];
+        if (form && form.tagName === 'FORM') {
+            form.reset();
+        }
         $("#accousticsImage").empty();
         $("#doorDimensionImage").empty();
         $("#Accoustics_image").attr('required',true);
@@ -3000,14 +3017,17 @@ dd(1);
         $('input:checkbox[name="firerating[]"][value="'+FD30+'"]').prop('checked',true);
         $('input:checkbox[name="firerating[]"][value="'+FD60+'"]').prop('checked',true);
     }
-    function editGlassGlazingSystem(id,Configurableitems,GlassType,GlazingSystem,VpAreaSize){
+    function editGlassGlazingSystem(id,Configurableitems,FireRating,GlassType,GlazingSystem,VpAreaSize,VPWidth,VPHeight){
         $("#addGlassGlazingType").modal('show');
         $("input[name=id]").val(id);
         $("select[name=glazingSystem]").val(GlazingSystem).trigger('change');
         $("select[name=GlassType]").val(GlassType).trigger('change');
         $("input[name=vpareasize]").val(VpAreaSize);
-        $('input[name=config][value='+Configurableitems+']').attr('checked', 'checked');
-        editGlassGlazing(Configurableitems,GlassType,GlazingSystem);
+        $("input[name=vpWidth]").val(VPWidth);
+        $("input[name=vpHeight]").val(VPHeight);
+        $('input[name=configGlassGlazing][value='+Configurableitems+']').attr('checked', 'checked');
+        $('input[name=fireratingGlassGlazing][value='+FireRating+']').attr('checked', 'checked');
+        editGlassGlazing(Configurableitems,FireRating,GlassType,GlazingSystem);
     }
 
     function editGlazingSystemCustome(id,Streboard,Halspan,Flamebreak,Stredor,NFR,FD30,FD60,GlazingSystem,GlazingBeadFixingDetail,selectedPrice,selectedId,GlazingThickness){

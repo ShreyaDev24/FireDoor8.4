@@ -3709,8 +3709,8 @@ class OptionController extends Controller
             case 'GlassGlazing':
                 $glazingSystem = $request->glazingSystem;
                 $GlassType = $request->GlassType;
-                $config = configurationDoor($request->config);
-                if(!empty($request->config) && !empty($request->vpareasize) && !empty($GlassType) &&  !empty($glazingSystem)){
+                $config = configurationDoor($request->configGlassGlazing);
+                if(!empty($request->configGlassGlazing) && !empty($request->vpareasize) && !empty($GlassType) &&  !empty($glazingSystem)){
                     if(!empty($request->id)){
                         //update in glazing system and selectedglazingsystem table
                         $data = GlassGlazingSystem::find($request->id);
@@ -3723,12 +3723,15 @@ class OptionController extends Controller
                     $GlassTypeId = GlassType::where('status',1)->where('GlassType',$GlassType)->first();
                     $GlazingSystemId = GlazingSystem::where('status',1)->where('GlazingSystem',$glazingSystem)->first();
 
-                    $data->Configurableitems = $request->config;
+                    $data->Configurableitems = $request->configGlassGlazing;
+                    $data->FireRating = $request->fireratingGlassGlazing;
                     $data->glass_id = $GlassTypeId->id;
                     $data->glazing_system = $GlazingSystemId->id;
                     $data->GlassType = $GlassType;
                     $data->GlazingSystem = $glazingSystem;
                     $data->VPAreaSize = $request->vpareasize;
+                    $data->VPWidth = $request->vpWidth;
+                    $data->VPHeight = $request->vpHeight;
                     $data->UserId = Auth::user()->id;
                     $data->save();
 
