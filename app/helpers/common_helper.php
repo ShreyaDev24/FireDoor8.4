@@ -7,6 +7,7 @@ use App\Models\BOMDetails;
 use App\Models\ConfigurableDoorFormula;
 use App\Models\Color;
 use App\Models\SelectedColor;
+use App\Models\GlassGlazingSystem;
 use App\Models\Item;
 use App\Models\ItemMaster;
 use App\Models\Customer;
@@ -5578,12 +5579,12 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
 
     $tbl1 = '';
     $aa = GlazingSystem::leftJoin('selected_glazing_system', function ($join) use ($authdata): void {
-        $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
-            ->where('selected_glazing_system.userId', '=', $authdata->id);
-    })->join('glass_glazing_system','glass_glazing_system.glazing_system','glazing_system.id')->
-    wherein('glass_glazing_system.UserId', $UserId)
-    ->where('glazing_system.'.$configurableItem,$configurableItemId)
-    ->select('glazing_system.*','selected_glazing_system.selectedPrice','selected_glazing_system.id as selectedId','selected_glazing_system.userId','glass_glazing_system.GlassType','glass_glazing_system.VPAreaSize','glass_glazing_system.UserId','glass_glazing_system.id as mainId')
+        $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId');
+            // ->where('selected_glazing_system.userId', '=', $authdata->id)
+    })->join('glass_glazing_system','glass_glazing_system.glazing_system','glazing_system.id')
+    // ->wherein('glass_glazing_system.UserId', $UserId)
+    // ->where('glazing_system.'.$configurableItem,$configurableItemId)
+    ->select('glazing_system.*','selected_glazing_system.selectedPrice','selected_glazing_system.id as selectedId','selected_glazing_system.userId','glass_glazing_system.GlassType','glass_glazing_system.VPAreaSize','glass_glazing_system.UserId','glass_glazing_system.VPWidth','glass_glazing_system.VPHeight','glass_glazing_system.id as mainId')
     ->orderBy('glass_glazing_system.GlassType', 'ASC')->orderBy('glass_glazing_system.GlazingSystem', 'ASC')->get();
 
 
@@ -5606,6 +5607,10 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
 
 $i = 1;
     foreach($aa as $value){
+        $FireRating = $value->FD60 ? 'FD60' : ($value->FD30 ? 'FD30' : ($value->NFR ? 'NFR' : ''));
+        $GlassGlazingSystem = GlassGlazingSystem::find($value->mainId);
+        $GlassGlazingSystem->FireRating = $value->FD60 ? 'FD60' : ($value->FD30 ? 'FD30' : ($value->NFR ? 'NFR' : ''));
+        $GlassGlazingSystem->save();
 
         $configurableItem = "<img src='".url('/')."/images/green_icon.svg'>";
 
@@ -5616,7 +5621,7 @@ $i = 1;
         if (($value->UserId != 1 || Auth::user()->UserType == 1)) {
             $action = '
             <div style="width:100px;">
-                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlassGlazingSystem('.$value->mainId.",'".$configurableItemId. "','" . $value->GlassType . "','" . $value->GlazingSystem . "',".$value->VPAreaSize.')">
+                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editGlassGlazingSystem('.$value->mainId.",'".$configurableItemId. "','".$FireRating. "','" . $value->GlassType . "','" . $value->GlazingSystem . "',".$value->VPAreaSize.",".$value->VPWidth.",".$value->VPHeight.')">
                     <i class="fa fa-edit text-white text-center"></i>
                 </button>
                 <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'GlassGlazingSystem\','.$value->mainId.')">
