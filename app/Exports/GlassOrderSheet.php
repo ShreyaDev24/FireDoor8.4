@@ -101,7 +101,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             'Door Type',
             'Door Number',
             'Plot Number/Ref',
-            'Door Number',
+            'Door Type',
             'IFC/Certifire No/Q mark Plug',
             'Glass Thickness in mm',
             'Glass Type',
