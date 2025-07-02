@@ -5099,6 +5099,7 @@ function architrave(isModal=0) {
 
 $("#doorsetType").on('change',function(){
     var doorsetType = $('#doorsetType').val();
+    visionPanel2Off($(this).val());
     localStorage.setItem('doorsetType',doorsetType);
 });
 // $.when(doorLeafFacingPrice()).done(function(){
@@ -5106,6 +5107,10 @@ $("#doorsetType").on('change',function(){
 // });
 $(document).ready(function(){
     setTimeout(function(){
+        var doorsetType = $('#doorsetType').val();
+        if(doorsetType){
+            visionPanel2Off(doorsetType);
+        }
         leafReadonly();
     }, 4000);
     let overPanel = $("#overpanel").val();
@@ -6230,5 +6235,18 @@ function SideLightHeight(type){
         },1000);
 
       }
+    }
+}
+
+// After copying data, if the doorset type is changed from 'DD' or 'leaf_and_a_half' to 'SD' and Vision Panel 2 is ON, it will automatically turn OFF Vision Panel 2
+function visionPanel2Off(door){
+   let doorold = $("#oldFirerating").val();
+    if((doorold != '' && doorold == 'DD' && door == 'SD') || (doorold != '' && doorold == 'leaf_and_a_half' && door == 'SD')){
+        let visionpanel2  = $("#leaf2VisionPanel").val();
+        if(visionpanel2 == 'Yes'){
+            $("#leaf2VisionPanel").val('No').trigger("change");
+            $("#distanceFromTopOfDoorforLeaf2").val('');
+            $("#distanceFromTheEdgeOfDoorforLeaf2").val('');
+        }
     }
 }
