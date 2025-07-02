@@ -2428,10 +2428,12 @@ class ItemListController extends Controller
             $query = GlassGlazingSystem::select(
                 'glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value',
                 'glass_glazing_system.GlassType',
-                'glazing_system.*'
+                'glazing_system.*',
+                'glass_type.GlassThickness'
             )
             ->join('glazing_system', 'glazing_system.id', 'glass_glazing_system.glazing_system')
             ->leftJoin('selected_glazing_system', 'selected_glazing_system.glazingId', 'glass_glazing_system.glazing_system')
+            ->join('glass_type', 'glass_type.GlassType', 'glass_glazing_system.GlassType')
             ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
             ->where('glazing_system.' . $configurationDoor, $pageId)
             ->whereIn('glazing_system.editBy', $userIds)
@@ -2463,10 +2465,12 @@ class ItemListController extends Controller
                 $query = GlassGlazingSystem::select(
                     'glass_glazing_system.VPAreaSize as leaf1VpAreaSizeM2Value',
                     'glass_glazing_system.GlassType',
-                    'glazing_system.*'
+                    'glazing_system.*',
+                    'glass_type.GlassThickness'
                 )
                 ->join('glazing_system', 'glazing_system.id', 'glass_glazing_system.glazing_system')
                 ->join('selected_glazing_system', 'selected_glazing_system.glazingId', 'glass_glazing_system.glazing_system')
+                ->join('glass_type', 'glass_type.GlassType', 'glass_glazing_system.GlassType')
                 ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
                 ->where('glazing_system.' . $configurationDoor, $pageId)
                 ->where('selected_glazing_system.userId', Auth::user()->id);

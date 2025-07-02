@@ -24,8 +24,8 @@ class AllGlazingBeadsExport implements WithMultipleSheets
     {
         return [
             'Vision Panel Glazing Beads' => new VisionPanelGlazingBeads($this->id,$this->vid,$this->result),
-            'Side Light Glazing Beads' => new SideLightGlazingBeads($this->id,$this->vid,$this->result),
-            'Fan Light Glazing Beads' => new FanLightGlazingBeads($this->id,$this->vid,$this->result),
+            // 'Side Light Glazing Beads' => new SideLightGlazingBeads($this->id,$this->vid,$this->result),
+            // 'Fan Light Glazing Beads' => new FanLightGlazingBeads($this->id,$this->vid,$this->result),
         ];
     }
 }
