@@ -1395,7 +1395,7 @@ class BOMController extends Controller
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
-    public function QualityControlPrint($quatationId, string $versionID,$version): void{
+    public function QualityControlPrint($quatationId, string $versionID): void{
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
         $result = BOMCAlculationExport($quatationId,$versionID);
