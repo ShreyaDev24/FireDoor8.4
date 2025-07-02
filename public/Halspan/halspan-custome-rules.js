@@ -5068,6 +5068,10 @@ $(document).ready(function(){
         }
         leafReadonly();
     }, 4000);
+    var doorsetType = $('#doorsetType').val();
+    if(doorsetType){
+        visionPanel2Off(doorsetType);
+    }
     let overPanel = $("#overpanel").val();
     let sideLight1 = $("#sideLight1").val();
     let sideLight2 = $("#sideLight2").val();
@@ -6236,6 +6240,14 @@ function visionPanel2Off(door){
     if((doorold != '' && doorold == 'DD' && door == 'SD') || (doorold != '' && doorold == 'leaf_and_a_half' && door == 'SD')){
         let visionpanel2  = $("#leaf2VisionPanel").val();
         if(visionpanel2 == 'Yes'){
+            $("#leaf2VisionPanel").val('No').trigger("change");
+            $("#distanceFromTopOfDoorforLeaf2").val('');
+            $("#distanceFromTheEdgeOfDoorforLeaf2").val('');
+        }
+    }
+    if(door == 'SD'){
+        let visionpanel2  = $("#leaf2VisionPanel").val();
+         if(visionpanel2 == 'Yes'){
             $("#leaf2VisionPanel").val('No').trigger("change");
             $("#distanceFromTopOfDoorforLeaf2").val('');
             $("#distanceFromTheEdgeOfDoorforLeaf2").val('');
