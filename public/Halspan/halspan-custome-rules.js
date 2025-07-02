@@ -5170,12 +5170,13 @@ function glass_glazing_system(isstatus = false){
                     }else{
                         glassTypeInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlassType +'</option>';
                     }
+                    $("#glassThickness").val(data[i].GlassThickness);
                 }
             } else {
                 glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
             }
             $("#glassType").empty().append(glassTypeInnerHtml);
-            $("#glassThickness").val(0);
+            // $("#glassThickness").val(0);
         }
     });
 }
@@ -5230,6 +5231,7 @@ function glazing_system(isIntegrity,isstatus = false){
                     }else{
                         glazingSystemInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlazingSystem +'</option>';
                     }
+                    $("#glassThickness").val(data[i].GlassThickness);
                 }
             } else {
                 glazingSystemInnerHtml += '<option value="">No Glazing Systems Found</option>';
