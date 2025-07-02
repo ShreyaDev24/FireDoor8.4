@@ -414,7 +414,7 @@ const render = (CustomElement = null) => {
             LeafHeightNoOP = 0;
         } else {
             //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
-            LeafHeightNoOPForMap = (LeafHeightNoOP + parseInt(UnderCut)) / 5;
+            LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
         }
 
         if (LeafHeightNoOP > 0) {
@@ -8401,7 +8401,7 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
                 // var RemainedSpaceInLeaf1 = LeafWidth1 - (DistanceFromTheEdgeOfDoorForLeaf1ToShow + Leaf1VisionPanelWidthToShow);
                 var RemainedSpaceInLeaf1 = DistanceFromTheEdgeOfDoorForLeaf1ToShow;
-
+///need to copy 
 
           if (ShowMeasurements) {
 

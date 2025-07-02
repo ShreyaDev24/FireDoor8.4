@@ -414,7 +414,7 @@ const render = (CustomElement = null) => {
             LeafHeightNoOP = 0;
         } else {
             //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
-            LeafHeightNoOPForMap = (LeafHeightNoOP + parseInt(UnderCut)) / 5;
+            LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
         }
 
         if (LeafHeightNoOP > 0) {
