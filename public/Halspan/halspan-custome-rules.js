@@ -2309,7 +2309,7 @@ $(document).ready(function() {
                     $("#SideLight1GlazingBeadSpecies").empty().append(innerHtml1);
                     $("#SideLight2GlazingBeadSpecies").empty().append(innerHtml1);
                 }
-                $("#glazingSystemsThickness").val(0);
+                // $("#glazingSystemsThickness").val(0);
             }
         });
     }

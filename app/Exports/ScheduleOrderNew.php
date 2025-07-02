@@ -168,8 +168,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $GlazingSystemThickness = $item[$i]->GlazingSystemThickness;
             $GlazingBeads = $item[$i]->GlazingBeads;
             $GlazingBeadsThickness = $item[$i]->GlazingBeadsThickness;
-            $glazingBeadsWidth = $item[$i]->glazingBeadsWidth;
-            $glazingBeadsHeight = $item[$i]->glazingBeadsHeight;
+            $glazingBeadsWidth = $item[$i]->glazingBeadsHeight;
+            $glazingBeadsHeight = $item[$i]->glazingBeadsThickness;
             $glazingBeadsFixingDetail = $item[$i]->glazingBeadsFixingDetail;
             $GlazingBeadSpecies = lippingSpeciesName($item[$i]->GlazingBeadSpecies);
             //Frame
