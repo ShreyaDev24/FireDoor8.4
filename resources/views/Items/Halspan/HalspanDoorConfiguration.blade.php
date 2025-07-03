@@ -231,6 +231,7 @@
                         <div hidden id="glazing-beads-filter">{{route('items/glazing-beads-filter')}}</div>
                         <div hidden id="glass-type-filter">{{route('items/glass-type-filter')}}</div>
                         <div hidden id="glazing-thikness-filter">{{route('items/glazing-thikness-filter')}}</div>
+                        <div hidden id="glass-glazing-VP-filter">{{route('items/glass-glazing-VP-filter')}}</div>
                         <div hidden id="frame-material-filter">{{route('items/frame-material-filter')}}</div>
                         <div hidden id="scallopped-lipping-thickness">{{route('items/scallopped-lipping-thickness')}}
                         </div>

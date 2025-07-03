@@ -483,6 +483,7 @@ function pageIdentity(){
 $(document).ready(function() {
     $("#leaf1VisionPanel").change(function(){
         visionPanelChange();
+        $("#visionPanelQuantity").trigger('change');
     });
 
     $("#visionPanelQuantity").change(function(){
@@ -725,6 +726,7 @@ $(document).ready(function() {
     //getting glazing thikness filter using glazing systems
     $("#glazingSystems").change(function(){
         GlazingSystemsChange();
+        GlassGlazingSystemsVPChange();
     });
     $("#opglazingSystems").change(function(){
         GlazingSystemsChange(null,"opglazingSystems");
@@ -1914,6 +1916,7 @@ $(document).ready(function() {
             LippingIns($("#fireRating").val());
             VisionPanelValidations($("#fireRating").val());
             glazing_system($('#fireRating').val(),true);
+            GlassGlazingSystemsVPChange();
 
         }
         IntumescentSeals();
@@ -3297,6 +3300,50 @@ $(document).ready(function() {
                         // }
                     } else {
                         $("#glazingSystemsThickness").val(0);
+                    }
+                }
+            });
+        }
+    }
+
+    function GlassGlazingSystemsVPChange(){
+
+        var glazingSystems = $("#glazingSystems").val();
+        var glassType = $("#glassType").val();
+        var fireRating = $("#fireRating").val();
+        var vP1Width = $("#vP1Width").val();
+        var vP1Height1 = $("#vP1Height1").val();
+        var leaf1VpAreaSizeM2 = $("#leaf1VpAreaSizeM2").val();
+
+
+        if(glazingSystems != '' && glassType != '' && fireRating != '' && vP1Width != '' && vP1Height1 != ''){
+            let pageId = pageIdentity();
+            $.ajax({
+                url:  $("#glass-glazing-VP-filter").html(),
+                method:"POST",
+                dataType:"Json",
+                data:{pageId:pageId,glazingSystems:glazingSystems,glassType:glassType,fireRating:fireRating,vP1Height1:vP1Height1,vP1Width:vP1Width,leaf1VpAreaSizeM2:leaf1VpAreaSizeM2,_token:$("#_token").val()},
+                success: function(result){
+                    if(result.status === "error"){
+                        let messages = result.messages;
+                        let finalMessage = messages.join("<br>");
+
+                        // Show SweetAlert
+                        Swal({
+                            icon: 'warning',
+                            title: 'Validation Warning',
+                            html: finalMessage,
+                            confirmButtonText: 'OK'
+                        });
+                        $('#vP1Width').css({'border':'1px solid red'});
+                        $('#vP1Height1').css({'border':'1px solid red'});
+
+                    } else if(result.status === "ok"){
+                        // Handle success logic
+                        var data = result.messages;
+                        $('#vP1Width').css({'border':'1px solid #ced4da'});
+                        $('#vP1Height1').css({'border':'1px solid #ced4da'});
+                        // you can process the valid data here if needed
                     }
                 }
             });
