@@ -72,10 +72,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->GlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
-                    $value->VisionPanelQuantity * 4,
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
-                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2),
                     $value->Leaf1VPHeight1 ?? '',
                     $value->Leaf1VPHeight1 ? 4 : '',
                     $value->Leaf1VPHeight2 ?? '',
@@ -105,8 +104,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function headings(): array
     {
         $a = [
-            'Door Ref', 'Door Type', 'Timber', 'Profile',
-        'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
+        'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+        'Glazing Bead Height', 'Glazing Bead Depth',
         'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
         'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
         ];
