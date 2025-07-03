@@ -6243,3 +6243,9 @@ function visionPanel2Off(door){
     }
 }
 
+$('#vP1Width, #vP1Height1').on('input', function () {
+    if ($('#vpSameAsLeaf1').val() === 'Yes') {
+        $('#vP2Width').val($('#vP1Width').val());
+        $('#vP2Height1').val($('#vP1Height1').val());
+    }
+});
