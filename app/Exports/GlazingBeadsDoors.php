@@ -44,25 +44,26 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
                 $LeafVPHeightQty = $value->VisionPanelQuantity * 4;
                 $data[] = array(
-                $value->doorNumber,
-                $value->DoorType,
-                $value->SpeciesName,
-                str_replace('_', ' ', $value->GlazingBeads),
-                $value->GlazingBeadsThickness,
-                $value->glazingBeadsHeight,
-                str_replace('_', ' ', $value->DoorLeafFinish),
-                $value->Leaf1VPWidth,
-                $LeafVPHeightQty,
-                $value->Leaf1VPHeight1 ?? '',
-                $value->Leaf1VPHeight1 ? 4 : '',
-                $value->Leaf1VPHeight2 ?? '',
-                $value->Leaf1VPHeight2 ? 4 : '',
-                $value->Leaf1VPHeight3 ?? '',
-                $value->Leaf1VPHeight3 ? 4 : '',
-                $value->Leaf1VPHeight4 ?? '',
-                $value->Leaf1VPHeight4 ? 4 : '',
-                $value->Leaf1VPHeight5 ?? '',
-                $value->Leaf1VPHeight5 ? 4 : '',
+                    $value->DoorType,
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->GlazingBeads),
+                    str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
+                    $value->Leaf1VPHeight1 ?? '',
+                    $value->Leaf1VPHeight1 ? 4 : '',
+                    $value->Leaf1VPHeight2 ?? '',
+                    $value->Leaf1VPHeight2 ? 4 : '',
+                    $value->Leaf1VPHeight3 ?? '',
+                    $value->Leaf1VPHeight3 ? 4 : '',
+                    $value->Leaf1VPHeight4 ?? '',
+                    $value->Leaf1VPHeight4 ? 4 : '',
+                    $value->Leaf1VPHeight5 ?? '',
+                    $value->Leaf1VPHeight5 ? 4 : '',
                 );
 
                 $k++;
@@ -81,8 +82,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function headings(): array
     {
         $a = [
-            'Door Ref', 'Door Type', 'Timber', 'Profile',
-        'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
+        'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+        'Glazing Bead Height', 'Glazing Bead Depth',
         'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
         'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
         ];
