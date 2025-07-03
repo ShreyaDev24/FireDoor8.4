@@ -519,20 +519,22 @@ $(document).ready(function() {
             $("#distanceFromTopOfDoor").attr({'required':true,'readonly':false});
             $("#AreVPsEqualSizes").attr('disabled',false);
         } else {
+            if($("#leaf1VisionPanel").val() == 'Yes'){
+                 $("#AreVPsEqualSizes").attr({'disabled':true,'required':false,'readonly':true}).val('');
+                $("#distanceBetweenVPs").attr('required',false);
+                $("#distanceBetweenVPs").attr('readonly',true);
+                // $("#vP1Width").val('');
+                $("#vP1Width").attr('readonly',false);
+                $("#vP1Width").attr('required',true);
+                $("#vP1Height1").attr('required',true);
+                $("#vP1Height1").attr('readonly',false);
+                $("#distanceBetweenVPs").val(0);
 
-            $("#AreVPsEqualSizes").attr({'disabled':true,'required':false,'readonly':true}).val('');
-            $("#distanceBetweenVPs").attr('required',false);
-            $("#distanceBetweenVPs").attr('readonly',true);
-            // $("#vP1Width").val('');
-            $("#vP1Width").attr('readonly',false);
-            $("#vP1Width").attr('required',true);
-            $("#vP1Height1").attr('required',true);
-            $("#vP1Height1").attr('readonly',false);
-            $("#distanceBetweenVPs").val(0);
-
-            for(var i=2;i<=5;i++){
-                $("#vP1Height"+i).val('').attr({'readonly':true,'required':false});
+                for(var i=2;i<=5;i++){
+                    $("#vP1Height"+i).val('').attr({'readonly':true,'required':false});
+                }
             }
+           
         }
     });
 
