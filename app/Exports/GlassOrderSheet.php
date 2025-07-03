@@ -77,9 +77,14 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
                     $value->VisionPanelQuantity,
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
-                    ''
+                    $value->Leaf1VPHeight2,
+                    $value->Leaf1VPHeight2 ? $value->VisionPanelQuantity * 1 : '',
+                    $value->Leaf1VPHeight3,
+                    $value->Leaf1VPHeight3 ? $value->VisionPanelQuantity * 1 : '',
+                    $value->Leaf1VPHeight4,
+                    $value->Leaf1VPHeight4 ? $value->VisionPanelQuantity * 1 : '',
+                    $value->Leaf1VPHeight5,
+                    $value->Leaf1VPHeight5 ? $value->VisionPanelQuantity * 1 : '',
                 );
 
                 $k++;
@@ -87,7 +92,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         }
 
         $footData = [
-            '','','','','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','','',
         ];
 
         $allData = [$data,$footData];
@@ -105,12 +110,17 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             'IFC/Certifire No/Q mark Plug',
             'Glass Thickness in mm',
             'Glass Type',
-            'Cut Height Bottom Panel',
-            'Cut Width Bottom Panel',
-            'Qty of Glass Panels to Order (Bottom)',
-            'Cut Size Height Top Panel',
-            'Cut Size Width Top Panel',
-            'Qty of Glass Panels to Order (Top)'
+            'VP1 H',
+            'VP W',
+            'QTY',
+            'VP2 H',
+            'QTY',
+            'VP3 H',
+            'QTY',
+            'VP4 H',
+            'QTY',
+            'VP5 H',
+            'QTY',
         ];
 
         $b = ['Glass Order Sheet'];
@@ -122,8 +132,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:M1';
-                $cellRange = 'A2:M2';
+                $cellRange1 = 'A1:Q1';
+                $cellRange = 'A2:Q2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -144,7 +154,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('M', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('Q', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
