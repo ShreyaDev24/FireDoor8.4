@@ -2514,11 +2514,9 @@ class ItemListController extends Controller
         }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
             $fireRating = 'FD60';
         }
-        $fireRatingDoor = fireRatingDoor($fireRating);
         $vP1Width = $request->vP1Width;
         $vP1Height1 = $request->vP1Height1;
         $leaf1VpAreaSizeM2 = $request->leaf1VpAreaSizeM2;
-        $configurationDoor = configurationDoor($pageId);
         if(in_array($pageId,[1,2,7,8]) && !empty($fireRating) && $fireRating == 'FD60' && !empty($glassType) && !empty($glazingSystem) && !empty($vP1Width) && !empty($vP1Height1) && !empty($leaf1VpAreaSizeM2)){
 
             $query = GlassGlazingSystem::select('glass_glazing_system.*')

@@ -5049,9 +5049,9 @@ function checkGlassGlazingFilter($h, $w, $VPWidth, $VPHeight,$maxArea,$inputArea
         return "Error: The width (".round($inputWidth, 2)." m) exceeds the maximum allowed width of ".round($dbVPWidth, 2)." m.";
     }
 
-    // Enforce 100mm buffer if both dimensions match exactly
+    // if both dimensions match exactly
     if (round($h) == round($VPHeight) && round($w) == round($VPWidth)) {
-        return "Error: Both width and height match maximum limits. Reduce either dimension by at least 100mm for compliance.";
+        return "Error: Both width and height match maximum limits.";
     }
 
     // Optional check against DB values
