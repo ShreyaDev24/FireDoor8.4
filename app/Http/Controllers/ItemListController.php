@@ -2503,5 +2503,57 @@ class ItemListController extends Controller
         }
     }
 
+    public function fileterGlassGlazingVPChange(Request $request): void{
+        $pageId = $request->pageId;
+        $userIds = CompanyUsers();
+        $glazingSystem = $request->glazingSystems;
+        $glassType = $request->glassType;
+        $fireRating = $request->fireRating;
+        if($fireRating == 'FD30' || $fireRating == 'FD30s'){
+            $fireRating = 'FD30';
+        }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
+            $fireRating = 'FD60';
+        }
+        $fireRatingDoor = fireRatingDoor($fireRating);
+        $vP1Width = $request->vP1Width;
+        $vP1Height1 = $request->vP1Height1;
+        $leaf1VpAreaSizeM2 = $request->leaf1VpAreaSizeM2;
+        $configurationDoor = configurationDoor($pageId);
+        if(in_array($pageId,[1,2,7,8]) && !empty($fireRating) && $fireRating == 'FD60' && !empty($glassType) && !empty($glazingSystem) && !empty($vP1Width) && !empty($vP1Height1) && !empty($leaf1VpAreaSizeM2)){
+
+            $query = GlassGlazingSystem::select('glass_glazing_system.*')
+            ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
+            ->where('glass_glazing_system.GlazingSystem', str_replace('_', ' ', $glazingSystem))
+            ->where('glass_glazing_system.FireRating', $fireRating)
+            ->where('glass_glazing_system.Configurableitems', $pageId)
+            ->wherein('glass_glazing_system.UserId', [1,Auth::user()->id])
+            ->orderBy('glass_glazing_system.GlazingSystem', 'ASC')
+            ->get();
+
+            if(!empty($query)){
+                $errorMessages = [];
+
+                foreach ($query as $value) {
+                    if($value->VPWidth != 0 && $value->VPHeight != 0){
+                        $result = checkGlassGlazingFilter($vP1Height1, $vP1Width, $value->VPWidth, $value->VPHeight,$leaf1VpAreaSizeM2, $value->VPAreaSize);
+                        if ($result !== true) {
+                            $errorMessages[] = $result;
+                        }
+                    }
+                }
+
+                if (!empty($errorMessages)) {
+                    echo json_encode(['status'=>'error','messages' => array_unique($errorMessages)]);
+                }else{
+                    echo json_encode(['status'=>'ok','messages' => $query]);
+                }
+
+            }else{
+                echo json_encode(['status'=>'ok','messages' => $query]);
+            }
+        }else{
+            echo json_encode(['status'=>'ok','messages' => '']);
+        }
+    }
 
 }

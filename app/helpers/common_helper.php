@@ -5025,6 +5025,45 @@ function fireRatingDoor($firerating): string{
     return $fireRatingValue;
 }
 
+function checkGlassGlazingFilter($h, $w, $VPWidth, $VPHeight,$maxArea,$inputArea)
+{
+    // Convert to meters (assuming inputs are in millimeters)
+    $inputHeight = $h / 1000;
+    $inputWidth = $w / 1000;
+    $dbVPHeight = $VPHeight / 1000;
+    $dbVPWidth = $VPWidth / 1000;
+
+    // Validate area
+    if ($inputArea < $maxArea) {
+        return "Note: Vision panel area value must be less than the maximum allowed (".round($inputArea, 2)." m²) when using this Glazing System.";
+    }
+
+
+    // Validate height
+    if ($inputHeight > $dbVPHeight) {
+        return "Error: The height (".round($inputHeight, 2)." m) exceeds the maximum allowed height of ".round($dbVPHeight, 2)." m.";
+    }
+
+    // Validate width
+    if ($inputWidth > $dbVPWidth) {
+        return "Error: The width (".round($inputWidth, 2)." m) exceeds the maximum allowed width of ".round($dbVPWidth, 2)." m.";
+    }
+
+    // Enforce 100mm buffer if both dimensions match exactly
+    if (round($h) == round($VPHeight) && round($w) == round($VPWidth)) {
+        return "Error: Both width and height match maximum limits. Reduce either dimension by at least 100mm for compliance.";
+    }
+
+    // Optional check against DB values
+    if ($inputHeight > $dbVPHeight || $inputWidth > $dbVPWidth) {
+        return "Warning: The entered VP size exceeds the available glass glazing system dimensions (max {$dbVPWidth}m x {$dbVPHeight}m).";
+    }
+
+    // Valid
+    return true;
+}
+
+
 function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
     $tbl1 = '';
     $aa = ArchitraveType::leftJoin('selected_architrave_type', function ($join) use ($authdata): void {

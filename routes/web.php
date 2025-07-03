@@ -163,6 +163,7 @@ Route::prefix('items')->group(function (): void {
 
     Route::post('/architrave-system-filter',[App\Http\Controllers\ItemListController::class,'fileterArchitraveSystem'])->name('items/architrave-system-filter');
     Route::post('/glazing-thikness-filter',[App\Http\Controllers\ItemListController::class,'fileterGlazingThikness'])->name('items/glazing-thikness-filter');
+    Route::post('/glass-glazing-VP-filter',[App\Http\Controllers\ItemListController::class,'fileterGlassGlazingVPChange'])->name('items/glass-glazing-VP-filter');
     Route::post('/glazing-beads-filter',[App\Http\Controllers\ItemListController::class,'fileterGlazingBeads'])->name('items/glazing-beads-filter');
     Route::post('/scallopped-lipping-thickness',[App\Http\Controllers\ItemListController::class,'scalloppedLippingThickness'])->name('items/scallopped-lipping-thickness');
     Route::post('/flat-lipping-thickness',[App\Http\Controllers\ItemListController::class,'flatLippingThickness'])->name('items/flat-lipping-thickness');
