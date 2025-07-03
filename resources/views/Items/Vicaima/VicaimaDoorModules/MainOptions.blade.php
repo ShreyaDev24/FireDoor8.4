@@ -123,6 +123,7 @@
                                    @endforeach
                                </select>
                            </div>
+                           <input type="hidden" name="oldFirerating" id="oldFirerating" value="@if(isset($Item["DoorsetType"])){{$Item["DoorsetType"]}}@else{{''}}@endif">
                        </div>
                        <div class="col-md-6">
                            <div class="position-relative form-group">

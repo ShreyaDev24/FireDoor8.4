@@ -2087,6 +2087,7 @@ class DoorScheduleController extends Controller
                     $SlBeadHeight = trim((string) $row[$j++]);
                     $SL1Depth = trim((string) $row[$j++]);
                     $SL1Transom = trim((string) $row[$j++]);
+                    $test2 = trim((string) $row[$j++]);
                     $SideLight2 = trim((string) $row[$j++]);
                     $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
                     $SideLight2GlassType = trim((string) $row[$j++]);
@@ -2108,6 +2109,7 @@ class DoorScheduleController extends Controller
                     $SL2Transom = trim((string) $row[$j++]);
                     $SLtransomHeightFromTop = trim((string) $row[$j++]);
                     $SLtransomThickness = trim((string) $row[$j++]);
+                    $test1 = trim((string) $row[$j++]);
                     $LippingType = trim((string) $row[$j++]);
                     $LippingThickness = trim((string) $row[$j++]);
                     $LippingSpecies = trim((string) $row[$j++]);
@@ -9123,15 +9125,16 @@ class DoorScheduleController extends Controller
             $rules['OPGlazingBeadsThickness'] = 'required';
             $rules['OPGlazingBeadsHeight'] = 'required';
             $rules['OPGlazingBeadsFixingDetail'] = 'required';
-            $rules['OPGlazingBeadSpecies'] = 'required';
         }
 
         // Optional Section: Lipping
         if (!empty($door['FireRating'])) {
-            $rules['IntumescentLeapingSealType'] = 'required';
-            $rules['IntumescentLeapingSealLocation'] = 'required';
-            $rules['IntumescentLeapingSealColor'] = 'required';
-            $rules['IntumescentLeapingSealArrangement'] = 'required';
+            if($door['FireRating'] != "NFR"){
+                $rules['IntumescentLeapingSealType'] = 'required';
+                $rules['IntumescentLeapingSealLocation'] = 'required';
+                $rules['IntumescentLeapingSealColor'] = 'required';
+                $rules['IntumescentLeapingSealArrangement'] = 'required';
+            }
         }
 
          if ($door['accoustics'] == 'Yes') {
