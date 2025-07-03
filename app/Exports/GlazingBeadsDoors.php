@@ -42,17 +42,27 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $data = [];
         foreach($item as $value){
             if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+                $LeafVPHeightQty = $value->VisionPanelQuantity * 4;
                 $data[] = array(
-                    $value->doorNumber,
-                    $value->plot_ref_no,
-                    $value->certification_no,
-                    $value->SpeciesName,
-                    str_replace('_', ' ', $value->GlazingBeads),
-                    str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->Leaf1VPHeight1 - 1,
-                    $value->VisionPanelQuantity * 4,
-                    $value->Leaf1VPWidth - 1,
-                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)
+                $value->doorNumber,
+                $value->DoorType,
+                $value->SpeciesName,
+                str_replace('_', ' ', $value->GlazingBeads),
+                $value->GlazingBeadsThickness,
+                $value->glazingBeadsHeight,
+                str_replace('_', ' ', $value->DoorLeafFinish),
+                $value->Leaf1VPWidth,
+                $LeafVPHeightQty,
+                $value->Leaf1VPHeight1 ?? '',
+                $value->Leaf1VPHeight1 ? 4 : '',
+                $value->Leaf1VPHeight2 ?? '',
+                $value->Leaf1VPHeight2 ? 4 : '',
+                $value->Leaf1VPHeight3 ?? '',
+                $value->Leaf1VPHeight3 ? 4 : '',
+                $value->Leaf1VPHeight4 ?? '',
+                $value->Leaf1VPHeight4 ? 4 : '',
+                $value->Leaf1VPHeight5 ?? '',
+                $value->Leaf1VPHeight5 ? 4 : '',
                 );
 
                 $k++;
@@ -71,16 +81,10 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function headings(): array
     {
         $a = [
-            'Door Ref',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Timber',
-            'Section',
-            'Finish on Bead',
-            'Saw Cut W',
-            'Quantity',
-            'Saw Cut L',
-            'Quantity'
+            'Door Ref', 'Door Type', 'Timber', 'Profile',
+        'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
+        'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
+        'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
         ];
 
 
@@ -93,8 +97,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:J1';
-                $cellRange = 'A2:J2';
+                $cellRange1 = 'A1:S1';
+                $cellRange = 'A2:S2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -115,7 +119,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('J', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('S', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
