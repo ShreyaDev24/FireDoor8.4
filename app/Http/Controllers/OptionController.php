@@ -2964,20 +2964,29 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
+                $Configurableitems = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
                 $glasstype = trim((string) $row[$j++]);
                 $glazing = trim((string) $row[$j++]);
                 $vpareasize = trim((string) $row[$j++]);
+                $VPHeight = trim((string) $row[$j++]);
+                $VPWidth = trim((string) $row[$j++]);
+                $configurationDoor = configurationDoor($Configurableitems);
                 if($vpareasize !== "N/A"){
-                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('Flamebreak',7)->first();
-                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('Flamebreak',7)->first();
+                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD60',$FireRating)->where('Streboard',$Configurableitems)->first();
+                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('FD60',$FireRating)->where('status',1)->where('Streboard',$Configurableitems)->first();
+
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
-                        $data->Configurableitems = intval(7);
+                        $data->Configurableitems = intval(1);
                         $data->glass_id = $GlassType->id;
                         $data->glazing_system = $GlazingSystem->id;
                         $data->GlassType = $GlassType->GlassType;
                         $data->GlazingSystem = $GlazingSystem->GlazingSystem;
                         $data->VPAreaSize = $vpareasize;
+                        $data->VPHeight = $VPHeight;
+                        $data->VPWidth = $VPWidth;
+                        $data->FireRating = $FireRating;
                         $data->UserId = Auth::user()->id;
                         $data->save();
                     }
