@@ -395,7 +395,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/generateBOMPrint' , [App\Http\Controllers\BOMController::class,'BomCalculationPrint'])->name('generateBOMPrint');
     Route::post('/ScreengenerateBOMPrint' , [App\Http\Controllers\BOMController::class,'ScreenBomCalculationPrint'])->name('ScreengenerateBOMPrint');
     Route::post('/DoorOrderSheetUrl' , [App\Http\Controllers\BOMController::class,'DoorOrderSheetUrl'])->name('DoorOrderSheetUrl');
-    Route::get('/QualityControlPrint/{id}/{vid}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
+    Route::get('/QualityControlPrint/{id}/{version}/{vid}' , [App\Http\Controllers\BOMController::class,'QualityControlPrint'])->name('QualityControlPrint');
 
     Route::post('/FrameTransomsUrl' , [App\Http\Controllers\BOMController::class,'FrameTransomsUrl'])->name('FrameTransomsUrl');
 
