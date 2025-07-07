@@ -777,7 +777,7 @@
     <input type="hidden" name="BomCalculationUrl" id="BomCalculationUrl"
         value="{{ url('quotation/generateBOMPrint') }}" />
     <input type="hidden" name="QualityControlUrl" id="QualityControlUrl"
-        value="{{ url('quotation/QualityControlPrint') }}/{{ $quotation->id }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+        value="{{ url('quotation/QualityControlPrint') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
     <input type="hidden" name="ScreenBomCalculationUrl" id="ScreenBomCalculationUrl"
         value="{{ url('quotation/ScreengenerateBOMPrint') }}" />
     <input type="hidden" name="DoorOrderSheetUrl" id="DoorOrderSheetUrl"
