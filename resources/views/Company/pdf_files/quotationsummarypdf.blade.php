@@ -3,16 +3,37 @@
     <head>
         <title>quotaion Summary PDF</title>
         <style>
-
             .cusTable {
                 width: 100%;
                 border-collapse: collapse;
             }
 
-            table th,
-            table td {
-                border: 0px solid #555;
-                padding-left: 5px;
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                font-family: Arial, sans-serif;
+                font-size: 14px;
+            }
+            .table-bordered td, .table-bordered th {
+                border: 1px solid #ddd;
+                padding: 8px;
+                vertical-align: top;
+            }
+            .tbl_color {
+                background-color: #f2f2f2;
+                font-weight: bold;
+                width: 25%;
+            }
+            td span {
+                display: block;
+                word-wrap: break-word;
+            }
+            h1, h2 {
+                margin: 0;
+                padding: 0;
+            }
+            p {
+                margin: 10px 0;
             }
 
             .imgClass {
@@ -117,18 +138,21 @@
             @page {
                 size: 710pt 925pt;
             }
+
             .footImg{
-                width:80px;
-                height:80px;
-                margin-top:-140px;
+                width:90px;
+                height:90px;
+                margin-top:-155px;
                 margin-left:748px;
             }
-            .bomlogo{
-            min-width: 100px;
-            max-width: 120px;
-            min-height: 100px;
-            max-height: 120px;
+
+            .bomlogo {
+                min-width: 100px;
+                max-width: 120px;
+                min-height: 100px;
+                max-height: 120px;
             }
+
         </style>
     </head>
     <body style="position: relative;">
@@ -262,81 +286,15 @@
             }
             @endphp
             @if (strpos($ExtractPdf2, 'COC:') === false)
-                <table cellpadding="1" cellspacing="1" style="width:500px">
+                <table class="table table-bordered">
                     <tr>
-                        <td><p><span style="font-size:18px">COC:</span></p></td>
-                        <td style="text-align:right"><p><span style="font-size:18px">{{!empty($project->coc) ? $project->coc : ''}}</span></p></td>
+                        <td class="tbl_color"><span>COC:</span></td>
+                        <td colspan="3">{{ !empty($project->coc) ? $project->coc : '' }}</td>
                     </tr>
                 </table>
             @endif
             </div>
-            <div class="footer2">
-                @if(!empty( $pdf_footer->msg))
-                    @php
-                        if(!empty($comapnyDetail->CompanyAddressLine1)){
-                            $companyAddress = $comapnyDetail->CompanyAddressLine1;
-                        } else {
-                            $companyAddress = '';
-                        }
-                        if(!empty($customer->CstCompanyAddressLine1)){
-                            $CustomerAddress = $customer->CstCompanyAddressLine1;
-                        } else {
-                            $CustomerAddress = '';
-                        }
-                        if(!empty($comapnyDetail->CompanyPhone)){
-                            $CompanyPhone = $comapnyDetail->CompanyPhone;
-                        } else {
-                            $CompanyPhone = '';
-                        }
 
-                        if(!empty($comapnyDetail->CompanyEmail)){
-                            $CompanyEmail = $comapnyDetail->CompanyEmail;
-                        } else {
-                            $CompanyEmail = '';
-                        }
-
-                        if(!empty($comapnyDetail->CompanyWebsite)){
-                            $CompanyWebsite = $comapnyDetail->CompanyWebsite;
-                        } else {
-                            $CompanyWebsite = '';
-                        }
-
-                        if(!empty($comapnyDetail->CompanyName)){
-                            $CompanyName = $comapnyDetail->CompanyName;
-                        } else {
-                            $CompanyName = '';
-                        }
-
-                        if(isset($contractorName)){
-                            $contractorName = $contractorName;
-                        }else{
-                            $contractorName = '';
-                        }
-
-
-                        $ExtractPdf3 = $pdf_footer->msg;
-                        $str3 = [
-                            '[CompanyAddress]','[CustomerAddress]','[CompanyPhone]','[CompanyEmail]','[CompanyWebsite]','[CompanyName]', '[ContractorName]'
-                        ];
-                        $rplc3 = [$companyAddress,$CustomerAddress,$CompanyPhone,$CompanyEmail,$CompanyWebsite,$CompanyName, $contractorName];
-
-                        $footer =  str_replace($str3,$rplc3,$ExtractPdf3);
-
-                    @endphp
-
-                @endif
-                <div class="col3">
-                    {!!$footer!!}
-                </div>
-                <div class="col4">
-                    @if(!empty($comapnyDetail->ComplogoBase64))
-                    <img src="{{$comapnyDetail->ComplogoBase64}}" style="width:150px; position:absolute; right: 10px;" class="footImg" alt="Logo" />
-                    @else
-                    <!-- <img src="{{Base64Image('defaultImg')}}" class="footImg" alt="Logo" /> -->
-                    {!! Base64Image('defaultImg') !!}
-                    @endif
-                </div>
-            </div>
         <!-- Page 2 End -->
     </body>
 </html>
