@@ -1395,7 +1395,7 @@ class BOMController extends Controller
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
-    public function QualityControlPrint($quatationId, string $versionID): void{
+    public function QualityControlPrint($quatationId, string $version,$versionID): void{
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
         $result = BOMCAlculationExport($quatationId,$versionID);
@@ -1480,7 +1480,8 @@ class BOMController extends Controller
             }
 
 
-            $bomVersion = BOMCalculation::where('QuotationId',$id)->get()->first();
+            $bomVersion = BOMCalculation::where('QuotationId',$quatationId)->get()->first();
+
             if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
                 $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType')->distinct('item_master.itemID')->get();
             }else{
