@@ -867,12 +867,14 @@ function frameonoff(){
         $("#plantonStopHeight").attr({'readonly':true,'required':false}).val('');
         $("#rebatedWidth").attr({'readonly':true,'required':false}).val('');
         $("#rebatedHeight").attr({'readonly':true,'required':false}).val('');
+        $("#ScallopedWidth").attr({'readonly':true,'required':false}).val('');
+        $("#ScallopedHeight").attr({'readonly':true,'required':false}).val('');
         $("#frameDepth").val('');
         $("#standardWidth").val('');
         $("#standardHeight").val('');
         $("#frameWidth").val('');
         $("#frameHeight").val('');
-        $("#frameFinish").val('');
+        $("#frameFinish").attr({'readonly':true,'required':false}).val('');
         $("#framefinishColor").val('');
         $("#frameCostuction").val('');
         $("#extLinerValue").val('');
