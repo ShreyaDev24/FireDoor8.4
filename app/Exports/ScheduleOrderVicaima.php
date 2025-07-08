@@ -323,7 +323,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $ArchitraveFinishColor = $item[$i]->ArchitraveFinishColor;
             $ArchitraveSetQty = $item[$i]->ArchitraveSetQty;
 
-            $DoorsetPrice = $item[$i]->DoorsetPrice;
+            $DoorsetPrice = ($item[$i]->AdjustPrice != 0) ? $item[$i]->AdjustPrice : $item[$i]->DoorsetPrice;
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
