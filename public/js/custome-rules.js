@@ -278,11 +278,14 @@ function pageIdentity(){
             if(doorsetType == 'SD'){
                 $("#opCoreWidth").val(calculate);
             } else {
-                opCoreWidthcalculates = calculate + calculateCoreWidth2 + gap;
+                var opCoreWidthcalculates = calculate + calculateCoreWidth2 + gap;
                 $("#opCoreWidth").val(opCoreWidthcalculates);
             }
 
             $("#opCoreHeight").val(opCoreHeightcalculate);
+        }else{
+            $("#opCoreWidth").val(0);
+            $("#opCoreHeight").val(0);
         }
         $("#coreWidth1").val(calculate);
         $("#coreHeight").val(calculateCoreHeight);
