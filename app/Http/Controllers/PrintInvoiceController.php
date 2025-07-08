@@ -83,6 +83,7 @@ class PrintInvoiceController extends Controller
             $configurationItem = $quotaion->configurableitems;
         }
 
+        $configurationItemName = configurationDoor($configurationItem);
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -2700,6 +2701,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">General</th>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Door Core</td>
+                                    <td class="dicription_blank">' . $configurationItemName . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Door Type</td>
