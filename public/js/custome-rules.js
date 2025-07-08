@@ -5524,7 +5524,6 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         let pageId = pageIdentity();
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
-        if(fireRatingValue != null && isStatus){
         if(fireRatingValue != null && isstatus){
             fireRatingValue = $("#FireRating-value").data("value");
             if(fireRatingValue != ""){
