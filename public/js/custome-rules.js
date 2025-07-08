@@ -1190,7 +1190,7 @@ function sideLight1Change(isstatus = false){
         doorLeafFacingPrice('sideLight11',"Yes");
         doorLeafFacingPrice('sideLight2',"Yes");
         // FramePrice('sideLight3');
-        updateTransomFields();
+        // updateTransomFields();
 
     } else {
 
@@ -1274,7 +1274,7 @@ function sideLight2Change(isstatus = false){
             $("#SL2Transom").attr({ 'disabled': false, "required": true });
         }
         doorLeafFacingPrice('sideLight12',"Yes");
-        updateTransomFields();
+        // updateTransomFields();
 
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
@@ -1367,7 +1367,7 @@ function copyOfSideLite1Change(isstatus = false){
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': true, "required": false }).val('');
         }
     }
-    updateTransomFields();
+    // updateTransomFields();
     SideLightHeight('sideLight1');
     SideLightHeight('sideLight2');
 }
@@ -5525,6 +5525,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
         if(fireRatingValue != null && isStatus){
+        if(fireRatingValue != null && isstatus){
             fireRatingValue = $("#FireRating-value").data("value");
             if(fireRatingValue != ""){
                 fireRating = fireRatingValue;
