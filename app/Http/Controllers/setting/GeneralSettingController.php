@@ -73,24 +73,24 @@ class GeneralSettingController extends Controller
             ],
 
             // Door Frame Construction Settings
-            'DoorFrame' => [
-                'HalfLipped' => [
-                    'width' => $request->input('doorFrame_halfLippedWidth'),
-                    'height' => $request->input('doorFrame_halfLippedHeight'),
-                ],
-                'Mitre' => [
-                    'width' => $request->input('doorFrame_mitreWidth'),
-                    'height' => $request->input('doorFrame_mitreHeight'),
-                ],
-                'Mortice1' => [
-                    'width' => $request->input('doorFrame_mortice1Width'),
-                    'height' => $request->input('doorFrame_mortice1Height'),
-                ],
-                'Butt' => [
-                    'width' => $request->input('doorFrame_buttWidth'),
-                    'height' => $request->input('doorFrame_buttHeight'),
-                ],
-            ],
+            // 'DoorFrame' => [
+            //     'HalfLipped' => [
+            //         'width' => $request->input('doorFrame_halfLippedWidth'),
+            //         'height' => $request->input('doorFrame_halfLippedHeight'),
+            //     ],
+            //     'Mitre' => [
+            //         'width' => $request->input('doorFrame_mitreWidth'),
+            //         'height' => $request->input('doorFrame_mitreHeight'),
+            //     ],
+            //     'Mortice1' => [
+            //         'width' => $request->input('doorFrame_mortice1Width'),
+            //         'height' => $request->input('doorFrame_mortice1Height'),
+            //     ],
+            //     'Butt' => [
+            //         'width' => $request->input('doorFrame_buttWidth'),
+            //         'height' => $request->input('doorFrame_buttHeight'),
+            //     ],
+            // ],
 
             // Plant-On Stop Settings
             'PlantOn' => [

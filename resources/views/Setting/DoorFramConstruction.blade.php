@@ -31,6 +31,7 @@
                             <input type="hidden" name="currencyUpdate" value="{{$users}}">
 
                             <div class="row">
+                                <div class="h6 col-12 font-weight-bold">DOOR FRAME CONSTRUCTION SETTINGS</div>
                                 <div class="h6 col-12 font-weight-bold">
                                     Half Lapped Joint
                                 </div>
@@ -42,7 +43,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_half_lap">Frame Height<span class="text-danger">*</span></label>
+                                        <label for="height_half_lap">Frame HEAD Height<span class="text-danger">*</span></label>
                                         <input name="height_half_lap" id="height_half_lap" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($half_lap_joint)){{$half_lap_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -60,7 +61,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_mitre">Frame Height<span class="text-danger">*</span></label>
+                                        <label for="height_mitre">Frame HEAD Height<span class="text-danger">*</span></label>
                                         <input name="height_mitre" id="height_mitre" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($mitre_joint)){{$mitre_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -78,7 +79,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_mortice">Frame Height<span class="text-danger">*</span></label>
+                                        <label for="height_mortice">Frame HEAD Height<span class="text-danger">*</span></label>
                                         <input name="height_mortice" id="height_mortice" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($mortice_tenon_joint)){{$mortice_tenon_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -96,7 +97,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_butt">Frame Height<span class="text-danger">*</span></label>
+                                        <label for="height_butt">Frame HEAD Height<span class="text-danger">*</span></label>
                                         <input name="height_butt" id="height_butt" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($butt_joint)){{$butt_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -108,90 +109,26 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="hinge1Location">Hinge 1 Location (Min 120 mm, Max 200 mm) <span class="text-danger">*</span></label>
-                                        <input type="number" name="hinge1Location" id="hinge1Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif" min="120" max="200">
+                                        <label for="hinge1Location">Hinge 1 Location (Min 100 mm, Max 180 mm) <span class="text-danger">*</span></label>
+                                        <input type="number" name="hinge1Location" id="hinge1Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif" min="100" max="180">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="hinge2Location">Hinge 2 Location (Min 220 mm) <span class="text-danger">*</span></label>
-                                        <input type="number" name="hinge2Location" id="hinge2Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="220">
+                                        <label for="hinge2Location">Hinge 2 Location (Min 200 mm) <span class="text-danger">*</span></label>
+                                        <input type="number" name="hinge2Location" id="hinge2Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="hinge3Location">Hinge 3 Location (Min 150 mm, Max 300 mm) <span class="text-danger">*</span></label>
-                                        <input type="number" name="hinge3Location" id="hinge3Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif" min="150" max="300">
+                                        <label for="hinge3Location">Hinge 3 Location (Min 150 mm, Max 250 mm) <span class="text-danger">*</span></label>
+                                        <input type="number" name="hinge3Location" id="hinge3Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif" min="150" max="250">
                                     </div>
                                 </div>
                                 <div class="col-md-6 ">
                                     <div class="position-relative form-group d-flex">
                                         <label for="hingeCenterCheck">Hinge Center</label>
                                         <input type="checkbox" name="hingeCenterCheck" id="hingeCenterCheck" class="change-event-calulation form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($hinge_location->hingeCenterCheck) && $hinge_location->hingeCenterCheck == 1){{'checked'}}@endif>
-                                    </div>
-                                </div>
-                            </div>
-
-                           <div class="row">
-                                <div class="h6 col-12 font-weight-bold">DOOR FRAME CONSTRUCTION SETTINGS</div>
-
-                                <!-- HALF LIPPED JOINT -->
-                                <div class="col-12 font-weight-bold">HALF LIPPED JOINT</div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_halfLippedWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_halfLippedWidth" id="doorFrame_halfLippedWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.HalfLipped'])){{$allSettings['DoorFrame.HalfLipped']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_halfLippedHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_halfLippedHeight" id="doorFrame_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.HalfLipped'])){{$allSettings['DoorFrame.HalfLipped']->Height}}@endif">
-                                    </div>
-                                </div>
-
-                                <!-- MITRE JOINT -->
-                                <div class="col-12 font-weight-bold">MITRE JOINT</div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_mitreWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mitreWidth" id="doorFrame_mitreWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mitre'])){{$allSettings['DoorFrame.Mitre']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_mitreHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mitreHeight" id="doorFrame_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mitre'])){{$allSettings['DoorFrame.Mitre']->Height}}@endif">
-                                    </div>
-                                </div>
-
-                                <!-- MORTICE AND TENON JOINT 1 -->
-                                <div class="col-12 font-weight-bold">MORTICE AND TENON JOINT</div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_mortice1Width">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_mortice1Width" id="doorFrame_mortice1Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Mortice1'])){{$allSettings['DoorFrame.Mortice1']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_mortice1Height">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_mortice1Height" id="doorFrame_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Mortice1'])){{$allSettings['DoorFrame.Mortice1']->Height}}@endif">
-                                    </div>
-                                </div>
-
-                                <!-- MORTICE AND TENON JOINT 2 -->
-                                <div class="col-12 font-weight-bold">Butt Joint</div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_buttWidth">FRAME HEAD WIDTH</label>
-                                        <input type="number" name="doorFrame_buttWidth" id="doorFrame_buttWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['DoorFrame.Butt'])){{$allSettings['DoorFrame.Butt']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="doorFrame_buttHeight">FRAME HEAD HEIGHT</label>
-                                        <input type="number" name="doorFrame_buttHeight" id="doorFrame_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['DoorFrame.Butt'])){{$allSettings['DoorFrame.Butt']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
