@@ -50,9 +50,10 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         $i = 0;
         $data = [];
         foreach($item as $items){
-            $totalpriceperdoorset = $item[$i]->DoorsetPrice + $item[$i]->IronmongaryPrice;
+            $DoorsetPrice = ($item[$i]->AdjustPrice != 0) ? $item[$i]->AdjustPrice : $item[$i]->DoorsetPrice;
+            $totalpriceperdoorset = $DoorsetPrice + $item[$i]->IronmongaryPrice;
             $SumDoorQuantity += $item[$i]->DoorQuantity;
-            $SumDoorsetPrice += $item[$i]->DoorsetPrice;
+            $SumDoorsetPrice += $DoorsetPrice;
             $SumIronmongaryPrice += $item[$i]->IronmongaryPrice;
             $configurableitems = '';
             if($item[$i]->configurableitems == 4){
@@ -318,7 +319,6 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $ArchitraveFinishColor = $item[$i]->ArchitraveFinishColor;
             $ArchitraveSetQty = $item[$i]->ArchitraveSetQty;
 
-            $DoorsetPrice = ($item[$i]->AdjustPrice != 0) ? $item[$i]->AdjustPrice : $item[$i]->DoorsetPrice;
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
