@@ -1367,21 +1367,21 @@ function copyOfSideLite1Change(isstatus = false){
 
     $("#meetingStyle").change(function(){
         if($(this).val()=="Scalloped"){
-            $("#scallopedLippingThickness").attr({'disabled':false});
-            $("#flatLippingThickness").attr({'disabled':true}).val('');
-            $("#rebatedLippingThickness").attr({'disabled':true}).val('');
+            $("#scallopedLippingThickness").attr({'disabled':false,'required':true});
+            $("#flatLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#rebatedLippingThickness").attr({'disabled':true,'required':false}).val('');
         }else if($(this).val()=="Rebated"){
-            $("#scallopedLippingThickness").attr({'disabled':true}).val('');
-            $("#flatLippingThickness").attr({'disabled':true}).val('');
-            $("#rebatedLippingThickness").attr({'disabled':false});
+            $("#scallopedLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#flatLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#rebatedLippingThickness").attr({'disabled':false,'required':true});
         }else if($(this).val()=="Flat"){
-            $("#scallopedLippingThickness").attr({'disabled':true}).val('');
-            $("#flatLippingThickness").attr({'disabled':false});
-            $("#rebatedLippingThickness").attr({'disabled':true}).val('');
+            $("#scallopedLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#flatLippingThickness").attr({'disabled':false,'required':true});
+            $("#rebatedLippingThickness").attr({'disabled':true,'required':false}).val('');
         } else{
-            $("#scallopedLippingThickness").attr({'disabled':true}).val('');
-            $("#flatLippingThickness").attr({'disabled':true}).val('');
-            $("#rebatedLippingThickness").attr({'disabled':true}).val('');
+            $("#scallopedLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#flatLippingThickness").attr({'disabled':true,'required':false}).val('');
+            $("#rebatedLippingThickness").attr({'disabled':true,'required':false}).val('');
         }
     });
 
@@ -2930,11 +2930,13 @@ function copyOfSideLite1Change(isstatus = false){
             if($("#swingType").val()=="SA"){
                 if($("#doorsetType").val()=="DD" || $("#doorsetType").val()=="leaf_and_a_half"){
                     $('#meetingStyle').attr('disabled',false);
+                    $('#meetingStyle').attr('required',true);
                     $('#meetingStyle').children('option[value="Scalloped"]').hide();
                     $('#meetingStyle').children('option[value="Rebated"]').show();
                     $('#meetingStyle').children('option[value="Flat"]').show();
                 } else {
                     $('#meetingStyle').attr('disabled',true).val("");
+                    $('#meetingStyle').attr('required',false).val("");
                 }
             } else if($("#swingType").val()=="DA"){
                 if($("#doorsetType").val()=="DD"){
