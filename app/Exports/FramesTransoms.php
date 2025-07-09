@@ -23,14 +23,15 @@ use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class FramesTransoms implements FromCollection,WithEvents,WithTitle
+class FramesTransoms implements FromCollection, WithEvents, WithTitle
 {
     /**
-    * @return \Illuminate\Support\Collection
-    */
-    protected $id,$vid,$result;
+     * @return \Illuminate\Support\Collection
+     */
+    protected $id, $vid, $result;
 
-    function __construct($id,$vid,$result) {
+    function __construct($id, $vid, $result)
+    {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
@@ -231,10 +232,10 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             ? User::where('UserType', 3)->where('id', Auth::user()->id)->first()->CreatedBy
             : Auth::user()->id;
 
-        $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
-        $mitre_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mitre_Joint')->first();
-        $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
-        $butt_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
+        $halflapedjoint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
+        $mitre_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Mitre_Joint')->first();
+        $mortice_tenon_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
+        $butt_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
         $k = 1;
         $data = [];
@@ -287,11 +288,49 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
 
             $stopleg2 = $leg - floatval($FrameType);
 
-            if ($value->DoorFrameConstruction == 'Half_Lapped_Joint') {
-                $leg = $value->FrameHeight - $value->FrameThickness + $halflapedjoint->Height;
-                $head = $value->FrameWidth - $halflapedjoint->Width;
-                $stopleg2 = $value->FrameHeight - $value->FrameThickness;
-                $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+            $Height = 0;
+            $Width = 0;
+            if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                $Height = $halflapedjoint->Height ?? 0;
+                $Width = $halflapedjoint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                $Height = $mitre_joint->Height ?? 0;
+                $Width = $mitre_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                $Height = $mortice_tenon_joint->Height ?? 0;
+                $Width = $mortice_tenon_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                $Height = $butt_joint->Height ?? 0;
+                $Width = $butt_joint->Width ?? 0;
+            }
+
+            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $head = $value->FrameWidth - $Width;
+            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+
+            if($value->FrameType == 'Plant_on_Stop'){
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['PlantOn.HalfLipped'])){
+                        $stophead += $allSettings['PlantOn.HalfLipped']->Width;
+                        $stopleg2 += $allSettings['PlantOn.HalfLipped']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['PlantOn.Mitre'])){
+                        $stophead += $allSettings['PlantOn.Mitre']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mitre']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['PlantOn.Mortice1'])){
+                        $stophead += $allSettings['PlantOn.Mortice1']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mortice1']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['PlantOn.Butt'])){
+                        $stophead += $allSettings['PlantOn.Butt']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Butt']->Height;
+                    }
+                }
             }
 
             $data[] = [
@@ -320,10 +359,111 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
                 $value->Handing,
                 str_replace('_', ' ', $value->FrameFinish),
                 $value->Undercut,
-                 '', // Empty column
+                '', // Empty column
                 '', // Empty column
                 '', // Empty column
             ];
+
+
+            if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+
+                $data[] = [
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->DoorType . ' '. $value->Overpanel,
+                    $value->FireRating,
+                    $value->LeafThickness,
+                    $value->SpeciesName,
+                    $value->OPHeigth,
+                    $value->OPWidth,
+                    $value->FrameThickness,
+                    $value->PlantonStopHeight,
+                    $value->PlantonStopWidth,
+                    $value->RebatedWidth,
+                    $value->ScallopedWidth,
+                    $value->ScallopedHeight,
+                    $value->FrameDepth,
+                    $leg,
+                    $head,
+                    $stopleg2,
+                    $stophead,
+                    '', // Empty column
+                    '', // Empty column
+                    $value->Handing,
+                    str_replace('_', ' ', $value->FrameFinish),
+                    $value->Undercut,
+                    '', // Empty column
+                    '', // Empty column
+                    '', // Empty column
+                ];
+            }
+            if($value->SideLight1 == 'Yes'){
+
+                $data[] = [
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->DoorType . ' Side Light 1',
+                    $value->FireRating,
+                    $value->LeafThickness,
+                    $value->SpeciesName,
+                    $value->SL1Height,
+                    $value->SL1Width,
+                    $value->FrameThickness,
+                    $value->PlantonStopHeight,
+                    $value->PlantonStopWidth,
+                    $value->RebatedWidth,
+                    $value->ScallopedWidth,
+                    $value->ScallopedHeight,
+                    $value->FrameDepth,
+                    $leg,
+                    $head,
+                    $stopleg2,
+                    $stophead,
+                    '', // Empty column
+                    '', // Empty column
+                    $value->Handing,
+                    str_replace('_', ' ', $value->FrameFinish),
+                    $value->Undercut,
+                    '', // Empty column
+                    '', // Empty column
+                    '', // Empty column
+                ];
+            }
+            if($value->SideLight2 == 'Yes'){
+
+                $data[] = [
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->DoorType . ' Side Light 2',
+                    $value->FireRating,
+                    $value->LeafThickness,
+                    $value->SpeciesName,
+                    $value->SL2Height,
+                    $value->SL2Width,
+                    $value->FrameThickness,
+                    $value->PlantonStopHeight,
+                    $value->PlantonStopWidth,
+                    $value->RebatedWidth,
+                    $value->ScallopedWidth,
+                    $value->ScallopedHeight,
+                    $value->FrameDepth,
+                    $leg,
+                    $head,
+                    $stopleg2,
+                    $stophead,
+                    '', // Empty column
+                    '', // Empty column
+                    $value->Handing,
+                    str_replace('_', ' ', $value->FrameFinish),
+                    $value->Undercut,
+                    '', // Empty column
+                    '', // Empty column
+                    '', // Empty column
+                ];
+            }
         }
 
         // Blank row
@@ -366,26 +506,41 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
             'Notes'
         ], array_fill(0, 32 - 18, ''));
 
-         foreach($this->result as $value){
+        foreach ($this->result as $value) {
             $screenNumber = $value->screenNumber;
             $ScreenType = $value->ScreenType;
             $FrameMF = lippingName($value->FrameMaterial);
             $Finish = $value->Finish;
 
             $data[] = [
-                    $screenNumber,
-                    $value->plot_ref_no,
-                    $value->certification_no,
-                    $value->FireRating,
-                    '',
-                    $FrameMF,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '','','','','','',''.'','','','','','','','','',''
-                ];
-         }
+                $screenNumber,
+                $value->plot_ref_no,
+                $value->certification_no,
+                $value->FireRating,
+                '',
+                $FrameMF,
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '' . '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                '',
+                ''
+            ];
+        }
 
 
         // Screen info data
@@ -398,86 +553,72 @@ class FramesTransoms implements FromCollection,WithEvents,WithTitle
         return collect($data);
     }
 
-    // public function headings(): array
-    // {
-    //     return [
-    //         'Door Number', 'Plot Number/Ref', 'IFC/Certifire No/Q mark Plug',
-    //         'Fire Rating', 'Door Thickness', 'Frame Material', 'O/A Frame H', 'O/A Frame W',
-    //         'Frame Thickness', 'Plant on stop thickness', 'Plant on stop Width',
-    //         'Rebate Width', 'Scalloped Width', 'Scalloped Depth', 'Frame Depth',
-    //         'Thresh Thickness', 'Thresh Material', 'Leg x2', 'Head', 'Stop Leg x 2',
-    //         'Stop Head', 'Stop Bottom', 'Bottom- 4 Sided Frame', 'Handing', 'Finish',
-    //         'Lock Type 1', 'Lock Type 2', 'Exitex Aluminum Cills', 'Undercut',
-    //         'Transom', 'Mullion', 'Notes'
-    //     ];
-    // }
-
     public function registerEvents(): array
-        {
-            return [
-                \Maatwebsite\Excel\Events\AfterSheet::class => function (\Maatwebsite\Excel\Events\AfterSheet $event) {
-                    $sheet = $event->sheet;
+    {
+        return [
+            \Maatwebsite\Excel\Events\AfterSheet::class => function (\Maatwebsite\Excel\Events\AfterSheet $event) {
+                $sheet = $event->sheet;
 
-                    // Auto-size all columns A to AF
-                    $col = 'A';
-                    while ($col !== 'AB') {
-                        $sheet->getColumnDimension($col)->setAutoSize(true);
-                        $col++;
+                // Auto-size all columns A to AF
+                $col = 'A';
+                while ($col !== 'AB') {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                    $col++;
+                }
+
+                $highestRow = $sheet->getHighestRow();
+
+                // Main title style (green top + bottom borders)
+                $mainTitleStyle = [
+                    'font' => ['bold' => true],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'borders' => [
+                        'top' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'color' => ['argb' => '008000'],
+                        ],
+                        'bottom' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'color' => ['argb' => '008000'],
+                        ],
+                    ],
+                ];
+
+                // Header row style (red bottom border only)
+                $headerRowStyle = [
+                    'font' => ['bold' => true],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'borders' => [
+                        'bottom' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'color' => ['argb' => 'FF0000'],
+                        ],
+                    ],
+                ];
+
+                for ($i = 1; $i <= $highestRow; $i++) {
+                    $val = trim((string) $sheet->getCell("A{$i}")->getValue());
+
+                    // Apply green top and bottom border to title rows
+                    if (in_array($val, ['Door Order Sheet', 'Frames and Transoms', 'SCREEN INFO'])) {
+                        $sheet->mergeCells("A{$i}:AB{$i}");
+                        $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($mainTitleStyle);
                     }
 
-                    $highestRow = $sheet->getHighestRow();
-
-                    // Main title style (green top + bottom borders)
-                    $mainTitleStyle = [
-                        'font' => ['bold' => true],
-                        'alignment' => [
-                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        ],
-                        'borders' => [
-                            'top' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                                'color' => ['argb' => '008000'],
-                            ],
-                            'bottom' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                                'color' => ['argb' => '008000'],
-                            ],
-                        ],
-                    ];
-
-                    // Header row style (red bottom border only)
-                    $headerRowStyle = [
-                        'font' => ['bold' => true],
-                        'alignment' => [
-                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        ],
-                        'borders' => [
-                            'bottom' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                                'color' => ['argb' => 'FF0000'],
-                            ],
-                        ],
-                    ];
-
-                    for ($i = 1; $i <= $highestRow; $i++) {
-                        $val = trim((string) $sheet->getCell("A{$i}")->getValue());
-
-                        // Apply green top and bottom border to title rows
-                        if (in_array($val, ['Door Order Sheet', 'Frames and Transoms', 'SCREEN INFO'])) {
-                            $sheet->mergeCells("A{$i}:AB{$i}");
-                            $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($mainTitleStyle);
-                        }
-
-                        // Apply red bottom border to heading rows
-                        if (in_array($val, ['Door Number', 'SCREEN NO'])) {
-                            $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($headerRowStyle);
-                        }
+                    // Apply red bottom border to heading rows
+                    if (in_array($val, ['Door Number', 'SCREEN NO'])) {
+                        $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($headerRowStyle);
                     }
-                },
-            ];
-        }
+                }
+            },
+        ];
+    }
 
     public function title(): string
     {
