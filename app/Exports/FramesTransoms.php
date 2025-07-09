@@ -190,7 +190,38 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             ];
 
 
+
             if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['Fanlight.HalfLipped'])){
+                        $Height = $allSettings['Fanlight.HalfLipped']->Height;
+                        $Width = $allSettings['Fanlight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['Fanlight.Mitre'])){
+                        $Height = $allSettings['Fanlight.Mitre']->Height;
+                        $Width = $allSettings['Fanlight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['Fanlight.Mortice1'])){
+                        $Height = $allSettings['Fanlight.Mortice1']->Height;
+                        $Width = $allSettings['Fanlight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['Fanlight.Butt'])){
+                        $Height = $allSettings['Fanlight.Butt']->Height;
+                        $Width = $allSettings['Fanlight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->OPHeigth - $value->FrameThickness + $Height;
+                $head = $value->OPWidth - $Width;
 
                 $data[] = [
                     $value->doorNumber,
@@ -225,6 +256,36 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             }
             if($value->SideLight1 == 'Yes'){
 
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL1Height - $value->FrameThickness + $Height;
+                $head = $value->SL1Width - $Width;
+
                 $data[] = [
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -257,6 +318,36 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 ];
             }
             if($value->SideLight2 == 'Yes'){
+
+                 $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL2Height - $value->FrameThickness + $Height;
+                $head = $value->SL2Width - $Width;
 
                 $data[] = [
                     $value->doorNumber,
