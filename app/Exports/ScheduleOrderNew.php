@@ -49,9 +49,10 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
         $i = 0;
         $data = [];
         foreach($item as $items){
-            $totalpriceperdoorset = $item[$i]->DoorsetPrice + $item[$i]->IronmongaryPrice;
+            $DoorsetPrice = ($item[$i]->AdjustPrice != 0) ? $item[$i]->AdjustPrice : $item[$i]->DoorsetPrice;
+            $totalpriceperdoorset = $DoorsetPrice + $item[$i]->IronmongaryPrice;
             $SumDoorQuantity += $item[$i]->DoorQuantity;
-            $SumDoorsetPrice += $item[$i]->DoorsetPrice;
+            $SumDoorsetPrice += $DoorsetPrice;
             $SumIronmongaryPrice += $item[$i]->IronmongaryPrice;
             $configurableitems = '';
             if($item[$i]->configurableitems == 1){
@@ -168,8 +169,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $GlazingSystemThickness = $item[$i]->GlazingSystemThickness;
             $GlazingBeads = $item[$i]->GlazingBeads;
             $GlazingBeadsThickness = $item[$i]->GlazingBeadsThickness;
-            $glazingBeadsWidth = $item[$i]->glazingBeadsWidth;
-            $glazingBeadsHeight = $item[$i]->glazingBeadsHeight;
+            $glazingBeadsWidth = $item[$i]->glazingBeadsHeight;
+            $glazingBeadsHeight = $item[$i]->glazingBeadsThickness;
             $glazingBeadsFixingDetail = $item[$i]->glazingBeadsFixingDetail;
             $GlazingBeadSpecies = lippingSpeciesName($item[$i]->GlazingBeadSpecies);
             //Frame
@@ -289,7 +290,6 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $ArchitraveFinishColor = $item[$i]->ArchitraveFinishColor;
             $ArchitraveSetQty = $item[$i]->ArchitraveSetQty;
 
-            $DoorsetPrice = $item[$i]->DoorsetPrice;
             $IronmongaryPrice = $item[$i]->IronmongaryPrice;
             $totalpriceperdoorset = $totalpriceperdoorset;
 
