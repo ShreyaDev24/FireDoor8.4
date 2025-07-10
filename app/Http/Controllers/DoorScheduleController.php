@@ -9113,8 +9113,6 @@ class DoorScheduleController extends Controller
             // Optional Section: Fanlight
             if ($door['Overpanel'] == 'Fan_Light') {
                 $rules['OPHeigth'] = 'required';
-                $rules['OpBeadThickness'] = 'required';
-                $rules['OpBeadHeight'] = 'required';
                 $rules['opGlassIntegrity'] = 'required';
                 $rules['OPGlassType'] = 'required';
                 $rules['OPGlassThickness'] = 'required';
