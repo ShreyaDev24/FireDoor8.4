@@ -333,6 +333,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
             }
 
+            $foursidedFrame = 0;
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
             }
