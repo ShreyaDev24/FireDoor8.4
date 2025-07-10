@@ -9211,15 +9211,41 @@ class DoorScheduleController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-
-
             // end vps
+
+            // ironmongary packets updates
+            $IronmongaryPrice = 0;
+            if(!empty($door->IronmongeryID)){
+                $AI = AddIronmongery::select('discountprice')->where('id',$door->IronmongeryID)->first();
+                $userIds = CompanyUsers();
+                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+                $marginDiscount = discountQuotationValue($door->QuotationId,$door->VersionId);
+                if($marginDiscount != 0){
+                    $margin += $marginDiscount;
+                }
+                $marginwithcal = 100 - $margin;
+                $testvar = $marginwithcal/100;
+                $totalcost = $AI->discountprice / $testvar;
+                $IronmongaryPrice = round(($totalcost),2);
+                if($IronmongaryPrice != $door->IronmongaryPrice){
+                    DB::table('items')
+                        ->where('itemId', $door->itemId) // assuming itemId is the primary key
+                        ->update([
+                            'IronmongaryPrice' => $IronmongaryPrice,
+                        ]);
+                }
+            }
+            // end
 
             if ($validator->fails()) {
                 $errors["door_Type_" . $door->DoorType] = $validator->errors()->all();
             }
 
         }
+
+        $allSvgAvailable = collect($items)->every(function ($item) {
+			return !empty($item->SvgImage); // Make sure it's not null or empty
+		});
 
         // If there are validation errors, return them as JSON
         if (!empty($errors)) {
@@ -9236,6 +9262,7 @@ class DoorScheduleController extends Controller
             'message' => 'All doors passed validation.',
             'items' => $items,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+            'all_svg_available' => $allSvgAvailable,
         ]);
     }
 }
