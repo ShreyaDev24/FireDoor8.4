@@ -72,7 +72,7 @@ class StredorController extends Controller
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname', 'ASC')->get();
+        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -108,20 +108,23 @@ class StredorController extends Controller
             foreach ($IronmongeryInfoSet as $valIronmongery) {
                 // Check if the property exists and is not empty
                 if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
                         ->where('UserId', Auth::user()->id)
-                        ->first();
+                        ->get();
 
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                    if (count($SelectedIronmongery) > 0) {
+                            foreach($SelectedIronmongery as $select){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-                        
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
+                                if(empty($IronmongeryInfoModel)){
+                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
+                                }
+
+                                if (!empty($IronmongeryInfoModel)) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
                     }
                 }
             }
@@ -137,7 +140,7 @@ class StredorController extends Controller
     }else{
         $ids = Auth::user()->id;
     }
-    
+
     $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'custom')
               ->where('UserId', $ids)
@@ -200,7 +203,7 @@ class StredorController extends Controller
         if ($item === null) {
             return abort(404);
         }
-        
+
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -255,13 +258,13 @@ class StredorController extends Controller
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
         }
-        
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
+        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -297,20 +300,23 @@ class StredorController extends Controller
             foreach ($IronmongeryInfoSet as $valIronmongery) {
                 // Check if the property exists and is not empty
                 if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
                         ->where('UserId', Auth::user()->id)
-                        ->first();
+                        ->get();
 
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                    if (count($SelectedIronmongery) > 0) {
+                            foreach($SelectedIronmongery as $select){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-                        
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
+                                if(empty($IronmongeryInfoModel)){
+                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
+                                }
+
+                                if (!empty($IronmongeryInfoModel)) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
                     }
                 }
             }
