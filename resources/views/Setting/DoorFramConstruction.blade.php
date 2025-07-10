@@ -403,35 +403,35 @@
 
                             <div class="row">
                                 <div class="h6 col-12 font-weight-bold">
-                                    FANLIGHT GLASS / OP LEAF ADJUSTMENT
+                                    FANLIGHT GLASS ADJUSTMENT
                                 </div>
 
                                 <!-- NRF or FD30 -->
-                                <div class="col-12 font-weight-bold">FANLIGHT GLASS OR OP LEAF SIZE (NRF OR FD30)</div>
+                                <div class="col-12 font-weight-bold">FANLIGHT GLASS SIZE (NRF OR FD30)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightNrfWidth">FANLIGHT GLASS OR OP LEAF SIZE WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <label for="fanlightNrfWidth">FANLIGHT GLASS SIZE WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
                                         <input type="number" min="-5" max="0" name="fanlightNrfWidth" id="fanlightNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightSize.NRF'])){{$allSettings['FanlightSize.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightNrfHeight">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <label for="fanlightNrfHeight">FANLIGHT GLASS SIZE HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
                                         <input type="number" min="-5" max="0" name="fanlightNrfHeight" id="fanlightNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightSize.NRF'])){{$allSettings['FanlightSize.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
                                 <!-- FD60 -->
-                                <div class="col-12 font-weight-bold">FANLIGHT GLASS OR OP LEAF SIZE (FD60)</div>
+                                <div class="col-12 font-weight-bold">FANLIGHT GLASS SIZE (FD60)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightFd60Width">FANLIGHT GLASS OR OP LEAF SIZE WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <label for="fanlightFd60Width">FANLIGHT GLASS SIZE WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
                                         <input type="number" min="-10" max="0" name="fanlightFd60Width" id="fanlightFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightSize.FD60'])){{$allSettings['FanlightSize.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightFd60Height">FANLIGHT GLASS OR OP LEAF SIZE HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
+                                        <label for="fanlightFd60Height">FANLIGHT GLASS SIZE HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
                                         <input type="number" min="-10" max="0" name="fanlightFd60Height" id="fanlightFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightSize.FD60'])){{$allSettings['FanlightSize.FD60']->Height}}@endif">
                                     </div>
                                 </div>

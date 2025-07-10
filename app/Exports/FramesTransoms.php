@@ -333,6 +333,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
             }
 
+            if($value->FourSidedFrame == 1){
+                $foursidedFrame = $head;
+            }
+
             $data[] = [
                 $value->doorNumber,
                 $value->plot_ref_no,
@@ -355,7 +359,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $stopleg2,
                 $stophead,
                 '', // Empty column
-                '', // Empty column
+                $foursidedFrame, // Empty column
                 $value->Handing,
                 str_replace('_', ' ', $value->FrameFinish),
                 $value->Undercut,

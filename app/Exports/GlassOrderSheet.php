@@ -70,7 +70,6 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     $value->DoorType,
                     $value->doorNumber,
                     $value->plot_ref_no,
-                    $value->DoorType,
                     $value->certification_no,
                     $value->GlassThickness,
                     str_replace('_', ' ', $value->GlassType),
@@ -87,12 +86,131 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     $value->Leaf1VPHeight5 ? $value->VisionPanelQuantity * 1 : '',
                 );
 
+
+
                 $k++;
+            }
+
+            if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['FanlightSize.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['FanlightSize.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['FanlightSize.NRF']->Height;
+                }
+                if(!empty($allSettings['FanlightSize.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['FanlightSize.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['FanlightSize.FD60']->Height;
+                }
+
+                $data[] = array(
+                    $value->DoorType. ' ' .$value->Overpanel,
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->OPGlassThickness,
+
+                    str_replace('_', ' ', $value->OPGlassType),
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->OPHeigth + $VisionPanelHeightFD60 : $value->OPHeigth + $VisionPanelHeightNFR,
+
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->OPWidth + $VisionPanelWidthNFR) : ($value->OPWidth + $VisionPanelWidthFD60),
+
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+            }
+
+            if($value->SideLight1 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['SideLightFD.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                }
+                if(!empty($allSettings['SideLightFD.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                }
+
+                $data[] = array(
+                    $value->DoorType. 'Side Light 1',
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SideLight1GlassThickness,
+
+                    str_replace('_', ' ', $value->SideLight1GlassType),
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL1Height + $VisionPanelHeightFD60 : $value->SL1Height + $VisionPanelHeightNFR,
+
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL1Width + $VisionPanelWidthNFR) : ($value->SL1Width + $VisionPanelWidthFD60),
+
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+            }
+
+            if($value->SideLight2 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['SideLightFD.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                }
+                if(!empty($allSettings['SideLightFD.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                }
+
+                $data[] = array(
+                    $value->DoorType. 'Side Light 2',
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SideLight2GlassThickness,
+
+                    str_replace('_', ' ', $value->SideLight2GlassType),
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL2Height + $VisionPanelHeightFD60 : $value->SL2Height + $VisionPanelHeightNFR,
+
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL2Width + $VisionPanelWidthNFR) : ($value->SL2Width + $VisionPanelWidthFD60),
+
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
             }
         }
 
         $footData = [
-            '','','','','','','','','','','','','','','','','',
+            '','','','','','','','','','','','','','','','',
         ];
 
         $allData = [$data,$footData];
@@ -106,7 +224,6 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             'Door Type',
             'Door Number',
             'Plot Number/Ref',
-            'Door Type',
             'IFC/Certifire No/Q mark Plug',
             'Glass Thickness in mm',
             'Glass Type',
