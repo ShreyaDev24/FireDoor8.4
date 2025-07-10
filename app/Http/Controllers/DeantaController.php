@@ -171,20 +171,23 @@ class DeantaController extends Controller
             foreach ($IronmongeryInfoSet as $valIronmongery) {
                 // Check if the property exists and is not empty
                 if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
                         ->where('UserId', Auth::user()->id)
-                        ->first();
+                        ->get();
 
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                    if (count($SelectedIronmongery) > 0) {
+                            foreach($SelectedIronmongery as $select){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-                        
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
+                                if(empty($IronmongeryInfoModel)){
+                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
+                                }
+
+                                if (!empty($IronmongeryInfoModel)) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
                     }
                 }
             }
@@ -192,7 +195,7 @@ class DeantaController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
-        
+
         $species = GetOptions(['leaf_type.Deanta'=> 6 ,'leaf_type.Status' => 1], "join","leaf_type");
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -202,7 +205,7 @@ class DeantaController extends Controller
         }else{
             $ids = Auth::user()->id;
         }
-        
+
         $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
             $query->where('default_type', 'standard')
                   ->where('UserId', $ids)
@@ -223,7 +226,7 @@ class DeantaController extends Controller
         } else {
             $defaultItemsstandard = [];
         }
-        
+
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
         return view('Items/Deanta/DeantaConfigurableItem',[
             "QuotationId" => $id,
@@ -259,13 +262,13 @@ class DeantaController extends Controller
         }else{
             $userId = [];
         }
-       
+
        $UserIds = CompanyUsers();
        $item = Item::where('itemId',$id)->first();
        if($item === null){
            return abort(404);
        }
-       
+
        $item = $item->toArray();
         $UserIds = CompanyUsers();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
@@ -335,23 +338,26 @@ class DeantaController extends Controller
         foreach ($setIronmongery as $ironmongery) {
             $additionalInfo = []; // Temporary array to hold additional info
 
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
+           foreach ($IronmongeryInfoSet as $valIronmongery) {
                 // Check if the property exists and is not empty
                 if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
                         ->where('UserId', Auth::user()->id)
-                        ->first();
+                        ->get();
 
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                    if (count($SelectedIronmongery) > 0) {
+                            foreach($SelectedIronmongery as $select){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-                        
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
+                                if(empty($IronmongeryInfoModel)){
+                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
+                                }
+
+                                if (!empty($IronmongeryInfoModel)) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
                     }
                 }
             }
@@ -359,7 +365,7 @@ class DeantaController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
-        
+
         $species = DB::table('leaf_type')->where('Deanta', 6)->where('Status',1)->whereIn('EditBy', $userId)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
