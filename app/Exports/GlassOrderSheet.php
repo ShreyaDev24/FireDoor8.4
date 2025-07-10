@@ -76,13 +76,13 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
                     $value->VisionPanelQuantity,
-                    $value->Leaf1VPHeight2,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR,
                     $value->Leaf1VPHeight2 ? $value->VisionPanelQuantity * 1 : '',
-                    $value->Leaf1VPHeight3,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR,
                     $value->Leaf1VPHeight3 ? $value->VisionPanelQuantity * 1 : '',
-                    $value->Leaf1VPHeight4,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR,
                     $value->Leaf1VPHeight4 ? $value->VisionPanelQuantity * 1 : '',
-                    $value->Leaf1VPHeight5,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR,
                     $value->Leaf1VPHeight5 ? $value->VisionPanelQuantity * 1 : '',
                 );
 
@@ -91,7 +91,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 $k++;
             }
 
-            if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+            if($value->Overpanel == 'Fan_Light'){
                 $VisionPanelWidthNFR = 0;
                 $VisionPanelHeightNFR = 0;
                 $VisionPanelWidthFD60 = 0;
@@ -146,7 +146,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 }
 
                 $data[] = array(
-                    $value->DoorType. 'Side Light 1',
+                    $value->DoorType. ' Side Light 1',
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
@@ -185,7 +185,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 }
 
                 $data[] = array(
-                    $value->DoorType. 'Side Light 2',
+                    $value->DoorType. ' Side Light 2',
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
