@@ -65,22 +65,146 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
                 }
                 $data[] = array(
+                    $value->DoorType,
                     $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->GlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
-                    $value->VisionPanelQuantity * 4,
+                    $value->Leaf1VPHeight1 ? 4 : '',
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
-                    ($value->VisionPanelQuantity * 2)  + ($value->Leaf2VisionPanelQuantity * 2)
+                    $value->Leaf1VPHeight2 ? 4 : '',
+                    $value->Leaf1VPHeight2 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR) : '',
+                    $value->Leaf1VPHeight3 ? 4 : '',
+                    $value->Leaf1VPHeight3 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR) : '',
+                    $value->Leaf1VPHeight4 ? 4 : '',
+                    $value->Leaf1VPHeight4 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR) : '',
+                    $value->Leaf1VPHeight5 ? 4 : '',
+                    $value->Leaf1VPHeight5 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR) : '',
                 );
 
+
                 $k++;
+            }
+
+            if($value->Overpanel == 'Fan_Light'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['FanlightBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['FanlightBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['FanlightBead.NRF']->Height;
+                }
+                if(!empty($allSettings['FanlightBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['FanlightBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['FanlightBead.FD60']->Height;
+                }
+                $data[] = array(
+                    $value->DoorType. ' ' .$value->Overpanel,
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->GlazingBeads),
+                    str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->OPWidth + $VisionPanelWidthNFR) : ($value->OPWidth + $VisionPanelWidthFD60),
+                    '',
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->OPHeight + $VisionPanelHeightFD60 : $value->OPHeight + $VisionPanelHeightNFR,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+            }
+
+            if($value->SideLight1 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['SideBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideBead.NRF']->Height;
+                }
+                if(!empty($allSettings['SideBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
+                }
+                $data[] = array(
+                    $value->DoorType. ' Side Light 1',
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->GlazingBeads),
+                    str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL1Width + $VisionPanelWidthNFR) : ($value->SL1Width + $VisionPanelWidthFD60),
+                    '',
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL1Height + $VisionPanelHeightFD60 : $value->SL1Height + $VisionPanelHeightNFR,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
+            }
+
+            if($value->SideLight2 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['SideBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideBead.NRF']->Height;
+                }
+                if(!empty($allSettings['SideBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
+                }
+                $data[] = array(
+                    $value->DoorType. ' Side Light 2',
+                    $value->doorNumber,
+                    $value->plot_ref_no,
+                    $value->certification_no,
+                    $value->SpeciesName,
+                    str_replace('_', ' ', $value->GlazingBeads),
+                    str_replace('_', ' ', $value->DoorLeafFinish),
+                    $value->GlazingBeadsThickness,
+                    $value->glazingBeadsWidth,
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL2Width + $VisionPanelWidthNFR) : ($value->SL2Width + $VisionPanelWidthFD60),
+                    '',
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL2Height + $VisionPanelHeightFD60 : $value->SL2Height + $VisionPanelHeightNFR,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                );
             }
         }
 
         $footData = [
-            '','','','','','','','','','',''
+            '','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -91,14 +215,10 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     public function headings(): array
     {
         $a = [
-            'Door Ref',
-            'Timber',
-            'Section',
-            'Finish on Bead',
-            'Saw Cut W',
-            'Quantity',
-            'Saw Cut L',
-            'Quantity'
+        'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+        'Glazing Bead Height', 'Glazing Bead Depth',
+        'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
+        'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
         ];
 
 
@@ -111,8 +231,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:H1';
-                $cellRange = 'A2:H2';
+                $cellRange1 = 'A1:U1';
+                $cellRange = 'A2:U2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -133,7 +253,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('H', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('U', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
