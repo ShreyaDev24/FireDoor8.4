@@ -75,16 +75,17 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->GlazingBeadsThickness,
                     $value->glazingBeadsWidth,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
-                    $value->Leaf1VPHeight1 ? 4 : '',
+                    $value->VisionPanelQuantity * 4,
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
-                    $value->Leaf1VPHeight2 ? 4 : '',
+                    $value->Leaf1VPHeight1 ? 4 : '',
                     $value->Leaf1VPHeight2 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR) : '',
-                    $value->Leaf1VPHeight3 ? 4 : '',
+                    $value->Leaf1VPHeight2 ? 4 : '',
                     $value->Leaf1VPHeight3 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR) : '',
-                    $value->Leaf1VPHeight4 ? 4 : '',
+                    $value->Leaf1VPHeight3 ? 4 : '',
                     $value->Leaf1VPHeight4 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR) : '',
-                    $value->Leaf1VPHeight5 ? 4 : '',
+                    $value->Leaf1VPHeight4 ? 4 : '',
                     $value->Leaf1VPHeight5 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR) : '',
+                    $value->Leaf1VPHeight5 ? 4 : '',
                 );
 
 
