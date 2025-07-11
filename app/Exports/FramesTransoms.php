@@ -403,6 +403,11 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $leg = $value->OPHeigth - $value->FrameThickness + $Height;
                 $head = $value->OPWidth - $Width;
 
+                $foursidedFrame = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                }
+
                 $data[] = [
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -414,21 +419,21 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->OPHeigth,
                     $value->OPWidth,
                     $value->FrameThickness,
-                    $value->PlantonStopHeight,
-                    $value->PlantonStopWidth,
-                    $value->RebatedWidth,
-                    $value->ScallopedWidth,
-                    $value->ScallopedHeight,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
                     $value->FrameDepth,
                     $leg,
                     $head,
-                    $stopleg2,
-                    $stophead,
+                    '',
+                    '',
                     '', // Empty column
-                    '', // Empty column
-                    $value->Handing,
+                    $foursidedFrame, // Empty column
+                    '',
                     str_replace('_', ' ', $value->FrameFinish),
-                    $value->Undercut,
+                    '',
                     '', // Empty column
                     '', // Empty column
                     '', // Empty column
@@ -466,6 +471,11 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $leg = $value->SL1Height - $value->FrameThickness + $Height;
                 $head = $value->SL1Width - $Width;
 
+                $foursidedFrame = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                }
+
                 $data[] = [
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -477,21 +487,21 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->SL1Height,
                     $value->SL1Width,
                     $value->FrameThickness,
-                    $value->PlantonStopHeight,
-                    $value->PlantonStopWidth,
-                    $value->RebatedWidth,
-                    $value->ScallopedWidth,
-                    $value->ScallopedHeight,
+                      '',
+                    '',
+                    '',
+                    '',
+                    '',
                     $value->FrameDepth,
                     $leg,
                     $head,
-                    $stopleg2,
-                    $stophead,
+                    '',
+                    '',
                     '', // Empty column
-                    '', // Empty column
-                    $value->Handing,
+                    $foursidedFrame, // Empty column
+                    '',
                     str_replace('_', ' ', $value->FrameFinish),
-                    $value->Undercut,
+                    '',
                     '', // Empty column
                     '', // Empty column
                     '', // Empty column
@@ -529,6 +539,11 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $leg = $value->SL2Height - $value->FrameThickness + $Height;
                 $head = $value->SL2Width - $Width;
 
+                $foursidedFrame = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                }
+
                 $data[] = [
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -540,21 +555,21 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->SL2Height,
                     $value->SL2Width,
                     $value->FrameThickness,
-                    $value->PlantonStopHeight,
-                    $value->PlantonStopWidth,
-                    $value->RebatedWidth,
-                    $value->ScallopedWidth,
-                    $value->ScallopedHeight,
+                      '',
+                    '',
+                    '',
+                    '',
+                    '',
                     $value->FrameDepth,
                     $leg,
                     $head,
-                    $stopleg2,
-                    $stophead,
+                    '',
+                    '',
                     '', // Empty column
-                    '', // Empty column
-                    $value->Handing,
+                    $foursidedFrame, // Empty column
+                    '',
                     str_replace('_', ' ', $value->FrameFinish),
-                    $value->Undercut,
+                    '',
                     '', // Empty column
                     '', // Empty column
                     '', // Empty column
