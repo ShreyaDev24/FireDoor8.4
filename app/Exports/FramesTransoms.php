@@ -159,8 +159,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             }
 
             $foursidedFrame = 0;
+            $stopbottom = 0;
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
+                $stopbottom = $stophead;
             }
 
             $data[] = [
@@ -184,7 +186,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $head,
                 $stopleg2,
                 $stophead,
-                '', // Empty column
+                $stopbottom, // Empty column
                 $foursidedFrame, // Empty column
                 $value->Handing,
                 str_replace('_', ' ', $value->FrameFinish),
@@ -228,9 +230,11 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $leg = $value->OPHeigth - $value->FrameThickness + $Height;
                 $head = $value->OPWidth - $Width;
 
-                $foursidedFrame = 0;
+               $foursidedFrame = 0;
+                $stopbottom = 0;
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
+                    $stopbottom = $stophead;
                 }
 
                 $data[] = [
@@ -297,8 +301,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $head = $value->SL1Width - $Width;
 
                 $foursidedFrame = 0;
+                $stopbottom = 0;
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
+                    $stopbottom = $stophead;
                 }
 
                 $data[] = [
@@ -365,8 +371,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $head = $value->SL2Width - $Width;
 
                 $foursidedFrame = 0;
+                $stopbottom = 0;
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
+                    $stopbottom = $stophead;
                 }
 
                 $data[] = [
