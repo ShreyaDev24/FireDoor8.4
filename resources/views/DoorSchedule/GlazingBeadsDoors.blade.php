@@ -114,8 +114,8 @@
                         <td></td>
                     </tr>
                 @endif
+                @endforeach
                 {!! implode('', $data) !!}
-            @endforeach
         </tbody>
     </table>
 </body>
