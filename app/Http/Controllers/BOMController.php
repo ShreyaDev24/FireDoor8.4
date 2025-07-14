@@ -1340,8 +1340,322 @@ class BOMController extends Controller
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+        $data = [];
+        foreach ($item as $value) {
+            $leg = $value->FrameHeight + $value->Height;
+            $head = $value->FrameWidth + $value->Width;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
 
-        $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint,'mitre_joint' => $mitre_joint,'mortice_tenon_joint' => $mortice_tenon_joint,'butt_joint' => $butt_joint, 'allSettings' => $allSettings]);
+            $FrameType = '';
+            if($value->FrameType == 'Plant_on_Stop'){
+                $FrameType = $value->PlantonStopHeight;
+            }elseif($value->FrameType == 'Rebated_Frame'){
+                $FrameType = $value->RebatedHeight;
+            }
+            $stopleg2 = $leg - floatval($FrameType) - 0;
+
+            $Height = 0;
+            $Width = 0;
+            if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                $Height = $halflapedjoint->Height ?? 0;
+                $Width = $halflapedjoint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                $Height = $mitre_joint->Height ?? 0;
+                $Width = $mitre_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                $Height = $mortice_tenon_joint->Height ?? 0;
+                $Width = $mortice_tenon_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                $Height = $butt_joint->Height ?? 0;
+                $Width = $butt_joint->Width ?? 0;
+            }
+
+            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $head = $value->FrameWidth - $Width;
+            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+
+            if($value->FrameType == 'Plant_on_Stop'){
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['PlantOn.HalfLipped'])){
+                        $stophead += $allSettings['PlantOn.HalfLipped']->Width;
+                        $stopleg2 += $allSettings['PlantOn.HalfLipped']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['PlantOn.Mitre'])){
+                        $stophead += $allSettings['PlantOn.Mitre']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mitre']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['PlantOn.Mortice1'])){
+                        $stophead += $allSettings['PlantOn.Mortice1']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mortice1']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['PlantOn.Butt'])){
+                        $stophead += $allSettings['PlantOn.Butt']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Butt']->Height;
+                    }
+                }
+            }
+
+            $foursidedFrame = 0;
+            $stopbottom = 0;
+            if($value->FourSidedFrame == 1){
+                $foursidedFrame = $head;
+                $stopbottom = $stophead;
+            }
+
+           $data[] = '<tr>'
+            . '<td>' . $value->doorNumber . '</td>'
+            . '<td>' . $value->plot_ref_no . '</td>'
+            . '<td>' . $value->certification_no . '</td>'
+            . '<td>' . $value->DoorType . '</td>'
+            . '<td>' . $value->FireRating . '</td>'
+            . '<td>' . $value->LeafThickness . '</td>'
+            . '<td>' . $value->SpeciesName . '</td>'
+            . '<td>' . $value->FrameHeight . '</td>'
+            . '<td>' . $value->FrameWidth . '</td>'
+            . '<td>' . $value->FrameThickness . '</td>'
+            . '<td>' . $value->PlantonStopHeight . '</td>'
+            . '<td>' . $value->PlantonStopWidth . '</td>'
+            . '<td>' . $value->RebatedWidth . '</td>'
+            . '<td>' . $value->ScallopedWidth . '</td>'
+            . '<td>' . $value->ScallopedHeight . '</td>'
+            . '<td>' . $value->FrameDepth . '</td>'
+            . '<td>' . $leg . '</td>'
+            . '<td>' . $head . '</td>'
+            . '<td>' . $stopleg2 . '</td>'
+            . '<td>' . $stophead . '</td>'
+            . '<td>' . $stopbottom . '</td>' // Can be empty string
+            . '<td>' . $foursidedFrame . '</td>' // Can be empty string
+            . '<td>' . $value->Handing . '</td>'
+            . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+            . '<td>' . $value->Undercut . '</td>'
+            . '<td></td>' // Empty column
+            . '<td></td>' // Empty column
+            . '<td></td>' // Empty column
+            . '</tr>';
+
+
+
+
+            if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['Fanlight.HalfLipped'])){
+                        $Height = $allSettings['Fanlight.HalfLipped']->Height;
+                        $Width = $allSettings['Fanlight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['Fanlight.Mitre'])){
+                        $Height = $allSettings['Fanlight.Mitre']->Height;
+                        $Width = $allSettings['Fanlight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['Fanlight.Mortice1'])){
+                        $Height = $allSettings['Fanlight.Mortice1']->Height;
+                        $Width = $allSettings['Fanlight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['Fanlight.Butt'])){
+                        $Height = $allSettings['Fanlight.Butt']->Height;
+                        $Width = $allSettings['Fanlight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->OPHeigth - $value->FrameThickness + $Height;
+                $head = $value->OPWidth - $Width;
+
+               $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
+                    . '<td>' . $value->FireRating . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . $value->OPHeigth . '</td>'
+                    . '<td>' . $value->OPWidth . '</td>'
+                    . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $value->FrameDepth . '</td>'
+                    . '<td>' . $leg . '</td>'
+                    . '<td>' . $head . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $foursidedFrame . '</td>'
+                    . '<td></td>'
+                    . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '</tr>';
+
+            }
+            if($value->SideLight1 == 'Yes'){
+
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL1Height - $value->FrameThickness + $Height;
+                $head = $value->SL1Width - $Width;
+
+                $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                }
+
+                $data[] = '<tr>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->DoorType . ' Side Light 1' . '</td>'
+                . '<td>' . $value->FireRating . '</td>'
+                . '<td>' . $value->LeafThickness . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . $value->SL1Height . '</td>'
+                . '<td>' . $value->SL1Width . '</td>'
+                . '<td>' . $value->FrameThickness . '</td>'
+                . '<td></td>' // Empty column
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td>' . $value->FrameDepth . '</td>'
+                . '<td>' . $leg . '</td>'       // Pre-calculated
+                . '<td>' . $head . '</td>'      // Pre-calculated
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td>' . $foursidedFrame . '</td>'  // Pre-calculated
+                . '<td></td>'
+                . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+            if($value->SideLight2 == 'Yes'){
+
+                 $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL2Height - $value->FrameThickness + $Height;
+                $head = $value->SL2Width - $Width;
+
+                $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->DoorType . ' Side Light 2' . '</td>'
+                    . '<td>' . $value->FireRating . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . $value->SL2Height . '</td>'
+                    . '<td>' . $value->SL2Width . '</td>'
+                    . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $value->FrameDepth . '</td>'
+                    . '<td>' . $leg . '</td>'
+                    . '<td>' . $head . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $foursidedFrame . '</td>'
+                    . '<td></td>'
+                    . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '</tr>';
+
+            }
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint,'mitre_joint' => $mitre_joint,'mortice_tenon_joint' => $mortice_tenon_joint,'butt_joint' => $butt_joint, 'allSettings' => $allSettings, 'data' => $data]);
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 

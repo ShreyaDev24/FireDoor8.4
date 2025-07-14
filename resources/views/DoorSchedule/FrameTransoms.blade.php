@@ -7,58 +7,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Of Material</title>
     <style>
-        @page {
-            size: 1260pt 660pt;
-        }
+    @page {
+        size: 1260pt 660pt; /* Landscape large size */
+        margin: 10pt;
+    }
 
-        table {
-            border: 1px solid black;
-            border-collapse: collapse;
-            width: 100%
-        }
+    body {
+        font-size: 9px; /* Smaller font */
+        font-family: Arial, sans-serif;
+    }
 
-        table tbody tr td {
-            padding: 5px 10px;
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed; /* Ensures fixed layout for columns */
+    }
 
-        table tbody tr th {
-            border: 1px solid black;
-            border-collapse: collapse;
-        }
-    </style>
+    th, td {
+        border: 1px solid black;
+        padding: 2px 4px; /* Reduce padding */
+        word-wrap: break-word;
+        font-size: 8px; /* Further reduce font in cells */
+    }
+
+    th {
+        {{--  background-color: #e0e0e0;  --}}
+        text-align: center;
+    }
+
+    /* Optional: Fixed column widths (adjust values as needed) */
+    td, th {
+        width: 80px; /* or you can use percentages like: width: 3.5%; */
+    }
+</style>
+
 </head>
 
 <body>
     <table>
         <tbody>
             <tr>
-                <th colspan="24">Frames & Transoms BOM</th>
+                <th colspan="28">Frames & Transoms BOM</th>
             </tr>
             <tr>
                 <th colspan="3">Ref</th>
-                <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
-                <th colspan="4">Project</th>
-                <td colspan="4">{{ $quotation->projectname }}</td>
+                <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
+                <th colspan="5">Project</th>
+                <td colspan="5">{{ $quotation->projectname }}</td>
                 <th colspan="5">Prepared By</th>
-                <td colspan="4">{{ $userName }}</td>
+                <td colspan="5">{{ $userName }}</td>
             </tr>
             <tr>
                 <th colspan="2">Revision</th>
                 <td colspan="2">{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
-                <td colspan="2">{{ $today }}</td>
-                <th colspan="3">Main Contractor</th>
-                <td colspan="4">{{ $quotation->CstCompanyName }}</td>
+                <td colspan="3">{{ $today }}</td>
+                <th colspan="4">Main Contractor</th>
+                <td colspan="5">{{ $quotation->CstCompanyName }}</td>
                 <th colspan="5">Sales Contact</th>
-                <td colspan="4">{{ $quotation->SalesContact }}</td>
+                <td colspan="5">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="24">Text</th>
+                <th colspan="28">Text</th>
             </tr>
             <tr>
-                <th colspan="24">Items</th>
+                <th colspan="28">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -67,33 +80,41 @@
                 @if ($i++ == 0)
                     <tr>
                         <th>Door Number</th>
+                        <th>Plot Number/Ref</th>
+                        <th>IFC/Certifire No/Q mark Plug</th>
+                        <th>Door Type</th>
                         <th>Fire Rating</th>
                         <th>Door Thickness</th>
-                        <th>Door Size</th>
                         <th>Frame Material</th>
                         <th>O/A Frame H</th>
                         <th>O/A Frame W</th>
                         <th>Frame Thickness</th>
-                        <th>Plant on Stop</th>
+                        <th>Plant on stop thickness</th>
+                        <th>Plant on stop Width</th>
+                        <th>Rebate Width</th>
+                        <th>Scalloped Width</th>
+                        <th>Scalloped Depth</th>
                         <th>Frame Depth</th>
-                        <!-- <th>Frame & Ranson Trench</th> -->
-                        <th>Thresh Thickness</th>
-                        <th>Thresh Material</th>
-                        <th>Leg</th>
+                        <th>Leg x2</th>
                         <th>Head</th>
                         <th>Stop Leg x 2</th>
                         <th>Stop Head</th>
                         <th>Stop Bottom</th>
+                        <th>Bottom- 4 Sided Frame</th>
                         <th>Handing</th>
                         <th>Finish</th>
-                        <th>Lock Type 1</th>
-                        <th>Lock Type 2</th>
-                        <th>Exitex Aliuminum Cills</th>
                         <th>Undercut</th>
+                        <th>Transom</th>
+                        <th>Mullion</th>
                         <th>Notes</th>
                     </tr>
+
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
@@ -120,96 +141,7 @@
                         {{-- <td></td> --}}
                     </tr>
                 @endif
-                @php
-                    $leg = $value->FrameHeight + $value->Height;
-                    $head = $value->FrameWidth + $value->Width;
-                    $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
-
-                    $FrameType = '';
-                    if($value->FrameType == 'Plant_on_Stop'){
-                        $FrameType = $value->PlantonStopHeight;
-                    }elseif($value->FrameType == 'Rebated_Frame'){
-                        $FrameType = $value->RebatedHeight;
-                    }
-                    $stopleg2 = $leg - floatval($FrameType) - 0;
-
-                    $Height = 0;
-                    $Width = 0;
-                    if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
-                        $Height = $halflapedjoint->Height ?? 0;
-                        $Width = $halflapedjoint->Width ?? 0;
-                    }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
-                        $Height = $mitre_joint->Height ?? 0;
-                        $Width = $mitre_joint->Width ?? 0;
-                    }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
-                        $Height = $mortice_tenon_joint->Height ?? 0;
-                        $Width = $mortice_tenon_joint->Width ?? 0;
-                    }else if($value->DoorFrameConstruction == 'Butt_Joint'){
-                        $Height = $butt_joint->Height ?? 0;
-                        $Width = $butt_joint->Width ?? 0;
-                    }
-
-                    $leg = $value->FrameHeight - $value->FrameThickness + $Height;
-                    $head = $value->FrameWidth - $Width;
-                    $stopleg2 = $value->FrameHeight - $value->FrameThickness;
-                    $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
-                    if($value->FrameType == 'Plant_on_Stop'){
-                        if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
-                            if(!empty($allSettings['PlantOn.HalfLipped'])){
-                                $stophead += $allSettings['PlantOn.HalfLipped']->Width;
-                                $stopleg2 += $allSettings['PlantOn.HalfLipped']->Height;
-                            }
-                        }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
-                            if(!empty($allSettings['PlantOn.Mitre'])){
-                                $stophead += $allSettings['PlantOn.Mitre']->Width;
-                                $stopleg2 += $allSettings['PlantOn.Mitre']->Height;
-                            }
-                        }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
-                            if(!empty($allSettings['PlantOn.Mortice1'])){
-                                $stophead += $allSettings['PlantOn.Mortice1']->Width;
-                                $stopleg2 += $allSettings['PlantOn.Mortice1']->Height;
-                            }
-                        }else if($value->DoorFrameConstruction == 'Butt_Joint'){
-                            if(!empty($allSettings['PlantOn.Butt'])){
-                                $stophead += $allSettings['PlantOn.Butt']->Width;
-                                $stopleg2 += $allSettings['PlantOn.Butt']->Height;
-                            }
-                        }
-                    }
-                @endphp
-                <tr>
-                    <td>{{ $value->doorNumber }}</td>
-                    <td>{{ $value->FireRating }}</td>
-                    <td>{{ $value->LeafThickness }}</td>
-                    <td> <p style="width: 100px;">{{ $value->LeafWidth1 }} × {{ $value->LeafHeight }}</p></td>
-                    <td>{{ $value->SpeciesName }}</td>
-                    <td>{{ $value->FrameHeight }}</td>
-                    <td>{{ $value->FrameWidth }}</td>
-                    <td>{{ $value->FrameThickness }}</td>
-                    <td>{{ $FrameType }}</td>
-                    <td>{{ $value->FrameDepth }}</td>
-                    <!-- <td></td> -->
-                    <td></td>
-                    <td></td>
-                    <td>{{ $leg }}</td>
-                    <td>{{ $head }}</td>
-                    <td>{{ $stopleg2 }}</td>
-                    <td>{{ $stophead }}</td>
-                    <td></td>
-                    @if($value->Handing == 'Left_Hand_Master_Right_Hand_Slave')
-                    <td><p style="width: 120px;">Left Hand Master Right Hand Slave</p></td>
-                    @elseif($value->Handing == 'Right_Hand_Master_Left_Hand_Slave')
-                    <td><p style="width: 120px;">Right Hand Master Left Hand Slave</p></td>
-                    @else
-                    <td>{{ $value->Handing }}</td>
-                    @endif
-                    <td>{{ str_replace('_', ' ', $value->FrameFinish) }}</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>{{ $value->Undercut }}</td>
-                    <td>{{ $value->SpecialFeatureRefs }}</td>
-                </tr>
+                {!! implode('', $data) !!}
             @endforeach
         </tbody>
     </table>
