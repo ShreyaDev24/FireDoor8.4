@@ -110,6 +110,9 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '8'){
                 $configurableitems = 'StreDoor';
             }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '9'){
+                $configurableitems = 'MMM';
+            }
 
             $data[] = array(
                 ($value->DoorQuantity) ? $value->DoorQuantity : 1,

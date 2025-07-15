@@ -67,6 +67,9 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             if($item[$i]->configurableitems == 6){
                 $configurableitems = 'Deanta';
             }
+            if($item[$i]->configurableitems == 9){
+                $configurableitems = 'MMM';
+            }
 
             if ($item[$i]->DoorsetType == 'leaf_and_a_half') {
                 $door = DoorDimension::find($item[$i]->DoorDimensions);

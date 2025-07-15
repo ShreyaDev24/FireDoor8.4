@@ -3,13 +3,13 @@
                             <div>
                                 <div class="tab-content">
                                     <div class="card-header">
-                                        <h5 class="card-title" style="margin-top: 10px">Overpanel/Fanlight</h5>
+                                        <h5 class="card-title OverPanelTitle" style="margin-top: 10px">Overpanel/Fanlight Section</h5>
                                     </div>
                                     <div>
                                         <div class="form-row">
                                         <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="overpanel">Overpanel/Fanlight
+                                                    <label for="overpanel" class="OverPanelTitle overPanelLabel">Overpanel/Fanlight
                                                     @if(!empty($tooltip->overpanel))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->overpanel}}'));
@@ -17,8 +17,8 @@
                                                     @endif
 
                                                     </label>
-                                                    <select required name="overpanel" id="overpanel"
-                                                        class="form-control change-event-calulation door-configuration forcoreWidth1">
+                                                    <select name="overpanel" id="overpanel"
+                                                        class="form-control change-event-calulation door-configuration">
                                                         <option value="">Is Over Panel Active?</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='door_configuration_overpanel')
@@ -63,17 +63,101 @@
                                             </div> --}}
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="oPWidth">OP/FL Width
+                                                    <label for="oPWidth" class="OpWidthCase">OP/FL Width
                                                     @if(!empty($tooltip->oPWidth))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->oPWidth}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input name="oPWidth" id="oPWidth" readonly class="form-control oPWidth door-configuration forcoreWidth1"
+                                                    <input name="oPWidth" id="oPWidth" readonly class="form-control oPWidth door-configuration"
                                                         type="text" value="@if(isset($Item['OPWidth'])){{$Item['OPWidth']}}@endif">
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="oPHeigth" class="OpHeightMax">OP/FL Height (Max-value:600)
+                                                    @if(!empty($tooltip->oPHeigth))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->oPHeigth}}'));
+                                                    </script>
+                                                    @endif
+
+                                                    </label>
+                                                    <input  name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration forcoreWidth1"
+                                                        type="number" value="@if(isset($Item['OPHeigth'])){{$Item['OPHeigth']}}@endif">
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="OpBeadThickness">Fan Light/ Over Panel Frame Thickness
+                                                    @if(!empty($tooltip->OpBeadThickness))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->OpBeadThickness}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <label for="OpBead_Thickness" style="display: none;">Fan Light/ Over Panel Frame Thickness</label>
+                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(empty(@$Item['OpBeadThickness'])) readonly @else required @endif class="form-control OpBeadThickness door-configuration forcoreWidth1"
+                                                        type="text" value="@if(isset($Item['OpBeadThickness'])){{$Item['OpBeadThickness']}}@endif">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="OpBeadHeight">Fan Light/ Over Panel Frame Depth
+                                                    @if(!empty($tooltip->OpBeadHeight))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->OpBeadHeight}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <label for="OpBead_Height" style="display: none;">Fan Light/ Over Panel Frame Depth</label>
+                                                    <input @if(empty(@$Item['OpBeadHeight'])) readonly @else required @endif  name="OpBeadHeight" id="OpBeadHeight" max="600" class="form-control door-configuration"
+                                                        type="number" value="@if(isset($Item['OpBeadHeight'])){{$Item['OpBeadHeight']}}@endif">
+                                                </div>
+                                            </div>
+
+
+                                           {{-- <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="opTransom">OP Transom
+                                                    @if(!empty($tooltip->opTransom))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->opTransom}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <select id="opTransom" name="opTransom" class="form-control">
+                                                        <option value="">Select Op Transom</option>
+                                                    <option value="No" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 'No') {{'selected'}} @endif @endif>No</option>
+                                                        <option value="1" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 1) {{'selected'}} @endif @endif>1</option>
+                                                        <option value="2" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 2) {{'selected'}} @endif @endif>2</option>
+                                                        <option value="3" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 3) {{'selected'}} @endif @endif>3</option>
+                                                        <option value="4" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 4) {{'selected'}} @endif @endif>4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="transomThickness">Transom Thickness
+                                                    @if(!empty($tooltip->transomThickness))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->transomThickness}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <select name="transomThickness" id="transomThickness" class="form-control">
+                                                        <option value="">Select transform thickness</option>
+                                                        @foreach($option_data as $row)
+                                                        @if($row->OptionSlug=='transom_thickness')
+                                                        <option value="{{$row->OptionKey}}" @if(isset($Item['TransomThickness'])) @if($Item['TransomThickness'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
+                                                        @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div> --}}
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="opGlassInopGlassIntegritytegrity">Fan Light Glass
@@ -94,7 +178,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opGlassType">Fan Light Glass Type
+                                                    <label for="opGlassType">FL Glass Type
                                                     @if(!empty($tooltip->opGlassType))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opGlassType}}'));
@@ -121,99 +205,6 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="oPHeigth">OP/FL Height
-                                                    @if(!empty($tooltip->oPHeigth))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->oPHeigth}}'));
-                                                    </script>
-                                                    @endif
-
-                                                    </label>
-                                                    <input required  name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration forcoreWidth1"
-                                                        type="number" value="@if(isset($Item['OPHeigth'])){{$Item['OPHeigth']}}@endif">
-                                                </div>
-                                            </div>
-
-
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="OpBeadThickness">Fan Light/ Over Panel Frame Thickness
-                                                    @if(!empty($tooltip->OpBeadThickness))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->OpBeadThickness}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <label for="OpBead_Thickness" style="display: none;">Fan Light/ Over Panel Frame Thickness</label>
-                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(empty(@$Item['OpBeadThickness'])) readonly @else required @endif class="form-control OpBeadThickness door-configuration forcoreWidth1"
-                                                        type="text" value="@if(isset($Item['OpBeadThickness'])){{$Item['OpBeadThickness']}}@endif"  min="1">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="OpBeadHeight">Fan Light/ Over Panel Frame Depth
-                                                    @if(!empty($tooltip->OpBeadHeight))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->OpBeadHeight}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <label for="OpBead_Height" style="display: none;">Fan Light/ Over Panel Frame Depth</label>
-                                                    <input @if(empty(@$Item['OpBeadHeight'])) readonly @else required @endif  name="OpBeadHeight" id="OpBeadHeight" max="600" class="form-control door-configuration"
-                                                        type="number" value="@if(isset($Item['OpBeadHeight'])){{$Item['OpBeadHeight']}}@endif"  min="1">
-                                                </div>
-                                            </div>
-
-
-                                          {{--  <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="opTransom">OP Transom
-                                                    @if(!empty($tooltip->opTransom))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->opTransom}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <select id="opTransom" name="opTransom" class="form-control">
-                                                        <option value="">Select OP Transom</option>
-                                                    <option value="No" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 'No') {{'selected'}} @endif @endif>No</option>
-                                                        <option value="1" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 1) {{'selected'}} @endif @endif>1</option>
-                                                        <option value="2" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 2) {{'selected'}} @endif @endif>2</option>
-                                                        <option value="3" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 3) {{'selected'}} @endif @endif>3</option>
-                                                        <option value="4" @if(isset($Item['OPTransom'])) @if($Item['OPTransom'] == 4) {{'selected'}} @endif @endif>4</option>
-                                                    </select>
-
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="opTransom">Transom Depth
-                                                    @if(!empty($tooltip->opTransom))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->opTransom}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <input name="opTransomDepth" id="opTransomDepth" class="form-control"
-                                                        type="text" value="@if(isset($Item['TransomDepth'])){{$Item['TransomDepth']}}@endif">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="transomThickness">Transom Thickness
-                                                    @if(!empty($tooltip->transomThickness))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->transomThickness}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <input name="transomThickness" id="transomThickness"  class="form-control"
-                                                    type="text" value="@if(isset($Item['TransomThickness'])){{$Item['TransomThickness']}}@endif">
-                                                </div>
-                                            </div> --}}
-
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
                                                     <label for="opglazingSystems">Fan Light Glazing Systems
                                                     @if(!empty($tooltip->opglazingSystems))
                                                     <script type="text/javascript">
@@ -221,12 +212,11 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    {{--  <select name="opglazingSystems" id="opglazingSystems" option_slug="leaf1_glazing_systems" class="form-control">
+                                                    <select name="opglazingSystems" id="opglazingSystems" option_slug="leaf1_glazing_systems" class="form-control">
                                                         <option value=""> Select Glazing Systems</option>
 
-                                                    </select>  --}}
-                                                    <input type="text" name="opglazingSystems" readonly id="opglazingSystems" class="form-control" value="@if(isset($Item['OPGlazingSystems'])){{$Item['OPGlazingSystems']}}@endif">
-                                                    {{--  <input type="hidden" id="opglazingSystemsvalue" value="@if(isset($Item['OPGlazingSystems'])){{$Item['OPGlazingSystems']}}@endif">  --}}
+                                                    </select>
+                                                    <input type="hidden" id="opglazingSystemsvalue" value="@if(isset($Item['OPGlazingSystems'])){{$Item['OPGlazingSystems']}}@endif">
                                                 </div>
                                             </div>
 
@@ -246,7 +236,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opGlazingBeads">Fan Light Glazing Beads
+                                                    <label for="opGlazingBeads">FL Glazing Beads
                                                     @if(!empty($tooltip->opGlazingBeads))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opGlazingBeads}}'));
@@ -256,35 +246,32 @@
                                                     <select required name="opGlazingBeads" id="opGlazingBeads" class="form-control">
                                                         <option value="">Select Glazing Beads</option>
                                                     </select>
-                                                    {{--  <input type="text" name="opGlazingBeads" readonly
-                                                        id="opGlazingBeads" class="form-control"
-                                                        value="@if(isset($Item['OPGlazingBeads'])){{$Item['OPGlazingBeads']}}@endif">  --}}
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opglazingBeadsThickness">Fan Light Glazing Beads Thickness
+                                                    <label for="opglazingBeadsThickness">Fan Light Glazing Beads Height
                                                     @if(!empty($tooltip->opglazingBeadsThickness))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opglazingBeadsThickness}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input Type="number" min="0" name="opglazingBeadsThickness"
+                                                    <input Type="number" min="20" name="opglazingBeadsThickness"
                                                         id="opglazingBeadsThickness" class="form-control"
                                                         value="@if(isset($Item['OPGlazingBeadsThickness'])){{$Item['OPGlazingBeadsThickness']}}@endif">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="opglazingBeadsHeight" class="">Fan Light Glazing Beads Width
+                                                    <label for="opglazingBeadsHeight" class="">Fan Light Glazing Beads Depth
                                                     @if(!empty($tooltip->opglazingBeadsHeight))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opglazingBeadsHeight}}'));
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <input Type="number" min="0" name="opglazingBeadsHeight"
+                                                    <input Type="number" min="20" name="opglazingBeadsHeight"
                                                         id="opglazingBeadsHeight" class="form-control"
                                                         value="@if(isset($Item['OPGlazingBeadsHeight'])){{$Item['OPGlazingBeadsHeight']}}@endif">
                                                 </div>
@@ -301,14 +288,14 @@
                                                     @endif
 
                                                         </label>
-                                                    <input type="text" name="opglazingBeadsFixingDetail" readonly
+                                                    <input type="text" name="opglazingBeadsFixingDetail"
                                                         id="opglazingBeadsFixingDetail" class="form-control"
                                                         value="@if(isset($Item['OPGlazingBeadsFixingDetail'])){{$Item['OPGlazingBeadsFixingDetail']}}@endif">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group input-icons">
-                                                    <label for="opGlazingBeadSpecies">Fan Light Glazing Bead Species
+                                                    <label for="opGlazingBeadSpecies">FL Glazing Bead Species
                                                     @if(!empty($tooltip->opGlazingBeadSpecies))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->opGlazingBeadSpecies}}'));
@@ -320,7 +307,7 @@
                                                         <option value="">Select Species</option>
                                                     </select> -->
                                                         <i class="fa fa-info icon" id="opGlazingBeadSpeciesIcon" onClick=""></i>
-                                                        <input type="text" id="opGlazingBeadSpecies"
+                                                        <input type="text" disabled id="opGlazingBeadSpecies"
                                                             class="form-control">
                                                         <input type="hidden" name="opGlazingBeadSpecies" value="@if(isset($Item['OPGlazingBeadSpecies'])){{$Item['OPGlazingBeadSpecies']}}@endif" id="opGlazingBeadSpeciesïd">
 
