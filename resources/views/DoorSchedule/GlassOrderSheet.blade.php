@@ -67,9 +67,9 @@
            @foreach ($item as $value)
             @if ($i++ == 0)
                 <tr>
+                    <th>Door Type</th>
                     <th>DOOR NUMBER</th>
                     <th>Plot Number/Ref</th>
-                    <th>Door Type</th>
                     <th>IFC/Certifire No/Q mark Plug</th>
                     <th>GLASS THICKNESS IN MM</th>
                     <th>GLASS TYPE</th>
@@ -93,96 +93,8 @@
                     <td></td>
                 </tr>
             @endif
-
-            @if ($value->GlassType != '' && $value->GlassThickness != '' || $value->Leaf1VPHeight1 != '' || $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
-                <tr>
-                    <td>{{ $value->doorNumber }}</td>
-                    <td>{{ $value->plot_ref_no }}</td>
-                    <td>{{ $value->DoorType }}</td>
-                    <td>{{ $value->certification_no }}</td>
-                    <td>{{ $value->GlassThickness }}</td>
-                    <td>{{ str_replace('_', ' ', $value->GlassType) }}</td>
-                    @if($value->Leaf1VPWidth && $value->Leaf1VPHeight1)
-                        @php
-                            if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
-                                $wdth = 5;
-                            }elseif($value->FireRating == 'FD60s' || $value->FireRating == 'FD60'){
-                                $wdth = 10;
-                            }else{
-                                $wdth = 0;
-                            }
-
-                            $vpQty = (int) $value->VisionPanelQuantity ?? 0;
-                            $doorType = $value->DoorsetType;
-                            $bothLeafsGlazed = $value->bothLeafsGlazed ?? false;
-
-                            switch ($doorType) {
-                                case 'SD':
-                                    $totalQty = $vpQty;
-                                    break;
-                                case 'DD':
-                                    $totalQty = $vpQty * 2;
-                                    break;
-                                case 'LH':
-                                    $totalQty = $bothLeafsGlazed ? $vpQty * 2 : $vpQty;
-                                    break;
-                                default:
-                                    $totalQty = $vpQty;
-                            }
-
-                            $qtyPerVP = ($vpQty > 0) ? $totalQty / $vpQty : 0;
-                        @endphp
-                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 10 : $value->Leaf1VPHeight1 - 5 }}</td>
-                        <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
-                        <td>
-                            {{ $value->Leaf1VPHeight1 ? (
-                                $value->AreVPsEqualSizesForLeaf1 == 'Yes'
-                                    ? rtrim(rtrim(number_format($qtyPerVP, 2), '0'), '.')
-                                    : ($value->Leaf1VPQty1 ?? 1)
-                            ) : '' }}
-                        </td>
-                    @else
-                        <td></td><td></td><td></td>
-                    @endif
-
-                    <td>{{ $value->Leaf1VPHeight2 }}</td>
-                    <td>
-                        {{ $value->Leaf1VPHeight2 ? (
-                            $value->AreVPsEqualSizesForLeaf1 == 'Yes'
-                                ? rtrim(rtrim(number_format($qtyPerVP, 2), '0'), '.')
-                                : ($value->Leaf1VPQty2 ?? 1)
-                        ) : '' }}
-                    </td>
-
-                    <td>{{ $value->Leaf1VPHeight3 }}</td>
-                    <td>
-                        {{ $value->Leaf1VPHeight3 ? (
-                            $value->AreVPsEqualSizesForLeaf1 == 'Yes'
-                                ? rtrim(rtrim(number_format($qtyPerVP, 2), '0'), '.')
-                                : ($value->Leaf1VPQty3 ?? 1)
-                        ) : '' }}
-                    </td>
-
-                    <td>{{ $value->Leaf1VPHeight4 }}</td>
-                    <td>
-                        {{ $value->Leaf1VPHeight4 ? (
-                            $value->AreVPsEqualSizesForLeaf1 == 'Yes'
-                                ? rtrim(rtrim(number_format($qtyPerVP, 2), '0'), '.')
-                                : ($value->Leaf1VPQty4 ?? 1)
-                        ) : '' }}
-                    </td>
-
-                    <td>{{ $value->Leaf1VPHeight5 }}</td>
-                    <td>
-                        {{ $value->Leaf1VPHeight5 ? (
-                            $value->AreVPsEqualSizesForLeaf1 == 'Yes'
-                                ? rtrim(rtrim(number_format($qtyPerVP, 2), '0'), '.')
-                                : ($value->Leaf1VPQty5 ?? 1)
-                        ) : '' }}
-                    </td>
-                </tr>
-            @endif
-        @endforeach
+            @endforeach
+            {!! implode('', $data) !!}
 
         </tbody>
     </table>
