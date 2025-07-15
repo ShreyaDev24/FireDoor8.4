@@ -333,6 +333,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                        <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -516,6 +518,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="deantaDoorCore" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                        <input type="checkbox" name="MMM" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
 
@@ -582,6 +586,8 @@ dd(1);
                                         value="5" required>Seadec
                                         <input type="radio" name="configurableitems" class="form-group  ml-3 option-style"
                                         value="6" required>Deanta
+                                        <input type="radio" name="configurableitems" class="form-group  ml-3 option-style"
+                                        value="9" required>MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -717,6 +723,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                        <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
 
@@ -805,6 +813,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                         <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -933,6 +943,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                        <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -1123,6 +1135,8 @@ dd(1);
                                         value="5">Seadec
                                          <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
                                         value="6">Deanta
+                                          <input type="checkbox" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
 
@@ -1188,6 +1202,8 @@ dd(1);
                                         value="5">Seadec
                                         <input type="checkbox" name="deantaDoorCore" class="form-group  ml-3 option-style checkboxDoorType"
                                         value="6">Deanta
+                                        <input type="checkbox" name="MMM" class="form-group  ml-3 option-style checkboxDoorType"
+                                        value="9">MMM
                                 </div>
                             </div>
 
@@ -1349,6 +1365,8 @@ dd(1);
                                         value="5" required>Seadec
                                         <input type="radio" name="configurableitems" id="configurableitems1" class="form-group  ml-3 option-style configurableitemsdoordimension"
                                         value="6" required>Deanta
+                                        <input type="radio" name="configurableitems" id="configurableitems1" class="form-group  ml-3 option-style configurableitemsdoordimension"
+                                        value="9" required>MMM
                                     <input type="hidden" name="id" class="form-control">
                                     <input type="hidden" name="selectId" class="form-control">
                                 </div>
@@ -2247,7 +2265,7 @@ dd(1);
     // leaf type only for custome door
     $('input[name="configurableitems"]').change(function() {
         let confi = $(this).val();
-        if (confi == '3' || confi == '4' || confi == '5' || confi == '6') {
+        if (confi == '3' || confi == '4' || confi == '5' || confi == '6' || confi == '9') {
             $('.customedoor').css('display', 'none');
         }
     });
@@ -2256,7 +2274,7 @@ dd(1);
     // Your code here
     let confi = $('input[name="configurableitems"]:checked').val();
     console.log(confi,'test3')
-    if (confi == '3' || confi == '4' || confi == '5' || confi == '6') {
+    if (confi == '3' || confi == '4' || confi == '5' || confi == '6' || confi == '9') {
             $('.customedoor').css('display', 'none');
         }
     });
@@ -2777,7 +2795,7 @@ dd(1);
         $("#SideScreenGlazingSystemAddForm").modal('show');
     });
 
-    function editLeafType(id,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,LeafType,selectedPrice,selectedId){
+    function editLeafType(id,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,LeafType,selectedPrice,selectedId){
         $("#leafTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -2787,9 +2805,10 @@ dd(1);
         $('input:checkbox[name="vicaimaDoorCore"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="seadecDoorCore"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="deantaDoorCore"][value="'+Deanta+'"]').prop('checked',true);
+        $('input:checkbox[name="MMM"][value="'+MMM+'"]').prop('checked',true);
     }
 
-    function editGlassType(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,NFR,FD30,FD60,GlassIntegrity,GlassType,GlassThickness,VpAreaSize,selectedPrice,selectedId){
+    function editGlassType(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,NFR,FD30,FD60,GlassIntegrity,GlassType,GlassThickness,VpAreaSize,selectedPrice,selectedId){
         $("#glassTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -2804,6 +2823,7 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
+        $('input:checkbox[name="config[]"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="firerating[]"][value="'+NFR+'"]').prop('checked',true);
         $('input:checkbox[name="firerating[]"][value="'+FD30+'"]').prop('checked',true);
         $('input:checkbox[name="firerating[]"][value="'+FD60+'"]').prop('checked',true);
@@ -2906,7 +2926,7 @@ dd(1);
 
     }
 
-    function editAccoustics(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,Flamebreak,Stredor,underattribute,accoustics,file,selectedPrice,selectedId){
+    function editAccoustics(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,Flamebreak,Stredor,underattribute,accoustics,file,selectedPrice,selectedId){
         let url = $('#url').val();
         $("#add_Accoustics").modal('show');
         $("input[name=id]").val(id);
@@ -2922,11 +2942,12 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
+        $('input:checkbox[name="config[]"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Flamebreak+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Stredor+'"]').prop('checked',true);
     }
 
-    function editDoorLeafFacing(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,Flamebreak,Stredor,option,doorleaffacing,selectedPrice,selectedId){
+    function editDoorLeafFacing(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,Flamebreak,Stredor,option,doorleaffacing,selectedPrice,selectedId){
         let url = $('#url').val();
         $("#add_Door_Leaf").modal('show');
         //if(option == 'Veneer'){
@@ -2944,12 +2965,13 @@ dd(1);
         $('input:checkbox[name="VicaimaDoorCore"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="SeadecDoorCore"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="deantaDoorCore"][value="'+Deanta+'"]').prop('checked',true);
+        $('input:checkbox[name="MMM"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="Flamebreak"][value="'+Flamebreak+'"]').prop('checked',true);
         $('input:checkbox[name="Stredor"][value="'+Stredor+'"]').prop('checked',true);
         doorLeafFacingOption(option);
     }
 
-    function editGlazingSystem(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,NFR,FD30,FD60,GlazingSystem,GlazingBeadFixingDetail,VpAreaSize,selectedPrice,selectedId,GlazingThickness){
+    function editGlazingSystem(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,NFR,FD30,FD60,GlazingSystem,GlazingBeadFixingDetail,VpAreaSize,selectedPrice,selectedId,GlazingThickness){
         $("#glazingTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -2962,6 +2984,7 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+Halspan+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+NormaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
+        $('input:checkbox[name="config[]"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
         $('input:checkbox[name="firerating[]"][value="'+NFR+'"]').prop('checked',true);
@@ -2995,7 +3018,7 @@ dd(1);
         $('input:checkbox[name="firerating[]"][value="'+FD60+'"]').prop('checked',true);
     }
 
-    function editIntumescentSealColor(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,Flamebreak,Stredor,IntumescentSealColorName,selectedId){
+    function editIntumescentSealColor(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,Flamebreak,Stredor,IntumescentSealColorName,selectedId){
 
         $("#Add_Intumescent_Seal_Color").modal('show');
         $("input[name=id]").val(id);
@@ -3005,13 +3028,14 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+Halspan+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+NormaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
+        $('input:checkbox[name="config[]"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Flamebreak+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Stredor+'"]').prop('checked',true);
     }
 
-    function editArchitraveType(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,Flamebreak,Stredor,ArchitraveType,selectedPrice,selectedId){
+    function editArchitraveType(id,Streboard,Halspan,NormaDoorCore,VicaimaDoorCore,Seadec,Deanta,MMM,Flamebreak,Stredor,ArchitraveType,selectedPrice,selectedId){
         $("#add_Architrave_Type").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -3021,6 +3045,7 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+Halspan+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+NormaDoorCore+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
+        $('input:checkbox[name="config[]"][value="'+MMM+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
         $('input:checkbox[name="config[]"][value="'+Flamebreak+'"]').prop('checked',true);
@@ -3183,7 +3208,7 @@ dd(1);
         $("input[name=mm_width]").val(mm_width);
         $("input[name=mm_height]").attr('required',true);
         $("input[name=mm_width]").attr('required',true);
-        if(configurableitems == 3 || configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+        if(configurableitems == 3 || configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
             $(".configurableitemsdoordimension").trigger("click");
             $(".leaf_type_door").css("display", "block");
             $("select[name=leaf_type]").val(leaf_type);
@@ -3195,7 +3220,7 @@ dd(1);
             $("#leaf_type").attr('required',true);
             $("#inch_height").attr('required',true);
             $("#inch_width").attr('required',true);
-            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
 
                 $("#door_leaf_finish").attr('required',false);
                 $("#doorLeafFinish").css("display", "none");
@@ -3462,7 +3487,7 @@ $(document).ready(function () {
             $(".leaf_type_door").css("display", "none");
             $("#image").attr({"required":false});
         }else{
-            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6){
+            if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
                 $("#doorLeafFinish").css("display", "none");
                 $("#door_leaf_finish").attr('required',false);
                 $('#leaf_type').val('');
@@ -3525,7 +3550,7 @@ $(document).ready(function () {
 
 
 
-                    if (configurableitems == 4 || configurableitems == 5 || configurableitems == 6) {
+                    if (configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9) {
 
                         $('.doorLeafType').css('display', 'block');
             $('.doorLeafFacingExistingOption').css('display', 'none');
@@ -3575,7 +3600,7 @@ $(document).ready(function() {
             $(".leaf_type_door").css("display", "none");
             $("#image").attr({"required":false});
         }else{
-            if($(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6){
+            if($(this).val() == 4 || $(this).val() == 5 || $(this).val() == 6 || $(this).val() == 9){
                 $("#doorLeafFinish").css("display", "none");
                 $("#door_leaf_finish").attr('required',false);
             }else{
@@ -3601,7 +3626,7 @@ $(document).ready(function() {
                 innerHtml = '';
                 innerHtml += '<option value="">Select Leaf Type</option>';
                 for(var index = 0; index<lenght;index++){
-                    if(config_type == data[index].NormaDoorCore || config_type == data[index].VicaimaDoorCore || config_type == data[index].Seadec || config_type == data[index].Deanta ){
+                    if(config_type == data[index].NormaDoorCore || config_type == data[index].VicaimaDoorCore || config_type == data[index].Seadec || config_type == data[index].Deanta || config_type == data[index].MMM ){
                         innerHtml +=  '<option value="'+ data[index].LeafType +'" class="">'+ data[index].LeafType +'</option>';
                     }
                 }

@@ -174,6 +174,9 @@
                 elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '8'){
                 $configurableitems = 'StreDoor';
                 }
+                elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '9'){
+                $configurableitems = 'MMM';
+                }
                 @endphp
 
                 <tr>

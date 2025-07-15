@@ -861,7 +861,7 @@ class PrintInvoiceController extends Controller
                 ';
 
 
-        if($quotaion->configurableitems == 4){
+        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
             $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }else{
             $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
@@ -2640,7 +2640,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                 //         ->where('selected_glass_type.editBy', '=', $id);
                 // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
-                if($configurationDoor === 'VicaimaDoorCore'){
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
                     $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                             ->where('selected_glass_type.editBy', '=', $id);
