@@ -51,7 +51,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         $k = 1;
         $data = [];
         foreach($item as $value){
-            if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+            if ($value->GlassType != '' && $value->GlassThickness != '' && (($value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0) || ($value->Leaf2VPHeight1 != '' && $value->Leaf2VPHeight1 != 0  && $value->Leaf2VPWidth != '' && $value->Leaf2VPWidth != 0) )){
                 $VisionPanelWidthNFR = 0;
                 $VisionPanelHeightNFR = 0;
                 $VisionPanelWidthFD60 = 0;
@@ -66,6 +66,29 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     $VisionPanelHeightFD60 = $allSettings['VisionPanel.FD60']->Height;
                 }
 
+                if($value->DoorsetType == 'SD'){
+                    if($value->AreVPsEqualSizesForLeaf1 == 'Yes'){
+                        $qty = $value->VisionPanelQuantity;
+                        $qty2 = 0;
+                    }else{
+                        $qty = 1;
+                        $qty2 = 1;
+                    }
+                }else{
+                    if($value->AreVPsEqualSizesForLeaf2 == 'Yes'){
+                        $qty = $value->Leaf2VisionPanelQuantity + $value->VisionPanelQuantity;
+                        $qty2 = 0;
+                    }else{
+                        if(empty($value->VisionPanelQuantity)){
+                            $qty = 1;
+                            $qty2 = 1;
+                        }else{
+                            $qty = 2;
+                            $qty2 = 2;
+                        }
+                    }
+                }
+
                 $data[] = array(
                     $value->DoorType,
                     $value->doorNumber,
@@ -73,24 +96,27 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     $value->certification_no,
                     $value->GlassThickness,
                     str_replace('_', ' ', $value->GlassType),
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
-                    ($value->AreVPsEqualSizesForLeaf1 == 'Yes')?$value->VisionPanelQuantity : 1,
-                    $value->Leaf1VPHeight2 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR):'',
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight1)?$value->Leaf1VPHeight1:$value->Leaf2VPHeight1) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight1)?$value->Leaf1VPHeight1:$value->Leaf2VPHeight1) + $VisionPanelHeightNFR,
 
-                     $value->Leaf1VPHeight2 ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')?$value->VisionPanelQuantity * 1 : 1 ) : '',
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ((($value->Leaf1VPWidth)?$value->Leaf1VPWidth:$value->Leaf2VPWidth) + $VisionPanelWidthNFR) : ((($value->Leaf1VPWidth)?$value->Leaf1VPWidth:$value->Leaf2VPWidth) + $VisionPanelWidthFD60),
 
-                    $value->Leaf1VPHeight3 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR):'',
+                    $qty,
 
-                    $value->Leaf1VPHeight3 ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')? $value->VisionPanelQuantity * 1 : 1) : '',
+                    ($value->Leaf1VPHeight2 || $value->Leaf2VPHeight2) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight2)?$value->Leaf1VPHeight2:$value->Leaf2VPHeight2) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight2)?$value->Leaf1VPHeight2:$value->Leaf2VPHeight2) + $VisionPanelHeightNFR):'',
 
-                    $value->Leaf1VPHeight4 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR):'',
+                    ($value->Leaf1VPHeight2 || $value->Leaf2VPHeight2) ? $qty2 : '',
 
-                    $value->Leaf1VPHeight4 ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')? $value->VisionPanelQuantity * 1 : 1) : '',
+                    ($value->Leaf1VPHeight3 || $value->Leaf2VPHeight3) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight3)?$value->Leaf1VPHeight3:$value->Leaf2VPHeight3) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight3)?$value->Leaf1VPHeight3:$value->Leaf2VPHeight3) + $VisionPanelHeightNFR):'',
 
-                    $value->Leaf1VPHeight5 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR):'',
+                    ($value->Leaf1VPHeight3 || $value->Leaf2VPHeight3) ? $qty2 : '',
 
-                    $value->Leaf1VPHeight5 ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')? $value->VisionPanelQuantity * 1 : 1) : '',
+                    ($value->Leaf1VPHeight4 || $value->Leaf2VPHeight4) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight4)?$value->Leaf1VPHeight4:$value->Leaf2VPHeight4) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight4)?$value->Leaf1VPHeight4:$value->Leaf2VPHeight4) + $VisionPanelHeightNFR):'',
+
+                    ($value->Leaf1VPHeight4 || $value->Leaf2VPHeight4) ? $qty2 : '',
+
+                    ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightNFR):'',
+
+                    ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ? $qty2 : '',
                 );
 
 
