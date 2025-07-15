@@ -16,7 +16,7 @@
                                                     </script>
                                                     @endif
                                                     </label>
-                                                    <select name="lippingType" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingType" class="form-control">
+                                                    <select name="lippingType" required  @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingType" class="form-control forcoreWidth1">
                                                         <option value="">Select Lipping Types</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='lipping_type')
