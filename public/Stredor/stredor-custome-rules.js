@@ -2505,7 +2505,8 @@ function copyOfSideLite1Change(isstatus = false){
                         for(var j =0; j<leepingSpecieslength;j++){
                             if(FrameMaterialValue != null){
                                 FrameMaterialValue = $("#FrameMaterial-value").data("value");
-                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id){
+                                let storeFireRating = $("#savedfirerating").val();
+                                if(FrameMaterialValue != "" && FrameMaterialValue == leepingSpecies[j].id && fireRating == storeFireRating){
                                     $("#frameMaterial").val(leepingSpecies[j].SpeciesName);
                                 }
                             }
