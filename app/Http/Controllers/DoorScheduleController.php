@@ -89,6 +89,7 @@ use App\Models\ArchitraveType;
 use App\Models\DoorFrameConstruction;
 use App\Exports\cuttingListExport;
 use App\Exports\AllGlazingBeadsExport;
+use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
 
 class DoorScheduleController extends Controller
@@ -9263,6 +9264,20 @@ class DoorScheduleController extends Controller
             'items' => $items,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
             'all_svg_available' => $allSvgAvailable,
+        ]);
+    }
+
+    public function ExportScreenBomCalculation($quotationId,$versionID){
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',$versionID)->first();
+            $vid = $QV->version;
+        }
+
+        return Excel::download(new BomCalculationScreenExport($quotationId,$versionID), "Screen BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
 }

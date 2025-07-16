@@ -872,7 +872,30 @@ class PrintInvoiceController extends Controller
         $fileName4 = $id . '4' . '.' . 'pdf';
         $pdf4->save($path4 . '/' . $fileName4);
 
+        // side screen door list
 
+        $s2 = '';
+        $shocw = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $quatationId])
+        ->where(['side_screen_items.VersionId' => $versionID])
+        ->select('side_screen_items.*','side_screen_item_master.screenNumber')
+        ->get();
+        $i = 1;
+        foreach ($shocw as $show) {
+            $s2 .=
+            '<tr>
+            <td>' . $show->ScreenType . '</td>
+            <td>' . $show->screenNumber . '</td>
+            <td>' . $show->GlazingType . '</td>
+            <td>' . $show->ScreenPrice . '</td>
+            </tr>';
+            $i++;
+        }
+
+        $pdf9 = PDF::loadView('Company.pdf_files.sidescreendoorlist', ['a2' => $s2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version]);
+        $path9 = public_path() . '/allpdfFile';
+        $fileName9 = $id . '9' . '.' . 'pdf';
+        $pdf9->save($path9 . '/' . $fileName9);
+        // end
 
         // Elevation Drawing
         $elevTbl = '';
@@ -3552,6 +3575,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName3,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
+                public_path() . '/allpdfFile' . '/' . $fileName9,
                 public_path() . '/allpdfFile' . '/' . $fileName6,
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName7,
@@ -3565,6 +3589,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName3,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
+                public_path() . '/allpdfFile' . '/' . $fileName9,
                 public_path() . '/allpdfFile' . '/' . $fileName6,
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName5,
@@ -3576,6 +3601,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
                 public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                public_path() . '/allpdfFile' . '/' . $fileName9,
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName5,
             ];
