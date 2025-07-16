@@ -246,7 +246,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->LeafThickness,
                     $value->SpeciesName,
                     $value->OPHeigth,
-                    $value->OPWidth,
+                    $value->FrameWidth,
                     $value->FrameThickness,
                     '',
                     '',
