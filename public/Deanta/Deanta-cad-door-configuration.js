@@ -5757,32 +5757,23 @@ svg.append("circle")
     drawDoorSignage(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,235,195,235);
     }
 
-      if (DoorSetType == "DD") {
-
-          // svg.append('rect') // double door rect
-          // .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles)
-          // .attr('y', iy + TopFrameHeight + GapForMap)
-          // .attr('width', LeafWidth2ForMap)
-          // .attr('height', LeafHeightNoOPForMap)
-          // .attr('stroke', 'black')
-          // .attr('fill', '#EBECE6');
-
-          if (IsDoorSinageEnable) {
-            if (DoorSignageCentered == 1) {
+      function drawDoorSignageDD(distanceFromEdge, isCentered, distanceFromBottom,rightDistance,leftdistance){
+         
+            if (isCentered == 1) {
                 svg.append("circle")
                     .style("stroke", "black")
                     .style("fill", "#2C3360")
                     .attr("r", 7)
                     .attr("cx", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5790,23 +5781,23 @@ svg.append("circle")
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap)+ GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + (FrameThicknessForMap) + GapForMap + LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + (FrameThicknessForMap) + GapForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5814,15 +5805,15 @@ svg.append("circle")
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix - (FrameThicknessForMap) - GapForMap + ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
 
                     // ...........................................................
@@ -5831,15 +5822,15 @@ svg.append("circle")
                     .style("fill", "#2C3360")
                     .attr("r", 7)
                     .attr("cx", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap +MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                 svg.append('line')
                     .style("stroke", "black")
@@ -5847,7 +5838,7 @@ svg.append("circle")
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
                     .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5855,17 +5846,17 @@ svg.append("circle")
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                    .text(1550);
+                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                    .text(distanceFromBottom);
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5873,23 +5864,23 @@ svg.append("circle")
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap)+ GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + (FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + (FrameThicknessForMap) + GapForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5897,15 +5888,15 @@ svg.append("circle")
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix - (FrameThicknessForMap) - GapForMap +MeetingStiles+LeafWidth1ForMap+ ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
             } else {
 
@@ -5914,36 +5905,36 @@ svg.append("circle")
                 .style("stroke", "black")
                 .style("fill", "#2C3360")
                 .attr("r", 7)
-                .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
 
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("marker-start", "url(#arrowLeft)")
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10))    // set x position
-                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) }, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
-                .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10))    // set x position
+                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10) }, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30})`) // rotate
+                .text(distanceFromEdge);
 
                 // ..........................................
 
@@ -5951,64 +5942,75 @@ svg.append("circle")
                 .style("stroke", "black")
                 .style("fill", "#2C3360")
                 .attr("r", 7)
-                .attr("cx", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("cx", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
 
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("marker-start", "url(#arrowLeft)")
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5)    // set x position
-                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
-                .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (distanceFromEdge / 10)+5)    // set x position
+                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (distanceFromEdge / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30})`) // rotate
+                .text(distanceFromEdge);
 
                 svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + SideLightPanel2WidthSpaceForVerticalLines + 250)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 250)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
                 .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 250)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                 .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 235)    // set x position
-                .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 235}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                .text(1550);
+                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5)    // set x position
+                .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                .text(distanceFromBottom);
             }
-        }
+        
+ }
+
+      if (DoorSetType == "DD") {
+
+          
+        if (IsDoorSinageEnable ) {
+    drawDoorSignageDD(DoorSignagedistanceFromLeadingEdgeOfDoor, DoorSignageCentered, DoorSignageDistanceFromBottomOfDoor,235,265,245);
+    }
+    if (IsDoorSinageEnable2 ) {
+    drawDoorSignageDD(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,255,275,255);
+    }
 
           if (IsPushHandlesEnable && !IsPullHandlesEnable) {
             if(LeafWidth2ForMap<LeafWidth1ForMap) {
