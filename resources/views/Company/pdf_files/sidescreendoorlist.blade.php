@@ -152,7 +152,7 @@
                 <thead>
                     <tr class="page3_tr">
                         <th scope="col">Screen Type</th>
-                        <th scope="col">Door No.</th>
+                        <th scope="col">Screen</th>
                         <th scope="col">Glazing Type</th>
                         <th scope="col">Screen Price</th>
                     </tr>
