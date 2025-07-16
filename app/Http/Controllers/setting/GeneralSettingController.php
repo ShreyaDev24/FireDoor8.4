@@ -235,69 +235,38 @@ class GeneralSettingController extends Controller
                         ->where('DoorFrameConstruction', $key)
                         ->first();
 
-                    if ($doorFrameConst) {
-                        $doorFrameConst->update([
-                            'Width' => $dimensions['width'],
-                            'Height' => $dimensions['height']
-                        ]);
-                    } else {
-                        DoorFrameConstruction::create([
-                            'UserId' => $userId,
-                            'DoorFrameConstruction' => $key,
-                            'Width' => $dimensions['width'],
-                            'Height' => $dimensions['height']
-                        ]);
-                    }
-                }
-            }
-
-            // Handle Hinge_Location
-            elseif ($mainKey === 'Hinge_Location') {
-                $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
-                    ->where('DoorFrameConstruction', $mainKey)
-                    ->first();
-                if ($doorFrameConst) {
-                    $doorFrameConst->hinge1Location = $values['hinge1Location'];
-                    $doorFrameConst->hinge2Location = $values['hinge2Location'];
-                    $doorFrameConst->hinge3Location = $values['hinge3Location'];
-                    $doorFrameConst->hingeCenterCheck = $values['hingeCenterCheck'];
+            if ($doorFrameConst) {
+                if($door === 'Hinge_Location'){
+                    $doorFrameConst->hinge1Location = $dimensions['hinge1Location'];
+                    $doorFrameConst->hinge2Location = $dimensions['hinge2Location'];
+                    $doorFrameConst->hinge3Location = $dimensions['hinge3Location'];
+                    $doorFrameConst->hingeCenterCheck = $dimensions['hingeCenterCheck'];
                     $doorFrameConst->save();
-                } else {
-                    $doorFrame = new DoorFrameConstruction;
-                    $doorFrame->DoorFrameConstruction = $mainKey;
-                    if($mainKey === 'Hinge_Location'){
-                        $doorFrame->hinge1Location = $values['hinge1Location'];
-                        $doorFrame->hinge2Location = $values['hinge2Location'];
-                        $doorFrame->hinge3Location = $values['hinge3Location'];
-                        $doorFrame->hingeCenterCheck = $values['hingeCenterCheck'];
-                    }
-                    $doorFrame->UserId = $userId;
-                    $doorFrame->save();
                 }
-            }
-
-            // Handle flat types like Mitre_Joint
-            else {
-                $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
-                    ->where('DoorFrameConstruction', $mainKey)
-                    ->first();
-
-                if ($doorFrameConst) {
+                else{
                     $doorFrameConst->update([
-                        'Width' => $values['width'],
-                        'Height' => $values['height']
-                    ]);
-                } else {
-                    DoorFrameConstruction::create([
-                        'UserId' => $userId,
-                        'DoorFrameConstruction' => $mainKey,
-                        'Width' => $values['width'],
-                        'Height' => $values['height']
+                        'Width' => $dimensions['width'],
+                        'Height' => $dimensions['height']
                     ]);
                 }
+            }else{
+                $doorFrame = new DoorFrameConstruction;
+                if($door === 'Hinge_Location'){
+                    $doorFrame->hinge1Location = $dimensions['hinge1Location'];
+                    $doorFrame->hinge2Location = $dimensions['hinge2Location'];
+                    $doorFrame->hinge3Location = $dimensions['hinge3Location'];
+                    $doorFrame->hingeCenterCheck = $dimensions['hingeCenterCheck'];
+                }
+                else{
+                    $doorFrame->Width = $dimensions['width'];
+                    $doorFrame->Height = $dimensions['height'];
+                }
+
+                $doorFrame->DoorFrameConstruction = $door;
+                $doorFrame->UserId = $userId;
+                $doorFrame->save();
             }
         }
-
 
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
