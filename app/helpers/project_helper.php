@@ -2570,8 +2570,13 @@ function sideScreenBOM($request): void{
                 $glazingBeadsThickness = getLippingSpeciesNearTheeknessValue($request->GlazingBeadHeight);
 
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->GlazingBeadMaterial)->where('selected_thickness','>=',$glazingBeadsThickness)->get()->first();
+                if($unitcost){
+                    $selected_price = $unitcost->selected_price;
+                } else {
+                    $selected_price = 0;
+                }
 
-                $PricePerLM = ($GlazingBeadWidth * $GlazingBeadHeight * $unitcost->selected_price) / 1000000;
+                $PricePerLM = ($GlazingBeadWidth * $GlazingBeadHeight * $selected_price) / 1000000;
 
                 $LM = (($GlassPaneWidth + $GlassPaneWidth + $GlassPaneHeight + $GlassPaneHeight) * 2)/1000;
 
