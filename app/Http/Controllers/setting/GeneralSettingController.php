@@ -59,12 +59,11 @@ class GeneralSettingController extends Controller
 
             if ($doorFrameConst) {
                 if($door === 'Hinge_Location'){
-                    $doorFrameConst->update([
-                        'hinge1Location' => $dimensions['hinge1Location'],
-                        'hinge2Location' => $dimensions['hinge2Location'],
-                        'hinge3Location' => $dimensions['hinge3Location'],
-                        'hingeCenterCheck' => $dimensions['hingeCenterCheck']
-                    ]);
+                    $doorFrameConst->hinge1Location = $dimensions['hinge1Location'];
+                    $doorFrameConst->hinge2Location = $dimensions['hinge2Location'];
+                    $doorFrameConst->hinge3Location = $dimensions['hinge3Location'];
+                    $doorFrameConst->hingeCenterCheck = $dimensions['hingeCenterCheck'];
+                    $doorFrameConst->save();
                 }
                 else{
                     $doorFrameConst->update([
