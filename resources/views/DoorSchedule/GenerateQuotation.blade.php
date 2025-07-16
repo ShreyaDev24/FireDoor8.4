@@ -104,6 +104,7 @@
                                             <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom
                                                 Calculation</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
                                             <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
@@ -816,6 +817,8 @@
         value="{{ url('/quotation/ExportDoorTypeBom') }}" />
     <input type="hidden" name="ExportSideScreenUrl" id="ExportSideScreenUrl"
         value="{{ url('/quotation/ExportSideScreen') }}" />
+    <input type="hidden" name="ExportScreenBomCalculationUrl" id="ExportScreenBomCalculationUrl"
+        value="{{ url('/quotation/ExportScreenBomCalculation') }}" />
     <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
         value="{{ url('/quotation/cuttingList') }}" />
     <input type="hidden" name="allGlazingBeadsUrl" id="allGlazingBeadsUrl"
@@ -2722,6 +2725,22 @@
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            ExportScreenBomCalculation = function() {
+                var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
+                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+                    }else{
+                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+                    }
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }

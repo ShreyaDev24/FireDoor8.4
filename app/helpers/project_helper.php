@@ -1091,6 +1091,40 @@ function BOMCAlculationExport($id,$version): array{
     return $result;
 }
 
+function BOMScreenCalculationExport($id,$version){
+    $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',$version)->first();
+            $vid = $QV->version;
+        }
+        // $vid means version number(1,2,3,4 etc) and $version means version id or number
+    $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
+    $bomVersion = ScreenBOMCalculation::where('QuotationId',$id)->get()->first();
+    if($vid == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
+        $data = ScreenBOMCalculation::join('side_screen_item_master','side_screen_item_master.ScreenID','screen_bom_calculations.ScreenID')->where('screen_bom_calculations.QuotationId',$id)->whereNotNull('screen_bom_calculations.ScreenID')->select('screen_bom_calculations.*')->distinct('side_screenitem_master.ScreenID')->get();
+    }else{
+        $data = ScreenBOMCalculation::join('side_screen_item_master','side_screen_item_master.ScreenID','screen_bom_calculations.ScreenID')->where('screen_bom_calculations.QuotationId',$id)->where('screen_bom_calculations.VersionId',$vid)->whereNotNull('screen_bom_calculations.ScreenID')->select('screen_bom_calculations.*')->distinct('side_screen_item_master.ScreenID')->get();
+        }
+
+    $currency = QuotationCurrency($quotation->Currency);
+    $today = Carbon::now()->format('d-m-Y');
+    $userName = Auth::user()->FirstName ." ".Auth::user()->LastName;
+    $totDoorsetType = NumberOfScreenSets($version,$id);
+    $version = $bomVersion->VersionId;
+    $item_details = SideScreenItem::join('side_screen_item_master','side_screen_items.id','side_screen_item_master.ScreenID')->select('side_screen_items.*','side_screen_item_master.*')->where(['QuotationId'=>$id])->get();
+
+    $GTSellPriceSum = 0;
+    $TotalCostSum = 0;
+    foreach($data as $value){
+        $GTSellPriceSum += $value->GTSellPrice;
+        $TotalCostSum += $value->TotalCost;
+    }
+
+    $result = ['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum, 'TotalCostSum' => $TotalCostSum];
+
+    return $result;
+}
+
 /**
  * @return \list<\non-empty-list>
  */
