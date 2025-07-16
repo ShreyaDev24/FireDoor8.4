@@ -89,6 +89,7 @@
                                    @endif
                                    @endforeach --}}
                                </select>
+                               <input type="hidden" name="storeFireRating" id="storeFireRating" value="@if(isset($Item["FireRating"])){{$Item["FireRating"]}}@else{{''}}@endif">
                            </div>
                        </div>
                        <div class="col-md-6">
