@@ -87,7 +87,7 @@ word-wrap: break-word;
                                         <select name="customerId" id="selectcustomer" class="form-control" required>
                                             <option value="">Select Main Contractor</option>
                                             @if(!empty($companykacustomer))
-                                                @foreach($companykacustomer as $row)
+                                                @foreach($companykacustomer->sortBy('CstCompanyName') as $row)
                                                     @if($row->CstCompanyName != '')
                                                         <option value="{{$row->id}}"
                                                         @if(!empty($projects->customerId))
