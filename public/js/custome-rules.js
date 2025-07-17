@@ -2043,10 +2043,10 @@ function copyOfSideLite1Change(isstatus = false){
         }
     }
 
-    function doorThicknessSelect(value){
-        // $("#doorThickness select").val(value);
-        $('#doorThickness option[value='+value+']').attr('selected','selected');
+    function doorThicknessSelect(value) {
+        $('#doorThickness option[value="' + value + '"]').prop('selected', true);
     }
+
 
     function doorThicknessFilter(fireRating,opGlassIntegrityVal="",SL1GlassIntegrityVal="",SL2GlassIntegrityVal=""){
         if(fireRating == 'FD30' || fireRating == 'FD30s'){
