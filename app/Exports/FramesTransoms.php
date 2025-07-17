@@ -257,6 +257,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Plant on stop thickness',
             'Plant on stop Width',
             'Rebate Width',
+            'Rebate Depth',
             'Scalloped Width',
             'Scalloped Depth',
             'Frame Depth',
@@ -354,6 +355,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->PlantonStopHeight,
                 $value->PlantonStopWidth,
                 $value->RebatedWidth,
+                $value->RebatedHeight,
                 $value->ScallopedWidth,
                 $value->ScallopedHeight,
                 $value->FrameDepth,
@@ -423,6 +425,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->OPHeigth,
                     $value->FrameWidth,
                     $value->FrameThickness,
+                    '',
                     '',
                     '',
                     '',
@@ -498,6 +501,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     '',
                     '',
                     '',
+                    '',
                     $value->FrameDepth,
                     $leg,
                     $head,
@@ -564,6 +568,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->SL2Width,
                     $value->FrameThickness,
                       '',
+                    '',
                     '',
                     '',
                     '',
@@ -680,7 +685,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                 // Auto-size all columns A to AF
                 $col = 'A';
-                while ($col !== 'AB') {
+                while ($col !== 'AC') {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
@@ -726,13 +731,13 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // Apply green top and bottom border to title rows
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms', 'SCREEN INFO'])) {
-                        $sheet->mergeCells("A{$i}:AB{$i}");
-                        $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AC{$i}");
+                        $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // Apply red bottom border to heading rows
                     if (in_array($val, ['Door Number', 'SCREEN NO'])) {
-                        $sheet->getStyle("A{$i}:AB{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($headerRowStyle);
                     }
                 }
             },
