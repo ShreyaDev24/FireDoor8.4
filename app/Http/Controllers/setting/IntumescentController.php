@@ -111,6 +111,7 @@ class IntumescentController extends Controller
             $a->Point2height = $request->Point2height;
             $a->Point1width = $request->Point1width;
             $a->Point2width = $request->Point2width;
+            $a->FireOnly = $request->FireOnly;
             $a->customeleafTypes = $leafTypesString;
             $a->updated_at = date('Y-m-d H:i:s');
             $a->editBy = Auth::user()->id;
@@ -150,6 +151,7 @@ class IntumescentController extends Controller
                 $a->Point2height = $request->Point2height;
                 $a->Point1width = $request->Point1width;
                 $a->Point2width = $request->Point2width;
+                $a->FireOnly = $request->FireOnly;
                 $a->customeleafTypes = $leafTypesString;
                 $a->updated_at = date('Y-m-d H:i:s');
                 $a->editBy = Auth::user()->id;

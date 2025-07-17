@@ -7453,8 +7453,8 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                         <th>MMM</th>
                         <th>FireRating</th>
                         <th>Configu ration</th>
-                        <th>Width</th>
                         <th>Height</th>
+                        <th>Width</th>
                         <th>Intumescent Seals</th>
                         <th>Brand</th>
                         <th>Fire Only Type</th>
@@ -7514,7 +7514,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editintumescentSealArrangement('.$value->id.",'".$value->configurableitems. "','" .$value->firerating. "','" .$value->configuration. "','" .$value->Point1height. "','" .$value->Point2height. "','" .$value->Point1width. "','" . $value->Point2width . "','" . $value->intumescentSeals . "','".$value->brand."','".$value->firetested."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->customeleafTypes. '\')">
+                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editintumescentSealArrangement('.$value->id.",'".$value->configurableitems. "','" .$value->firerating. "','" .$value->configuration. "','" .$value->Point1height. "','" .$value->Point2height. "','" .$value->Point1width. "','" . $value->Point2width . "','" . $value->intumescentSeals . "','".$value->brand."','".$value->firetested."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->FireOnly. "','" .$value->customeleafTypes. '\')">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
                             <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
@@ -7622,8 +7622,8 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                         <th>Stredor</th>
                         <th>FireRating</th>
                         <th>Configu ration</th>
-                        <th>Width</th>
                         <th>Height</th>
+                        <th>Width</th>
                         <th>Intumescent Seals</th>
                         <th>Brand</th>
                         <th>Fire Only Type</th>
@@ -7676,7 +7676,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                         if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                             $action = '
                             <div style="width:100px;">
-                                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editintumescentSealArrangement('.$value->id.",'".$value->configurableitems. "','" .$value->firerating. "','" .$value->configuration. "','" .$value->Point1height. "','" .$value->Point2height. "','" .$value->Point1width. "','" . $value->Point2width . "','" . $value->intumescentSeals . "','".$value->brand."','".$value->firetested."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->customeleafTypes. '\')">
+                                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editintumescentSealArrangement('.$value->id.",'".$value->configurableitems. "','" .$value->firerating. "','" .$value->configuration. "','" .$value->Point1height. "','" .$value->Point2height. "','" .$value->Point1width. "','" . $value->Point2width . "','" . $value->intumescentSeals . "','".$value->brand."','".$value->firetested."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->FireOnly. "','" .$value->customeleafTypes. '\')">
                                     <i class="fa fa-edit text-white text-center"></i>
                                 </button>
                                 <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onclick="deleteGlassType(\'' .$optionType. "',".$value->id.')">
