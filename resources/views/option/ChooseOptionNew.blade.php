@@ -663,6 +663,17 @@ dd(1);
                                       placeholder="Enter Width Point 2" required>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group">
+                                    <label for="w-point2">Fire Only Type<span class="text-danger">*</span></label>
+                                    <select name="FireOnly" id="FireOnly" class="form-control" >
+                                        <option value="">Select Fire Only</option>
+                                        <option value="Fire_only">Fire only</option>
+                                        <option value="Fire_and_Smoke">Fire and Smoke</option>
+                                        <option value="Fire_Smoke_and_Acoustic">Fire Smoke and Acoustic</option>
+                                    </select>
+                                </div>
+                            </div>
                             @if(Auth::user()->UserType != 1)
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
@@ -3104,7 +3115,7 @@ dd(1);
         $('input:checkbox[name="config[]"][value="'+Stredor+'"]').prop('checked',true);
     }
 
-    function editintumescentSealArrangement(id,configurableitems,firerating,configuration,Point1height ,Point2height,Point1width,Point2width,intumescentSeals,brand,firetested,selected_cost,selectedId,customeLeafId){
+    function editintumescentSealArrangement(id,configurableitems,firerating,configuration,Point1height ,Point2height,Point1width,Point2width,intumescentSeals,brand,firetested,selected_cost,selectedId,FireOnly,customeLeafId){
         $("#intumescentSealArrangementAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -3114,6 +3125,7 @@ dd(1);
         $("input[name=Point2height]").val(Point2height);
         $("input[name=Point1width]").val(Point1width);
         $("input[name=Point2width]").val(Point2width);
+        $("select[name=FireOnly]").val(FireOnly);
         $("input[name=brand]").val(brand);
         $("input[name=firetested]").val(firetested);
         $("input[name=IntumescentSealPrice]").val(selected_cost);
