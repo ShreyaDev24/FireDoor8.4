@@ -665,8 +665,8 @@ const render = (CustomElement = null) => {
             $('input[name="hinge4Location"]').val('');
         }
 
-        if (SideLightPanel1 == "Yes") {
-            console.log(FrameThicknessForMap, 'llllllllllllll')
+         if (SideLightPanel1 == "Yes") {
+            // console.log(FrameThicknessForMap, 'llllllllllllll')
             if (OverPanelHeight) {
                 svg.append('rect') //outer sidepanel rect
                     .attr('x', ix)
@@ -715,14 +715,13 @@ const render = (CustomElement = null) => {
             if (ShowMeasurements) {
                 if (SideLightPanel1Width > 0) {
 
-                    if (SideLightPanel1Width < 40) {
                         svg.append('line')//vertical line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
                             .attr("x2", ix - 10)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5))
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
@@ -730,33 +729,33 @@ const render = (CustomElement = null) => {
                             .style("fill", "black")
                             .attr("font-size", 10)
                             .attr("x", ix - 15)
-                            .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
+                            .attr("y", iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
-                               ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                               ${iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5) + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - 10 - 5)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
                             .attr("x2", ix + FrameThicknessForMap)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y2", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
 
                         svg.append('line')//vertical line to show measurement of side panel joining line bottom
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - 10 - 5)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y1", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
                             .attr("x2", ix + FrameThicknessForMap)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
 
                         svg.append('line')//horizontal line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap)
+                            .attr("x1", ix )
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                            .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
+                            .attr("x2", ix + SideLightPanel1Width )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
@@ -765,56 +764,22 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + (SideLightPanel1Width / 2) - 5)
                             .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
+                            .text(SideLightPanel1WidthToShow );
                         svg.append('line')//horizontal line to show measurement of side panel joining line
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap)
+                            .attr("x1", ix )
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                            .attr("x2", ix + FrameThicknessForMap)
+                            .attr("x2", ix )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
                         svg.append('line')//horizontal line to show measurement of side panel joining line
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + SideLightPanel1Width - FrameThicknessForMap)
+                            .attr("x1", ix + SideLightPanel1Width )
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                            .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
+                            .attr("x2", ix + SideLightPanel1Width )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                    } else {
-                        svg.append('line')//horizontal line to show measurement of side panel
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap)
-                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                            .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
-                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-                        svg.append("text")           //horizontal line to show measurement text of side panel
-                            .style("fill", "black")
-                            .attr("font-size", 10)
-                            .attr("x", ix + (SideLightPanel1Width / 2) - 5)
-                            .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 25)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                        svg.append('line')//vertical line to show measurement of side panel
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + ((SideLightPanel1Width - (FrameThicknessForMap * 2))) - 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                            .attr("x2", ix + FrameThicknessForMap + ((SideLightPanel1Width - (FrameThicknessForMap * 2))) - 10)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-
-                        svg.append("text")           // vertical line to show measurement text of side panel
-                            .style("fill", "black")
-                            .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + (SideLightPanel1Width - (FrameThicknessForMap * 2)) - 15)
-                            .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + (SideLightPanel1Width - (FrameThicknessForMap * 2)) - 15},
-                               ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
-                    }
+                    
                 }
 
 
@@ -880,48 +845,47 @@ const render = (CustomElement = null) => {
                 //     .text(SideLightPanel2WidthToShow);   // define the text to display
                 if (SideLightPanel2Width > 0) {
 
-                    if (SideLightPanel2Width < 40) {
                         svg.append('line')//vertical line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
                             .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + 10)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
                         svg.append("text")           // vertical line to show measurement text of side panel
                             .style("fill", "black")
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameWidthForMap + SideLightPanel2Width + 25)
-                            .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 25},
-                               ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                            .attr("x", ix + FrameWidthForMap + SideLightPanel2Width + 20)
+                            .attr("y", iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15)
+                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
+                               ${iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5) + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10 + 5)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
                             .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y2", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
 
                         svg.append('line')//vertical line to show measurement of side panel joining line bottom
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y1", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
                             .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap + 10)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
 
                         svg.append('line')//horizontal line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
+                            .attr("x1", ix + FrameWidthForMap )
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
@@ -930,62 +894,26 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
                             .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
+                            .text(SideLightPanel2WidthToShow );
                         svg.append('line')//horizontal line to show measurement of side panel joining line
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
+                            .attr("x1", ix + FrameWidthForMap)
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                            .attr("x2", ix + FrameWidthForMap + FrameThicknessForMap)
+                            .attr("x2", ix + FrameWidthForMap )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
                         svg.append('line')//horizontal line to show measurement of side panel joining line
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
+                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width )
                             .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width )
                             .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                    } else {
-                        svg.append('line')//horizontal line to show measurement of side panel
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
-                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-                        svg.append("text")           //horizontal line to show measurement text of side panel
-                            .style("fill", "black")
-                            .attr("font-size", 10)
-                            .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
-                            .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 25)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                        svg.append('line')//vertical line to show measurement of side panel
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap + ((SideLightPanel2Width - (FrameThicknessForMap * 2))) - 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                            .attr("x2", ix + FrameWidthForMap + FrameThicknessForMap + ((SideLightPanel2Width - (FrameThicknessForMap * 2))) - 10)
-                            .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-
-                        svg.append("text")           // vertical line to show measurement text of side panel
-                            .style("fill", "black")
-                            .attr("font-size", 10)
-                            .attr("x", ix + FrameWidthForMap + FrameThicknessForMap + (SideLightPanel2Width - (FrameThicknessForMap * 2)) - 15)
-                            .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + FrameThicknessForMap + (SideLightPanel2Width - (FrameThicknessForMap * 2)) - 15},
-                               ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
-                    }
+                  
                 }
             }
 
         }
-
-
 
         /* Frame */
 
