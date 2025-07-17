@@ -597,73 +597,132 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
 
         // SCREEN INFO header row (merged A:AF later)
-        $data[] = array_merge(['SCREEN INFO'], array_fill(0, 31, ''));
+        $data[] = array_merge(['SCREEN INFO'], array_fill(0, 11, ''));
 
         // Screen info column headers
         $data[] = array_merge([
-            'Screen Number',
+            'S.No',
+            'Screen No',
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
-            'Fire Rating',
-            'Door Thickness',
-            'Frame Material',
-            'O/A Frame H',
-            'O/A Frame W',
-            'Frame Thickness',
-            'Plant on stop thickness',
-            'Plant on stop Width',
-            'Rebate Width',
-            'Scalloped Width',
-            'Scalloped Depth',
-            'Frame Depth',
-            'Leg x2',
-            'Head',
-            'Stop Leg x 2',
-            'Stop Head',
-            'Stop Bottom',
-            'Bottom- 4 Sided Frame',
-            'Handing',
-            'Finish',
-            'Undercut',
-            'Transom',
-            'Mullion',
-            'Notes'
+            'Screen Type',
+            'Frame Location',
+            'Frame Material/Finish',
+            'Frame Finish',
+            'Qty Per Screen Type',
+            'Quantity of screen types',
+            'Screen Dims ',
         ], array_fill(0, 32 - 18, ''));
-
-        foreach ($this->result as $value) {
+         $j = 1;
+        foreach($this->result as $value){
             $screenNumber = $value->screenNumber;
             $ScreenType = $value->ScreenType;
+            $poNmber = $value->plot_ref_no;
+            $Certificate = $value->certification_no;
             $FrameMF = lippingName($value->FrameMaterial);
             $Finish = $value->Finish;
-
-            $data[] = [
-                $screenNumber,
-                $value->plot_ref_no,
-                $value->certification_no,
-                $value->FireRating,
-                '',
-                $FrameMF,
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '' . '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                ''
+            $FrameDimensions = [
+                'Head' => $value->FrameWidth . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
+                'Bottom' => $value->FrameWidth . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
+                'Sides' => $value->FrameHeight . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
             ];
+            $Quantities = [
+                'Head' => 1,
+                'Bottom' => 1,
+                'Sides' => 2,
+            ];
+
+            foreach (['Head', 'Bottom', 'Sides'] as $FrameLocation) {
+                $Qty = $Quantities[$FrameLocation];
+                $screenDim = $FrameDimensions[$FrameLocation];
+                $data[] = [
+                    $j++,
+                    $screenNumber,
+                    $poNmber,
+                    $Certificate,
+                    $ScreenType,
+                    $FrameLocation,
+                    $FrameMF,
+                    $Finish,
+                    $Qty,
+                    1, // QtyScreenType is constant as 1
+                    $screenDim,
+                ];
+            }
+
+            if(!empty($value->TransomQuantity) && ($value->TransomQuantity != 0)){
+                $TransomQuantity = $value->TransomQuantity;
+                for ($i = 1; $i <= $TransomQuantity; $i++) {
+                    $FrameLocation = 'Transom'.$i;
+                    $Qty = 1;
+                    $TransomThickness ='Transom'.$i.'Thickness';
+                    $screenDim = $value->TransomWidth1.' x '.$value->TransomDepth.' x '.$value->$TransomThickness;
+                    $FrameMF = lippingName($value->TransomMaterial);
+
+                    $data[] = [
+                        $j,
+                        $screenNumber,
+                        $poNmber,
+                        $Certificate,
+                        $ScreenType,
+                        $FrameLocation,
+                        $FrameMF,
+                        $Finish,
+                        $Qty,
+                        1,
+                        $screenDim
+                    ];
+                    $j++;
+                }
+            }
+
+            if(!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)){
+                $MullionQuantity = $value->MullionQuantity;
+                for ($i = 1; $i <= $MullionQuantity; $i++) {
+                    $FrameLocation = 'Mullion'.$i;
+                    $Qty = 1;
+                    $MullionThickness ='Mullion'.$i.'Thickness';
+                    $screenDim = $value->MullionHeight1.' x '.$value->FrameDepth.' x '.$value->$MullionThickness;
+                    $FrameMF = lippingName($value->MullionMaterial);
+
+                    $data[] = [
+                        $j,
+                        $screenNumber,
+                        $poNmber,
+                        $Certificate,
+                        $ScreenType,
+                        $FrameLocation,
+                        $FrameMF,
+                        $Finish,
+                        $Qty,
+                        1,
+                        $screenDim
+                    ];
+                    $j++;
+                }
+            }
+
+            if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
+                $FrameLocation = 'SubFrame Bottom';
+                $FrameMF = lippingName($value->SubFrameMaterial);
+                $screenDim = $value->FrameWidth.' x '.$value->FrameDepth.' x '.$value->SubFrameBottomThickness;
+
+                $data[] = [
+                    $j,
+                    $screenNumber,
+                    $poNmber,
+                    $Certificate,
+                    $ScreenType,
+                    $FrameLocation,
+                    $FrameMF,
+                    $Finish,
+                    $Qty,
+                    1,
+                    $screenDim
+                ];
+                $j++;
+            }
+
         }
 
 
@@ -692,7 +751,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                 $highestRow = $sheet->getHighestRow();
 
-                // Main title style (green top + bottom borders)
+                // Title row style (green top and bottom borders)
                 $mainTitleStyle = [
                     'font' => ['bold' => true],
                     'alignment' => [
@@ -729,20 +788,45 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 for ($i = 1; $i <= $highestRow; $i++) {
                     $val = trim((string) $sheet->getCell("A{$i}")->getValue());
 
-                    // Apply green top and bottom border to title rows
-                    if (in_array($val, ['Door Order Sheet', 'Frames and Transoms', 'SCREEN INFO'])) {
+                    // Green border title rows
+                    if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
                         $sheet->mergeCells("A{$i}:AC{$i}");
                         $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($mainTitleStyle);
                     }
 
-                    // Apply red bottom border to heading rows
-                    if (in_array($val, ['Door Number', 'SCREEN NO'])) {
+                    // Green border for SCREEN INFO title
+                    if ($val === 'SCREEN INFO') {
+                        $sheet->mergeCells("A{$i}:K{$i}");
+                        $sheet->getStyle("A{$i}:K{$i}")->applyFromArray($mainTitleStyle);
+                    }
+
+                    // Red border for headings (Door Section and Screen Section)
+                    if ($val === 'Door Number') {
                         $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($headerRowStyle);
                     }
+
+                    if ($val === 'S.No') {
+                        // Find the last non-empty column in the current row
+                        $lastColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString('A');
+                        for ($colIndex = 1; $colIndex <= 100; $colIndex++) { // limit to 100 columns max
+                            $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
+                            $cellVal = trim((string) $sheet->getCell("{$colLetter}{$i}")->getValue());
+                            if (!empty($cellVal)) {
+                                $lastColIndex = $colIndex;
+                            }
+                        }
+
+                        $lastColLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($lastColIndex);
+                        $range = "A{$i}:{$lastColLetter}{$i}";
+                        $sheet->getStyle($range)->applyFromArray($headerRowStyle);
+                    }
+
+
                 }
             },
         ];
     }
+
 
     public function title(): string
     {
