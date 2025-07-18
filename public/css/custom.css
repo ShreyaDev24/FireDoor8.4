@@ -1812,6 +1812,50 @@ tbody{
         margin-top: 5px;
         margin-bottom: 20px;
     }
+
+    /* for vicima */
+    .Quote_tems_vicima {
+        background: #fff;
+        text-align: center;
+        padding: 30px 0px;
+        box-shadow: 0px 0px 3px 1px rgb(0 0 0 / 4%);
+        margin-bottom: 20px;
+        min-height: 320px;
+    }
+    .Quote_tems_vicima img {
+        max-width: 150px;
+        width: 100%;
+        margin-bottom: 15px;
+        max-height: 52px;
+    }
+    .Quote_tems_vicima a {
+        display: block;
+        font-weight: 600;
+        font-size: 15px;
+    }
+
+    .Quote_tems_vicima p {
+        font-size: 13px;
+        line-height: 24px;
+        color: #707070;
+        max-width: 200px;
+        width: 100%;
+        margin: 0 auto;
+        margin-top: 5px;
+        margin-bottom: 20px;
+    }
+    .vicimanewcss {
+        font-size: 13px !important;
+        line-height: 24px !important;
+        color: #707070!important;
+        max-width: 434px!important;
+        width: 100%!important;
+        margin: 0 auto!important;
+        margin-top: 5px!important;
+        margin-bottom: 20px!important;
+    }
+    /* end */
+
     .configure_btn {
         background: #338dff;
         display: inline-block !important;

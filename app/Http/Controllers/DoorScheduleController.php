@@ -4117,19 +4117,32 @@ class DoorScheduleController extends Controller
                         Additional <br> Door Set</a>
                     ';
                 }
-
-                $configItem .=
-                    '
-                <div class="col-sm-6 p-0 pr-1">
-                    <div class="Quote_tems">
-                        <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
-                        <a href="#">' . $ci->name . '</a>
-                        <input type="hidden" value="' . $ci->id . '" class="configItemId">
-                        <p>Configurable On Configuration</p>
-                        ' . $btnLink . '
-                    </div>
-                </div>
-                ';
+                // dd($ci);
+                if($ci->name == 'Vicaima'){
+                    $configItem .=
+                        '<div class="col-sm-6 p-0 pr-1">
+                            <div class="Quote_tems_vicima">
+                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <a href="#">' . $ci->name . ' - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A </a>
+                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
+                                <p class="vicimanewcss">Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical</p>
+                                ' . $btnLink . '
+                            </div>
+                        </div>
+                    ';
+                } else {
+                    $configItem .=
+                        '<div class="col-sm-6 p-0 pr-1">
+                            <div class="Quote_tems">
+                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <a href="#">' . $ci->name . '</a>
+                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
+                                <p>Configurable On Configuration</p>
+                                ' . $btnLink . '
+                            </div>
+                        </div>
+                    ';
+                }
             }
 
             $countDeliveryAddressInEditHeader = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->count();
