@@ -3420,7 +3420,7 @@ function commonGeneralLabourCost($request,$userIds): void{
 
         //dooor leaf finish
         if(!empty($request->doorLeafFinish)){
-            if(!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes" && $GeneralLabourCost->VisionPanel2 == 1)
+            if(!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes" && $GeneralLabourCost->VisionPanel2 == 1) {
                 if ($request->doorLeafFinish == "Primed" && $GeneralLabourCost->DoorLeafFinishPrimed2 == 1) {
                     $data = getMyLaborCost('DoorLeafFinishPrimed2', $GeneralLabourCost->genLaborCost);
                     $description = "Priming of glazing bead |".($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
