@@ -587,16 +587,13 @@ $sn++;
                                     ->orderBy('architects.ArcCompanyName')
                                     ->get();
 
-        if(Auth::user()->UserType==1){
-        $main_contractor_list = Customer::join('users','users.id','customers.UserId')
-                                ->select('customers.id','users.UserEmail','customers.CstCompanyName')
-                                ->where('users.CreatedBy',Auth::user()->id)->orderBy('customers.CstCompanyName')->get();
-        }
-        else{
-        $main_contractor_list = Customer::join('users','users.id','customers.UserId')
-                                ->select('customers.id','users.UserEmail','customers.CstCompanyName')
-                                ->orderBy('customers.CstCompanyName')
-                                ->get();
+
+        $main_contractor_list = "";
+        if (Auth::user()->UserType == "2" || Auth::user()->UserType == "3") {
+            $UserId = Auth::user()->id;
+            $main_contractor_list = Customer::join('users', 'customers.UserId', '=', 'users.id')->where(['users.CreatedBy' => $UserId])->select('customers.*', 'users.*', 'customers.id as CId')->orderBy('customers.id', 'desc')->get();
+        } else {
+            $main_contractor_list = Customer::where(['UserId' => Auth::user()->id])->orderBy('customers.id', 'desc')->get();
         }
 
 
