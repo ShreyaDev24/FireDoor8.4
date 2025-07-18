@@ -3420,11 +3420,13 @@ function commonGeneralLabourCost($request,$userIds): void{
 
         //dooor leaf finish
         if(!empty($request->doorLeafFinish)){
-            if ($request->doorLeafFinish == "Primed" && $GeneralLabourCost->DoorLeafFinishPrimed2 == 1) {
-                $data = getMyLaborCost('DoorLeafFinishPrimed2', $GeneralLabourCost->genLaborCost);
-                $description = "Priming of glazing bead |".($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            if(!empty($request->leaf1VisionPanel) && $request->leaf1VisionPanel == "Yes" && $GeneralLabourCost->VisionPanel2 == 1)
+                if ($request->doorLeafFinish == "Primed" && $GeneralLabourCost->DoorLeafFinishPrimed2 == 1) {
+                    $data = getMyLaborCost('DoorLeafFinishPrimed2', $GeneralLabourCost->genLaborCost);
+                    $description = "Priming of glazing bead |".($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                    $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                }
             }
 
             if (($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted2 == 1) {
