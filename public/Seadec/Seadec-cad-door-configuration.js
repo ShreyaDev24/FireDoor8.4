@@ -949,145 +949,97 @@ const render = (CustomElement = null) => {
   //     .attr('fill', '#D0D0C6');
 
 
-  if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
+    if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
 
-      svg.append('rect') // over panel rect (upper part)
-          .attr('x', ix)
-          .attr('y', iy) // Remove FrameThicknessForMap from y
-          .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap))
-          .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
-          .attr('stroke', 'black')
-          .attr('fill', '#D0D0C6');
+            svg.append('rect') // over panel rect (upper part)
+                .attr('x', ix)
+                .attr('y', iy) // Remove FrameThicknessForMap from y
+                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap))
+                .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
+                .attr('stroke', 'black')
+                .attr('fill', '#D0D0C6');
 
-      svg.append('rect') // over panel rect (upper part)
-          .attr('x', ix + FrameThicknessForMap + GapForMap)
-          .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
-          .attr('width', OverPanelWidth)
-          .attr('height', OverPanelHeight - (2 * FrameThicknessForMap)) // Reduce height
-          .attr('stroke', 'black')
-          .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
-
-      // // Second rectangle (below)
-      // svg.append('rect') // over panel rect (lower part)
-      // .attr('x', ix + ((GapForOverPanel / 5) / 2) )
-      // .attr('y', iy + OverPanelHeight - FrameThicknessForMap) // Position directly below the first rect
-      // .attr('width', FrameWidthForMap)
-      // .attr('height', FrameThicknessForMap) // Height equals FrameThicknessForMap
-      // .attr('stroke', 'black')
-      // .attr('fill', '#CDD8DD');
+            svg.append('rect') // over panel rect (upper part)
+                .attr('x',  ix + FrameThicknessForMap + GapForMap )
+                .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
+                .attr('width', OverPanelWidth)
+                .attr('height', OverPanelHeight - (2 * FrameThicknessForMap)) // Reduce height
+                .attr('stroke', 'black')
+                .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
 
 
-      if (ShowMeasurements) {
-          console.log(OverPanelHeight, 'OverPanelHeight')
-          if (OverPanelHeight > 0) {
+            if (ShowMeasurements) {
+                if (OverPanelHeight > 0) {
 
-              if (OverPanelHeight > 40) {
-                  console.log(OverPanelHeight, 'oooooooooooooooooooOverPanelHeight')
+                        svg.append("text")           
+                            .style("fill", "black")      
+                            .attr("font-size", 10)
+                            .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         
+                            .attr("y", iy - 15)        
+                            .text(SOWidth);   
+                       
 
-                  svg.append("text")           //Text of Width of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         // set x position of left side of text
-                      .attr("y", iy + OverPanelHeight - 20)         // set y position of bottom of text
-                      .text(OverPanelWidthToShow);   // define the text to display
-                  //Text of Width of Outer frame of door
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix )
+                            .attr("y1", iy - 10)
+                            .attr("x2", ix  + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("y2", iy - 10)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix )
+                            .attr("y1", iy + FrameThicknessForMap - 20)
+                            .attr("x2", ix )
+                            .attr("y2", iy + FrameThicknessForMap)
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("y1", iy + FrameThicknessForMap - 20)
+                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("y2", iy + FrameThicknessForMap)
 
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy + OverPanelHeight - 15)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy + OverPanelHeight - 15)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
+                       svg.append("text")           //Text of height of over panel of door
+                            .style("fill", "black")      // make the text black
+                            .attr("font-size", 10)
+                            .attr("x", ix - SideLightPanel1Width -35)         // set x position of left side of text
+                            .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
+                             .attr("transform", `rotate(-90, ${ix - SideLightPanel1Width - 35}, ${iy + FrameThicknessForMap + (OverPanelHeight / 2)})`) // rotate 45° around (x, y)
+                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
+                        //Text of Width of Outer frame of door
 
-                  svg.append("text")           //Text of height of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 35)         // set x position of left side of text
-                      .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                       .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
-                  //Text of Width of Outer frame of door
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -30)
+                            .attr("y1", iy )
+                            .attr("x2", ix - SideLightPanel1Width -30)
+                            .attr("y2", iy + OverPanelHeight)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -35)
+                            .attr("y1", iy )
+                            .attr("x2", ix )
+                            .attr("y2", iy )
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -35)
+                            .attr("y1", iy + OverPanelHeight)
+                            .attr("x2", ix )
+                            .attr("y2", iy + OverPanelHeight)
+                   
+                }
+            }
 
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 10)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 10)
-                      .attr("y2", iy + OverPanelHeight - FrameThicknessForMap)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-              } else {
-                  svg.append("text")           //Text of Width of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         // set x position of left side of text
-                      .attr("y", iy - 15)         // set y position of bottom of text
-                      .text(OverPanelWidthToShow);   // define the text to display
-                  //Text of Width of Outer frame of door
-
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy - 10)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy - 10)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy + FrameThicknessForMap - 20)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y2", iy + FrameThicknessForMap)
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy + FrameThicknessForMap - 20)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy + FrameThicknessForMap)
-
-                  svg.append("text")           //Text of height of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)         // set x position of left side of text
-                      .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                       .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
-                  //Text of Width of Outer frame of door
-
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 15)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 15)
-                      .attr("y2", iy - FrameThicknessForMap + OverPanelHeight)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)
-                      .attr("y2", iy + FrameThicknessForMap)
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy - FrameThicknessForMap + OverPanelHeight)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)
-                      .attr("y2", iy - FrameThicknessForMap + OverPanelHeight)
-              }
-          }
-      }
-
-  }
+        }
 
   if (ShowMeasurements && frameonoff && FrameThickness) {
 
