@@ -37,25 +37,203 @@ class GeneralSettingController extends Controller
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $hinge_location = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-        return view('Setting.DoorFramConstruction', ['users' => $users, 'half_lap_joint' => $half_lap_joint, 'mitre_joint' => $mitre_joint, 'mortice_tenon_joint' => $mortice_tenon_joint, 'butt_joint' => $butt_joint, 'hinge_location' => $hinge_location]);
+        $allSettings = DoorFrameConstruction::where('UserId', $users)->get()->keyBy('DoorFrameConstruction');
+        return view('Setting.DoorFramConstruction', ['users' => $users, 'half_lap_joint' => $half_lap_joint, 'mitre_joint' => $mitre_joint, 'mortice_tenon_joint' => $mortice_tenon_joint, 'butt_joint' => $butt_joint, 'hinge_location' => $hinge_location,'allSettings' => $allSettings]);
     }
 
     public function storeDoorFrameConstruction(Request $request)
     {
         $userId = Auth::user()->id;
+
         $doorFrames = [
-            'Half_Lapped_Joint' => ['width' => $request->input('width_half_lap'), 'height' => $request->input('height_half_lap')],
-            'Mitre_Joint' => ['width' => $request->input('width_mitre'), 'height' => $request->input('height_mitre')],
-            'Mortice_&_Tenon_Joint' => ['width' => $request->input('width_mortice'), 'height' => $request->input('height_mortice')],
-            'Butt_Joint' => ['width' => $request->input('width_butt'), 'height' => $request->input('height_butt')],
-            'Hinge_Location' => ['hinge1Location' => $request->input('hinge1Location'), 'hinge2Location' => $request->input('hinge2Location'),'hinge3Location' => $request->input('hinge3Location'),'hingeCenterCheck' => $request->input('hingeCenterCheck')],
+            // Primary Joint Types
+            'Half_Lapped_Joint' => [
+                'width' => $request->input('width_half_lap'),
+                'height' => $request->input('height_half_lap'),
+            ],
+            'Mitre_Joint' => [
+                'width' => $request->input('width_mitre'),
+                'height' => $request->input('height_mitre'),
+            ],
+            'Mortice_&_Tenon_Joint' => [
+                'width' => $request->input('width_mortice'),
+                'height' => $request->input('height_mortice'),
+            ],
+            'Butt_Joint' => [
+                'width' => $request->input('width_butt'),
+                'height' => $request->input('height_butt'),
+            ],
+
+            // Hinge Configuration
+            'Hinge_Location' => [
+                'hinge1Location' => $request->input('hinge1Location'),
+                'hinge2Location' => $request->input('hinge2Location'),
+                'hinge3Location' => $request->input('hinge3Location'),
+                'hingeCenterCheck' => $request->input('hingeCenterCheck'),
+            ],
+
+            // Door Frame Construction Settings
+            // 'DoorFrame' => [
+            //     'HalfLipped' => [
+            //         'width' => $request->input('doorFrame_halfLippedWidth'),
+            //         'height' => $request->input('doorFrame_halfLippedHeight'),
+            //     ],
+            //     'Mitre' => [
+            //         'width' => $request->input('doorFrame_mitreWidth'),
+            //         'height' => $request->input('doorFrame_mitreHeight'),
+            //     ],
+            //     'Mortice1' => [
+            //         'width' => $request->input('doorFrame_mortice1Width'),
+            //         'height' => $request->input('doorFrame_mortice1Height'),
+            //     ],
+            //     'Butt' => [
+            //         'width' => $request->input('doorFrame_buttWidth'),
+            //         'height' => $request->input('doorFrame_buttHeight'),
+            //     ],
+            // ],
+
+            // Plant-On Stop Settings
+            'PlantOn' => [
+                'HalfLipped' => [
+                    'width' => $request->input('plantOn_halfLippedWidth'),
+                    'height' => $request->input('plantOn_halfLippedHeight'),
+                ],
+                'Mitre' => [
+                    'width' => $request->input('plantOn_mitreWidth'),
+                    'height' => $request->input('plantOn_mitreHeight'),
+                ],
+                'Mortice1' => [
+                    'width' => $request->input('plantOn_mortice1Width'),
+                    'height' => $request->input('plantOn_mortice1Height'),
+                ],
+                'Butt' => [
+                    'width' => $request->input('plantOn__buttWidth'),
+                    'height' => $request->input('plantOn__buttHeight'),
+                ],
+            ],
+            // Side Light Panels
+            'SideLight' => [
+                'HalfLipped' => [
+                    'width' => $request->input('sideLight_halfLippedWidth'),
+                    'height' => $request->input('sideLight_halfLippedHeight'),
+                ],
+                'Mitre' => [
+                    'width' => $request->input('sideLight_mitreWidth'),
+                    'height' => $request->input('sideLight_mitreHeight'),
+                ],
+                'Mortice1' => [
+                    'width' => $request->input('sideLight_mortice1Width'),
+                    'height' => $request->input('sideLight_mortice1Height'),
+                ],
+                'Butt' => [
+                    'width' => $request->input('sideLight_buttWidth'),
+                    'height' => $request->input('sideLight_buttHeight'),
+                ],
+            ],
+
+            // Fanlight Panels
+            'Fanlight' => [
+                'HalfLipped' => [
+                    'width' => $request->input('fanlightHalfLippedWidth'),
+                    'height' => $request->input('fanlightHalfLippedHeight'),
+                ],
+                'Mitre' => [
+                    'width' => $request->input('fanlightMitreWidth'),
+                    'height' => $request->input('fanlightMitreHeight'),
+                ],
+                'Mortice1' => [
+                    'width' => $request->input('fanlightMortice1Width'),
+                    'height' => $request->input('fanlightMortice1Height'),
+                ],
+                'Butt' => [
+                    'width' => $request->input('fanlight_buttWidth'),
+                    'height' => $request->input('fanlight_buttHeight'),
+                ],
+            ],
+            // Vision Panels
+            'VisionPanel' => [
+                'NRF' => [
+                    'width' => $request->input('vpWidthNRF'),
+                    'height' => $request->input('vpHeightNRF'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('vpWidthFD60'),
+                    'height' => $request->input('vpHeightFD60'),
+                ],
+            ],
+
+            // Side Lights
+            'SideLightFD' => [
+                'FD30' => [
+                    'width' => $request->input('sideLightWidthFD30'),
+                    'height' => $request->input('sideLightHeightFD30'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('sideLightWidthFD60'),
+                    'height' => $request->input('sideLightHeightFD60'),
+                ],
+            ],
+
+            // Fanlight Sizes
+            'FanlightSize' => [
+                'NRF' => [
+                    'width' => $request->input('fanlightNrfWidth'),
+                    'height' => $request->input('fanlightNrfHeight'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('fanlightFd60Width'),
+                    'height' => $request->input('fanlightFd60Height'),
+                ],
+            ],
+
+            // Vision Panel Beading
+            'VPBead' => [
+                'NRF' => [
+                    'width' => $request->input('vpBeadNrfWidth'),
+                    'height' => $request->input('vpBeadNrfHeight'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('vpBeadFd60Width'),
+                    'height' => $request->input('vpBeadFd60Height'),
+                ],
+            ],
+
+            // Side Light Beading
+            'SideBead' => [
+                'NRF' => [
+                    'width' => $request->input('sideBeadNrfWidth'),
+                    'height' => $request->input('sideBeadNrfHeight'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('sideBeadFd60Width'),
+                    'height' => $request->input('sideBeadFd60Height'),
+                ],
+            ],
+
+            // Fanlight Beading
+            'FanlightBead' => [
+                'NRF' => [
+                    'width' => $request->input('fanlightNRFWidth'),
+                    'height' => $request->input('fanlightNRFHeight'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('fanlightFD60Width'),
+                    'height' => $request->input('fanlightFD60Height'),
+                ],
+            ],
+
         ];
-        $existDoorFrameConst = DoorFrameConstruction::where('UserId', $userId)->get();
-        $doorFrameConst = $existDoorFrameConst;
-        foreach ($doorFrames as $door => $dimensions){
-            $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
-            ->where('DoorFrameConstruction', $door)
-            ->first();
+
+        // Loop through and flatten if needed
+        foreach ($doorFrames as $mainKey => $values) {
+            // Handle nested subtypes like DoorFrame.Mitre
+            if (is_array($values) && isset($values['width']) === false && $mainKey !== 'Hinge_Location') {
+                foreach ($values as $subKey => $dimensions) {
+                    $key = "{$mainKey}.{$subKey}";
+
+                    $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
+                        ->where('DoorFrameConstruction', $key)
+                        ->first();
 
             if ($doorFrameConst) {
                 if($door === 'Hinge_Location'){
@@ -89,6 +267,7 @@ class GeneralSettingController extends Controller
                 $doorFrame->save();
             }
         }
+    }}
 
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
