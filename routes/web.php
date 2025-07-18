@@ -422,6 +422,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexportNew/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'exportNew'])->name('exportNew');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
+    Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
     Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');
     Route::get('/allGlazingBeadsExport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'allGlazingBeadsExport'])->name('allGlazingBeadsExport');

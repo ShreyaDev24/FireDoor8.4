@@ -89,6 +89,7 @@ use App\Models\ArchitraveType;
 use App\Models\DoorFrameConstruction;
 use App\Exports\cuttingListExport;
 use App\Exports\AllGlazingBeadsExport;
+use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
 
 class DoorScheduleController extends Controller
@@ -4116,19 +4117,32 @@ class DoorScheduleController extends Controller
                         Additional <br> Door Set</a>
                     ';
                 }
-
-                $configItem .=
-                    '
-                <div class="col-sm-6 p-0 pr-1">
-                    <div class="Quote_tems">
-                        <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
-                        <a href="#">' . $ci->name . '</a>
-                        <input type="hidden" value="' . $ci->id . '" class="configItemId">
-                        <p>Configurable On Configuration</p>
-                        ' . $btnLink . '
-                    </div>
-                </div>
-                ';
+                // dd($ci);
+                if($ci->name == 'Vicaima'){
+                    $configItem .=
+                        '<div class="col-sm-6 p-0 pr-1">
+                            <div class="Quote_tems_vicima">
+                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <a href="#">' . $ci->name . ' - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A </a>
+                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
+                                <p class="vicimanewcss">Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical</p>
+                                ' . $btnLink . '
+                            </div>
+                        </div>
+                    ';
+                } else {
+                    $configItem .=
+                        '<div class="col-sm-6 p-0 pr-1">
+                            <div class="Quote_tems">
+                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <a href="#">' . $ci->name . '</a>
+                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
+                                <p>Configurable On Configuration</p>
+                                ' . $btnLink . '
+                            </div>
+                        </div>
+                    ';
+                }
             }
 
             $countDeliveryAddressInEditHeader = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->count();
@@ -8561,6 +8575,29 @@ class DoorScheduleController extends Controller
                     $version_id = 1;
                 }
 
+                //JFDS 1042 START
+                $currentquotation = Quotation::where('id', $request->qId)->first();
+                $favquotation = Quotation::where('id', $request->quotationId)->first();
+                $configurableitems = configurationDoor($favquotation->configurableitems);
+                $current = configurationDoor($currentquotation->configurableitems);
+                if (
+                    !is_null($currentquotation->configurableitems) &&
+                    !is_null($favquotation->configurableitems) &&
+                    $currentquotation->configurableitems !== $favquotation->configurableitems
+                ) {
+                    $response = [
+                        'status' => false,
+                        'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
+                    ];
+                    return response()->json(
+                        $response,
+                        200,
+                        ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                        JSON_UNESCAPED_UNICODE
+                    );
+                }
+                // JFDS 1042 END
+
                 if (empty($request->versionId)) {
                     $request->versionId = 0;
                 }
@@ -9185,6 +9222,20 @@ class DoorScheduleController extends Controller
             'message' => 'All doors passed validation.',
             'items' => $items,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+        ]);
+    }
+
+    public function ExportScreenBomCalculation($quotationId,$versionID){
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',$versionID)->first();
+            $vid = $QV->version;
+        }
+
+        return Excel::download(new BomCalculationScreenExport($quotationId,$versionID), "Screen BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
 }
