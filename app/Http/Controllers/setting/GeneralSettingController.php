@@ -267,6 +267,7 @@ class GeneralSettingController extends Controller
                 $doorFrame->save();
             }
         }
+    }}
 
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
