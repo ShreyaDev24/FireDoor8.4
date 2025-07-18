@@ -138,6 +138,9 @@ class IntumescentController extends Controller
             // if(!empty($check)){
             //     return redirect()->back()->with('error', 'The Intumescent Seals tag already exist!');
             // }else{
+            $FireOnly = $request->FireOnly;
+
+            foreach($FireOnly as $FireOnlyData){
                 $a = new SettingIntumescentSeals2;
                 $a->created_at = date('Y-m-d H:i:s');
                 $a->configurableitems = $request->configurableitems;
@@ -151,7 +154,7 @@ class IntumescentController extends Controller
                 $a->Point2height = $request->Point2height;
                 $a->Point1width = $request->Point1width;
                 $a->Point2width = $request->Point2width;
-                $a->FireOnly = $request->FireOnly;
+                $a->FireOnly = $FireOnlyData;
                 $a->customeleafTypes = $leafTypesString;
                 $a->updated_at = date('Y-m-d H:i:s');
                 $a->editBy = Auth::user()->id;
@@ -174,6 +177,7 @@ class IntumescentController extends Controller
                 $selectedOption->selected_Point2width = $a->Point2width;
                 $selectedOption->selected_cost = ($request->IntumescentSealPrice) ?? 0;
                 $selectedOption->save();
+            }
             // }
         }
 

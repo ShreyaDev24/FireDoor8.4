@@ -666,12 +666,13 @@ dd(1);
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
                                     <label for="w-point2">Fire Only Type<span class="text-danger">*</span></label>
-                                    <select name="FireOnly" id="FireOnly" class="form-control" >
-                                        <option value="">Select Fire Only</option>
+                                    <select name="FireOnly[]" id="FireOnly" class="form-control" multiple>
+                                        <option value="" disabled selected>Select Fire Type</option>
                                         <option value="Fire_only">Fire only</option>
                                         <option value="Fire_and_Smoke">Fire and Smoke</option>
                                         <option value="Fire_Smoke_and_Acoustic">Fire Smoke and Acoustic</option>
                                     </select>
+
                                 </div>
                             </div>
                             @if(Auth::user()->UserType != 1)
@@ -2727,6 +2728,10 @@ dd(1);
 
     $("#Add_IntumescentSealArrangement").click(function(e) {
         e.preventDefault();
+        $('#FireOnly')
+        .attr('name', 'FireOnly[]')   // array input
+        .attr('multiple', 'multiple'); // enable multi-select
+
         $("#intumescentSealArrangementAddForm").modal('show');
     });
 
@@ -3073,7 +3078,11 @@ dd(1);
         $("input[name=Point2height]").val(Point2height);
         $("input[name=Point1width]").val(Point1width);
         $("input[name=Point2width]").val(Point2width);
-        $("select[name=FireOnly]").val(FireOnly);
+        $('#FireOnly')
+        .attr('name', 'FireOnly')      // single value
+        .removeAttr('multiple')        // remove multi-select
+        .val(FireOnly)            // set selected value
+        .trigger('change');
         $("input[name=brand]").val(brand);
         $("input[name=firetested]").val(firetested);
         $("input[name=IntumescentSealPrice]").val(selected_cost);
