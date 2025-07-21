@@ -16,6 +16,7 @@ use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
 use App\Exports\ScheduleOrderNew;
+use App\Exports\ExportNonConfig;
 use App\Exports\ScheduleOrderVicaima;
 use App\Exports\ScheduleOrder2;
 use App\Exports\BomDoorTypeExport;
@@ -5044,6 +5045,19 @@ class DoorScheduleController extends Controller
         // $fp = fopen('file.csv', 'w');
         return Excel::download(
             new ScheduleOrderNew($quotationId, $versionID),
+            'ScheduleOrder.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
+    }
+
+    public function ExcelExportNonConfig($quotationId, $versionID)
+    {
+        return Excel::download(
+            new ExportNonConfig($quotationId, $versionID),
             'ScheduleOrder.xlsx',
             \Maatwebsite\Excel\Excel::XLSX,
             [

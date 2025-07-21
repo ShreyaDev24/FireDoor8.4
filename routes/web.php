@@ -420,6 +420,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'export'])->name('export');
 
     Route::get('/excelexportNew/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'exportNew'])->name('exportNew');
+    Route::get('/ExcelExportNonConfig/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExcelExportNonConfig'])->name('ExcelExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
