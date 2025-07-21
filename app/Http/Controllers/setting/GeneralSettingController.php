@@ -72,26 +72,6 @@ class GeneralSettingController extends Controller
                 'hingeCenterCheck' => $request->input('hingeCenterCheck'),
             ],
 
-            // Door Frame Construction Settings
-            // 'DoorFrame' => [
-            //     'HalfLipped' => [
-            //         'width' => $request->input('doorFrame_halfLippedWidth'),
-            //         'height' => $request->input('doorFrame_halfLippedHeight'),
-            //     ],
-            //     'Mitre' => [
-            //         'width' => $request->input('doorFrame_mitreWidth'),
-            //         'height' => $request->input('doorFrame_mitreHeight'),
-            //     ],
-            //     'Mortice1' => [
-            //         'width' => $request->input('doorFrame_mortice1Width'),
-            //         'height' => $request->input('doorFrame_mortice1Height'),
-            //     ],
-            //     'Butt' => [
-            //         'width' => $request->input('doorFrame_buttWidth'),
-            //         'height' => $request->input('doorFrame_buttHeight'),
-            //     ],
-            // ],
-
             // Plant-On Stop Settings
             'PlantOn' => [
                 'HalfLipped' => [
@@ -230,52 +210,74 @@ class GeneralSettingController extends Controller
             if (is_array($values) && isset($values['width']) === false && $mainKey !== 'Hinge_Location') {
                 foreach ($values as $subKey => $dimensions) {
                     $key = "{$mainKey}.{$subKey}";
+
                     $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
                         ->where('DoorFrameConstruction', $key)
                         ->first();
+
                     if ($doorFrameConst) {
                         $doorFrameConst->update([
-                                'Width' => $dimensions['width'] ?? 0,
-                                'Height' => $dimensions['height'] ?? 0
-                            ]);
-                    }else{
-                        $doorFrame = new DoorFrameConstruction;
-                        $doorFrame->Width = $dimensions['width'] ?? 0;
-                        $doorFrame->Height = $dimensions['height'] ?? 0;
-                        $doorFrame->DoorFrameConstruction = $key;
-                        $doorFrame->UserId = $userId;
-                        $doorFrame->save();
+                            'Width' => $dimensions['width'],
+                            'Height' => $dimensions['height']
+                        ]);
+                    } else {
+                        DoorFrameConstruction::create([
+                            'UserId' => $userId,
+                            'DoorFrameConstruction' => $key,
+                            'Width' => $dimensions['width'],
+                            'Height' => $dimensions['height']
+                        ]);
                     }
                 }
             }
+
+            // Handle Hinge_Location
+            elseif ($mainKey === 'Hinge_Location') {
+                $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
+                    ->where('DoorFrameConstruction', $mainKey)
+                    ->first();
+                if ($doorFrameConst) {
+                    $doorFrameConst->hinge1Location = $values['hinge1Location'];
+                    $doorFrameConst->hinge2Location = $values['hinge2Location'];
+                    $doorFrameConst->hinge3Location = $values['hinge3Location'];
+                    $doorFrameConst->hingeCenterCheck = $values['hingeCenterCheck'];
+                    $doorFrameConst->save();
+                } else {
+                    $doorFrame = new DoorFrameConstruction;
+                    $doorFrame->DoorFrameConstruction = $mainKey;
+                    if($mainKey === 'Hinge_Location'){
+                        $doorFrame->hinge1Location = $values['hinge1Location'];
+                        $doorFrame->hinge2Location = $values['hinge2Location'];
+                        $doorFrame->hinge3Location = $values['hinge3Location'];
+                        $doorFrame->hingeCenterCheck = $values['hingeCenterCheck'];
+                    }
+                    $doorFrame->UserId = $userId;
+                    $doorFrame->save();
+                }
+            }
+
+            // Handle flat types like Mitre_Joint
             else {
-                if(is_array($values)  && $mainKey == 'Hinge_Location') {
-                        $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
-                            ->where('DoorFrameConstruction', $mainKey)
-                            ->first();
-                        if ($doorFrameConst) {
-                            if($mainKey === 'Hinge_Location'){
-                                $doorFrameConst->hinge1Location = $values['hinge1Location'] ?? null;
-                                $doorFrameConst->hinge2Location = $values['hinge2Location'] ?? null;
-                                $doorFrameConst->hinge3Location = $values['hinge3Location'] ?? null;
-                                $doorFrameConst->hingeCenterCheck = $values['hingeCenterCheck'] ?? 0;
-                                $doorFrameConst->save();
-                            }
-                        }else{
-                            $doorFrame = new DoorFrameConstruction;
-                            if($mainKey === 'Hinge_Location'){
-                                $doorFrame->hinge1Location = $values['hinge1Location'] ?? null;
-                                $doorFrame->hinge2Location = $values['hinge2Location'] ?? null;
-                                $doorFrame->hinge3Location = $values['hinge3Location'] ?? null;
-                                $doorFrame->hingeCenterCheck = $values['hingeCenterCheck'] ?? 0;
-                            }
-                            $doorFrame->DoorFrameConstruction = $mainKey;
-                            $doorFrame->UserId = $userId;
-                            $doorFrame->save();
-                        }
+                $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
+                    ->where('DoorFrameConstruction', $mainKey)
+                    ->first();
+
+                if ($doorFrameConst) {
+                    $doorFrameConst->update([
+                        'Width' => $values['width'],
+                        'Height' => $values['height']
+                    ]);
+                } else {
+                    DoorFrameConstruction::create([
+                        'UserId' => $userId,
+                        'DoorFrameConstruction' => $mainKey,
+                        'Width' => $values['width'],
+                        'Height' => $values['height']
+                    ]);
                 }
             }
         }
+
 
         if (!empty($existDoorFrameConst)) {
             return redirect()->back()->with('success', 'Update Successfully!');
