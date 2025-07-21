@@ -11,8 +11,6 @@
                             @if (!empty($msg))
                             <h1>{{$msg}}</h1>
                             @endif
-
-
                         </div>
                         <a href="{{url('quotation/generate')}}/{{Request::segment(3)}}/{{$vid}}"
                             class="btn-shadow btn btn-info float-right" style="margin-right:5px; margin-top:-50px">
@@ -77,6 +75,44 @@
                         </form>
                         <div id="validate"></div>
                         @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="card-header">
+                            <h5 class="card-title" style="margin-top: 10px">Add New Non-Configurable Items</h5>
+                        </div>
+                        <form method="post" action="{{route('quotation/non-config-store-excel')}}" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <label for="file">Excel File</label>
+                                            <input name="NonConfigExcelFile" id="NonConfigExcelFile" type="file"
+                                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                required class="form-control">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                                    <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                                    <div class="col-md-6">
+                                        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                                        <input type="hidden" id="base_url" value="{{url('/')}}">
+                                        <div class="position-relative form-group">
+                                            <label for="file" class=""></label>
+                                            <input type="submit" value="Submit" class="btn btn-success"
+                                                style="margin-top: 25px;">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>

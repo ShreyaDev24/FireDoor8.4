@@ -1888,7 +1888,64 @@ class DoorScheduleController extends Controller
         return null;
     }
 
+    public function nonconfigstorexcel(request $request)
+    {
+        $quotationId = $request->quotationId;
+        $versionId = $request->versionId;
+        $UserId = Auth::user()->id;
+        $countFR = null;
+        $success = null;
+        $countDFR = null;
 
+        $quotation = Quotation::where('id', $quotationId)->first();
+        if (!empty($quotation)) {
+            $data = Excel::toArray(new DoorScheduleImport, request()->file('NonConfigExcelFile'));
+
+            $configurableitems = '';
+            if ($data[0][1][1] == 'Streboard') {
+                $configurableitems = 1;
+            } elseif ($data[0][1][1] == 'Halspan') {
+                $configurableitems = 2;
+            } elseif ($data[0][1][1] == 'Norma') {
+                $configurableitems = 3;
+            } elseif ($data[0][1][1] == 'Vicaima') {
+                $configurableitems = 4;
+            }elseif($data[0][1][1] == 'Seadec'){
+                $configurableitems = 5;
+            }elseif($data[0][1][1] == 'Deanta'){
+                $configurableitems = 6;
+            }elseif($data[0][1][1] == 'Flamebreak'){
+                $configurableitems = 7;
+            }elseif($data[0][1][1] == 'Stredor'){
+                $configurableitems = 8;
+            }elseif($data[0][1][1] == 'MMM'){
+                $configurableitems = 9;
+            }
+
+            if($quotation->configurableitems != $configurableitems && $quotation->configurableitems != null){
+                return redirect()->back()->with('error', 'Quotation is not linked with '.$data[0][1][1].' door!');
+            }
+
+            if ($configurableitems == 1 || $configurableitems == 2 || $configurableitems == 3 || $configurableitems == 7 || $configurableitems == 8) {
+                $quotation->configurableitems = $configurableitems;
+                $quotation->save();
+                $i = 0;
+                foreach ($data[0] as $row) {
+
+                    if (isset($row[6]) && ($i == 0 || trim($row[6]) === '')) {
+                        $i++;
+                        continue;
+                    }
+
+                    // dd($row);
+                    $j = 2;
+                    $IntumescentLeafType = trim((string) $row[$j++]);
+                    $FrameOnOff = trim((string) $row[$j++]);
+
+                }
+            }
+        }
+    }
 
     public function storexcel(request $request)
     {
