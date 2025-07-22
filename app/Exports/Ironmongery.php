@@ -50,9 +50,9 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
                 $words2 = $words[2] ?? "";
                 $words3 = $words[3] ?? "";
                 $words4 = $words[4] ?? "";
-                $words5 = $words[5] ?? "";
+                $words5 = $words[count($words) - 2] ?? null;
                 $quantity = $value->LMPerDoorType;
-                $words6 = floatval($words[6] ?? 0);
+                $words6 = floatval(($words[count($words) - 1]) ?? 0);
                 $margin = $value->Margin;
 
                 $marginwithcal = 100 - $margin;
