@@ -164,6 +164,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
                 $stopbottom = $stophead;
+                $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
             }
 
             $data[] = [
@@ -237,6 +238,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                    $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = [
@@ -308,6 +310,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                    $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = [
@@ -379,6 +382,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                    $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = [
