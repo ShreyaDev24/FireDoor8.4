@@ -90,12 +90,18 @@
                             {{csrf_field()}}
                             <div class="card-body">
                                 <div class="form-row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-12">
                                         <div class="position-relative form-group">
                                             <label for="file">Excel File</label>
                                             <input name="NonConfigExcelFile" id="NonConfigExcelFile" type="file"
                                                 accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                                 required class="form-control">
+
+                                            <p style="color:red; font-size:12px; margin-top:5px">
+                                                The Name and Product Code fields in the import file must exactly match the entries from the Non-Configurable Items — including case sensitivity (uppercase/lowercase).
+
+                                                Both fields are required, and the import must use the same format as the exported Non-Configurable Items file.
+                                            </p>
                                         </div>
                                     </div>
                                     <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
