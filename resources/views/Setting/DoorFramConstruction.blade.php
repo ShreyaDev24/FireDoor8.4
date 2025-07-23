@@ -445,14 +445,14 @@
                                 <div class="col-12 font-weight-bold">VP GLAZING BEAD SIZE (NRF OR FD30)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpBeadNrfWidth">VP GLAZING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-5" max="0" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Width}}@endif">
+                                        <label for="vpBeadNrfWidth">VP GLAZING BEAD WIDTH NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpBeadNrfHeight">VP GLAZING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-5" max="0" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Height}}@endif">
+                                        <label for="vpBeadNrfHeight">VP GLAZING BEAD HEIGHT NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -460,14 +460,14 @@
                                 <div class="col-12 font-weight-bold">VP GLAZING BEAD SIZE (FD60)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpBeadFd60Width">VP GLAZING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-10" max="0" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Width}}@endif">
+                                        <label for="vpBeadFd60Width">VP GLAZING BEAD WIDTH FD60 </label>
+                                        <input type="number" min="-10" max="20" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpBeadFd60Height">VP GLAZING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-10" max="0" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Height}}@endif">
+                                        <label for="vpBeadFd60Height">VP GLAZING BEAD HEIGHT FD60 </label>
+                                        <input type="number" min="-10" max="20" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -480,14 +480,14 @@
                                 <div class="col-12 font-weight-bold">SIDE LIGHT 1 & 2 GLAZING BEAD SIZE (NRF OR FD30)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideBeadNrfWidth">SIDE LIGHT GLAZING BEAD WIDTH NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-5" max="0" name="sideBeadNrfWidth" id="sideBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Width}}@endif">
+                                        <label for="sideBeadNrfWidth">SIDE LIGHT GLAZING BEAD WIDTH NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="sideBeadNrfWidth" id="sideBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideBeadNrfHeight">SIDE LIGHT GLAZING BEAD HEIGHT NRF OR FD30 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-5" max="0" name="sideBeadNrfHeight" id="sideBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Height}}@endif">
+                                        <label for="sideBeadNrfHeight">SIDE LIGHT GLAZING BEAD HEIGHT NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="sideBeadNrfHeight" id="sideBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.NRF'])){{$allSettings['SideBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -495,14 +495,14 @@
                                 <div class="col-12 font-weight-bold">SIDE LIGHT 1 & 2 GLAZING BEAD SIZE (FD60)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideBeadFd60Width">SIDE LIGHT GLAZING BEAD WIDTH FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-10" max="0" name="sideBeadFd60Width" id="sideBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Width}}@endif">
+                                        <label for="sideBeadFd60Width">SIDE LIGHT GLAZING BEAD WIDTH FD60 </label>
+                                        <input type="number" min="-10" max="20" name="sideBeadFd60Width" id="sideBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideBeadFd60Height">SIDE LIGHT GLAZING BEAD HEIGHT FD60 <span class="text-muted">CAN BE - ONLY</span></label>
-                                        <input type="number" min="-10" max="0" name="sideBeadFd60Height" id="sideBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Height}}@endif">
+                                        <label for="sideBeadFd60Height">SIDE LIGHT GLAZING BEAD HEIGHT FD60 </label>
+                                        <input type="number" min="-10" max="20" name="sideBeadFd60Height" id="sideBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideBead.FD60'])){{$allSettings['SideBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
@@ -516,14 +516,14 @@
                                 <div class="col-12 font-weight-bold">FANLIGHT / OP GLAZING BEAD SIZE - NRF OR FD30</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightNRFWidth">FANLIGHT / OP GLAZING BEAD SIZE WIDTH NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" min="-5" max="0" name="fanlightNRFWidth" id="fanlightNRFWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Width}}@endif">
+                                        <label for="fanlightNRFWidth">FANLIGHT / OP GLAZING BEAD SIZE WIDTH NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="fanlightNRFWidth" id="fanlightNRFWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightNRFHeight">FANLIGHT / OP GLAZING BEAD SIZE HEIGHT NRF OR FD30 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" min="-5" max="0" name="fanlightNRFHeight" id="fanlightNRFHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Height}}@endif">
+                                        <label for="fanlightNRFHeight">FANLIGHT / OP GLAZING BEAD SIZE HEIGHT NRF OR FD30 </label>
+                                        <input type="number" min="-5" max="20" name="fanlightNRFHeight" id="fanlightNRFHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.NRF'])){{$allSettings['FanlightBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -531,14 +531,14 @@
                                 <div class="col-12 font-weight-bold">FANLIGHT / OP GLAZING BEAD SIZE - FD60</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightFD60Width">FANLIGHT / OP GLAZING BEAD SIZE WIDTH FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" min="-10" max="0"" name="fanlightFD60Width" id="fanlightFD60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Width}}@endif">
+                                        <label for="fanlightFD60Width">FANLIGHT / OP GLAZING BEAD SIZE WIDTH FD60 </label>
+                                        <input type="number" min="-10" max="20"" name="fanlightFD60Width" id="fanlightFD60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightFD60Height">FANLIGHT / OP GLAZING BEAD SIZE HEIGHT FD60 <br> <small class="text-muted">CAN BE - ONLY</small></label>
-                                        <input type="number" min="-10" max="0" name="fanlightFD60Height" id="fanlightFD60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Height}}@endif">
+                                        <label for="fanlightFD60Height">FANLIGHT / OP GLAZING BEAD SIZE HEIGHT FD60 </label>
+                                        <input type="number" min="-10" max="20" name="fanlightFD60Height" id="fanlightFD60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['FanlightBead.FD60'])){{$allSettings['FanlightBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>
