@@ -275,6 +275,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excel-upload/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelupload'])->name('quotation/excel-upload');
     Route::post('/store-door', [App\Http\Controllers\DoorScheduleController::class,'storedoor'])->name('quotation/store-door');
     Route::post('/store-excel', [App\Http\Controllers\DoorScheduleController::class,'storexcel'])->name('quotation/store-excel');
+    Route::post('/non-config-store-excel', [App\Http\Controllers\DoorScheduleController::class,'nonconfigstorexcel'])->name('quotation/non-config-store-excel');
     Route::post('/edit-image', [App\Http\Controllers\DoorScheduleController::class,'editImage'])->name('quotation/edit-image');
     Route::post('/edit-image1', [App\Http\Controllers\DoorScheduleController::class,'editImage1'])->name('quotation/edit-image1');
     Route::post('/validateAlls', [App\Http\Controllers\DoorScheduleController::class,'validateAlls'])->name('quotation/validateAlls');
@@ -421,6 +422,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'export'])->name('export');
 
     Route::get('/excelexportNew/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'exportNew'])->name('exportNew');
+    Route::get('/ExcelExportNonConfig/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExcelExportNonConfig'])->name('ExcelExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');

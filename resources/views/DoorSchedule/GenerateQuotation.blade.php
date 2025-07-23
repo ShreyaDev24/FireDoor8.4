@@ -122,6 +122,7 @@
                                             <li><a href="javascript:void(0);" onClick="MainFormImport();">Import</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="ExcelExport();">Export Old</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                             <li><a href="javascript:void(0);"
                                                     onClick="CopyQuotation({{ $quotationId }});">Copy</a></li>
                                             <li><a href="javascript:void(0);" onClick="favoriteItemList();">favourite</a>
@@ -811,6 +812,8 @@
     <input type="hidden" name="excelexportUrl" id="excelexportUrl" value="{{ url('/quotation/excelexport') }}" />
     <input type="hidden" name="excelexportNewUrl" id="excelexportNewUrl"
         value="{{ url('/quotation/excelexportNew') }}" />
+    <input type="hidden" name="ExcelExportNonConfigUrl" id="ExcelExportNonConfigUrl"
+        value="{{ url('/quotation/ExcelExportNonConfig') }}" />
     <input type="hidden" name="ExportBomCalculationUrl" id="ExportBomCalculationUrl"
         value="{{ url('/quotation/ExportBomCalculation') }}" />
     <input type="hidden" name="ExportDoorTypeBomUrl" id="ExportDoorTypeBomUrl"
@@ -2690,6 +2693,17 @@
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
+            ExcelExportNonConfig = function() {
+            var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
+            var quotationId = $("#quotationId").val();
+            var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+            var currentVersion = $("#currentVersion").val();
+            if (currentVersion != 0) {
+                window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
+            } else {
+                swal("Oops!", "You haven't selected any version yet.", "error");
+            }
+        };
             ExportBomCalculation = function() {
                 var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
                 var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
