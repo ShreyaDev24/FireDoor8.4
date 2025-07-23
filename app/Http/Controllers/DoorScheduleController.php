@@ -5136,7 +5136,7 @@ class DoorScheduleController extends Controller
     {
         return Excel::download(
             new ExportNonConfig($quotationId, $versionID),
-            'ScheduleOrder.xlsx',
+            'Non-Config.xlsx',
             \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
