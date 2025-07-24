@@ -28,10 +28,35 @@
         </div>
         @endif
 
-
+        <div class="card-body">
+            <div class="tab-content">
+                <form method="post" action="{{ route('option/import-non-config') }}" enctype="multipart/form-data">
+                    {{csrf_field()}}
+                    <div class="card-body">
+                        <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="position-relative form-group">
+                                <label for="file">Excel File</label>
+                                <input name="ExcelFile" id="ExcelFile" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                            <input type="hidden" id="base_url" value="{{url('/')}}">
+                            <div class="position-relative form-group">
+                                <label for="file" class=""></label>
+                                <input type="submit" value="Submit" class="btn btn-success" style="margin-top: 25px;">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
         <div class="tab-content">
             <a href="{{ url('non-configural-items/create') }}">
                 <button id="nonconfigurableitem" class="btn btn-info float-right mt-3 mr-4">Create Non Configurable Item</button>
+                <a href="{{url('/quotation/ExportNonConfig')}}" class="btn btn-primary float-right mt-3 mr-4">Export</a>
             </a>
             <div class="main-card mb-3 card">
                 <table style="width:100%" id="example" class="table table-hover table-striped table-bordered" >

@@ -1857,7 +1857,10 @@ class DoorScheduleController extends Controller
         }
     }
 
-
+    public function import_non_config(Request $request)
+    {
+        
+    }
 
     public function storedoor(request $request)
     {
@@ -5045,6 +5048,19 @@ class DoorScheduleController extends Controller
         return Excel::download(
             new ScheduleOrderNew($quotationId, $versionID),
             'ScheduleOrder.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
+    }
+
+    public function ExportNonConfig(Request $request)
+    {
+        return Excel::download(
+            new NonConfig(),
+            'Non-Config-List.xlsx',
             \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
