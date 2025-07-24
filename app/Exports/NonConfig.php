@@ -34,8 +34,7 @@ class NonConfig implements FromCollection,WithHeadings,WithEvents
             $description = $item->description;
             $unit = $item->unit;
             $quantity = $item->quantity;
-            $storePrice = $item->storePrice;
-            $total_price = $item->total_price;
+            $storePrice = $item->price;
 
             $data[] = [
                 $j,

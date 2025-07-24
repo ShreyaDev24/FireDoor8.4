@@ -1860,7 +1860,51 @@ class DoorScheduleController extends Controller
 
     public function import_non_config(Request $request)
     {
-        
+        $UserId = Auth::user()->id;
+
+        $importedCount = 0;
+        $skippedRows = 0;
+
+        try {
+            $data = Excel::toArray(new DoorScheduleImport, $request->file('ExcelFile'));
+
+            if (empty($data[0])) {
+                return redirect()->back()->with('error', 'The uploaded file is empty.');
+            }
+
+            $i = 0;
+            foreach ($data[0] as $row) {
+                if ($i++ == 0) continue; // skip header
+
+                $j = 0;
+                $sno = trim((string) $row[$j++]);
+                $name = trim((string) $row[$j++]);
+                $product_code = trim((string) $row[$j++]);
+                $description = trim((string) $row[$j++]);
+                $unit = trim((string) $row[$j++]);
+                $price = (float) trim((string) $row[$j++]);
+
+                $data = new NonConfigurableItems();
+                $data->name = $name;
+                $data->description = $description;
+                $data->product_code = $product_code;
+                $data->unit = $unit;
+                $data->price = $price;
+                $data->userId = Auth::user()->id;
+                $data->save();
+
+                $importedCount++;
+            }
+
+            if ($importedCount > 0) {
+                $msg = "{$importedCount} item(s) imported successfully.";
+                return redirect()->back()->with('success', $msg);
+            } else {
+                return redirect()->back()->with('error', 'No items were imported. Please check the file contents.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while importing: ' . $e->getMessage());
+        }
     }
 
     public function storedoor(request $request)
