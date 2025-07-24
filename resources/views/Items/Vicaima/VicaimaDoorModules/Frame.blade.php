@@ -214,7 +214,7 @@
                                                     @endif
                                                     </label>
                                                     <select name="frameFinish" id="frameFinish"
-                                                        class="form-control change-event-calulation">
+                                                        class="form-control change-event-calulation" required>
                                                         <option value="">Select Frame finish</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='Frame_Finish')
