@@ -16,6 +16,7 @@ use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
 use App\Exports\ScheduleOrderNew;
+use App\Exports\NonConfig;
 use App\Exports\ScheduleOrderVicaima;
 use App\Exports\ScheduleOrder2;
 use App\Exports\BomDoorTypeExport;
