@@ -1884,20 +1884,27 @@ class DoorScheduleController extends Controller
                 $unit = trim((string) $row[$j++]);
                 $price = (float) trim((string) $row[$j++]);
 
-                $data = new NonConfigurableItems();
-                $data->name = $name;
-                $data->description = $description;
-                $data->product_code = $product_code;
-                $data->unit = $unit;
-                $data->price = $price;
-                $data->userId = Auth::user()->id;
-                $data->save();
+                if(!empty($name) && !empty($product_code) && !empty($description) && !empty($unit) && !empty($price)){
+                    $data = new NonConfigurableItems();
+                    $data->name = $name;
+                    $data->description = $description;
+                    $data->product_code = $product_code;
+                    $data->unit = $unit;
+                    $data->price = $price;
+                    $data->userId = Auth::user()->id;
+                    $data->save();
 
-                $importedCount++;
+                    $importedCount++;
+                } else {
+                    $skippedRows++;
+                }
             }
 
             if ($importedCount > 0) {
                 $msg = "{$importedCount} item(s) imported successfully.";
+                if ($skippedRows > 0) {
+                    $msg .= " {$skippedRows} row(s) skipped due to empty/missing required fields.";
+                }
                 return redirect()->back()->with('success', $msg);
             } else {
                 return redirect()->back()->with('error', 'No items were imported. Please check the file contents.');
