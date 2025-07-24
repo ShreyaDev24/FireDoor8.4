@@ -505,7 +505,7 @@ word-wrap: break-word;
                                                 @if($file->tag == $matchname)
                                                     @php
                                                         $extension = pathinfo($file->file, PATHINFO_EXTENSION);
-                                                        $filePath = asset('uploads/project/' . $file->file);
+                                                        $filePath = asset('uploads/Project/' . $file->file);
                                                         $iconClass = match($extension) {
                                                             'csv' => 'fa-file-csv',
                                                             'xls', 'xlsx' => 'fa-file-excel',
