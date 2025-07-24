@@ -37,6 +37,18 @@ word-wrap: break-word;
     padding-top: 0;
 }
 
+.modal-backdrop.show, .show.blockOverlay {
+    opacity: 0 !important;
+    display: none;
+}
+.modal.show {
+    display: block !important;
+    z-index: 1050 !important;    /* ensure modal is above backdrop */
+}
+#filePreviewModal .modal-dialog {
+    top: 10%; /* pushes modal down from top */
+    z-index: 1060 !important;
+}
 </style>
 <div class="app-main__outer">
 <div class="app-main__inner">
@@ -392,7 +404,7 @@ word-wrap: break-word;
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 p-0">
+                        {{-- <div class="col-md-12 p-0">
                             <h5 class="card-title">Project Files</h5>
                             <div class="row">
                                 @php
@@ -444,7 +456,97 @@ word-wrap: break-word;
                                     </div>
                                 @endforeach
                             </div>
+                        </div> --}}
+                        <div class="col-md-12 p-0">
+                            <h5 class="card-title">Project Files</h5>
+
+                            <!-- Breadcrumb -->
+                            <nav aria-label="breadcrumb" class="mb-3">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item active">Project Files</li>
+                                    <li class="breadcrumb-item"><a href="#" id="uploadTab">Upload Files</a></li>
+                                    <li class="breadcrumb-item"><a href="#" id="showTab">Show Files</a></li>
+                                </ol>
+                            </nav>
+
+                            <!-- Upload Files Section -->
+                            <div class="row" id="uploadSection">
+                                @php
+                                    $projectFilesArray = ["Door Schedule", "Door Elevations", "Floor Plan", "NBS", "BOQ (Bill of Quantities)", "Ironmongery Schedule", "Other Files"];
+                                @endphp
+
+                                @foreach($projectFilesArray as $projectFileVal)
+                                    @php
+                                        $filename = preg_replace('/\s+/', '', $projectFileVal);
+                                        $filetype = 'multiple';
+                                        $matchname = $filename == 'BOQ(BillofQuantities)' ? 'BOQ' : $filename;
+                                        $altername = $matchname.'[]';
+                                        $accept_type = $matchname == 'DoorSchedule' ? '.csv' : '';
+                                    @endphp
+
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label">{{ $projectFileVal }}</label>
+                                        <input type="file" name="{{ $altername }}" class="form-control" {{ $filetype }} accept="{{ $accept_type }}">
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <!-- Show Files Section -->
+                            <div class="row" id="showSection" style="display:none;">
+                                @if(!empty($ProjectFiles))
+                                    @foreach($projectFilesArray as $projectFileVal)
+                                        @php
+                                            $matchname = preg_replace('/\s+/', '', $projectFileVal);
+                                            $matchname = $matchname == 'BOQ(BillofQuantities)' ? 'BOQ' : $matchname;
+                                        @endphp
+                                        <div class="col-md-4 mb-3">
+                                            <h6>{{ $projectFileVal }}</h6>
+                                            @foreach($ProjectFiles as $file)
+                                                @if($file->tag == $matchname)
+                                                    @php
+                                                        $extension = pathinfo($file->file, PATHINFO_EXTENSION);
+                                                        $filePath = asset('uploads/project/' . $file->file);
+                                                        $iconClass = match($extension) {
+                                                            'csv' => 'fa-file-csv',
+                                                            'xls', 'xlsx' => 'fa-file-excel',
+                                                            'pdf' => 'fa-file-pdf',
+                                                            default => 'fa-file',
+                                                        };
+                                                    @endphp
+                                                    <div class="alert alert-primary alert-dismissible fade show d-flex justify-content-between align-items-center" role="alert" style="background-color: #e8edfa;">
+                                                        <div class="d-flex align-items-center">
+                                                            <i class="fas {{ $iconClass }} text-dark mr-3 fa-lg"></i>
+                                                            <strong style="margin-left: 10px;">{{ $file->file }}</strong>
+                                                        </div>
+
+                                                        <div class="d-flex align-items-center">
+                                                            @if($extension === 'pdf')
+                                                                <a href="{{ $filePath }}" target="_blank" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;">
+                                                                    <i class="fas fa-eye"></i> Open PDF
+                                                                </a>
+                                                            @elseif(in_array($extension, ['csv', 'xlsx', 'xls']))
+                                                                <button type="button" class="btn btn-sm btn-outline-primary" style="margin-right: 10px;" onclick="previewFile('{{ $filePath }}', '{{ $extension }}')">
+                                                                    <i class="fas fa-eye"></i>
+                                                                </button>
+                                                            @endif
+
+                                                           <input type="hidden" class="projectFileID" value="{{ $file->id }}">
+                                                            <input type="hidden" class="filename" value="{{ $file->file }}">
+                                                            <a href="#" class="text-danger DeleteProjectFile" title="Delete File">
+                                                                <i class="fa fa-trash fa-lg"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                @endif
+                                            @endforeach
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="col-md-12"><p>No files uploaded yet.</p></div>
+                                @endif
+                            </div>
                         </div>
+
                         <div class="inptfrm mt-2">
                             <h5 class="card-title">Certification</h5>
                             <div class="row">
@@ -546,6 +648,23 @@ word-wrap: break-word;
     @endif
 </button>
 </div>
+<!-- File Preview Modal -->
+<div class="modal fade" id="filePreviewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">File Preview</h5>
+        <button type="button" class="btn text-danger" data-bs-dismiss="modal" aria-label="Close">
+            <i class="fa fa-times fa-lg"></i>
+        </button>
+      </div>
+      <div class="modal-body" id="filePreviewBody">
+        <p class="text-muted">Loading file preview...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 </div>
 </div>
 </form>
@@ -553,6 +672,10 @@ word-wrap: break-word;
 </div>
 @endsection
 @section("script_section")
+<!-- Bootstrap CSS -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 $.ajaxSetup({
     headers: {
@@ -661,6 +784,7 @@ $(document).ready(function() {
     });
 });
 $(document).on('click','.DeleteProjectFile',function(){
+
     const projectFileID = $(this).siblings('.projectFileID').val();
     const filename = $(this).siblings('.filename').val();
     $.ajax({
@@ -669,10 +793,68 @@ $(document).on('click','.DeleteProjectFile',function(){
         data: { projectFileID: projectFileID, filename: filename },
         dataType: "json",
         success: function(data) {
-        console.log(data);
+            if(data == 1){
+                location.reload();
+            }
     }
     });
 });
+
+$(document).ready(function(){
+        $('#uploadTab').on('click', function(e){
+            e.preventDefault();
+            $('#uploadSection').show();
+            $('#showSection').hide();
+        });
+
+        $('#showTab').on('click', function(e){
+            e.preventDefault();
+            $('#uploadSection').hide();
+            $('#showSection').show();
+        });
+});
+function previewFile(filePath, ext) {
+    const previewBody = document.getElementById('filePreviewBody');
+    previewBody.innerHTML = '<p class="text-muted">Loading...</p>';
+
+    // Show modal
+    const previewModal = new bootstrap.Modal(document.getElementById('filePreviewModal'));
+    previewModal.show();
+
+    if (ext === 'csv') {
+        fetch(filePath)
+            .then(response => response.text())
+            .then(text => {
+                const rows = text.trim().split('\n');
+                let html = '<div class="table-responsive"><table class="table table-bordered table-sm"><tbody>';
+                rows.forEach((row, index) => {
+                    const cells = row.split(',');
+                    html += '<tr>';
+                    cells.forEach(cell => {
+                        html += index === 0
+                            ? `<th>${cell}</th>`
+                            : `<td>${cell}</td>`;
+                    });
+                    html += '</tr>';
+                });
+                html += '</tbody></table></div>';
+                previewBody.innerHTML = html;
+            })
+            .catch(() => {
+                previewBody.innerHTML = '<div class="text-danger">Error loading file preview.</div>';
+            });
+
+    } else if (['xlsx', 'xls'].includes(ext)) {
+        previewBody.innerHTML = `
+            <div class="alert alert-info">
+                Excel preview not supported in-browser. Please click to <a href="${filePath}" target="_blank">download to show the file</a>.
+            </div>
+        `;
+    } else {
+        previewBody.innerHTML = '<div class="text-danger">Unsupported file format for preview.</div>';
+    }
+}
+
 
 
 </script>
