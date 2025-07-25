@@ -290,6 +290,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/parseImport', [App\Http\Controllers\DoorScheduleController::class,'parseImport'])->name('parseImport');
     Route::get('/import_fields', [App\Http\Controllers\DoorScheduleController::class,'import_fields'])->name('import_fields');
     Route::post('/import_process', [App\Http\Controllers\DoorScheduleController::class,'import_process'])->name('import_process');
+    Route::post('/import-non-config', [App\Http\Controllers\DoorScheduleController::class,'import_non_config'])->name('option/import-non-config');
 
 
 
@@ -422,6 +423,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'export'])->name('export');
 
     Route::get('/excelexportNew/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'exportNew'])->name('exportNew');
+    Route::get('/ExportNonConfig', [App\Http\Controllers\DoorScheduleController::class,'ExportNonConfig'])->name('ExportNonConfig');
     Route::get('/ExcelExportNonConfig/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExcelExportNonConfig'])->name('ExcelExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
