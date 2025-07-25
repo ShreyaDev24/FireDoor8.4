@@ -73,7 +73,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     str_replace('_', ' ', $value->GlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
                     $value->GlazingBeadsThickness,
-                    $value->glazingBeadsWidth,
+                    $value->glazingBeadsHeight,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR) : ($value->Leaf1VPWidth + $VisionPanelWidthFD60),
                     $value->VisionPanelQuantity * 4,
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR,
