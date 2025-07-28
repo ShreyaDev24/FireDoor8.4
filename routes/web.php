@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -251,6 +252,8 @@ Route::prefix('options')->group(function (): void {
     Route::post('filter-glass-type-overpanel',[App\Http\Controllers\OptionController::class,'filter_glass_type_overpanel'])->name('filter-glass-type-overpanel');
     Route::post('filter-leaf-type',[App\Http\Controllers\OptionController::class,'filter_leaf_type'])->name('filter-leaf-type');
 });
+
+Route::resource('favorites', FavoriteController::class);
 
 Route::prefix('quotation')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
