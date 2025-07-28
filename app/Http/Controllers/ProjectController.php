@@ -271,6 +271,7 @@ class ProjectController extends Controller
                 // end certification
                 // MOVE FROM QUOTATION TO ADD OR EDIT PROJECT. (30-11-2023)
                 $project->coc = $request->COC;
+                $project->project_ironmongery = $request->project_ironmongery;
                 $project->updated_at = date('Y-m-d H:i:s');
                 $project->save();
 

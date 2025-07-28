@@ -235,7 +235,7 @@ word-wrap: break-word;
                                             value="@if(isset($projects->id)){{$projects->ProjectName}}@else{{old('ProjectName')}}@endif" required>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-2">
                                     <div class="form-group mb-5">
                                         <label for="First Name">Project Image</label>
                                         <input type="file" name="ProjectImage" id="ProjectImage" class="form-control"
@@ -248,7 +248,7 @@ word-wrap: break-word;
                                     </div>
                                 @endif
                                 <div class="col-md-2">
-                                    <div class="form-group mb-5">
+                                    <div class="form-group mb-3">
                                         <label for="returnTenderDate">Return Tender Date<span class="text-danger">*</span></label>
                                         <input type="text" name="returnTenderDate" class="form-control datepicker" value="@if(isset($projects->returnTenderDate))@if($projects->returnTenderDate != '0000-00-00'){{ date('d-m-Y',strtotime($projects->returnTenderDate)) }}@endif @endif" required autocomplete="off">
                                     </div>
@@ -309,7 +309,7 @@ word-wrap: break-word;
                                     </div>
                                 </div>
                                 @endif
-                                <div class="col-md-2">
+                                <div class="col-md-1">
                                     <div class="position-relative form-group">
                                         <label for="COC">COC</label>
                                         <select name="COC" id="COC" class="form-control" required>
@@ -321,6 +321,18 @@ word-wrap: break-word;
                                                 @endif>{{$row->OptionValue}}</option>
                                             @endif
                                             @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        <label for="selectcustomer">Ironmongery<span class="text-danger">*</span></label>
+                                        <select name="project_ironmongery" id="project_ironmongery" class="form-control" required>
+                                            <option value="">Select Ironmongery</option>
+                                            <option value="Free Issue Fitted" @if(isset($projects->project_ironmongery) && $projects->project_ironmongery == 'Free Issue Fitted'){{'selected'}} @endif>Free Issue Fitted</option>
+                                            <option value="Free issue Not Fitted" @if(isset($projects->project_ironmongery) && $projects->project_ironmongery == 'Free issue Not Fitted') {{'selected'}} @endif>Free issue Not Fitted</option>
+                                            <option value="Supplied by Manufacture" @if(isset($projects->project_ironmongery) && $projects->project_ironmongery == 'Supplied by Manufacture') {{'selected'}} @endif>Supplied by Manufacture</option>
                                         </select>
                                     </div>
                                 </div>
