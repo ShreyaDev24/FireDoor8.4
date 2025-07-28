@@ -202,6 +202,43 @@
                                 <a href="javascript:void(0);" onclick="validationHere();" id="needValidation"
                                     class="btn btn-primary float-right mx-1">Validate
                                 </a>
+                                <a href="javascript:void(0);" onclick="favoritebtn();" id="Favorite"
+                                    class="btn btn-primary float-right mx-1">Favorite
+                                </a>
+                            </div>
+
+                            <div class="main-card mb-3" id="favorite-section" style="display: none;">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-header-bg">
+                                            <tr class="text-white">
+                                                <th>Sr No</th>
+                                                <th>Name</th>
+                                                <th>Created At</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="versionData">
+                                            @if (!empty($favorites) && count($favorites) > 0)
+                                                <?php
+                                                $SI = 1; ?>
+                                                @foreach ($favorites as $fav)
+                                                    <tr>
+                                                        <td>{{ $SI++ }}</td>
+                                                        <td>{{ $fav->name }}</td>
+                                                        <td>{{ $fav->created_at->format('d M Y') }}</td>
+                                                        <td class="text-center">
+                                                            <a href="{{ route('favorites.show', $fav->id) }}" class="btn btn-sm btn-info"
+                                                                title="View">
+                                                                <i class="fas fa-eye"></i>
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="main-card mb-3" id="side-screen-section" style="display: none;">
                                 <div class="card-body">
@@ -932,6 +969,7 @@
             function configurableNon(id) {
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#customer-list').hide();
@@ -943,6 +981,7 @@
                     $('#showall').removeClass('activeNC');
                     $('#addSideScreen').removeClass('activeNC');
                     $('#SideScreenList').removeClass('activeNC');
+                    $('#Favorite').removeClass('activeNC');
                 } else {
                     $('#quotation-item-list').css('display','none');
                     $('#NonConfig-item-list').css('display','block');
@@ -951,6 +990,7 @@
                     $('#showall').removeClass('activeNC');
                     $('#addSideScreen').removeClass('activeNC');
                     $('#SideScreenList').removeClass('activeNC');
+                    $('#Favorite').removeClass('activeNC');
                 }
             }
             function editNonConfig(id){
@@ -2031,6 +2071,7 @@
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').show();
                 $('#quotation-item-list').hide();
@@ -2040,11 +2081,13 @@
                 $('#SideScreenList').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function ShowAddItemOption() {
                 $('#customer-list').hide();
                 $('#add-item-section').show();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
@@ -2054,11 +2097,13 @@
                 $('#SideScreenList').removeClass('activeNC');
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function addSideScreen() {
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#add-side-screen-section').show();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
@@ -2069,12 +2114,14 @@
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function SideScreen() {
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#side-screen-section').show();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
                 $('#NonConfig-item-list').css('display','none');
@@ -2083,17 +2130,36 @@
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function ChangeCustomerBtn() {
                 $('#customer-list').show();
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
                 $('#NonConfig-item-list').css('display','none');
                 $('#addSideScreen').removeClass('activeNC')
                 $('#SideScreenList').removeClass('activeNC')
+                $('#showall').removeClass('activeNC')
+                $('#config').removeClass('activeNC');
+                $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
+            }
+            function favoritebtn() {
+                $('#customer-list').hide();
+                $('#add-item-section').hide();
+                $('#add-side-screen-section').hide();
+                $('#favorite-section').show();
+                $('#side-screen-section').hide();
+                $('#edit-header-section').hide();
+                $('#quotation-item-list').hide();
+                $('#NonConfig-item-list').css('display','none');
+                $('#addSideScreen').removeClass('activeNC')
+                $('#SideScreenList').removeClass('activeNC')
+                $('#Favorite').addClass('activeNC')
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');

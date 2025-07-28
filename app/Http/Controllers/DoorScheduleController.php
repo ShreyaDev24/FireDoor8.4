@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Item;
 use App\Models\DoorSchedule;
 use App\Models\DoorDimension;
+use App\Models\Favorite;
 use App\Models\IntumescentSealLeafType;
 use Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -4285,8 +4286,11 @@ class DoorScheduleController extends Controller
                 $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
+            $favorites = Favorite::with('user')->where('userId',Auth::id())->latest()->get();
+
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
+                'favorites' => $favorites,
                 'SideScreenData' => $SideScreenData,
                 'quotation_data' => $quotation_data,
                 'quotationId' => $Id,
