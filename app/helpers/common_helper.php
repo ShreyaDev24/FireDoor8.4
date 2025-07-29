@@ -4513,21 +4513,21 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionValue;
         $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->first()->SelectedOptionValue;
         $doorLeafFinishColor = $request->doorLeafFinishColor;
-        if($request->fireRating == 'NFR' && empty($request->lippingSpecies)){
-            $lippingsType = $request->lippingType;
-            $lippingSpecies = $request->lippingSpecies;
-            $lippingThickness = $request->lippingThickness;
-        } else{
+        if($request->fireRating === 'NFR' && empty($request->lippingType) && empty($request->lippingThickness) && empty($request->lippingSpecies)){
             $lippingsType = '';
             $lippingSpecies = 0;
             $lippingThickness = 0;
+        } else{
+            $lippingsType = $request->lippingType;
+            $lippingSpecies = $request->lippingSpecies;
+            $lippingThickness = $request->lippingThickness;
         }
 
         $word = str_replace('_', ' ',  $request->doorLeafFacing);
         if(!empty($lippingsType)){
             $lipping_type = str_replace('_', ' ',  $lippingsType);
         } else {
-            $lipping_type = '';
+            $lipping_type = '-';
         }
 
         $selected_lipping_species = LippingSpecies::where('id', $lippingSpecies)->get()->first();
