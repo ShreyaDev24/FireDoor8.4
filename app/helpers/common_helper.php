@@ -2600,172 +2600,7 @@ function BomCalculation($request): void{
     MachiningCostExport($request);
 
     //LeafSetBesPoke
-    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish) && !empty($request->lippingSpecies)){
-        if($request->issingleconfiguration == 1){
-            $doorConfiguration = "Strebord";
-        }
-
-        $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionValue;
-        $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->first()->SelectedOptionValue;
-        $doorLeafFinishColor = $request->doorLeafFinishColor;
-
-        $word = str_replace('_', ' ',  $request->doorLeafFacing);
-
-        $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
-        $selected_lipping_species = LippingSpecies::where('id', $request->lippingSpecies)->get()->first();
-        if($selected_lipping_species->SpeciesName == ''){
-            $selected_lipping_species->SpeciesName = 0;
-        }
-
-        if($request->decorativeGroves == 'Yes'){
-            $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
-        }else{
-            $groves = '.';
-        }
-
-        // if($request->doorLeafFacing == 'Kraft_Paper'){
-        //     if($request->doorLeafFinish == 'Painted'){
-        //         $description = $doorConfiguration.'| '.$word.','.$doorLeafFinish.', '.$doorLeafFinishColor.'|'.$lipping_type.'|'.$request->lippingThickness.'mm | '.$selected_lipping_species->SpeciesName.'|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        //     }else{
-        //         $description = $doorConfiguration.'| '.$word.','.$doorLeafFinish.'|'.$lipping_type.','.$selected_lipping_species->SpeciesName.'|'.$request->lippingThickness.'mm|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        //     }
-        //     //dd($description);
-
-        // }elseif($request->doorLeafFacing == 'Veneer'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$doorLeafFinish.'|'.$lipping_type.','.$selected_lipping_species->SpeciesName.'|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', Sheen Level '.$request->SheenLevel.', '.$request->lippingThickness.'mm, '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }elseif($request->doorLeafFacing == 'Laminate'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$request->doorLeafFinish.'|'.$lipping_type.$selected_lipping_species->SpeciesName. '|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', '.$request->lippingThickness.'mm '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }elseif($request->doorLeafFacing == 'PVC'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$request->doorLeafFinish.'|'.$lipping_type.', '.$selected_lipping_species->SpeciesName. '|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', '.$request->lippingThickness.'mm '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }
-
-        $description = $doorConfiguration.'|'.$lipping_type.'|'.$request->lippingThickness.'mm | '.$selected_lipping_species->SpeciesName.'|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
-        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
-            $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-        }
-
-        $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
-
-        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
-
-        $door_core_size = getDoorDimensionData($userIds,$request->issingleconfiguration,$fireRatingVal);
-
-        $minCost = null;
-        $minCostLeafAndAHalf = null;
-
-        // Initialize variables to track minimum width and height
-        $minWidth1 = PHP_INT_MAX;
-        $minHeight1 = PHP_INT_MAX;
-        $minWidth2 = PHP_INT_MAX;
-        $minHeight2 = PHP_INT_MAX;
-        if (!empty($door_core_size)) {
-            foreach ($door_core_size as $door_core) {
-
-                // For leafWidth1 and leafHeightNoOP
-                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
-                        $minWidth1 = $door_core->selected_mm_width;
-                        $minHeight1 = $door_core->selected_mm_height;
-                        $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
-                        $intumescentLeafType = $request->intumescentLeafType;
-                        // dd($pricesArray);
-                        if (isset($pricesArray[$intumescentLeafType])) {
-                            $minCost = $pricesArray[$intumescentLeafType];
-                        }
-                    }
-
-                         // Track the cost with the minimum dimensions
-                }
-
-                // For leafWidth2 and leafHeightNoOP (Leaf and a half)
-                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
-                    $minWidth2 = $door_core->selected_mm_width;
-                    $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
-                    $intumescentLeafType2 = $request->intumescentLeafType;
-                    if (isset($pricesArray2[$intumescentLeafType2])) {
-                        $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
-                        // $minCost = $door_core->selected_cost;
-                    }
-                }
-            }
-        }
-
-        $door_core1 = $minCost;
-        $door_core2 = $minCostLeafAndAHalf;
-        $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
-
-        // dd($door_core_size,$door_core1,$door_core2);
-        $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
-        $thickness_cost = ($request->lippingThickness * $request->doorThickness * $unitcost1)/1000000;
-        $painted_cost = (($request->leafHeightNoOP * 2) + 50)/1000;
-
-        if($request->doorLeafFacing == 'Kraft_Paper'){
-
-            $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing;
-
-            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
-        }elseif($request->doorLeafFacing == 'Veneer'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if($doorLeafFacing->selectedPrice == NULL){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
-        }elseif($request->doorLeafFacing == 'Laminate'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if(empty($doorLeafFacing->selectedPrice)){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
-            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
-            ->where('selected_color.SelectedUserId',Auth::user()->id)
-            ->get()->first();
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
-
-        }elseif($request->doorLeafFacing == 'PVC'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if(empty($doorLeafFacing->selectedPrice)){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
-            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
-            ->where('selected_color.SelectedUserId',Auth::user()->id)
-            ->get()->first();
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
-        }
-
-// dd($lm,$thickness_cost,$doorLeafFacingCost,$door_cost);
-
-        $category = 'LeafSetBesPoke';
-        $frame_unit = 'Each';
-        $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
-        if($request->doorsetType == 'leaf_and_a_half'){
-            $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
-        }
-
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-    }
+    LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
     AccousticsExport($request);
@@ -2986,170 +2821,7 @@ function StredorBomCalculation($request): void{
     MachiningCostExport($request);
 
     //LeafSetBesPoke
-    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish) && !empty($request->lippingSpecies)){
-        if($request->issingleconfiguration == 8){
-            $doorConfiguration = "Stredor";
-        }
-
-        $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionValue;
-        $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->first()->SelectedOptionValue;
-        $doorLeafFinishColor = $request->doorLeafFinishColor;
-
-        $word = str_replace('_', ' ',  $request->doorLeafFacing);
-
-        $lipping_type = str_replace('_', ' ',  $request->lippingType);
-
-        $selected_lipping_species = LippingSpecies::where('id', $request->lippingSpecies)->get()->first();
-        if($selected_lipping_species->SpeciesName == ''){
-            $selected_lipping_species->SpeciesName = 0;
-        }
-
-        if($request->decorativeGroves == 'Yes'){
-            $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
-        }else{
-            $groves = '.';
-        }
-
-        // if($request->doorLeafFacing == 'Kraft_Paper'){
-        //     if($request->doorLeafFinish == 'Painted'){
-        //         $description = $doorConfiguration.'| '.$word.','.$doorLeafFinish.', '.$doorLeafFinishColor.'|'.$lipping_type.'|'.$request->lippingThickness.'mm | '.$selected_lipping_species->SpeciesName.'|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        //     }else{
-        //         $description = $doorConfiguration.'| '.$word.','.$doorLeafFinish.'|'.$lipping_type.','.$selected_lipping_species->SpeciesName.'|'.$request->lippingThickness.'mm|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        //     }
-        //     //dd($description);
-
-        // }elseif($request->doorLeafFacing == 'Veneer'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$doorLeafFinish.'|'.$lipping_type.','.$selected_lipping_species->SpeciesName.'|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', Sheen Level '.$request->SheenLevel.', '.$request->lippingThickness.'mm, '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }elseif($request->doorLeafFacing == 'Laminate'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$request->doorLeafFinish.'|'.$lipping_type.$selected_lipping_species->SpeciesName. '|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', '.$request->lippingThickness.'mm '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }elseif($request->doorLeafFacing == 'PVC'){
-        //     $description = $doorConfiguration.', '.$word.'|'.$request->doorLeafFinish.'|'.$lipping_type.', '.$selected_lipping_species->SpeciesName. '|'.str_replace('_', ' ',  $request->doorLeafFacingValue).', '.$request->lippingThickness.'mm '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.$groves;
-        // }
-
-        $description = $doorConfiguration.'|'.$lipping_type.'|'.$request->lippingThickness.'mm | '.$selected_lipping_species->SpeciesName.'|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-
-        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
-            $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-        }
-
-        $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
-
-        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
-
-        $door_core_size = getDoorDimensionData($userIds,$request->issingleconfiguration,$fireRatingVal);
-
-        $minCost = null;
-        $minCostLeafAndAHalf = null;
-
-        // Initialize variables to track minimum width and height
-        $minWidth1 = PHP_INT_MAX;
-        $minHeight1 = PHP_INT_MAX;
-        $minWidth2 = PHP_INT_MAX;
-        $minHeight2 = PHP_INT_MAX;
-
-        if (!empty($door_core_size)) {
-            foreach ($door_core_size as $door_core) {
-                // For leafWidth1 and leafHeightNoOP
-                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1)) {
-                    $minWidth1 = $door_core->selected_mm_width;
-                    $minHeight1 = $door_core->selected_mm_height;
-                    $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
-                    $intumescentLeafType = $request->intumescentLeafType;
-                    if (isset($pricesArray[$intumescentLeafType])) {
-                        $minCost = $pricesArray[$intumescentLeafType];
-                        // $minCost = $door_core->selected_cost;
-                    }
-
-                    // Track the cost with the minimum dimensions
-                }
-
-                // For leafWidth2 and leafHeightNoOP (Leaf and a half)
-                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
-                    $minWidth2 = $door_core->selected_mm_width;
-                    $minHeight2 = $door_core->selected_mm_height;
-                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
-                    $intumescentLeafType2 = $request->intumescentLeafType;
-                    if (isset($pricesArray2[$intumescentLeafType2])) {
-                        $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
-                        // $minCost = $door_core->selected_cost;
-                    }
-                }
-            }
-        }
-
-        $door_core1 = $minCost;
-        $door_core2 = $minCostLeafAndAHalf;
-        $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
-
-        // dd($door_core_size,$arr,$door_core1,$arrleafandahalf,$door_core2);
-        $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
-        $thickness_cost = ($request->lippingThickness * $request->doorThickness * $unitcost1)/1000000;
-        $painted_cost = (($request->leafHeightNoOP * 2) + 50)/1000;
-
-        if($request->doorLeafFacing == 'Kraft_Paper'){
-
-            $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing;
-
-            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
-        }elseif($request->doorLeafFacing == 'Veneer'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if($doorLeafFacing->selectedPrice == NULL){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
-        }elseif($request->doorLeafFacing == 'Laminate'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if(empty($doorLeafFacing->selectedPrice)){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
-            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
-            ->where('selected_color.SelectedUserId',Auth::user()->id)
-            ->get()->first();
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
-
-        }elseif($request->doorLeafFacing == 'PVC'){
-
-            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
-            if(empty($doorLeafFacing->selectedPrice)){
-                $doorLeafFacing->selectedPrice = 0;
-            }
-
-            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
-
-            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
-            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
-            ->where('selected_color.SelectedUserId',Auth::user()->id)
-            ->get()->first();
-            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
-        }
-
-// dd($lm,$thickness_cost,$doorLeafFacingCost,$door_cost);
-
-        $category = 'LeafSetBesPoke';
-        $frame_unit = 'Each';
-        $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
-        if($request->doorsetType == 'leaf_and_a_half'){
-            $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
-        }
-
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-    }
+    LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
     AccousticsExport($request);
@@ -4824,6 +4496,177 @@ function MachiningCostExport($request): void{
 
             }
         }
+    }
+}
+
+function LeafSetBesPoke($request,$userIds,string $configurationDoor){
+    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish)){
+        $doorConfiguration = configurationDoor($request->issingleconfiguration);
+        $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
+        if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
+        $fireRatingVal = 'FD30';
+        } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
+            $fireRatingVal = 'FD60';
+        } else{
+            $fireRatingVal = 'NFR';
+        }
+        $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionValue;
+        $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->first()->SelectedOptionValue;
+        $doorLeafFinishColor = $request->doorLeafFinishColor;
+        if($request->fireRating == 'NFR' && !empty($request->lippingSpecies)){
+            $lippingsType = $request->lippingType;
+            $lippingSpecies = $request->lippingSpecies;
+            $lippingThickness = $request->lippingThickness;
+        } else{
+            $lippingsType = '';
+            $lippingSpecies = 0;
+            $lippingThickness = 0;
+        }
+
+        $word = str_replace('_', ' ',  $request->doorLeafFacing);
+        if(!empty($lippingsType)){
+            $lipping_type = str_replace('_', ' ',  $lippingsType);
+        } else {
+            $lipping_type = '';
+        }
+
+        $selected_lipping_species = LippingSpecies::where('id', $lippingSpecies)->get()->first();
+        if(empty($selected_lipping_species)){
+            $selected_lipping_SpeciesName = 0;
+        } else {
+            $selected_lipping_SpeciesName = $selected_lipping_species->SpeciesName;
+        }
+
+        if($request->decorativeGroves == 'Yes'){
+            $groves = ', V Grooves, '.str_replace('_', ' ',  $request->grooveLocation).', '.$request->numberOfGroove.' No, '.$request->grooveWidth.'mm wide, '.$request->grooveDepth.'mm deep.';
+        }else{
+            $groves = '.';
+        }
+
+        $description = $doorConfiguration.'|'.$lipping_type.'|'.$lippingThickness.'mm | '.$selected_lipping_SpeciesName.'|'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
+
+        if($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half'){
+            $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
+        }
+
+        $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
+
+        $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
+
+        $door_core_size = getDoorDimensionData($userIds,$request->issingleconfiguration,$fireRatingVal);
+
+        $minCost = null;
+        $minCostLeafAndAHalf = null;
+
+        // Initialize variables to track minimum width and height
+        $minWidth1 = PHP_INT_MAX;
+        $minHeight1 = PHP_INT_MAX;
+        $minWidth2 = PHP_INT_MAX;
+        $minHeight2 = PHP_INT_MAX;
+        if (!empty($door_core_size)) {
+            foreach ($door_core_size as $door_core) {
+
+                // For leafWidth1 and leafHeightNoOP
+                if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
+                    if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
+                        $minWidth1 = $door_core->selected_mm_width;
+                        $minHeight1 = $door_core->selected_mm_height;
+                        $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
+                        $intumescentLeafType = $request->intumescentLeafType;
+                        // dd($pricesArray);
+                        if (isset($pricesArray[$intumescentLeafType])) {
+                            $minCost = $pricesArray[$intumescentLeafType];
+                        }
+                    }
+
+                         // Track the cost with the minimum dimensions
+                }
+
+                // For leafWidth2 and leafHeightNoOP (Leaf and a half)
+                if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
+                    $minWidth2 = $door_core->selected_mm_width;
+                    $minHeight2 = $door_core->selected_mm_height;
+                    $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
+                    $intumescentLeafType2 = $request->intumescentLeafType;
+                    if (isset($pricesArray2[$intumescentLeafType2])) {
+                        $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
+                        // $minCost = $door_core->selected_cost;
+                    }
+                }
+            }
+        }
+
+        $door_core1 = $minCost;
+        $door_core2 = $minCostLeafAndAHalf;
+        $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
+
+        // dd($door_core_size,$door_core1,$door_core2);
+        $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
+        $thickness_cost = ($lippingThickness * $request->doorThickness * $unitcost1)/1000000;
+        $painted_cost = (($request->leafHeightNoOP * 2) + 50)/1000;
+
+        if($request->doorLeafFacing == 'Kraft_Paper'){
+
+            $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
+
+            $doorLeafFacingCost = $painted_cost * $doorLeafFacing;
+
+            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
+            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+        }elseif($request->doorLeafFacing == 'Veneer'){
+
+            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            if($doorLeafFacing->selectedPrice == NULL){
+                $doorLeafFacing->selectedPrice = 0;
+            }
+
+            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+
+            $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
+            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+        }elseif($request->doorLeafFacing == 'Laminate'){
+
+            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            if(empty($doorLeafFacing->selectedPrice)){
+                $doorLeafFacing->selectedPrice = 0;
+            }
+
+            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+
+            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
+            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
+            ->where('selected_color.SelectedUserId',Auth::user()->id)
+            ->get()->first();
+            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+
+        }elseif($request->doorLeafFacing == 'PVC'){
+
+            // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            if(empty($doorLeafFacing->selectedPrice)){
+                $doorLeafFacing->selectedPrice = 0;
+            }
+
+            $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+
+            $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
+            ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
+            ->where('selected_color.SelectedUserId',Auth::user()->id)
+            ->get()->first();
+            $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+        }
+
+
+        $category = 'LeafSetBesPoke';
+        $frame_unit = 'Each';
+        $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
+        if($request->doorsetType == 'leaf_and_a_half'){
+            $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
+        }
+
+        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
     }
 }
 
