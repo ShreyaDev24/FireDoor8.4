@@ -4513,7 +4513,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionValue;
         $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->first()->SelectedOptionValue;
         $doorLeafFinishColor = $request->doorLeafFinishColor;
-        if($request->fireRating == 'NFR' && !empty($request->lippingSpecies)){
+        if($request->fireRating == 'NFR' && empty($request->lippingSpecies)){
             $lippingsType = $request->lippingType;
             $lippingSpecies = $request->lippingSpecies;
             $lippingThickness = $request->lippingThickness;
