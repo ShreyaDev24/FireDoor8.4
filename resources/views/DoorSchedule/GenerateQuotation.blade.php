@@ -215,7 +215,7 @@
                                                 <th>Sr No</th>
                                                 <th>Name</th>
                                                 <th>Created At</th>
-                                                <th>Action</th>
+                                                <th class="text-center">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody id="versionData">
@@ -228,10 +228,7 @@
                                                         <td>{{ $fav->name }}</td>
                                                         <td>{{ $fav->created_at->format('d M Y') }}</td>
                                                         <td class="text-center">
-                                                            <a href="{{ route('favorites.show', $fav->id) }}" class="btn btn-sm btn-info"
-                                                                title="View">
-                                                                <i class="fas fa-eye"></i>
-                                                            </a>
+                                                            <button class="btn btn-success" onClick="favoriteItemList();">List</button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -1165,6 +1162,7 @@
                 }
                 var quotationId = $('#quotationId').val();
                 var itemId = $('#itemId').val();
+                var favName = $('#favName').val();
                 var itemMasterId = $('#itemMasterId').val();
                 var doorTypeName = $('#doorTypeName').val();
                 $.ajax({
@@ -1173,6 +1171,7 @@
                     data: {
                         _token: $("#_token").val(),
                         quotationId: quotationId,
+                        favName: favName,
                         versionId: versionId,
                         itemId: itemId,
                         itemMasterId: itemMasterId,
@@ -3175,6 +3174,17 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Favorite Type</label>
+                            <select name="favName" id="favName" class="form-control">
+                                <option value="">Select Favorite Type</option>
+                                @if (!empty($favorites) && count($favorites) > 0)
+                                    @foreach ($favorites as $fav)
+                                        <option value="{{ $fav->id }}">{{ $fav->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                         <div class="col-sm-12 mb-2">
                             <label for="doorTypeName">Door Type Name</label>
                             <input type="text" class="form-control" id="doorTypeName">

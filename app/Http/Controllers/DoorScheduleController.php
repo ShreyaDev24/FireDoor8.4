@@ -8481,11 +8481,12 @@ class DoorScheduleController extends Controller
         }
 
         // echo $request->itemId;die;
-        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId)) {
+        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId) && !empty($request->favName)) {
             $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('userId', Auth::user()->id)->get()->first();
             if (empty($Favorite)) {
                 $FavoriteItem = new FavoriteItem();
                 $FavoriteItem->itemId = $request->itemId;
+                $FavoriteItem->favorite_id = $request->favName;
                 $FavoriteItem->itemMasterId = $request->itemMasterId;
                 $FavoriteItem->quotationId = $request->quotationId;
                 $FavoriteItem->versionId = $request->versionId;
