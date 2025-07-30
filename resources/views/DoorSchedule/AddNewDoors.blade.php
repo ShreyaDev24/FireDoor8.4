@@ -89,10 +89,48 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
-                                            <label for="doornumber">Door Number</label>
-                                            <input name="doornumber" value="{{old('doornumber')}}" id="doornumber" class="form-control" placeholder="Door Number">
+                                            <label>Door Entry Mode</label><br>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="door_mode" id="single_door" value="single" checked>
+                                                <label class="form-check-label" for="single_door">Single Door</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="door_mode" id="range_door" value="range">
+                                                <label class="form-check-label" for="range_door">Door Range</label>
+                                            </div>
                                         </div>
                                     </div>
+
+                                    <!-- Single Door Field -->
+                                    <div class="col-md-6 single-door-field">
+                                        <div class="position-relative form-group">
+                                            <label for="doornumber">Door Number</label>
+                                            <input name="doornumber" value="{{ old('doornumber') }}" id="doornumber" class="form-control" placeholder="Door Number">
+                                        </div>
+                                    </div>
+
+                                    <!-- Door Range Fields (Hidden by Default) -->
+                                    <div class="col-md-6 range-fields" style="display: none;">
+                                        <div class="position-relative form-group">
+                                            <label for="prefix">Prefix</label>
+                                            <input name="prefix" id="prefix" class="form-control" placeholder="e.g. QUOTE or DOOR">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 range-fields" style="display: none;">
+                                        <div class="position-relative form-group">
+                                            <label for="range_start">Range Start</label>
+                                            <input name="range_start" id="range_start" type="number" class="form-control" placeholder="e.g. 1">
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-3 range-fields" style="display: none;">
+                                        <div class="position-relative form-group">
+                                            <label for="range_end">Range End</label>
+                                            <input name="range_end" id="range_end" type="number" class="form-control" placeholder="e.g. 20">
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -139,6 +177,18 @@ $("#existingDoorId").change(function() {
 
     });
 
+});
+
+$(document).ready(function () {
+    $('input[name="door_mode"]').change(function () {
+        if ($(this).val() === 'single') {
+            $('.single-door-field').show();
+            $('.range-fields').hide();
+        } else {
+            $('.single-door-field').hide();
+            $('.range-fields').show();
+        }
+    });
 });
 </script>
 @endsection
