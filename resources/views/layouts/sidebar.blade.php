@@ -727,6 +727,27 @@
                         </ul>
                     </li>
 
+                   <li class="mm-{{ Request::segment(1) == 'favorites' ? 'active' : '' }}">
+                        <a href="#">
+                            <i class="metismenu-icon">
+                                <i class="fa fa-heart"></i>
+                            </i>
+                            Favorite
+                            <i class="metismenu-state-icon">
+                                <i class="fa fa-caret-down"></i>
+                            </i>
+                        </a>
+                        <ul>
+                            <li class="submm-{{ Request::routeIs('favorites.index') ? 'active' : '' }}">
+                                <a href="{{ route('favorites.index') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Favorite List
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
 
                     @if(Auth::user()->UserType=='2')
 
