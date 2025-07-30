@@ -79,7 +79,7 @@ input[type=number]::-webkit-outer-spin-button {
                                 </a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{{ route('folders.create') }}" class="btn btn-primary">
+                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-3">
                                     <i class="fas fa-folder-plus"></i> Add Folder
                                 </a>
                             </div>

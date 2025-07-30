@@ -3000,7 +3000,7 @@ $sn++;
             'user_id' => $user_ids, // Save current user
         ]);
         $folder->ironmongerySets()->attach($request->ironmongery_sets);
-        return redirect()->route('Project.folders.index')->with('success', 'Folder created successfully.');
+        return redirect()->route('folders.index')->with('success', 'Folder created successfully.');
     }
 
     public function foldersShow(Folder $folder)
