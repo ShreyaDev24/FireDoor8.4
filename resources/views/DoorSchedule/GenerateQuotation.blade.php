@@ -124,8 +124,8 @@
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export</a></li>
                                             <li><a href="javascript:void(0);"
                                                     onClick="CopyQuotation({{ $quotationId }});">Copy</a></li>
-                                            <li><a href="javascript:void(0);" onClick="favoriteItemList();">favourite</a>
-                                            </li>
+                                            {{--  <li><a href="javascript:void(0);" onClick="favoriteItemList();">favourite</a>
+                                            </li>  --}}
                                             <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                             <li><a href="javascript:void(0);" onClick="SendToClient();">Send To Client</a>
                                             </li>
@@ -228,7 +228,7 @@
                                                         <td>{{ $fav->name }}</td>
                                                         <td>{{ $fav->created_at->format('d M Y') }}</td>
                                                         <td class="text-center">
-                                                            <button class="btn btn-success" onClick="favoriteItemList();">List</button>
+                                                            <button class="btn btn-success" onClick="favoriteItemList({{ $fav->id }});">List</button>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -877,6 +877,7 @@
         <input type="hidden" id="edit_image1" value="{{ url('/quotation/edit-image1') }}" />
         <input type="hidden" id="validateAlls" value="{{ url('/quotation/validateAlls') }}" />
         <input type="hidden" id="favoriteItem" value="{{ url('/quotation/favoriteItem') }}" />
+        <input type="hidden" id="favoriteItemShow" value="{{ url('/quotation/favoriteItemShow') }}" />
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
         <input type="hidden" id="favoriteDeleteItem" value="{{ url('/quotation/favoriteDeleteItem') }}" />
@@ -1981,8 +1982,29 @@
             function openVersionModal() {
                 $("#quotation-version-modal").modal("show");
             }
-            function favoriteItemList() {
-                $("#Favorite-Item-modal").modal("show");
+            function favoriteItemList(id) {
+                $.ajax({
+                    url: "{{ route('quotation/favoriteItemShow') }}",
+                    type: 'post',
+                    data: {
+                        _token: $("#_token").val(),
+                        'id': id
+                    },
+                    success: function(data) {
+
+                        if (data.status == true) {
+                            $('#favItemAddData').html(data.result)
+                            $("#Favorite-Item-modal").modal("show");
+
+                        } else {
+                            swal('error', data.result, 'error').then(function() {
+                                location.reload();
+                            });
+                        }
+
+                    }
+                })
+
             }
             function CreateNewVersionModal(version) {
                 if (version == 0) {
@@ -3212,36 +3234,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            @if (!empty($Favorite) && $Favorite != '')
-                                @foreach ($Favorite as $value)
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <p>{{ $value->DoorType }}</p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button
-                                                onclick="favoriteItemAdd('{{ $value->itemId }}','{{ $value->itemMasterId }}','{{ $value->quotationId }}','{{ $value->versionId }}')"
-                                                class="btn btn-success">Assign</button>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <a href="{{ ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) }}" class="btn btn-info">Edit</a>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button
-                                                onclick="favoriteDeleteItem('{{ $value->id }}')"
-                                                class="btn btn-danger">Delete</button>
-                                        </div>
-                                        <div class="col-sm-1"></div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <p>Data not found!</p>
-                                    </div>
-                                </div>
-                            @endif
+                        <div class="col-sm-12 mb-2" id="favItemAddData">
+
                         </div>
                     </div>
                 </div>

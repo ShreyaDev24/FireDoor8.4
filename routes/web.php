@@ -281,6 +281,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/edit-image1', [App\Http\Controllers\DoorScheduleController::class,'editImage1'])->name('quotation/edit-image1');
     Route::post('/validateAlls', [App\Http\Controllers\DoorScheduleController::class,'validateAlls'])->name('quotation/validateAlls');
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
+    Route::post('/favoriteItemShow', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemShow'])->name('quotation/favoriteItemShow');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');
     Route::post('/favoriteDeleteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteDeleteItem'])->name('quotation/favoriteDeleteItem');

@@ -4286,7 +4286,7 @@ class DoorScheduleController extends Controller
                 $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
-            $favorites = Favorite::with('user')->where('userId',Auth::id())->latest()->get();
+            $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
@@ -8472,6 +8472,66 @@ class DoorScheduleController extends Controller
                 ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
                 JSON_UNESCAPED_UNICODE
             );
+    }
+
+    public function favoriteItemShow(Request $request)
+    {
+        $id = $request->id;
+        if(!empty($id)){
+            $UserIds = CompanyMultiUsers();
+            $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
+            ->join('favorite','favorite.id','favorite_item.favorite_id')
+            ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
+            ->where('favorite_item.favorite_id',$id)
+            ->wherein('favorite_item.userId', $UserIds)->get();
+
+           $html = '';
+
+            if (!empty($Favorite) && $Favorite != '') {
+                $html .= '<table class="table table-bordered">';
+                $html .= '<thead>';
+                $html .= '<tr>';
+                $html .= '<th>Favorite Name</th>';
+                $html .= '<th>Door Type</th>';
+                $html .= '<th>Assign</th>';
+                $html .= '</tr>';
+                $html .= '</thead>';
+                $html .= '<tbody>';
+
+                foreach ($Favorite as $value) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $value->name . '</td>';
+                    $html .= '<td>' . $value->DoorType . '</td>';
+
+                    $html .= '<td>';
+                    $html .= '<button onclick="favoriteItemAdd(\'' . $value->itemId . '\', \'' . $value->itemMasterId . '\', \'' . $value->quotationId . '\', \'' . $value->versionId . '\')" class="btn btn-success">Assign</button>';
+                    $html .= '</td>';
+
+                    $html .= '</tr>';
+                }
+
+                $html .= '</tbody>';
+                $html .= '</table>';
+            } else {
+                $html .= '<p>Data not found!</p>';
+            }
+
+            $response = [
+                'status' => true,
+                'result' => $html
+            ];
+        }else{
+            $response = [
+                'status' => false,
+                'result' => 'something went wrong!'
+            ];
+        }
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     public function favoriteItem(Request $request)

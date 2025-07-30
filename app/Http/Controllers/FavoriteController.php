@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Favorite;
 use App\Models\User;
+use App\Models\FavoriteItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,7 +17,7 @@ class FavoriteController extends Controller
 
     public function index()
     {
-        $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
+        $favorites = Favorite::with('user')->where(['userId'=>Auth::id()])->latest()->get();
         return view('favorites.index', compact('favorites'));
     }
 
@@ -43,7 +44,50 @@ class FavoriteController extends Controller
 
     public function show(Favorite $favorite)
     {
-        return view('favorites.show', compact('favorite'));
+        $html = '';
+
+        $UserIds = CompanyMultiUsers();
+        $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
+        ->join('favorite','favorite.id','favorite_item.favorite_id')
+        ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
+        ->where('favorite_item.favorite_id',$favorite->id)
+        ->wherein('favorite_item.userId', $UserIds)->get();
+
+        if (!empty($Favorite) && $Favorite != '') {
+            $html .= '<table class="table table-bordered">';
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>Favorite Type</th>';
+            $html .= '<th>Door Type</th>';
+            $html .= '<th>Edit</th>';
+            $html .= '<th>Delete</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+            $html .= '<tbody>';
+
+            foreach ($Favorite as $value) {
+                $html .= '<tr>';
+                $html .= '<td>' . $value->name . '</td>';
+                $html .= '<td>' . $value->DoorType . '</td>';
+
+                $html .= '<td>';
+                $html .= '<a href="' . ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) . '" class="btn btn-info">Edit</a>';
+                $html .= '</td>';
+
+                $html .= '<td>';
+                $html .= '<button onclick="favoriteDeleteItem(\'' . $value->id . '\')" class="btn btn-danger">Delete</button>';
+                $html .= '</td>';
+
+                $html .= '</tr>';
+            }
+
+            $html .= '</tbody>';
+            $html .= '</table>';
+        } else {
+            $html .= '<p>Data not found!</p>';
+        }
+
+        return view('favorites.show', compact('favorite','html'));
     }
 
     public function edit(Favorite $favorite)
