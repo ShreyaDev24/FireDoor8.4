@@ -21,14 +21,16 @@
                 </ul>
             </div>
         @endif
-        <form action="{{ route('folders.store') }}" method="POST">
+
+        <form action="{{ route('folders.update', $folder->id) }}" method="POST">
             @csrf
+            @method('PUT')
             <div class="tab-content">
                 <div class="main-card mb-3 card">
                     <div class="">
                         <div class="tab-content">
                             <div class="card-header">
-                                <h5 class="card-title" style="margin-top: 10px">Create Folder</h5>
+                                <h5 class="card-title" style="margin-top: 10px">Update Folder</h5>
                             </div>
                             <div class="">
                                 <div class="form-row">
@@ -40,7 +42,7 @@
                                                         <div class="col-md-3">
                                                             <div class="form-group">
                                                                 <label>Folder Name <span class="text-danger">*</span></label>
-                                                                <input class="form-control" type="text" name="foldername" required>
+                                                                <input class="form-control" type="text" name="name" value="{{ old('name', $folder->name) }}" required>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
@@ -48,7 +50,10 @@
                                                                 <label for="ironmongery_sets">Select Ironmongery Sets<span class="text-danger">*</span></label>
                                                                 <select required name="ironmongery_sets[]" id="ironmongery_sets" multiple class="form-control selectpicker">
                                                                     @foreach($sets as $rr)
-                                                                    <option value="{{ $rr->id }}">{{ $rr->Setname }}</option>
+                                                                    <option value="{{ $rr->id }}"
+                                                                        {{ in_array($rr->id, $selectedSets ?? []) ? 'selected' : '' }}>
+                                                                        {{ $rr->Setname }}
+                                                                    </option>
                                                                     @endforeach
                                                                 </select>
                                                             </div>
@@ -65,8 +70,8 @@
                 </div>
                 <div class="main-card mb-3 custom_card">
                     <div class="d-block text-right">
-                        <button type="submit" id="submit" class="btn-wide btn btn-success">
-                                Create Now
+                        <button type="submit" class="btn-wide btn btn-primary">
+                            Update Folder
                         </button>
                     </div>
                 </div>

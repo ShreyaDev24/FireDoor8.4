@@ -544,6 +544,10 @@ Route::prefix('project')->group(function (): void {
     Route::get('/folders/create', [App\Http\Controllers\ProjectController2::class, 'foldersCreate'])->name('folders.create');
     Route::post('/folders', [App\Http\Controllers\ProjectController2::class, 'foldersStore'])->name('folders.store');
     Route::get('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersShow'])->name('folders.show');
+    Route::get('/folders/{folder}/edit', [App\Http\Controllers\ProjectController2::class, 'foldersEdit'])->name('folders.edit');
+    Route::put('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersUpdate'])->name('folders.update');
+    Route::delete('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersDestroy'])->name('folders.destroy');
+
 
     Route::post('/invite', [App\Http\Controllers\ProjectController2::class,'invite'])->name('project/invite');
     Route::get('/invitation/list', [App\Http\Controllers\ProjectController2::class,'invitation_list'])->name('project/invitation/list');

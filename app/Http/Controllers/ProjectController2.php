@@ -3005,4 +3005,64 @@ $sn++;
         $sets = $folder->ironmongerySets;
         return view('Project.folders.show', compact('folder', 'sets'));
     }
+
+    public function foldersEdit($id)
+    {
+        $folder = Folder::findOrFail($id);
+
+        // assuming this returns all ironmongery sets
+       if (Auth::user()->UserType == 2) {
+            $myAdminGroup = getMyCreatedAdmins();
+            $UserId = $myAdminGroup;
+            // $UserId = array_merge(['1'], $myAdminGroup);
+        }else{
+           $User = Auth::user();
+
+           $UserId = ['id' => $User->id];
+        }
+
+        $sets = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
+
+        // fetch IDs of sets already linked to the folder
+        $selectedSets = DB::table('folder_ironmongery_sets')
+            ->where('folder_id', $id)
+            ->pluck('add_ironmongery_id')
+            ->toArray();
+
+        return view('Project.folders.edit', compact('folder', 'sets', 'selectedSets'));
+    }
+
+
+    public function foldersUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'ironmongery_sets' => 'nullable|array',
+        ]);
+
+        $folder = Folder::findOrFail($id);
+        $folder->name = $request->name;
+        $folder->save();
+
+        // Sync ironmongery sets (remove old ones and attach new ones)
+        $folder->ironmongerySets()->sync($request->ironmongery_sets ?? []);
+
+        return redirect()->route('folders.index')->with('success', 'Folder updated successfully.');
+    }
+
+
+   public function foldersDestroy($id)
+    {
+        $folder = Folder::findOrFail($id);
+
+        // Detach all related ironmongery sets from the pivot table
+        $folder->ironmongerySets()->detach();
+
+        // Then delete the folder
+        $folder->delete();
+
+        return redirect()->route('folders.index')->with('success', 'Folder deleted successfully.');
+    }
+
+
 }
