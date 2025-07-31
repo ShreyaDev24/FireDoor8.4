@@ -38,15 +38,10 @@
                     <div class="custom_card">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="card-header"><h5 class="card-title">Ironmongery <span>Set</span></h5></div>
+                                <div class="card-header"><h5 class="card-title">Ironmongery <span>Folders</span></h5></div>
                             </div>
                             <div class="col-sm-6 ">
-                                <a href="{{route('ironmongeryadd')}}" class="btn-shadow btn btn-info float-right">
-                                    <i class="fa fa-edit" aria-hidden="true"></i> Add Ironmongery Set
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-2">
+                                <a href="{{ route('folders.create') }}" class="btn-shadow btn btn-info float-right">
                                     <i class="fas fa-folder-plus"></i> Add Folder
                                 </a>
                             </div>
@@ -67,7 +62,18 @@
                                             <td>{{ $folder->name }}</td>
                                             <td>{{ $folder->ironmongery_sets_count }}</td>
                                             <td>
-                                                <a href="{{ route('folders.show', $folder->id) }}" class="btn btn-info">View</a>
+                                                <a href="{{ route('folders.show', $folder->id) }}" class="btn btn-info btn-sm">View</a>
+
+                                                {{-- Edit Button --}}
+                                                <a href="{{ route('folders.edit', $folder->id) }}" class="btn btn-warning btn-sm">Edit</a>
+
+                                                {{-- Delete Button --}}
+                                                <form action="{{ route('folders.destroy', $folder->id) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm"
+                                                        onclick="return confirm('Are you sure you want to delete this folder?')">Delete</button>
+                                                </form>
                                             </td>
                                         </tr>
                                         @endforeach
