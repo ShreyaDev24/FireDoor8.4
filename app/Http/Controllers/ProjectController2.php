@@ -3006,7 +3006,20 @@ $sn++;
     public function foldersShow(Folder $folder)
     {
         $sets = $folder->ironmongerySets;
-        return view('Project.folders.show', compact('folder', 'sets'));
+        $i = 1;
+        $tbl = '';
+        foreach($sets as $t){
+            $tbl .=
+            '<tr>
+                <td>'.$t->Setname.'</td>
+                <td>
+                    <button type="button" value="'.$t->id.'" class="btn btn-info updAddIronmongery">Edit</button>
+                    <button type="button" value="'.$t->id.'" class="btn btn-danger delAddIronmongery" onclick="return confirm(\'Are you sure you want to delete this item?\');">Delete</button>
+                </td>
+            </tr>';
+            $i++;
+        }
+        return view('Project.folders.show', compact('folder', 'sets','tbl'));
     }
 
     public function foldersEdit($id)
