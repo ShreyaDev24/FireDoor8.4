@@ -2713,11 +2713,11 @@ function copyOfSideLite1Change(isstatus = false){
                     innerHtml+='<option value="">No Flat lipping Thickness Found</option>';
                     $("#flatLippingThickness").empty().append(innerHtml);
                 }
-                if(fireRating=="NFR"){
-                    var noData ='';
-                    noData+='<option value="">No Flat lipping Thickness Found</option>';
-                    $("#flatLippingThickness").empty().append(noData);
-                }
+                // if(fireRating=="NFR"){
+                //     var noData ='';
+                //     noData+='<option value="">No Flat lipping Thickness Found</option>';
+                //     $("#flatLippingThickness").empty().append(noData);
+                // }
             }
         });
     }
@@ -2753,11 +2753,11 @@ function copyOfSideLite1Change(isstatus = false){
                     innerHtml+='<option value="">No Rebated Lipping Thickness Found</option>';
                     $("#rebatedLippingThickness").empty().append(innerHtml);
                 }
-                if(fireRating=="NFR"){
-                    var noData ='';
-                    noData+='<option value="">No Rebated lipping Thickness Found</option>';
-                    $("#rebatedLippingThickness").empty().append(noData);
-                }
+                // if(fireRating=="NFR"){
+                //     var noData ='';
+                //     noData+='<option value="">No Rebated lipping Thickness Found</option>';
+                //     $("#rebatedLippingThickness").empty().append(noData);
+                // }
             }
         });
     }

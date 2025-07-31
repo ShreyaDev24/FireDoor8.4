@@ -1302,7 +1302,7 @@ class PrintInvoiceController extends Controller
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7') .'px;left: -44px;">
                                         <img style="width:'. (
                                             (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing == "Left") ? '77' : '67') .'px; height:'. (
-    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : '196px') .';" src="' . $FrameTypeLeft . '" alt="">
+    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : ($tt->FrameType == 'Rebated_Frame'? '126px': '196px' ) ) .';" src="' . $FrameTypeLeft . '" alt="">
                                     </div>
                                 </div>';
 
