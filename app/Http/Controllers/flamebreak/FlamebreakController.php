@@ -327,6 +327,7 @@ class FlamebreakController extends Controller
             'quotation' => $quotation,
             'LippingName' => $LippingName,    // this line is for to send lipping name into edit form
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,    // this line is for to send lipping name into edit form
+            'folders' => $folders
         ]);
     }
 }
