@@ -7722,7 +7722,6 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                         .text(ATGDistanceFromBottomOfDoor);
             
             }
-                   // Calculate distances
                    const lockDistance = LockNLatchesDistanceFromBottomOfDoor / 5;
                    const cylinderDistance = CylindersDistanceFromBottomOfDoor / 5;
                    const thumbturnDistance = ThumbturnDistanceFromBottomOfDoor / 5;
@@ -7747,10 +7746,9 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                const distances2= [lockDistance2, cylinderDistance2, thumbturnDistance2];
                const distanceFromEdge2=[lockDistanceFromEdge2,cylinderDistanceFromEdge2,thumbturnDistanceFromEdge2]
 
-               const uniqueDistances2 = Array.from(new Set(distances)).filter(num => num !== 0);
+               const uniqueDistances2 = Array.from(new Set(distances2)).filter(num => num !== 0);
 
-               const uniqueDistancesFromEdge2=Array.from(new Set(distanceFromEdge)).filter(num => num !== 0);
-
+               const uniqueDistancesFromEdge2=Array.from(new Set(distanceFromEdge2)).filter(num => num !== 0);
                    function conditionalRenderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
                        if (distance !== 0 ) { // Check if the distance is not zero
 
@@ -7770,6 +7768,13 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                             }
                        }
                    }
+                    function conditionalRenderItemleft(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+ renderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                    }
+
+                     function conditionalRenderItemright(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+ renderItem2(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                    }
 
                    // Function to render an item
                    function renderItem(distance, label, edgeDistance,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
@@ -7845,7 +7850,7 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                                .text(label);
                        
                     }
-
+if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockNLatchesEnable2 && !IsThumbturnEnable2 && !IsCylindersEnable2)){
                    if (uniqueDistances.length === 1) {
                     if(uniqueDistancesFromEdge.length ===1){
                         conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
@@ -7897,6 +7902,113 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                      }
 
                 }
+            }
+
+            if((IsLockNLatchesEnable2 || IsThumbturnEnable2 || IsCylindersEnable2)){
+                   if (uniqueDistances.length === 1) {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                    }else{
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                    }
+                } else if (uniqueDistances.length === 2) {
+                    // Two distances are the same; show one item for each unique distance
+                    console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
+                    if(uniqueDistancesFromEdge.length === 1){
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                    }else if(uniqueDistancesFromEdge.length === 2){
+                       conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                    }else{
+                       conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                       conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,0,180,185,180,185);
+                    }
+
+                } else {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[0],200,205,200,205);
+                     }else if(uniqueDistancesFromEdge.length ===2){
+            const matchingIndices = [];
+            const seen = new Map();
+                distanceFromEdge.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (seen.has(value)) {
+                            matchingIndices.push([seen.get(value), index]);
+                        } else {
+                            seen.set(value, index);
+                        }
+                    }
+                });
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[matchingIndices[0][1]],200,205,200,205);
+                     }  else if(uniqueDistancesFromEdge.length ===3){
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[2],200,205,200,205);
+                     }else{
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,0,165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,0,180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,0,200,205,200,205);
+                     }
+
+                }
+
+                  if (uniqueDistances2.length === 1) {
+                    if(uniqueDistancesFromEdge2.length ===1){
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                    }else{
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,0,165,170,165,170);
+                    }
+                } else if (uniqueDistances2.length === 2) {
+                    // Two distances are the same; show one item for each unique distance
+                    console.log(uniqueDistancesFromEdge2.length,'llllllllllllllllllllllll')
+                    if(uniqueDistancesFromEdge2.length === 1){
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                        conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,uniqueDistancesFromEdge2[0],180,185,180,185);
+                    }else if(uniqueDistancesFromEdge2.length === 2){
+                       conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                    }else{
+                       conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,0,165,170,165,170);
+                       conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,0,180,185,180,185);
+                    }
+
+                } else {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[0],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[0],200,205,200,205);
+                     }else if(uniqueDistancesFromEdge2.length ===2){
+            const matchingIndices = [];
+            const seen = new Map();
+                distanceFromEdge2.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (seen.has(value)) {
+                            matchingIndices.push([seen.get(value), index]);
+                        } else {
+                            seen.set(value, index);
+                        }
+                    }
+                });
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[matchingIndices[0][1]],200,205,200,205);
+                     }  else if(uniqueDistancesFromEdge2.length ===3){
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[2],200,205,200,205);
+                     }else{
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,0,165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,0,180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,0,200,205,200,205);
+                     }
+
+                }
+            }
             }
   }
 
