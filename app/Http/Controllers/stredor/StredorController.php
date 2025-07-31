@@ -333,13 +333,14 @@ class StredorController extends Controller
                             foreach($SelectedIronmongery as $select){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
+                                if(empty($IronmongeryInfoModel)){
+                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
+                                }
 
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
+                                if (!empty($IronmongeryInfoModel)) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
                     }
                 }
             }
