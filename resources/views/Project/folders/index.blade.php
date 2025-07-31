@@ -1,39 +1,6 @@
 @extends("layouts.Master")
 
 @section("main_section")
-<style>
-.input-icons i {
-    position: absolute;
-    left: 0;
-}
-.input-icons{
-    display: flex;
-}
-.input-group-text{
-    text-align: left;
-    padding-left: 18px;
-}
-.qty{
-    width: 80px;
-}
-.text_style{
-    font-size: 12px;
-    color: #f00;
-    margin-top: -14px;
-}
-input[type=number]::-webkit-inner-spin-button,
-input[type=number]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-.customcross{
-    font-size: 15px;
-    background: #ffffff;
-    border: 1px solid #ececec;
-    color: red;
-    font-weight: bold;
-}
-</style>
 <script>
     function Tooltip(tooltipValue) {
         let TooltipCode2 =
@@ -79,20 +46,31 @@ input[type=number]::-webkit-outer-spin-button {
                                 </a>
                             </div>
                             <div class="col-sm-6">
-                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-3">
+                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-2">
                                     <i class="fas fa-folder-plus"></i> Add Folder
                                 </a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <th>Set Name</th>
-                                            <th>Manage</th>
+                                <table style="width: 100%;" id="example" class="table table-striped table-bordered">
+                                    <thead class="text-uppercase table-header-bg">
+                                        <tr class="text-white">
+                                            <th>Folder Name</th>
+                                            <th>Ironmongery Set Count</th>
+                                            <th>Action</th>
                                         </tr>
-                                         {!! $tbl !!}
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($folders as $folder)
+                                        <tr>
+                                            <td>{{ $folder->name }}</td>
+                                            <td>{{ $folder->ironmongery_sets_count }}</td>
+                                            <td>
+                                                <a href="{{ route('folders.show', $folder->id) }}" class="btn btn-info">View</a>
+                                            </td>
+                                        </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -103,32 +81,5 @@ input[type=number]::-webkit-outer-spin-button {
         </div>
     </div>
 </div>
-<input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
-<form action="{{route('updAddIronmongery')}}" id="updSubmit" method="post">
-    {{ csrf_field() }}
-    <input type="hidden" name="updAddIronmongery" id="updId">
-</form>
-<form action="{{route('delAddIronmongery')}}" id="delSubmit" method="post">
-    {{ csrf_field() }}
-    <input type="hidden" name="delId" id="delId">
-</form>
-@endsection
-
-@section("script_section")
-<script>
-        // Edit Ironmongery
-        $(document).on('click', '.updAddIronmongery', function() {
-            let id = $(this).val();
-            $('#updId').val(id);
-            $('#updSubmit').submit();
-        })
-        // Delete Ironmongery
-        $(document).on('click', '.delAddIronmongery', function() {
-            let id = $(this).val();
-            $('#delId').val(id);
-            $('#delSubmit').submit();
-        })
-
-</script>
 @endsection
 

@@ -322,7 +322,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="IronmongeryID">Select Ironmongery Set
                             @if(!empty($tooltip->selectironmongerySet))
@@ -342,7 +342,39 @@
                                 @endif
                             </select>
                         </div>
+                    </div> --}}
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="IronmongeryID">Select Ironmongery Set
+                                @if(!empty($tooltip->selectironmongerySet))
+                                    <script type="text/javascript">
+                                        document.write(Tooltip('{{$tooltip->selectironmongerySet}}'));
+                                    </script>
+                                @endif
+                            </label>
+                            <label for="select_ironmogery_set" style="display: none;">Select Ironmongery Set</label>
+
+                            <select name="IronmongeryID" id="IronmongeryID" class="form-control"
+                                @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") disabled @endif>
+                                <option value="">Select Ironmongery Set</option>
+                                @if(!empty($folders))
+                                    @foreach($folders as $folderId => $ironmongeries)
+                                        @php $folderName = $ironmongeries->first()->name; @endphp
+                                        <optgroup label="{{ $folderName }}" data-toggle="tooltip" title="@foreach($ironmongeries as $iron) {{ $iron->Setname }} @if(!$loop->last), @endif @endforeach">
+                                            @foreach($ironmongeries as $iron)
+                                                <option value="{{ $iron->ironmongery_id }}"
+                                                    @if(isset($Item['IronmongeryID']) && $Item['IronmongeryID'] == $iron->ironmongery_id) selected @endif>
+                                                    {{ $iron->Setname }}
+                                                </option>
+                                            @endforeach
+                                        </optgroup>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
                     </div>
+
 
                    </div>
                </div>

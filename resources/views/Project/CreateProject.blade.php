@@ -77,9 +77,9 @@ word-wrap: break-word;
 <input type="hidden" name="projectId" value="@if(isset($projects->id)){{$projects->id}}@endif">
 
 <div class="tab-content">
-<div class="main-card mb-3 card">
-<div class="">
-<div class="tab-content">
+    <div class="main-card mb-3 card">
+        <div class="">
+    <div class="tab-content">
     <div class="card-header">
         <h5 class="card-title" style="margin-top: 10px">Create Project</h5>
     </div>
