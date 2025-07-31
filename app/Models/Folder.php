@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Folder extends Model
 {
      protected $table = 'folders';
-     protected $fillable = ['name'];
+     protected $fillable = ['name','user_id'];
 
       public function ironmongerySets()
     {
