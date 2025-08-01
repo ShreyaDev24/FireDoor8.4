@@ -3100,93 +3100,92 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
 
             if($isActive == true){
-
                 $elevTbl .= ' <div class="tbl_prn">
                 <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
                 <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
-                <table id="NoBorder" style="margin-top:1rem;" class="mt-4">
-                    <tr>
-                        <td colspan="2">
-                            <table id="WithBorder" class="tbl1">
-                                <tbody>
-                                    <tr>
-                                        <td class="marImg" rowspan="2">
-                                            <span>';
-                if (!empty($comapnyDetail->ComplogoBase64)) {
-                    $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
-                } else {
-                    $elevTbl .= Base64Image('defaultImg');
-                }
-
-                $elevTbl .= '</span>
-                                        </td>
-                                        <td class="tbl_color"><span>Ref</span></td>
-                                        <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
-                                        <td class="tbl_color"><span>Project</span></td>
-                                        <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
-                                        <td class="tbl_color"><span>Prepared By</span></td>
-                                        <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
-                                        <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
-                                        <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
-                                        <td><span>' . date('Y-m-d') . '</span></td>
-                                        <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
-                                        <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
-                                        <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
-                                        <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </td>
-                    </tr>
-                </table>
-                </div>
-                <div class="fr_d_tbl" style=" margin: 0 auto;">
-                <table id="WithBorder" style="margin-top:1rem; width:500px; margin:0 auto 40px;" class="tbl2  mt-4">
-                    <tbody>
+                    <table id="NoBorder" style="margin-top:1rem;margin-bottom: 15px;" class="mt-4">
                         <tr>
-                            <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
-                            <td class="dicription_blank"><b>Type ' . htmlspecialchars((string) $tt->DoorType) . '</b></td>
-                        </tr>
-                    </tbody>
-                </table>
-                </div>
-                <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
-                <table style="background:#fff; margin-top:1rem;border-collapse: collapse;" class="fir-dr-tbl mytableclass mt-3">
-                    <thead>
-                        <tr>
-                            <th>Door / Screen No</th>
-                            <th>Assign Plot Ref</th>
-                            <th>Certification No</th>
-                            <th>Quality Check- CNC</th>
-                            <th>Quality Check- VP</th>
-                            <th>Quality Check- Assembly</th>
-                            <th>Door Plug</th>
-                            <th>Frame Plug</th>
-                            <th>Glass stamp Visible</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>';
-                    foreach ($DoorNumber as $bb) {
-                        $elevTbl .=  '<tr>
-                            <td>' . $bb->doorNumber . '</td>
-                            <td>' . $bb->plot_ref_no . '</td>
-                            <td>' . $bb->certification_no . '</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>';
+                            <td colspan="2">
+                                <table id="WithBorder" class="tbl1">
+                                    <tbody>
+                                        <tr>
+                                            <td class="marImg" rowspan="2">
+                                                <span>';
+                    if (!empty($comapnyDetail->ComplogoBase64)) {
+                        $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
+                    } else {
+                        $elevTbl .= Base64Image('defaultImg');
                     }
 
-                    $elevTbl .= '</tbody>
-                </table>
+                    $elevTbl .= '</span>
+                                            </td>
+                                            <td class="tbl_color"><span>Ref</span></td>
+                                            <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
+                                            <td class="tbl_color"><span>Project</span></td>
+                                            <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
+                                            <td class="tbl_color"><span>Prepared By</span></td>
+                                            <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
+                                            <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
+                                            <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
+                                            <td><span>' . date('Y-m-d') . '</span></td>
+                                            <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
+                                            <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
+                                            <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
+                                            <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
                 </div>
+                <div class="fr_d_tbl" style=" margin: 0 auto;">
+
+                    <div style="text-align:center; margin-bottom: 20px;">
+                        <table style="width: 300px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
+                            <tr>
+                                <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
+                                <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div style="margin: 0 auto; width: 95%;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
+                            <thead style="background: #f9f9f9;">
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 6px;">Door / Screen No</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Assign Plot Ref</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Certification No</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- CNC</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- VP</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- Assembly</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Door Plug</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Frame Plug</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Glass Stamp Visible</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
+                foreach ($DoorNumber as $bb) {
+                    $elevTbl .= '<tr>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->doorNumber . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->plot_ref_no . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->certification_no . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                    </tr>';
+                }
+                $elevTbl .= '
+                            </tbody>
+                        </table>
+                    </div>
                 </div>';
                 if ($PageBreakCounts < $TotalItems) {
                     $elevTbl .= '<div class="page-break"></div>';
