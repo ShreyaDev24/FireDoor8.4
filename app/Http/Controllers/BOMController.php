@@ -1537,6 +1537,7 @@ class BOMController extends Controller
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
                 $stopbottom = $stophead;
+                $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
             }
 
            $data[] = '<tr>'
@@ -1553,6 +1554,7 @@ class BOMController extends Controller
             . '<td>' . $value->PlantonStopHeight . '</td>'
             . '<td>' . $value->PlantonStopWidth . '</td>'
             . '<td>' . $value->RebatedWidth . '</td>'
+            . '<td>' . $value->RebatedHeight . '</td>'
             . '<td>' . $value->ScallopedWidth . '</td>'
             . '<td>' . $value->ScallopedHeight . '</td>'
             . '<td>' . $value->FrameDepth . '</td>'
@@ -1610,6 +1612,7 @@ class BOMController extends Controller
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                     $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = '<tr>'
@@ -1621,8 +1624,9 @@ class BOMController extends Controller
                     . '<td>' . $value->LeafThickness . '</td>'
                     . '<td>' . $value->SpeciesName . '</td>'
                     . '<td>' . $value->OPHeigth . '</td>'
-                    . '<td>' . $value->OPWidth . '</td>'
+                    . '<td>' . $value->FrameWidth . '</td>'
                     . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
                     . '<td></td>'
                     . '<td></td>'
                     . '<td></td>'
@@ -1681,6 +1685,7 @@ class BOMController extends Controller
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                    $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = '<tr>'
@@ -1695,6 +1700,7 @@ class BOMController extends Controller
                 . '<td>' . $value->SL1Width . '</td>'
                 . '<td>' . $value->FrameThickness . '</td>'
                 . '<td></td>' // Empty column
+                . '<td></td>'
                 . '<td></td>'
                 . '<td></td>'
                 . '<td></td>'
@@ -1752,6 +1758,7 @@ class BOMController extends Controller
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
+                    $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
                 }
 
                 $data[] = '<tr>'
@@ -1765,6 +1772,7 @@ class BOMController extends Controller
                     . '<td>' . $value->SL2Height . '</td>'
                     . '<td>' . $value->SL2Width . '</td>'
                     . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
                     . '<td></td>'
                     . '<td></td>'
                     . '<td></td>'
@@ -1814,98 +1822,76 @@ class BOMController extends Controller
 
         $data = [];
         foreach($item as $value){
-            if ($value->GlassType != '' && $value->GlassThickness != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+           if ($value->GlassType != '' && $value->GlassThickness != '' &&
+            (($value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0 && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0) ||
+                ($value->Leaf2VPHeight1 != '' && $value->Leaf2VPHeight1 != 0 && $value->Leaf2VPWidth != '' && $value->Leaf2VPWidth != 0))) {
+
                 $VisionPanelWidthNFR = 0;
                 $VisionPanelHeightNFR = 0;
                 $VisionPanelWidthFD60 = 0;
                 $VisionPanelHeightFD60 = 0;
 
-                if(!empty($allSettings['VisionPanel.NRF'])){
+                if (!empty($allSettings['VisionPanel.NRF'])) {
                     $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
                     $VisionPanelHeightNFR = $allSettings['VisionPanel.NRF']->Height;
                 }
-                if(!empty($allSettings['VisionPanel.FD60'])){
+                if (!empty($allSettings['VisionPanel.FD60'])) {
                     $VisionPanelWidthFD60 = $allSettings['VisionPanel.FD60']->Width;
                     $VisionPanelHeightFD60 = $allSettings['VisionPanel.FD60']->Height;
                 }
 
-                $data[] = '<tr>'
-                . '<td>' . $value->DoorType . '</td>'
-                . '<td>' . $value->doorNumber . '</td>'
-                . '<td>' . $value->plot_ref_no . '</td>'
-                . '<td>' . $value->certification_no . '</td>'
-                . '<td>' . $value->GlassThickness . '</td>'
-                . '<td>' . str_replace('_', ' ', $value->GlassType) . '</td>'
-                . '<td>' . (
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                        ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60
-                        : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR
-                ) . '</td>'
-                . '<td>' . (
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
-                        ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR)
-                        : ($value->Leaf1VPWidth + $VisionPanelWidthFD60)
-                ) . '</td>'
-                . '<td>' . (($value->AreVPsEqualSizesForLeaf1 == 'Yes') ? $value->VisionPanelQuantity : 1) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight2
-                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                            ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60
-                            : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight2
-                        ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')
-                            ? $value->VisionPanelQuantity * 1
-                            : 1)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight3
-                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                            ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60
-                            : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight3
-                        ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')
-                            ? $value->VisionPanelQuantity * 1
-                            : 1)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight4
-                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                            ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60
-                            : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight4
-                        ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')
-                            ? $value->VisionPanelQuantity * 1
-                            : 1)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight5
-                        ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                            ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60
-                            : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR)
-                        : ''
-                ) . '</td>'
-                . '<td>' . (
-                    $value->Leaf1VPHeight5
-                        ? (($value->AreVPsEqualSizesForLeaf1 == 'Yes')
-                            ? $value->VisionPanelQuantity * 1
-                            : 1)
-                        : ''
-                ) . '</td>'
-                . '</tr>';
+                if ($value->DoorsetType == 'SD') {
+                    $qty = ($value->AreVPsEqualSizesForLeaf1 == 'Yes') ? $value->VisionPanelQuantity : 1;
+                } else {
+                    if ($value->AreVPsEqualSizesForLeaf2 == 'Yes') {
+                        $qty = $value->Leaf2VisionPanelQuantity + $value->VisionPanelQuantity;
+                    } else {
+                        $qty = (empty($value->VisionPanelQuantity)) ? 1 :
+                            (($value->Leaf1VPHeight1 ? 1 : 0) + ($value->Leaf2VPHeight1 ? 1 : 0));
+                    }
+                }
 
+                $fireRatingFD60 = ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60');
+                $fireRatingNFR = ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30');
+
+                $row = '<tr>'
+                    . '<td>' . $value->DoorType . '</td>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->GlassThickness . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->GlassType) . '</td>'
+                    . '<td>' . (
+                        $fireRatingFD60
+                            ? (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightFD60)
+                            : (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightNFR)
+                    ) . '</td>'
+                    . '<td>' . (
+                        $fireRatingNFR
+                            ? (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthNFR)
+                            : (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthFD60)
+                    ) . '</td>'
+                    . '<td>' . $qty . '</td>';
+
+                for ($i = 2; $i <= 5; $i++) {
+                    $leaf1Height = $value->{'Leaf1VPHeight' . $i};
+                    $leaf2Height = $value->{'Leaf2VPHeight' . $i};
+                    $height = ($leaf1Height ?: $leaf2Height);
+                    $panelQty = ($leaf1Height ? 1 : 0) + ($leaf2Height ? 1 : 0);
+
+                    $heightCol = $height
+                        ? ($fireRatingFD60 ? ($height + $VisionPanelHeightFD60) : ($height + $VisionPanelHeightNFR))
+                        : '';
+                    $qtyCol = $height ? $panelQty : '';
+
+                    $row .= '<td>' . $heightCol . '</td>'
+                        . '<td>' . $qtyCol . '</td>';
+                }
+
+                $row .= '</tr>';
+                $data[] = $row;
             }
+
             if($value->Overpanel == 'Fan_Light'){
                 $VisionPanelWidthNFR = 0;
                 $VisionPanelHeightNFR = 0;
