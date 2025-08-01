@@ -3165,6 +3165,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <th>Quality Check- Assembly</th>
                             <th>Door Plug</th>
                             <th>Frame Plug</th>
+                            <th>Glass stamp Visible</th>
                         </tr>
                     </thead>
 
@@ -3174,6 +3175,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <td>' . $bb->doorNumber . '</td>
                             <td>' . $bb->plot_ref_no . '</td>
                             <td>' . $bb->certification_no . '</td>
+                            <td></td>
                             <td></td>
                             <td></td>
                             <td></td>
