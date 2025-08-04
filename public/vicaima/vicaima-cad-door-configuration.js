@@ -953,15 +953,12 @@ const render = (CustomElement = null) => {
         var IronmongerySet = $('select[name="ironmongerySet"]').val();
         var IronmongeryID = $('select[name="IronmongeryID"]').val();
 
-
-
-
-        if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
+if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
 
             svg.append('rect') // over panel rect (upper part)
                 .attr('x', ix -SideLightPanel1Width )
                 .attr('y', iy) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + SideLightPanel2Width)
+                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                 .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', '#D0D0C6');
@@ -969,7 +966,7 @@ const render = (CustomElement = null) => {
             svg.append('rect') // over panel rect (upper part)
                 .attr('x',  ix + FrameThicknessForMap + GapForMap -SideLightPanel1Width )
                 .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth + + SideLightPanel1Width + SideLightPanel2Width )
+                .attr('width', OverPanelWidth + + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0) )
                 .attr('height', OverPanelHeight - (2 * FrameThicknessForMap) ) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
@@ -983,7 +980,7 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         
                             .attr("y", iy - 15)        
-                            .text(FrameWidth + (( SideLightPanel1Width + SideLightPanel2Width)*5));   
+                            .text(FrameWidth + (( SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))*5));   
                        
 
                         svg.append('line')//measurement line of Width of over panel of door
@@ -991,7 +988,7 @@ const render = (CustomElement = null) => {
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - SideLightPanel1Width )
                             .attr("y1", iy - 10)
-                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + SideLightPanel2Width)
+                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy - 10)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)")
@@ -1005,9 +1002,9 @@ const render = (CustomElement = null) => {
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + SideLightPanel2Width)
+                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y1", iy + FrameThicknessForMap - 20)
-                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel2Width)
+                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy + FrameThicknessForMap)
 
                        svg.append("text")           //Text of height of over panel of door
@@ -1047,6 +1044,7 @@ const render = (CustomElement = null) => {
             }
 
         }
+
 
 
 
