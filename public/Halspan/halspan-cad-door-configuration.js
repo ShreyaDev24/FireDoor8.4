@@ -669,29 +669,29 @@ const render = (CustomElement = null) => {
 
         if (SideLightPanel1 == "Yes") {
             // console.log(FrameThicknessForMap, 'llllllllllllll')
-            if (OverPanelHeight) {
-                svg.append('rect') //outer sidepanel rect
-                    .attr('x', ix)
-                    .attr('y', iy)
-                    //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
-                    .attr('width', SideLightPanel1Width)
-                    //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
-                    .attr('height', (FrameHeight / 5) + OverPanelHeight)
-                    .attr('stroke', 'black')
-                    .attr('fill', '#D0D0C6');
+            // if (OverPanelHeight) {
+            //     svg.append('rect') //outer sidepanel rect
+            //         .attr('x', ix)
+            //         .attr('y', iy)
+            //         //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
+            //         .attr('width', SideLightPanel1Width)
+            //         //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
+            //         .attr('height', (FrameHeight / 5) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#D0D0C6');
 
-                svg.append('rect')// inner side panel rect
-                    //.attr('x', ix + LeftGapForLeaf1)
-                    .attr('x', ix + FrameThicknessForMap)
-                    //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-                    .attr('y', iy + GapAfterOverPanelApplied - OverPanelHeight + FrameThicknessForMap)
-                    //.attr('width', SideLightPanel1Width)
-                    .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
-                    //.attr('height', SideLightPanel1Height)
-                    .attr('height', (FrameHeight / 5) - (2 * FrameThicknessForMap) + OverPanelHeight)
-                    .attr('stroke', 'black')
-                    .attr('fill', '#CDD8DD');
-            } else {
+            //     svg.append('rect')// inner side panel rect
+            //         //.attr('x', ix + LeftGapForLeaf1)
+            //         .attr('x', ix + FrameThicknessForMap)
+            //         //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+            //         .attr('y', iy + GapAfterOverPanelApplied - OverPanelHeight + FrameThicknessForMap)
+            //         //.attr('width', SideLightPanel1Width)
+            //         .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
+            //         //.attr('height', SideLightPanel1Height)
+            //         .attr('height', (FrameHeight / 5) - (2 * FrameThicknessForMap) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#CDD8DD');
+            // } else {
                 svg.append('rect') //outer sidepanel rect
                     .attr('x', ix)
                     .attr('y', iy + GapAfterOverPanelApplied)
@@ -713,7 +713,7 @@ const render = (CustomElement = null) => {
                     .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
                     .attr('stroke', 'black')
                     .attr('fill', '#CDD8DD');
-            }
+            // }
             if (ShowMeasurements) {
                 if (SideLightPanel1Width > 0) {
 
@@ -721,7 +721,7 @@ const render = (CustomElement = null) => {
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied  )
                             .attr("x2", ix - 10)
                             .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5))
                             .attr("marker-start", "url(#arrowLeft)")
@@ -731,18 +731,18 @@ const render = (CustomElement = null) => {
                             .style("fill", "black")
                             .attr("font-size", 10)
                             .attr("x", ix - 15)
-                            .attr("y", iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15)
+                            .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
-                               ${iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5) + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                               ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5) );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - 10 - 5)
-                            .attr("y1", iy + GapAfterOverPanelApplied - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied )
                             .attr("x2", ix + FrameThicknessForMap)
-                            .attr("y2", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y2", iy + GapAfterOverPanelApplied )
 
                         svg.append('line')//vertical line to show measurement of side panel joining line bottom
                             .style("stroke", "black")
@@ -792,28 +792,36 @@ const render = (CustomElement = null) => {
         }
 
         if (SideLightPanel2 == "Yes") {
+//  svg.append('rect') //outer sidepanel rect
+//                     .attr('x', ix)
+//                     .attr('y', iy + GapAfterOverPanelApplied)
+//                     //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
+//                     .attr('width', SideLightPanel1Width)
+//                     //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
+//                     .attr('height', (FrameHeight / 5))
+//                     .attr('stroke', 'black')
+//                     .attr('fill', '#D0D0C6');
+            // if (OverPanelHeight) {
+            //     svg.append('rect') //outer sidepanel rect
+            //         .attr('x', ix + FrameWidthForMap)
+            //         .attr('y', iy)
+            //         .attr('width', SideLightPanel2Width)
+            //         .attr('height', (FrameHeight / 5) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#D0D0C6');
 
-            if (OverPanelHeight) {
+            //     svg.append('rect')//copy inner side light
+            //         .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
+            //         .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap - OverPanelHeight)
+            //         .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
+            //         .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#CDD8DD');
+
+            // } else {
                 svg.append('rect') //outer sidepanel rect
                     .attr('x', ix + FrameWidthForMap)
-                    .attr('y', iy)
-                    .attr('width', SideLightPanel2Width)
-                    .attr('height', (FrameHeight / 5) + OverPanelHeight)
-                    .attr('stroke', 'black')
-                    .attr('fill', '#D0D0C6');
-
-                svg.append('rect')//copy inner side light
-                    .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
-                    .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap - OverPanelHeight)
-                    .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
-                    .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2) + OverPanelHeight)
-                    .attr('stroke', 'black')
-                    .attr('fill', '#CDD8DD');
-
-            } else {
-                svg.append('rect') //outer sidepanel rect
-                    .attr('x', ix + FrameWidthForMap)
-                    .attr('y', iy)
+                    .attr('y', iy + GapAfterOverPanelApplied)
                     .attr('width', SideLightPanel2Width)
                     .attr('height', (FrameHeight / 5))
                     .attr('stroke', 'black')
@@ -826,32 +834,17 @@ const render = (CustomElement = null) => {
                     .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
                     .attr('stroke', 'black')
                     .attr('fill', '#CDD8DD');
-            }
+            // }
 
             if (ShowMeasurements) {
-                // svg.append('line')
-                //     .style("stroke", "black")
-                //     .style("stroke-width", 0.5)
-                //     .attr("x1", ix + FrameWidthForMap)
-                //     .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                //     .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width)
-                //     .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                //     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                //     .attr("marker-end", "url(#arrowRight)")
-
-                // svg.append("text")            // append text
-                //     .style("fill", "black")      // make the text black
-                //     .attr("font-size", 10)
-                //     .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2))         // set x position of left side of text
-                //     .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                //     .text(SideLightPanel2WidthToShow);   // define the text to display
+                
                 if (SideLightPanel2Width > 0) {
 
                         svg.append('line')//vertical line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10)
-                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied  )
                             .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + 10)
                             .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
                             .attr("marker-start", "url(#arrowLeft)")
@@ -861,18 +854,18 @@ const render = (CustomElement = null) => {
                             .style("fill", "black")
                             .attr("font-size", 10)
                             .attr("x", ix + FrameWidthForMap + SideLightPanel2Width + 20)
-                            .attr("y", iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15)
+                            .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
-                               ${iy + ((GapAfterOverPanelApplied  + (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5) + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                               ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5));
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10 + 5)
-                            .attr("y1", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y1", iy + GapAfterOverPanelApplied )
                             .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap)
-                            .attr("y2", iy + GapAfterOverPanelApplied  - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                            .attr("y2", iy + GapAfterOverPanelApplied )
 
                         svg.append('line')//vertical line to show measurement of side panel joining line bottom
                             .style("stroke", "black")
@@ -924,30 +917,23 @@ const render = (CustomElement = null) => {
         var IronmongeryID = $('select[name="IronmongeryID"]').val();
 
 
-        // svg.append('rect')
-        //     .attr('x', ix)
-        //     .attr('y', iy)
-        //     .attr('width', FrameWidthForMap)
-        //     .attr('height', TopFrameHeight)
-        //     .attr('stroke', 'black')
-        //     .attr('fill', '#D0D0C6');
 
 
         if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
 
             svg.append('rect') // over panel rect (upper part)
-                .attr('x', ix)
+                .attr('x', ix -SideLightPanel1Width )
                 .attr('y', iy) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap))
+                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + SideLightPanel2Width)
                 .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', '#D0D0C6');
 
             svg.append('rect') // over panel rect (upper part)
-                .attr('x',  ix + FrameThicknessForMap + GapForMap )
+                .attr('x',  ix + FrameThicknessForMap + GapForMap -SideLightPanel1Width )
                 .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth)
-                .attr('height', OverPanelHeight - (2 * FrameThicknessForMap)) // Reduce height
+                .attr('width', OverPanelWidth + + SideLightPanel1Width + SideLightPanel2Width )
+                .attr('height', OverPanelHeight - (2 * FrameThicknessForMap) ) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
 
@@ -960,31 +946,31 @@ const render = (CustomElement = null) => {
                             .attr("font-size", 10)
                             .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         
                             .attr("y", iy - 15)        
-                            .text(FrameWidth);   
+                            .text(FrameWidth + (( SideLightPanel1Width + SideLightPanel2Width)*5));   
                        
 
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix )
+                            .attr("x1", ix - SideLightPanel1Width )
                             .attr("y1", iy - 10)
-                            .attr("x2", ix  + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + SideLightPanel2Width)
                             .attr("y2", iy - 10)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)")
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix )
+                            .attr("x1", ix - SideLightPanel1Width)
                             .attr("y1", iy + FrameThicknessForMap - 20)
-                            .attr("x2", ix )
+                            .attr("x2", ix - SideLightPanel1Width)
                             .attr("y2", iy + FrameThicknessForMap)
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + SideLightPanel2Width)
                             .attr("y1", iy + FrameThicknessForMap - 20)
-                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap))
+                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel2Width)
                             .attr("y2", iy + FrameThicknessForMap)
 
                        svg.append("text")           //Text of height of over panel of door
