@@ -9236,4 +9236,39 @@ class DoorScheduleController extends Controller
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ]);
     }
+
+    public function updateRevision(Request $request){
+        $quote = Quotation::where('id',$request->quotationId)->first();
+        if($quote){
+            $quote->QuotationStatus = 'Rivision';
+            $quote->fileByClient = null;
+            $quote->rejectreason = null;
+            $quote->linkStatus = 0;
+            $quote->status_accept_reject_at = date('Y-m-d H:i:s');
+            $updatequote = $quote->update();
+                if($updatequote){
+                    $projectId  = $quote->ProjectId;
+                    if(!empty($projectId) && $projectId != NULL ){
+                        $projectDetails = Project::find($projectId);
+                        $projectDetails->quotationId = null;
+                        $projectDetails->versionId =null;
+                        $projectDetails->save();
+                    }
+                    return response()->json([
+                    'status' => 'success',
+                    'message' => 'Now You rivised this quote',
+                ]);
+            } else{
+                return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong !!!',
+                ]);
+            }
+        } else {
+             return response()->json([
+                'status' => 'error',
+                'message' => 'Quotation not found',
+            ]);
+        }
+    }
 }
