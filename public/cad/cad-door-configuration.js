@@ -6034,7 +6034,7 @@ svg.append("circle")
                             }
                 }
 
-                if (IsPushHandlesEnable2   ) {
+                if (IsPushHandlesEnable2   && !IsPullHandlesEnable  ) {
                      LeftPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
                      RightPushHandle(PushHandleHeight2,PushHandleDistanceFromBottomOfDoor2,PushHandleDistanceFromLeadingEdgeOfDoor2)
                 }
