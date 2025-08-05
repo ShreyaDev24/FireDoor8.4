@@ -2082,7 +2082,7 @@ $sn++;
 
         if($store == true){
             if($request->folder_id){
-                 $item->folders()->attach($request->folder_id);
+                 $item->folders()->sync([$request->folder_id]);
             }
         }
 
@@ -2145,6 +2145,7 @@ $sn++;
         $id = $request->updAddIronmongery;
         $tooltip = Tooltip::first();
         $item = AddIronmongery::where('id',$id)->first();
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
 
         $pid = $item->ProjectId;
         // $pageId = $item->configurableitems;
@@ -2425,6 +2426,7 @@ $sn++;
         'Miscellaneous' => $Miscellaneous,
         'MiscellaneousPrice' => $MiscellaneousPrice,
         'list' => $list,
+        'folders' => $folders
         ]);
 
     }
