@@ -173,14 +173,18 @@ input[type=number]::-webkit-outer-spin-button {
                                         </div>
                                     </div>
                                      <div class="col-md-3">
-                                         <label for="folder_id">Add to Folder (optional):</label>
+                                        <label for="folder_id">Add to Folder (optional):</label>
                                         <select name="folder_id" id="folder_id" class="form-control">
                                             <option value="">-- Select Folder --</option>
                                             @foreach($folders as $folder)
-                                                <option value="{{ $folder->id }}">{{ $folder->name }}</option>
+                                                <option value="{{ $folder->id }}"
+                                                    @if(isset($item) && $item->folders->contains($folder->id)) selected @endif>
+                                                    {{ $folder->name }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
+
                                     <div class="col-md-12"></div>
                                 </div>
                                 <div class="form-row main-form">
