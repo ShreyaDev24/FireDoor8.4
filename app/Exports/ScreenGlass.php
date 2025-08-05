@@ -46,7 +46,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
             }
-            
+
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
@@ -83,6 +83,15 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                     // Check if the glass pane exists in the map
                     if (isset($glassPaneMap[$glasspane])) {
+                        if($alphabet[$i] == 'A'){
+                            $glassType = $value->SinglePane;
+                        }else if($alphabet[$i] == 'B'){
+                            $glassType = (isset($value->SinglePaneB))?$value->SinglePaneB:$value->SinglePane;
+                        }else if($alphabet[$i] == 'C'){
+                            $glassType = (isset($value->SinglePaneC))?$value->SinglePaneC:$value->SinglePane;
+                        }else if($alphabet[$i] == 'D'){
+                            $glassType = (isset($value->SinglePaneD))?$value->SinglePaneD:$value->SinglePane;
+                        }
                         $GlassPaneWidth = $value->{$glassPaneMap[$glasspane]['width']};
                         $GlassPaneHeight = $value->{$glassPaneMap[$glasspane]['height']};
                     }else {
@@ -118,7 +127,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -138,7 +147,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 

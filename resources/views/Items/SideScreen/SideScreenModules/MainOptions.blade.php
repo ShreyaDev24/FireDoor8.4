@@ -82,7 +82,8 @@
                     <div class="col-md-6">
                     <div class="position-relative form-group">
                         <label for="SinglePaneB">Single Pane B</label>
-                        <select name="SinglePaneB_disabled" id="SinglePaneB" class="form-control">
+                        <select name="SinglePaneB_disabled" id="SinglePaneB" class="form-control"  @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
                             <option value="">Select Single Pane B</option>
                         </select>
                         <input type="hidden" name="SinglePaneB" id="SinglePaneB-hidden">
@@ -91,7 +92,8 @@
                     <div class="col-md-6">
                     <div class="position-relative form-group">
                         <label for="SinglePaneC">Single Pane C</label>
-                        <select name="SinglePaneC_disabled" id="SinglePaneC" class="form-control">
+                        <select name="SinglePaneC_disabled" id="SinglePaneC" class="form-control" @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
                             <option value="">Select Single Pane C</option>
                         </select>
                         <input type="hidden" name="SinglePaneC" id="SinglePaneC-hidden">
@@ -100,7 +102,8 @@
                     <div class="col-md-6">
                     <div class="position-relative form-group">
                         <label for="SinglePaneD">Single Pane D</label>
-                        <select name="SinglePaneD_disabled" id="SinglePaneD" class="form-control">
+                        <select name="SinglePaneD_disabled" id="SinglePaneD" class="form-control" @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
                             <option value="">Select Single Pane D</option>
                         </select>
                         <input type="hidden" name="SinglePaneD" id="SinglePaneD-hidden">
