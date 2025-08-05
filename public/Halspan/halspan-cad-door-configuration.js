@@ -2920,6 +2920,7 @@ const render = (CustomElement = null) => {
         var IsAirTransferGrillsEnable = false;
          var IsAirTransferGrillsEnable2 = false;
         var IsFlushBoltsEnable = false;
+        var IsFlushBoltsEnable2 = false;
         var IsMorticedDropdownSealsEnable = false;
         var IsFacefixeddropsealsEnable = false;
         var IsConcealedOverheadCloserEnable = false;
@@ -2971,6 +2972,8 @@ const render = (CustomElement = null) => {
         /** FlushBoltsData Measurements */
         var FlushBoltsHeight = 0
         var FlushBoltsWidth = 0
+        var FlushBoltsHeight2 = 0
+        var FlushBoltsWidth2 = 0
         /** PushHandle Measurements */
         var PushHandleHeight = 0
         var PushHandleDistanceFromBottomOfDoor = 0
@@ -3231,10 +3234,22 @@ const render = (CustomElement = null) => {
 
                     }
                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
+
+                        const FlushBoltsData = elem.additional_info.filter(item => item.Category === "FlushBolts");
+   
+                    if (FlushBoltsData.length > 0) {
                         IsFlushBoltsEnable = true;
-                        const FlushBoltsData = elem.additional_info.find((item) => item.Category === "FlushBolts");
-                        FlushBoltsHeight = FlushBoltsData.staticHeight
-                        FlushBoltsWidth = FlushBoltsData.staticWidth
+                        const FlushBoltsData1 = FlushBoltsData[0];
+                        FlushBoltsHeight = FlushBoltsData1.staticHeight
+                        FlushBoltsWidth = FlushBoltsData1.staticWidth
+                    }
+
+                    if (FlushBoltsData.length > 1) {
+                        IsFlushBoltsEnable2 = true;
+                        const FlushBoltsData2 = FlushBoltsData[1];
+                        FlushBoltsHeight2 = FlushBoltsData2.staticHeight
+                        FlushBoltsWidth2 = FlushBoltsData2.staticWidth
+                    }
                     }
                     if (elem.Morticeddropdownseals != '' && elem.Morticeddropdownseals != null) {
                         IsMorticedDropdownSealsEnable = true;
@@ -6326,7 +6341,7 @@ svg.append("circle")
 
                 if(IsFlushBoltsEnable)
                     {
-                        if(LeafWidth2ForMap<LeafWidth1ForMap) {
+                        // if(LeafWidth2ForMap<LeafWidth1ForMap) {
 
 
                             svg.append('rect')
@@ -6414,94 +6429,141 @@ svg.append("circle")
                                             .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
                                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
                                             .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
-                        }else{
+                        // }else{
+                        //     svg.append('rect')
+                        //     .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr('y', iy + TopFrameHeight + GapForMap + 1)
+                        //     .attr('width', (FlushBoltsWidth / 5))
+                        //     .attr('height', (FlushBoltsHeight / 5))
+                        //     .attr('stroke', 'none')
+                        //     .attr('fill', '#D0D0C6')
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1)
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("marker-start", "url(#arrowLeft)")
+                        //     .attr("marker-end", "url(#arrowRight)")
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5 - 5 - 1)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+
+
+                        // svg.append("text")            // append text
+                        //     .style("fill", "black")   // make the text
+                        //     .attr("font-size", 10)
+                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10)    // set x position
+                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
+                        //     .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
+                        //     .text(FlushBoltsHeight);
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1 + (FlushBoltsWidth / 5))
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                        //     .attr("marker-start", "url(#arrowLeft)")
+                        //     .attr("marker-end", "url(#arrowRight)")
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
+
+                        // svg.append("text")            // append text
+                        //     .style("fill", "black")   // make the text
+                        //     .attr("font-size", 10)
+                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 10) - 1 - 5)    // set x position
+                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
+                        //     .text(FlushBoltsWidth);
+
+                        //     svg.append('line')
+                        //                     .style("stroke", "black")
+                        //                     .style("stroke-width", 0.5)
+                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        //                     .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //                     .attr("marker-start", "url(#arrowLeft)")
+                        //                     .attr("marker-end", "url(#arrowRight)")
+
+                        //                 svg.append('line')
+                        //                     .style("stroke", "black")
+                        //                     .style("stroke-width", 0.5)
+                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
+                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
+                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
+
+                        //                 svg.append("text")            // append text
+                        //                     .style("fill", "black")   // set text color
+                        //                     .attr("font-size", 10)    // set font size
+                        //                     .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
+                        //                     .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
+                        //                     .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
+                        //                     .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
+                        // }
+                    }
+
+                     if(IsFlushBoltsEnable2)
+                    {
                             svg.append('rect')
-                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                            .attr('y', iy + TopFrameHeight + GapForMap + 1)
-                            .attr('width', (FlushBoltsWidth / 5))
-                            .attr('height', (FlushBoltsHeight / 5))
+                            .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr('y',  iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1 - (FlushBoltsHeight2 / 5))
+                            .attr('width', (FlushBoltsWidth2 / 5))
+                            .attr('height', (FlushBoltsHeight2 / 5))
                             .attr('stroke', 'none')
                             .attr('fill', '#D0D0C6')
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5))
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5 - 5 - 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
-                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
-                            .text(FlushBoltsHeight);
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) + 5 ) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20}, ${iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) +5 })`) // rotate
+                            .text(FlushBoltsHeight2);
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1 + (FlushBoltsWidth / 5))
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
+               
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 10) - 1 - 5)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
-                            .text(FlushBoltsWidth);
-
-                            svg.append('line')
-                                            .style("stroke", "black")
-                                            .style("stroke-width", 0.5)
-                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                            .attr("marker-start", "url(#arrowLeft)")
-                                            .attr("marker-end", "url(#arrowRight)")
-
-                                        svg.append('line')
-                                            .style("stroke", "black")
-                                            .style("stroke-width", 0.5)
-                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
-                                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
-                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
-
-                                        svg.append("text")            // append text
-                                            .style("fill", "black")   // set text color
-                                            .attr("font-size", 10)    // set font size
-                                            .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
-                                            .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
-                                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
-                                            .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
-                        }
-
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 10) + 1)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 10) // set y position
+                            .text(FlushBoltsWidth2);
 
                     }
                 if (IsMorticedDropdownSealsEnable || IsFacefixeddropsealsEnable) {
