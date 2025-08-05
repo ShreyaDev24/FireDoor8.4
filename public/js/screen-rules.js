@@ -34,6 +34,42 @@ function updateFields(target, quantity, isstatus = false) {
 }
 
 
+$(document).on('change', '#AreSinglePaneEqualSizes', function() {
+    var selectedVal = $(this).val();
+    if (selectedVal === 'No') {
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD")
+            .prop('readonly', false)
+            .prop('required', true);
+    } else {
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD")
+            .prop('readonly', true)
+            .prop('required', false);
+    }
+});
+
+function syncHiddenInputs() {
+    $('#SinglePaneB-hidden').val($('#SinglePaneB').val());
+    $('#SinglePaneC-hidden').val($('#SinglePaneC').val());
+    $('#SinglePaneD-hidden').val($('#SinglePaneD').val());
+}
+
+$(document).on('change', '#SinglePane, #AreSinglePaneEqualSizes', function(e) {
+    e.preventDefault();
+    var SinglePane = $("#SinglePane").val();
+
+    if ($('#AreSinglePaneEqualSizes').val() === 'Yes') {
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD").val(SinglePane).prop('disabled', true);
+    } else {
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD").prop('disabled', false);
+    }
+
+    syncHiddenInputs();
+});
+
+$(document).on('change', '#SinglePaneB, #SinglePaneC, #SinglePaneD', function() {
+    syncHiddenInputs();
+});
+
 $(document).on('change','#GlazingSystem',function(e){
     e.preventDefault();
     GlazingThicknessFilter();
@@ -64,6 +100,7 @@ function SinglePane(){
         swal('Warning','Somethings went wrong!');
         return false;
     }
+
     $.ajax({
         url: $("#get-glass-options").text(),
         method: "POST",
@@ -84,11 +121,17 @@ function SinglePane(){
 
             if (result.status === "ok") {
                 let data = result.data;
-                $("#SinglePane").empty().append(buildOptions(data, "#SinglePane-value", "Select Single Pane"));
+                $("#SinglePane").empty().append(buildOptions(data, "#SinglePane-value", "Select Single Pane A"));
+                $("#SinglePaneB").empty().append(buildOptions(data, "#SinglePaneB-value", "Select Single Pane B"));
+                $("#SinglePaneC").empty().append(buildOptions(data, "#SinglePaneC-value", "Select Single Pane C"));
+                $("#SinglePaneD").empty().append(buildOptions(data, "#SinglePaneD-value", "Select Single Pane D"));
                 let dataNFR = result.dataNFR;
                 $("#IGUInnerPane").empty().append(buildOptions(dataNFR, "#IGUInnerPane-value", "Select IGU Inner Pane"));
             } else {
                 $("#SinglePane").empty().append('<option value="">No Single Pane Found</option>');
+                $("#SinglePaneB").empty().append('<option value="">No Single Pane Found</option>');
+                $("#SinglePaneC").empty().append('<option value="">No Single Pane Found</option>');
+                $("#SinglePaneD").empty().append('<option value="">No Single Pane Found</option>');
                 $("#IGUInnerPane").empty().append('<option value="">No IGU Inner Pane Found</option>');
             }
 
