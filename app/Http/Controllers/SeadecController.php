@@ -163,34 +163,77 @@ class SeadecController extends Controller
         ];
 
         // Process the data and merge
+        // foreach ($setIronmongery as $ironmongery) {
+        //     $additionalInfo = []; // Temporary array to hold additional info
+
+        //     foreach ($IronmongeryInfoSet as $valIronmongery) {
+        //         // Check if the property exists and is not empty
+        //         if (!empty($ironmongery->$valIronmongery)) {
+        //             $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+        //                 ->where('UserId', Auth::user()->id)
+        //                 ->first();
+
+        //             if (!empty($SelectedIronmongery)) {
+        //                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+        //                         ->first();
+        //                 if(empty($IronmongeryInfoModel)){
+        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+        //                 }
+
+        //                 if (!empty($IronmongeryInfoModel)) {
+        //                     $additionalInfo[] = $IronmongeryInfoModel;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     // Dynamically add the additional_info attribute
+        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
+        // }
+
+        $qtyFieldOverrides = [
+            'DoorSinage' => 'doorSignageQty',
+            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
+            'DoorStops' => 'DoorStopsQty',
+        ];
+
         foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = []; // Temporary array to hold additional info
+            $additionalInfo = [];
 
             foreach ($IronmongeryInfoSet as $valIronmongery) {
-                // Check if the property exists and is not empty
+                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
+
                 if (!empty($ironmongery->$valIronmongery)) {
                     $ids = explode(',', $ironmongery->$valIronmongery);
-                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
-                        ->where('UserId', Auth::user()->id)
-                        ->get();
+                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
 
-                    if (count($SelectedIronmongery) > 0) {
-                            foreach($SelectedIronmongery as $select){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
+                    foreach ($ids as $index => $itemId) {
+                        $itemId = trim($itemId);
+                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
+
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if ($SelectedIronmongery) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
+                                ->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
 
-                                if (!empty($IronmongeryInfoModel)) {
+                            if (!$IronmongeryInfoModel) {
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if ($IronmongeryInfoModel) {
+                                for ($i = 0; $i < $qty; $i++) {
                                     $additionalInfo[] = $IronmongeryInfoModel;
                                 }
                             }
+                        }
                     }
                 }
             }
 
-            // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
 
@@ -333,34 +376,77 @@ class SeadecController extends Controller
         ];
 
         // Process the data and merge
+        // foreach ($setIronmongery as $ironmongery) {
+        //     $additionalInfo = []; // Temporary array to hold additional info
+
+        //     foreach ($IronmongeryInfoSet as $valIronmongery) {
+        //         // Check if the property exists and is not empty
+        //         if (!empty($ironmongery->$valIronmongery)) {
+        //             $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+        //                 ->where('UserId', Auth::user()->id)
+        //                 ->first();
+
+        //             if (!empty($SelectedIronmongery)) {
+        //                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+        //                         ->first();
+        //                 if(empty($IronmongeryInfoModel)){
+        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+        //                 }
+
+        //                 if (!empty($IronmongeryInfoModel)) {
+        //                     $additionalInfo[] = $IronmongeryInfoModel;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     // Dynamically add the additional_info attribute
+        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
+        // }
+
+        $qtyFieldOverrides = [
+            'DoorSinage' => 'doorSignageQty',
+            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
+            'DoorStops' => 'DoorStopsQty',
+        ];
+
         foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = []; // Temporary array to hold additional info
+            $additionalInfo = [];
 
             foreach ($IronmongeryInfoSet as $valIronmongery) {
-                // Check if the property exists and is not empty
+                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
+
                 if (!empty($ironmongery->$valIronmongery)) {
                     $ids = explode(',', $ironmongery->$valIronmongery);
-                    $SelectedIronmongery = SelectedIronmongery::whereIn('id', $ids)
-                        ->where('UserId', Auth::user()->id)
-                        ->get();
+                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
 
-                    if (count($SelectedIronmongery) > 0) {
-                            foreach($SelectedIronmongery as $select){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
+                    foreach ($ids as $index => $itemId) {
+                        $itemId = trim($itemId);
+                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
+
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if ($SelectedIronmongery) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
+                                ->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
 
-                                if (!empty($IronmongeryInfoModel)) {
+                            if (!$IronmongeryInfoModel) {
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if ($IronmongeryInfoModel) {
+                                for ($i = 0; $i < $qty; $i++) {
                                     $additionalInfo[] = $IronmongeryInfoModel;
                                 }
                             }
+                        }
                     }
                 }
             }
 
-            // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
 
