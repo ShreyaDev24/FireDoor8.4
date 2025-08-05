@@ -40,9 +40,12 @@
                             <div class="col-sm-6">
                                 <div class="card-header"><h5 class="card-title">Ironmongery <span>Folders</span></h5></div>
                             </div>
-                            <div class="col-sm-6 ">
+                            <div class="col-sm-6">
                                 <a href="{{ route('folders.create') }}" class="btn-shadow btn btn-info float-right">
                                     <i class="fas fa-folder-plus"></i> Add Folder
+                                </a>
+                                                                <a href="{{route('ironmongeryadd')}}" class="btn-shadow btn btn-info float-right mr-3">
+                                    <i class="fa fa-edit" aria-hidden="true"></i> Add Ironmongery Set
                                 </a>
                             </div>
                         </div>

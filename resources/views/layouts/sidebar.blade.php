@@ -1167,10 +1167,17 @@
                                         Non Configurable Items
                                     </a>
                                 </li>
-                                <li class="mm-{{ (Request::segment(2) == 'ironmongery-list') ? 'active' : ''}}">
+                                {{-- <li class="mm-{{ (Request::segment(2) == 'ironmongery-list') ? 'active' : ''}}">
                                     <a href="{{route('ironmongery-list')}}">
                                         <i class="metismenu-icon"></i>
                                         Ironmongery Set
+                                    </a>
+                                </li> --}}
+
+                                <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
+                                    <a href="{{route('folders.index')}}">
+                                        <i class="metismenu-icon"></i>
+                                        Ironmongery Folder
                                     </a>
                                 </li>
 

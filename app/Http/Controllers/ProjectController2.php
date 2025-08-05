@@ -1993,8 +1993,9 @@ $sn++;
         $FloorSpring = null;
         $tooltip = Tooltip::first();
         $list = IronmongeryName::where('status',1)->orderBy('name','ASC')->get();
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
         //dd($item, $tooltip, $hinge);
-        return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list]);
+        return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list, 'folders' => $folders]);
         // return view('Project.addironmongery',compact('tooltip','pid','item','hinge' , 'FloorSpring','LocksAndLatches', 'FlushBolts' , 'ConcealedOverheadCloser' , 'PullHandles' , 'PushHandles' , 'KickPlates' ,'DoorSelectors' ,'PanicHardware', 'Doorsecurityviewer' , 'Morticeddropdownseals' , 'Facefixeddropseals' , 'ThresholdSeal' , 'AirTransferGrill' , 'Letterplates' , 'CableWays' , 'SafeHinge' , 'LeverHandle'  , 'DoorSinage'  , 'FaceFixedDoorCloser' , 'Thumbturn'  , 'KeyholeEscutchen'));
     }
 
@@ -2077,7 +2078,13 @@ $sn++;
         $item->totalprice = $request->totalprice;
         $item->discountprice = $request->discountprice;
         $item->updated_at = date('Y-m-d H:i:s');
-        $item->save();
+        $store = $item->save();
+
+        if($store == true){
+            if($request->folder_id){
+                 $item->folders()->attach($request->folder_id);
+            }
+        }
 
         $project = Project::where('id', $request->ProjectId)->first();
         // $project->editBy = Auth::user()->id;
@@ -2088,7 +2095,7 @@ $sn++;
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery updated successfully!');
             }
 
-            return redirect('project/ironmongery-list')->with('success', 'Ironmongery updated successfully!');
+            return redirect('project/folders')->with('success', 'Ironmongery updated successfully!');
         }
         else
         {
@@ -2096,7 +2103,7 @@ $sn++;
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery added successfully!');
             }
 
-            return redirect('project/ironmongery-list')->with('success', 'Ironmongery added successfully!');
+            return redirect('project/folders')->with('success', 'Ironmongery added successfully!');
 
         }
     }else{
@@ -2955,7 +2962,7 @@ $sn++;
 
     public function foldersIndex()
     {
-        $folders = Folder::withCount('ironmongerySets')->get();
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
         return view('Project.folders.index', compact('folders'));
     }
 
