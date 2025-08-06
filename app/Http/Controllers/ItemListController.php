@@ -1208,6 +1208,7 @@ class ItemListController extends Controller
                         'IntumescentSealSize'                   => $request->intumescentSealSize,
                         'IronmongerySet'                        => $request->ironmongerySet,
                         'IronmongeryID'                         => $request->IronmongeryID,
+                        'FolderId'                              => $request->FolderId,
                         'SpecialFeatureRefs'                    => $request->specialFeatureRefs,
 
                     //Over Panel Section
@@ -1505,6 +1506,7 @@ class ItemListController extends Controller
                         $item->IntumescentSealSize = $request->intumescentSealSize;
                         $item->IronmongerySet = $request->ironmongerySet;
                         $item->IronmongeryID = $request->IronmongeryID;
+                        $item->FolderId    = $request->FolderId;
                         $item->SpecialFeatureRefs = $request->specialFeatureRefs;
 
                     //Over Panel Section
