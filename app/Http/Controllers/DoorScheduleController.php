@@ -5537,6 +5537,7 @@ class DoorScheduleController extends Controller
                     'add_ironmongery.id as ironmongery_id',
                     'add_ironmongery.Setname'
                 )
+                ->where('folders.user_id',Auth::user()->id)
                 ->get()
                 ->groupBy('folder_id');
 
