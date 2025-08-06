@@ -8075,6 +8075,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                     <tr class="text-white">
                         '.$check.'
                         <th>Fire Rating</th>
+                        <th>Integrity Type</th>
                         <th>DFRating</th>
                         <th>Glass Name</th>
                         <th>Width Point 1 (far right)</th>
@@ -8120,6 +8121,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                                                                '.$value->id.',
                                                                '.$value->DFRating.',
                                                                \''.$value->FireRating.'\',
+                                                               \''.$value->GlassIntegrity.'\',
                                                                \''.$value->GlassType.'\',
                                                                '.$value->WidthPoint1.',
                                                                '.$value->HeightPoint1.',
@@ -8129,8 +8131,8 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                                                                '.$value->TransomDepth.',
                                                                '.$value->AreaSize.',
                                                                '.$value->FrameDensity.',
-                                                               '.$value->glassSelectedPrice.',
-                                                               '.$value->selectedId.'
+                                                               '.($value->glassSelectedPrice ?? 0).',
+                                                               '.($value->selectedId ?? 0).'
                                                            )">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
@@ -8155,6 +8157,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$value->FireRating.'</td>
+                        <td class="text-center">'.str_replace('_',' ',$value->GlassIntegrity).'</td>
                         <td class="text-center">'.$value->DFRating.'</td>
                         <td>'.$value->GlassType.'</td>
                         <td>'.$value->WidthPoint1.'</td>
@@ -8184,7 +8187,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
     })
     ->Join('screen_glass_type', 'screen_glazing_type.ScreenGlassId', '=', 'screen_glass_type.id')->
     wherein('screen_glazing_type.editBy', $UserId)
-    ->select('screen_glazing_type.*','selected_screen_glazing.glazingSelectedPrice','selected_screen_glazing.id as selectedId','selected_screen_glazing.editBy')
+    ->select('screen_glazing_type.*','selected_screen_glazing.glazingSelectedPrice','selected_screen_glazing.id as selectedId','selected_screen_glazing.editBy','screen_glass_type.GlassIntegrity')
     ->whereNotNull('screen_glazing_type.GlazingSystem')
     ->orderBy('screen_glazing_type.GlazingSystem', 'ASC')->get();
 
@@ -8224,6 +8227,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
                     <tr class="text-white">
                         '.$check.'
                         <th>Fire Rating</th>
+                        <th>Integrity Type</th>
                         <th>Screen Glass</th>
                         <th>Glazing System</th>
                         <th>Glazing Thickness</th>
@@ -8264,13 +8268,14 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
                                 <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editSideScreenGlazingSystem('.$value->id.',
                                     '.$screenGlass->id.',
                                     \''.$value->FireRating.'\',
+                                    \''.$value->GlassIntegrity.'\',
                                     \''.$value->GlazingSystem.'\',
                                     \''.$value->FixingDetails.'\',
                                     '.$value->Beading.',
                                     '.$value->BeadingHeight.',
                                     '.$value->BeadingWidth.',
-                                    '.$value->glazingSelectedPrice.',
-                                    \''.$value->selectedId.'\',
+                                    '.($value->glazingSelectedPrice ?? 0).',
+                                    \''.($value->selectedId ?? 0).'\',
                                     \''.$value->GlazingThickness.'\',
                                     \''.$screenGlass->GlassType.'\')">
                             <i class="fa fa-edit text-white text-center"></i>
@@ -8296,6 +8301,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
     $tbl1 .=        '<tr>
                         '.$checkText.'
                         <td class="text-center">'.$value->FireRating.'</td>
+                        <td class="text-center">'.$value->GlassIntegrity.'</td>
                         <td class="text-center">'.$screenGlass->GlassType.'</td>
                         <td>'.$value->GlazingSystem.'</td>
                         <td>'.$value->GlazingThickness.'</td>

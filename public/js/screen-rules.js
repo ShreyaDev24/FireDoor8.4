@@ -37,11 +37,18 @@ function updateFields(target, quantity, isstatus = false) {
 $(document).on('change', '#AreSinglePaneEqualSizes', function() {
     var selectedVal = $(this).val();
     if (selectedVal === 'No') {
-        $("#SinglePaneB, #SinglePaneC, #SinglePaneD")
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD")
             .prop('readonly', false)
             .prop('required', true);
     } else {
-        $("#SinglePaneB, #SinglePaneC, #SinglePaneD")
+        $('#GlassIntegrityB').val($('#GlassIntegrity').val());
+        SinglePane($('#GlassIntegrity').val(), 'B');
+        $('#GlassIntegrityC').val($('#GlassIntegrity').val());
+        SinglePane($('#GlassIntegrity').val(), 'C');
+        $('#GlassIntegrityD').val($('#GlassIntegrity').val());
+        SinglePane($('#GlassIntegrity').val(), 'D');
+
+        $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD")
             .prop('readonly', true)
             .prop('required', false);
     }
@@ -51,22 +58,29 @@ function syncHiddenInputs() {
     $('#SinglePaneB-hidden').val($('#SinglePaneB').val());
     $('#SinglePaneC-hidden').val($('#SinglePaneC').val());
     $('#SinglePaneD-hidden').val($('#SinglePaneD').val());
+    $('#GlassIntegrityB-hidden').val($('#GlassIntegrityB').val());
+    $('#GlassIntegrityC-hidden').val($('#GlassIntegrityC').val());
+    $('#GlassIntegrityD-hidden').val($('#GlassIntegrityD').val());
 }
 
-$(document).on('change', '#SinglePane, #AreSinglePaneEqualSizes', function(e) {
+$(document).on('change', '#SinglePane,#GlassIntegrity, #AreSinglePaneEqualSizes', function(e) {
     e.preventDefault();
     var SinglePane = $("#SinglePane").val();
+    var GlassIntegrity = $("#GlassIntegrity").val();
 
     if ($('#AreSinglePaneEqualSizes').val() === 'Yes') {
+        $("#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").val(GlassIntegrity).prop('disabled', true);
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD").val(SinglePane).prop('disabled', true);
+        FireRatingChange();
     } else {
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD").prop('disabled', false);
+        $("#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").prop('disabled', false);
     }
 
     syncHiddenInputs();
 });
 
-$(document).on('change', '#SinglePaneB, #SinglePaneC, #SinglePaneD', function() {
+$(document).on('change', '#SinglePaneB, #SinglePaneC, #SinglePaneD ,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD', function() {
     syncHiddenInputs();
 });
 
@@ -90,14 +104,26 @@ $("#FireRating").change(function(){
 });
 
 function FireRatingChange(){
-    SinglePane();
+    SinglePane($('#GlassIntegrity').val(),'A');
+    SinglePane($('#GlassIntegrityB').val(), 'B');
+    SinglePane($('#GlassIntegrityC').val(), 'C');
+    SinglePane($('#GlassIntegrityD').val(), 'D');
 }
 
-function SinglePane(){
-    var SinglePane = $("#SinglePane").val();
-    var FireRating = $("#FireRating").val();
-    if(FireRating == ''){
-        swal('Warning','Somethings went wrong!');
+// On Glass Integrity dropdown change
+$("#GlassIntegrity, #GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").change(function () {
+    const id = $(this).attr('id'); // Get which ID triggered the change
+    const type = id.replace('GlassIntegrity', '') || 'A'; // A, B, C, D
+    const selectedVal = $(this).val();
+
+    SinglePane(selectedVal, type);
+});
+
+function SinglePane(glassIntegrityValue = null, type = 'A') {
+    const fireRating = $("#FireRating").val();
+
+    if (!fireRating || !glassIntegrityValue) {
+        swal('Warning', 'Something went wrong!');
         return false;
     }
 
@@ -105,14 +131,18 @@ function SinglePane(){
         url: $("#get-glass-options").text(),
         method: "POST",
         dataType: "json",
-        data: { FireRating: FireRating, _token: $("#_token").val() },
+        data: {
+            FireRating: fireRating,
+            GlassIntegrity: glassIntegrityValue,
+            _token: $("#_token").val()
+        },
         success: function (result) {
             function buildOptions(data, valueElementId, defaultOptionText) {
                 let optionsHtml = `<option value="">${defaultOptionText}</option>`;
-                let selectedValue = $(valueElementId).data("value") || null;
+                const selectedValue = $(valueElementId).data("value") || null;
 
                 data.forEach(item => {
-                    let selected = selectedValue === item.GlassType ? "selected" : "";
+                    const selected = selectedValue === item.GlassType ? "selected" : "";
                     optionsHtml += `<option value="${item.GlassType}" ${selected}>${item.GlassType}</option>`;
                 });
 
@@ -120,29 +150,58 @@ function SinglePane(){
             }
 
             if (result.status === "ok") {
-                let data = result.data;
-                $("#SinglePane").empty().append(buildOptions(data, "#SinglePane-value", "Select Single Pane A"));
-                $("#SinglePaneB").empty().append(buildOptions(data, "#SinglePaneB-value", "Select Single Pane B"));
-                $("#SinglePaneC").empty().append(buildOptions(data, "#SinglePaneC-value", "Select Single Pane C"));
-                $("#SinglePaneD").empty().append(buildOptions(data, "#SinglePaneD-value", "Select Single Pane D"));
-                let dataNFR = result.dataNFR;
+                const data = result.data;
+                const dataNFR = result.dataNFR;
+
+                // Determine which dropdown to update based on 'type'
+                switch (type) {
+                    case 'A':
+                        $("#SinglePane").empty().append(buildOptions(data, "#SinglePane-value", "Select Single Pane A"));
+                        break;
+                    case 'B':
+                        $("#SinglePaneB").empty().append(buildOptions(data, "#SinglePaneB-value", "Select Single Pane B"));
+                        break;
+                    case 'C':
+                        $("#SinglePaneC").empty().append(buildOptions(data, "#SinglePaneC-value", "Select Single Pane C"));
+                        break;
+                    case 'D':
+                        $("#SinglePaneD").empty().append(buildOptions(data, "#SinglePaneD-value", "Select Single Pane D"));
+                        break;
+                }
+
+                if($('#AreSinglePaneEqualSizes').val() == 'Yes'){
+                    $("#SinglePaneB, #SinglePaneC, #SinglePaneD").val($("#SinglePane").val());
+                    syncHiddenInputs();
+                }
+
+                // IGUInnerPane is updated in all cases
                 $("#IGUInnerPane").empty().append(buildOptions(dataNFR, "#IGUInnerPane-value", "Select IGU Inner Pane"));
+
             } else {
-                $("#SinglePane").empty().append('<option value="">No Single Pane Found</option>');
-                $("#SinglePaneB").empty().append('<option value="">No Single Pane Found</option>');
-                $("#SinglePaneC").empty().append('<option value="">No Single Pane Found</option>');
-                $("#SinglePaneD").empty().append('<option value="">No Single Pane Found</option>');
+                const msg = '<option value="">No Single Pane Found</option>';
+                switch (type) {
+                    case 'A':
+                        $("#SinglePane").empty().append(msg);
+                        break;
+                    case 'B':
+                        $("#SinglePaneB").empty().append(msg);
+                        break;
+                    case 'C':
+                        $("#SinglePaneC").empty().append(msg);
+                        break;
+                    case 'D':
+                        $("#SinglePaneD").empty().append(msg);
+                        break;
+                }
                 $("#IGUInnerPane").empty().append('<option value="">No IGU Inner Pane Found</option>');
             }
-
-            // let elements = $(this);
-            // render(elements);
         },
         error: function (err) {
             console.error("AJAX Error:", err);
         }
     });
 }
+
 
 function GlazingThicknessFilter(id = null,isstatus = false){
     GlazingSystem = (id == null)?$("#GlazingSystem").val():id;

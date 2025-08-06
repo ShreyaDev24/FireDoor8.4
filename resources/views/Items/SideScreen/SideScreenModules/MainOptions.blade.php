@@ -41,6 +41,7 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="GlazingType">Glazing Type</label>
@@ -51,9 +52,35 @@
                             </select>
                         </div>
                     </div>
+
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="AreSinglePaneEqualSizes">Are Single Pane equal sizes?</label>
+                            <label for="GlassIntegrity">Integrity Type A</label>
+                            <select name="GlassIntegrity" id="GlassIntegrity" class="form-control " required>
+                                <option value="">Select Integrity Type</option>
+                                <option value="Integrity_And_Insulation"
+                                    @if(isset($Item['GlassIntegrity']) && $Item['GlassIntegrity'] == 'Integrity_And_Insulation')
+                                        selected
+                                    @endif>Integrity And Insulation</option>
+                                <option value="Integrity_only"
+                                    @if(isset($Item['GlassIntegrity']) && $Item['GlassIntegrity'] == 'Integrity_only')
+                                        selected
+                                    @endif>Integrity only</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="SinglePane">Single Pane A</label>
+                            <select name="SinglePane" id="SinglePane" class="form-control " required>
+                                <option value="">Select Single Pane A</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="position-relative form-group">
+                            <label for="AreSinglePaneEqualSizes">Are Single Panes B, C, D same as Single Pane A?</label>
                             <select name="AreSinglePaneEqualSizes" id="AreSinglePaneEqualSizes" class="form-control" required>
                                 <option value="Yes"
                                     @if(isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
@@ -73,10 +100,20 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="SinglePane">Single Pane A</label>
-                            <select name="SinglePane" id="SinglePane" class="form-control " required>
-                                <option value="">Select Single Pane A</option>
+                            <label for="GlassIntegrity">Integrity Type B</label>
+                            <select name="GlassIntegrityB_disabled" id="GlassIntegrityB" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                <option value="">Select Integrity Type</option>
+                                <option value="Integrity_And_Insulation"
+                                    @if(isset($Item['GlassIntegrityB']) && $Item['GlassIntegrityB'] == 'Integrity_And_Insulation')
+                                        selected
+                                    @endif>Integrity And Insulation</option>
+                                <option value="Integrity_only"
+                                    @if(isset($Item['GlassIntegrityB']) && $Item['GlassIntegrityB'] == 'Integrity_only')
+                                        selected
+                                    @endif>Integrity only</option>
                             </select>
+                            <input type="hidden" name="GlassIntegrityB" id="GlassIntegrityB-hidden">
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -90,6 +127,24 @@
                     </div>
                     </div>
                     <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="GlassIntegrity">Integrity Type C</label>
+                            <select name="GlassIntegrityC_disabled" id="GlassIntegrityC" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                <option value="">Select Integrity Type</option>
+                                 <option value="Integrity_And_Insulation"
+                                    @if(isset($Item['GlassIntegrityC']) && $Item['GlassIntegrityC'] == 'Integrity_And_Insulation')
+                                        selected
+                                    @endif>Integrity And Insulation</option>
+                                <option value="Integrity_only"
+                                    @if(isset($Item['GlassIntegrityC']) && $Item['GlassIntegrityC'] == 'Integrity_only')
+                                        selected
+                                    @endif>Integrity only</option>
+                            </select>
+                            <input type="hidden" name="GlassIntegrityC" id="GlassIntegrityC-hidden">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                     <div class="position-relative form-group">
                         <label for="SinglePaneC">Single Pane C</label>
                         <select name="SinglePaneC_disabled" id="SinglePaneC" class="form-control" @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
@@ -98,6 +153,24 @@
                         </select>
                         <input type="hidden" name="SinglePaneC" id="SinglePaneC-hidden">
                     </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="GlassIntegrity">Integrity Type D</label>
+                            <select name="GlassIntegrityD_disabled" id="GlassIntegrityD" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
+                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                <option value="">Select Integrity Type</option>
+                                 <option value="Integrity_And_Insulation"
+                                    @if(isset($Item['GlassIntegrityD']) && $Item['GlassIntegrityD'] == 'Integrity_And_Insulation')
+                                        selected
+                                    @endif>Integrity And Insulation</option>
+                                <option value="Integrity_only"
+                                    @if(isset($Item['GlassIntegrityD']) && $Item['GlassIntegrityD'] == 'Integrity_only')
+                                        selected
+                                    @endif>Integrity only</option>
+                            </select>
+                            <input type="hidden" name="GlassIntegrityD" id="GlassIntegrityD-hidden">
+                        </div>
                     </div>
                     <div class="col-md-6">
                     <div class="position-relative form-group">

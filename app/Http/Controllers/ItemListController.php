@@ -803,6 +803,10 @@ class ItemListController extends Controller
             'FireRating' => 'nullable|string',
             'GlazingType' => 'nullable|string',
             'AreSinglePaneEqualSizes' => 'nullable|string',
+            'GlassIntegrity' => 'nullable|string',
+            'GlassIntegrityB' => 'nullable|string',
+            'GlassIntegrityC' => 'nullable|string',
+            'GlassIntegrityD' => 'nullable|string',
             'SinglePane' => 'nullable|string',
             'SinglePaneB' => 'nullable|string',
             'SinglePaneC' => 'nullable|string',
@@ -2126,6 +2130,7 @@ class ItemListController extends Controller
 
     public function getGlassOptions(Request $request): void{
         $FireRating = $request->FireRating;
+        $GlassIntegrity = $request->GlassIntegrity;
         if($FireRating == 'IGU 0-0'){
             $FireRating = '0-0';
         }elseif($FireRating == 'IGU 30-0'){
@@ -2138,13 +2143,13 @@ class ItemListController extends Controller
 
         if(!empty($FireRating)){
             $glassData = ScreenGlassType::join('selected_screen_glass','screen_glass_type.id','selected_screen_glass.glass_id')
-            ->where(['screen_glass_type.FireRating' => $FireRating,'screen_glass_type.status'=>1])
+            ->where(['screen_glass_type.FireRating' => $FireRating,'screen_glass_type.GlassIntegrity' => $GlassIntegrity,'screen_glass_type.status'=>1])
             ->wherein('selected_screen_glass.editBy', $UserId)
             ->select('screen_glass_type.*')
             ->orderBy('screen_glass_type.GlassType','ASC')
             ->get();
 
-            $glassDataSelectedOption = ScreenGlassType::where(['screen_glass_type.FireRating' => $FireRating,'screen_glass_type.status'=>1])
+            $glassDataSelectedOption = ScreenGlassType::where(['screen_glass_type.FireRating' => $FireRating,'screen_glass_type.GlassIntegrity' => $GlassIntegrity,'screen_glass_type.status'=>1])
             ->select('screen_glass_type.*')
             ->orderBy('screen_glass_type.GlassType','ASC')
             ->get();
