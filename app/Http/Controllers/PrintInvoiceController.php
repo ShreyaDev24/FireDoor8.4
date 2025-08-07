@@ -944,6 +944,7 @@ class PrintInvoiceController extends Controller
            $certMap = [
                 4 => [
                     'FD30' => 'FEA/F99112 Revision L',
+                    'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 8 => [
                     'FD30' => 'BMT/CNA/F15159 Revision F',
@@ -963,6 +964,10 @@ class PrintInvoiceController extends Controller
                 ],
                 6 => [
                     'FD30' => 'WF399992 Revision E',
+                ],
+                5 => [
+                    'FD30' => '10133/22-2.R1',
+                    'FD60' => '10133/22-2.R1',
                 ],
             ];
 
