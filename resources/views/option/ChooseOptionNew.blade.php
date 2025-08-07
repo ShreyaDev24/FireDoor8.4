@@ -1934,6 +1934,16 @@ dd(1);
                                     </select>
                                 </div>
                             </div>
+                             <div class="col-md-12">
+                                <div class="position-relative form-group">
+                                    <label for="GlassIntegrity">Integrity Type</label>
+                                    <select name="GlassIntegrity" id="GlassIntegrity" class="form-control " required>
+                                        <option value="">Select Integrity Type</option>
+                                        <option value="Integrity_And_Insulation">Integrity And Insulation</option>
+                                        <option value="Integrity_only">Integrity only</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
                                     <label for="glasstype">DFRating<span class="text-danger">*</span></label>
@@ -2090,6 +2100,16 @@ dd(1);
                             </div>
                             <div class="col-md-12">
                                 <div class="position-relative form-group">
+                                    <label for="GlassIntegrity">Integrity Type</label>
+                                    <select name="GlassIntegrity" id="GlassIntegrityCheck" class="form-control " required>
+                                        <option value="">Select Integrity Type</option>
+                                        <option value="Integrity_And_Insulation">Integrity And Insulation</option>
+                                        <option value="Integrity_only">Integrity only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="position-relative form-group">
                                     <label for="glasstype">Glass Type<span class="text-danger">*</span></label>
                                     <select name="GlassTypeSideScreen" id="GlassTypeSideScreen" required class="form-control ">
                                         <option value="">Select Glass Type</option>
@@ -2187,7 +2207,8 @@ dd(1);
 
     function SinglePane(){
         var FireRating = $("#ScreenFireRating").val();
-        if(FireRating == ''){
+        var GlassIntegrityCheck = $("#GlassIntegrityCheck").val();
+        if(FireRating == '' && GlassIntegrityCheck == ''){
             swal('Warning','Somethings went wrong!');
             return false;
         }
@@ -2195,7 +2216,7 @@ dd(1);
             url: "{{ route('items/get-glass-options') }}",
             method: "POST",
             dataType: "json",
-            data: { FireRating: FireRating, _token: '{{ csrf_token() }}' },
+            data: { FireRating: FireRating,GlassIntegrity: GlassIntegrityCheck, _token: '{{ csrf_token() }}' },
             success: function (result) {
                 function buildOptions(data, valueElementId, defaultOptionText) {
                     let optionsHtml = `<option value="">${defaultOptionText}</option>`;
@@ -2225,7 +2246,7 @@ dd(1);
         });
     }
 
-    $(document).on('change','#ScreenFireRating', function () {
+    $(document).on('change','#ScreenFireRating,#GlassIntegrityCheck', function () {
         SinglePane();
     });
 
@@ -3503,13 +3524,14 @@ $(document).ready(function () {
 });
 
 
-    function editSideScreenGlazingSystem(id,glassType,FireRating,GlazingSystem,FixingDetails,Beading,BeadingHeight,BeadingWidth,glazingSelectedPrice,selectedId,GlazingThickness,GlassType)
+    function editSideScreenGlazingSystem(id,glassType,FireRating,GlassIntegrity,GlazingSystem,FixingDetails,Beading,BeadingHeight,BeadingWidth,glazingSelectedPrice,selectedId,GlazingThickness,GlassType)
     {
         $("input[name=glass_ids]").val(glassType);
         $("#SideScreenGlazingSystemAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
         $("select[name=FireRating]").val(FireRating);
+        $("select[name=GlassIntegrity]").val(GlassIntegrity);
         $("input[name=GlazingSystem]").val(GlazingSystem);
         $("input[name=Beading]").val(Beading);
         $("input[name=GlazingThickness]").val(GlazingThickness);
@@ -3520,12 +3542,13 @@ $(document).ready(function () {
         SinglePane();
     }
 
-    function editSideScreenGlassType(id,DFRating,FireRating,GlassType,WidthPoint1,HeightPoint1,WidthPoint2,HeightPoint2,TransomThickness,TransomDepth,AreaSize,FrameDensity,glassSelectedPrice,selectedId)
+    function editSideScreenGlassType(id,DFRating,FireRating,GlassIntegrity,GlassType,WidthPoint1,HeightPoint1,WidthPoint2,HeightPoint2,TransomThickness,TransomDepth,AreaSize,FrameDensity,glassSelectedPrice,selectedId)
     {
         $("#SideScreenGlassTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
         $("select[name=FireRating]").val(FireRating);
+        $("select[name=GlassIntegrity]").val(GlassIntegrity);
         $("input[name=GlassType]").val(GlassType);
         $("input[name=WidthPoint1]").val(WidthPoint1);
         $("input[name=HeightPoint1]").val(HeightPoint1);

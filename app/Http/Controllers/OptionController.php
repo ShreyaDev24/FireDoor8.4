@@ -4344,6 +4344,7 @@ class OptionController extends Controller
             case 'SideScreen_Glass_Type':
                 $GlassType = $request->GlassType;
                 $FireRating = $request->FireRating;
+                $GlassIntegrity = $request->GlassIntegrity;
                 $DFRating = $request->DFRating;
                 $WidthPoint1 = $request->WidthPoint1;
                 $HeightPoint1 = $request->HeightPoint1;
@@ -4372,6 +4373,7 @@ class OptionController extends Controller
                     $data->GlassType = $GlassType;
                     $data->DFRating = $DFRating;
                     $data->FireRating = $FireRating;
+                    $data->GlassIntegrity = $GlassIntegrity;
                     $data->WidthPoint1 = $WidthPoint1;
                     $data->HeightPoint1 = $HeightPoint1;
                     $data->HeightPoint2 = $HeightPoint2;
