@@ -175,6 +175,11 @@
                             $projectName = '';
                         }
 
+                        if(!empty(isset($project->project_ironmongery))){
+                            $ProjectIronmongery =  $project->project_ironmongery;
+                        } else {
+                            $ProjectIronmongery = '';
+                        }
                         if(!empty(isset($project->coc))){
                             $coc =  $project->coc;
                         } else {
@@ -279,8 +284,8 @@
                     $contractorName = '';
                 }
 
-                $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]'];
-                $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName];
+                $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]','ProjectIronmongery'];
+                $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName,$ProjectIronmongery];
 
                 echo str_replace($str,$rplc,$ExtractPdf2);
             }
@@ -290,6 +295,14 @@
                     <tr>
                         <td class="tbl_color"><span>COC:</span></td>
                         <td colspan="3">{{ !empty($project->coc) ? $project->coc : '' }}</td>
+                    </tr>
+                </table>
+            @endif
+            @if (strpos($ExtractPdf2, 'ProjectIronmongery:') === false)
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="tbl_color"><span>ProjectIronmongery:</span></td>
+                        <td colspan="3">{{ !empty($project->project_ironmongery) ? $project->project_ironmongery : '' }}</td>
                     </tr>
                 </table>
             @endif
