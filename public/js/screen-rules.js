@@ -38,8 +38,7 @@ $(document).on('change', '#AreSinglePaneEqualSizes', function() {
     var selectedVal = $(this).val();
     if (selectedVal === 'No') {
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD")
-            .prop('readonly', false)
-            .prop('required', true);
+            .prop('readonly', false);
     } else {
         $('#GlassIntegrityB').val($('#GlassIntegrity').val());
         SinglePane($('#GlassIntegrity').val(), 'B');
@@ -49,8 +48,7 @@ $(document).on('change', '#AreSinglePaneEqualSizes', function() {
         SinglePane($('#GlassIntegrity').val(), 'D');
 
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD")
-            .prop('readonly', true)
-            .prop('required', false);
+            .prop('readonly', true);
     }
 });
 

@@ -102,7 +102,7 @@
                         <div class="position-relative form-group">
                             <label for="GlassIntegrity">Integrity Type B</label>
                             <select name="GlassIntegrityB_disabled" id="GlassIntegrityB" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                                 <option value="">Select Integrity Type</option>
                                 <option value="Integrity_And_Insulation"
                                     @if(isset($Item['GlassIntegrityB']) && $Item['GlassIntegrityB'] == 'Integrity_And_Insulation')
@@ -120,7 +120,7 @@
                     <div class="position-relative form-group">
                         <label for="SinglePaneB">Single Pane B</label>
                         <select name="SinglePaneB_disabled" id="SinglePaneB" class="form-control"  @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                             <option value="">Select Single Pane B</option>
                         </select>
                         <input type="hidden" name="SinglePaneB" id="SinglePaneB-hidden">
@@ -130,7 +130,7 @@
                         <div class="position-relative form-group">
                             <label for="GlassIntegrity">Integrity Type C</label>
                             <select name="GlassIntegrityC_disabled" id="GlassIntegrityC" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                                 <option value="">Select Integrity Type</option>
                                  <option value="Integrity_And_Insulation"
                                     @if(isset($Item['GlassIntegrityC']) && $Item['GlassIntegrityC'] == 'Integrity_And_Insulation')
@@ -148,7 +148,7 @@
                     <div class="position-relative form-group">
                         <label for="SinglePaneC">Single Pane C</label>
                         <select name="SinglePaneC_disabled" id="SinglePaneC" class="form-control" @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                             <option value="">Select Single Pane C</option>
                         </select>
                         <input type="hidden" name="SinglePaneC" id="SinglePaneC-hidden">
@@ -158,7 +158,7 @@
                         <div class="position-relative form-group">
                             <label for="GlassIntegrity">Integrity Type D</label>
                             <select name="GlassIntegrityD_disabled" id="GlassIntegrityD" class="form-control " @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                                 <option value="">Select Integrity Type</option>
                                  <option value="Integrity_And_Insulation"
                                     @if(isset($Item['GlassIntegrityD']) && $Item['GlassIntegrityD'] == 'Integrity_And_Insulation')
@@ -176,7 +176,7 @@
                     <div class="position-relative form-group">
                         <label for="SinglePaneD">Single Pane D</label>
                         <select name="SinglePaneD_disabled" id="SinglePaneD" class="form-control" @if (isset($Item['AreSinglePaneEqualSizes']) && $Item['AreSinglePaneEqualSizes'] == 'Yes')
-                                {{ 'disabled' }} @else {{ 'required' }} @endif>
+                                {{ 'disabled' }}  @endif>
                             <option value="">Select Single Pane D</option>
                         </select>
                         <input type="hidden" name="SinglePaneD" id="SinglePaneD-hidden">
