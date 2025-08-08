@@ -109,7 +109,7 @@
                             </label>
                             {{-- <label for="Rebated_Height" style="display: none;">Rebated Depth</label> --}}
                             <input type="number" @if(empty($Item['ScallopedHeight'])){{'readonly'}}@endif
-                                name="ScallopedHeight" id="ScallopedHeight" class="form-control"
+                                name="ScallopedHeight" id="ScallopedHeight" class="form-control change-event-calulation"
                                 value="@if(isset($Item['ScallopedHeight'])){{$Item['ScallopedHeight']}}@else{{'0'}}@endif">
                         </div>
                     </div>
