@@ -620,14 +620,29 @@ class DoorScheduleController extends Controller
     {
         $valid = $request->validate(
             [
-                'doortypeId' => 'required',
-                'doornumber' => 'required'
+                'doortypeId'    => 'required',
+                'door_mode'     => 'required|in:single,range',
+                'doornumber'    => 'required_if:door_mode,single',
+                'prefix'        => 'required_if:door_mode,range',
+                'range_start'   => 'required_if:door_mode,range|nullable|integer',
+                'range_end'     => 'required_if:door_mode,range|nullable|integer|gte:range_start',
             ],
             [
-                'doortypeId.required' => 'Door type field is required.',
-                'doornumber.required' => 'Door number field is required.'
+                'doortypeId.required'     => 'Door type field is required.',
+                'doornumber.required'     => 'Door number field is required.',
+                'door_mode.required'      => 'Door mode is required.',
+                'door_mode.in'            => 'Door mode must be either single or range.',
+                'doornumber.required_if'  => 'Door number is required when mode is single.',
+                'prefix.required_if'      => 'Prefix is required when mode is range.',
+                'range_start.required_if' => 'Start of range is required.',
+                'range_start.integer'     => 'Start of range must be an integer.',
+                'range_end.required_if'   => 'End of range is required.',
+ //               'range_end.integer'       => 'End of range must be an integer.',
+                'range_end.gte'           => 'End of range must be greater than or equal to start.',
             ]
         );
+
+
         $QuotationId = $request->quotationID;
         $itemid = $request->doortypeId;
         $floor = $request->floor;
@@ -639,63 +654,126 @@ class DoorScheduleController extends Controller
         $qq->editBy = Auth::user()->id;
         $qq->updated_at = date('Y-m-d H:i:s');
         $qq->save();
-        // $aa = ItemMaster::where('id',$itemmasterId)->first();
-        // $doorType = $aa->doorType;
-        // $itemID = $aa->itemID;
-        // check these `Door Type` with `Door Number` with `Quotation Id` is not duplicate entry
-        // it show message if it is more than 0 (zero) - Door Type with Door Number is already exist.
 
-        $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
+        $doorMode = $request->door_mode;
 
-        // $mm = Item::join('item_master','items.itemId','item_master.itemID')->join('quotation_version_items','quotation_version_items.itemmasterID','item_master.id')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'quotation_version_items.version_id'=>$versionID])->count();
-        if ($mm > 0) {
-            return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
-        } else {
-            $itemmaster = new ItemMaster();
-            $itemmaster->itemID = $itemid;
-            $itemmaster->doorNumber = $DoorNo;
-            $itemmaster->floor = $floor;
-            $itemmaster->location = $location;
-            $itemmaster->save();
+        if ($doorMode === 'single') {
+            $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
 
-            $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
-            $itemmasterID = $kl->id;
-            if ($versionID > 0) {
-                $qv = new QuotationVersionItems();
-                $qv->version_id = $versionID;
-                $qv->itemID = $itemid;
-                $qv->itemmasterID = $itemmasterID;
-                $qv->Status = 1;
-                $qv->created_at = date('Y-m-d H:i:s');
-                $qv->updated_at = date('Y-m-d H:i:s');
-                $qv->save();
-            }
+            if ($mm > 0) {
+                return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
+            } else {
 
-            $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
+                $itemmaster = new ItemMaster();
+                $itemmaster->itemID = $itemid;
+                $itemmaster->doorNumber = $DoorNo;
+                $itemmaster->floor = $floor;
+                $itemmaster->location = $location;
+                $itemmaster->save();
 
-            $quotation = Quotation::where('id',$QuotationId)->first();
-
-            BOMUpdate($data, $quotation->configurableitems);
-
-            $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-            $GTSellPrice = 0;
-            $GTSellPriceTotal = 0;
-            if(!empty($BOMCalculation)){
-                foreach($BOMCalculation as $value){
-                    if($value->Category != 'Ironmongery&MachiningCosts'){
-                        $GTSellPrice += $value->GTSellPrice;
-                    }
+                $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
+                $itemmasterID = $kl->id;
+                if ($versionID > 0) {
+                    $qv = new QuotationVersionItems();
+                    $qv->version_id = $versionID;
+                    $qv->itemID = $itemid;
+                    $qv->itemmasterID = $itemmasterID;
+                    $qv->Status = 1;
+                    $qv->created_at = date('Y-m-d H:i:s');
+                    $qv->updated_at = date('Y-m-d H:i:s');
+                    $qv->save();
                 }
 
-                $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
+
+                $quotation = Quotation::where('id',$QuotationId)->first();
+
+                BOMUpdate($data, $quotation->configurableitems);
+
+                $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
+                $GTSellPrice = 0;
+                $GTSellPriceTotal = 0;
+                if(!empty($BOMCalculation)){
+                    foreach($BOMCalculation as $value){
+                        if($value->Category != 'Ironmongery&MachiningCosts'){
+                            $GTSellPrice += $value->GTSellPrice;
+                        }
+                    }
+
+                    $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
+                    $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                }
+
+                $Item = Item::where('itemId', $itemid)->update([
+                    'DoorsetPrice' => $GTSellPriceTotal
+                ]);
+            }
+        }else if ($doorMode === 'range') {
+            $prefix = $request->prefix;
+            $start = (int) $request->range_start;
+            $end = (int) $request->range_end;
+
+            if ($start > $end) {
+                return back()->withErrors(['range_start' => 'Start number cannot be greater than end number.']);
             }
 
-            $Item = Item::where('itemId', $itemid)->update([
-                'DoorsetPrice' => $GTSellPriceTotal
-             ]);
-            // BOMQuatityOfDoorUpdate($itemid, $QuotationId);
+            // Store multiple records
+            for ($i = $start; $i <= $end; $i++) {
+                $DoorNo = $prefix . $i;
+
+                $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
+
+                if ($mm > 0) {
+                    return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
+                } else {
+
+                    $itemmaster = new ItemMaster();
+                    $itemmaster->itemID = $itemid;
+                    $itemmaster->doorNumber = $DoorNo;
+                    $itemmaster->floor = $floor;
+                    $itemmaster->location = $location;
+                    $itemmaster->save();
+
+                    $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
+                    $itemmasterID = $kl->id;
+                    if ($versionID > 0) {
+                        $qv = new QuotationVersionItems();
+                        $qv->version_id = $versionID;
+                        $qv->itemID = $itemid;
+                        $qv->itemmasterID = $itemmasterID;
+                        $qv->Status = 1;
+                        $qv->created_at = date('Y-m-d H:i:s');
+                        $qv->updated_at = date('Y-m-d H:i:s');
+                        $qv->save();
+                    }
+
+                    $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
+
+                    $quotation = Quotation::where('id',$QuotationId)->first();
+
+                    BOMUpdate($data, $quotation->configurableitems);
+
+                    $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
+                    $GTSellPrice = 0;
+                    $GTSellPriceTotal = 0;
+                    if(!empty($BOMCalculation)){
+                        foreach($BOMCalculation as $value){
+                            if($value->Category != 'Ironmongery&MachiningCosts'){
+                                $GTSellPrice += $value->GTSellPrice;
+                            }
+                        }
+
+                        $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
+                        $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                    }
+
+                    $Item = Item::where('itemId', $itemid)->update([
+                        'DoorsetPrice' => $GTSellPriceTotal
+                    ]);
+                }
+            }
         }
+
 
         return redirect()->back()->with('success', 'Door Created Successfully!');
     }
