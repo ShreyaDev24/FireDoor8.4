@@ -375,6 +375,18 @@ margin-top: 40px;
         var MullionWidthPoint4 = 0;
 
         if(TransomQuantity == 3){
+            $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").prop('required', true);
+        }else if(TransomQuantity == 2){
+            $("#SinglePaneB, #SinglePaneC,#GlassIntegrityB, #GlassIntegrityC").prop('required', true);
+            $("#SinglePaneD, #GlassIntegrityD").prop('required', false);
+        }else if(TransomQuantity == 1){
+            $("#SinglePaneB,#GlassIntegrityB").prop('required', true);
+            $("#SinglePaneD, #GlassIntegrityD, #SinglePaneC,#GlassIntegrityC").prop('required', false);
+        }else if(TransomQuantity == 0){
+            $("#SinglePaneB, #SinglePaneC, #SinglePaneD,#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").prop('required', false);
+        }
+
+        if(TransomQuantity == 3){
             TransomHeightPoint4 = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
         }
 
