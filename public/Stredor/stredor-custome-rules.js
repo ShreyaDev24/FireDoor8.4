@@ -257,7 +257,7 @@ function pageIdentity(){
         var calculateCoreWidth2 = leafWidth2-(LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
         var calculateCoreHeight = leafHeight-(LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
         var opCoreWidthcalculate =  oPWidth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
-        var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
+        var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (lipping_thickness * 2);
         // var calculate = leafWidth1-(randomkey*lipping_thickness);
         // OP Width -OP frame thicknessX2-GapX2-Lipping ticknessX2
         // OP height-OP framethicknessX2-GapX2- lipping thicknessx2
