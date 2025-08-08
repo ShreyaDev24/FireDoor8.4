@@ -32,7 +32,7 @@
                @endif
                <span class="error"></span>
                <span class="success"></span>
-               @if($ProjectFiles > 0)
+               {{--  @if($ProjectFiles > 0)
                   <h3 style="display: flex;">
                      File already exist please click to upload file!
                      <form method="post" action="{{route('ImportfileUpload')}}" enctype="multipart/form-data" >
@@ -42,7 +42,7 @@
                         <input type="submit" value="Click Here" class="btn btn-success" >
                      </form>
                   </h3>
-               @else
+               @else  --}}
                   <form method="post" action="{{route('quotation/store-excel')}}" enctype="multipart/form-data" >
                      {{csrf_field()}}
                      <div class="card-body">
@@ -72,7 +72,7 @@
                      </div>
                   </form>
                   <div id="validate"></div>
-               @endif
+               {{--  @endif  --}}
             </div>
          </div>
       </div>
