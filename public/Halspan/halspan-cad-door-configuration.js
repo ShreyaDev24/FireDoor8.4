@@ -358,13 +358,13 @@ const render = (CustomElement = null) => {
                 if (LeafWidth1 != "") {
                     LeafWidth1 = parseFloat(LeafWidth1);
                 }
+                LeafWidth2 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap) - LeafWidth1;
                 if($("#frameType").val() == 'Rebated_Frame'){
-                    LeafWidth1 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2);
+                    LeafWidth2 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2) - LeafWidth1;
                     console.log(
-                    `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) = ${LeafWidth1}`
+                    `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) - ${LeafWidth1}= ${LeafWidth2}`
                     );
                 }
-                LeafWidth2 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap) - LeafWidth1;
             }
             DoorSetType = "DD";
         }
