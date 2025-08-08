@@ -96,6 +96,8 @@
                                             @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoice();"
                                                     id="">Generate Quote</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
+                                                    id="">Generate Elevation Drawing</a></li>
                                             <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
                                                     Doorset Schedule Excel</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}

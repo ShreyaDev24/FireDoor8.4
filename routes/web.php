@@ -303,7 +303,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/versionstore', [App\Http\Controllers\DoorScheduleController::class,'versionStore'])->name('quotation/versionstore');
     Route::post('/get-version', [App\Http\Controllers\DoorScheduleController::class,'getVersionQuotation'])->name('quotation/get-version');
     Route::match(['get','post'],'/records', [App\Http\Controllers\DoorScheduleController::class,'records'])->name('quotation/records');
-    Route::get('/printinvoice/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoice'])->name('printinvoice');
+    Route::get('/printinvoice/{v}/{qid}/{isActive?}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoice'])->name('printinvoice');
     Route::get('/printinvoiceinexcel/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcel'])->name('printinvoiceinexcel');
 
     Route::post('/testprintinvoice', [App\Http\Controllers\PrintInvoiceController::class,'testprintinvoice'])->name('testprintinvoice');
