@@ -2737,7 +2737,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
                 $gap = is_numeric($tt->GAP) ? $tt->GAP : 0;
 
-                $OPFLHeight = $opHeight - $beadThickness - $beadThickness - $gap;
+                $OPFLHeight = $opHeight - $beadThickness - $beadThickness;
             }
 
             $elevTbl .= '</table>
