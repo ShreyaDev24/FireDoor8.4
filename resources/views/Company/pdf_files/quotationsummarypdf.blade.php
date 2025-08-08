@@ -301,7 +301,7 @@
             @if (strpos($ExtractPdf2, 'ProjectIronmongery:') === false)
                 <table class="table table-bordered">
                     <tr>
-                        <td class="tbl_color"><span>ProjectIronmongery:</span></td>
+                        <td class="tbl_color"><span>Ironmongery Status:</span></td>
                         <td colspan="3">{{ !empty($project->project_ironmongery) ? $project->project_ironmongery : '' }}</td>
                     </tr>
                 </table>
