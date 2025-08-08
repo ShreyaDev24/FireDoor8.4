@@ -189,6 +189,10 @@ $(document).ready(function () {
             $('.range-fields').show();
         }
     });
+
+    $('#submit').on('click', function () {
+        $('.loader').css({'display':'block'});
+    });
 });
 </script>
 @endsection
