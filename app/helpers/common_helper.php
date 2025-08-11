@@ -2985,7 +2985,10 @@ function StredorBomCalculation($request): void{
     MachiningCostExport($request);
 
     //LeafSetBesPoke
-    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && !empty($request->doorLeafFinish) && !empty($request->lippingSpecies)){
+    if(!empty($request->issingleconfiguration) && !empty($request->doorLeafFacing) && (
+        strtolower(trim($request->doorLeafFacing)) == 'raw' ||
+        !empty($request->doorLeafFinish)
+    )  && !empty($request->lippingSpecies)){
         if($request->issingleconfiguration == 8){
             $doorConfiguration = "Stredor";
         }
@@ -3140,6 +3143,10 @@ function StredorBomCalculation($request): void{
 
 // dd($lm,$thickness_cost,$doorLeafFacingCost,$door_cost);
 
+        if($request->doorLeafFacing == 'Raw'){
+            $doorLeafFacingCost = 0;
+            $door_cost = 0;
+        }
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
