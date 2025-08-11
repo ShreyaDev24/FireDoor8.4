@@ -88,7 +88,7 @@
                                                     @endif
                                                     </label>
                                                     <label for="Rebated_Width" style="display: none;">Rebated Width</label>
-                                                    <input type="number" name="ScallopedWidth" value="@if(isset($Item['ScallopedWidth'])){{$Item['ScallopedWidth']}}@else{{'0'}}@endif" id="ScallopedWidth" class="form-control" @if(empty($Item['ScallopedWidth'])){{'readonly'}}@endif min="32">
+                                                    <input type="number" name="ScallopedWidth" value="@if(isset($Item['ScallopedWidth'])){{$Item['ScallopedWidth']}}@else{{''}}@endif" id="ScallopedWidth" class="form-control" @if(empty($Item['ScallopedWidth'])){{'readonly'}}@endif min="32">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -102,7 +102,7 @@
                                                     </label>
                                                     {{--  <label for="Rebated_Height" style="display: none;">Rebated Height</label>  --}}
                                                     <input type="number" @if(empty($Item['ScallopedHeight'])){{'readonly'}}@endif min="12" name="ScallopedHeight" id="ScallopedHeight" class="form-control change-event-calulation"
-                                                    value="@if(isset($Item['ScallopedHeight'])){{$Item['ScallopedHeight']}}@else{{'0'}}@endif">
+                                                    value="@if(isset($Item['ScallopedHeight'])){{$Item['ScallopedHeight']}}@else{{''}}@endif">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
