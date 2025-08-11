@@ -2708,6 +2708,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $OPFLHeight = $opHeight - $beadThickness - $beadThickness;
             }
 
+            $OPFLWeidth = 'N/A';
+            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
+                $frameWidth = is_numeric($tt->FrameWidth) ? $tt->FrameWidth : 0;
+                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+            }
+
             $elevTbl .= '</table>
 
                     </div>
@@ -2963,7 +2970,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">OP Panel Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">OP Panel Height</td>
@@ -2973,7 +2980,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">FL Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Height</td>
