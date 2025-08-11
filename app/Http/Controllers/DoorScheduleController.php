@@ -9238,6 +9238,7 @@ class DoorScheduleController extends Controller
     }
 
     public function updateRevision(Request $request){
+        $url = url('quotation/generate') . '/' . $request->quotationId . '/' . $request->version;
         $quote = Quotation::where('id',$request->quotationId)->first();
         if($quote){
             $quote->QuotationStatus = 'Rivision';
@@ -9257,6 +9258,7 @@ class DoorScheduleController extends Controller
                     return response()->json([
                     'status' => 'success',
                     'message' => 'Now You rivised this quote',
+                    'url' => $url
                 ]);
             } else{
                 return response()->json([
