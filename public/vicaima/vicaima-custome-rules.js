@@ -6115,6 +6115,8 @@ $(document).ready(function () {
         var swingType = $('#swingType').val();
         if ((doorsetType === 'SD' && swingType === 'DA') || (doorsetType === 'DD' && swingType === 'DA')) {
             $("select[name=frameType]").val('Scalloped');
+            $("#ScallopedHeight").attr({ 'readonly': false, 'required': true }).val('');
+            $("#ScallopedWidth").attr({ 'readonly': false, 'required': true }).val('');
             $("#frameType option[value='Plant_on_Stop'], #frameType option[value='Rebated_Frame']").prop("disabled", true);
             var frameType = $('#frameType').val();
 
@@ -6168,6 +6170,8 @@ $(document).ready(function () {
                 $('#ScallopedHeight').removeAttr('min').removeAttr('max');
                 $('#ScallopedLabelWidth').text('Scalloped Width (min32)');
                 $('#ScallopedLabelDepth').text('Scalloped Depth');
+                $("#ScallopedHeight").attr({ 'readonly': true, 'required': false });
+                $("#ScallopedWidth").attr({ 'readonly': true, 'required': false });
         }
     }
 
