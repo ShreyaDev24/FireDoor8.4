@@ -2654,11 +2654,6 @@ $(document).ready(function() {
                     innerHtml+='<option value="">No Scallopped lipping thickness Found</option>';
                     $("#scallopedLippingThickness").empty().append(innerHtml);
                 }
-                if(fireRating=="NFR"){
-                    var noData ='';
-                    noData+='<option value="">No Scallopped lipping thickness Found</option>';
-                    $("#scallopedLippingThickness").empty().append(noData);
-                }
             }
         });
     }
