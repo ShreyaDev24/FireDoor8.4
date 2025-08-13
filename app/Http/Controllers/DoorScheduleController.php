@@ -9029,7 +9029,7 @@ class DoorScheduleController extends Controller
                     }
 
                     $userId = CompanyMultiUsers();
-                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->wherein('userId', $userId)->get()->first();
+                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('favorite_type', $favorite_type)->wherein('userId', $userId)->get()->first();
                     if (!empty($Favorite)) {
                         $item = Item::where('itemId', $Favorite->itemId)->get()->first();
                         $itemMaster = ItemMaster::where('id', $Favorite->itemMasterId)->get()->first();
