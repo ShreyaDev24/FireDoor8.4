@@ -5,7 +5,7 @@
         <h2>Favorite Details</h2>
         <p><strong>Name:</strong> {{ $favorite->name }}</p>
         <p><strong>User:</strong> {{ $favorite->user->UserEmail ?? 'N/A' }}</p>
-        <p><strong>Status:</strong> {{ $favorite->status }}</p>
+        <p><strong>Status:</strong> {{ ($favorite->status == 1)?'Active':'Inactive' }}</p>
         <br>
         <div
             style="background: #fff3cd; color: #856404; padding: 10px 15px; border-radius: 5px; margin-bottom: 20px; border: 1px solid #ffeeba;">
