@@ -8816,28 +8816,6 @@ class DoorScheduleController extends Controller
                     if (empty($version_id)) {
                         $version_id = 1;
                     }
-
-                    //JFDS 1042 START
-                    $currentquotation = Quotation::where('id', $request->qId)->first();
-                    $favquotation = Quotation::where('id', $request->quotationId)->first();
-                    $configurableitems = configurationDoor($favquotation->configurableitems);
-                    $current = configurationDoor($currentquotation->configurableitems);
-                    if (
-                        !is_null($currentquotation->configurableitems) &&
-                        !is_null($favquotation->configurableitems) &&
-                        $currentquotation->configurableitems !== $favquotation->configurableitems
-                    ) {
-                        $response = [
-                            'status' => false,
-                            'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
-                        ];
-                        return response()->json(
-                            $response,
-                            200,
-                            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-                            JSON_UNESCAPED_UNICODE
-                        );
-                    }
                     // JFDS 1042 END
 
                     if (empty($request->versionId)) {
@@ -8845,16 +8823,14 @@ class DoorScheduleController extends Controller
                     }
 
                     $userId = CompanyMultiUsers();
-                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->wherein('userId', $userId)->get()->first();
+                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('favorite_type', $favorite_type)->wherein('userId', $userId)->get()->first();
                     if (!empty($Favorite)) {
-                        $item = Item::where('itemId', $Favorite->itemId)->get()->first();
-                        $itemMaster = ItemMaster::where('id', $Favorite->itemMasterId)->get()->first();
-                        $version_ids = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
-                        $itemListValidate = Item::where(['items.QuotationId' => $request->qId, 'items.DoorType' => $item->DoorType, 'items.VersionId' => $request->vId])->count();
+                        $SideScreenItem = SideScreenItem::where('id', $Favorite->itemId)->get()->first();
+                        $itemListValidate = SideScreenItem::where(['side_screen_items.QuotationId' => $request->qId, 'side_screen_items.ScreenType' => $SideScreenItem->ScreenType, 'side_screen_items.VersionId' => $request->vId])->count();
                         if ($itemListValidate > 0) {
                             $response = [
                                 'status' => false,
-                                'msg' => 'Door Type ' . $item->DoorType . ' is already exist for these quotation.'
+                                'msg' => 'Screen Type ' . $SideScreenItem->ScreenType . ' is already exist for these quotation.'
                                 // 'msg'=> 'Door Type '.$item->DoorType.' and Door number '.$itemMaster->doorNumber.' is already exist for these quotation.
                             ];
                             return response()->json(
@@ -8864,28 +8840,20 @@ class DoorScheduleController extends Controller
                                 JSON_UNESCAPED_UNICODE
                             );
                         } else {
-                            $item = Item::where('itemId', $Favorite->itemId)->get()->first();
-                            if (!empty($item)) {
-                                $NewItemInformation = $item->replicate();
-                                $NewItemInformation->itemId = Item::max('itemId') + 1;
+                            $SideScreenItem = SideScreenItem::where('id', $Favorite->itemId)->get()->first();
+                            if (!empty($SideScreenItem)) {
+                                $NewItemInformation = $SideScreenItem->replicate();
+                                $NewItemInformation->id = SideScreenItem::max('id') + 1;
                                 $NewItemInformation->QuotationId = $request->qId;
                                 $NewItemInformation->VersionId = $request->vId;
                                 $NewItemInformation->save();
-
-                                //adding configurableitems like streboard etc to quotation table
-                                $quotationConfigurableitems = Quotation::where('id', $request->quotationId)->first();
-                                $quotation = Quotation::where('id', $request->qId)->first();
-                                if (!empty($quotation)) {
-                                    $quotation->configurableitems = $quotationConfigurableitems->configurableitems;
-                                    $quotation->save();
-                                }
 
                                 // }
                                 $response = [
                                     'status' => true,
                                     'QuotationId' => $request->qId,
                                     'VersionId' => $request->vId,
-                                    'msg' => 'Door added successfully!'
+                                    'msg' => 'Screens added successfully!'
                                 ];
                             } else {
                                 $response = [
@@ -8903,7 +8871,7 @@ class DoorScheduleController extends Controller
                 } else {
                     $response = [
                         'status' => false,
-                        'msg' => 'Door already added!'
+                        'msg' => 'Screen already added!'
                     ];
                 }
             }

@@ -1,6 +1,6 @@
 $(function(){
     // Dynamic Tabs
-    // Custom Tab Open 
+    // Custom Tab Open
     // Dynamic tab makes use anywhere
     // Example :
     // <ul class="CustomTabs tabs">
@@ -18,28 +18,39 @@ $(function(){
     // CustomTabContent
 
 
-    $('.CustomTabs>li.active>a').css({'color':'blue','font-weight':'bold'})
-    $(document).on('click','.CustomTabs>li>a',function(e){
-        e.preventDefault();
-        let href = $(this).attr('href');
-        $('.CustomTabs>li>a').removeAttr('style')
-        $(this).css({'color':'blue','font-weight':'bold'})
-        $('.CustomTabContent > div').removeAttr('class')
-        $('.CustomTabContent > div').addClass('tab-pane fade')
-        if(href == '#all'){
-            $('.CustomTabContent > div').removeAttr('class')
-            $('.CustomTabContent > div').addClass('tab-pane active')
-        } else {
-            $(href).removeAttr('class')
-            $(href).addClass('tab-pane active')
-        }
-    })
+    // Initial style for active tab link
+    // Apply blue style to initially active tab
+$('.CustomTabs li.active a').css({'color':'blue','font-weight':'bold'});
+
+$(document).on('click', '.CustomTabs li a', function(e) {
+    e.preventDefault();
+
+    let href = $(this).attr('href');
+
+    // Style for clicked tab
+    $(this).closest('ul').find('a').removeAttr('style');
+    $(this).css({'color':'blue','font-weight':'bold'});
+
+    // Find the related tab content container
+    let tabContent = $(this).closest('.col-sm-12').next().find('.CustomTabContent');
+
+    // Show the selected tab content
+    tabContent.find('.tab-pane').removeClass('active show');
+
+    if (href === '#all') {
+        tabContent.find('.tab-pane').addClass('active show');
+    } else {
+        tabContent.find(href).addClass('active show');
+    }
+});
+
+
 
 })
 
 
 
-// Read More Button 
+// Read More Button
 // Dynamic code use any where
 
 // Just call this script in your page and pass two things: 1. TextLength, 2. Text
@@ -65,13 +76,13 @@ function ReadMore(TextLength,AllText){
     } else {
         return limitText;
     }
-    
+
 }
 $(document).on('click','.ReadMoreFull',function(e){
     e.preventDefault();
     let fullText = $(this).siblings('.fullText').val()
     let limitText = $(this).siblings('.limitText').val()
-    let TextLength = $(this).siblings('.textlength').val()    
+    let TextLength = $(this).siblings('.textlength').val()
     let data = fullText+   `
         <a href="#" class="ReadShortText" style="color:red">Close</a>
         <input type="hidden" class="fullText" value="`+fullText+`">

@@ -326,7 +326,7 @@
                                                             {{ $SI }}
                                                             <input type="hidden" class=""
                                                                 value="{{ $row->id }}">
-                                                            <input type="hidden" class="doors_{{ $index }}"
+                                                            <input type="hidden" class=""
                                                                 value="{{ $row->screenMasterid }}">
                                                         </td>
                                                         <td>{{ $row->FireRating }}</td>
@@ -1271,10 +1271,17 @@
                     dataType: "Json",
                     success: function(data) {
                         if (data.status == true) {
-                            swal('success', data.msg, 'success').then(function() {
-                                window.location.href = "{{ url('/') }}/quotation/add-new-doors/" +
-                                    data.QuotationId + "/" + data.VersionId;
-                            });
+                            if(favorite_type == 'Door'){
+                                swal('success', data.msg, 'success').then(function() {
+                                    window.location.href = "{{ url('/') }}/quotation/add-new-doors/" +
+                                        data.QuotationId + "/" + data.VersionId;
+                                });
+                            }else{
+                                swal('success', data.msg, 'success').then(function() {
+                                    window.location.href = "{{ url('/') }}/quotation/add-new-screens/" +
+                                        data.QuotationId + "/" + data.VersionId;
+                                });
+                            }
                         } else {
                             swal('error', data.msg, 'error').then(function() {
                                 location.reload();
