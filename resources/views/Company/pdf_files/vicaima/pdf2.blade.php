@@ -164,6 +164,7 @@
                 <th class="page2_2"><p> Plot Number/Ref </p></th>
                 <th class="page2_2"><p> IFC/Certifire No/Q mark Plug </p></th>
                 <th class="page2_2"><p> Floor </p></th>
+                <th class="page2_2"><p> Door Core </p></th>
                 <th class="page2_2"><p> Door No. </p></th>
                 <th class="page2_2"><p> Door Description </p></th>
                 <th class="page2_2"><p> S.O Height </p></th>
