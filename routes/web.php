@@ -516,6 +516,7 @@ Route::prefix('project')->group(function (): void {
     //end
     Route::get('/ironmongery-add',[App\Http\Controllers\ProjectController2::class,'ironmongeryadd'])->name('ironmongeryadd');
     Route::get('/ironmongery-list',[App\Http\Controllers\ProjectController2::class,'ironmongeryList'])->name('ironmongery-list');
+    Route::get('/new-ironmongery-list',[App\Http\Controllers\ProjectController2::class,'newironmongeryList'])->name('new-ironmongery-list');
     Route::get('/add-ironmongery/{pid}',[App\Http\Controllers\ProjectController2::class,'addironmongery'])->name('addironmongery');
     Route::post('/subaddironmongery',[App\Http\Controllers\ProjectController2::class,'subaddironmongery'])->name('subaddironmongery');
     Route::post('/storeaddironmongery',[App\Http\Controllers\ProjectController2::class,'storeaddironmongery'])->name('storeaddironmongery');
@@ -528,6 +529,16 @@ Route::prefix('project')->group(function (): void {
     Route::post('/activateproject',[App\Http\Controllers\ProjectController2::class,'activateproject'])->name('activateproject');
     Route::post('/deleteproject',[App\Http\Controllers\ProjectController2::class,'deleteproject'])->name('deleteproject');
     Route::post('/deleteProjectFile',[App\Http\Controllers\ProjectController::class,'deleteProjectFile'])->name('deleteProjectFile');
+
+
+    Route::get('/folders', [App\Http\Controllers\ProjectController2::class, 'foldersIndex'])->name('folders.index');
+    Route::get('/folders/create', [App\Http\Controllers\ProjectController2::class, 'foldersCreate'])->name('folders.create');
+    Route::post('/folders', [App\Http\Controllers\ProjectController2::class, 'foldersStore'])->name('folders.store');
+    Route::get('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersShow'])->name('folders.show');
+    Route::get('/folders/{folder}/edit', [App\Http\Controllers\ProjectController2::class, 'foldersEdit'])->name('folders.edit');
+    Route::put('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersUpdate'])->name('folders.update');
+    Route::delete('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersDestroy'])->name('folders.destroy');
+
 
     Route::post('/invite', [App\Http\Controllers\ProjectController2::class,'invite'])->name('project/invite');
     Route::get('/invitation/list', [App\Http\Controllers\ProjectController2::class,'invitation_list'])->name('project/invitation/list');

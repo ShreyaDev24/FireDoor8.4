@@ -87,6 +87,18 @@ class HalspanController extends Controller
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
@@ -133,7 +145,7 @@ class HalspanController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
-                            
+
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }
@@ -203,6 +215,7 @@ class HalspanController extends Controller
            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -214,7 +227,7 @@ class HalspanController extends Controller
         if($item === null){
             return abort(404);
         }
-        
+
         $item = $item->toArray();
 
         // below code to get lipping name and to show on edit page---
@@ -262,7 +275,18 @@ class HalspanController extends Controller
         if($quotation != ''){
             $CompanyId = $quotation->CompanyId;
         }
-
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
@@ -309,7 +333,7 @@ class HalspanController extends Controller
                             if(empty($IronmongeryInfoModel)){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                             }
-                            
+
                             if (!empty($IronmongeryInfoModel)) {
                                 $additionalInfo[] = $IronmongeryInfoModel;
                             }
@@ -347,6 +371,7 @@ class HalspanController extends Controller
             'quotation' => $quotation,
             'LippingName' => $LippingName,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,  // this line is for to send lipping name into edit form
+            'folders' => $folders
         ]);
     }
 }

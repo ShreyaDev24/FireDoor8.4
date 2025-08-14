@@ -131,6 +131,18 @@ class SeadecController extends Controller
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
 
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
@@ -179,7 +191,7 @@ class SeadecController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
-                        
+
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -190,7 +202,7 @@ class SeadecController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
-        
+
         $species = GetOptions(['leaf_type.Seadec'=> 5 ,'leaf_type.Status' => 1], "join","leaf_type");
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -200,7 +212,7 @@ class SeadecController extends Controller
         }else{
             $ids = Auth::user()->id;
         }
-        
+
         $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
             $query->where('default_type', 'standard')
                   ->where('UserId', $ids)
@@ -221,7 +233,7 @@ class SeadecController extends Controller
         } else {
             $defaultItemsstandard = [];
         }
-        
+
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
         return view('Items/Seadec/SeadecConfigurableItem',[
             "QuotationId" => $id,
@@ -246,6 +258,7 @@ class SeadecController extends Controller
             'species' => $species,
             'default' => $defaultItemsstandard,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -257,13 +270,13 @@ class SeadecController extends Controller
         }else{
             $userId = [];
         }
-       
+
        $UserIds = CompanyUsers();
        $item = Item::where('itemId',$id)->first();
        if($item === null){
            return abort(404);
        }
-       
+
        $item = $item->toArray();
         $UserIds = CompanyUsers();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
@@ -299,6 +312,18 @@ class SeadecController extends Controller
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
         $IronmongeryInfoSet = [
@@ -346,7 +371,7 @@ class SeadecController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
-                        
+
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -357,7 +382,7 @@ class SeadecController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
-        
+
         $species = DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
@@ -382,6 +407,7 @@ class SeadecController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'species' => $species,
+            'folders' => $folders
         ]);
     }
 

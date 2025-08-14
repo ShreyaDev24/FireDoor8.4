@@ -322,7 +322,19 @@
                          </select>
                      </div>
                  </div>
-                 <div class="col-md-6">
+                <!-- Folder Dropdown -->
+                <div class="col-md-6">
+                    <div class="position-relative form-group">
+                        <label for="folderDropdown">Select Folder</label>
+                        <select id="folder_id" class="form-control" name="FolderId">
+                            <option value="">Select Folder</option>
+                            @foreach($folders as $folderId => $ironmongeries)
+                                <option value="{{ $folderId }}" @if(isset($Item['FolderId'])) @if($Item['FolderId'] == $folderId) {{'selected'}} @endif @endif >{{ $ironmongeries->first()->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6" id="ironmongeryWrapper" style="display: none;">
                      <div class="position-relative form-group">
                          <label for="IronmongeryID">Select Ironmongery Set
                          @if(!empty($tooltip->selectironmongerySet))
@@ -334,16 +346,9 @@
                          <label for="select_ironmogery_set" style="display: none;">Select Ironmongery Set</label>
                          <select name="IronmongeryID" id="IronmongeryID" class="form-control" @if(empty($Item['IronmongerySet']) || $Item['IronmongerySet'] == "No") {{'disabled'}} @endif>
                              <option value="">Select Ironmongery Set</option>
-                             @if(!empty($setIronmongery))
-                             @foreach($setIronmongery as $setIronmongerys)
-                                 <option value="{{$setIronmongerys->id}}"
-                                 @if(isset($Item['IronmongeryID'])) @if($Item['IronmongeryID'] == $setIronmongerys->id) {{'selected'}} @endif @endif>{{$setIronmongerys->Setname}}</option>
-                             @endforeach
-                             @endif
                          </select>
                      </div>
-                 </div>
-
+                </div>
                 </div>
             </div>
         </div>
@@ -352,3 +357,7 @@
 
 <input type="hidden" id="currentLeafType" value="{{ isset($Item['IntumescentLeafType']) ? $Item['IntumescentLeafType'] : '' }}">
 <input type="hidden" id="currentFireRating" value="{{ isset($Item['FireRating']) ? $Item['FireRating'] : '' }}">
+<input type="hidden" id="ironmongeryid" value="{{ isset($Item['IronmongeryID']) ? $Item['IronmongeryID'] : '' }}">
+<script>
+var folderIronmongeryMap = @json($folders);
+</script>

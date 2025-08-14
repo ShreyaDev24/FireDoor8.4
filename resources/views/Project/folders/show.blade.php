@@ -71,30 +71,31 @@ input[type=number]::-webkit-outer-spin-button {
                     <div class="custom_card">
                         <div class="row">
                             <div class="col-sm-6">
-                                <div class="card-header"><h5 class="card-title">Ironmongery <span>Set</span></h5></div>
+                                <div class="card-header"><h5 class="card-title">Ironmongery <span>Folder Show</span></h5></div>
                             </div>
                             <div class="col-sm-6 ">
-                                <a href="{{route('ironmongeryadd')}}" class="btn-shadow btn btn-info float-right">
-                                    <i class="fa fa-edit" aria-hidden="true"></i> Add Ironmongery Set
-                                </a>
-                            </div>
-                            <div class="col-sm-6">
-                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-3">
+                                <a href="{{ route('folders.create') }}" class="btn-shadow btn btn-info float-right">
                                     <i class="fas fa-folder-plus"></i> Add Folder
                                 </a>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">
-                                <table class="table">
-                                    <tbody>
-                                        <tr>
-                                            <th>Set Name</th>
-                                            <th>Manage</th>
-                                        </tr>
-                                         {!! $tbl !!}
-                                    </tbody>
-                                </table>
+                                <h3 class="mb-3 text-primary">Folder: {{ $folder->name }}</h3>
+                            </div>
+                            <div class="col-sm-12">
+                               <table style="width: 100%;" id="example" class="table table-striped table-bordered">
+                                <thead class="text-uppercase table-header-bg">
+                                    <tr class="text-white">
+                                        <th>Set Name</th>
+                                        <th>Manage</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {!! $tbl !!}
+                                </tbody>
+                            </table>
+
                             </div>
                         </div>
                     </div>
@@ -128,6 +129,7 @@ input[type=number]::-webkit-outer-spin-button {
             $('#delId').val(id);
             $('#delSubmit').submit();
         })
+
 
 </script>
 @endsection

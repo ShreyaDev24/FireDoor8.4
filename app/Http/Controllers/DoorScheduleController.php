@@ -5359,6 +5359,19 @@ class DoorScheduleController extends Controller
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id', $id)->first();
 
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -5485,6 +5498,7 @@ class DoorScheduleController extends Controller
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -5592,6 +5606,20 @@ class DoorScheduleController extends Controller
         $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
+
         $CompanyId = null;
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
@@ -5690,6 +5718,7 @@ class DoorScheduleController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'folders' => $folders
         ]);
     }
 

@@ -52,6 +52,7 @@ use App\Models\BOMCalculation;
 use App\Models\QuotationVersion;
 use App\Models\IronmongeryName;
 use App\Models\Option;
+use App\Models\Folder;
 use App\Models\ConfigurableDoorFormula;
 use App\Models\NonConfigurableItemStore;
 use Maatwebsite\Excel\Facades\Excel;
@@ -1939,6 +1940,42 @@ $sn++;
         }
     }
 
+    public function newironmongeryList(Request $request){
+        if (Auth::user()->UserType == 2) {
+            $myAdminGroup = getMyCreatedAdmins();
+            $UserId = $myAdminGroup;
+            // $UserId = array_merge(['1'], $myAdminGroup);
+        }else{
+           $User = Auth::user();
+
+           $UserId = ['id' => $User->id];
+        }
+
+        $addIronmongery = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
+        $i = 1;
+        $tbl = '';
+        foreach($addIronmongery as $t){
+            $tbl .=
+            '<tr>
+                <td>'.$t->Setname.'</td>
+                <td>
+                    <button type="button" value="'.$t->id.'" class="btn btn-info updAddIronmongery">Edit</button>
+                    <button type="button" value="'.$t->id.'" class="btn btn-danger delAddIronmongery" onclick="return confirm(\'Are you sure you want to delete this item?\');">Delete</button>
+                </td>
+            </tr>';
+            $i++;
+        }
+
+        if($tbl !== '' && $tbl !== '0'){
+            $htmlData = view('Project.IronmongeryList',['tbl' => $tbl])->render();
+            return $htmlData;
+        } else {
+            $tbl .=  '<tr><td>Data not found</td></tr>';
+            $htmlData = view('Project.IronmongeryList',['tbl' => $tbl])->render();
+            return $htmlData;
+        }
+    }
+
     public function addironmongery($pid)
     {
         $item = null;
@@ -1956,8 +1993,9 @@ $sn++;
         $FloorSpring = null;
         $tooltip = Tooltip::first();
         $list = IronmongeryName::where('status',1)->orderBy('name','ASC')->get();
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
         //dd($item, $tooltip, $hinge);
-        return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list]);
+        return view('Project.addIronmongeryNew',['tooltip' => $tooltip, 'item' => $item, 'hinge' => $hinge, 'FloorSpring' => $FloorSpring, 'list' => $list, 'folders' => $folders]);
         // return view('Project.addironmongery',compact('tooltip','pid','item','hinge' , 'FloorSpring','LocksAndLatches', 'FlushBolts' , 'ConcealedOverheadCloser' , 'PullHandles' , 'PushHandles' , 'KickPlates' ,'DoorSelectors' ,'PanicHardware', 'Doorsecurityviewer' , 'Morticeddropdownseals' , 'Facefixeddropseals' , 'ThresholdSeal' , 'AirTransferGrill' , 'Letterplates' , 'CableWays' , 'SafeHinge' , 'LeverHandle'  , 'DoorSinage'  , 'FaceFixedDoorCloser' , 'Thumbturn'  , 'KeyholeEscutchen'));
     }
 
@@ -2040,7 +2078,13 @@ $sn++;
         $item->totalprice = $request->totalprice;
         $item->discountprice = $request->discountprice;
         $item->updated_at = date('Y-m-d H:i:s');
-        $item->save();
+        $store = $item->save();
+
+        if($store == true){
+            if($request->folder_id){
+                 $item->folders()->sync([$request->folder_id]);
+            }
+        }
 
         $project = Project::where('id', $request->ProjectId)->first();
         // $project->editBy = Auth::user()->id;
@@ -2051,7 +2095,7 @@ $sn++;
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery updated successfully!');
             }
 
-            return redirect('project/ironmongery-list')->with('success', 'Ironmongery updated successfully!');
+            return redirect('project/folders')->with('success', 'Ironmongery updated successfully!');
         }
         else
         {
@@ -2059,7 +2103,7 @@ $sn++;
                 return redirect('/project/quotation-list/'.$project->GeneratedKey)->with('success', 'Ironmongery added successfully!');
             }
 
-            return redirect('project/ironmongery-list')->with('success', 'Ironmongery added successfully!');
+            return redirect('project/folders')->with('success', 'Ironmongery added successfully!');
 
         }
     }else{
@@ -2101,6 +2145,7 @@ $sn++;
         $id = $request->updAddIronmongery;
         $tooltip = Tooltip::first();
         $item = AddIronmongery::where('id',$id)->first();
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
 
         $pid = $item->ProjectId;
         // $pageId = $item->configurableitems;
@@ -2381,6 +2426,7 @@ $sn++;
         'Miscellaneous' => $Miscellaneous,
         'MiscellaneousPrice' => $MiscellaneousPrice,
         'list' => $list,
+        'folders' => $folders
         ]);
 
     }
@@ -2915,4 +2961,130 @@ $sn++;
 
         return back()->with('success','Updated successfully');
     }
+
+    public function foldersIndex()
+    {
+        $folders = Folder::withCount('ironmongerySets')->where('user_id',Auth::user()->id)->get();
+        return view('Project.folders.index', compact('folders'));
+    }
+
+    public function foldersCreate()
+    {
+        if (Auth::user()->UserType == 2) {
+            $myAdminGroup = getMyCreatedAdmins();
+            $UserId = $myAdminGroup;
+            // $UserId = array_merge(['1'], $myAdminGroup);
+        }else{
+           $User = Auth::user();
+
+           $UserId = ['id' => $User->id];
+        }
+
+        $sets = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
+        return view('Project.folders.create', compact('sets'));
+    }
+
+    public function foldersStore(Request $request)
+    {
+        if(Auth::user()->UserType == 2){
+            $users = User::where('UserType',3)->where('CreatedBy',Auth::user()->id)->pluck('id');
+            $user_ids = [];
+            foreach($users as $valUserId){
+                $user_ids[] = $valUserId;
+            }
+
+            $user_ids[] = Auth::user()->id;
+        }elseif(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+
+            $user_ids = [Auth::user()->id, intval($users->CreatedBy)];
+        }else{
+            $user_ids = [Auth::user()->id];
+        }
+        $folder = Folder::create([
+            'name' => $request->foldername,
+            'user_id' => Auth::user()->id, // Save current user
+        ]);
+        $folder->ironmongerySets()->attach($request->ironmongery_sets);
+        return redirect()->route('folders.index')->with('success', 'Folder created successfully.');
+    }
+
+    public function foldersShow(Folder $folder)
+    {
+        $sets = $folder->ironmongerySets;
+        $i = 1;
+        $tbl = '';
+        foreach($sets as $t){
+            $tbl .=
+            '<tr>
+                <td>'.$t->Setname.'</td>
+                <td>
+                    <button type="button" value="'.$t->id.'" class="btn btn-info updAddIronmongery">Edit</button>
+                    <button type="button" value="'.$t->id.'" class="btn btn-danger delAddIronmongery" onclick="return confirm(\'Are you sure you want to delete this item?\');">Delete</button>
+                </td>
+            </tr>';
+            $i++;
+        }
+        return view('Project.folders.show', compact('folder', 'sets','tbl'));
+    }
+
+    public function foldersEdit($id)
+    {
+        $folder = Folder::findOrFail($id);
+
+        // assuming this returns all ironmongery sets
+       if (Auth::user()->UserType == 2) {
+            $myAdminGroup = getMyCreatedAdmins();
+            $UserId = $myAdminGroup;
+            // $UserId = array_merge(['1'], $myAdminGroup);
+        }else{
+           $User = Auth::user();
+
+           $UserId = ['id' => $User->id];
+        }
+
+        $sets = AddIronmongery::wherein('UserId',$UserId)->orderBy('Setname','ASC')->get();
+
+        // fetch IDs of sets already linked to the folder
+        $selectedSets = DB::table('folder_ironmongery_sets')
+            ->where('folder_id', $id)
+            ->pluck('add_ironmongery_id')
+            ->toArray();
+
+        return view('Project.folders.edit', compact('folder', 'sets', 'selectedSets'));
+    }
+
+
+    public function foldersUpdate(Request $request, $id)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'ironmongery_sets' => 'nullable|array',
+        ]);
+
+        $folder = Folder::findOrFail($id);
+        $folder->name = $request->name;
+        $folder->save();
+
+        // Sync ironmongery sets (remove old ones and attach new ones)
+        $folder->ironmongerySets()->sync($request->ironmongery_sets ?? []);
+
+        return redirect()->route('folders.index')->with('success', 'Folder updated successfully.');
+    }
+
+
+   public function foldersDestroy($id)
+    {
+        $folder = Folder::findOrFail($id);
+
+        // Detach all related ironmongery sets from the pivot table
+        $folder->ironmongerySets()->detach();
+
+        // Then delete the folder
+        $folder->delete();
+
+        return redirect()->route('folders.index')->with('success', 'Folder deleted successfully.');
+    }
+
+
 }

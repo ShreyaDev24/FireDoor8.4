@@ -700,17 +700,11 @@ class IronmongeryInfo extends Controller
         if($userType=="1" ||$userType=="4"){
             $data = IronmongeryInfoModel::join('selected_ironmongery','selected_ironmongery.ironmongery_id','ironmongery_info.id')
                                         ->where('ironmongery_info.Category',$request->ironCategoryType)->orderBy('ironmongery_info.id','desc')->get();
-            $miscellaneousdata = MiscellaneousInfo::join('selected_miscellaneous','selected_miscellaneous.miscellaneous_id','miscellaneous_info.id')
-                                        ->where('miscellaneous_info.MiscellaneousCategory',$request->ironCategoryType)->orderBy('miscellaneous_info.id','desc')->get();
         }else{
 
             $data = IronmongeryInfoModel::join('selected_ironmongery','selected_ironmongery.ironmongery_id','ironmongery_info.id')
                                         ->wherein( 'selected_ironmongery.UserId', $useTbl )
                                         ->orderBy('ironmongery_info.Category','ASC')->orderBy('ironmongery_info.id','desc')
-                                        ->get();
-            $miscellaneousdata = MiscellaneousInfo::join('selected_miscellaneous','selected_miscellaneous.miscellaneous_id','miscellaneous_info.id')
-                                        ->wherein( 'selected_miscellaneous.user_id', $useTbl )
-                                        ->orderBy('miscellaneous_info.MiscellaneousCategory','ASC')->orderBy('miscellaneous_info.id','desc')
                                         ->get();
 
             // $data = IronmongeryInfoModel::wherein('UserId',$useTbl)->orderBy('id','desc')->get();
@@ -724,7 +718,7 @@ class IronmongeryInfo extends Controller
         }
 
         if(count((array)$data)!="0"){
-            echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency,"miscellaneousdata"=>$miscellaneousdata]);
+            echo json_encode(["status"=>"ok","data"=>$data,"currency"=>$currency]);
         }else{
             echo json_encode(["status"=>"error","data"=>'']);
         }

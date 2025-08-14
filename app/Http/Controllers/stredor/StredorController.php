@@ -23,6 +23,7 @@ use App\Models\IntumescentSealLeafType;
 use App\Models\SelectedIronmongery;
 use App\Models\IronmongeryInfoModel;
 use App\Models\DoorFrameConstruction;
+use DB;
 
 class StredorController extends Controller
 {
@@ -72,6 +73,18 @@ class StredorController extends Controller
         // } else {
         //     $setIronmongery = null;
         // }
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
@@ -118,7 +131,7 @@ class StredorController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
-                        
+
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -137,7 +150,7 @@ class StredorController extends Controller
     }else{
         $ids = Auth::user()->id;
     }
-    
+
     $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
         $query->where('default_type', 'custom')
               ->where('UserId', $ids)
@@ -187,6 +200,7 @@ class StredorController extends Controller
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -200,7 +214,7 @@ class StredorController extends Controller
         if ($item === null) {
             return abort(404);
         }
-        
+
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
@@ -255,12 +269,24 @@ class StredorController extends Controller
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
         }
-        
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
         //     $setIronmongery = null;
         // }
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
@@ -307,7 +333,7 @@ class StredorController extends Controller
                         if(empty($IronmongeryInfoModel)){
                             $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
                         }
-                        
+
                         if (!empty($IronmongeryInfoModel)) {
                             $additionalInfo[] = $IronmongeryInfoModel;
                         }
@@ -345,6 +371,7 @@ class StredorController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'folders' => $folders
         ]);
     }
 }
