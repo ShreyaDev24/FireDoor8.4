@@ -320,6 +320,7 @@ const render = (CustomElement = null) => {
         var LeafWidth1ForMap = 0;
         var LeafWidth2ForMap = 0;
         var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
+        var RebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0 ;
 
         if (DoorSetType == "DD" && withoutFrameId != 1) {
             LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap)) / 2;
@@ -331,6 +332,12 @@ const render = (CustomElement = null) => {
                 `LeafWidth1 Scalloped DD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${ScallopedHeight} * 2) / 2 = ${LeafWidth1}`
                 );
             }
+            if($("#frameType").val() == 'Rebated_Frame'){
+                LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2)) / 2;
+                console.log(
+                `LeafWidth1 Rebated DD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) / 2 = ${LeafWidth1}`
+                );
+            }
         } else if (DoorSetType == "SD" && withoutFrameId != 1) {
             LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap);
             if($("#frameType").val() == 'Scalloped'){
@@ -338,7 +345,12 @@ const render = (CustomElement = null) => {
                 console.log(
                 `${SOWidth} - (${Tollerance} * 2) - (${FrameThickness} * 2) - (2 * ${Gap}) + ${ScallopedHeight}= SD Scalloped LeafWidth1 ${LeafWidth1}`
                 );
-
+            }
+            if($("#frameType").val() == 'Rebated_Frame'){
+                LeafWidth1 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                console.log(
+                `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 2) + (${RebatedHeight} * 2) = ${LeafWidth1}`
+                );
             }
         } else if (DoorSetType == "leaf_and_a_half") {
             if (withoutFrameId != 1) {
@@ -347,6 +359,12 @@ const render = (CustomElement = null) => {
                     LeafWidth1 = parseFloat(LeafWidth1);
                 }
                 LeafWidth2 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap) - LeafWidth1;
+                if($("#frameType").val() == 'Rebated_Frame'){
+                    LeafWidth2 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2) - LeafWidth1;
+                    console.log(
+                    `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) - ${LeafWidth1}= ${LeafWidth2}`
+                    );
+                }
             }
             DoorSetType = "DD";
         }
@@ -413,9 +431,37 @@ const render = (CustomElement = null) => {
         );
 
 
+            if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType == 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    console.log(LeafHeightNoOP,'no foursided , sd')
+                }
+                else if (DoorSetType == 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - FrameThickness  - Gap - UnderCut + RebatedHeight;
+                    console.log(LeafHeightNoOP,'no foursided , DD')
+                }
+                else if (DoorSetType == 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                   console.log(LeafHeightNoOP,'no foursided , Leaf and half')
+                }
+            }
         let foursidedframe = document.getElementById("foursidedframe");
         if (foursidedframe.checked) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
+            if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType === 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    console.log(LeafHeightNoOP,'sd')
+                }
+                else if (DoorSetType === 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    console.log(LeafHeightNoOP,'dd')
+                }
+                else if (DoorSetType === 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    console.log(LeafHeightNoOP,'leafandhalf')
+                }
+            }
         }
         if (LeafHeightNoOP == "") {
             LeafHeightNoOP = 0;
