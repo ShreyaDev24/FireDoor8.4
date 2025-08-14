@@ -301,18 +301,7 @@ const render = (CustomElement = null) => {
             FrameHeightForMap = FrameHeight / 5;
         }
 
-        var UnderCut = 0;
-        if (FloorFinish > 0) {
-            if ($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD60') {
-                UnderCut = FloorFinish + 8;
-            } else if ($("#fireRating").val() == 'FD30s' || $("#fireRating").val() == 'FD60s') {
-                UnderCut = FloorFinish + 3;
-            } else {
-                UnderCut = $('#undercut').val();
-            }
-        }else{
-            UnderCut = $('#undercut').val();
-        }
+        var UnderCut = $('#undercut').val();
 
         var LeafWidth1 = 0;
         var LeafWidth2 = 0;
@@ -467,6 +456,12 @@ const render = (CustomElement = null) => {
         } else {
             //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
             LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
+        }
+
+         if(withoutFrameId == 1){
+            $("#leafHeightNoOP").attr('readonly',false);
+        }else{
+            $("#leafHeightNoOP").val(LeafHeightNoOP).attr({'readonly':true, "required": true });
         }
 
         if (LeafHeightNoOP > 0) {
