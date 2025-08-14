@@ -687,7 +687,7 @@
             $("#standardHeight").val('');
             $("#frameWidth").val('');
             $("#frameHeight").val('');
-            $("#frameFinish").val('');
+            $("#frameFinish").val('').attr('required',false);
             $("#framefinishColor").val('');
             $("#frameCostuction").val('');
             $("#extLinerValue").val('');
