@@ -47,6 +47,8 @@ function floor_finish_change(){
 
     }
     swingTypeFrameType();
+    let elements = $(this);
+    render(elements);
 }
 
 $(document).on('click','#swingType',function(e){
