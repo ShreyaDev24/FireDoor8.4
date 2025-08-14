@@ -179,6 +179,27 @@ class PrintInvoiceController extends Controller
                     $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
                     $IronmongeryData .= '<div id="headText"><b>Ironmongery Set Data</b></div><div>
                     <table id="WithBorder" class="tbl2">'.IronmongerySetData($ironData->IronmongeryID).'</table></div>';
+
+
+                    $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)
+                        ->pluck('doorNumber') // gets only the doorNumber column values
+                        ->toArray();
+
+                    // Convert array to comma-separated string
+                    $doorNumbersString = implode(', ', $doorNumbers);
+
+                    if(!empty($doorNumbers)){
+
+                        $IronmongeryData .= '<div style="margin-top: 20px;">
+                            <strong>Door list that this belongs to:</strong>
+                            <ul>';
+                                foreach($doorNumbers as $door){
+                                    $IronmongeryData .= '<li>'. $ironData->DoorType .' - '. $door .'</li>';
+                                }
+                            $IronmongeryData .= '</ul>
+                        </div>';
+                    }
+
                     if ($PageBreakCount < count($GetIronmongerySet)) {
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
