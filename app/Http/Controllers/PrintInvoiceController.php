@@ -877,7 +877,7 @@ class PrintInvoiceController extends Controller
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
-                        <td class="tbl_bottom" colspan="38"></td>';
+                        <td class="tbl_bottom" colspan="39"></td>';
                         if($HideCosts == 0){
                             $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
                             <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
