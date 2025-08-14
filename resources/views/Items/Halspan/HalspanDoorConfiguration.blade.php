@@ -438,6 +438,7 @@
         $("#FrameMaterial-value").data("value",$("#FrameMaterial-import").data("value"));
         $("#frameMaterialNew").val($("#FrameMaterial-import").data("value"));
         $("select[name=frameType]").val($("#FrameType-import").data("value"));
+        $("#frametypevalue").val($("#FrameType-import").data("value"));
         $("#frameDepth").val($("#FrameDepth-import").data("value"));
         $("select[name=frameFinish]").val($("#FrameFinish-import").data("value"));
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){
