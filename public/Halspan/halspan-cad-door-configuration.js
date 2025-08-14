@@ -470,6 +470,12 @@ const render = (CustomElement = null) => {
             LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
         }
 
+        if(withoutFrameId == 1){
+            $("#leafHeightNoOP").attr('readonly',false);
+        }else{
+            $("#leafHeightNoOP").val(LeafHeightNoOP).attr({'readonly':true, "required": true });
+        }
+
         if (LeafHeightNoOP > 0) {
             $("#leafHeightNoOP-selected").empty().text(LeafHeightNoOP);
             $("#leafHeightNoOP-price").empty().text("£0.00");
