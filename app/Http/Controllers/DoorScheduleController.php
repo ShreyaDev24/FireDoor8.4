@@ -655,6 +655,49 @@ class DoorScheduleController extends Controller
         $qq->updated_at = date('Y-m-d H:i:s');
         $qq->save();
 
+        if($request->copy_door == 1){
+            if (!empty($itemid)) {
+
+                // if(!empty($VersionId)){
+                $OldQuotationItems = Item::select('items.*')->join('item_master', 'item_master.itemID', 'items.itemId')->where('items.QuotationId', $QuotationId)->where('items.itemId', $itemid)->get()->first();
+
+                $door = $OldQuotationItems->DoorType . ' Copy';
+                $mm =  Item::where(['QuotationId' => $QuotationId, 'DoorType' => $door])->get()->first();
+                if (!empty($mm) && $OldQuotationItems->DoorType . ' Copy' == $mm->DoorType) {
+                    $errorlist = 'Door Type ' . $mm->DoorType . ' is already exist for these quotation.';
+                    return redirect()->back()->withInput()->with('error',  $errorlist);
+                }
+
+                $Items = $OldQuotationItems->replicate();
+                $Items->DoorType = $OldQuotationItems->DoorType . ' Copy';
+                $Items->itemId = Items::max('itemId') + 1;
+                $Items->save();
+
+                $NewQuotationItemId = $Items->itemId;
+                $NewDoorType = $Items->DoorType;
+
+                $version_id = QuotationVersion::where('quotation_id', $OldQuotationItems->QuotationId)->where('id', $versionID)->value('version');
+
+                if ($versionID == 0) {
+                    $BOMCalculation = BOMCalculation::where('QuotationId', $OldQuotationItems->QuotationId)->where('itemId', $OldQuotationItems->itemId)->get();
+                } else {
+                    $BOMCalculation = BOMCalculation::where('QuotationId', $OldQuotationItems->QuotationId)->where('itemId', $OldQuotationItems->itemId)->where('VersionId', $version_id)->get();
+                }
+
+                if ($BOMCalculation != null) {
+                    foreach ($BOMCalculation as $IKey => $IVal) {
+                        $BOMCalculationItems = $IVal->replicate();
+                        $BOMCalculationItems->id = BOMCalculation::max('id') + 1;
+                        $BOMCalculationItems->itemId = $NewQuotationItemId;
+                        $BOMCalculationItems->DoorType = $NewDoorType;
+                        $BOMCalculationItems->save();
+                    }
+                }
+            }
+
+            $itemid = $NewQuotationItemId;
+        }
+
         $doorMode = $request->door_mode;
 
         if ($doorMode === 'single') {
