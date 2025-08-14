@@ -302,18 +302,7 @@ const render = (CustomElement = null) => {
             FrameHeightForMap = FrameHeight / 5;
         }
 
-        var UnderCut = 0;
-        if (FloorFinish > 0) {
-            if ($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD60') {
-                UnderCut = FloorFinish + 8;
-            } else if ($("#fireRating").val() == 'FD30s' || $("#fireRating").val() == 'FD60s') {
-                UnderCut = FloorFinish + 3;
-            } else {
-                UnderCut = $('#undercut').val();
-            }
-        }else{
-            UnderCut = $('#undercut').val();
-        }
+        var UnderCut = $('#undercut').val();
 
         var LeafWidth1 = 0;
         var LeafWidth2 = 0;
@@ -427,7 +416,7 @@ const render = (CustomElement = null) => {
         var LeafHeightNoOPForMap = 0;
         var LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - UnderCut - Gap;
          console.log(
-        `${SOHeight} - ${Tollerance} - ${FrameThickness} - ${UnderCut} - ${Gap} = LeafHeight ${LeafHeightNoOP}`
+        `${SOHeight} - ${Tollerance} - ${FrameThickness} - ${UnderCut} - ${Gap} = LeafHeightCAD ${LeafHeightNoOP}`
         );
 
 
