@@ -840,12 +840,15 @@
             font-size: 20px;
         }
 
-
+        .door-list { width:100%; border-collapse:collapse; }
+        .door-list thead { display: table-header-group; } /* repeat on each page */
+        .door-list tbody tr { page-break-inside: avoid; }
+        .door-list th, .door-list td { text-align:left; padding:2px 0; }
     </style>
 </head>
 
 <body>
-    
+
     {!! html_entity_decode($IronmongeryData, ENT_QUOTES, 'UTF-8') !!}
 </body>
 
