@@ -9570,18 +9570,15 @@ class DoorScheduleController extends Controller
 
     public function validateAlls(Request $request)
     {
-        // dd('Hii');
         $quotation = Quotation::find($request->quotationId);
         $items = Item::where('QuotationId', $request->quotationId)->get();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
         $errors = [];
 
-        // If no items found, return 404
         if ($items->isEmpty()) {
             return abort(404, 'No items found for this quotation.');
         }
 
-        // Loop through each item (door) to validate
         foreach ($items as $index => $door) {
             if($door->configurableitems == '1' || $door->configurableitems == '2' || $door->configurableitems == '7' || $door->configurableitems == '8') {
                 $rules = [
@@ -9594,7 +9591,7 @@ class DoorScheduleController extends Controller
                     'Tollerance' => 'required|numeric|max:20',
                     'Undercut' => 'required',
                     'FloorFinish' => 'required',
-                    'GAP' => 'required|numeric|between:2,4',
+                    // GAP will be added dynamically below
                     'FrameThickness' => 'required|numeric|min:22',
                     'Handing' => 'required',
                     'SOWidth' => 'required|numeric',
@@ -9611,7 +9608,7 @@ class DoorScheduleController extends Controller
                     'Tollerance' => 'required|numeric|max:20',
                     'Undercut' => 'required',
                     'FloorFinish' => 'required',
-                    'GAP' => 'required|numeric|between:2,4',
+                    // GAP will be added dynamically below
                     'FrameThickness' => 'required|numeric|min:22',
                     'Handing' => 'required',
                     'SOWidth' => 'required|numeric',
@@ -9620,6 +9617,12 @@ class DoorScheduleController extends Controller
                 ];
             }
 
+            // ✅ GAP validation based on FireRating
+            if (in_array($door['FireRating'], ['FD30', 'FD60'])) {
+                $rules['GAP'] = 'required|numeric|between:2,4';
+            } else {
+                $rules['GAP'] = 'required'; // NFR → GAP not required
+            }
 
             // Optional Section: Vision Panel
             if($door['visionPanelWidth'] == "Yes"){
@@ -9637,7 +9640,6 @@ class DoorScheduleController extends Controller
                 $rules['GlassType'] = 'required';
                 $rules['GlazingBeads'] = 'required';
             }
-
 
             // Optional Section: Frame
             if (!empty($door['FrameMaterial'])) {
@@ -9707,10 +9709,10 @@ class DoorScheduleController extends Controller
             // Validate the current door
             $validator = Validator::make($door->toArray(), $rules);
 
-            // check vps
-           if ($door->DoorsetType == 'SD' && $door->Leaf2VisionPanel == 'Yes') {
+            // Vision Panel reset for Leaf2 if SD
+            if ($door->DoorsetType == 'SD' && $door->Leaf2VisionPanel == 'Yes') {
                 DB::table('items')
-                    ->where('itemId', $door->itemId) // assuming itemId is the primary key
+                    ->where('itemId', $door->itemId)
                     ->update([
                         'Leaf2VisionPanel' => "No",
                         'sVPSameAsLeaf1' => null,
@@ -9728,9 +9730,8 @@ class DoorScheduleController extends Controller
                         'updated_at' => now(),
                     ]);
             }
-            // end vps
 
-            // ironmongary packets updates
+            // Ironmongary packets updates
             $IronmongaryPrice = 0;
             if(!empty($door->IronmongeryID)){
                 $AI = AddIronmongery::select('discountprice')->where('id',$door->IronmongeryID)->first();
@@ -9746,25 +9747,22 @@ class DoorScheduleController extends Controller
                 $IronmongaryPrice = round(($totalcost),2);
                 if($IronmongaryPrice != $door->IronmongaryPrice){
                     DB::table('items')
-                        ->where('itemId', $door->itemId) // assuming itemId is the primary key
+                        ->where('itemId', $door->itemId)
                         ->update([
                             'IronmongaryPrice' => $IronmongaryPrice,
                         ]);
                 }
             }
-            // end
 
             if ($validator->fails()) {
                 $errors["door_Type_" . $door->DoorType] = $validator->errors()->all();
             }
-
         }
 
         $allSvgAvailable = collect($items)->every(function ($item) {
-			return !empty($item->SvgImage); // Make sure it's not null or empty
-		});
+            return !empty($item->SvgImage);
+        });
 
-        // If there are validation errors, return them as JSON
         if (!empty($errors)) {
             return response()->json([
                 'status' => 'error',
@@ -9773,7 +9771,6 @@ class DoorScheduleController extends Controller
             ]);
         }
 
-        // If all validations pass
         return response()->json([
             'status' => 'success',
             'message' => 'All doors passed validation.',
