@@ -177,11 +177,36 @@ class PrintInvoiceController extends Controller
             foreach($GetIronmongerySet as $ironData){
                 if (!empty($ironData->IronmongeryID)) {
                     $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
-                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Set Data</b></div><div>
-                    <table id="WithBorder" class="tbl2">'.IronmongerySetData($ironData->IronmongeryID).'</table></div>';
+                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
+                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetData($ironData->IronmongeryID) .'</table></div>';
+
+                    $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
+
+                    if (!empty($doorNumbers)) {
+                        $rows = '';
+                        foreach ($doorNumbers as $door) {
+                            $rows .= '<tr><td>&bull; '. e($ironData->DoorType) .' - '. e($door) .'</td></tr>';
+                        }
+
+                        // Door list with repeating header
+                        $IronmongeryData .= '
+                        <table class="door-list">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div id="headText"><b>Ironmongery Data</b></div>
+                                        <div><strong>Door list that this belongs to:</strong></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>'. $rows .'</tbody>
+                        </table>';
+                    }
+
                     if ($PageBreakCount < count($GetIronmongerySet)) {
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
+
 
                     $PageBreakCount++;
                 }
