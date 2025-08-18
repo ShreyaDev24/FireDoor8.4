@@ -1,142 +1,192 @@
-
 @extends("layouts.Master")
 @section("main_section")
 <div class="app-main__outer">
-<div class="app-main__inner">
-   <div class="tab-content">
-      <div class="main-card mb-3 card">
-         <div class="card-body">
-            <div class="tab-content">
-               <div class="card-header">
-                  <h5 class="card-title" style="margin-top: 10px">Add New Doors</h5>
-                  @if (!empty($msg))
-                  <h1>{{$msg}}</h1>
-                  @endif
-
-
-               </div>
-               <a href="{{url('quotation/generate')}}/{{Request::segment(3)}}/{{$vid}}" class="btn-shadow btn btn-info float-right" style="margin-right:5px; margin-top:-50px">
-                                <i class="fa fa-arrow-left"></i> Back
-                            </a>
-               @if(session()->has('success'))
-               <div class="alert alert-success alert-dismissible">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                  <strong>Success!</strong> {!! session()->get('success') !!}
-               </div>
-               @endif
-               @if(session()->has('error'))
-               <div class="alert alert-danger alert-dismissible">
-                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                  <strong>Error!</strong> {!! session()->get('error') !!}
-               </div>
-               @endif
-               <span class="error"></span>
-               <span class="success"></span>
-               @if($ProjectFiles > 0)
-                  <h3 style="display: flex;">
-                     File already exist please click to upload file!
-                     <form method="post" action="{{route('ImportfileUpload')}}" enctype="multipart/form-data" >
-                        {{csrf_field()}}
-                        <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
-                        <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
-                        <input type="submit" value="Click Here" class="btn btn-success" >
-                     </form>
-                  </h3>
-               @else
-                  <form method="post" action="{{route('quotation/store-excel')}}" enctype="multipart/form-data" >
-                     {{csrf_field()}}
-                     <div class="card-body">
-                        <div class="form-row">
-                           <div class="col-md-3">
-                              <div class="position-relative form-group">
-                                 <label for="file">Excel File</label>
-                                 <input name="ExcelFile" id="ExcelFile" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"    required class="form-control">
-                              </div>
-                           </div>
-                           <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
-                           <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
-                           <div class="col-md-6">
-                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
-                            <input type="hidden" id="edit_image" value="{{url('/quotation/edit-image')}}" />
-                            <input type="hidden" id="edit_image1" value="{{url('/quotation/edit-image1')}}" />
-                            <input type="hidden" id="base_url" value="{{url('/')}}">
-                              <div class="position-relative form-group">
-                                 <label for="file" class=""></label>
-                                 <input type="submit" value="Submit" class="btn btn-success" style="margin-top: 25px;">
-
-
-                              </div>
-
-                           </div>
+    <div class="app-main__inner">
+        <div class="tab-content">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="card-header">
+                            <h5 class="card-title" style="margin-top: 10px">Add New Doors</h5>
+                            @if (!empty($msg))
+                            <h1>{{$msg}}</h1>
+                            @endif
                         </div>
-                     </div>
-                  </form>
-                  <div id="validate"></div>
-               @endif
-            </div>
-         </div>
-      </div>
-   </div>
-   <div class="tab-content">
-      <div class="main-card mb-3 card">
-         <div class="card-body">
-            <div class="card-header">
-               <h5 class="card-title" style="margin-top: 10px">Add New Doors [With Match Column]</h5>
-            </div>
-            @if(session()->has('success2'))
-            <div class="alert alert-success alert-dismissible">
-               <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-               <strong>Success!</strong> {!! session()->get('success2') !!}
-            </div>
-            @endif
-            <form class="form-horizontal" method="POST" action="{{ route('parseImport') }}" enctype="multipart/form-data">
-               {{ csrf_field() }}
-               <input type="hidden" name="quotationId" value="{{$quotationId}}">
-               <input type="hidden" name="versionId" value="{{$vid}}">
-               <div class="form-row mb-2">
-                  <div class="col-md-3">
-                  <label for="ConfigurationType">Configuration Type</label>
-                  <select required name="ConfigurationType" id="ConfigurationType" class="form-control">
-                     <option value="">Select Configuration Type</option>
-                     <option value="1">Streboard</option>
-                     <option value="2">Halspan</option>
-                     <option value="7">Flamebreak</option>
-                     <option value="8">Stredoor</option>
-                     <option value="3">Norma</option>
-                     <option value="4">Vicaima</option>
-                     <option value="5">Seadec</option>
-                     <option value="6">Deanta</option>
-                 </select>
-                  </div>
-               </div>
+                        <a href="{{url('quotation/generate')}}/{{Request::segment(3)}}/{{$vid}}"
+                            class="btn-shadow btn btn-info float-right" style="margin-right:5px; margin-top:-50px">
+                            <i class="fa fa-arrow-left"></i> Back
+                        </a>
+                        @if(session()->has('success'))
+                        <div class="alert alert-success alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success!</strong> {!! session()->get('success') !!}
+                        </div>
+                        @endif
+                        @if(session()->has('error'))
+                        <div class="alert alert-danger alert-dismissible">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Error!</strong> {!! session()->get('error') !!}
+                        </div>
+                        @endif
+                        <span class="error"></span>
+                        <span class="success"></span>
+                        @if($ProjectFiles > 0)
+                        <h3 style="display: flex;">
+                            File already exist please click to upload file!
+                            <form method="post" action="{{route('ImportfileUpload')}}" enctype="multipart/form-data">
+                                {{csrf_field()}}
+                                <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                                <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                                <input type="submit" value="Click Here" class="btn btn-success">
+                            </form>
+                        </h3>
+                        @else
+                        <form method="post" action="{{route('quotation/store-excel')}}" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-3">
+                                        <div class="position-relative form-group">
+                                            <label for="file">Excel File</label>
+                                            <input name="ExcelFile" id="ExcelFile" type="file"
+                                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                required class="form-control">
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                                    <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                                    <div class="col-md-6">
+                                        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                                        <input type="hidden" id="edit_image" value="{{url('/quotation/edit-image')}}" />
+                                        <input type="hidden" id="edit_image1"
+                                            value="{{url('/quotation/edit-image1')}}" />
+                                        <input type="hidden" id="base_url" value="{{url('/')}}">
+                                        <div class="position-relative form-group">
+                                            <label for="file" class=""></label>
+                                            <input type="submit" value="Submit" class="btn btn-success"
+                                                style="margin-top: 25px;">
 
-               <div class="form-row">
-                  <div class="col-md-3">
-                     <div class="position-relative form-group">
-                        <label for="csv_file">File to import</label>
-                        <input id="csv_file" type="file" class="form-control" name="csv_file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required>
-                        <p style="color:red; font-size:12px; margin-top:5px">File must contain firerating, doornumber and doortype. Project floor name should match document floor name.</p>
-                     </div>
-                  </div>
-                  <div class="col-md-6 mt-4">
-                     <button type="submit" class="btn btn-primary mt-1">Match Column</button>
-                  </div>
-               </div>
-            </form>
-         </div>
-      </div>
-   </div>
-   <div id="user_jobs" hidden></div>
-   <input type="hidden" id="SvgImage" name="SvgImage" value="" />
-   <input type="hidden" id='store2' value="{{url('items/store2')}}">
-</div>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="validate"></div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="tab-content">
+                        <div class="card-header">
+                            <h5 class="card-title" style="margin-top: 10px">Add New Non-Configurable Items</h5>
+                        </div>
+                        <form method="post" action="{{route('quotation/non-config-store-excel')}}" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="position-relative form-group">
+                                            <label for="file">Excel File</label>
+                                            <input name="NonConfigExcelFile" id="NonConfigExcelFile" type="file"
+                                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                required class="form-control">
+
+                                            <p style="color:red; font-size:12px; margin-top:5px">
+                                                The Name and Product Code fields in the import file must exactly match the entries from the Non-Configurable Items — including case sensitivity (uppercase/lowercase).
+
+                                                Both fields are required, and the import must use the same format as the exported Non-Configurable Items file.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                                    <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                                    <div class="col-md-6">
+                                        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                                        <input type="hidden" id="base_url" value="{{url('/')}}">
+                                        <div class="position-relative form-group">
+                                            <label for="file" class=""></label>
+                                            <input type="submit" value="Submit" class="btn btn-success"
+                                                style="margin-top: 25px;">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-content">
+            <div class="main-card mb-3 card">
+                <div class="card-body">
+                    <div class="card-header">
+                        <h5 class="card-title" style="margin-top: 10px">Add New Doors [With Match Column]</h5>
+                    </div>
+                    @if(session()->has('success2'))
+                    <div class="alert alert-success alert-dismissible">
+                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                        <strong>Success!</strong> {!! session()->get('success2') !!}
+                    </div>
+                    @endif
+                    <form class="form-horizontal" method="POST" action="{{ route('parseImport') }}"
+                        enctype="multipart/form-data">
+                        {{ csrf_field() }}
+                        <input type="hidden" name="quotationId" value="{{$quotationId}}">
+                        <input type="hidden" name="versionId" value="{{$vid}}">
+                        <div class="form-row mb-2">
+                            <div class="col-md-3">
+                                <label for="ConfigurationType">Configuration Type</label>
+                                <select required name="ConfigurationType" id="ConfigurationType" class="form-control">
+                                    <option value="">Select Configuration Type</option>
+                                    <option value="1">Streboard</option>
+                                    <option value="2">Halspan</option>
+                                    <option value="7">Flamebreak</option>
+                                    <option value="8">Stredoor</option>
+                                    <option value="3">Norma</option>
+                                    <option value="4">Vicaima</option>
+                                    <option value="5">Seadec</option>
+                                    <option value="6">Deanta</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="position-relative form-group">
+                                    <label for="csv_file">File to import</label>
+                                    <input id="csv_file" type="file" class="form-control" name="csv_file"
+                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                        required>
+                                    <p style="color:red; font-size:12px; margin-top:5px">File must contain firerating,
+                                        doornumber and doortype. Project floor name should match document floor name.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-4">
+                                <button type="submit" class="btn btn-primary mt-1">Match Column</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div id="user_jobs" hidden></div>
+        <input type="hidden" id="SvgImage" name="SvgImage" value="" />
+        <input type="hidden" id='store2' value="{{url('items/store2')}}">
+    </div>
 </div>
 
 @endsection
 @section("js")
 <script>
-
-//$('#validate').on('click',function(){
+    //$('#validate').on('click',function(){
     // $(document).ready(function(){
     //     var versionId = $('#versionId').val();
     //     var quotationId = $('#quotationId').val();
@@ -253,4 +303,3 @@
 
 </script>
 @endsection
-

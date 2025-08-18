@@ -16,6 +16,7 @@ use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
 use App\Exports\ScheduleOrderNew;
+use App\Exports\ExportNonConfig;
 use App\Exports\ScheduleOrderVicaima;
 use App\Exports\ScheduleOrder2;
 use App\Exports\BomDoorTypeExport;
@@ -1965,6 +1966,84 @@ class DoorScheduleController extends Controller
         return null;
     }
 
+    public function nonconfigstorexcel(Request $request)
+    {
+        $quotationId = $request->quotationId;
+        $versionId = $request->versionId;
+        $UserId = Auth::user()->id;
+
+        $quotation = Quotation::find($quotationId);
+        if (!$quotation) {
+            return redirect()->back()->with('error', 'Quotation not found.');
+        }
+
+        $importedCount = 0;
+        $skippedRows = 0;
+
+        try {
+            $data = Excel::toArray(new DoorScheduleImport, $request->file('NonConfigExcelFile'));
+
+            if (empty($data[0])) {
+                return redirect()->back()->with('error', 'The uploaded file is empty.');
+            }
+
+            $i = 0;
+            foreach ($data[0] as $row) {
+                if ($i++ == 0) continue; // skip header
+
+                $j = 0;
+                $sno = trim((string) $row[$j++]);
+                $name = trim((string) $row[$j++]);
+                $product_code = trim((string) $row[$j++]);
+                $description = trim((string) $row[$j++]);
+                $unit = trim((string) $row[$j++]);
+                $qty = (int) trim((string) $row[$j++]);
+                $price = (float) trim((string) $row[$j++]);
+                $total = (float) trim((string) $row[$j++]);
+
+                $NonConfigurableItems = NonConfigurableItems::where('name',$name)->where('product_code',$product_code)->first();
+
+                if(!empty($NonConfigurableItems)){
+
+                    $price = $NonConfigurableItems->price;
+                    $margin = discountQuotationValue($quotationId,$versionId);
+                    if($margin != 0){
+                        $QuoteSummaryDiscountValue = ($price * $margin) / 100;
+                        $price = ($margin > 0)? ($price + $QuoteSummaryDiscountValue): ($price - $QuoteSummaryDiscountValue);
+                    }
+
+                    $total_price = $qty * $price;
+                    $currencyPrice = getCurrencyRate($quotationId);
+
+                    $data = new NonConfigurableItemStore();
+                    $data->quotationId = $quotationId;
+                    $data->versionId = $versionId;
+                    $data->nonConfigurableId = $NonConfigurableItems->id;
+                    $data->price = $price * $currencyPrice;
+                    $data->quantity = $qty;
+                    $data->total_price = $total_price * $currencyPrice;
+                    $data->userId = user_id();
+                    $data->save();
+
+                    $importedCount++;
+                } else {
+                    $skippedRows++;
+                }
+            }
+
+            if ($importedCount > 0) {
+                $msg = "{$importedCount} item(s) imported successfully.";
+                if ($skippedRows > 0) {
+                    $msg .= " {$skippedRows} row(s) skipped due to unmatched item(s).";
+                }
+                return redirect()->back()->with('success', $msg);
+            } else {
+                return redirect()->back()->with('error', 'No items were imported. Please check the file contents.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while importing: ' . $e->getMessage());
+        }
+    }
 
 
     public function storexcel(request $request)
@@ -5123,6 +5202,19 @@ class DoorScheduleController extends Controller
         return Excel::download(
             new ScheduleOrderNew($quotationId, $versionID),
             'ScheduleOrder.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
+    }
+
+    public function ExcelExportNonConfig($quotationId, $versionID)
+    {
+        return Excel::download(
+            new ExportNonConfig($quotationId, $versionID),
+            'Non-Config.xlsx',
             \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
