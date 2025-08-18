@@ -1,70 +1,67 @@
 @extends("layouts.Master")
 @section("main_section")
 <div class="app-main__outer">
-    <div class="app-main__inner">
-        <div class="tab-content">
-            <div class="main-card mb-3 card">
-                <div class="card-body">
-                    <div class="tab-content">
-                        <div class="card-header">
-                            <h5 class="card-title" style="margin-top: 10px">Add New Doors</h5>
-                            @if (!empty($msg))
-                            <h1>{{$msg}}</h1>
-                            @endif
-                        </div>
-                        <a href="{{url('quotation/generate')}}/{{Request::segment(3)}}/{{$vid}}"
-                            class="btn-shadow btn btn-info float-right" style="margin-right:5px; margin-top:-50px">
-                            <i class="fa fa-arrow-left"></i> Back
-                        </a>
-                        @if(session()->has('success'))
-                        <div class="alert alert-success alert-dismissible">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Success!</strong> {!! session()->get('success') !!}
-                        </div>
-                        @endif
-                        @if(session()->has('error'))
-                        <div class="alert alert-danger alert-dismissible">
-                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                            <strong>Error!</strong> {!! session()->get('error') !!}
-                        </div>
-                        @endif
-                        <span class="error"></span>
-                        <span class="success"></span>
-                        @if($ProjectFiles > 0)
-                        <h3 style="display: flex;">
-                            File already exist please click to upload file!
-                            <form method="post" action="{{route('ImportfileUpload')}}" enctype="multipart/form-data">
-                                {{csrf_field()}}
-                                <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
-                                <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
-                                <input type="submit" value="Click Here" class="btn btn-success">
-                            </form>
-                        </h3>
-                        @else
-                        <form method="post" action="{{route('quotation/store-excel')}}" enctype="multipart/form-data">
-                            {{csrf_field()}}
-                            <div class="card-body">
-                                <div class="form-row">
-                                    <div class="col-md-3">
-                                        <div class="position-relative form-group">
-                                            <label for="file">Excel File</label>
-                                            <input name="ExcelFile" id="ExcelFile" type="file"
-                                                accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
-                                                required class="form-control">
-                                        </div>
-                                    </div>
-                                    <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
-                                    <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
-                                    <div class="col-md-6">
-                                        <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
-                                        <input type="hidden" id="edit_image" value="{{url('/quotation/edit-image')}}" />
-                                        <input type="hidden" id="edit_image1"
-                                            value="{{url('/quotation/edit-image1')}}" />
-                                        <input type="hidden" id="base_url" value="{{url('/')}}">
-                                        <div class="position-relative form-group">
-                                            <label for="file" class=""></label>
-                                            <input type="submit" value="Submit" class="btn btn-success"
-                                                style="margin-top: 25px;">
+<div class="app-main__inner">
+   <div class="tab-content">
+      <div class="main-card mb-3 card">
+         <div class="card-body">
+            <div class="tab-content">
+               <div class="card-header">
+                  <h5 class="card-title" style="margin-top: 10px">Add New Doors</h5>
+                  @if (!empty($msg))
+                  <h1>{{$msg}}</h1>
+                  @endif
+
+
+               </div>
+               <a href="{{url('quotation/generate')}}/{{Request::segment(3)}}/{{$vid}}" class="btn-shadow btn btn-info float-right" style="margin-right:5px; margin-top:-50px">
+                                <i class="fa fa-arrow-left"></i> Back
+                            </a>
+               @if(session()->has('success'))
+               <div class="alert alert-success alert-dismissible">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>Success!</strong> {!! session()->get('success') !!}
+               </div>
+               @endif
+               @if(session()->has('error'))
+               <div class="alert alert-danger alert-dismissible">
+                  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                  <strong>Error!</strong> {!! session()->get('error') !!}
+               </div>
+               @endif
+               <span class="error"></span>
+               <span class="success"></span>
+               {{--  @if($ProjectFiles > 0)
+                  <h3 style="display: flex;">
+                     File already exist please click to upload file!
+                     <form method="post" action="{{route('ImportfileUpload')}}" enctype="multipart/form-data" >
+                        {{csrf_field()}}
+                        <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                        <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                        <input type="submit" value="Click Here" class="btn btn-success" >
+                     </form>
+                  </h3>
+               @else  --}}
+                  <form method="post" action="{{route('quotation/store-excel')}}" enctype="multipart/form-data" >
+                     {{csrf_field()}}
+                     <div class="card-body">
+                        <div class="form-row">
+                           <div class="col-md-3">
+                              <div class="position-relative form-group">
+                                 <label for="file">Excel File</label>
+                                 <input name="ExcelFile" id="ExcelFile" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"    required class="form-control">
+                              </div>
+                           </div>
+                           <input type="hidden" id="quotationId" name="quotationId" value="{{$quotationId}}">
+                           <input type="hidden" id="versionId" name="versionId" value="{{$vid}}">
+                           <div class="col-md-6">
+                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                            <input type="hidden" id="edit_image" value="{{url('/quotation/edit-image')}}" />
+                            <input type="hidden" id="edit_image1" value="{{url('/quotation/edit-image1')}}" />
+                            <input type="hidden" id="base_url" value="{{url('/')}}">
+                              <div class="position-relative form-group">
+                                 <label for="file" class=""></label>
+                                 <input type="submit" value="Submit" class="btn btn-success" style="margin-top: 25px;">
 
 
                                         </div>
@@ -74,7 +71,7 @@
                             </div>
                         </form>
                         <div id="validate"></div>
-                        @endif
+                        {{--  @endif  --}}
                     </div>
                 </div>
             </div>
