@@ -4473,20 +4473,35 @@ class DoorScheduleController extends Controller
             }
 
             for ($i = 0; $i <= count($filters) - 1; $i++) {
-                // if(array_key_exists("AND",$filters[$i]) || array_key_exists("OR",$filters[$i])){
-                //     if(array_key_exists("AND",$filters[$i])){
-                //         array_push($AndWhereCondition,[$filters[$i]['AND'][0],$filters[$i]['AND'][1],$filters[$i]['AND'][2]]);
-                //     }
-                //     if(array_key_exists("OR",$filters[$i])){
-                //         array_push($OrWhereCondition,[$filters[$i]['OR'][0],$filters[$i]['OR'][1],$filters[$i]['OR'][2]]);
 
-                //         // print_r($OrWhereCondition);die;
-                //     }
-                // }else{
-                //     $filters[$i] = [$filters[$i][0],$filters[$i][1],$filters[$i][2]];
-                // }
+                $configurableItem = trim($filters[$i][2], "% "); // remove % and spaces
+                $configurableItem = ucfirst(strtolower($configurableItem));
 
-                $filters[$i] = [$filters[$i][0], $filters[$i][1], $filters[$i][2]];
+                if ($configurableItem == 'Streboard') {
+                    $configurableId = 1;
+                } elseif ($configurableItem == 'Halspan') {
+                    $configurableId = 2;
+                } elseif ($configurableItem == 'Normadoorcore') {
+                    $configurableId = 3;
+                } elseif ($configurableItem == 'Vicaimadoorcore') {
+                    $configurableId = 4;
+                } elseif ($configurableItem == 'Seadec') {
+                    $configurableId = 5;
+                } elseif ($configurableItem == 'Deanta') {
+                    $configurableId = 6;
+                } elseif ($configurableItem == 'Flamebreak') {
+                    $configurableId = 7;
+                } elseif ($configurableItem == 'Stredor') {
+                    $configurableId = 8;
+                } elseif ($configurableItem == 'Mmm') { // ucfirst makes MMM -> Mmm
+                    $configurableId = 9;
+                }
+
+                if (isset($configurableId)) {
+                    $filters[$i] = ['quotation.configurableitems',$configurableId];
+                }else{
+                    $filters[$i] = [$filters[$i][0], $filters[$i][1], $filters[$i][2]];
+                }
             }
 
             $orders = $request->orders;
