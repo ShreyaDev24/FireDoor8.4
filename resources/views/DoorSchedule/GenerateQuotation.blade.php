@@ -127,8 +127,8 @@
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                             <li><a href="javascript:void(0);"
                                                     onClick="CopyQuotation({{ $quotationId }});">Copy</a></li>
-                                            <li><a href="javascript:void(0);" onClick="favoriteItemList();">favourite</a>
-                                            </li>
+                                            {{--  <li><a href="javascript:void(0);" onClick="favoriteItemList();">favourite</a>
+                                            </li>  --}}
                                             <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                             <li><a href="javascript:void(0);" onClick="SendToClient();">Send To Client</a>
                                             </li>
@@ -205,6 +205,40 @@
                                 <a href="javascript:void(0);" onclick="validationHere();" id="needValidation"
                                     class="btn btn-primary float-right mx-1">Validate
                                 </a>
+                                <a href="javascript:void(0);" onclick="favoritebtn();" id="Favorite"
+                                    class="btn btn-primary float-right mx-1">Favorite
+                                </a>
+                            </div>
+
+                            <div class="main-card mb-3" id="favorite-section" style="display: none;">
+                                <div class="card-body">
+                                    <table class="table table-bordered table-striped">
+                                        <thead class="table-header-bg">
+                                            <tr class="text-white">
+                                                <th>Sr No</th>
+                                                <th>Name</th>
+                                                <th>Created At</th>
+                                                <th class="text-center">Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="versionData">
+                                            @if (!empty($favorites) && count($favorites) > 0)
+                                                <?php
+                                                $SI = 1; ?>
+                                                @foreach ($favorites as $fav)
+                                                    <tr>
+                                                        <td>{{ $SI++ }}</td>
+                                                        <td>{{ $fav->name }}</td>
+                                                        <td>{{ $fav->created_at->format('d M Y') }}</td>
+                                                        <td class="text-center">
+                                                            <button class="btn btn-success" onClick="favoriteItemList({{ $fav->id }});">List</button>
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                             <div class="main-card mb-3" id="side-screen-section" style="display: none;">
                                 <div class="card-body">
@@ -848,6 +882,7 @@
         <input type="hidden" id="edit_image1" value="{{ url('/quotation/edit-image1') }}" />
         <input type="hidden" id="validateAlls" value="{{ url('/quotation/validateAlls') }}" />
         <input type="hidden" id="favoriteItem" value="{{ url('/quotation/favoriteItem') }}" />
+        <input type="hidden" id="favoriteItemShow" value="{{ url('/quotation/favoriteItemShow') }}" />
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
         <input type="hidden" id="favoriteDeleteItem" value="{{ url('/quotation/favoriteDeleteItem') }}" />
@@ -937,6 +972,7 @@
             function configurableNon(id) {
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#customer-list').hide();
@@ -948,6 +984,7 @@
                     $('#showall').removeClass('activeNC');
                     $('#addSideScreen').removeClass('activeNC');
                     $('#SideScreenList').removeClass('activeNC');
+                    $('#Favorite').removeClass('activeNC');
                 } else {
                     $('#quotation-item-list').css('display','none');
                     $('#NonConfig-item-list').css('display','block');
@@ -956,6 +993,7 @@
                     $('#showall').removeClass('activeNC');
                     $('#addSideScreen').removeClass('activeNC');
                     $('#SideScreenList').removeClass('activeNC');
+                    $('#Favorite').removeClass('activeNC');
                 }
             }
             function editNonConfig(id){
@@ -1130,6 +1168,7 @@
                 }
                 var quotationId = $('#quotationId').val();
                 var itemId = $('#itemId').val();
+                var favName = $('#favName').val();
                 var itemMasterId = $('#itemMasterId').val();
                 var doorTypeName = $('#doorTypeName').val();
                 $.ajax({
@@ -1138,6 +1177,7 @@
                     data: {
                         _token: $("#_token").val(),
                         quotationId: quotationId,
+                        favName: favName,
                         versionId: versionId,
                         itemId: itemId,
                         itemMasterId: itemMasterId,
@@ -1947,8 +1987,29 @@
             function openVersionModal() {
                 $("#quotation-version-modal").modal("show");
             }
-            function favoriteItemList() {
-                $("#Favorite-Item-modal").modal("show");
+            function favoriteItemList(id) {
+                $.ajax({
+                    url: "{{ route('quotation/favoriteItemShow') }}",
+                    type: 'post',
+                    data: {
+                        _token: $("#_token").val(),
+                        'id': id
+                    },
+                    success: function(data) {
+
+                        if (data.status == true) {
+                            $('#favItemAddData').html(data.result)
+                            $("#Favorite-Item-modal").modal("show");
+
+                        } else {
+                            swal('error', data.result, 'error').then(function() {
+                                location.reload();
+                            });
+                        }
+
+                    }
+                })
+
             }
             function CreateNewVersionModal(version) {
                 if (version == 0) {
@@ -2036,6 +2097,7 @@
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').show();
                 $('#quotation-item-list').hide();
@@ -2045,11 +2107,13 @@
                 $('#SideScreenList').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function ShowAddItemOption() {
                 $('#customer-list').hide();
                 $('#add-item-section').show();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
@@ -2059,11 +2123,13 @@
                 $('#SideScreenList').removeClass('activeNC');
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function addSideScreen() {
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#add-side-screen-section').show();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
@@ -2074,12 +2140,14 @@
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function SideScreen() {
                 $('#customer-list').hide();
                 $('#add-item-section').hide();
                 $('#side-screen-section').show();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
                 $('#NonConfig-item-list').css('display','none');
@@ -2088,17 +2156,36 @@
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
             }
             function ChangeCustomerBtn() {
                 $('#customer-list').show();
                 $('#add-item-section').hide();
                 $('#add-side-screen-section').hide();
+                $('#favorite-section').hide();
                 $('#side-screen-section').hide();
                 $('#edit-header-section').hide();
                 $('#quotation-item-list').hide();
                 $('#NonConfig-item-list').css('display','none');
                 $('#addSideScreen').removeClass('activeNC')
                 $('#SideScreenList').removeClass('activeNC')
+                $('#showall').removeClass('activeNC')
+                $('#config').removeClass('activeNC');
+                $('#nonConfig').removeClass('activeNC');
+                $('#Favorite').removeClass('activeNC');
+            }
+            function favoritebtn() {
+                $('#customer-list').hide();
+                $('#add-item-section').hide();
+                $('#add-side-screen-section').hide();
+                $('#favorite-section').show();
+                $('#side-screen-section').hide();
+                $('#edit-header-section').hide();
+                $('#quotation-item-list').hide();
+                $('#NonConfig-item-list').css('display','none');
+                $('#addSideScreen').removeClass('activeNC')
+                $('#SideScreenList').removeClass('activeNC')
+                $('#Favorite').addClass('activeNC')
                 $('#showall').removeClass('activeNC')
                 $('#config').removeClass('activeNC');
                 $('#nonConfig').removeClass('activeNC');
@@ -3126,6 +3213,17 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Favorite Type</label>
+                            <select name="favName" id="favName" class="form-control">
+                                <option value="">Select Favorite Type</option>
+                                @if (!empty($favorites) && count($favorites) > 0)
+                                    @foreach ($favorites as $fav)
+                                        <option value="{{ $fav->id }}">{{ $fav->name }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col-sm-12 mb-2">
                             <label for="doorTypeName">Door Type Name</label>
                             <input type="text" class="form-control" id="doorTypeName">
                             <input type="hidden" class="form-control" id="itemId">
@@ -3152,36 +3250,8 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-sm-12 mb-2">
-                            @if (!empty($Favorite) && $Favorite != '')
-                                @foreach ($Favorite as $value)
-                                    <div class="row">
-                                        <div class="col-sm-5">
-                                            <p>{{ $value->DoorType }}</p>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button
-                                                onclick="favoriteItemAdd('{{ $value->itemId }}','{{ $value->itemMasterId }}','{{ $value->quotationId }}','{{ $value->versionId }}')"
-                                                class="btn btn-success">Assign</button>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <a href="{{ ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) }}" class="btn btn-info">Edit</a>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <button
-                                                onclick="favoriteDeleteItem('{{ $value->id }}')"
-                                                class="btn btn-danger">Delete</button>
-                                        </div>
-                                        <div class="col-sm-1"></div>
-                                    </div>
-                                @endforeach
-                            @else
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <p>Data not found!</p>
-                                    </div>
-                                </div>
-                            @endif
+                        <div class="col-sm-12 mb-2" id="favItemAddData">
+
                         </div>
                     </div>
                 </div>

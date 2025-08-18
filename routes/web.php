@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -252,6 +253,8 @@ Route::prefix('options')->group(function (): void {
     Route::post('filter-leaf-type',[App\Http\Controllers\OptionController::class,'filter_leaf_type'])->name('filter-leaf-type');
 });
 
+Route::resource('favorites', FavoriteController::class);
+
 Route::prefix('quotation')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
     Route::post('/store', [App\Http\Controllers\DoorScheduleController::class,'store'])->name('quotation/store');
@@ -279,6 +282,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/edit-image1', [App\Http\Controllers\DoorScheduleController::class,'editImage1'])->name('quotation/edit-image1');
     Route::post('/validateAlls', [App\Http\Controllers\DoorScheduleController::class,'validateAlls'])->name('quotation/validateAlls');
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
+    Route::post('/favoriteItemShow', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemShow'])->name('quotation/favoriteItemShow');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');
     Route::post('/favoriteDeleteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteDeleteItem'])->name('quotation/favoriteDeleteItem');
