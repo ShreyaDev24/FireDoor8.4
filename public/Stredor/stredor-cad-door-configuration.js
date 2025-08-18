@@ -432,14 +432,17 @@ const render = (CustomElement = null) => {
         if($("#frameType").val() == 'Rebated_Frame'){
                 if (DoorSetType == 'SD') {
                     LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'no foursided , sd')
                 }
                 else if (DoorSetType == 'DD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - FrameThickness  - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'no foursided , DD')
                 }
                 else if (DoorSetType == 'leaf_and_a_half') {
                     LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                    console.log(LeafHeightNoOP,'no foursided , Leaf and half')
                 }
             }
@@ -449,14 +452,17 @@ const render = (CustomElement = null) => {
             if($("#frameType").val() == 'Rebated_Frame'){
                 if (DoorSetType === 'SD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'sd')
                 }
                 else if (DoorSetType === 'DD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'dd')
                 }
                 else if (DoorSetType === 'leaf_and_a_half') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'leafandhalf')
                 }
             }
