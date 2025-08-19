@@ -383,6 +383,7 @@
         $("select[name=doorsetType]").val($("#DoorsetType-import").data("value")).trigger("change");
         $("select[name=swingType]").val($("#SwingType-import").data("value")).trigger("change");
         $("select[name=latchType]").val($("#LatchType-import").data("value")).trigger("change");
+        $("#savedfirerating").val($("#FireRating-import").data("value"));
         DoorSetTypeChange();
         filterHandling();
         //$("select[name=Handing]").val($("#Handing-import").data("value")).trigger("change");
@@ -444,6 +445,7 @@
         $("#FrameMaterial-value").data("value",$("#FrameMaterial-import").data("value"));
         $("#frameMaterialNew").val($("#FrameMaterial-import").data("value"));
         $("select[name=frameType]").val($("#FrameType-import").data("value"));
+        $("#frametypevalue").val($("#FrameType-import").data("value"));
         $("#frameDepth").val($("#FrameDepth-import").data("value"));
         $("select[name=frameFinish]").val($("#FrameFinish-import").data("value"));
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){

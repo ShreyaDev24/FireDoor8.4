@@ -318,6 +318,7 @@
         $("#DoorLeafFacingValue-value").data("value",$("#DoorLeafFacingValue-import").data("value"));
         $("#DoorLeafFinish-value").data("value",$("#DoorLeafFinish-import").data("value"));
         $("select[name=fireRating]").val($("#FireRating-import").data("value")).trigger("change");
+        $("#savedfirerating").val($("#FireRating-import").data("value"));
         FireRatingChange();
         $("select[name=doorsetType]").val($("#DoorsetType-import").data("value")).trigger("change");
         $("select[name=swingType]").val($("#SwingType-import").data("value")).trigger("change");
@@ -401,6 +402,7 @@
         $("#FrameMaterial-value").data("value",$("#FrameMaterial-import").data("value"));
         $("#frameMaterialNew").val($("#FrameMaterial-import").data("value"));
         $("select[name=frameType]").val($("#FrameType-import").data("value")).trigger('change');98
+        $("#frametypevalue").val($("#FrameType-import").data("value"));
         $("#frameDepth").val($("#FrameDepth-import").data("value"));
         $("select[name=frameFinish]").val($("#FrameFinish-import").data("value"));
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){

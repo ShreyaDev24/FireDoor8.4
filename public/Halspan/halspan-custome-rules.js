@@ -1971,13 +1971,13 @@ $(document).ready(function() {
                 $("#ScallopedHeightText").text('(min 2-8mm)');
             }
         // } else if (framTypeValue == "Rebated_Frame"){
-            if ($("#fireRating").val() == "NFR") {
+            if ($("#fireRating").val() == "NFR" && framTypeValue == "Rebated_Frame") {
                 $("#rebatedWidth").attr('min', '35');
                 $("#rebatedWidthText").text('(min 35)');
-            }else if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s"){
+            }else if(($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s") && framTypeValue == "Rebated_Frame"){
                 $("#rebatedWidth").attr('min', '44');
                 $("#rebatedWidthText").text('(min 44)');
-            }else if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+            }else if(($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s") && framTypeValue == "Rebated_Frame"){
                 $("#rebatedWidth").attr('min', '54');
                 $("#rebatedWidthText").text('(min 54)');
             }
@@ -5956,8 +5956,8 @@ function onlyLipingSpecies(fireRating){
                     $("#LipingModalBody").empty().append(innerHtml1);
                 }
                  else {
-                    var lippingSpecies = result.lippingSpecies;
-                    var lippingSpeciesLength =result.lippingSpecies.length;
+                    var lippingSpecies = result.OnlylippingSpecies;
+                    var lippingSpeciesLength =result.OnlylippingSpecies.length;
                     innerHtml+='<option value="">No Glazing Systems Found</option>';
                     if(lippingSpecies!='' && lippingSpeciesLength>0){
                         innerHtml1 = "";
