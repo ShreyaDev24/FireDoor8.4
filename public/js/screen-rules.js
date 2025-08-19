@@ -69,7 +69,7 @@ $(document).on('change', '#SinglePane,#GlassIntegrity, #AreSinglePaneEqualSizes'
     if ($('#AreSinglePaneEqualSizes').val() === 'Yes') {
         $("#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").val(GlassIntegrity).prop('disabled', true);
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD").val(SinglePane).prop('disabled', true);
-        FireRatingChange();
+
     } else {
         $("#SinglePaneB, #SinglePaneC, #SinglePaneD").prop('disabled', false);
         $("#GlassIntegrityB, #GlassIntegrityC, #GlassIntegrityD").prop('disabled', false);
