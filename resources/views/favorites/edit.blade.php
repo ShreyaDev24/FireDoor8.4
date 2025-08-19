@@ -2,7 +2,7 @@
 
 @section('main_section')
 <div class="container">
-    <h2>Edit Favorite</h2>
+    <h2>Edit Favourite</h2>
 
     @if($errors->any())
         <div class="alert alert-danger">
