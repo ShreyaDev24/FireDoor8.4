@@ -58,7 +58,7 @@ class FavoriteController extends Controller
             $html .= '<table class="table table-bordered">';
             $html .= '<thead>';
             $html .= '<tr>';
-            $html .= '<th>Favorite Type</th>';
+            $html .= '<th>Favourite Type</th>';
             $html .= '<th>Favorite Name</th>';
             $html .= '<th>Door Type</th>';
             $html .= '<th>Edit</th>';

@@ -2,7 +2,7 @@
 
 @section('main_section')
     <div class="container">
-        <h2>Favorite Details</h2>
+        <h2>Favourite Details</h2>
         <p><strong>Name:</strong> {{ $favorite->name }}</p>
         <p><strong>User:</strong> {{ $favorite->user->UserEmail ?? 'N/A' }}</p>
         <p><strong>Status:</strong> {{ ($favorite->status == 1)?'Active':'Inactive' }}</p>

@@ -10,7 +10,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="card-header">
-                            <h5 class="card-title">Favorite List</h5>
+                            <h5 class="card-title">Favourite List</h5>
                         </div>
                     </div>
                     <div class="col-sm-6 ">
