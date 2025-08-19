@@ -8801,7 +8801,7 @@ class DoorScheduleController extends Controller
                 $html .= '<table class="table table-bordered">';
                 $html .= '<thead>';
                 $html .= '<tr>';
-                $html .= '<th>Favorite Name</th>';
+                $html .= '<th>Favourite Name</th>';
                 $html .= '<th>Door Type</th>';
                 $html .= '<th>Assign</th>';
                 $html .= '</tr>';
@@ -8960,7 +8960,7 @@ class DoorScheduleController extends Controller
                 ) {
                     $response = [
                         'status' => false,
-                        'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
+                        'msg' => 'The selected Favourite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
                     ];
                     return response()->json(
                         $response,

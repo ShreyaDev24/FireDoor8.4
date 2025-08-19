@@ -206,7 +206,7 @@
                                     class="btn btn-primary float-right mx-1">Validate
                                 </a>
                                 <a href="javascript:void(0);" onclick="favoritebtn();" id="Favorite"
-                                    class="btn btn-primary float-right mx-1">Favorite
+                                    class="btn btn-primary float-right mx-1">Favourite
                                 </a>
                             </div>
 
@@ -3205,7 +3205,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Favorite Item</h5>
+                    <h5 class="modal-title">Favourite Item</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -3213,9 +3213,9 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-sm-12 mb-2">
-                            <label for="doorTypeName">Favorite Type</label>
+                            <label for="doorTypeName">Favourite Type</label>
                             <select name="favName" id="favName" class="form-control">
-                                <option value="">Select Favorite Type</option>
+                                <option value="">Select Favourite Type</option>
                                 @if (!empty($favorites) && count($favorites) > 0)
                                     @foreach ($favorites as $fav)
                                         <option value="{{ $fav->id }}">{{ $fav->name }}</option>
@@ -3243,7 +3243,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Favorite Item List</h5>
+                    <h5 class="modal-title">Favourite Item List</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>

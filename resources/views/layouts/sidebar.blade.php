@@ -732,7 +732,7 @@
                             <i class="metismenu-icon">
                                 <i class="fa fa-heart"></i>
                             </i>
-                            Favorite
+                            Favourite
                             <i class="metismenu-state-icon">
                                 <i class="fa fa-caret-down"></i>
                             </i>
@@ -741,7 +741,7 @@
                             <li class="submm-{{ Request::routeIs('favorites.index') ? 'active' : '' }}">
                                 <a href="{{ route('favorites.index') }}">
                                     <i class="metismenu-icon"></i>
-                                    Favorite List
+                                    Favourite List
                                 </a>
                             </li>
                         </ul>

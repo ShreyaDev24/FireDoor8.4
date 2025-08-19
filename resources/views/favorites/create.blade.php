@@ -2,7 +2,7 @@
 
 @section('main_section')
 <div class="container">
-    <h2>Create Favorite</h2>
+    <h2>Create Favourite</h2>
     <form action="{{ route('favorites.store') }}" method="POST">
         @csrf
         <div class="mb-3">
