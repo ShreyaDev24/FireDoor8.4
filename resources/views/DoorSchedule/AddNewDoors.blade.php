@@ -49,6 +49,14 @@
                         <div class="tab-content">
                             <div class="card-body">
                                 <div class="form-row">
+                                    <div class="col-md-12">
+                                        <div class="position-relative form-group">
+                                            <label>
+                                                <input type="checkbox" name="copy_door" value="1">
+                                                Do you want to copy a door? If yes, please check this box. It will create a copy with the selected Door Type Name followed by “-Copy”.
+                                            </label>
+                                        </div>
+                                    </div>
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label for="existingDoorId">Select Door Type</label>
