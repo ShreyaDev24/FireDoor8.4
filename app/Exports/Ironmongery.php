@@ -46,6 +46,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
         foreach($this->result['data'] as $value){
             if($value->Category=='Ironmongery&MachiningCosts'){
                 $words = explode("|", (string) $value->Description);
+                $doortype = $words[0] ?? "";
                 $words1 = $words[1] ?? "";
                 $words2 = $words[2] ?? "";
                 $words3 = $words[3] ?? "";
@@ -60,6 +61,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
                 $totalcost = $words6 / $testvar;
 
                 $data[] = [
+                    $doortype,   // Door Type (new first column)
                     $words1,
                     $words2,
                     $words3,
@@ -79,49 +81,52 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
 
         foreach ($category as $cate) {
             foreach ($data as $val) {
-                if ($cate == $val[0]) {
+                if ($cate == $val[1]) {
                     // $val[3] represents ironmongery name
-                    if (isset($aa[$cate][$val[3]])) {
-                        $aa[$cate][$val[3]] += $val[5]; // Increment quantity if ironmongery name exists
+                    if (isset($aa[$cate][$val[4]])) {
+                        $aa[$cate][$val[4]] += $val[6]; // Increment quantity if ironmongery name exists
                     } else {
-                        $aa[$cate][$val[3]] = $val[5]; // Otherwise, set the quantity
+                        $aa[$cate][$val[4]] = $val[6]; // Otherwise, set the quantity
                     }
                 }
             }
         }
 
 
-            $val = [];
+        $val = [];
 
-            // Loop through each element in the $aa array
-            foreach ($aa as $ke => $v) {
-                // Loop through each nested array in $v
-                foreach ($v as $key => $value) {
-                    // Initialize $k to 1 for each iteration
-                    $k = 1;
+        // Loop through each element in the $aa array
+        foreach ($aa as $ke => $v) {
+            foreach ($v as $key => $value) {
 
-                    // Loop through each element in the $data array
-                    foreach ($data as $valu) {
-                        // Check if the value at index 3 in $valu matches $key,
-                        // $k is 1, and $ke matches the value at index 0 in $valu
-                        if ($valu[3] === $key && $k == 1 && $ke === $valu[0]) {
-                            // If conditions are met, append an array to $val
-                            $val[] = [
-                                $valu[0],               // Index 0 of $valu
-                                $valu[1],               // Index 1 of $valu
-                                $valu[2],               // Index 2 of $valu
-                                $valu[3],               // Index 3 of $valu
-                                $valu[4],               // Index 4 of $valu
-                                $value,                 // Value from the inner loop
-                                $value * $valu[6],      // Calculation based on value from inner loop and index 6 of $valu
-                            ];
+                // Collect all door types for this category+ironmongery
+                $doorTypes = [];
+                $firstMatch = null;
 
-                            // Increment $k to avoid appending multiple times
-                            $k++;
+                foreach ($data as $valu) {
+                    if ($valu[4] === $key && $ke === $valu[1]) {
+                        $doorTypes[] = $valu[0];   // add door type
+                        if ($firstMatch === null) {
+                            $firstMatch = $valu;   // save first row as reference
                         }
                     }
                 }
+
+                if ($firstMatch) {
+                    $val[] = [
+                        implode(", ", array_unique($doorTypes)), // Concatenate door types
+                        $firstMatch[1],   // Category
+                        $firstMatch[2],   // Code
+                        $firstMatch[3],   // Ironmongery Name
+                        $firstMatch[4],   // Supplier
+                        $firstMatch[5],   // Extra field (if needed)
+                        $value,           // Quantity
+                        $value * $firstMatch[7], // Price
+                    ];
+                }
             }
+        }
+
 
         // Store the resulting array inside another array
         $allData = [$val];
@@ -136,6 +141,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
    {
     // Define an array $a containing column headings
     $a = [
+        'Door Type',
         'Ironmongery Set Name',
         'Category',
         'Code',
@@ -161,8 +167,8 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
 
         return [
             AfterSheet::class => function(AfterSheet $event): void {
-                $headerRange1 = 'A1:G1';
-                $headerRange2 = 'A2:G2';
+                $headerRange1 = 'A1:H1';
+                $headerRange2 = 'A2:H2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -186,7 +192,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
                 $event->sheet->mergeCells($headerRange1);
 
                 // Set columns to auto size
-                foreach (range('A', 'G') as $columnID) {
+                foreach (range('A', 'H') as $columnID) {
                     $event->sheet->getColumnDimension($columnID)->setAutoSize(true);
                 }
 
@@ -219,15 +225,15 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
 
         if ($currency == '$') {
             return [
-                'G' => $currencyFormats['$'],
+                'H' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'G' => $currencyFormats['£'],
+                'H' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'G' => $currencyFormats['€'],
+                'H' => $currencyFormats['€'],
             ];
         }
 
