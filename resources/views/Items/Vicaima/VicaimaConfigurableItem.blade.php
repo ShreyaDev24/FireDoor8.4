@@ -549,10 +549,12 @@
             $("#ScallopedWidth").attr({ 'readonly': false, 'required': true });
 
         }else{
+            let frameType = $("#frametypevalue").val();
+            $("select[name=frameType]").val(frameType).trigger("change");
             $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
             $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
             $("#frameType option[value='Scalloped']").prop("disabled", true);
-            $("#frameType").val('').trigger('change');
+            // $("#frameType").val('').trigger('change');
         }
     };
 
