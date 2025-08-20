@@ -69,16 +69,23 @@ input[type=number]::-webkit-outer-spin-button {
             <div class="row">
                 <div class="col-sm-12">
                     <div class="custom_card">
-                        <div class="row">
+                        <div class="row align-items-center">
                             <div class="col-sm-6">
-                                <div class="card-header"><h5 class="card-title">Ironmongery <span>Folder Show</span></h5></div>
+                                <div class="card-header">
+                                    <h5 class="card-title">Ironmongery <span>Folder Show</span></h5>
+                                </div>
                             </div>
-                            <div class="col-sm-6 ">
-                                <a href="{{ route('folders.create') }}" class="btn-shadow btn btn-info float-right">
+                            <div class="col-sm-6 d-flex justify-content-end">
+                                <button onclick="history.back()" class="btn btn-secondary mr-2">
+                                    <i class="fas fa-arrow-left"></i> Back
+                                </button>
+                                <a href="{{ route('folders.create') }}" class="btn btn-primary">
                                     <i class="fas fa-folder-plus"></i> Add Folder
                                 </a>
                             </div>
                         </div>
+
+
                         <div class="row">
                             <div class="col-sm-12">
                                 <h3 class="mb-3 text-primary">Folder: {{ $folder->name }}</h3>
