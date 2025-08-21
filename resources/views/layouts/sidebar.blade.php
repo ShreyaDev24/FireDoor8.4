@@ -1117,6 +1117,12 @@
                                         General
                                     </a>
                                 </li>
+                                <li class="{{ Request::segment(2) === 'core_certificates' ? 'submm-active' : '' }}">
+                                    <a href="{{ route('core_certificates.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Core Certificates
+                                    </a>
+                                </li>
                                 <li class="submm-{{ (Request::segment(2) == 'mail-Format') ? 'active' : ''}}">
                                     <a href="{{route('settingpdf')}}">
                                         <i class="metismenu-icon"></i>

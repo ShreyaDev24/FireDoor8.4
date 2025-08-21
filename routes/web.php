@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\CoreCertificateController;
 
 /*
 |--------------------------------------------------------------------------
@@ -254,6 +255,7 @@ Route::prefix('options')->group(function (): void {
 });
 
 Route::resource('favorites', FavoriteController::class);
+Route::resource('core_certificates', CoreCertificateController::class)->middleware('auth');
 
 Route::prefix('quotation')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
