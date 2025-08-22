@@ -1945,7 +1945,7 @@ function BOMUpdate($data, $configurableitems): void{
     $item->leaf1VpAreaSizeM2 = $data->Leaf1VPAreaSizem2;
     $item->leaf2VisionPanel = $data->Leaf2VisionPanel;
     $item->vpSameAsLeaf1 = $data->sVPSameAsLeaf1;
-    $item->Leaf2VisionPanelQuantity = $data->Leaf2VisionPanelQuantity;
+    $item->visionPanelQuantityforLeaf2 = $data->Leaf2VisionPanelQuantity;
     $item->AreVPsEqualSizesForLeaf2 =  $data->AreVPsEqualSizesForLeaf2;
     $item->distanceFromTopOfDoorforLeaf2 = $data->DistanceFromTopOfDoorForLeaf2;
     $item->distanceFromTheEdgeOfDoorforLeaf2 = $data->DistanceFromTheEdgeOfDoorforLeaf2;
