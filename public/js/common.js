@@ -74,15 +74,10 @@ function swingTypeFrameType(){
         // $("#frameType").val('').trigger('change');
         $('#foursidedframe').prop('disabled', false);
     }
-    if (
-        !url.includes("edit-vicaima-door-core-item") &&
-        !url.includes("add-vicaima-door-core-item")
-    ) {
-        setTimeout(function () {
-            framTypeChangeInputEnableDisable();
-            frameThicknessChange();
-        }, 500);
-    }
+    setTimeout(function () {
+        framTypeChangeInputEnableDisable();
+        frameThicknessChange();
+    }, 500);
 }
 
 
