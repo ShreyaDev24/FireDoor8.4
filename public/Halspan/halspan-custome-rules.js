@@ -755,7 +755,7 @@ $(document).ready(function() {
         isScallopedFrame($(this).val());
     });
     $(document).ready(function () {
-        const selectedValue = $("#frametypevalue").val();
+        const selectedValue = $("#frameType").val() || $("#frametypevalue").val();
         // Set the value of the dropdown
         $('#frameType').val(selectedValue);
         if(selectedValue == 'Rebated_Frame'){
@@ -774,7 +774,7 @@ $(document).ready(function() {
     });
 
     $(document).ready(function () {
-        const selectedValue = $("#frametypevalue").val();
+        const selectedValue = $("#frameType").val() || $("#frametypevalue").val();
         // Set the value of the dropdown
         $('#frameType').val(selectedValue);
         if(selectedValue == 'Rebated_Frame'){
