@@ -67,6 +67,7 @@ Route::get('quotationApproval/{qId}/{vId}', [App\Http\Controllers\SendToClientCo
 Route::post('quotaionAccept', [App\Http\Controllers\SendToClientController::class,'quotaionAccept'])->name('quotaionAccept');
 Route::post('quotaionReject', [App\Http\Controllers\SendToClientController::class,'quotaionReject'])->name('quotaionReject');
 Route::get('quotationSignature/{qId}/{vId}/{cId}', [App\Http\Controllers\SendToClientController::class,'quotationSignature'])->name('quotationSignature');
+Route::post('/quotationSignature/submit', [App\Http\Controllers\PrintInvoiceController::class, 'submitSignature'])->name('quotation.signature.submit');
 
 Route::middleware('auth:web')->group(function(): void{
 
@@ -317,7 +318,6 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/printinvoiceinexcel/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcel'])->name('printinvoiceinexcel');
 
     Route::post('/testprintinvoice', [App\Http\Controllers\PrintInvoiceController::class,'testprintinvoice'])->name('testprintinvoice');
-    Route::post('/quotationSignature/submit', [App\Http\Controllers\PrintInvoiceController::class, 'submitSignature'])->name('quotation.signature.submit');
 
     Route::post('/selectcustomer', [App\Http\Controllers\DoorScheduleController::class,'selectcustomer'])->name('quotation/selectcustomer');
     Route::get('/singleconfigurationitem/{id}', [App\Http\Controllers\DoorScheduleController::class,'singleconfigurationitem'])->name('quotation/singleconfigurationitem');
