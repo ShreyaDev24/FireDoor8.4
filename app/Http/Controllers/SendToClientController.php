@@ -28,7 +28,7 @@ class SendToClientController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth')->except(['quotationApproval','quotaionAccept','quotaionReject']);
+        $this->middleware('auth')->except(['quotationApproval','quotaionAccept','quotaionReject','quotationSignature','signaturesubmit']);
     }
 
     public function sendToClientUrl(Request $request): void
@@ -42,7 +42,7 @@ class SendToClientController extends Controller
         $QuotationContactInformation = QuotationContactInformation::where('QuotationId',$quotationId)->first();
         $customer_contact_id = explode(',',(string) $QuotationContactInformation->Contact);
 
-        $q = Quotation::select('QuotationGenerationId','quotTag','SalesContact','ProjectId')->where('id',$quotationId)->first();
+        $q = Quotation::select('QuotationGenerationId','quotTag','SalesContact','ProjectId','UserId')->where('id',$quotationId)->first();
 
         if($q->ProjectId != Null){
             $projectDetails = Project::find($q->ProjectId);
@@ -89,7 +89,7 @@ class SendToClientController extends Controller
         if(!empty($QuotationContactInformation->Email)){
             $to = $QuotationContactInformation->Email;
             $subject = 'Order process | Quotation ' . $q->QuotationGenerationId;
-            $currentloginId = Auth::user()->id;
+            $currentloginId = $q->UserId;
             $qId = encrypt($quotationId);
             $vId = encrypt($currentVersion);
             $cId = encrypt($currentloginId);

@@ -4970,6 +4970,22 @@ function CompanyUsers($isstatus = false){
     return $UserId;
 }
 
+function CompanyUsersClient($isstatus = false,$userid){
+    $users = User::where('UserType',3)->where('id',$userid)->first();
+    if($users){
+        if($isstatus == true){
+            $UserId = [$userid];
+        }
+    } else{
+        $users = User::where('UserType','!=',3)->where('id',$userid)->first();
+        if($users){
+            $UserId = ['1', $userid];
+        } else {
+            $UserId = ['1'];
+        }
+    }
+    return $UserId;
+}
 function user_id(){
     $user_id = Auth::user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
 

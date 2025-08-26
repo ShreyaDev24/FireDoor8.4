@@ -130,7 +130,7 @@ body {
 
         <div class="jumbotron text-center">
             <h2>Sign Quotation</h2>
-            <form action="{{ route('quotation.signature.submit') }}" method="POST" id="signature-form">
+            <form action="{{ route('signaturesubmit') }}" method="POST" id="signature-form">
                 @csrf
                 <input type="hidden" name="quotationId" value="{{ $qId }}">
                 <input type="hidden" name="versionId" value="{{ $vId }}">
