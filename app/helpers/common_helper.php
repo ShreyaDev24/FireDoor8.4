@@ -1544,7 +1544,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
 
             for($j = 0; $j < $count; $j++){
 
-                $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',user_id())->first();
+                $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',$userid)->first();
 
                 if(!empty($SelectedIronmongery)){
                     $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
