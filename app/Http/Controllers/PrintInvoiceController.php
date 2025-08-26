@@ -3911,7 +3911,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 if (!empty($ironData->IronmongeryID)) {
                     $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
                     $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
-                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetData($ironData->IronmongeryID) .'</table></div>';
+                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetDataClient($ironData->IronmongeryID,$userid) .'</table></div>';
 
                     $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
 
