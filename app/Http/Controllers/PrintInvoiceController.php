@@ -45,6 +45,7 @@ use App\Models\QuotationContactInformation;
 use App\Models\GlazingSystem;
 use App\Models\SettingCurrency;
 use App\Models\QuotationSiteDeliveryAddress;
+use App\Models\ClientSignature;
 use setasign\Fpdi\Tcpdf\Fpdi;
 use App\Jobs\{GenerateQuotationPDF,pdf1,pdf2,pdf3andpdf4_2,pdf4,pdf6,pdf8};
 
@@ -55,7 +56,7 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth');
     }
 
-    public function printinvoice($quatationId, $versionID, $isActive = null): mixed
+    public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null): mixed
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -1239,6 +1240,7 @@ class PrintInvoiceController extends Controller
                 $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
             }
 
+            $fetchSignature = ClientSignature::where('quotation_id',$quatationId)->where('version_id',$versionID)->first();
 // dd($tt->Leaf2VisionPanel != 'Yes');
             $redstripRightCommonClass = $tt->IntumescentLeapingSealLocation.'_right_strip_'.$tt->DoorsetType;
             $redstripLeftCommonClass = $tt->IntumescentLeapingSealLocation.'_left_strip_'.$tt->DoorsetType;
@@ -2233,7 +2235,7 @@ class PrintInvoiceController extends Controller
 
             $elevTbl .=
                 '</span>
-                                                </td>
+                                            </td>
                                                 <td class="tbl_color"><span>IO No</span></td>
                                                 <td>' . $project->ioNumberOne . '</td>
                                                 <td>' . $project->ioNumberTwo . '</td>
@@ -2263,6 +2265,29 @@ class PrintInvoiceController extends Controller
                                             </tr>
                                         </tbody>
                                     </table>
+                                    <div style="margin-top: 10px;overflow: auto; padding: 0px 20px;align-items: center height: 150px ;display: flex;">
+                                    <div style="float: left;border: aliceblue;padding: 5px 10px;display: flex;width: 50%;">
+                                        <div style="display: inline-flex; align-items: center;">
+                                            <p style="font-size: 16px; line-height: 23px; padding: 0; margin: 0;">Signature</p>';
+                                            if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
+                                               $elevTbl .= ' <img style="width: 160px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
+                                            } else {
+                                                $elevTbl .= ' ';
+                                            }
+                                      $elevTbl .= '  </div>
+                                    </div>';
+
+                                    if($clientclick == 'yes'){
+                                     $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date - '. \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y').'
+                                    </div>';
+                                    } else{
+                                        $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date -
+                                    </div>';
+                                    }
+                                    $elevTbl .= '
+                                </div>
                                 </td>
                             </tr>';
             $elevTbl .= '<tr>';
@@ -3764,7 +3789,51 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
     }
 
+    public function submitSignature(Request $request)
+    {
+        $request->validate([
+            'quotationId' => 'required',
+            'versionId'   => 'required',
+            'userId'      => 'required',
+            'signature'   => 'required', // signature image (base64 from canvas)
+            'agree'       => 'accepted', // checkbox must be ticked
+        ]);
 
+        $quotationId = $request->quotationId;
+        $versionId   = $request->versionId;
+        $userId      = $request->userId;
+
+        // 🔹 Decode and save the signature image
+        $signatureData = $request->input('signature');
+        $signaturePath = null;
+
+        if ($signatureData) {
+            // remove the base64 prefix if present
+            $signature = str_replace('data:image/png;base64,', '', $signatureData);
+            $signature = str_replace(' ', '+', $signature);
+            $signatureImage = base64_decode($signature);
+
+            // choose your folder inside public/
+            $signaturePath = 'signatures/' . uniqid() . '.png';
+
+            // save directly into public folder
+            file_put_contents(public_path($signaturePath), $signatureImage);
+        }
+
+
+        // 🔹 Save record in DB
+        ClientSignature::create([
+            'quotation_id' => $quotationId,
+            'version_id'   => $versionId,
+            'user_id'      => $userId,
+            'signature_path' => $signaturePath,
+            'signed_at'    => now(),
+        ]);
+        $clientclick = 'yes';
+
+        // 🔹 Call your existing invoice generator
+        return $this->printinvoice($quotationId, $versionId, null, $userId,$clientclick);
+    }
 
     public function testprintinvoice(Request $request)
     {

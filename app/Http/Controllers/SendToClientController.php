@@ -89,9 +89,12 @@ class SendToClientController extends Controller
         if(!empty($QuotationContactInformation->Email)){
             $to = $QuotationContactInformation->Email;
             $subject = 'Order process | Quotation ' . $q->QuotationGenerationId;
+            $currentloginId = Auth::user()->id;
             $qId = encrypt($quotationId);
             $vId = encrypt($currentVersion);
+            $cId = encrypt($currentloginId);
             $url = route('quotationApproval',[ $qId , $vId ]);
+            $signatureUrl = route('quotationSignature',[ $qId , $vId, $cId ]);
             // http://localhost/GithubSadique/firedoor/public/quotationApproval/eyJpdiI6ImN0T2RXWkVad1V0eGZlMWVzZGgrcEE9PSIsInZhbHVlIjoiWUtwcDBsTExEV0VJRUZSNXZkUnJKUT09IiwibWFjIjoiMmVlMjc1OWZmZDc1MWVlZTA5NzZkMzU4Mjc3NDJmMTA5M2I2NWU1NTQ0ZGFjNmMzMTVmNWJiNzBlMGE1Y2VhMiJ9/eyJpdiI6IlZMajYrN1Y3MkZTaks4Zyt6UGNLM0E9PSIsInZhbHVlIjoicm9Id3RubDNtVzE3VUtNS3hRMVZDUT09IiwibWFjIjoiMjIwZGQ1OWNiOWY3NTY5Zjk4NmJiNmMwY2RlZTdmZjNlZmYxYjhhZjY3ZjU2ZTg3YzA2NTg0ZWQ2MWZiMDk1ZCJ9
 
 
@@ -105,7 +108,7 @@ class SendToClientController extends Controller
             $emailFromName = $com->CompanyName ?? 'noreply@jfds.co.uk';
 
             $usermname = $cc->FirstName.' '.$cc->LastName;
-            $data_set = ['usermname'=>$usermname,'CompanyName'=>$com->CompanyName, 'url'=>$url, 'SalesCon'=>$SalesCon];
+            $data_set = ['usermname'=>$usermname,'CompanyName'=>$com->CompanyName, 'url'=>$url, 'SalesCon'=>$SalesCon,'signatureUrl' => $signatureUrl];
 
             ini_set('display_errors', 1);
             try{
@@ -247,5 +250,19 @@ class SendToClientController extends Controller
         $q->status_accept_reject_at = date('Y-m-d H:i:s');
         $q->save();
         return redirect()->back()->with('success', 'You rejected the quotation!');
+    }
+
+    public function quotationSignature($quotationId,$versionId,$userId){
+        $qId = decrypt($quotationId);
+        $vId = decrypt($versionId);
+        $cId = decrypt($userId);
+        $quotation = Quotation::where('id',$qId)->first();
+        $QuotationGenerationId = $quotation->QuotationGenerationId;
+        $QV = QuotationVersion::select('version')->where('id',$vId)->first();
+        $version = $QV->version;
+        $qGId = str_replace('#','%23',$QuotationGenerationId);
+        $filename = $qGId.'_'.$version.'.pdf';
+        $pdf_file_name =  str_replace("%23", '', $filename);
+        return view('sendToClient.signatureQuotation',['qId' => $qId, 'vId' => $vId, 'cId' => $cId,'quotationnumber' => $quotation->QuotationGenerationId,'quotation' => $quotation, 'pdf_file_name' => $pdf_file_name, 'filename' => $filename,]);
     }
 }
