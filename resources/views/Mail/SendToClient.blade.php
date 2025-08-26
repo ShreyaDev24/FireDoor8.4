@@ -9,6 +9,9 @@
 
     <P> <a href='{{ $url }}' class='btn btn-success'> Click To View Quotation </a></p>
 
+    <p>If you would like to digitally sign this quotation, please click below:<br>
+        <a href="{{ $signatureUrl }}">Click To Sign Quotation</a>
+    </p>
     <p> Please don't hesitate to get in touch if you have any questions.</p>
 
 

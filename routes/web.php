@@ -316,6 +316,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/printinvoiceinexcel/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcel'])->name('printinvoiceinexcel');
 
     Route::post('/testprintinvoice', [App\Http\Controllers\PrintInvoiceController::class,'testprintinvoice'])->name('testprintinvoice');
+    Route::post('/quotationSignature/submit', [App\Http\Controllers\PrintInvoiceController::class, 'submitSignature'])->name('quotation.signature.submit');
 
     Route::post('/selectcustomer', [App\Http\Controllers\DoorScheduleController::class,'selectcustomer'])->name('quotation/selectcustomer');
     Route::get('/singleconfigurationitem/{id}', [App\Http\Controllers\DoorScheduleController::class,'singleconfigurationitem'])->name('quotation/singleconfigurationitem');
@@ -450,6 +451,7 @@ Route::prefix('quotation')->group(function (): void {
     // Send To Client
     Route::post('/sendToClientUrl',[App\Http\Controllers\SendToClientController::class,'sendToClientUrl'])->name('sendToClientUrl');
 
+    Route::get('quotationSignature/{qId}/{vId}/{cId}', [App\Http\Controllers\SendToClientController::class,'quotationSignature'])->name('quotationSignature');
     // showAccousticdata in Modal
     Route::post('/showAccoustic', [App\Http\Controllers\DoorScheduleController::class,'showAccoustic'])->name('showAccoustic');
     Route::post('/doorStandardPrice', [App\Http\Controllers\DoorScheduleController::class,'doorStandardPrice'])->name('doorStandardPrice');
