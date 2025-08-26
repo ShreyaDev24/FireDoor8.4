@@ -788,7 +788,7 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Plant_on_Stop');
+            // FramePrice('Plant_on_Stop');
             // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
 
@@ -817,7 +817,7 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Rebated_Frame');
+            // FramePrice('Rebated_Frame');
             framewidth();
             // frameprice('Rebated_Frame');
         } else {
@@ -5363,7 +5363,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
         let pageId = pageIdentity();
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
-        if(fireRatingValue != null && isStatus){
+        if(fireRatingValue != null && isstatus){
             fireRatingValue = $("#FireRating-value").data("value");
             if(fireRatingValue != ""){
                 fireRating = fireRatingValue;
