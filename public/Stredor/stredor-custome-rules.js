@@ -6256,25 +6256,3 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
-function updateSL1TransomFields() {
-  const isNo = $('#SL1Transom').val() === 'No';
-  // Make inputs read-only (works for input/textarea). Keep values cleared when No.
-  $('#SL1TransomDepth, #SL1transomThickness')
-    .prop('readonly', isNo)
-    .prop('required', !isNo)
-    .toggleClass('readonly', isNo);
-
-  if (isNo) {
-    $('#SL1TransomDepth, #SL1transomThickness').val('');
-  }
-
-  // If those controls are <select> instead of <input>, disable them instead:
-  if ($('#SL1TransomDepth').is('select, [type=checkbox], [type=radio]') ||
-      $('#SL1transomThickness').is('select, [type=checkbox], [type=radio]')) {
-    $('#SL1TransomDepth, #SL1transomThickness').prop('disabled', isNo);
-  }
-}
-
-// run on load + on change
-$(document).ready(updateSL1TransomFields);
-$('#SL1Transom').on('change', updateSL1TransomFields);
