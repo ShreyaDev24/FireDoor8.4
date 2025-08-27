@@ -1554,6 +1554,7 @@ class ItemListController extends Controller
                         $item->SL1transomThickness = $request->SL1transomThickness;
                         $item->SideLight1GlassWidth = $request->sidelight1GlassWidth;
                         $item->Sidelight1GlassHeight = $request->sidelight1GlassHeight;
+                        $item->SideLight1FrameThickness = $request->sideLight1FrameThickness;
                         $item->SideLight2 = $request->sideLight2;
                         $item->DoYouWantToCopySameAsSL1 = $request->copyOfSideLite1;
                         $item->SL2GlassIntegrity = ($request->copyOfSideLite1 == "Yes")?$request->SL1GlassIntegrity:$request->SL2GlassIntegrity;

@@ -5776,7 +5776,7 @@ $(document).ready(function () {
             $('#submit').attr({'disabled': true,"readonly":true });
             setTimeout(() => {
                 $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
-                $$('#submit').attr({'disabled': false,"readonly":false });
+                $('#submit').attr({'disabled': false,"readonly":false });
             }, 25000);
         }
    }
@@ -6256,3 +6256,23 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+
+// JFDS-700
+$(document).ready(function () {
+    $("#SL1Transom, #SL2Transom").change(function() {
+        updateTransomFields(); // Ensure fields are set correctly on page load
+    });
+});
+
+function updateTransomFields() {
+    toggleField("#SL1Transom", "#SL1TransomDepth");
+    toggleField("#SL2Transom", "#SL2TransomDepth");
+}
+
+function toggleField(transomSelector, depthSelector) {
+    if ($(transomSelector).val() === "No") {
+        $(depthSelector).prop({ required: false, disabled: true });
+    } else {
+        $(depthSelector).prop({ required: true, disabled: false });
+    }
+}
