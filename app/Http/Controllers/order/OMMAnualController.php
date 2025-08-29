@@ -2876,6 +2876,7 @@ class OMMAnualController extends Controller
         $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
         $IronmongeryData = '';
         $PageBreakCount = 1;
+        $pdfSpecification = [];
         // dd($GetIronmongerySet,count($GetIronmongerySet));
         if (!empty($GetIronmongerySet)) {
             foreach ($GetIronmongerySet as $ironData) {
@@ -2911,6 +2912,7 @@ class OMMAnualController extends Controller
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
 
+                    $pdfSpecification[] = IronmongerySetData($ironData->IronmongeryID,true);
 
                     $PageBreakCount++;
                 }
@@ -2981,6 +2983,20 @@ class OMMAnualController extends Controller
         // 🔹 Add IronmongeryData only if available
         if ($pdf77 !== '' && file_exists($pdf77)) {
             $pdfMerger->addPDF($pdf77, 'all');
+        }
+
+        if (!empty($pdfSpecification)) {
+            foreach ($pdfSpecification as $pdfSpeci) {
+                if (is_array($pdfSpeci)) {
+                    foreach ($pdfSpeci as $pdfSpe) {
+                        if (!empty($pdfSpe) && file_exists($pdfSpe)) {
+                            $pdfMerger->addPDF($pdfSpe, 'all');
+                        } else {
+                            \Log::warning("PDF not found: " . $pdfSpe);
+                        }
+                    }
+                }
+            }
         }
 
         $pdfMerger->merge();
