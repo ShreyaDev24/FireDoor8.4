@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 use App\Models\SettingCurrency;
+use App\Models\FittingInstructions;
 use App\Models\CompanyQuotationCounter;
 use App\Models\CompanyOrderCounter;
 use App\Models\DoorFrameConstruction;
@@ -25,7 +26,8 @@ class GeneralSettingController extends Controller
         $currency = SettingCurrency::wherein('UserId',$users)->first();
         $ComQuotCounter = CompanyQuotationCounter::wherein('UserId',$users)->first();
         $ComOrdCounter = CompanyOrderCounter::wherein('UserId',$users)->first();
-        return view('Setting.generalsetting',['currency' => $currency, 'ComQuotCounter' => $ComQuotCounter, 'ComOrdCounter' => $ComOrdCounter]);
+        $fittingInstructions = FittingInstructions::wherein('user_id',$users)->latest()->get();
+        return view('Setting.generalsetting',['currency' => $currency, 'ComQuotCounter' => $ComQuotCounter, 'ComOrdCounter' => $ComOrdCounter,'fittingInstructions'=> $fittingInstructions]);
     }
 
     public function DoorFrameConstruction(Request $request)
@@ -95,6 +97,39 @@ class GeneralSettingController extends Controller
         }else{
             return redirect()->back()->with('success', 'Added Successfully!');
         }
+    }
+
+    public function Fittinginstructions(Request $request){
+        $request->validate([
+            'document' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+        ]);
+
+        $path = null;
+        if ($request->hasFile('document')) {
+            $filename = time().'_'.$request->file('document')->getClientOriginalName();
+            $request->file('document')->move(public_path('Fittinginstructions'), $filename);
+
+            // Store only relative path
+            $path = 'Fittinginstructions/' . $filename;
+        }
+
+        FittingInstructions::create([
+            'user_id' => Auth::id(),
+            'document_path' => $path,
+            'status' => 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Fitting Instruction File Added Successfully!');
+    }
+
+    public function destroy($id)
+    {
+        $instruction = FittingInstructions::findOrFail($id);
+
+        // Delete DB record
+        $instruction->delete();
+
+        return redirect()->back()->with('success', 'Fitting instruction deleted successfully.');
     }
 
     public function subgeneralSetting(Request $request)

@@ -36,6 +36,7 @@ use App\Models\User;
 use App\Models\CoreCertificate;
 use App\Models\OverpanelGlassGlazing;
 use App\Models\IntumescentSealLeafType;
+use App\Models\FittingInstructions;
 
 class OMMAnualController extends Controller
 {
@@ -2995,6 +2996,17 @@ class OMMAnualController extends Controller
                             \Log::warning("PDF not found: " . $pdfSpe);
                         }
                     }
+                }
+            }
+        }
+
+        $fittingInstructions = FittingInstructions::where('user_id',Auth::id())->latest()->get();
+        // 🔹 Add fittingInstructions PDFs
+        if (!empty($fittingInstructions)) {
+            foreach ($fittingInstructions as $cert) {
+                $path = public_path($cert->document_path);
+                if (file_exists($path)) {
+                    $pdfMerger->addPDF($path, 'all');
                 }
             }
         }
