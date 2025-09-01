@@ -70,7 +70,7 @@ class CoreCertificateController extends Controller
             ],
             'test_certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
-            'document' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
         ]);
 
         $path = null;
@@ -144,7 +144,7 @@ class CoreCertificateController extends Controller
             ],
             'test_certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
-            'document' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
         ]);
 
         $path = $coreCertificate->document_path; // old path
