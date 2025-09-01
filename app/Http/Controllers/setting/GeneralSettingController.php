@@ -101,7 +101,7 @@ class GeneralSettingController extends Controller
 
     public function Fittinginstructions(Request $request){
         $request->validate([
-            'document' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:2048',
+            'document' => 'nullable|file|mimes:pdf,jpg,png,doc,docx|max:10240',
         ]);
 
         $path = null;
