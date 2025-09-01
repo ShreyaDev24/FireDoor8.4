@@ -613,6 +613,8 @@ Route::prefix('non-configural-items')->group(function (): void{
 Route::prefix('setting')->group(function (): void{
     Route::get('/generalSetting', [App\Http\Controllers\setting\GeneralSettingController::class,'generalSetting'])->name('generalSetting');
     Route::post('/subgeneralSetting',[App\Http\Controllers\setting\GeneralSettingController::class,'subgeneralSetting'])->name('subgeneralSetting');
+    Route::post('/Fittinginstructions',[App\Http\Controllers\setting\GeneralSettingController::class,'Fittinginstructions'])->name('Fittinginstructions');
+    Route::delete('/Fittinginstructions/{id}', [App\Http\Controllers\setting\GeneralSettingController::class,'destroy'])->name('Fittinginstructions.destroy');
     Route::get('/DoorFrameConstruction',[App\Http\Controllers\setting\GeneralSettingController::class,'DoorFrameConstruction'])->name('DoorFrameConstruction');
     Route::post('/storeDoorFrameConstruction',[App\Http\Controllers\setting\GeneralSettingController::class,'storeDoorFrameConstruction'])->name('storeDoorFrameConstruction');
 

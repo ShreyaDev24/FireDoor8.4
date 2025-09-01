@@ -2753,14 +2753,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             ->where('selected_glass_type.editBy', '=', $id);
                     })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType;
-                }
-                else{
+                }else{
                     $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
                         $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
                             ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
                     })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType;
-        }
+                }
 
             }
 

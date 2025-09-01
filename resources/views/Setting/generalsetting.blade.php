@@ -126,6 +126,63 @@
                             </div>
                         </div>
                     </form>
+                    <form action="{{ route('Fittinginstructions') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="mb-2">
+                            <label class="form-label">Upload Fitting Instructions</label>
+                            <input type="file" name="document" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-success">Save</button>
+                    </form>
+
+                    <hr>
+
+                    <h5 class="mt-3">Uploaded Fitting Instructions</h5>
+                    <table class="table table-bordered mt-2">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>File Name</th>
+                                {{--  <th>Uploaded By</th>  --}}
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @forelse($fittingInstructions as $index => $item)
+                                <tr>
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ basename($item->document_path) }}</td>
+                                    {{--  <td>{{ $item->user->name ?? 'N/A' }}</td>  --}}
+                                    <td>
+                                        @if($item->status == 1)
+                                            <span class="badge bg-success">Active</span>
+                                        @else
+                                            <span class="badge bg-secondary">Inactive</span>
+                                        @endif
+                                    </td>
+                                    <td class="d-flex" style="gap:10px;">
+                                        <a href="{{ asset($item->document_path) }}" target="_blank" class="btn btn-primary btn-sm">
+                                            View
+                                        </a>
+
+                                        <form action="{{ route('Fittinginstructions.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this file?');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                        </form>
+                                    </td>
+
+
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="5" class="text-center">No fitting instructions uploaded yet.</td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
         </div>

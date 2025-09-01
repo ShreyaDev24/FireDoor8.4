@@ -1275,7 +1275,7 @@ function IronmongerySetName($IronmongeryID){
     return $IronmongerySet;
 }
 
-function IronmongerySetData($IronmongeryID): string{
+function IronmongerySetData($IronmongeryID,$pdfSpecification=false){
     $IronmongeryInfo = AddIronmongery::select('*')->where('id', $IronmongeryID)->where('UserId',user_id())->get()->first();
 
     $IronmongeryInfoSet = [
@@ -1375,6 +1375,7 @@ function IronmongerySetData($IronmongeryID): string{
                 <td style="text-align:center; width:5%"><b>Qty</b></td>
             </tr>';
     $Counter = 1;
+    $pdfUrl = [];
     for($i = 0; $i <= 24; $i++){
 
         $valIronmongey = $IronmongeryInfoSet[$i];
@@ -1421,14 +1422,24 @@ function IronmongerySetData($IronmongeryID): string{
                                     <td style="text-align:center;width:40%">'.$IronmongeryInfoModel->Description.'</td>
                                     <td style="text-align:center;width:5%">' . $QtyPerDoorType . '</td>
                                 </tr>';
+
+
+                       // collect PDF paths
+                        if (!empty($IronmongeryInfoModel->PdfSpecification)) {
+                            $pdfUrl[] = public_path('uploads/IronmongeryInfo/' . $IronmongeryInfoModel->PdfSpecification);
+                        }
                     }
                 }
             }
         }
     }
 
+    if($pdfSpecification == true){
+        return $pdfUrl;
+    }else{
+        return $table;
+    }
     // dd($table);
-    return $table;
 }
 
 function IronmongerySetDataClient($IronmongeryID,$userid): string{
