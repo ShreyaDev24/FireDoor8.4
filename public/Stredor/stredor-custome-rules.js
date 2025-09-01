@@ -5726,6 +5726,8 @@ $(document).ready(function() {
         $("#opglazingBeadsThickness").attr('disabled',true);
         $("#opGlazingBeadSpecies").attr('disabled',true);
         $("#opglazingBeadsHeight").attr('disabled',true);
+    } else if(overpanelE && overpanelE == 'Overpanel'){
+        $('#OpBeadThickness').attr('readonly',false);
     }
 });
 
@@ -5832,7 +5834,7 @@ $(document).ready(function () {
             $('#submit').attr({'disabled': true,"readonly":true });
             setTimeout(() => {
                 $("select[name=SideLight1BeadingType]").val(Beading1TypeOld).trigger("change");
-                $$('#submit').attr({'disabled': false,"readonly":false });
+                $('#submit').attr({'disabled': false,"readonly":false });
             }, 25000);
         }
    }
@@ -6117,40 +6119,40 @@ $(document).ready(function(){
     $("#overpanel").change(function () {
         if($(this).val() == 'Overpanel'){
             // JFDS 896
-            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+            $("#OpBeadHeight").attr({ 'readonly': false, required: true });
             $("#OpBeadThickness").attr('min',44);
-            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+            $("#OpBeadThickness").attr({ 'readonly': false, required: true });
             $("#OpBeadHeight").attr('min',95);
         } else if($(this).val() == 'Fan_Light'){  // JFDS 896
             $("#OpBeadThickness").attr('min',44);
             $("#OpBeadHeight").attr('min',95);
-            $("#OpBeadHeight").attr({ 'disabled': false, required: true });
-            $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+            $("#OpBeadHeight").attr({ 'readonly': false, required: true });
+            $("#OpBeadThickness").attr({ 'readonly': false, required: true });
         } else { // JFDS 896
             $("#OpBeadThickness").removeAttr('min',44);
             $("#OpBeadHeight").removeAttr('min',95);
-            $("#OpBeadHeight").attr({ 'disabled': true, required: false });
-            $("#OpBeadThickness").attr({ 'disabled': true, required: false });
+            $("#OpBeadHeight").attr({ 'readonly': true, required: false });
+            $("#OpBeadThickness").attr({ 'readonly': true, required: false });
         }
     });
 
     let overpanelVal = $("#overpanel").val();
     if(overpanelVal == 'Overpanel'){
         // JFDS 896
-        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
+        $("#OpBeadHeight").attr({ 'readonly': false, required: true });
         $("#OpBeadThickness").attr('min',44);
-        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        $("#OpBeadThickness").attr({ 'readonly': false, required: true });
         $("#OpBeadHeight").attr('min',95);
     } else if($(this).val() == 'Fan_Light'){  // JFDS 896
         $("#OpBeadThickness").attr('min',44);
         $("#OpBeadHeight").attr('min',95);
-        $("#OpBeadHeight").attr({ 'disabled': false, required: true });
-        $("#OpBeadThickness").attr({ 'disabled': false, required: true });
+        $("#OpBeadHeight").attr({ 'readonly': false, required: true });
+        $("#OpBeadThickness").attr({ 'readonly': false, required: true });
     } else {  // JFDS 896
         $("#OpBeadHeight").removeAttr('min',44);
         $("#OpBeadThickness").removeAttr('min',95);
-        $("#OpBeadHeight").attr({ 'disabled': true, required: false });
-        $("#OpBeadThickness").attr({ 'disabled': true, required: false });
+        $("#OpBeadHeight").attr({ 'readonly': true, required: false });
+        $("#OpBeadThickness").attr({ 'readonly': true, required: false });
     }
 });
 
@@ -6365,3 +6367,45 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+
+// JFDS-700
+$(document).ready(function () {
+    $("#SL1Transom, #SL2Transom").change(function() {
+        updateTransomFields(); // Ensure fields are set correctly on page load
+    });
+});
+
+function updateTransomFields() {
+    toggleField("#SL1Transom", "#SL1TransomDepth");
+    toggleField("#SL2Transom", "#SL2TransomDepth");
+}
+
+function toggleField(transomSelector, depthSelector) {
+    if ($(transomSelector).val() === "No") {
+        $(depthSelector).prop({ required: false, disabled: true });
+    } else {
+        $(depthSelector).prop({ required: true, disabled: false });
+    }
+}
+function updateSL1TransomFields() {
+  const isNo = $('#SL1Transom').val() === 'No';
+  // Make inputs read-only (works for input/textarea). Keep values cleared when No.
+  $('#SL1TransomDepth, #SL1transomThickness')
+    .prop('readonly', isNo)
+    .prop('required', !isNo)
+    .toggleClass('readonly', isNo);
+
+  if (isNo) {
+    $('#SL1TransomDepth, #SL1transomThickness').val('');
+  }
+
+  // If those controls are <select> instead of <input>, disable them instead:
+  if ($('#SL1TransomDepth').is('select, [type=checkbox], [type=radio]') ||
+      $('#SL1transomThickness').is('select, [type=checkbox], [type=radio]')) {
+    $('#SL1TransomDepth, #SL1transomThickness').prop('disabled', isNo);
+  }
+}
+
+// run on load + on change
+$(document).ready(updateSL1TransomFields);
+$('#SL1Transom').on('change', updateSL1TransomFields);

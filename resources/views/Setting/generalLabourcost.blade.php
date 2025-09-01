@@ -82,7 +82,7 @@
                                     <input type='checkbox' class='check-btn'  id='DoorLeafFacingVaneer' name='DoorLeafFacingVaneer' @if(!empty($set->DoorLeafFacingVaneer) && $set->DoorLeafFacingVaneer== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Facing Vaneer</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Facing Veneer</span></h5>
                                         </div>
                                         <input type="hidden" class="DoorLeafFacingVaneer" name="type[]" value="DoorLeafFacingVaneer">
                                         <div class="col-md-6">
@@ -1444,7 +1444,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLight' name='SideLight' @if(!empty($set->SideLight) && $set->SideLight== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light Assembley</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 1 Assembly</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLight" name="type[]" value="SideLight">
                                         <div class="col-md-6">
@@ -1487,7 +1487,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLight2' name='SideLight2' @if(!empty($set->SideLight2) && $set->SideLight2== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 2 Assembley</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 2 Assembly</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLight2" name="type[]" value="SideLight2">
                                         <div class="col-md-6">
@@ -1531,7 +1531,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLightGlazing' name='SideLightGlazing' @if(!empty($set->SideLightGlazing) && $set->SideLightGlazing== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light Glazing</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side light 1 Glazing</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLightGlazing" name="type[]" value="SideLightGlazing">
                                         <div class="col-md-6">
