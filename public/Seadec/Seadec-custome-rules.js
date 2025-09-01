@@ -1927,6 +1927,8 @@ function ischangesfirerating(fire) {
         if (normalize(Fireratingchanges) !== normalize(fire)) {
             $("#doorLeafFacing").val('');
             $("#DoorDimensions").val('');
+            $("#frameMaterial").val('');
+            $("#frameMaterialNew").val('');
         }
     }
 }
