@@ -99,6 +99,7 @@
                                <input type="hidden" name="savedfirerating" id="savedfirerating" value="@if(isset($Item["FireRating"])){{$Item["FireRating"]}}@else{{''}}@endif">
                            </div>
                        </div>
+                       <input type="hidden" name="Fireratingchanges" id="Fireratingchanges" value="@if(isset($Item["FireRating"])){{$Item["FireRating"]}}@else{{''}}@endif">
                        <div class="col-md-6">
                            <div class="position-relative form-group">
                                <label for="doorsetType">Doorset Type

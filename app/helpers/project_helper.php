@@ -194,8 +194,29 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursid
             } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
                 $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
             }
-
-        }elseif($configurationDoor == 7){
+        } else if($configurationDoor == 5){
+            if ($fireRating=="FD30" || $fireRating=="FD30s") {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 510]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 510]
+                ]);
+            } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
+                $lippingSpecies = GetOptions(
+                    [
+                        ["lipping_species.Status", "=", 1],
+                        ["lipping_species.MaxValues", ">=", 690]
+                    ],
+                    "join",
+                    "lippingSpecies",
+                    "query",
+                    [],
+                    [["lipping_species.MinValues", ">=", 690]]
+                );
+            }
+        }
+        elseif($configurationDoor == 7){
             if ($foursided == 1) {
                 if ($fireRating=="FD30" || $fireRating=="FD30s") {
                     $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
