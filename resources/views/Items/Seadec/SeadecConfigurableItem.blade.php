@@ -8,6 +8,7 @@
         right: 0;
         top: 27px;
     }
+     .hidden-force { display: none !important; }
 </style>
 
 <div class="app-main__outer">
@@ -53,11 +54,11 @@
                                         <a class="btn btn-primary" data-toggle="tab" href="#frame-section">Frame</a>
                                         <input type="hidden" value="2039px">
                                     </li>
-                                    <li class="optionItem framehideshow">
+                                    <li class="optionItem framehideshow seadechide">
                                         <a class="btn btn-primary" data-toggle="tab" href="#over-panel-section">Overpanel/Fanlight Section</a>
                                         <input type="hidden" value="2656px">
                                     </li>
-                                    <li class="optionItem framehideshow">
+                                    <li class="optionItem framehideshow seadechide">
                                         <a class="btn btn-primary" data-toggle="tab" href="#side-light-section">Side Light</a>
                                         <input type="hidden" value="2958px">
                                     </li>
@@ -113,11 +114,11 @@
                             @include("Items.Seadec.SeadecDoorModules.Frame")
                         </div>
 
-                        <div id="over-panel-section" class="tab-pane fade framehideshow">
+                        <div id="over-panel-section" class="tab-pane fade framehideshow seadechide">
                             @include("Items.Seadec.SeadecDoorModules.OverPanel")
                         </div>
 
-                        <div id="side-light-section" class="tab-pane fade framehideshow">
+                        <div id="side-light-section" class="tab-pane fade framehideshow seadechide">
                             @include("Items.Seadec.SeadecDoorModules.SideLight")
                         </div>
 
