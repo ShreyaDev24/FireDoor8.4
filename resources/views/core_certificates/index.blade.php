@@ -39,10 +39,11 @@
                                 <td>{{ $certificate->fire_rating }}</td>
                                 <td>{{ $certificate->test_certificate_reference }}</td>
                                 <td>{{ $certificate->expiry_date }}</td>
-                                <td>
+                                <td><b>
                                     @if($certificate->document_path)
                                         <a href="{{ asset('/' . $certificate->document_path) }}" target="_blank">View</a>
                                     @endif
+                                </b>
                                 </td>
                                 <td>
                                     <a href="{{ route('core_certificates.edit', $certificate) }}" class="btn btn-sm btn-warning">Edit</a>
