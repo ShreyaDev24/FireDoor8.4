@@ -345,3 +345,18 @@ $(document).on('change','#NumberOfGrooveLeaf2',function(e){
         $('#numberOfGroove').val(0);
     }
 })
+
+function validateFrameDepth() {
+        const doorThickness = parseFloat(document.getElementById("doorThickness").value) || 0;
+        const plantonStopWidth = parseFloat(document.getElementById("plantonStopWidth").value) || 0;
+        const frameDepth = parseFloat(document.getElementById("frameDepth").value) || 0;
+
+        if (frameDepth < (doorThickness + plantonStopWidth)) {
+            swal("error", "Door Leaf Thickness and Plant on Stop exceeds Frame Depth!!!");
+        }
+}
+
+// Trigger validation when values change
+document.getElementById("doorThickness").addEventListener("input", validateFrameDepth);
+document.getElementById("plantonStopWidth").addEventListener("input", validateFrameDepth);
+document.getElementById("frameDepth").addEventListener("input", validateFrameDepth);
