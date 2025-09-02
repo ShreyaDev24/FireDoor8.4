@@ -154,8 +154,10 @@
                 <td class="tbl_extra" colspan="6">Frame</td>
                 <td class="tbl_leaft" colspan="1"></td>
                 <td class="tbl_extra" colspan="5">Architrave</td>
-                @if($HideCosts == 0)
+                @if($HideCosts == 0 || $HideCosts != 5)
                 <td class="tbl_leaft" colspan="8"></td>
+                @elseif ($HideCosts == 5)
+                <td class="tbl_leaft" colspan="5"></td>
                 @else
                 <td class="tbl_leaft" colspan="6"></td>
                 @endif
@@ -212,11 +214,13 @@
                 <th class="page2_2"><p> rW Db Rating </p></th>
                 <th class="page2_2"><p> Fire Rating </p></th>
                 <th class="page2_2"><p> Special Feature Refs </p></th>
-                @if($HideCosts == 0)
+                @if($HideCosts == 0 || $HideCosts != 5)
                 <th class="page2_2 tbl_last"><p> Doorset Price </p></th>
                 <th class="page2_2 tbl_last"><p> Ironmongery Price </p></th>
                 @endif
+                @if($HideCosts != 5)
                 <th class="page2_2 tbl_last"><p> Total Price Per Doorset </p></th>
+                @endif
             </tr>
 
             {!! $a !!}
