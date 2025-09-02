@@ -116,47 +116,9 @@ class OMMAnualController extends Controller
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
 
-        //Non Configurable Item
-        $nonConfigData = nonConfigurableItem($quatationId, $versionID, CompanyUsers());
-
-        $pdf4_2 = PDF::loadView('Company.pdf_files.nonconfigdoor', ['nonConfigData' => $nonConfigData, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
-        // return $pdf4->download('file4.pdf');
-        $path4_2 = public_path() . '/allpdfFile';
-        $fileName4_2 = $id . '4_2' . '.' . 'pdf';
-        $pdf4_2->save($path4_2 . '/' . $fileName4_2);
-
-        // Fourth PDF
-        // Details Door List PDF
-
-        $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
             ->where('quotation_version_items.version_id', $versionID)->get();
-        $i = 1;
-        $DoorDescription = '';
-        foreach ($shows as $show) {
-            if (!empty($show->DoorsetType)) {
-                $DoorDescription = DoorDescription($show->DoorsetType);
-            }
-
-            $a2 .=
-                '<tr>
-                <td>' . $show->doorNumber . '</td>
-                <td>' . $DoorDescription . '</td>
-                <td>' . $show->DoorType . '</td>
-                <td>' . round((($show->AdjustPrice) ? floatval($show->AdjustPrice) : floatval($show->DoorsetPrice)), 2) . '</td>
-                <td>' . round($show->IronmongaryPrice, 2) . '</td>
-                <td>' . round((($show->AdjustPrice) ? floatval($show->AdjustPrice) + floatval($show->IronmongaryPrice) : floatval($show->DoorsetPrice) + floatval($show->IronmongaryPrice)), 2) . '</td>
-                </tr>';
-            $i++;
-        }
-
-        $pdf4 = PDF::loadView('Order.pdf_files.detaildoorlist', ['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'customer' => $customer]);
-        // return $pdf3->download('file3.pdf');
-        $path4 = public_path() . '/allpdfFile';
-        $fileName4 = $id . '4' . '.' . 'pdf';
-        $pdf4->save($path4 . '/' . $fileName4);
-
         // Sixth PDF
         // Ironmongery Set
         $itemIronmon = Item::where('QuotationId', $quatationId)->where('VersionId', $versionID)->get();
@@ -609,9 +571,6 @@ class OMMAnualController extends Controller
                         <td>' . $fireRate . '</td>
                         <td>' . $COC . '</td>
                         <td>' . $SpecialFeatureRefs . '</td>
-                        <td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                        <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>
-                        <td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
                         </tr>
                         ';
             $i++;
@@ -619,20 +578,21 @@ class OMMAnualController extends Controller
             // }
         }
 
-        $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
 
         $a .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
                         <td class="tbl_bottom" colspan="39"></td>
-                        <td class="tbl_bottom">£' . round($SumDoorsetPrice, 2) . '</td>
-                        <td class="tbl_bottom">£' . round($SumIronmongaryPrice, 2) . '</td>
-                        <td class="tbl_bottom">£' . round($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
 
-        $pdf5 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
+            $pdf5 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => 5]);
+        }else{
+            $pdf5 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => 5]);
+        }
+
         // return $pdf4->download('file4.pdf');
         $path5 = public_path() . '/allpdfFile';
         $fileName5 = $id . '5' . '.' . 'pdf';
@@ -2946,8 +2906,6 @@ class OMMAnualController extends Controller
         $pdf2 = public_path() . '/allpdfFile' . '/' . $fileName2;
         $pdf3 = public_path() . '/allpdfFile' . '/' . $fileName3;
         $pdf_m_p_r = public_path() . '/allpdfFile' . '/' . $fileName_m_p_r;
-        $pdf4_2 = public_path() . '/allpdfFile' . '/' . $fileName4_2;
-        $pdf4 = public_path() . '/allpdfFile' . '/' . $fileName4;
         $pdf64 = '';
         if ($fileName64 !== '' && $fileName64 !== '0') {
             $pdf64 = public_path() . '/allpdfFile' . '/' . $fileName64;
@@ -2961,8 +2919,6 @@ class OMMAnualController extends Controller
         $pdfMerger->addPDF($pdf2, 'all');
         $pdfMerger->addPDF($pdf3, 'all');
         $pdfMerger->addPDF($pdf_m_p_r, 'all');
-        $pdfMerger->addPDF($pdf4_2, 'all');
-        $pdfMerger->addPDF($pdf4, 'all');
 
         if ($pdf64 !== '' && $pdf64 !== '0' && file_exists($pdf64)) {
             $pdfMerger->addPDF($pdf64, 'all');
