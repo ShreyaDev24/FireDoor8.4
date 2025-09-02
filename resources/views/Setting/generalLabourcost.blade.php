@@ -917,7 +917,7 @@
                                     <input type='checkbox' class='check-btn'  id='VisionPanelandFireRatingFD30' name='VisionPanelandFireRatingFD30' @if(!empty($set->VisionPanelandFireRatingFD30) && $set->VisionPanelandFireRatingFD30== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Vision Panel and FireRating FD-30(VP (Hockey Stick) - FD30 Fit)</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Vision Panel and FireRating NFR/FD-30(VP (Hockey Stick) - NFR/FD30 Fit)</span></h5>
                                         </div>
                                         <input type="hidden" class="VisionPanelandFireRatingFD30" name="type[]" value="VisionPanelandFireRatingFD30">
                                         <div class="col-md-6">
@@ -1005,7 +1005,7 @@
                                     <input type='checkbox' class='check-btn'  id='VisionPanelandFireRating2FD30' name='VisionPanelandFireRating2FD30' @if(!empty($set->VisionPanelandFireRating2FD30) && $set->VisionPanelandFireRating2FD30== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Vision Panel and FireRating FD-30(VP (Flush) - FD30 Fit)</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Vision Panel and FireRating NFR/FD-30(VP (Flush) - NFR/FD30 Fit)</span></h5>
                                         </div>
                                         <input type="hidden" class="VisionPanelandFireRating2FD30" name="type[]" value="VisionPanelandFireRating2FD30">
                                         <div class="col-md-6">
