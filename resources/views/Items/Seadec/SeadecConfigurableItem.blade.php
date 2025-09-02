@@ -1229,6 +1229,8 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     doorLeafFacingPrice('glazingBead',"{{$Item['GlazingBeads']}}");
     @endif
 
+    validateFrameDepth();
+
     });
     commanLeafType();
     function commanLeafType() {
