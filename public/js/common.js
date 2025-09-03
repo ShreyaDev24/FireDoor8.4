@@ -356,7 +356,8 @@ function validateFrameDepth() {
         }
 }
 
-// Trigger validation when values change
-document.getElementById("doorThickness").addEventListener("input", validateFrameDepth);
-document.getElementById("plantonStopWidth").addEventListener("input", validateFrameDepth);
-document.getElementById("frameDepth").addEventListener("input", validateFrameDepth);
+// Trigger validation only after leaving the field
+document.getElementById("doorThickness").addEventListener("blur", validateFrameDepth);
+document.getElementById("plantonStopWidth").addEventListener("blur", validateFrameDepth);
+document.getElementById("frameDepth").addEventListener("blur", validateFrameDepth);
+
