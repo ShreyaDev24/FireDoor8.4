@@ -2930,13 +2930,13 @@ function sideScreenBOM($request): void{
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
-        if($GeneralLabourCost->SprayFinishOf == 1){
-            $data = getMyLaborCost('SprayFinishOf', $GeneralLabourCost->genLaborCost);
-            $description = "SS - Spray Finish Of |".($GeneralLabourCost->SprayFinishOfManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
-            $unit_cost = ($GeneralLabourCost->SprayFinishOfManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
-        }
+        // if($GeneralLabourCost->SprayFinishOf == 1){
+        //     $data = getMyLaborCost('SprayFinishOf', $GeneralLabourCost->genLaborCost);
+        //     $description = "SS - Spray Finish Of |".($GeneralLabourCost->SprayFinishOfManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
+        //     $unit_cost = ($GeneralLabourCost->SprayFinishOfManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfMachineMinutes * ($data->labour_cost_per_machine/ 60));
+        //     $total_cost = $unit_cost * $QTYOfScreenType;
+        //     saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+        // }
 
         if($GeneralLabourCost->SprayFinishOfScreenframe == 1){
             $data = getMyLaborCost('SprayFinishOfScreenframe', $GeneralLabourCost->genLaborCost);
