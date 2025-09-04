@@ -183,11 +183,11 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                     str_replace('_', ' ', $value->SideLight1GlassType),
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ?
-                    ($value->SL1Height  - ($value->sideLight1FrameThickness * 2)) + $VisionPanelHeightFD60 :
-                    ($value->SL1Height  - ($value->sideLight1FrameThickness * 2)) + $VisionPanelHeightNFR,
+                    ($value->SL1Height  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightFD60 :
+                    ($value->SL1Height  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightNFR,
 
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? (($value->SL1Width  - ($value->sideLight1FrameThickness * 2)) + $VisionPanelWidthNFR) :
-                    (($value->SL1Width  - ($value->sideLight1FrameThickness * 2)) + $VisionPanelWidthFD60),
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? (($value->SL1Width  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthNFR) :
+                    (($value->SL1Width  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthFD60),
 
                     1,
                     '',
@@ -224,9 +224,9 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     $value->SideLight2GlassThickness,
 
                     str_replace('_', ' ', $value->SideLight2GlassType),
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? ($value->SL2Height  - ($value->sideLight2FrameThickness * 2)) + $VisionPanelHeightFD60 : ($value->SL2Height  - ($value->sideLight2FrameThickness * 2)) + $VisionPanelHeightNFR,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? ($value->SL2Height  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60 : ($value->SL2Height  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR,
 
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? (($value->SL2Width  - ($value->sideLight2FrameThickness * 2)) + $VisionPanelWidthNFR) : (($value->SL2Width  - ($value->sideLight2FrameThickness * 2)) + $VisionPanelWidthFD60),
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? (($value->SL2Width  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthNFR) : (($value->SL2Width  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthFD60),
 
                     1,
                     '',
