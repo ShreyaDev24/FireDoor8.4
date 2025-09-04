@@ -157,6 +157,9 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $stopleg2 += $allSettings['PlantOn.Butt']->Height;
                     }
                 }
+            }else{
+                $stophead += $Width;
+                $stopleg2 += $Height;
             }
 
             $foursidedFrame = 0;
