@@ -233,8 +233,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->OPHeigth - $value->FrameThickness + $Height;
-                $head = $value->OPWidth + $Width;
+                $leg = $value->OPHeigth - ($value->FrameThickness * 2) - $Height;
+                $head = $value->OPWidth - $Width;
 
                $foursidedFrame = 0;
                 $stopbottom = 0;
@@ -305,8 +305,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL1Height - $value->FrameThickness + $Height;
-                $head = $value->SL1Width + $Width;
+                $leg = $value->SL1Height - ($value->FrameThickness * 2) - $Height;
+                $head = $value->SL1Width - $Width;
 
                 $foursidedFrame = 0;
                 $stopbottom = 0;
@@ -377,8 +377,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL2Height - $value->FrameThickness + $Height;
-                $head = $value->SL2Width + $Width;
+                $leg = $value->SL2Height - ($value->FrameThickness * 2) - $Height;
+                $head = $value->SL2Width - $Width;
 
                 $foursidedFrame = 0;
                 $stopbottom = 0;
