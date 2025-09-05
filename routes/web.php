@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FavoriteController;
 
 /*
 |--------------------------------------------------------------------------
@@ -252,6 +253,8 @@ Route::prefix('options')->group(function (): void {
     Route::post('filter-leaf-type',[App\Http\Controllers\OptionController::class,'filter_leaf_type'])->name('filter-leaf-type');
 });
 
+Route::resource('favorites', FavoriteController::class);
+
 Route::prefix('quotation')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\DoorScheduleController::class,'add'])->name('quotation/add');
     Route::post('/store', [App\Http\Controllers\DoorScheduleController::class,'store'])->name('quotation/store');
@@ -274,10 +277,12 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excel-upload/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelupload'])->name('quotation/excel-upload');
     Route::post('/store-door', [App\Http\Controllers\DoorScheduleController::class,'storedoor'])->name('quotation/store-door');
     Route::post('/store-excel', [App\Http\Controllers\DoorScheduleController::class,'storexcel'])->name('quotation/store-excel');
+    Route::post('/non-config-store-excel', [App\Http\Controllers\DoorScheduleController::class,'nonconfigstorexcel'])->name('quotation/non-config-store-excel');
     Route::post('/edit-image', [App\Http\Controllers\DoorScheduleController::class,'editImage'])->name('quotation/edit-image');
     Route::post('/edit-image1', [App\Http\Controllers\DoorScheduleController::class,'editImage1'])->name('quotation/edit-image1');
     Route::post('/validateAlls', [App\Http\Controllers\DoorScheduleController::class,'validateAlls'])->name('quotation/validateAlls');
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
+    Route::post('/favoriteItemShow', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemShow'])->name('quotation/favoriteItemShow');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');
     Route::post('/favoriteDeleteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteDeleteItem'])->name('quotation/favoriteDeleteItem');
@@ -288,6 +293,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/parseImport', [App\Http\Controllers\DoorScheduleController::class,'parseImport'])->name('parseImport');
     Route::get('/import_fields', [App\Http\Controllers\DoorScheduleController::class,'import_fields'])->name('import_fields');
     Route::post('/import_process', [App\Http\Controllers\DoorScheduleController::class,'import_process'])->name('import_process');
+    Route::post('/import-non-config', [App\Http\Controllers\DoorScheduleController::class,'import_non_config'])->name('option/import-non-config');
 
 
 
@@ -303,7 +309,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/versionstore', [App\Http\Controllers\DoorScheduleController::class,'versionStore'])->name('quotation/versionstore');
     Route::post('/get-version', [App\Http\Controllers\DoorScheduleController::class,'getVersionQuotation'])->name('quotation/get-version');
     Route::match(['get','post'],'/records', [App\Http\Controllers\DoorScheduleController::class,'records'])->name('quotation/records');
-    Route::get('/printinvoice/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoice'])->name('printinvoice');
+    Route::get('/printinvoice/{v}/{qid}/{isActive?}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoice'])->name('printinvoice');
     Route::get('/printinvoiceinexcel/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcel'])->name('printinvoiceinexcel');
 
     Route::post('/testprintinvoice', [App\Http\Controllers\PrintInvoiceController::class,'testprintinvoice'])->name('testprintinvoice');
@@ -420,6 +426,8 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexport/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'export'])->name('export');
 
     Route::get('/excelexportNew/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'exportNew'])->name('exportNew');
+    Route::get('/ExcelExportNonConfig/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExcelExportNonConfig'])->name('ExcelExportNonConfig');
+    Route::get('/ExportNonConfig', [App\Http\Controllers\DoorScheduleController::class,'ExportNonConfig'])->name('ExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
@@ -516,6 +524,7 @@ Route::prefix('project')->group(function (): void {
     //end
     Route::get('/ironmongery-add',[App\Http\Controllers\ProjectController2::class,'ironmongeryadd'])->name('ironmongeryadd');
     Route::get('/ironmongery-list',[App\Http\Controllers\ProjectController2::class,'ironmongeryList'])->name('ironmongery-list');
+    Route::get('/new-ironmongery-list',[App\Http\Controllers\ProjectController2::class,'newironmongeryList'])->name('new-ironmongery-list');
     Route::get('/add-ironmongery/{pid}',[App\Http\Controllers\ProjectController2::class,'addironmongery'])->name('addironmongery');
     Route::post('/subaddironmongery',[App\Http\Controllers\ProjectController2::class,'subaddironmongery'])->name('subaddironmongery');
     Route::post('/storeaddironmongery',[App\Http\Controllers\ProjectController2::class,'storeaddironmongery'])->name('storeaddironmongery');
@@ -528,6 +537,16 @@ Route::prefix('project')->group(function (): void {
     Route::post('/activateproject',[App\Http\Controllers\ProjectController2::class,'activateproject'])->name('activateproject');
     Route::post('/deleteproject',[App\Http\Controllers\ProjectController2::class,'deleteproject'])->name('deleteproject');
     Route::post('/deleteProjectFile',[App\Http\Controllers\ProjectController::class,'deleteProjectFile'])->name('deleteProjectFile');
+
+
+    Route::get('/folders', [App\Http\Controllers\ProjectController2::class, 'foldersIndex'])->name('folders.index');
+    Route::get('/folders/create', [App\Http\Controllers\ProjectController2::class, 'foldersCreate'])->name('folders.create');
+    Route::post('/folders', [App\Http\Controllers\ProjectController2::class, 'foldersStore'])->name('folders.store');
+    Route::get('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersShow'])->name('folders.show');
+    Route::get('/folders/{folder}/edit', [App\Http\Controllers\ProjectController2::class, 'foldersEdit'])->name('folders.edit');
+    Route::put('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersUpdate'])->name('folders.update');
+    Route::delete('/folders/{folder}', [App\Http\Controllers\ProjectController2::class, 'foldersDestroy'])->name('folders.destroy');
+
 
     Route::post('/invite', [App\Http\Controllers\ProjectController2::class,'invite'])->name('project/invite');
     Route::get('/invitation/list', [App\Http\Controllers\ProjectController2::class,'invitation_list'])->name('project/invitation/list');

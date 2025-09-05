@@ -133,6 +133,18 @@ class DeantaController extends Controller
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
 
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
@@ -180,14 +192,13 @@ class DeantaController extends Controller
                             foreach($SelectedIronmongery as $select){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
+                        if(empty($IronmongeryInfoModel)){
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        }
 
-                                if (!empty($IronmongeryInfoModel)) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
+                        if (!empty($IronmongeryInfoModel)) {
+                            $additionalInfo[] = $IronmongeryInfoModel;
+                        }
                     }
                 }
             }
@@ -251,6 +262,7 @@ class DeantaController extends Controller
             'species' => $species,
             'default' => $defaultItemsstandard,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -304,6 +316,18 @@ class DeantaController extends Controller
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
         $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
         $IronmongeryInfoSet = [
@@ -350,14 +374,13 @@ class DeantaController extends Controller
                             foreach($SelectedIronmongery as $select){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
+                        if(empty($IronmongeryInfoModel)){
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        }
 
-                                if (!empty($IronmongeryInfoModel)) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
+                        if (!empty($IronmongeryInfoModel)) {
+                            $additionalInfo[] = $IronmongeryInfoModel;
+                        }
                     }
                 }
             }
@@ -390,6 +413,7 @@ class DeantaController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'species' => $species,
+            'folders' => $folders
         ]);
     }
 

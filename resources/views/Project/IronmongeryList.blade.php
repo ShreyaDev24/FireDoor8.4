@@ -78,6 +78,11 @@ input[type=number]::-webkit-outer-spin-button {
                                     <i class="fa fa-edit" aria-hidden="true"></i> Add Ironmongery Set
                                 </a>
                             </div>
+                            <div class="col-sm-6">
+                                <a href="{{ route('folders.create') }}" class="btn btn-info mb-3">
+                                    <i class="fas fa-folder-plus"></i> Add Folder
+                                </a>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-sm-12">

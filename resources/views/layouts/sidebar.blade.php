@@ -727,6 +727,27 @@
                         </ul>
                     </li>
 
+                   <li class="mm-{{ Request::segment(1) == 'favorites' ? 'active' : '' }}">
+                        <a href="#">
+                            <i class="metismenu-icon">
+                                <i class="fa fa-heart"></i>
+                            </i>
+                            Favourite
+                            <i class="metismenu-state-icon">
+                                <i class="fa fa-caret-down"></i>
+                            </i>
+                        </a>
+                        <ul>
+                            <li class="submm-{{ Request::routeIs('favorites.index') ? 'active' : '' }}">
+                                <a href="{{ route('favorites.index') }}">
+                                    <i class="metismenu-icon"></i>
+                                    Favourite List
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+
 
                     @if(Auth::user()->UserType=='2')
 
@@ -1146,10 +1167,17 @@
                                         Non Configurable Items
                                     </a>
                                 </li>
-                                <li class="mm-{{ (Request::segment(2) == 'ironmongery-list') ? 'active' : ''}}">
+                                {{-- <li class="mm-{{ (Request::segment(2) == 'ironmongery-list') ? 'active' : ''}}">
                                     <a href="{{route('ironmongery-list')}}">
                                         <i class="metismenu-icon"></i>
                                         Ironmongery Set
+                                    </a>
+                                </li> --}}
+
+                                <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
+                                    <a href="{{route('folders.index')}}">
+                                        <i class="metismenu-icon"></i>
+                                        Ironmongery Folder
                                     </a>
                                 </li>
 

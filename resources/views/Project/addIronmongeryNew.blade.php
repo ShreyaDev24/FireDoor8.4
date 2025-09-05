@@ -153,7 +153,7 @@ input[type=number]::-webkit-outer-spin-button {
                             </div>
                             <div class="">
                                 <div class="form-row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="Setname">Set Name<span class="text-danger">*</span></label>
                                         <div class="input-icons">
                                             <input type="text" name="Setname" id="Setname" class="form-control" value="@if(isset($item)){{$item->Setname}}@else{{old('Setname')}}@endif" required>
@@ -172,6 +172,19 @@ input[type=number]::-webkit-outer-spin-button {
 
                                         </div>
                                     </div>
+                                     <div class="col-md-3">
+                                        <label for="folder_id">Add to Folder (optional):</label>
+                                        <select name="folder_id" id="folder_id" class="form-control">
+                                            <option value="">-- Select Folder --</option>
+                                            @foreach($folders as $folder)
+                                                <option value="{{ $folder->id }}"
+                                                    @if(isset($item) && $item->folders->contains($folder->id)) selected @endif>
+                                                    {{ $folder->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+
                                     <div class="col-md-12"></div>
                                 </div>
                                 <div class="form-row main-form">
@@ -414,12 +427,10 @@ input[type=number]::-webkit-outer-spin-button {
                 success: function(result){ console.log(result)
                     if(result.status=="ok"){
                         $("#ironIronmongerydata").val(JSON.stringify(result.data));
-                        $("#miscellaneousIronmongerydata").val(JSON.stringify(result.miscellaneousdata));
                         $("#currency").val(result.currency);
                         // alert(result.data)
                     }else{
                         $("#ironIronmongerydata").html('');
-                        $("#miscellaneousIronmongerydata").html('');
                     }
                 }
             });
@@ -520,15 +531,12 @@ input[type=number]::-webkit-outer-spin-button {
             ironCategoryName = 'Push Plates';
         }
         var data = $("#ironIronmongerydata").val();
-        var miscellaneousdata = $("#miscellaneousIronmongerydata").val();
         var currency = $("#currency").val();
 
         if(data!=''){
             data =  JSON.parse(data);
-            miscellaneousdata =  JSON.parse(miscellaneousdata);
 
             var lenght = data.length;
-            var lenght1 = miscellaneousdata.length;
             innerHtml = '';
             for(var index = 0; index<lenght;index++){
                 if(data[index].Category==ironCategoryType){

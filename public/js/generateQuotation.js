@@ -190,6 +190,54 @@ $(function(){
         }
     };
 
+    ElevationDrawing = function() {
+        $('.loader').css({'display':'block'});
+        var printInvoiceUrl = $("#printInvoiceUrl").val();
+        var bomTag = $("#bomTag").val();
+        var isActive = true;
+        if (currentVersion != 0) {
+            // if(bomTag > 0){
+            let url = printInvoiceUrl + '/' + quotationId + '/' + currentVersion + '/' + isActive;
+            var request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if(request.readyState == 4) {
+                    if(request.status == 200) {
+                        console.log(request.response); // should be a blob
+                        var blob = request.response;
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "ElevationDrawing "+generatedId.replace('#','')+"-"+versionnumber+".pdf";
+                        link.click();
+                        $('.loader').css({'display':'none'});
+                    } else if(request.responseText != "") {
+                        $('.loader').css({'display':'none'});
+                        swal("Oops!", "Please fill the required field to generate the quote!", "error");
+                        console.log(request.responseText);
+                    }
+                } else if(request.readyState == 2) {
+                    if(request.status == 200) {
+                        request.responseType = "blob";
+                        var blob = request.response;
+                        var link = document.createElement('a');
+                        link.href = window.URL.createObjectURL(blob);
+                        link.download = "ElevationDrawing"+generatedId+"-"+versionnumber+".pdf";
+                        link.click();
+                        $('.loader').css({'display':'none'});
+                    } else {
+                        request.responseType = "text";
+                        $('.loader').css({'display':'none'});
+                        swal("Oops!", "Please fill the required field to generate the quote!", "error");
+                    }
+                }
+            };
+            request.open("GET", url, true);
+            request.send();
+        } else {
+            $('.loader').css({'display':'none'});
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+
 
     BuildOfMaterial = function(){
         $('.loader').css({'display':'block'});

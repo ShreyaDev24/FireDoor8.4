@@ -99,7 +99,7 @@
                                                     @endif
                                                     </label>
                                                     {{--  <label for="Rebated_Height" style="display: none;">Rebated Depth</label>  --}}
-                                                    <input type="number" @if(empty($Item['ScallopedHeight'])){{'readonly'}}@endif name="ScallopedHeight" id="ScallopedHeight" class="form-control"
+                                                    <input type="number" @if(empty($Item['ScallopedHeight'])){{'readonly'}}@endif name="ScallopedHeight" id="ScallopedHeight" class="form-control change-event-calulation"
                                                     value="@if(isset($Item['ScallopedHeight'])){{$Item['ScallopedHeight']}}@else{{'0'}}@endif">
                                                 </div>
                                             </div>
@@ -128,7 +128,7 @@
                                                     </label>
                                                     <label for="Rebated_Height" style="display: none;">Rebated Depth</label>
                                                     <input type="number" @if(empty($Item['RebatedHeight'])){{'readonly'}}@endif min="12" name="rebatedHeight"
-                                                        id="rebatedHeight" class="form-control"
+                                                        id="rebatedHeight" class="form-control change-event-calulation"
                                                         value="@if(isset($Item['RebatedHeight'])){{$Item['RebatedHeight']}}@else{{'0'}}@endif">
                                                 </div>
                                             </div>
@@ -213,7 +213,7 @@
                                                     @endif
                                                     </label>
                                                     <select name="frameFinish" required id="frameFinish"
-                                                        class="form-control change-event-calulation">
+                                                        class="form-control change-event-calulation" required>
                                                         <option value="">Select Frame finish</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='Frame_Finish')

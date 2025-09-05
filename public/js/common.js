@@ -47,6 +47,8 @@ function floor_finish_change(){
 
     }
     swingTypeFrameType();
+    let elements = $(this);
+    render(elements);
 }
 
 $(document).on('click','#swingType',function(e){
@@ -66,7 +68,7 @@ function swingTypeFrameType(){
         // Refresh Select2 UI
         $("#frameType").trigger("change");
     }else if($("#swingType").val() == 'SA'){
-        let frameType = $("#frametypevalue").val();
+        let frameType = $("#frameType").val() || $("#frametypevalue").val();
         $("select[name=frameType]").val(frameType).trigger("change");
         $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
         $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
@@ -74,15 +76,10 @@ function swingTypeFrameType(){
         // $("#frameType").val('').trigger('change');
         $('#foursidedframe').prop('disabled', false);
     }
-    if (
-        !url.includes("edit-vicaima-door-core-item") &&
-        !url.includes("add-vicaima-door-core-item")
-    ) {
-        setTimeout(function () {
-            framTypeChangeInputEnableDisable();
-            frameThicknessChange();
-        }, 500);
-    }
+    setTimeout(function () {
+        framTypeChangeInputEnableDisable();
+        frameThicknessChange();
+    }, 500);
 }
 
 

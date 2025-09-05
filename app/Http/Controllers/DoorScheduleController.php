@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Crypt;
 use App\Models\Item;
 use App\Models\DoorSchedule;
 use App\Models\DoorDimension;
+use App\Models\Favorite;
 use App\Models\IntumescentSealLeafType;
 use Session;
 use Maatwebsite\Excel\Facades\Excel;
@@ -16,6 +17,8 @@ use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
 use App\Exports\ScheduleOrderNew;
+use App\Exports\ExportNonConfig;
+use App\Exports\NonConfig;
 use App\Exports\ScheduleOrderVicaima;
 use App\Exports\ScheduleOrder2;
 use App\Exports\BomDoorTypeExport;
@@ -620,14 +623,29 @@ class DoorScheduleController extends Controller
     {
         $valid = $request->validate(
             [
-                'doortypeId' => 'required',
-                'doornumber' => 'required'
+                'doortypeId'    => 'required',
+                'door_mode'     => 'required|in:single,range',
+                'doornumber'    => 'required_if:door_mode,single',
+                'prefix'        => 'required_if:door_mode,range',
+                'range_start'   => 'required_if:door_mode,range|nullable|integer',
+                'range_end'     => 'required_if:door_mode,range|nullable|integer|gte:range_start',
             ],
             [
-                'doortypeId.required' => 'Door type field is required.',
-                'doornumber.required' => 'Door number field is required.'
+                'doortypeId.required'     => 'Door type field is required.',
+                'doornumber.required'     => 'Door number field is required.',
+                'door_mode.required'      => 'Door mode is required.',
+                'door_mode.in'            => 'Door mode must be either single or range.',
+                'doornumber.required_if'  => 'Door number is required when mode is single.',
+                'prefix.required_if'      => 'Prefix is required when mode is range.',
+                'range_start.required_if' => 'Start of range is required.',
+                'range_start.integer'     => 'Start of range must be an integer.',
+                'range_end.required_if'   => 'End of range is required.',
+ //               'range_end.integer'       => 'End of range must be an integer.',
+                'range_end.gte'           => 'End of range must be greater than or equal to start.',
             ]
         );
+
+
         $QuotationId = $request->quotationID;
         $itemid = $request->doortypeId;
         $floor = $request->floor;
@@ -639,63 +657,169 @@ class DoorScheduleController extends Controller
         $qq->editBy = Auth::user()->id;
         $qq->updated_at = date('Y-m-d H:i:s');
         $qq->save();
-        // $aa = ItemMaster::where('id',$itemmasterId)->first();
-        // $doorType = $aa->doorType;
-        // $itemID = $aa->itemID;
-        // check these `Door Type` with `Door Number` with `Quotation Id` is not duplicate entry
-        // it show message if it is more than 0 (zero) - Door Type with Door Number is already exist.
 
-        $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
+        if($request->copy_door == 1){
+            if (!empty($itemid)) {
 
-        // $mm = Item::join('item_master','items.itemId','item_master.itemID')->join('quotation_version_items','quotation_version_items.itemmasterID','item_master.id')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'quotation_version_items.version_id'=>$versionID])->count();
-        if ($mm > 0) {
-            return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
-        } else {
-            $itemmaster = new ItemMaster();
-            $itemmaster->itemID = $itemid;
-            $itemmaster->doorNumber = $DoorNo;
-            $itemmaster->floor = $floor;
-            $itemmaster->location = $location;
-            $itemmaster->save();
+                // if(!empty($VersionId)){
+                $OldQuotationItems = Item::select('items.*')->join('item_master', 'item_master.itemID', 'items.itemId')->where('items.QuotationId', $QuotationId)->where('items.itemId', $itemid)->get()->first();
 
-            $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
-            $itemmasterID = $kl->id;
-            if ($versionID > 0) {
-                $qv = new QuotationVersionItems();
-                $qv->version_id = $versionID;
-                $qv->itemID = $itemid;
-                $qv->itemmasterID = $itemmasterID;
-                $qv->Status = 1;
-                $qv->created_at = date('Y-m-d H:i:s');
-                $qv->updated_at = date('Y-m-d H:i:s');
-                $qv->save();
-            }
-
-            $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
-
-            $quotation = Quotation::where('id',$QuotationId)->first();
-
-            BOMUpdate($data, $quotation->configurableitems);
-
-            $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-            $GTSellPrice = 0;
-            $GTSellPriceTotal = 0;
-            if(!empty($BOMCalculation)){
-                foreach($BOMCalculation as $value){
-                    if($value->Category != 'Ironmongery&MachiningCosts'){
-                        $GTSellPrice += $value->GTSellPrice;
-                    }
+                $door = $OldQuotationItems->DoorType . ' Copy';
+                $mm =  Item::where(['QuotationId' => $QuotationId, 'DoorType' => $door])->get()->first();
+                if (!empty($mm) && $OldQuotationItems->DoorType . ' Copy' == $mm->DoorType) {
+                    $errorlist = 'Door Type ' . $mm->DoorType . ' is already exist for these quotation.';
+                    return redirect()->back()->withInput()->with('error',  $errorlist);
                 }
 
-                $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                $Items = $OldQuotationItems->replicate();
+                $Items->DoorType = $OldQuotationItems->DoorType . ' Copy';
+                $Items->itemId = Items::max('itemId') + 1;
+                $Items->save();
+
+                $NewQuotationItemId = $Items->itemId;
+                $NewDoorType = $Items->DoorType;
+
+                $version_id = QuotationVersion::where('quotation_id', $OldQuotationItems->QuotationId)->where('id', $versionID)->value('version');
+
+                if ($versionID == 0) {
+                    $BOMCalculation = BOMCalculation::where('QuotationId', $OldQuotationItems->QuotationId)->where('itemId', $OldQuotationItems->itemId)->get();
+                } else {
+                    $BOMCalculation = BOMCalculation::where('QuotationId', $OldQuotationItems->QuotationId)->where('itemId', $OldQuotationItems->itemId)->where('VersionId', $version_id)->get();
+                }
+
+                if ($BOMCalculation != null) {
+                    foreach ($BOMCalculation as $IKey => $IVal) {
+                        $BOMCalculationItems = $IVal->replicate();
+                        $BOMCalculationItems->id = BOMCalculation::max('id') + 1;
+                        $BOMCalculationItems->itemId = $NewQuotationItemId;
+                        $BOMCalculationItems->DoorType = $NewDoorType;
+                        $BOMCalculationItems->save();
+                    }
+                }
             }
 
-            $Item = Item::where('itemId', $itemid)->update([
-                'DoorsetPrice' => $GTSellPriceTotal
-             ]);
-            // BOMQuatityOfDoorUpdate($itemid, $QuotationId);
+            $itemid = $NewQuotationItemId;
         }
+
+        $doorMode = $request->door_mode;
+
+        if ($doorMode === 'single') {
+            $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
+
+            if ($mm > 0) {
+                return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
+            } else {
+
+                $itemmaster = new ItemMaster();
+                $itemmaster->itemID = $itemid;
+                $itemmaster->doorNumber = $DoorNo;
+                $itemmaster->floor = $floor;
+                $itemmaster->location = $location;
+                $itemmaster->save();
+
+                $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
+                $itemmasterID = $kl->id;
+                if ($versionID > 0) {
+                    $qv = new QuotationVersionItems();
+                    $qv->version_id = $versionID;
+                    $qv->itemID = $itemid;
+                    $qv->itemmasterID = $itemmasterID;
+                    $qv->Status = 1;
+                    $qv->created_at = date('Y-m-d H:i:s');
+                    $qv->updated_at = date('Y-m-d H:i:s');
+                    $qv->save();
+                }
+
+                $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
+
+                $quotation = Quotation::where('id',$QuotationId)->first();
+
+                BOMUpdate($data, $quotation->configurableitems);
+
+                $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
+                $GTSellPrice = 0;
+                $GTSellPriceTotal = 0;
+                if(!empty($BOMCalculation)){
+                    foreach($BOMCalculation as $value){
+                        if($value->Category != 'Ironmongery&MachiningCosts'){
+                            $GTSellPrice += $value->GTSellPrice;
+                        }
+                    }
+
+                    $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
+                    $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                }
+
+                $Item = Item::where('itemId', $itemid)->update([
+                    'DoorsetPrice' => $GTSellPriceTotal
+                ]);
+            }
+        }else if ($doorMode === 'range') {
+            $prefix = $request->prefix;
+            $start = (int) $request->range_start;
+            $end = (int) $request->range_end;
+
+            if ($start > $end) {
+                return back()->withErrors(['range_start' => 'Start number cannot be greater than end number.']);
+            }
+
+            // Store multiple records
+            for ($i = $start; $i <= $end; $i++) {
+                $DoorNo = $prefix . $i;
+
+                $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
+
+                if ($mm > 0) {
+                    return redirect()->back()->withInput()->with('error', 'Door Number ' . $DoorNo . ' is already exist for these quotation.');
+                } else {
+
+                    $itemmaster = new ItemMaster();
+                    $itemmaster->itemID = $itemid;
+                    $itemmaster->doorNumber = $DoorNo;
+                    $itemmaster->floor = $floor;
+                    $itemmaster->location = $location;
+                    $itemmaster->save();
+
+                    $kl = ItemMaster::orderBy('id', 'desc')->limit(1)->first();
+                    $itemmasterID = $kl->id;
+                    if ($versionID > 0) {
+                        $qv = new QuotationVersionItems();
+                        $qv->version_id = $versionID;
+                        $qv->itemID = $itemid;
+                        $qv->itemmasterID = $itemmasterID;
+                        $qv->Status = 1;
+                        $qv->created_at = date('Y-m-d H:i:s');
+                        $qv->updated_at = date('Y-m-d H:i:s');
+                        $qv->save();
+                    }
+
+                    $data = Item::where(['items.QuotationId' => $QuotationId, 'items.itemId' => $itemid])->first();
+
+                    $quotation = Quotation::where('id',$QuotationId)->first();
+
+                    BOMUpdate($data, $quotation->configurableitems);
+
+                    $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
+                    $GTSellPrice = 0;
+                    $GTSellPriceTotal = 0;
+                    if(!empty($BOMCalculation)){
+                        foreach($BOMCalculation as $value){
+                            if($value->Category != 'Ironmongery&MachiningCosts'){
+                                $GTSellPrice += $value->GTSellPrice;
+                            }
+                        }
+
+                        $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
+                        $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+                    }
+
+                    $Item = Item::where('itemId', $itemid)->update([
+                        'DoorsetPrice' => $GTSellPriceTotal
+                    ]);
+                }
+            }
+        }
+
 
         return redirect()->back()->with('success', 'Door Created Successfully!');
     }
@@ -1857,7 +1981,61 @@ class DoorScheduleController extends Controller
         }
     }
 
+    public function import_non_config(Request $request)
+    {
+        $UserId = Auth::user()->id;
 
+        $importedCount = 0;
+        $skippedRows = 0;
+
+        try {
+            $data = Excel::toArray(new DoorScheduleImport, $request->file('ExcelFile'));
+
+            if (empty($data[0])) {
+                return redirect()->back()->with('error', 'The uploaded file is empty.');
+            }
+
+            $i = 0;
+            foreach ($data[0] as $row) {
+                if ($i++ == 0) continue; // skip header
+
+                $j = 0;
+                $sno = trim((string) $row[$j++]);
+                $name = trim((string) $row[$j++]);
+                $product_code = trim((string) $row[$j++]);
+                $description = trim((string) $row[$j++]);
+                $unit = trim((string) $row[$j++]);
+                $price = (float) trim((string) $row[$j++]);
+
+                if(!empty($name) && !empty($product_code) && !empty($description) && !empty($unit) && !empty($price)){
+                    $data = new NonConfigurableItems();
+                    $data->name = $name;
+                    $data->description = $description;
+                    $data->product_code = $product_code;
+                    $data->unit = $unit;
+                    $data->price = $price;
+                    $data->userId = Auth::user()->id;
+                    $data->save();
+
+                    $importedCount++;
+                } else {
+                    $skippedRows++;
+                }
+            }
+
+            if ($importedCount > 0) {
+                $msg = "{$importedCount} item(s) imported successfully.";
+                if ($skippedRows > 0) {
+                    $msg .= " {$skippedRows} row(s) skipped due to empty/missing required fields.";
+                }
+                return redirect()->back()->with('success', $msg);
+            } else {
+                return redirect()->back()->with('error', 'No items were imported. Please check the file contents.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while importing: ' . $e->getMessage());
+        }
+    }
 
     public function storedoor(request $request)
     {
@@ -1887,6 +2065,84 @@ class DoorScheduleController extends Controller
         return null;
     }
 
+    public function nonconfigstorexcel(Request $request)
+    {
+        $quotationId = $request->quotationId;
+        $versionId = $request->versionId;
+        $UserId = Auth::user()->id;
+
+        $quotation = Quotation::find($quotationId);
+        if (!$quotation) {
+            return redirect()->back()->with('error', 'Quotation not found.');
+        }
+
+        $importedCount = 0;
+        $skippedRows = 0;
+
+        try {
+            $data = Excel::toArray(new DoorScheduleImport, $request->file('NonConfigExcelFile'));
+
+            if (empty($data[0])) {
+                return redirect()->back()->with('error', 'The uploaded file is empty.');
+            }
+
+            $i = 0;
+            foreach ($data[0] as $row) {
+                if ($i++ == 0) continue; // skip header
+
+                $j = 0;
+                $sno = trim((string) $row[$j++]);
+                $name = trim((string) $row[$j++]);
+                $product_code = trim((string) $row[$j++]);
+                $description = trim((string) $row[$j++]);
+                $unit = trim((string) $row[$j++]);
+                $qty = (int) trim((string) $row[$j++]);
+                $price = (float) trim((string) $row[$j++]);
+                $total = (float) trim((string) $row[$j++]);
+
+                $NonConfigurableItems = NonConfigurableItems::where('name',$name)->where('product_code',$product_code)->first();
+
+                if(!empty($NonConfigurableItems)){
+
+                    $price = $NonConfigurableItems->price;
+                    $margin = discountQuotationValue($quotationId,$versionId);
+                    if($margin != 0){
+                        $QuoteSummaryDiscountValue = ($price * $margin) / 100;
+                        $price = ($margin > 0)? ($price + $QuoteSummaryDiscountValue): ($price - $QuoteSummaryDiscountValue);
+                    }
+
+                    $total_price = $qty * $price;
+                    $currencyPrice = getCurrencyRate($quotationId);
+
+                    $data = new NonConfigurableItemStore();
+                    $data->quotationId = $quotationId;
+                    $data->versionId = $versionId;
+                    $data->nonConfigurableId = $NonConfigurableItems->id;
+                    $data->price = $price * $currencyPrice;
+                    $data->quantity = $qty;
+                    $data->total_price = $total_price * $currencyPrice;
+                    $data->userId = user_id();
+                    $data->save();
+
+                    $importedCount++;
+                } else {
+                    $skippedRows++;
+                }
+            }
+
+            if ($importedCount > 0) {
+                $msg = "{$importedCount} item(s) imported successfully.";
+                if ($skippedRows > 0) {
+                    $msg .= " {$skippedRows} row(s) skipped due to unmatched item(s).";
+                }
+                return redirect()->back()->with('success', $msg);
+            } else {
+                return redirect()->back()->with('error', 'No items were imported. Please check the file contents.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'An error occurred while importing: ' . $e->getMessage());
+        }
+    }
 
 
     public function storexcel(request $request)
@@ -4285,8 +4541,11 @@ class DoorScheduleController extends Controller
                 $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
+            $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
+
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
+                'favorites' => $favorites,
                 'SideScreenData' => $SideScreenData,
                 'quotation_data' => $quotation_data,
                 'quotationId' => $Id,
@@ -5053,6 +5312,32 @@ class DoorScheduleController extends Controller
 
     }
 
+    public function ExportNonConfig(Request $request)
+    {
+        return Excel::download(
+            new NonConfig(),
+            'Non-Config-List.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
+    }
+
+    public function ExcelExportNonConfig($quotationId, $versionID)
+    {
+        return Excel::download(
+            new ExportNonConfig($quotationId, $versionID),
+            'Non-Config.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]
+        );
+
+    }
+
     public function ExportBomCalculation($quotationId,$versionID)
     {
         $quotation = Quotation::where('quotation.id',$quotationId)->first();
@@ -5281,6 +5566,19 @@ class DoorScheduleController extends Controller
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id', $id)->first();
 
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
         // } else {
@@ -5406,6 +5704,7 @@ class DoorScheduleController extends Controller
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -5513,6 +5812,20 @@ class DoorScheduleController extends Controller
         $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
+
         $CompanyId = null;
         if ($quotation != '') {
             $CompanyId = $quotation->CompanyId;
@@ -5614,6 +5927,7 @@ class DoorScheduleController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'folders' => $folders
         ]);
     }
 
@@ -8472,6 +8786,66 @@ class DoorScheduleController extends Controller
             );
     }
 
+    public function favoriteItemShow(Request $request)
+    {
+        $id = $request->id;
+        if(!empty($id)){
+            $UserIds = CompanyMultiUsers();
+            $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
+            ->join('favorite','favorite.id','favorite_item.favorite_id')
+            ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
+            ->where('favorite_item.favorite_id',$id)
+            ->wherein('favorite_item.userId', $UserIds)->get();
+
+           $html = '';
+
+            if (!empty($Favorite) && $Favorite != '') {
+                $html .= '<table class="table table-bordered">';
+                $html .= '<thead>';
+                $html .= '<tr>';
+                $html .= '<th>Favourite Name</th>';
+                $html .= '<th>Door Type</th>';
+                $html .= '<th>Assign</th>';
+                $html .= '</tr>';
+                $html .= '</thead>';
+                $html .= '<tbody>';
+
+                foreach ($Favorite as $value) {
+                    $html .= '<tr>';
+                    $html .= '<td>' . $value->name . '</td>';
+                    $html .= '<td>' . $value->DoorType . '</td>';
+
+                    $html .= '<td>';
+                    $html .= '<button onclick="favoriteItemAdd(\'' . $value->itemId . '\', \'' . $value->itemMasterId . '\', \'' . $value->quotationId . '\', \'' . $value->versionId . '\')" class="btn btn-success">Assign</button>';
+                    $html .= '</td>';
+
+                    $html .= '</tr>';
+                }
+
+                $html .= '</tbody>';
+                $html .= '</table>';
+            } else {
+                $html .= '<p>Data not found!</p>';
+            }
+
+            $response = [
+                'status' => true,
+                'result' => $html
+            ];
+        }else{
+            $response = [
+                'status' => false,
+                'result' => 'something went wrong!'
+            ];
+        }
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
     public function favoriteItem(Request $request)
     {
         if (empty($request->versionId)) {
@@ -8479,11 +8853,12 @@ class DoorScheduleController extends Controller
         }
 
         // echo $request->itemId;die;
-        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId)) {
+        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId) && !empty($request->favName)) {
             $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('userId', Auth::user()->id)->get()->first();
             if (empty($Favorite)) {
                 $FavoriteItem = new FavoriteItem();
                 $FavoriteItem->itemId = $request->itemId;
+                $FavoriteItem->favorite_id = $request->favName;
                 $FavoriteItem->itemMasterId = $request->itemMasterId;
                 $FavoriteItem->quotationId = $request->quotationId;
                 $FavoriteItem->versionId = $request->versionId;
@@ -8587,7 +8962,7 @@ class DoorScheduleController extends Controller
                 ) {
                     $response = [
                         'status' => false,
-                        'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
+                        'msg' => 'The selected Favourite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
                     ];
                     return response()->json(
                         $response,

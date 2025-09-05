@@ -413,10 +413,10 @@ $(".change-event-calulation").change(function(){
         GapAdditionalNumber = 3;
         var leafWidth1 = (soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap))/2;
         if($("#frameType").val() == 'Scalloped'){
-            leafWidth1 = (soWidth - (tollerance * TolleranceAdditionalNumber) - ((framethikness - ScallopedHeight) * 2) - (GapAdditionalNumber * gap)) / 2;
+           leafWidth1 = (soWidth - (tollerance * 2) - (framethikness * 2) - (gap * 3) + (ScallopedHeight * 2)) / 2;
             console.log(
-                `(${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - ((${framethikness} - ${ScallopedHeight}) * 2) - (${GapAdditionalNumber} * ${gap})) / 2 = LeafWidth1 = LeafWidth2 = ${leafWidth1}`
-                );
+                `(${soWidth}) - (${tollerance} * 2) - (${framethikness} * 2) - (${gap} * 3) + (${ScallopedHeight} * 2) = DD Scalloped LeafWidth1 ${leafWidth1}`
+            );
         }
         // $("#leafWidth2").val(leafWidth1).attr('readonly',true);
         // $("#leafWidth1").val(leafWidth1);
@@ -438,11 +438,10 @@ $(".change-event-calulation").change(function(){
         GapAdditionalNumber = 2;
         var leafWidth1 = soWidth-(tollerance*TolleranceAdditionalNumber)-(framethikness*FrameThicknessAdditionalNumber)-(GapAdditionalNumber*gap);
         if($("#frameType").val() == 'Scalloped'){
-            leafWidth1 = soWidth - (tollerance * TolleranceAdditionalNumber) - (framethikness - ScallopedHeight) - framethikness - (GapAdditionalNumber * gap);
-            console.log(
-            `${soWidth} - (${tollerance} * ${TolleranceAdditionalNumber}) - (${framethikness} - ${ScallopedHeight}) - ${framethikness} - (${GapAdditionalNumber} * ${gap}) = LeafWidth1 ${leafWidth1}`
-            );
-
+           leafWidth1 = soWidth - (tollerance * 2) - (framethikness * 2) - (gap * 2) + ScallopedHeight * 1;
+                console.log(
+                `${soWidth} - (${tollerance} * 2) - (${framethikness} * 2) - (${gap} * 2) + (${ScallopedHeight} * 1) = Scalloped LeafWidth1 ${leafWidth1}`
+                );
         }
         $("#leafWidth2").val(0).attr('readonly',true);
 
@@ -474,6 +473,16 @@ $(".change-event-calulation").change(function(){
             $("#leafWidth2").val(leafWidth2).attr('readonly',true);
         }
 
+    }
+    var calculationOfLeafHeight = soHeight-tollerance-framethikness-undercut-gap;
+    let foursidedframe = document.getElementById("foursidedframe");
+    if (foursidedframe.checked) {
+        calculationOfLeafHeight = soHeight - (tollerance *2) - (framethikness * 2) - (gap * 2);
+    }
+    if(withoutFrameId == 1){
+        $("#leafHeightNoOP").attr('readonly',false);
+    }else{
+        $("#leafHeightNoOP").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
     }
     // leaf height clculation and hide show OP leaping thickness , OP height, OP transom, and Transom thickness acording to Over panel
     if(overPanel=="Fan_Light"){
@@ -528,16 +537,7 @@ $(".change-event-calulation").change(function(){
     }else{
 
         // $("#SL1Height").val(leafHeightNoOP).attr('readonly',true);
-        var calculationOfLeafHeight = soHeight-tollerance-framethikness-undercut-gap;
-        let foursidedframe = document.getElementById("foursidedframe");
-        if (foursidedframe.checked) {
-            calculationOfLeafHeight = soHeight - (tollerance *2) - (framethikness * 2) - (gap * 2);
-        }
-        if(withoutFrameId == 1){
-            $("#leafHeightNoOP").attr('readonly',false);
-        }else{
-            $("#leafHeightNoOP").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
-        }
+
 
         if($("#sideLight1").val() == "Yes"){
             SideLightHeight('sideLight1');

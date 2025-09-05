@@ -301,41 +301,45 @@ const render = (CustomElement = null) => {
             FrameHeightForMap = FrameHeight / 5;
         }
 
-        var UnderCut = 0;
-        if (FloorFinish > 0) {
-            if ($("#fireRating").val() == 'FD30' || $("#fireRating").val() == 'FD60') {
-                UnderCut = FloorFinish + 8;
-            } else if ($("#fireRating").val() == 'FD30s' || $("#fireRating").val() == 'FD60s') {
-                UnderCut = FloorFinish + 3;
-            } else {
-                UnderCut = $('#undercut').val();
-            }
-        }else{
-            UnderCut = $('#undercut').val();
-        }
+        var UnderCut = $('#undercut').val();
 
         var LeafWidth1 = 0;
         var LeafWidth2 = 0;
         var LeafWidth1ForMap = 0;
         var LeafWidth2ForMap = 0;
         var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
+        var RebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0 ;
 
         if (DoorSetType == "DD" && withoutFrameId != 1) {
             LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap)) / 2;
+
             if($("#frameType").val() == 'Scalloped'){
-                LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - ((FrameThickness - ScallopedHeight) * 2) - (GapAdditionalNumber * Gap)) / 2;
+
+            LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (ScallopedHeight * 2)) / 2;
                 console.log(
-                    `(${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - ((${FrameThickness} - ${ScallopedHeight}) * 2) - (${GapAdditionalNumber} * ${Gap})) / 2 = LeafWidth1 = LeafWidth2 = ${LeafWidth1}`
-                    );
+                `LeafWidth1 Scalloped DD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${ScallopedHeight} * 2) / 2 = ${LeafWidth1}`
+                );
+            }
+            if($("#frameType").val() == 'Rebated_Frame'){
+                LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2)) / 2;
+                console.log(
+                `LeafWidth1 Rebated DD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) / 2 = ${LeafWidth1}`
+                );
             }
         } else if (DoorSetType == "SD" && withoutFrameId != 1) {
             LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap);
             if($("#frameType").val() == 'Scalloped'){
-                LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness - ScallopedHeight) - FrameThickness - (GapAdditionalNumber * Gap);
+                LeafWidth1 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2) + ScallopedHeight * 1;
                 console.log(
-                `${SOWidth} - (${Tollerance} * ${TolleranceAdditionalNumber}) - (${FrameThickness} - ${ScallopedHeight}) - ${FrameThickness} - (${GapAdditionalNumber} * ${Gap}) = LeafWidth1 ${LeafWidth1}`
+                `${SOWidth} - (${Tollerance} * 2) - (${FrameThickness} * 2) - (2 * ${Gap}) + ${ScallopedHeight}= SD Scalloped LeafWidth1 ${LeafWidth1}`
                 );
 
+            }
+            if($("#frameType").val() == 'Rebated_Frame'){
+                LeafWidth1 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                console.log(
+                `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 2) + (${RebatedHeight} * 2) = ${LeafWidth1}`
+                );
             }
         } else if (DoorSetType == "leaf_and_a_half") {
             if (withoutFrameId != 1) {
@@ -344,6 +348,12 @@ const render = (CustomElement = null) => {
                     LeafWidth1 = parseFloat(LeafWidth1);
                 }
                 LeafWidth2 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap) - LeafWidth1;
+                if($("#frameType").val() == 'Rebated_Frame'){
+                    LeafWidth2 = SOWidth - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 3) + (RebatedHeight * 2) - LeafWidth1;
+                    console.log(
+                    `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) - ${LeafWidth1}= ${LeafWidth2}`
+                    );
+                }
             }
             DoorSetType = "DD";
         }
@@ -406,15 +416,58 @@ const render = (CustomElement = null) => {
 
         var LeafHeightNoOPForMap = 0;
         var LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - UnderCut - Gap;
+        console.log(
+        `${SOHeight} - ${Tollerance} - ${FrameThickness} - ${UnderCut} - ${Gap} = LeafHeight ${LeafHeightNoOP}`
+        );
+        if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType == 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'no foursided , sd')
+                }
+                else if (DoorSetType == 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - FrameThickness  - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'no foursided , DD')
+                }
+                else if (DoorSetType == 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                   console.log(LeafHeightNoOP,'no foursided , Leaf and half')
+                }
+            }
         let foursidedframe = document.getElementById("foursidedframe");
         if (foursidedframe.checked) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
+            if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType === 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'sd')
+                }
+                else if (DoorSetType === 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'dd')
+                }
+                else if (DoorSetType === 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'leafandhalf')
+                }
+            }
         }
         if (LeafHeightNoOP == "") {
             LeafHeightNoOP = 0;
         } else {
             //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
             LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
+        }
+
+         if(withoutFrameId == 1){
+            $("#leafHeightNoOP").attr('readonly',false);
+        }else{
+            $("#leafHeightNoOP").val(LeafHeightNoOP).attr({'readonly':true, "required": true });
         }
 
         if (LeafHeightNoOP > 0) {
@@ -1818,7 +1871,7 @@ const render = (CustomElement = null) => {
                         .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
                        }
 
-                   
+
 
                     svg.append('line') // hinge 4 joining line top
                         .style("stroke", "black")
@@ -1828,7 +1881,7 @@ const render = (CustomElement = null) => {
                         .attr("y1", (hngLctn3Y + 20))
                         .attr("y2", hngLctn3Y + 20)
 
-                    
+
 
                     // Hinge 4 text
                     svg.append("text")
@@ -2161,7 +2214,7 @@ const render = (CustomElement = null) => {
                         .attr("y2", iy + (FrameHeight / 5)+(OverPanelHeight ?? 0))
    }
 
-                  
+
                     svg.append('line') // hinge 4 joining line top
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -2170,7 +2223,7 @@ const render = (CustomElement = null) => {
                         .attr("y1", (hngLctn3Y + 20))
                         .attr("y2", hngLctn3Y + 20)
 
-                  
+
 
                     // Hinge 4 text
                     svg.append("text")
@@ -2509,7 +2562,7 @@ const render = (CustomElement = null) => {
                     .attr("y2", iy + ((FrameHeight) / 5)+ (OverPanelHeight ?? 0))
                    }
 
-               
+
 
                 svg.append('line') // hinge 4 joining line top
                     .style("stroke", "black")
@@ -2519,7 +2572,7 @@ const render = (CustomElement = null) => {
                     .attr("y1", (hngLctn3Y + 20))
                     .attr("y2", hngLctn3Y + 20)
 
-                
+
 
                 // Hinge 4 text
                 svg.append("text")
@@ -2791,11 +2844,11 @@ const render = (CustomElement = null) => {
                 createLine("black", 0.5, ix + FrameThicknessForMap - 1, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0), hingelinex - 5, iy + (FrameHeight / 5)+(OverPanelHeight ?? 0));
 
                  }
-                
+
                 // hinge 4 joining line top
                 createLine("black", 0.5, hingelinex - 5, hngLctn3Y + 20, ix + FrameThicknessForMap - 1, hngLctn3Y + 20);
 
-               
+
                 // Hinge 4 text
                 svg.append("text")
                     .style("fill", "black")
@@ -8627,7 +8680,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                 // var RemainedSpaceInLeaf1 = LeafWidth1 - (DistanceFromTheEdgeOfDoorForLeaf1ToShow + Leaf1VisionPanelWidthToShow);
                 var RemainedSpaceInLeaf1 = DistanceFromTheEdgeOfDoorForLeaf1ToShow;
 
-               
+
            if (ShowMeasurements) {
 
 
@@ -8960,14 +9013,14 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-      
+
     });
 });
                     if(first){
                             $('input[name="vP1Height1"]').val(newHeight).trigger('change');
                             first=false
                            }
-                           
+
                         }
                 }
 
@@ -9084,11 +9137,11 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 });
                             if(first){
@@ -9096,7 +9149,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             first=false
                            }
                         }
-                          
+
                     }
                 } else {
                     svg.append('line')
@@ -9167,17 +9220,17 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                                if((LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-(Leaf1VisionPanel2Height*5))<200){
                            var newHeight = (Leaf1VisionPanel2Height * 5)-(200 -(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-(Leaf1VisionPanel2Height*5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
-                           
+
       $(document).ready(function () {
     $('#vP1Height2').on('input', function () {
         first=true
-        
+
     });
      $('#vP1Height1').on('input', function () {
         first=true });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 });
                             if(first){
@@ -9294,16 +9347,16 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
 
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 
 });
@@ -9311,7 +9364,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             $('input[name="vP1Height3"]').val(newHeight).trigger('change');
                             first=false
                            }
-   
+
                         }
 
                     }
@@ -9387,7 +9440,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
         first=true
@@ -9395,14 +9448,14 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 });
                           if(first){
                             $('input[name="vP1Height3"]').val(newHeight).trigger('change');
                             first=false
                            }
-                           
+
 
                         }
                     }
@@ -9521,20 +9574,20 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
         first=true
         console.log('User changed the input. isUserChanged =', isUserChanged);
     });
     $('#vP1Height4').on('input', function () {
-        
+
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 
 });
@@ -9542,7 +9595,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             $('input[name="vP1Height4"]').val(newHeight).trigger('change');
                             first=false
                            }
-   
+
                         }
                     }
 
@@ -9623,20 +9676,20 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
         first=true
         console.log('User changed the input. isUserChanged =', isUserChanged);
     });
     $('#vP1Height4').on('input', function () {
-        
+
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 
 });
@@ -9644,7 +9697,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             $('input[name="vP1Height4"]').val(newHeight).trigger('change');
                             first=false
                            }
-   
+
                         }
 
                     }
@@ -9762,25 +9815,25 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
         first=true
         console.log('User changed the input. isUserChanged =', isUserChanged);
     });
     $('#vP1Height4').on('input', function () {
-        
+
         first=true
-       
+
     });
     $('#vP1Height5').on('input', function () {
-        
+
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 
 });
@@ -9788,7 +9841,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             $('input[name="vP1Height5"]').val(newHeight).trigger('change');
                             first=false
                            }
-   
+
                         }
 
                     }
@@ -9855,7 +9908,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                     .attr("font-size", 10)
                     .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
                             .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5)-  (Leaf1VisionPanel4Height * 5)-  (Leaf1VisionPanel5Height * 5));
-                   
+
   if((LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5)-  (Leaf1VisionPanel4Height * 5)-  (Leaf1VisionPanel5Height * 5))<200){
                            var newHeight = (Leaf1VisionPanel5Height * 5)-(200 -(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)-  (Leaf1VisionPanel2Height * 5)-  (Leaf1VisionPanel3Height * 5)-  (Leaf1VisionPanel4Height * 5)-  (Leaf1VisionPanel5Height * 5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
@@ -9864,25 +9917,25 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
         first=true });
     $('#vP1Height2').on('input', function () {
         first=true
-       
+
     });
     $('#vP1Height3').on('input', function () {
         first=true
         console.log('User changed the input. isUserChanged =', isUserChanged);
     });
     $('#vP1Height4').on('input', function () {
-        
+
         first=true
-       
+
     });
     $('#vP1Height5').on('input', function () {
-        
+
         first=true
-       
+
     });
      $('#distanceFromTopOfDoor').on('input', function () {
         first=true
-       
+
     });
 
 });
@@ -9890,7 +9943,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                             $('input[name="vP1Height5"]').val(newHeight).trigger('change');
                             first=false
                            }
-   
+
                         }
                     }
 

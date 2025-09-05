@@ -105,7 +105,7 @@
 
         #footer {
             position: absolute;
-            bottom: -45px;
+            bottom: 20px;
             font-size: 9px;
             width: 100%
         }

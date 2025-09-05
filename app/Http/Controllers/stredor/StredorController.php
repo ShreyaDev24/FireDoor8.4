@@ -23,6 +23,7 @@ use App\Models\IntumescentSealLeafType;
 use App\Models\SelectedIronmongery;
 use App\Models\IronmongeryInfoModel;
 use App\Models\DoorFrameConstruction;
+use DB;
 
 class StredorController extends Controller
 {
@@ -72,7 +73,19 @@ class StredorController extends Controller
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -117,14 +130,13 @@ class StredorController extends Controller
                             foreach($SelectedIronmongery as $select){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
+                        if(empty($IronmongeryInfoModel)){
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        }
 
-                                if (!empty($IronmongeryInfoModel)) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
+                        if (!empty($IronmongeryInfoModel)) {
+                            $additionalInfo[] = $IronmongeryInfoModel;
+                        }
                     }
                 }
             }
@@ -190,6 +202,7 @@ class StredorController extends Controller
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'folders' => $folders
         ]);
     }
 
@@ -264,7 +277,19 @@ class StredorController extends Controller
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+        $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -309,14 +334,13 @@ class StredorController extends Controller
                             foreach($SelectedIronmongery as $select){
                                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $select->ironmongery_id)->where('UserId', Auth::user()->id)
                                 ->first();
-                                if(empty($IronmongeryInfoModel)){
-                                    $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $select->ironmongery_id)->first();
-                                }
+                        if(empty($IronmongeryInfoModel)){
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        }
 
-                                if (!empty($IronmongeryInfoModel)) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
+                        if (!empty($IronmongeryInfoModel)) {
+                            $additionalInfo[] = $IronmongeryInfoModel;
+                        }
                     }
                 }
             }
@@ -351,6 +375,7 @@ class StredorController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'folders' => $folders
         ]);
     }
 }

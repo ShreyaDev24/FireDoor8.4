@@ -2689,11 +2689,6 @@ function copyOfSideLite1Change(isstatus = false){
                     innerHtml+='<option value="">No Scallopped lipping thickness Found</option>';
                     $("#scallopedLippingThickness").empty().append(innerHtml);
                 }
-                if(fireRating=="NFR"){
-                    var noData ='';
-                    noData+='<option value="">No Scallopped lipping thickness Found</option>';
-                    $("#scallopedLippingThickness").empty().append(noData);
-                }
             }
         });
     }
@@ -6361,3 +6356,54 @@ function visionPanel2Off(door){
         }
     }
 }
+$(document).ready(function () {
+    if (typeof folderIronmongeryMap !== 'undefined') {
+        let folderIronmongeryArray = Object.values(folderIronmongeryMap); // Ensure it's array of arrays
+
+        function populateIronmongeryDropdown(folderId, selectedIronmongeryId = null) {
+            var flattened = folderIronmongeryArray.flat();
+
+            var filteredIronmongery = flattened.filter(item => item.folder_id == folderId);
+
+            $('#IronmongeryID').empty().append('<option value="">Select Ironmongery Set</option>');
+
+            filteredIronmongery.forEach(item => {
+                let selected = (selectedIronmongeryId == item.ironmongery_id) ? 'selected' : '';
+                $('#IronmongeryID').append(
+                    `<option value="${item.ironmongery_id}" ${selected}>${item.Setname}</option>`
+                );
+            });
+
+            if (filteredIronmongery.length > 0) {
+                $('#ironmongeryWrapper').show();
+                $('#IronmongeryID').prop('disabled', false);
+            } else {
+                $('#ironmongeryWrapper').hide();
+                $('#IronmongeryID').prop('disabled', true);
+            }
+        }
+
+        // Folder change
+        $('#folder_id').on('change', function () {
+            var selectedFolderId = parseInt($(this).val());
+            if (!selectedFolderId) {
+                $('#ironmongeryWrapper').hide();
+                $('#IronmongeryID').empty().append('<option value="">Select Ironmongery Set</option>').prop('disabled', true);
+                return;
+            }
+
+            populateIronmongeryDropdown(selectedFolderId);
+        });
+
+        // Edit mode handling
+        var existingFolderId = $('#folder_id').val();
+        var existingIronmongeryId = $('#ironmongeryid').val(); // You must pass this from Blade
+
+        if (existingFolderId && existingIronmongeryId) {
+            populateIronmongeryDropdown(existingFolderId, existingIronmongeryId);
+        } else if (!existingFolderId) {
+            $('#ironmongeryWrapper').hide();
+        }
+    }
+});
+

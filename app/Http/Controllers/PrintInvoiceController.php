@@ -55,7 +55,7 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth');
     }
 
-    public function printinvoice($quatationId, $versionID): void
+    public function printinvoice($quatationId, $versionID, $isActive = null): mixed
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -177,11 +177,36 @@ class PrintInvoiceController extends Controller
             foreach($GetIronmongerySet as $ironData){
                 if (!empty($ironData->IronmongeryID)) {
                     $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
-                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Set Data</b></div><div>
-                    <table id="WithBorder" class="tbl2">'.IronmongerySetData($ironData->IronmongeryID).'</table></div>';
+                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
+                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetData($ironData->IronmongeryID) .'</table></div>';
+
+                    $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
+
+                    if (!empty($doorNumbers)) {
+                        $rows = '';
+                        foreach ($doorNumbers as $door) {
+                            $rows .= '<tr><td>&bull; '. e($ironData->DoorType) .' - '. e($door) .'</td></tr>';
+                        }
+
+                        // Door list with repeating header
+                        $IronmongeryData .= '
+                        <table class="door-list">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <div id="headText"><b>Ironmongery Data</b></div>
+                                        <div><strong>Door list that this belongs to:</strong></div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>'. $rows .'</tbody>
+                        </table>';
+                    }
+
                     if ($PageBreakCount < count($GetIronmongerySet)) {
                         $IronmongeryData .= '<div class="page-break"></div>';
                     }
+
 
                     $PageBreakCount++;
                 }
@@ -719,6 +744,7 @@ class PrintInvoiceController extends Controller
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
+                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -781,6 +807,7 @@ class PrintInvoiceController extends Controller
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
+                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -850,7 +877,7 @@ class PrintInvoiceController extends Controller
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
-                        <td class="tbl_bottom" colspan="38"></td>';
+                        <td class="tbl_bottom" colspan="39"></td>';
                         if($HideCosts == 0){
                             $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
                             <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
@@ -940,6 +967,38 @@ class PrintInvoiceController extends Controller
                 $tt->FireRating = 'FD60';
 
             }
+
+           $certMap = [
+                4 => [
+                    'FD30' => 'FEA/F99112 Revision L',
+                    'FD60' => 'FEA/F96103  Revision Q',
+                ],
+                8 => [
+                    'FD30' => 'BMT/CNA/F15159 Revision F',
+                    'FD60' => 'WF377027 Revision A',
+                ],
+                1 => [
+                    'FD30' => 'Chilt/A02066 Revision P',
+                    'FD60' => 'Chilt/A02067 Revision M',
+                ],
+                2 => [
+                    'FD30' => 'Chilt/A01204 Revision H',
+                    'FD60' => 'FEA/F96103  Revision Q',
+                ],
+                7 => [
+                    'FD30' => 'FEA98164 Revision P',
+                    'FD60' => 'FEA/F02141 Revision M',
+                ],
+                6 => [
+                    'FD30' => 'WF399992 Revision E',
+                ],
+                5 => [
+                    'FD30' => '10133/22-2.R1',
+                    'FD60' => '10133/22-2.R1',
+                ],
+            ];
+
+            $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
 
             $configurationDoor = configurationDoor($tt->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
@@ -1187,7 +1246,7 @@ class PrintInvoiceController extends Controller
                 case "SD":
                     // $DoorFrameImage = Base64Image('FD30SingleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;">
+                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 200px;">
                                 <div style="position: relative;top: 12px;">';
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
@@ -1582,7 +1641,7 @@ class PrintInvoiceController extends Controller
                 case "DD":
                     // $DoorFrameImage = Base64Image('FD30DoubleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: '.$frameImageLeftMargin.'px;">
+                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 200px;">
                             <div style="position: relative;  top: 12px;">';
 
 
@@ -2730,6 +2789,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $configurationItemName . '</td>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Test Certificate Reference </td>
+                                    <td class="dicription_blank">' . $certNo . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Door Type</td>
                                     <td class="dicription_blank">' . $tt->DoorType . '</td>
                                 </tr>
@@ -3099,106 +3162,120 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $PageBreakCount++;
 
 
-            $elevTbl .= ' <div class="tbl_prn">
-            <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
-            <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
-            <table id="NoBorder" style="margin-top:1rem;" class="mt-4">
-                <tr>
-                    <td colspan="2">
-                        <table id="WithBorder" class="tbl1">
-                            <tbody>
-                                <tr>
-                                    <td class="marImg" rowspan="2">
-                                        <span>';
-            if (!empty($comapnyDetail->ComplogoBase64)) {
-                $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
-            } else {
-                $elevTbl .= Base64Image('defaultImg');
-            }
+            if($isActive == true){
+                $elevTbl .= ' <div class="tbl_prn">
+                <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
+                <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
+                    <table id="NoBorder" style="margin-top:1rem;margin-bottom: 15px;" class="mt-4">
+                        <tr>
+                            <td colspan="2">
+                                <table id="WithBorder" class="tbl1">
+                                    <tbody>
+                                        <tr>
+                                            <td class="marImg" rowspan="2">
+                                                <span>';
+                    if (!empty($comapnyDetail->ComplogoBase64)) {
+                        $elevTbl .= '<img src="' . htmlspecialchars((string) $comapnyDetail->ComplogoBase64) . '" class="imgClass" alt="Logo"/>';
+                    } else {
+                        $elevTbl .= Base64Image('defaultImg');
+                    }
 
-            $elevTbl .= '</span>
-                                    </td>
-                                    <td class="tbl_color"><span>Ref</span></td>
-                                    <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
-                                    <td class="tbl_color"><span>Project</span></td>
-                                    <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
-                                    <td class="tbl_color"><span>Prepared By</span></td>
-                                    <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
-                                </tr>
-                                <tr>
-                                    <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
-                                    <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
-                                    <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
-                                    <td><span>' . date('Y-m-d') . '</span></td>
-                                    <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
-                                    <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
-                                    <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
-                                    <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
-                                </tr>
-                            </tbody>
+                    $elevTbl .= '</span>
+                                            </td>
+                                            <td class="tbl_color"><span>Ref</span></td>
+                                            <td colspan="3"><span>' . htmlspecialchars((string) $QuotationGenerationId) . '</span></td>
+                                            <td class="tbl_color"><span>Project</span></td>
+                                            <td><span>' . htmlspecialchars((string) $ProjectName) . '</span></td>
+                                            <td class="tbl_color"><span>Prepared By</span></td>
+                                            <td><span>' . htmlspecialchars((string) $Username) . '</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
+                                            <td style="width:20px;"><span>' . htmlspecialchars((string) $version) . '</span></td>
+                                            <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
+                                            <td><span>' . date('Y-m-d') . '</span></td>
+                                            <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
+                                            <td><span>' . htmlspecialchars((string) $customer->CstCompanyName) . '</span></td>
+                                            <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
+                                            <td><span>' . htmlspecialchars((string) $SalesContact) . '</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="fr_d_tbl" style=" margin: 0 auto;">
+
+                    <div style="text-align:center; margin-bottom: 20px;">
+                        <table style="width: 300px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
+                            <tr>
+                                <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
+                                <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                            </tr>
                         </table>
-                    </td>
-                </tr>
-            </table>
-            </div>
-            <div class="fr_d_tbl" style=" margin: 0 auto;">
-            <table id="WithBorder" style="margin-top:1rem; width:500px; margin:0 auto 40px;" class="tbl2  mt-4">
-                <tbody>
-                    <tr>
-                        <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
-                        <td class="dicription_blank"><b>Type ' . htmlspecialchars((string) $tt->DoorType) . '</b></td>
-                    </tr>
-                </tbody>
-            </table>
-            </div>
-            <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
-            <table style="background:#fff; margin-top:1rem;border-collapse: collapse;" class="fir-dr-tbl mytableclass mt-3">
-                <thead>
-                    <tr>
-                        <th>Door / Screen No</th>
-                        <th>Assign Plot Ref</th>
-                        <th>Certification No</th>
-                        <th>Quality Check- CNC</th>
-                        <th>Quality Check- VP</th>
-                        <th>Quality Check- Assembly</th>
-                        <th>Door Plug</th>
-                        <th>Frame Plug</th>
-                    </tr>
-                </thead>
+                    </div>
 
-                <tbody>';
+                    <div style="margin: 0 auto; width: 95%;">
+                        <table style="width: 100%; border-collapse: collapse; border: 1px solid #000;">
+                            <thead style="background: #f9f9f9;">
+                                <tr>
+                                    <th style="border: 1px solid #000; padding: 6px;">Door / Screen No</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Assign Plot Ref</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Certification No</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- CNC</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- VP</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Quality Check- Assembly</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Door Plug</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Frame Plug</th>
+                                    <th style="border: 1px solid #000; padding: 6px;">Glass Stamp Visible</th>
+                                </tr>
+                            </thead>
+                            <tbody>';
                 foreach ($DoorNumber as $bb) {
-                    $elevTbl .=  '<tr>
-                        <td>' . $bb->doorNumber . '</td>
-                        <td>' . $bb->plot_ref_no . '</td>
-                        <td>' . $bb->certification_no . '</td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                    $elevTbl .= '<tr>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->doorNumber . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->plot_ref_no . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;">' . $bb->certification_no . '</td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
+                        <td style="border: 1px solid #000; padding: 5px;"></td>
                     </tr>';
                 }
+                $elevTbl .= '
+                            </tbody>
+                        </table>
+                    </div>
+                </div>';
+                if ($PageBreakCounts < $TotalItems) {
+                    $elevTbl .= '<div class="page-break"></div>';
+                }
 
-                $elevTbl .= '</tbody>
-            </table>
-            </div>
-            </div>';
-            if ($PageBreakCounts < $TotalItems) {
-                $elevTbl .= '<div class="page-break"></div>';
+                $PageBreakCounts++;
             }
-
-            $PageBreakCounts++;
-
         }
 
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
-        $path6 = public_path() . '/allpdfFile';
-        $fileName6 = $id . '6' . '.' . 'pdf';
-        // return $pdf6->download('elevation.pdf');
-        $pdf6->save($path6 . '/' . $fileName6);
+
+        $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
+
+        if ($isActive) {
+            return $pdf6->download('ElevationDrawing.pdf');  // ✅ Forces download with correct name
+        } else {
+            $path6 = public_path('allpdfFile');
+            if (!file_exists($path6)) {
+                mkdir($path6, 0777, true);
+            }
+
+            $fileName6 = $id . '6' . '.pdf';
+            $pdf6->save($path6 . '/' . $fileName6);
+        }
+
 
         // back page design
 
@@ -3622,36 +3699,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $quo->quotTag = 1;
             $quo->save();
 
-            // start old code
-            // $pdf = new Fpdi();
-            // $pageCount = $pdf->setSourceFile($mergedFilePath);
-
-            // // Set margins
-            // $pdf->SetMargins(10, 10, 10);
-            // $pdf->SetAutoPageBreak(true, 10);
-
-            // // Disable header and footer completely
-            // $pdf->setPrintHeader(false);
-            // $pdf->setPrintFooter(true);
-
-            // for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-
-            //     $tplId = $pdf->importPage($pageNo);
-            //     $pdf->AddPage();
-            //     $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
-
-            //     // Add page number at bottom center
-            //     $pdf->SetY(-20);
-            //     $pdf->Cell(0, 10, 'Page ' . $pageNo . '/' . $pageCount, 0, 0, 'C');
-            // }
-
-            // // Save the final PDF with page numbers
-            // $outputPath = $PDFfilename;
-            // $pdf->Output($outputPath, 'F');
-
-            // $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
-            //end  old code
-
             // new code
             $pdf = new Fpdi();
             // Source file path
@@ -3714,65 +3761,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             foreach ($pdfFiles as $unlinkPath) {
                 unlink($unlinkPath);
             }
-
-        // $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
-        // // Merge the PDF File
-        // $pdf1 = public_path() . '/allpdfFile' . '/' . $fileName1;
-        // $pdf2 = public_path() . '/allpdfFile' . '/' . $fileName2;
-        // $pdf3 = public_path() . '/allpdfFile' . '/' . $fileName3;
-        // $pdf4_2 = public_path() . '/allpdfFile' . '/' . $fileName4_2;
-        // $pdf4 = public_path() . '/allpdfFile' . '/' . $fileName4;
-        // $pdf6 = public_path() . '/allpdfFile' . '/' . $fileName6;
-        // $pdf7 = public_path() . '/allpdfFile' . '/' . $fileName7;
-        // $pdf5 = public_path() . '/allpdfFile' . '/' . $fileName5;
-        // $pdfMerger = PDFMerger::init();
-        // $pdfMerger->addPDF($pdf1, 'all');
-        // $pdfMerger->addPDF($pdf2, 'all');
-        // $pdfMerger->addPDF($pdf3, 'all');
-        // $pdfMerger->addPDF($pdf4_2, 'all');
-        // $pdfMerger->addPDF($pdf4, 'all');
-        // $pdfMerger->addPDF($pdf6, 'all');
-        // $pdfMerger->addPDF($pdf7, 'all');
-        // $pdfMerger->addPDF($pdf5, 'all');
-        // $pdfMerger->merge();
-        // $pdfMerger->save($PDFfilename);
-        // $pdfMerger->save("$quotaion->QuotationGenerationId+'_'+$version.pdf", 'download');
-
-
-        // $file = public_path() . '/quotationFiles' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
-        // if (file_exists($file)) {
-        //     unlink($file);
-        // }
-        // $quo = Quotation::find($quatationId);
-        // $quo->quotTag = 1;
-        // $quo->save();
-        // $pdfMerger->save($file);
-
-
-        // $unlinkpath1 = public_path() . '/allpdfFile' . '/' . $fileName1;
-        // $unlinkpath2 = public_path() . '/allpdfFile' . '/' . $fileName2;
-        // $unlinkpath3 = public_path() . '/allpdfFile' . '/' . $fileName3;
-        // $unlinkpath4_2 = public_path() . '/allpdfFile' . '/' . $fileName4_2;
-        // $unlinkpath4 = public_path() . '/allpdfFile' . '/' . $fileName4;
-        // $unlinkpath6 = public_path() . '/allpdfFile' . '/' . $fileName6;
-        // $unlinkpath7 = public_path() . '/allpdfFile' . '/' . $fileName7;
-        // $unlinkpath5 = public_path() . '/allpdfFile' . '/' . $fileName5;
-        // unlink($unlinkpath1);
-        // unlink($unlinkpath2);
-        // unlink($unlinkpath3);
-        // unlink($unlinkpath4_2);
-        // unlink($unlinkpath4);
-        // unlink($unlinkpath6);
-        // unlink($unlinkpath7);
-        // unlink($unlinkpath5);
-
-        // return response()->download($pdf);
-        // return $pdf->download('2file.pdf');
-
-        // Storage::put('public/images/pdf/invoice.pdf', $pdf->output());
-        // $content = $pdf->download()->getOriginalContent();
-
-        // Storage::put('public/name.pdf',$content) ;
 
     }
 

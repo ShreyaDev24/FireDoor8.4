@@ -314,8 +314,10 @@ dd($IronmongeryInfo);
                                             $finishesArray = [
                                             "Chrome","Polished Brass","Polished Nickel","Satin Nickel",
                                             "Antique Brass","Satin Chrome","Bronze
-                                            Finish","Black","Bronze","Gold","Silver","White","Satin Stainless Steel","Polished Stainless Steel","Polished Chrome","Aluminium Silver","Yellow Grey","Traffic Black(Ebony Black)","Matte Chrome","Satin Anodised Aluminium","Golden Yellow","Ruby Red","Wine Red","Ultramarine Blue (Cobalt Blue)","Sapphire Blue (Midnight Blue)","Turquoise Green","Anthracite Grey","Manhattan Grey","Traffic White (Diamond White)","Stainless Steel Brushed (Anti Microbial Coated)","Matte Nickel Plate"
+                                            Finish","Black","Bronze","Gold","Silver","White","Satin Stainless Steel","Polished Stainless Steel","Polished Chrome","Aluminium Silver","Yellow Grey","Traffic Black(Ebony Black)","Matte Chrome","Satin Anodised Aluminium","Golden Yellow","Ruby Red","Wine Red","Ultramarine Blue (Cobalt Blue)","Sapphire Blue (Midnight Blue)","Turquoise Green","Anthracite Grey","Manhattan Grey","Traffic White (Diamond White)","Stainless Steel Brushed (Anti Microbial Coated)","Matte Nickel Plate",
+                                            "Brown", "Blue", "Grey", "Red", "Yellow", "Heather Blue"
                                             ];
+                                            sort($finishesArray);
                                             @endphp
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
