@@ -5714,7 +5714,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                                     if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? '640':'634').'px;margin-top:' .(($tt->FrameType !== null)? '-385':'-385').'px;"></div>';
+                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? '640':'634').'px;margin-top:' .(($tt->FrameType !== null)? '-37':'-37').'px;"></div>'; //intubacent fixes -385
                                     }
                     }
 
