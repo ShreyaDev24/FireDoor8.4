@@ -1189,7 +1189,7 @@ class PrintInvoiceController extends Controller
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
 
-                   if(($show->DoorsetType == "SD")){
+                   if(($tt->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                            $FullBlock =$FixedSpaceBlockScallopedLeft;
                        }else{
