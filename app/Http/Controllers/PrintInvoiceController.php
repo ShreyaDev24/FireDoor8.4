@@ -55,7 +55,7 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth');
     }
 
-    public function printinvoice($quatationId, $versionID): void
+    public function printinvoice($quatationId, $versionID)
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -1129,7 +1129,7 @@ class PrintInvoiceController extends Controller
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
 
-                   if(($show->DoorsetType == "SD")){
+                   if(($tt->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                            $FullBlock =$FixedSpaceBlockScallopedLeft;
                        }else{
@@ -3193,7 +3193,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
         // return $elevTbl;
-        // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
+        return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
         $path6 = public_path() . '/allpdfFile';
         $fileName6 = $id . '6' . '.' . 'pdf';
