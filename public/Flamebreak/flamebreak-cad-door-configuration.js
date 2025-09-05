@@ -1032,7 +1032,7 @@ const render = (CustomElement = null) => {
                             .attr("x", ix - SideLightPanel1Width -35)         // set x position of left side of text
                             .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
                              .attr("transform", `rotate(-90, ${ix - SideLightPanel1Width - 35}, ${iy + FrameThicknessForMap + (OverPanelHeight / 2)})`) // rotate 45° around (x, y)
-                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
+                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) );     // define the text to display
                         //Text of Width of Outer frame of door
 
                         svg.append('line')//measurement line of height of over panel of door
