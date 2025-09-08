@@ -619,6 +619,14 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Qty Per Screen Type',
             'Quantity of screen types',
             'Screen Dims ',
+            'O/A Frame Height',
+            'O/A Frame Width',
+            'Frame Thickness',
+            'Frame Depth',
+            'Leg x 2',
+            'Head',
+            'Transom',
+            'Mullion',
         ], array_fill(0, 32 - 18, ''));
          $j = 1;
         foreach($this->result as $value){
@@ -654,6 +662,14 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $Qty,
                     1, // QtyScreenType is constant as 1
                     $screenDim,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
                 ];
             }
 
@@ -677,7 +693,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $Finish,
                         $Qty,
                         1,
-                        $screenDim
+                        $screenDim,
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
                     ];
                     $j++;
                 }
@@ -703,7 +727,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $Finish,
                         $Qty,
                         1,
-                        $screenDim
+                        $screenDim,
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
+                        '',
                     ];
                     $j++;
                 }
@@ -725,7 +757,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $Finish,
                     $Qty,
                     1,
-                    $screenDim
+                    $screenDim,
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
+                    '',
                 ];
                 $j++;
             }
