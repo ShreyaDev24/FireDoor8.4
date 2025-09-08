@@ -2979,6 +2979,7 @@ const render = (CustomElement = null) => {
         var IsFacefixeddropsealsEnable = false;
         var IsConcealedOverheadCloserEnable = false;
         var IsFaceFixedDoorClosersEnable = false;
+        var IsFaceFixedDoorClosersEnable2 = false;
         var IsCylindersEnable = false;
         var IsThumbturnEnable = false;
         var IsCylindersEnable2 = false;
@@ -3046,6 +3047,8 @@ const render = (CustomElement = null) => {
         /** FaceFixedDoorCloser Measurements */
         var FaceFixedDoorCloserDataHeight = 0
         var FaceFixedDoorClosersWidth = 0
+         var FaceFixedDoorCloserDataHeight2 = 0
+        var FaceFixedDoorClosersWidth2 = 0
         /** Thumbturn Measurements */
         var ThumbturnDistanceFromBottomOfDoor = 0
         var ThumbturnDistanceFromLeadingEdgeOfDoor=0
@@ -3161,11 +3164,22 @@ const render = (CustomElement = null) => {
                         // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
                     }
                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
+                                 const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
+   console.log(FaceFixedDoorClosers.length,'/////////////////////////')
+                    if (FaceFixedDoorClosers.length > 0) {
                         IsFaceFixedDoorClosersEnable = true;
-                        const FaceFixedDoorCloserData = elem.additional_info.find((item) => item.Category === "FaceFixedDoorClosers");
-                        FaceFixedDoorClosersWidth = FaceFixedDoorCloserData.staticWidth
-                        FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData.staticHeight
-                        // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
+                        const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
+                       FaceFixedDoorClosersWidth = FaceFixedDoorClosersData1.staticWidth
+                        FaceFixedDoorCloserDataHeight = FaceFixedDoorClosersData1.staticHeight
+                    }
+
+                    if (FaceFixedDoorClosers.length > 1) {
+                        IsFaceFixedDoorClosersEnable2 = true;
+                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
+                        const FaceFixedDoorClosersData2 = FaceFixedDoorClosers[1];
+                       FaceFixedDoorClosersWidth2 = FaceFixedDoorClosersData2.staticWidth
+                        FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosersData2.staticHeight
+                    }
                     }
 
                     if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
@@ -6640,60 +6654,87 @@ svg.append("circle")
                         .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth2ForMap+ MeetingStiles+LeafWidth1ForMap)
                         .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
                 }
+  if (IsFaceFixedDoorClosersEnable && !IsFaceFixedDoorClosersEnable2 ) {
+           
+                   if (LeafWidth2ForMap == LeafWidth1ForMap){
+                        if(Handing == 'DD'){
+                            faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+                        }
+                    else{
+                        faceFixedDoorCloserRight(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+                    }
+                }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            faceFixedDoorCloserRight(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            }
 
 
-                if(IsFaceFixedDoorClosersEnable){
+          
 
-                        svg.append('rect')
+            }
+
+                if (IsFaceFixedDoorClosersEnable2 ) {
+                     faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            faceFixedDoorCloserRight(FaceFixedDoorClosersWidth2,FaceFixedDoorCloserDataHeight2)
+
+            }
+
+               
+
+                function faceFixedDoorCloserLeft(width, height){
+                       svg.append('rect')
                             .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
                             .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                            .attr('width', (FaceFixedDoorClosersWidth / 5))
-                            .attr('height', (FaceFixedDoorCloserDataHeight / 5))
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
                             .attr('stroke', 'black')
                             .attr('fill', '#D0D0C6')
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
                             .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 10)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
                             .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10 + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
                             .attr("y2", iy + TopFrameHeight + GapForMap + 10)
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 10)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10 + 5)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
 
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 30)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5) // set y position
-                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5})`) // rotate
-                            .text(FaceFixedDoorCloserDataHeight);
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + (width / 5) + 30)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + 10+iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2 +10) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (width / 5) + 30}, ${(iy + TopFrameHeight + GapForMap + 10+iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2+10})`) // rotate
+                            .text(height);
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
@@ -6701,76 +6742,79 @@ svg.append("circle")
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                             .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 10) - 5)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 19) // set y position
-                            .text(FaceFixedDoorClosersWidth);
-                    // .........................................................................................................
-                    {
-                        svg.append('rect')
-                            .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (width / 10) - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 19) // set y position
+                            .text(width);
+                }
+
+                  function faceFixedDoorCloserRight(width,height){
+ svg.append('rect')
+                            .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
                             .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                            .attr('width', (FaceFixedDoorClosersWidth / 5))
-                            .attr('height', (FaceFixedDoorCloserDataHeight / 5))
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
                             .attr('stroke', 'black')
                             .attr('fill', '#D0D0C6')
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
                             .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                            .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
                             .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
                             .attr("y2", iy + TopFrameHeight + GapForMap + 10)
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
 
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5) // set y position
-                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                            .text(FaceFixedDoorCloserDataHeight);
+                            .attr("x", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + 10 + iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2 +10) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5)}, ${ (iy + TopFrameHeight + GapForMap + 10 + iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2+10})`) // rotate
+                            .text(height);
+
+                            
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                             .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
@@ -6778,27 +6822,25 @@ svg.append("circle")
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                             .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                            .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 10) - 5)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 15) // set y position
-                            .text(FaceFixedDoorClosersWidth);
-
-                    }
-                }
+                            .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 10) - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 15) // set y position
+                            .text(width);
+                  }
 
                 if(IsConcealedOverheadCloserEnable){
 
