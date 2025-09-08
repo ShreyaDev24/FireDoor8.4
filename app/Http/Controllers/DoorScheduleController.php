@@ -5354,6 +5354,7 @@ class DoorScheduleController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {
@@ -5635,6 +5636,7 @@ class DoorScheduleController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {

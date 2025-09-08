@@ -148,6 +148,7 @@ class HalspanController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {
@@ -369,6 +370,7 @@ class HalspanController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {
