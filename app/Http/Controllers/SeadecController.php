@@ -207,6 +207,7 @@ class SeadecController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {
@@ -433,6 +434,7 @@ class SeadecController extends Controller
             'DoorSinage' => 'doorSignageQty',
             'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
             'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
         ];
 
         foreach ($setIronmongery as $ironmongery) {
