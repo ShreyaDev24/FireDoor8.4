@@ -2184,7 +2184,7 @@ class PrintInvoiceController extends Controller
                              <tr>
     <td colspan="2">
         <!-- HEADER TABLE -->
-        <table id="WithBorder" class="tbl1">
+        <table id="WithBorderNew" class="tbl1">
             <tbody>
                 <tr>
                     <td class="marImg" rowspan="2">
@@ -2221,7 +2221,7 @@ $elevTbl .= '</span>
 <tr>
     <td colspan="2">
         <!-- PO TABLE -->
-        <table id="WithBorder" class="tbl1 dashedborder">
+        <table id="WithBorderNew" class="tbl1 dashedborder">
             <tbody>
                 <tr>
                     <td class="tbl_color"><span>IO No</span></td>
@@ -5914,7 +5914,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <tr>
     <td colspan="2">
         <!-- HEADER TABLE -->
-        <table id="WithBorder" class="tbl1">
+        <table id="WithBorderNew" class="tbl1">
             <tbody>
                 <tr>
                     <td class="marImg" rowspan="2">
@@ -5951,7 +5951,7 @@ $elevTbl .= '</span>
 <tr>
     <td colspan="2">
         <!-- PO TABLE -->
-        <table id="WithBorder" class="tbl1 dashedborder">
+        <table id="WithBorderNew" class="tbl1 dashedborder">
             <tbody>
                 <tr>
                     <td class="tbl_color"><span>IO No</span></td>

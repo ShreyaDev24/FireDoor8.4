@@ -1142,23 +1142,23 @@ margin-left: -12px;
     margin: 40px auto 0 !important;
 }
 
-#WithBorder {
+#WithBorderNew {
     border: 1px solid #000;
     border-collapse: collapse;
     width: 100%;
 }
-#WithBorder td {
+#WithBorderNew td {
     border: 1px solid #000;
     padding: 5px;
     font-size: 13px;
     vertical-align: middle;
 }
-.tbl_color {
+#WithBorderNew .tbl_color {
     background: #f1f1f1;
     font-weight: bold;
     text-align: center;
 }
-.imgClass {
+#WithBorderNew .imgClass {
     max-height: 40px;
     max-width: 120px;
 }
