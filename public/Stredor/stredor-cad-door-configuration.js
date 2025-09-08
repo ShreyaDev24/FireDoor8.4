@@ -2923,7 +2923,8 @@ const render = (CustomElement = null) => {
         var IsMorticedDropdownSealsEnable = false;
         var IsFacefixeddropsealsEnable = false;
         var IsConcealedOverheadCloserEnable = false;
-        var IsFaceFixedDoorClosersEnable = false;
+          var IsFaceFixedDoorClosersEnable = false;
+        var IsFaceFixedDoorClosersEnable2 = false;
         var IsCylindersEnable = false;
         var IsThumbturnEnable = false;
         var IsCylindersEnable2 = false;
@@ -3105,12 +3106,23 @@ const render = (CustomElement = null) => {
                         ConcealedOverheadCloserHeight = ConcealedOverheadCloserData.staticHeight
                         // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
                     }
-                    if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
+                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
+                                 const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
+   console.log(FaceFixedDoorClosers.length,'/////////////////////////')
+                    if (FaceFixedDoorClosers.length > 0) {
                         IsFaceFixedDoorClosersEnable = true;
-                        const FaceFixedDoorCloserData = elem.additional_info.find((item) => item.Category === "FaceFixedDoorClosers");
-                        FaceFixedDoorClosersWidth = FaceFixedDoorCloserData.staticWidth
-                        FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData.staticHeight
-                        // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
+                        const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
+                       FaceFixedDoorClosersWidth = FaceFixedDoorClosersData1.staticWidth
+                        FaceFixedDoorCloserDataHeight = FaceFixedDoorClosersData1.staticHeight
+                    }
+
+                    if (FaceFixedDoorClosers.length > 1) {
+                        IsFaceFixedDoorClosersEnable2 = true;
+                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
+                        const FaceFixedDoorClosersData2 = FaceFixedDoorClosers[1];
+                       FaceFixedDoorClosersWidth2 = FaceFixedDoorClosersData2.staticWidth
+                        FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosersData2.staticHeight
+                    }
                     }
 
                     if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {

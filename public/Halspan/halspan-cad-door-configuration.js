@@ -2924,6 +2924,7 @@ const render = (CustomElement = null) => {
         var IsMorticedDropdownSealsEnable = false;
         var IsFacefixeddropsealsEnable = false;
         var IsConcealedOverheadCloserEnable = false;
+        var IsConcealedOverheadCloserEnable2 = false;
         var IsFaceFixedDoorClosersEnable = false;
         var IsFaceFixedDoorClosersEnable2 = false;
         var IsCylindersEnable = false;
