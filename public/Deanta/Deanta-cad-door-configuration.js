@@ -2932,7 +2932,8 @@ if (IsFourSidedFrame == true) {
         var IsFlushBoltsEnable2 = false;
         var IsMorticedDropdownSealsEnable = false;
         var IsFacefixeddropsealsEnable = false;
-        var IsConcealedOverheadCloserEnable = false;
+         var IsConcealedOverheadCloserEnable = false;
+        var IsConcealedOverheadCloserEnable2 = false;
           var IsFaceFixedDoorClosersEnable = false;
         var IsFaceFixedDoorClosersEnable2 = false;
         var IsCylindersEnable = false;
@@ -2999,9 +3000,13 @@ if (IsFourSidedFrame == true) {
         /** LockNLatches Measurements */
         var ConcealedOverheadCloserHeight = 0
         var ConcealedOverheadCloserWidth = 0
+         var ConcealedOverheadCloserHeight2 = 0
+        var ConcealedOverheadCloserWidth2 = 0
         /** FaceFixedDoorCloser Measurements */
         var FaceFixedDoorCloserDataHeight = 0
         var FaceFixedDoorClosersWidth = 0
+         var FaceFixedDoorCloserDataHeight2 = 0
+        var FaceFixedDoorClosersWidth2 = 0
         /** Thumbturn Measurements */
         var ThumbturnDistanceFromBottomOfDoor = 0
         var ThumbturnDistanceFromLeadingEdgeOfDoor=0
@@ -3109,12 +3114,25 @@ if (IsFourSidedFrame == true) {
                     }
                     }
 
-                    if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
+                   if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
+                
+
+                                               const ConcealedOverheadCloser = elem.additional_info.filter(item => item.Category === "ConcealedOverheadCloser");
+
+                    if (ConcealedOverheadCloser.length > 0) {
                         IsConcealedOverheadCloserEnable = true;
-                        const ConcealedOverheadCloserData = elem.additional_info.find((item) => item.Category === "ConcealedOverheadCloser");
-                        ConcealedOverheadCloserWidth = ConcealedOverheadCloserData.staticWidth
-                        ConcealedOverheadCloserHeight = ConcealedOverheadCloserData.staticHeight
-                        // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
+                        const ConcealedOverheadCloserData1 = ConcealedOverheadCloser[0];
+                       ConcealedOverheadCloserWidth = ConcealedOverheadCloserData1.staticWidth
+                        ConcealedOverheadCloserHeight = ConcealedOverheadCloserData1.staticHeight
+                    }
+
+                    if (ConcealedOverheadCloser.length > 1) {
+                        IsConcealedOverheadCloserEnable2 = true;
+                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
+                        const ConcealedOverheadCloserData2 = ConcealedOverheadCloser[1];
+                       ConcealedOverheadCloserWidth2 = ConcealedOverheadCloserData2.staticWidth
+                        ConcealedOverheadCloserHeight2 = ConcealedOverheadCloserData2.staticHeight
+                    }
                     }
                      if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
                                  const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
@@ -6794,58 +6812,79 @@ svg.append("circle")
                             .text(width);
                   }
 
-                if(IsConcealedOverheadCloserEnable){
+                if(IsConcealedOverheadCloserEnable && !IsConcealedOverheadCloserEnable2){
+      if (LeafWidth2ForMap == LeafWidth1ForMap){
+                        if(Handing == 'DD'){
+                            ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+                        }
+                    else{
+                        ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+                    }
+                }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            }
+            }
 
+               if (IsConcealedOverheadCloserEnable2 ) {
+                     ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth2,ConcealedOverheadCloserHeight2)
+
+            }
+            function ConcealedOverheadCloserLeft(width,height){
                     svg.append('rect')
                         .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
                         .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                        .attr('width', (ConcealedOverheadCloserWidth / 5))
-                        .attr('height', (ConcealedOverheadCloserHeight / 5))
+                        .attr('width', (width / 5))
+                        .attr('height', (height / 5))
                         .attr('stroke', 'black')
                         .attr('fill', '#D0D0C6')
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
                         .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10)
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 10)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
                         .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10 + 5)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
                         .attr("y2", iy + TopFrameHeight + GapForMap + 10)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 10)
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10 + 5)
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
 
 
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 30)    // set x position
-                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                        .text(ConcealedOverheadCloserHeight);
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + (width / 5) + 30)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 10) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (width / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
+                        .text(height);
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
                         .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
-                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
 
@@ -6853,76 +6892,77 @@ svg.append("circle")
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
                         .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                         .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 10) - 5)    // set x position
-                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 19) // set y position
-                        .text(ConcealedOverheadCloserWidth);
-                // .........................................................................................................
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (width / 10) - 5)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 19) // set y position
+                        .text(width);
+            }
+             function ConcealedOverheadCloserRight(width,height){
                 {
                     svg.append('rect')
-                        .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
+                        .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
                         .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                        .attr('width', (ConcealedOverheadCloserWidth / 5))
-                        .attr('height', (ConcealedOverheadCloserHeight / 5))
+                        .attr('width', (width / 5))
+                        .attr('height', (height / 5))
                         .attr('stroke', 'black')
                         .attr('fill', '#D0D0C6')
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
                         .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                        .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
                         .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
                         .attr("y2", iy + TopFrameHeight + GapForMap + 10)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
 
 
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))    // set x position
-                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                        .text(ConcealedOverheadCloserHeight);
+                        .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (width / 5))    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 10) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (width / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
+                        .text(height);
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                         .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
 
@@ -6930,28 +6970,27 @@ svg.append("circle")
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
                         .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
                         .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                        .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
 
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 10) - 5)    // set x position
-                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 15) // set y position
-                        .text(ConcealedOverheadCloserWidth);
+                        .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 10) - 5)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 15) // set y position
+                        .text(width);
 
                 }
             }
-            
                if (IsSecurityViewerEnable && !IsSecurityViewerEnable2 ) {
            
                    if (LeafWidth2ForMap == LeafWidth1ForMap){
