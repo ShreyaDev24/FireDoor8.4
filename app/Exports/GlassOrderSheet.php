@@ -168,11 +168,15 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 if(!empty($allSettings['SideLightFD.FD30'])){
                     $VisionPanelWidthNFR = $allSettings['SideLightFD.FD30']->Width;
                     $VisionPanelHeightNFR = $allSettings['SideLightFD.FD30']->Height;
+                    $SLWidth = $value->SL1Width - ($value->SideLight1FrameThickness * 2) + $VisionPanelWidthNFR;
                 }
                 if(!empty($allSettings['SideLightFD.FD60'])){
                     $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
                     $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                    $SLWidth = $value->SL1Width - ($value->SideLight1FrameThickness * 2) + $VisionPanelWidthFD60;
                 }
+
+
 
                 $data[] = array(
                     $value->DoorType. ' Side Light 1',
@@ -185,10 +189,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ?
                     ($value->SL1Height  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightFD60 :
                     ($value->SL1Height  - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightNFR,
-
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL1Width  + $VisionPanelWidthNFR) :
-                    ($value->SL1Width + $VisionPanelWidthFD60),
-
+                    $SLWidth,
                     1,
                     '',
                     '',
@@ -210,10 +211,12 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 if(!empty($allSettings['SideLightFD.NRF'])){
                     $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
                     $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                    $SLWidth = $value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthNFR;
                 }
                 if(!empty($allSettings['SideLightFD.FD60'])){
                     $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
                     $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                    $SLWidth = $value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthFD60;
                 }
 
                 $data[] = array(
@@ -228,8 +231,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ($value->SL2Height  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60 :
                     ($value->SL2Height  - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR,
 
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL2Width + $VisionPanelWidthNFR) :
-                    ($value->SL2Width + $VisionPanelWidthFD60),
+                    $SLWidth,
 
                     1,
                     '',
