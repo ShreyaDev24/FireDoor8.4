@@ -2181,107 +2181,115 @@ class PrintInvoiceController extends Controller
                 <div id="main">
                     <div id="section-left">
                         <table id="NoBorder">
-                             <tr>
-    <td colspan="2">
-        <!-- HEADER TABLE -->
-        <table id="WithBorder" class="tbl1">
-            <tbody>
-                <tr>
-                    <td class="marImg" rowspan="2">
-                        <span>';
-if (!empty($comapnyDetail->ComplogoBase64)) {
-    $elevTbl .= '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
-} else {
-    $elevTbl .= Base64Image('defaultImg');
-}
-$elevTbl .= '</span>
-                    </td>
-                    <td class="tbl_color"><span>Ref</span></td>
-                    <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
-                    <td class="tbl_color"><span>Project</span></td>
-                    <td><span>' . $ProjectName . '</span></td>
-                    <td class="tbl_color"><span>Prepared By</span></td>
-                    <td><span>' . $Username . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color" style="width:25px;"><span>Revision</span></td>
-                    <td style="width:20px;"><span>' . $version . '</span></td>
-                    <td class="tbl_color" style="width:20px;"><span>Date</span></td>
-                    <td><span>' . date('Y-m-d') . '</span></td>
-                    <td class="tbl_color" style="width:10px;"><span>Customer</span></td>
-                    <td><span>' . $customer->CstCompanyName . '</span></td>
-                    <td class="tbl_color" style="width:60px;"><span>Quote name</span></td>
-                    <td><span>' . $SalesContact . '</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
-
-<tr>
-    <td colspan="2">
-        <!-- PO TABLE -->
-        <table id="WithBorder" class="tbl1 dashedborder">
-            <tbody>
-                <tr>
-                    <td class="tbl_color"><span>IO No</span></td>
-                    <td>' . $project->ioNumberOne . '</td>
-                    <td>' . $project->ioNumberTwo . '</td>
-                    <td>' . $project->ioNumberThree . '</td>
-                    <td class="tbl_color"><span>Frame Po</span></td>
-                    <td>' . $project->framePoOne . '</td>
-                    <td>' . $project->framePoTwo . '</td>
-                    <td>' . $project->framePoThree . '</td>
-                    <td class="tbl_color"><span>Ironmongery Po</span></td>
-                    <td>' . $project->ironmongeryPoOne . '</td>
-                    <td>' . $project->ironmongeryPoTwo . '</td>
-                    <td>' . $project->ironmongeryPoThree . '</td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Door Po</span></td>
-                    <td>' . $project->doorPoOne . '</td>
-                    <td>' . $project->doorPoTwo . '</td>
-                    <td>' . $project->doorPoThree . '</td>
-                    <td class="tbl_color"><span>Glass Po</span></td>
-                    <td>' . $project->glassPoOne . '</td>
-                    <td>' . $project->glassPoTwo . '</td>
-                    <td>' . $project->glassPoThree . '</td>
-                    <td class="tbl_color"><span>Intumescent Po</span></td>
-                    <td>' . $project->intumescentPoOne . '</td>
-                    <td>' . $project->intumescentPoTwo . '</td>
-                    <td>' . $project->intumescentPoThree . '</td>
-                </tr>
-
-                <!-- SIGNATURE + DATE ROW -->
-                <tr>
-                    <td colspan="12" style="padding: 12px;">
-                        <table style="width:100%; border-collapse: collapse;">
                             <tr>
-                                <td style="text-align:left; font-size:16px; vertical-align:middle;">
-                                    <b>Signature:</b>
-                                    ';
-if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
-    $elevTbl .= '<img style="width: 160px; margin-left:10px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
-}
-$elevTbl .= '
-                                </td>
-                                <td style="text-align:right; font-size:16px; vertical-align:middle;">
-                                    <b>Date:</b> ';
-if($clientclick == 'yes'){
-    $elevTbl .= \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y');
-}
-$elevTbl .= '
+                                <td colspan="2">
+                                    <table id="WithBorder" class="tbl1">
+                                        <tbody>
+                                            <tr>
+                                                <td class="marImg" rowspan="2">
+                                                    <span>';
+            if (!empty($comapnyDetail->ComplogoBase64)) {
+                $elevTbl .=
+                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+            } else {
+                $elevTbl .= Base64Image('defaultImg');
+            }
+
+            $elevTbl .=
+                '</span>
+                                                </td>
+                                                <td class="tbl_color"><span>Ref</span></td>
+                                                <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
+                                                <td class="tbl_color"><span>Project</span></td>
+                                                <td><span>' . $ProjectName . '</span></td>
+                                                <td class="tbl_color"><span>Prepared By</span></td>
+                                                <td><span>' . $Username . '</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
+                                                <td style="width:20px;"><span>' . $version . '</span></td>
+                                                <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
+                                                <td><span >' . date('Y-m-d') . '</span></td>
+                                                <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
+                                                <td><span>' . $customer->CstCompanyName . '</span></td>
+                                                <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
+                                                <td><span>' . $SalesContact . '</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </td>
                             </tr>
-                        </table>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
+                            <tr>
+                                <td colspan="2">
+                                    <table id="WithBorder" class="tbl1 dashedborder">
+                                        <tbody>
+                                            <tr>
+                                                <td class="marImg" rowspan="2">
+                                                    <span>';
+            if (!empty($comapnyDetail->ComplogoBase64)) {
+                $elevTbl .=
+                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+            } else {
+                $elevTbl .= Base64Image('defaultImg');
+            }
 
-                            ';
+            $elevTbl .=
+                '</span>
+                                            </td>
+                                                <td class="tbl_color"><span>IO No</span></td>
+                                                <td>' . $project->ioNumberOne . '</td>
+                                                <td>' . $project->ioNumberTwo . '</td>
+                                                <td>' . $project->ioNumberThree . '</td>
+                                                <td class="tbl_color"><span>Frame Po</span></td>
+                                                <td>' . $project->framePoOne . '</td>
+                                                <td>' . $project->framePoTwo . '</td>
+                                                <td>' . $project->framePoThree . '</td>
+                                                <td class="tbl_color"><span>Ironmongery Po</span></td>
+                                                <td>' . $project->ironmongeryPoOne . '</td>
+                                                <td>' . $project->ironmongeryPoTwo . '</td>
+                                                <td>' . $project->ironmongeryPoThree . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_color"><span>Door Po</span></td>
+                                                <td>' . $project->doorPoOne . '</td>
+                                                <td>' . $project->doorPoTwo . '</td>
+                                                <td>' . $project->doorPoThree . '</td>
+                                                <td class="tbl_color"><span>Glass Po</span></td>
+                                                <td>' . $project->glassPoOne . '</td>
+                                                <td>' . $project->glassPoTwo . '</td>
+                                                <td>' . $project->glassPoThree . '</td>
+                                                <td class="tbl_color"><span>Intumescent Po</span></td>
+                                                <td>' . $project->intumescentPoOne . '</td>
+                                                <td>' . $project->intumescentPoTwo . '</td>
+                                                <td>' . $project->intumescentPoThree . '</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin-top: 10px;overflow: auto; padding: 0px 20px;align-items: center height: 150px ;display: flex;">
+                                    <div style="float: left;border: aliceblue;padding: 5px 10px;display: flex;width: 50%;">
+                                        <div style="display: inline-flex; align-items: center;">
+                                            <p style="font-size: 16px; line-height: 23px; padding: 0; margin: 0;">Signature</p>';
+                                            if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
+                                               $elevTbl .= ' <img style="width: 160px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
+                                            } else {
+                                                $elevTbl .= ' ';
+                                            }
+                                      $elevTbl .= '  </div>
+                                    </div>';
+
+                                    if($clientclick == 'yes'){
+                                     $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date - '. \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y').'
+                                    </div>';
+                                    } else{
+                                        $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date -
+                                    </div>';
+                                    }
+                                    $elevTbl .= '
+                                </div>
+                                </td>
+                            </tr>';
             $elevTbl .= '<tr>';
 
             $ConfigurableItems = "Streboard";
@@ -5906,108 +5914,114 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     <div id="section-left">
                         <table id="NoBorder">
                             <tr>
-    <td colspan="2">
-        <!-- HEADER TABLE -->
-        <table id="WithBorder" class="tbl1">
-            <tbody>
-                <tr>
-                    <td class="marImg" rowspan="2">
-                        <span>';
-if (!empty($comapnyDetail->ComplogoBase64)) {
-    $elevTbl .= '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
-} else {
-    $elevTbl .= Base64Image('defaultImg');
-}
-$elevTbl .= '</span>
-                    </td>
-                    <td class="tbl_color"><span>Ref</span></td>
-                    <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
-                    <td class="tbl_color"><span>Project</span></td>
-                    <td><span>' . $ProjectName . '</span></td>
-                    <td class="tbl_color"><span>Prepared By</span></td>
-                    <td><span>' . $Username . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color" style="width:25px;"><span>Revision</span></td>
-                    <td style="width:20px;"><span>' . $version . '</span></td>
-                    <td class="tbl_color" style="width:20px;"><span>Date</span></td>
-                    <td><span>' . date('Y-m-d') . '</span></td>
-                    <td class="tbl_color" style="width:10px;"><span>Customer</span></td>
-                    <td><span>' . $customer->CstCompanyName . '</span></td>
-                    <td class="tbl_color" style="width:60px;"><span>Quote name</span></td>
-                    <td><span>' . $SalesContact . '</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </td>
-</tr>
+                                <td colspan="2">
+                                    <table id="WithBorder" class="tbl1">
+                                        <tbody>
+                                            <tr>
+                                                <td class="marImg" rowspan="2">
+                                                    <span>';
+            if (!empty($comapnyDetail->ComplogoBase64)) {
+                $elevTbl .=
+                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+            } else {
+                $elevTbl .= Base64Image('defaultImg');
+            }
 
-<tr>
-    <td colspan="2">
-        <!-- PO TABLE -->
-        <table id="WithBorder" class="tbl1 dashedborder">
-            <tbody>
-                <tr>
-                    <td class="tbl_color"><span>IO No</span></td>
-                    <td>' . $project->ioNumberOne . '</td>
-                    <td>' . $project->ioNumberTwo . '</td>
-                    <td>' . $project->ioNumberThree . '</td>
-                    <td class="tbl_color"><span>Frame Po</span></td>
-                    <td>' . $project->framePoOne . '</td>
-                    <td>' . $project->framePoTwo . '</td>
-                    <td>' . $project->framePoThree . '</td>
-                    <td class="tbl_color"><span>Ironmongery Po</span></td>
-                    <td>' . $project->ironmongeryPoOne . '</td>
-                    <td>' . $project->ironmongeryPoTwo . '</td>
-                    <td>' . $project->ironmongeryPoThree . '</td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Door Po</span></td>
-                    <td>' . $project->doorPoOne . '</td>
-                    <td>' . $project->doorPoTwo . '</td>
-                    <td>' . $project->doorPoThree . '</td>
-                    <td class="tbl_color"><span>Glass Po</span></td>
-                    <td>' . $project->glassPoOne . '</td>
-                    <td>' . $project->glassPoTwo . '</td>
-                    <td>' . $project->glassPoThree . '</td>
-                    <td class="tbl_color"><span>Intumescent Po</span></td>
-                    <td>' . $project->intumescentPoOne . '</td>
-                    <td>' . $project->intumescentPoTwo . '</td>
-                    <td>' . $project->intumescentPoThree . '</td>
-                </tr>
+            $elevTbl .=
+                '</span>
+                                                </td>
+                                                <td class="tbl_color"><span>Ref</span></td>
+                                                <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
+                                                <td class="tbl_color"><span>Project</span></td>
+                                                <td><span>' . $ProjectName . '</span></td>
+                                                <td class="tbl_color"><span>Prepared By</span></td>
+                                                <td><span>' . $Username . '</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
+                                                <td style="width:20px;"><span>' . $version . '</span></td>
+                                                <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
+                                                <td><span >' . date('Y-m-d') . '</span></td>
+                                                <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
+                                                <td><span>' . $customer->CstCompanyName . '</span></td>
+                                                <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
+                                                <td><span>' . $SalesContact . '</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <table id="WithBorder" class="tbl1 dashedborder">
+                                        <tbody>
+                                            <tr>
+                                                <td class="marImg" rowspan="2">
+                                                    <span>';
+            if (!empty($comapnyDetail->ComplogoBase64)) {
+                $elevTbl .=
+                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+            } else {
+                $elevTbl .= Base64Image('defaultImg');
+            }
 
-                <!-- SIGNATURE + DATE ROW -->
-                <!-- SIGNATURE + DATE ROW -->
-<tr>
-    <td colspan="12" style="padding: 8px;">
-        <table style="width:100%; border-collapse: collapse;">
-            <tr>
-                <td style="text-align:left; font-size:14px; vertical-align:middle; white-space:nowrap; padding:5px;">
-                    <b>Signature:</b>
-                    ';
-if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
-    $elevTbl .= '<span style="display:inline-block; vertical-align:middle; margin-left:10px; min-height:40px;">
-                    <img style="max-height:40px; max-width:160px; object-fit:contain;" src="' . public_path($fetchSignature->signature_path) . '"/>
-                 </span>';
-}
-$elevTbl .= '
-                </td>
-                <td style="text-align:right; font-size:14px; vertical-align:middle; white-space:nowrap; padding:5px;">
-                    <b>Date:</b> ';
-if($clientclick == 'yes'){
-    $elevTbl .= \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y');
-}
-$elevTbl .= '
-                </td>
-            </tr>
-        </table>
-    </td>
-</tr>
+            $elevTbl .=
+                '</span>
+                                            </td>
+                                                <td class="tbl_color"><span>IO No</span></td>
+                                                <td>' . $project->ioNumberOne . '</td>
+                                                <td>' . $project->ioNumberTwo . '</td>
+                                                <td>' . $project->ioNumberThree . '</td>
+                                                <td class="tbl_color"><span>Frame Po</span></td>
+                                                <td>' . $project->framePoOne . '</td>
+                                                <td>' . $project->framePoTwo . '</td>
+                                                <td>' . $project->framePoThree . '</td>
+                                                <td class="tbl_color"><span>Ironmongery Po</span></td>
+                                                <td>' . $project->ironmongeryPoOne . '</td>
+                                                <td>' . $project->ironmongeryPoTwo . '</td>
+                                                <td>' . $project->ironmongeryPoThree . '</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="tbl_color"><span>Door Po</span></td>
+                                                <td>' . $project->doorPoOne . '</td>
+                                                <td>' . $project->doorPoTwo . '</td>
+                                                <td>' . $project->doorPoThree . '</td>
+                                                <td class="tbl_color"><span>Glass Po</span></td>
+                                                <td>' . $project->glassPoOne . '</td>
+                                                <td>' . $project->glassPoTwo . '</td>
+                                                <td>' . $project->glassPoThree . '</td>
+                                                <td class="tbl_color"><span>Intumescent Po</span></td>
+                                                <td>' . $project->intumescentPoOne . '</td>
+                                                <td>' . $project->intumescentPoTwo . '</td>
+                                                <td>' . $project->intumescentPoThree . '</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div style="margin-top: 10px;overflow: auto; padding: 0px 20px;align-items: center height: 150px ;display: flex;">
+                                    <div style="float: left;border: aliceblue;padding: 5px 10px;display: flex;width: 50%;">
+                                        <div style="display: inline-flex; align-items: center;">
+                                            <p style="font-size: 16px; line-height: 23px; padding: 0; margin: 0;">Signature</p>';
+                                            if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
+                                               $elevTbl .= ' <img style="width: 160px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
+                                            } else {
+                                                $elevTbl .= ' ';
+                                            }
+                                      $elevTbl .= '  </div>
+                                    </div>';
 
-            </tbody>
-        </table>
-    </td>
-</tr>';
+                                    if($clientclick == 'yes'){
+                                     $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date - '. \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y').'
+                                    </div>';
+                                    } else{
+                                        $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
+                                        Date -
+                                    </div>';
+                                    }
+                                    $elevTbl .= '
+                                </div>
+                                </td>
+                            </tr>';
             $elevTbl .= '<tr>';
 
             $ConfigurableItems = "Streboard";
