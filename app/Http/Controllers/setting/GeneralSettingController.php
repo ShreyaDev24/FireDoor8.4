@@ -202,6 +202,45 @@ class GeneralSettingController extends Controller
                 ],
             ],
 
+            // Screen Construction Settings
+
+            'ScreenConstruction' => [
+                'FrameHead' => [
+                    'width' => $request->input('frameHeadWidth'),
+                    'height' => $request->input('frameHeadHeight'),
+                ],
+                'Transom' => [
+                    'width' => $request->input('transomAdjustment'),
+                ],
+                'Mullion' => [
+                    'width' => $request->input('mullionAdjustment'),
+                ],
+
+            ],
+            'ScreenGlass' => [
+                'NFR' => [
+                    'width' => $request->input('screenGlassWidthNFR'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('screenGlassWidthFD60'),
+                ],
+            ],
+            'SideGlass' => [
+                'NFR' => [
+                    'width' => $request->input('sideLightWidthNFR'),
+                    'height' => $request->input('sideLightHeightNFR'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('sideLightWidthFD60'),
+                    'height' => $request->input('sideLightHeightFD60'),
+                ],
+            ],
+            'ScreenBead' => [
+                'NFR' => [
+                    'width' => $request->input('screenBeadWidthNFR'),
+                    'height' => $request->input('screenBeadHeightNFR'),
+                ],
+            ],
         ];
 
         // Loop through and flatten if needed
@@ -218,14 +257,14 @@ class GeneralSettingController extends Controller
                     if ($doorFrameConst) {
                         $doorFrameConst->update([
                             'Width' => $dimensions['width'],
-                            'Height' => $dimensions['height']
+                            'Height' => $dimensions['height'] ?? 0
                         ]);
                     } else {
                         DoorFrameConstruction::create([
                             'UserId' => $userId,
                             'DoorFrameConstruction' => $key,
-                            'Width' => $dimensions['width'],
-                            'Height' => $dimensions['height']
+                            'Width' => $dimensions['width'] ?? 0,
+                            'Height' => $dimensions['height'] ?? 0
                         ]);
                     }
                 }
@@ -265,14 +304,14 @@ class GeneralSettingController extends Controller
                 if ($doorFrameConst) {
                     $doorFrameConst->update([
                         'Width' => $values['width'],
-                        'Height' => $values['height']
+                        'Height' => $values['height'] ?? 0
                     ]);
                 } else {
                     DoorFrameConstruction::create([
                         'UserId' => $userId,
                         'DoorFrameConstruction' => $mainKey,
                         'Width' => $values['width'],
-                        'Height' => $values['height']
+                        'Height' => $values['height'] ?? 0
                     ]);
                 }
             }
