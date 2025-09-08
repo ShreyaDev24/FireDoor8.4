@@ -7126,20 +7126,55 @@ svg.append("circle")
             }
             }
 
-                if (IsLetterPlatesEnable2 ) {
-                    if (LetterplatesCentered == 1) {
-LeftLetterPlate(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor,LetterplatesDistanceFromLeadingEdgeOfDoor)
-                    }else{
- LeftLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
-                    }
-                     if (LetterplatesCentered2 == 1) {
-                    RightLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
-                 }
-                else{
-                    RightLetterPlate(LetterplatesHeight2,LetterplatesWidth2,LetterplatesDistanceFromBottomOfDoor2,LetterplatesDistanceFromLeadingEdgeOfDoor2)
-                }
-                   
-            }
+                     if (IsLetterPlatesEnable2) {
+    
+    // Case 1: Both plates centered
+    if (LetterplatesCentered == 1 && LetterplatesCentered2 == 1) {
+        LeftLetterPlateCentered(
+            LetterplatesHeight,
+            LetterplatesWidth,
+            LetterplatesDistanceFromBottomOfDoor
+        );
+        RightLetterPlateCentered(
+            LetterplatesHeight,
+            LetterplatesWidth,
+            LetterplatesDistanceFromBottomOfDoor
+        );
+    }
+    else {
+        // Handle Left Plate
+        if (LetterplatesCentered == 1) {
+            LeftLetterPlateCentered(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor
+            );
+        } else {
+            LeftLetterPlate(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor,
+                LetterplatesDistanceFromLeadingEdgeOfDoor
+            );
+        }
+
+        // Handle Right Plate
+        if (LetterplatesCentered2 == 1) {
+            RightLetterPlateCentered(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor
+            );
+        } else {
+            RightLetterPlate(
+                LetterplatesHeight2,
+                LetterplatesWidth2,
+                LetterplatesDistanceFromBottomOfDoor2,
+                LetterplatesDistanceFromLeadingEdgeOfDoor2
+            );
+        }
+    }
+}
 
 
 
