@@ -1759,7 +1759,7 @@ class PrintInvoiceController extends Controller
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4')) .'px; left: -40px;">
                                     <img style="width: '. (
-                                                ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px; alt="" src="' . $FrameTypeLeft . '">
+                                                ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '46')) .'px; alt="" src="' . $FrameTypeLeft . '">
                                 </div>
                             </div>';
 
@@ -1876,7 +1876,7 @@ class PrintInvoiceController extends Controller
 
                         $DoorFrameImage .= '<img style="
                                     width: '. (
-                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '105' : '323')  .'px;
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '323' : '323')  .'px;
                                     position: relative;
                                     top: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '6' : '-10')  .'px;
@@ -1972,7 +1972,7 @@ class PrintInvoiceController extends Controller
                                         top: 8px;
                                         left: 386px;">
                                         <img style="width:'. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319')) .'px;
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '319' : '319') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '319' : '319')) .'px;
                                         position: relative;
                                         top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4')) .'px;;
@@ -2034,7 +2034,7 @@ class PrintInvoiceController extends Controller
                                                 right:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'33') : '20')) .'px;">
                                             <img style="width:'. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
                                         </div>';
                                             }
                     // ----------------Right-------------------
