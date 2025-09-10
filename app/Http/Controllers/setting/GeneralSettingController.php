@@ -220,19 +220,11 @@ class GeneralSettingController extends Controller
             'ScreenGlass' => [
                 'NFR' => [
                     'width' => $request->input('screenGlassWidthNFR'),
+                    'height' => $request->input('screenGlassHeightNFR'),
                 ],
                 'FD60' => [
                     'width' => $request->input('screenGlassWidthFD60'),
-                ],
-            ],
-            'SideGlass' => [
-                'NFR' => [
-                    'width' => $request->input('sideLightWidthNFR'),
-                    'height' => $request->input('sideLightHeightNFR'),
-                ],
-                'FD60' => [
-                    'width' => $request->input('sideLightWidthFD60'),
-                    'height' => $request->input('sideLightHeightFD60'),
+                    'height' => $request->input('screenGlassHeightFD60'),
                 ],
             ],
             'ScreenBead' => [

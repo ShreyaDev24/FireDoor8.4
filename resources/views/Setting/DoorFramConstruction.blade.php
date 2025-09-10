@@ -585,26 +585,19 @@
                                 </div>
 
                                 <!-- Screen Glass Size Adjustment - NFR/FD30 -->
-                                <div class="col-12 font-weight-bold">SCREEN GLASS SIZE ADJUSTMENT</div>
+                                <div class="col-12 font-weight-bold">SCREEN GLASS SIZE ADJUSTMENT - NFR OR FD30</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="screenGlassWidthNFR">SCREEN GLASS WIDTH NFR OR FD30</label>
+                                        <label for="screenGlassWidthNFR">SCREEN GLASS WIDTH</label>
                                         <input type="number" name="screenGlassWidthNFR" id="screenGlassWidthNFR" class="form-control" placeholder="Enter Width" max="0"
                                             value="@if(!empty($allSettings['ScreenGlass.NFR'])){{$allSettings['ScreenGlass.NFR']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLightWidthNFR">SIDE LIGHT GLASS WIDTH</label>
-                                        <input type="number" name="sideLightWidthNFR" id="sideLightWidthNFR" class="form-control" placeholder="Enter Width" max="0"
-                                            value="@if(!empty($allSettings['SideGlass.NFR'])){{$allSettings['SideGlass.NFR']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="sideLightHeightNFR">SIDE LIGHT GLASS HEIGHT</label>
-                                        <input type="number" name="sideLightHeightNFR" id="sideLightHeightNFR" class="form-control" placeholder="Enter Height" max="0"
-                                            value="@if(!empty($allSettings['SideGlass.NFR'])){{$allSettings['SideGlass.NFR']->Height}}@endif">
+                                        <label for="screenGlassHeightNFR">SCREEN GLASS HEIGHT</label>
+                                        <input type="number" name="screenGlassHeightNFR" id="screenGlassHeightNFR" class="form-control" placeholder="Enter Height" max="0"
+                                            value="@if(!empty($allSettings['ScreenGlass.NFR'])){{$allSettings['ScreenGlass.NFR']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -612,38 +605,31 @@
                                 <div class="col-12 font-weight-bold">SCREEN GLASS SIZE ADJUSTMENT - FD60</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="screenGlassWidthFD60">SCREEN GLASS WIDTH FD60</label>
+                                        <label for="screenGlassWidthFD60">SCREEN GLASS WIDTH</label>
                                         <input type="number" name="screenGlassWidthFD60" id="screenGlassWidthFD60" class="form-control" placeholder="Enter Width" max="0"
                                             value="@if(!empty($allSettings['ScreenGlass.FD60'])){{$allSettings['ScreenGlass.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLightWidthFD60">SIDE LIGHT GLASS WIDTH</label>
-                                        <input type="number" name="sideLightWidthFD60" id="sideLightWidthFD60" class="form-control" placeholder="Enter Width" max="0"
-                                            value="@if(!empty($allSettings['SideGlass.FD60'])){{$allSettings['SideGlass.FD60']->Width}}@endif">
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <label for="sideLightHeightFD60">SIDE LIGHT GLASS HEIGHT</label>
-                                        <input type="number" name="sideLightHeightFD60" id="sideLightHeightFD60" class="form-control" placeholder="Enter Height" max="0"
-                                            value="@if(!empty($allSettings['SideGlass.FD60'])){{$allSettings['SideGlass.FD60']->Height}}@endif">
+                                        <label for="screenGlassHeightFD60">SCREEN GLASS HEIGHT</label>
+                                        <input type="number" name="screenGlassHeightFD60" id="screenGlassHeightFD60" class="form-control" placeholder="Enter Height" max="0"
+                                            value="@if(!empty($allSettings['ScreenGlass.FD60'])){{$allSettings['ScreenGlass.FD60']->Height}}@endif">
                                     </div>
                                 </div>
 
                                 <!-- Screen Bead Size Adjustment -->
-                                <div class="col-12 font-weight-bold">SCREEN BEAD SIZE ADJUSTMENT - NFR OR FD30</div>
+                                <div class="col-12 font-weight-bold">SCREEN BEAD SIZE ADJUSTMENT</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="screenBeadWidthNFR">SCREEN BEAD WIDTH NFR OR FD30</label>
+                                        <label for="screenBeadWidthNFR">SCREEN BEAD WIDTH</label>
                                         <input type="number" name="screenBeadWidthNFR" id="screenBeadWidthNFR" class="form-control" placeholder="Enter Width"
                                             value="@if(!empty($allSettings['ScreenBead.NFR'])){{$allSettings['ScreenBead.NFR']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="screenBeadHeightNFR">SCREEN BEAD HEIGHT NFR OR FD30</label>
+                                        <label for="screenBeadHeightNFR">SCREEN BEAD HEIGHT</label>
                                         <input type="number" name="screenBeadHeightNFR" id="screenBeadHeightNFR" class="form-control" placeholder="Enter Height"
                                             value="@if(!empty($allSettings['ScreenBead.NFR'])){{$allSettings['ScreenBead.NFR']->Height}}@endif">
                                     </div>
