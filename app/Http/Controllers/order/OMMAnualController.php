@@ -36,6 +36,7 @@ use App\Models\User;
 use App\Models\CoreCertificate;
 use App\Models\OverpanelGlassGlazing;
 use App\Models\IntumescentSealLeafType;
+use App\Models\QuotationSiteDeliveryAddress;
 use App\Models\FittingInstructions;
 
 class OMMAnualController extends Controller
@@ -86,7 +87,28 @@ class OMMAnualController extends Controller
 
         // First PDF
         // Introduction PDF
-        $pdfOne = PDF::loadView('Order.pdf_files.introduction', ['pdf1' => $pdf1, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        // $pdfOne = PDF::loadView('Order.pdf_files.introduction', ['pdf1' => $pdf1, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        // // return $pdfOne->download('file.pdf');
+        // $path = public_path() . '/allpdfFile';
+        // $fileName1 = $id . '1' . '.' . 'pdf';
+        // $pdfOne->save($path . '/' . $fileName1);
+
+        $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
+
+        $QuotationSiteDeliveryAddress = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->first();
+
+        $data = [
+            'project_name' => $project->ProjectName ?? '',
+            'client_contractor' => $customer->FirstName.' '.$customer->LastName,
+            'site_address' => (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')),
+            'fire_door_types' => 'Door cores used '. $configurationItemName .' FD30/FD60',
+            'date' => now()->format('d M Y'),
+            'compiled_by' => ' ',
+            'cover_image' => public_path('uploads/cover-image.jpg') // Uploaded image path
+        ];
+
+
+        $pdfOne = PDF::loadView('Order.pdf_files.cover', ['data' => $data, 'comapnyDetail' => $comapnyDetail]);
         // return $pdfOne->download('file.pdf');
         $path = public_path() . '/allpdfFile';
         $fileName1 = $id . '1' . '.' . 'pdf';
