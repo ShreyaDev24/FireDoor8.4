@@ -71,7 +71,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                     $Finish = $value->Finish;
                     $GlazingBeadWidth = $value->GlazingBeadWidth;
                     $GlazingBeadHeight = $value->GlazingBeadHeight;
-
+                    $ScreenGlazingWidthNFR = $ScreenGlazingHeightNFR = 0;
                     if(!empty($allSettings['ScreenBead.NFR'])){
                         $ScreenGlazingWidthNFR = $allSettings['ScreenBead.NFR']->Width;
                         $ScreenGlazingHeightNFR = $allSettings['ScreenBead.NFR']->Height;

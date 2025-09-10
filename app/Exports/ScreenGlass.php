@@ -59,7 +59,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
-
+            $ScreenGlassWidthNFR = $ScreenGlassHeightNFR = $ScreenGlassWidthFD60 = $ScreenGlassHeightFD60 = 0;
             if(!empty($allSettings['ScreenGlass.NFR'])){
                 $ScreenGlassWidthNFR = $allSettings['ScreenGlass.NFR']->Width;
                 $ScreenGlassHeightNFR = $allSettings['ScreenGlass.NFR']->Height;
