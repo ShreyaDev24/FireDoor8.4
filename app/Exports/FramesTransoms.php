@@ -451,12 +451,19 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Leg x 2',
             'Head',
             'Transom',
+            'Transom QTY',
             'Mullion',
+            'Mullion QTY',
+            'Notes',
         ], array_fill(0, 32 - 18, ''));
          $j = 1;
         foreach($this->result as $value){
             $screenNumber = $value->screenNumber;
             $ScreenType = $value->ScreenType;
+            $FrameHeight = $value->FrameHeight;
+            $FrameWidth = $value->FrameWidth;
+            $FrameThickness = $value->FrameThickness;
+            $FrameDepth = $value->FrameDepth;
             $poNmber = $value->plot_ref_no;
             $Certificate = $value->certification_no;
             $FrameMF = lippingName($value->FrameMaterial);
@@ -472,6 +479,18 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 'Sides' => 2,
             ];
 
+            $Height = $Width = $TransomWidth = $MullionWidth = 0;
+            if(!empty($allSettings['ScreenConstruction.FrameHead'])){
+                $Height = $allSettings['ScreenConstruction.FrameHead']->Height;
+                $Width = $allSettings['ScreenConstruction.FrameHead']->Width;
+            }
+            if(!empty($allSettings['ScreenConstruction.Transom'])){
+                $TransomWidth = $allSettings['ScreenConstruction.Transom']->width;
+            }
+            if(!empty($allSettings['ScreenConstruction.Mullion'])){
+                $MullionWidth = $allSettings['ScreenConstruction.Mullion']->width;
+            }
+
             foreach (['Head', 'Bottom', 'Sides'] as $FrameLocation) {
                 $Qty = $Quantities[$FrameLocation];
                 $screenDim = $FrameDimensions[$FrameLocation];
@@ -484,16 +503,19 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $FrameLocation,
                     $FrameMF,
                     $Finish,
+                    2, // QtyScreenType is constant as 1
                     $Qty,
-                    1, // QtyScreenType is constant as 1
                     $screenDim,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
+                    $FrameHeight,
+                    $FrameWidth,
+                    $FrameThickness,
+                    $FrameDepth,
+                    $FrameHeight - ($FrameThickness * 2) + $Height,
+                    $FrameWidth + $Width,
+                    $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
+                    $value->TransomQuantity ?? 0,
+                    $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
+                    $value->MullionQuantity ?? 0,
                     '',
                 ];
             }
@@ -519,13 +541,16 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $Qty,
                         1,
                         $screenDim,
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
+                        $FrameHeight,
+                        $FrameWidth,
+                        $FrameThickness,
+                        $FrameDepth,
+                        $FrameHeight - ($FrameThickness * 2) + $Height,
+                        $FrameWidth + $Width,
+                        $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
+                        $value->TransomQuantity ?? 0,
+                        $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
+                        $value->MullionQuantity ?? 0,
                         '',
                     ];
                     $j++;
@@ -553,13 +578,16 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         $Qty,
                         1,
                         $screenDim,
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
-                        '',
+                        $FrameHeight,
+                        $FrameWidth,
+                        $FrameThickness,
+                        $FrameDepth,
+                        $FrameHeight - ($FrameThickness * 2) + $Height,
+                        $FrameWidth + $Width,
+                        $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
+                        $value->TransomQuantity ?? 0,
+                        $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
+                        $value->MullionQuantity ?? 0,
                         '',
                     ];
                     $j++;
@@ -583,13 +611,16 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $Qty,
                     1,
                     $screenDim,
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
-                    '',
+                    $FrameHeight,
+                    $FrameWidth,
+                    $FrameThickness,
+                    $FrameDepth,
+                    $FrameHeight - ($FrameThickness * 2) + $Height,
+                    $FrameWidth + $Width,
+                    $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
+                    $value->TransomQuantity ?? 0,
+                    $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
+                    $value->MullionQuantity ?? 0,
                     '',
                 ];
                 $j++;
