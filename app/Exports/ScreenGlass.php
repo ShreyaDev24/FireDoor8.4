@@ -16,7 +16,8 @@ use App\Models\QuotationVersion;
 use App\Models\BOMCalculation;
 use Carbon\Carbon;
 use App\Models\Company;
-use App\Models\SideScreenItemMaster;
+use App\Models\DoorFrameConstruction;
+use App\Models\User;
 use Auth;
 
 class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
@@ -42,6 +43,14 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         $k = 1;
         $data = [];
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
         foreach($this->result as $value){
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
@@ -49,6 +58,27 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
+            }
+
+            if(!empty($allSettings['ScreenGlass.NFR'])){
+                $ScreenGlassWidthNFR = $allSettings['ScreenGlass.NFR']->Width;
+                $ScreenGlassHeightNFR = $allSettings['ScreenGlass.NFR']->Height;
+            }
+            if(!empty($allSettings['ScreenGlass.FD60'])){
+                $ScreenGlassWidthFD60 = $allSettings['ScreenGlass.FD60']->Width;
+                $ScreenGlassHeightFD60 = $allSettings['ScreenGlass.FD60']->Height;
+            }
+
+            $FrameHeight = $value->FrameHeight;
+            $FrameWidth = $value->FrameWidth;
+            $FrameThickness = $value->FrameThickness;
+
+            if($value->FireRating == '60-60' || $value->FireRating == '60-0'){
+                $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
+                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
+            }else{
+                $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthNFR;
+                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassHeightNFR;
             }
 
             $TransomQuantity = $value->TransomQuantity + 1;
@@ -110,8 +140,8 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $ScreenType,
                         $glasspane,
                         $glassType,
-                        $GlassPaneWidth,
-                        $GlassPaneHeight,
+                        $GlassWidth,
+                        $GlassHeight,
                         $screenQty,
                     ];
                     $k++;

@@ -9,13 +9,13 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
-use App\Models\Item;
+use App\Models\DoorFrameConstruction;
 use App\Models\Project;
 use App\Models\Quotation;
 use App\Models\QuotationVersion;
 use App\Models\BOMCalculation;
 use Carbon\Carbon;
-use App\Models\LippingSpecies;
+use App\Models\User;
 use Auth;
 
 class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle
@@ -45,11 +45,19 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
             }
-            
+
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
-            
+
+            if(Auth::user()->UserType == 3){
+                $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+                $ids = $users->CreatedBy;
+            }else{
+                $ids = Auth::user()->id;
+            }
+            $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
             $TransomQuantity = $value->TransomQuantity + 1;
             $MullionQuantity = $value->MullionQuantity + 1;
             $alphabet = range('A', 'D'); // For row labels (A, B, C)
@@ -63,6 +71,11 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                     $Finish = $value->Finish;
                     $GlazingBeadWidth = $value->GlazingBeadWidth;
                     $GlazingBeadHeight = $value->GlazingBeadHeight;
+
+                    if(!empty($allSettings['ScreenBead.NFR'])){
+                        $ScreenGlazingWidthNFR = $allSettings['ScreenBead.NFR']->Width;
+                        $ScreenGlazingHeightNFR = $allSettings['ScreenBead.NFR']->Height;
+                    }
                     // Map glass pane identifiers to their respective width and height properties
                     $glassPaneMap = [
                         'A1' => ['width' => 'GlassPane1Width', 'height' => 'GlassPane1Height'],
@@ -107,8 +120,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                         $GlazingBeadShape,
                         $GlazingBeadMaterial,
                         $Finish,
-                        $GlazingBeadWidth,
-                        $GlazingBeadHeight,
+                        $GlazingBeadWidth + $ScreenGlazingWidthNFR,
+                        $GlazingBeadHeight + $ScreenGlazingHeightNFR,
                         $GlassPaneWidth,
                         $Qty,
                         $screenQty,
@@ -124,8 +137,8 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
                         $GlazingBeadShape,
                         $GlazingBeadMaterial,
                         $Finish,
-                        $GlazingBeadWidth,
-                        $GlazingBeadHeight,
+                        $GlazingBeadWidth + $ScreenGlazingWidthNFR,
+                        $GlazingBeadHeight + $ScreenGlazingHeightNFR,
                         $GlassPaneHeight,
                         $Qty,
                         $screenQty,
@@ -143,7 +156,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -167,7 +180,7 @@ class ScreenGlazingBeads implements FromCollection,WithHeadings,WithEvents,WithT
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
         return [
