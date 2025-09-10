@@ -102,7 +102,9 @@ class OMMAnualController extends Controller
             'client_contractor' => $customer->FirstName.' '.$customer->LastName,
             'site_address' => (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')),
             'fire_door_types' => 'Door cores used '. $configurationItemName .' FD30/FD60',
+            'configurationItemName' => $configurationItemName,
             'date' => now()->format('d M Y'),
+            'NumberOfDoorSets' => NumberOfDoorSets($versionID,$quatationId),
             'compiled_by' => ' ',
             'cover_image' => public_path('uploads/cover-image.jpg') // Uploaded image path
         ];
@@ -116,11 +118,17 @@ class OMMAnualController extends Controller
 
         // Second PDF
         // Architectural Ironmongery
-        $pdfTwo = PDF::loadView('Order.pdf_files.architecturalIronmongery', ['pdf2' => $pdf2, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        $pdfTwo = PDF::loadView('Order.pdf_files.Fire-door-submittal.blade', ['data' => $data, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
         // return $pdfTwo->download('file.pdf');
         $path2 = public_path() . '/allpdfFile';
         $fileName2 = $id . '2' . '.' . 'pdf';
         $pdfTwo->save($path2 . '/' . $fileName2);
+        //  // Architectural Ironmongery
+        // $pdfTwo = PDF::loadView('Order.pdf_files.architecturalIronmongery', ['pdf2' => $pdf2, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        // // return $pdfTwo->download('file.pdf');
+        // $path2 = public_path() . '/allpdfFile';
+        // $fileName2 = $id . '2' . '.' . 'pdf';
+        // $pdfTwo->save($path2 . '/' . $fileName2);
 
         $pdf_mpr = PDF::loadView('Order.pdf_files.m_p_r');
         $path_mpr = public_path() . '/allpdfFile';
