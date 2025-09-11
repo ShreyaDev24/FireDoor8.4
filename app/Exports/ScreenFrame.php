@@ -63,7 +63,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
             $FrameMF = lippingName($value->FrameMaterial);
             $Finish = $value->Finish;
             $FrameDimensions = [
-                'Head' => $value->FrameWidth . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
+                'Head' => $FrameHeight . ' x ' .$value->FrameWidth . ' x ' . $value->FrameThickness,
                 'Bottom' => $value->FrameWidth . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
                 'Sides' => $value->FrameHeight . ' x ' . $value->FrameDepth . ' x ' . $value->FrameThickness,
             ];
