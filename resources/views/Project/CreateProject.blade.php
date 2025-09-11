@@ -407,10 +407,13 @@ word-wrap: break-word;
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label for="projectImage" class="">More Information <span
-                                                class="text-danger"></span></label>
+                                        <label>
+                                            <input type="checkbox" name="QualificationsStatus" value="1">
+                                             Qualifications <span
+                                                class="text-danger"></span>
+                                        </label>
                                         <textarea rows="10" cols="10"
-                                            placeholder="Enter More Information..." name="MoreInformation"
+                                            placeholder="Enter Qualifications ..." name="MoreInformation"
                                             class="form-control">@if(isset($projects->MoreInformation)){{$projects->MoreInformation}}@else{{old('MoreInformation')}}@endif</textarea>
                                     </div>
                                 </div>
