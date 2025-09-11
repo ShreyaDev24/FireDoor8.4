@@ -510,10 +510,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $FrameDepth,
                     $FrameHeight - ($FrameThickness * 2) + $Height,
                     $FrameWidth + $Width,
-                    $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
-                    $value->TransomQuantity ?? 0,
-                    $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
-                    $value->MullionQuantity ?? 0,
+                    (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($FrameWidth - ($FrameThickness * 2) + $TransomWidth) : 0,
+                    (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($value->TransomQuantity) : 0,
+                    (!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)) ? ($FrameHeight - ($FrameThickness * 2) + $MullionWidth) : 0,
+                    (!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)) ? ($value->MullionQuantity) : 0,
                     '',
                 ];
             }
