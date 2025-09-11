@@ -718,11 +718,11 @@ $(document).ready(function() {
     });
 
     $("#sideLight1GlassType").change(function(){
-        OverpanelGlassTypeChange($("#sideLight1GlassType").val(),'sideLight1GlassType',false);
+        SideGlassTypeChange($("#sideLight1GlassType").val(),'sideLight1GlassType',false);
     });
 
     $("#sideLight2GlassType").change(function(){
-        OverpanelGlassTypeChange($("#sideLight2GlassType").val(),'sideLight2GlassType',false);
+        SideGlassTypeChange($("#sideLight2GlassType").val(),'sideLight2GlassType',false);
     });
 
     //getting glazing thikness filter using glazing systems
@@ -1017,6 +1017,13 @@ $(document).ready(function() {
     }
     $(document).ready(function () {
         addValidation($("#overpanel").val());
+
+         $("#SL1Transom, #SL2Transom").on("change", function () {
+            updateTransomFields();
+        });
+
+        // Run once on page load in case default values exist
+        updateTransomFields();
     });
 
     function overpanelOPHeight(){
@@ -2129,7 +2136,8 @@ $(document).ready(function() {
                             }
                         }
                     }
-
+                    let sideLight1 = $("#sideLight1").val();
+                    let sideLight2 = $("#sideLight2").val();
                     if(innerHtml1 != ''){
                         var intigrity1 ='<option value="">Select Glass Intrigrity</option>';
                         $("#opGlassIntegrity").attr('disabled',false).val();
@@ -2139,16 +2147,33 @@ $(document).ready(function() {
                         $("#opGlassIntegrity").attr('disabled',true).val('');
                     }
                     if(innerHtml2 != ''){
-                        var intigrity2 ='<option value="">Select Glass Intrigrity</option>';
-                        $("#SL1GlassIntegrity").attr('disabled',false).val();
+                        if(sideLight1 == 'No'){
+                            var intigrity2 ='<option value="">Select Glass Intrigrity</option>';
+                            $("#SL1GlassIntegrity").attr('readonly',true).val();
+                        } else {
+                            var intigrity2 ='<option value="">Select Glass Intrigrity</option>';
+                            $("#SL1GlassIntegrity").attr('disabled',false).val();
+                        }
                     }else{
-                        var intigrity2 ='';
-                        innerHtml2+='<option value="">No Glass Intrigrity Found</option>';
-                        $("#SL1GlassIntegrity").attr('disabled',true).val('');
+                        if(sideLight1 == 'No'){
+                           var intigrity2 ='';
+                            innerHtml2+='<option value="">No Glass Intrigrity Found</option>';
+                            $("#SL1GlassIntegrity").attr('readonly',true).val('');
+                        }
+                        else {
+                            var intigrity2 ='';
+                            innerHtml2+='<option value="">No Glass Intrigrity Found</option>';
+                            $("#SL1GlassIntegrity").attr('disabled',true).val('');
+                        }
                     }
                     if(innerHtml3 != ''){
-                        var intigrity3 ='<option value="">Select Glass Intrigrity</option>';
-                        $("#SL2GlassIntegrity").attr('disabled',false).val();
+                        if(sideLight2 == 'No'){
+                            var intigrity3 ='<option value="">Select Glass Intrigrity</option>';
+                            $("#SL2GlassIntegrity").attr('readonly',true).val();
+                        } else {
+                            var intigrity3 ='<option value="">Select Glass Intrigrity</option>';
+                            $("#SL2GlassIntegrity").attr('disabled',false).val();
+                        }
                     }else{
                         var intigrity3='';
                         innerHtml3+='<option value="">No Glass Intrigrity Found</option>';
@@ -5061,10 +5086,17 @@ $("#doorsetType").on('change',function(){
 //     $('.loader').css({'display':'none'});
 // });
 $(document).ready(function(){
+    let overPanel = $("#overpanel").val();
+    let sideLight1 = $("#sideLight1").val();
+    let sideLight2 = $("#sideLight2").val();
     setTimeout(function(){
         var doorsetType = $('#doorsetType').val();
         if(doorsetType){
             visionPanel2Off(doorsetType);
+        }
+        if(sideLight1 == 'No'){
+            $("#sideLight1FrameThickness").prop("readonly", true);
+            $("#SL1TransomDepth").prop("readonly", true);
         }
         leafReadonly();
     }, 4000);
@@ -5072,9 +5104,7 @@ $(document).ready(function(){
     if(doorsetType){
         visionPanel2Off(doorsetType);
     }
-    let overPanel = $("#overpanel").val();
-    let sideLight1 = $("#sideLight1").val();
-    let sideLight2 = $("#sideLight2").val();
+
     opFlWidthAndHeight(overPanel)
     if(sideLight1 == 'Yes'){
         getSideLightGlass(sideLight1,'SideLight1');
@@ -5347,12 +5377,6 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
     if(type == "opGlassType"){
         glassType = (id == null)?$("#opGlassType").val():id;
     }
-    if(type == "sideLight1GlassType"){
-        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
-    }
-    if(type == "sideLight2GlassType"){
-        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
-    }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
         glassTypeValue = $("#OPGlassType-value").data("value");
@@ -5448,7 +5472,59 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
                             }
                             $("#OPglazingModalBody").empty().append(innerHtml1);
                         }
-                    }else if(type == "sideLight1GlassType"){
+                        let sidelightglass = $("#sideLight1GlassType").val() ?? $("#SideLight1GlassType-value").data("value");
+                        console.log(sidelightglass)
+                        $("#sideLight1GlassType").val(sidelightglass);
+                    }
+                }
+            }
+        });
+    }
+}
+function SideGlassTypeChange(id = null,type="",isstatus = false){
+
+    if(type == "sideLight1GlassType"){
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
+    }
+    if(type == "sideLight2GlassType"){
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
+    }
+    var glassTypeValue = document.getElementById('SideLight1GlassType-value');
+    if(glassTypeValue != null  && isstatus == true){
+        glassTypeValue = $("#SideLight1GlassType-value").data("value");
+        if(glassTypeValue != ""){
+            glassType = glassTypeValue;
+        }
+    }
+    console.log(glassType)
+    if(glassType != ''){
+        let pageId = pageIdentity();
+        let fireRating =$("#fireRating").val();
+        var fireRatingValue = document.getElementById('FireRating-value');
+        if(fireRatingValue != null && isstatus){
+            fireRatingValue = $("#FireRating-value").data("value");
+            if(fireRatingValue != ""){
+                fireRating = fireRatingValue;
+            }
+        }
+
+        $.ajax({
+            url:  $("#overpanel-glass-type-filter").html(),
+            method:"POST",
+            dataType:"Json",
+            data:{pageId:pageId,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
+            success: function(result){
+                var innerHtml1='';
+                if(result.status=="ok"){
+                    var innerHtml ='';
+                    var data = result.data;
+                    var length = result.data.length;
+                    var lippingSpecies = result.lippingSpecies;
+                    var lippingSpeciesLength =result.lippingSpecies.length;
+                    // innerHtml+='<option value="">Select Glass thikness</option>';
+
+                    var GlassThicknessValue = document.getElementById('GlassThickness-value');
+                    if(type == "sideLight1GlassType"){
                         $("#sideLight1GlassThickness").val(data.GlassThickness);
                         if(fireRating == "NFR"){
                             $("#SL1Width").removeAttr('max');
@@ -6327,3 +6403,21 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+function updateTransomFields() {
+            toggleField("#SL1Transom", "#SL1TransomDepth", "#SL1TransomThickness");
+            toggleField("#SL2Transom", "#SL2TransomDepth", "#SL2TransomThickness");
+        }
+
+function toggleField(transomSelector, depthSelector, thicknessSelector) {
+    if ($(transomSelector).val() === "No") {
+        $(depthSelector).prop("required", false).prop("readonly", true).val('');
+        $(thicknessSelector).prop("required", false).prop("readonly", true).val('');
+    } else if ($(transomSelector).val() === "Yes") {
+        $(depthSelector).prop("required", true).prop("readonly", false);
+        $(thicknessSelector).prop("required", true).prop("readonly", false);
+    } else {
+        // If nothing selected, make them optional and editable
+        $(depthSelector).prop("required", false).prop("readonly", false).val('');
+        $(thicknessSelector).prop("required", false).prop("readonly", false).val('');
+    }
+}

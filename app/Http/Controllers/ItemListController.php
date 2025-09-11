@@ -1575,6 +1575,7 @@ class ItemListController extends Controller
                         $item->SL2Transom = ($request->copyOfSideLite1 == "Yes")?$request->SL1Transom:$request->SL2Transom;
                         $item->SLtransomHeightFromTop = $request->SLtransomHeightFromTop;
                         $item->SLtransomThickness = $request->SLtransomThickness;
+                        $item->SideLight2FrameThickness = ($request->copyOfSideLite1 == "Yes")?$request->sideLight1FrameThickness:$request->sideLight2FrameThickness;
                         $item->SlBeadThickness = $request->SlBeadThickness;
                         $item->SlBeadHeight = $request->SlBeadHeight;
                         $item->SideLight2GlassWidth = ($request->copyOfSideLite1 == "Yes")?$request->sidelight1GlassWidth:$request->sidelight2GlassWidth;

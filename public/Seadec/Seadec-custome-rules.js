@@ -4782,13 +4782,13 @@ $("#vP1Width, #vP1Height1,#vP1Height2, #vP1Height3,#vP1Height4, #vP1Height5,#gla
 
 $("#SlBeadThickness, #SlBeadHeight,#SL2Width, #SL2Height").on("keyup", function () {
     if ($("#sideLight2").val() == "Yes") {
-        doorLeafFacingPrice('sideLight12', Yes);
+        doorLeafFacingPrice('sideLight12', 'Yes');
     }
 });
 
 $("#SlBeadThickness, #SlBeadHeight,#SL1Width, #SL1Height").on("keyup", function () {
     if ($("#sideLight1").val() == "Yes") {
-        doorLeafFacingPrice('sideLight2', Yes);
+        doorLeafFacingPrice('sideLight2', 'Yes');
     }
 });
 
