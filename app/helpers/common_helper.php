@@ -1642,10 +1642,9 @@ function IntumescentSealType($configurableitems,$key){
 
 function VPBeadingType($configurableitems , $OptionSlug , $OptionKey){
     $opt = Option::where([ "configurableitems" => $configurableitems , 'OptionSlug' => $OptionSlug , 'OptionKey' => $OptionKey ])->first();
-    $OptionValue = $opt->OptionValue;
     $data = 'N/A';
-    if(!empty($OptionValue)){
-        $data = $OptionValue;
+    if ($opt && !empty($opt->OptionValue)) {
+        $data = $opt->OptionValue;
     }
 
     return $data;
