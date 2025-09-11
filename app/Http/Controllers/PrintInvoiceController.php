@@ -3261,22 +3261,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
-
-        $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
-
-        if ($isActive) {
-            return $pdf6->download('ElevationDrawing.pdf');  // ✅ Forces download with correct name
-        } else {
-            $path6 = public_path('allpdfFile');
-            if (!file_exists($path6)) {
-                mkdir($path6, 0777, true);
-            }
-
-            $fileName6 = $id . '6' . '.pdf';
-            $pdf6->save($path6 . '/' . $fileName6);
-        }
-
-
+        $path6 = public_path() . '/allpdfFile';
+        $fileName6 = $id . '6' . '.' . 'pdf';
+        $pdf6->save($path6 . '/' . $fileName6);
         // back page design
 
 
@@ -3682,6 +3669,25 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName5,
             ];
+        }
+
+        $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
+
+        if ($isActive) {
+            if(count($eds) == 0){
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName6
+                ];
+            } else if(count($ed) == 0) {
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName8
+                ];
+            } else {
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8
+                ];
+            }
         }
 
             // Merge the PDF files using PDFMerger
