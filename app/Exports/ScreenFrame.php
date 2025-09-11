@@ -85,18 +85,15 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $MullionWidth = $allSettings['ScreenConstruction.Mullion']->width;
             }
 
-            foreach (['Head', 'Bottom', 'Sides'] as $FrameLocation) {
+            foreach (['Head'] as $FrameLocation) {
                 $Qty = $Quantities[$FrameLocation];
                 $screenDim = $FrameDimensions[$FrameLocation];
                 $data[] = [
                     $j++,
-                    $value->plot_ref_no,
-                    $value->certification_no,
                     $screenNumber,
                     $poNmber,
                     $Certificate,
                     $ScreenType,
-                    $FrameLocation,
                     $FrameMF,
                     $Finish,
                     2, // QtyScreenType is constant as 1
@@ -115,123 +112,10 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     '',
                 ];
             }
-
-            if(!empty($value->TransomQuantity) && ($value->TransomQuantity != 0)){
-                $TransomQuantity = $value->TransomQuantity;
-                for ($i = 1; $i <= $TransomQuantity; $i++) {
-                    $FrameLocation = 'Transom'.$i;
-                    $Qty = 1;
-                    $TransomThickness ='Transom'.$i.'Thickness';
-                    $screenDim = $value->TransomWidth1.' x '.$value->TransomDepth.' x '.$value->$TransomThickness;
-                    $FrameMF = lippingName($value->TransomMaterial);
-
-                    $data[] = [
-                        $j,
-                        $value->plot_ref_no,
-                        $value->certification_no,
-                        $screenNumber,
-                        $poNmber,
-                        $Certificate,
-                        $ScreenType,
-                        $FrameLocation,
-                        $FrameMF,
-                        $Finish,
-                        $Qty,
-                        1,
-                        $screenDim,
-                        $FrameHeight,
-                        $FrameWidth,
-                        $FrameThickness,
-                        $FrameDepth,
-                        $FrameHeight - ($FrameThickness * 2) + $Height,
-                        $FrameWidth + $Width,
-                        $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
-                        $value->TransomQuantity ?? 0,
-                        $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
-                        $value->MullionQuantity ?? 0,
-                        '',
-                    ];
-                    $j++;
-                }
-            }
-
-            if(!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)){
-                $MullionQuantity = $value->MullionQuantity;
-                for ($i = 1; $i <= $MullionQuantity; $i++) {
-                    $FrameLocation = 'Mullion'.$i;
-                    $Qty = 1;
-                    $MullionThickness ='Mullion'.$i.'Thickness';
-                    $screenDim = $value->MullionHeight1.' x '.$value->FrameDepth.' x '.$value->$MullionThickness;
-                    $FrameMF = lippingName($value->MullionMaterial);
-
-                    $data[] = [
-                        $j,
-                        $value->plot_ref_no,
-                        $value->certification_no,
-                        $screenNumber,
-                        $poNmber,
-                        $Certificate,
-                        $ScreenType,
-                        $FrameLocation,
-                        $FrameMF,
-                        $Finish,
-                        $Qty,
-                        1,
-                        $screenDim,
-                        $FrameHeight,
-                        $FrameWidth,
-                        $FrameThickness,
-                        $FrameDepth,
-                        $FrameHeight - ($FrameThickness * 2) + $Height,
-                        $FrameWidth + $Width,
-                        $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
-                        $value->TransomQuantity ?? 0,
-                        $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
-                        $value->MullionQuantity ?? 0,
-                        '',
-                    ];
-                    $j++;
-                }
-            }
-
-            if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-                $FrameLocation = 'SubFrame Bottom';
-                $FrameMF = lippingName($value->SubFrameMaterial);
-                $screenDim = $value->FrameWidth.' x '.$value->FrameDepth.' x '.$value->SubFrameBottomThickness;
-
-                $data[] = [
-                    $j,
-                    $value->plot_ref_no,
-                    $value->certification_no,
-                    $screenNumber,
-                    $poNmber,
-                    $Certificate,
-                    $ScreenType,
-                    $FrameLocation,
-                    $FrameMF,
-                    $Finish,
-                    $Qty,
-                    1,
-                    $screenDim,
-                    $FrameHeight,
-                    $FrameWidth,
-                    $FrameThickness,
-                    $FrameDepth,
-                    $FrameHeight - ($FrameThickness * 2) + $Height,
-                    $FrameWidth + $Width,
-                    $FrameWidth - ($FrameThickness * 2) + $TransomWidth,
-                    $value->TransomQuantity ?? 0,
-                    $FrameHeight - ($FrameThickness * 2) + $MullionWidth,
-                    $value->MullionQuantity ?? 0,
-                    '',
-                ];
-                $j++;
-            }
-
         }
 
         $footData = [
-            '','','','','','','','','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -247,7 +131,6 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
             'Screen Type',
-            'Frame Location',
             'Frame Material/Finish',
             'Frame Finish',
             'Qty Per Screen Type',
@@ -275,8 +158,8 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:V1';
-                $cellRange = 'A2:V2';
+                $cellRange1 = 'A1:U1';
+                $cellRange = 'A2:U2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -297,7 +180,7 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('V', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('U', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
