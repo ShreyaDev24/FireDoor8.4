@@ -117,27 +117,7 @@
 
     <section class="section boxed">
       <p>The intent of this package is to demonstrate full traceability and compliance in line with building regulations and project fire safety requirements. All installations will be carried out by competent personnel following manufacturer and industry best practice, and will be subject to inspection and certification under the project's QA procedure.</p>
-
-      <p class="muted">Field of Application references (Section 7): {{ $foaSection7 ?? '[See Section 7 attachments]' }}</p>
     </section>
-
-    <section class="section">
-      <h2>Document Index &amp; Attachments</h2>
-      @if(!empty($attachments) && is_array($attachments))
-        <ol>
-          @foreach($attachments as $att)
-            <li>{{ $att }}</li>
-          @endforeach
-        </ol>
-      @else
-        <p class="muted">[Attachment list not supplied — include test reports, FoA pdfs, DoPs, maintenance manuals, photographic records]</p>
-      @endif
-    </section>
-
-    <footer>
-      <p>Prepared by: {{ $preparedBy ?? '[Name / Company]' }}</p>
-      <p class="muted">Note: Replace placeholder values with your project variables before rendering to PDF.</p>
-    </footer>
   </div>
 </body>
 </html>

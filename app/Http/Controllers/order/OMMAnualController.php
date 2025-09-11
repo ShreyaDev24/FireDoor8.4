@@ -118,7 +118,7 @@ class OMMAnualController extends Controller
 
         // Second PDF
         // Architectural Ironmongery
-        $pdfTwo = PDF::loadView('Order.pdf_files.Fire-door-submittal.blade', ['data' => $data, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        $pdfTwo = PDF::loadView('Order.pdf_files.Fire-door-submittal', ['data' => $data, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
         // return $pdfTwo->download('file.pdf');
         $path2 = public_path() . '/allpdfFile';
         $fileName2 = $id . '2' . '.' . 'pdf';
