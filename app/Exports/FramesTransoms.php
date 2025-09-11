@@ -484,10 +484,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $Width = $allSettings['ScreenConstruction.FrameHead']->Width;
             }
             if(!empty($allSettings['ScreenConstruction.Transom'])){
-                $TransomWidth = $allSettings['ScreenConstruction.Transom']->width;
+                $TransomWidth = $allSettings['ScreenConstruction.Transom']->Width;
             }
             if(!empty($allSettings['ScreenConstruction.Mullion'])){
-                $MullionWidth = $allSettings['ScreenConstruction.Mullion']->width;
+                $MullionWidth = $allSettings['ScreenConstruction.Mullion']->Width;
             }
 
             foreach (['Head'] as $FrameLocation) {
