@@ -666,10 +666,10 @@ $(document).ready(function() {
     @endif
 
     @if(isset($Item["SideLight1GlassType"]))
-    OverpanelGlassTypeChange(null,'sideLight1GlassType',true);
+    SideGlassTypeChange(null,'sideLight1GlassType',true);
     @endif
     @if(isset($Item["SideLight2GlassType"]))
-    OverpanelGlassTypeChange(null,'sideLight2GlassType',true);
+    SideGlassTypeChange(null,'sideLight1GlassType',true);
     @endif
 
     @if(isset($Item["OPGlassType"]))

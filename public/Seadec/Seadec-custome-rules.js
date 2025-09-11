@@ -4890,7 +4890,7 @@ $("#SlBeadThickness, #SlBeadHeight,#SL2Width, #SL2Height").on("keyup", function 
 
 $("#SlBeadThickness, #SlBeadHeight,#SL1Width, #SL1Height").on("keyup", function () {
     if ($("#sideLight1").val() == "Yes") {
-        doorLeafFacingPrice('sideLight2', Yes);
+        doorLeafFacingPrice('sideLight2', 'Yes');
     }
 });
 
