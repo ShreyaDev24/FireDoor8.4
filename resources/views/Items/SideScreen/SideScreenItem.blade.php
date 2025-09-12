@@ -395,7 +395,7 @@ margin-top: 40px;
 
         var GlassPane3Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane4Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane4Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
         var GlassPane4Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
@@ -484,7 +484,7 @@ margin-top: 40px;
             GlassPane10Width = parseInt(MullionWidthPoint2);
             GlassPane14Width = parseInt(MullionWidthPoint2);
         }
-        
+
         var TransomWidth1 = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness);
         var MullionHeight1 = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness);
 
