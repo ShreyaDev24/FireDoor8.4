@@ -9435,18 +9435,15 @@ class DoorScheduleController extends Controller
 
     public function validateAlls(Request $request)
     {
-        // dd('Hii');
         $quotation = Quotation::find($request->quotationId);
         $items = Item::where('QuotationId', $request->quotationId)->get();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
         $errors = [];
 
-        // If no items found, return 404
         if ($items->isEmpty()) {
             return abort(404, 'No items found for this quotation.');
         }
 
-        // Loop through each item (door) to validate
         foreach ($items as $index => $door) {
             if($door->configurableitems == '1' || $door->configurableitems == '2' || $door->configurableitems == '7' || $door->configurableitems == '8') {
                 $rules = [
@@ -9459,7 +9456,7 @@ class DoorScheduleController extends Controller
                     'Tollerance' => 'required|numeric|max:20',
                     'Undercut' => 'required',
                     'FloorFinish' => 'required',
-                    'GAP' => 'required|numeric|between:2,4',
+                    // GAP will be added dynamically below
                     'FrameThickness' => 'required|numeric|min:22',
                     'Handing' => 'required',
                     'SOWidth' => 'required|numeric',
@@ -9476,7 +9473,7 @@ class DoorScheduleController extends Controller
                     'Tollerance' => 'required|numeric|max:20',
                     'Undercut' => 'required',
                     'FloorFinish' => 'required',
-                    'GAP' => 'required|numeric|between:2,4',
+                    // GAP will be added dynamically below
                     'FrameThickness' => 'required|numeric|min:22',
                     'Handing' => 'required',
                     'SOWidth' => 'required|numeric',
@@ -9485,6 +9482,12 @@ class DoorScheduleController extends Controller
                 ];
             }
 
+            // ✅ GAP validation based on FireRating
+            if (in_array($door['FireRating'], ['FD30', 'FD60'])) {
+                $rules['GAP'] = 'required|numeric|between:2,4';
+            } else {
+                $rules['GAP'] = 'required'; // NFR → GAP not required
+            }
 
         // Optional Section: Vision Panel
         if($door['visionPanelWidth'] == "Yes"){
@@ -9503,84 +9506,128 @@ class DoorScheduleController extends Controller
             $rules['GlazingBeads'] = 'required';
         }
 
-
-        // Optional Section: Frame
-        if (!empty($door['FrameMaterial'])) {
-            $rules['FrameMaterial'] = 'required';
-            $rules['FrameType'] = 'required';
-            if($door['FrameType'] == 'Scalloped'){
-                $rules['ScallopedWidth'] = 'required|numeric';
-                $rules['ScallopedHeight'] = 'required|numeric';
-            } else if($door['FrameType'] == 'Plant_on_Stop'){
-                $rules['PlantonStopWidth'] = 'required|numeric';
-                $rules['PlantonStopHeight'] = 'required|numeric';
-            } else if($door['FrameType'] == 'Rebated_Frame'){
-                $rules['RebatedWidth'] = 'required|numeric';
-                $rules['RebatedHeight'] = 'required|numeric';
+            // Optional Section: Frame
+            if (!empty($door['FrameMaterial'])) {
+                $rules['FrameMaterial'] = 'required';
+                $rules['FrameType'] = 'required';
+                if($door['FrameType'] == 'Scalloped'){
+                    $rules['ScallopedWidth'] = 'required|numeric';
+                    $rules['ScallopedHeight'] = 'required|numeric';
+                } else if($door['FrameType'] == 'Plant_on_Stop'){
+                    $rules['PlantonStopWidth'] = 'required|numeric';
+                    $rules['PlantonStopHeight'] = 'required|numeric';
+                } else if($door['FrameType'] == 'Rebated_Frame'){
+                    $rules['RebatedWidth'] = 'required|numeric';
+                    $rules['RebatedHeight'] = 'required|numeric';
+                }
+                $rules['FrameDepth'] = 'required|numeric';
+                $rules['DoorFrameConstruction'] = 'required';
             }
-            $rules['FrameDepth'] = 'required|numeric';
-            $rules['DoorFrameConstruction'] = 'required';
-        }
 
-         // Optional Section: Overpanel
-        if ($door['Overpanel'] == 'Overpanel') {
-            $rules['OPHeigth'] = 'required';
-            $rules['OpBeadThickness'] = 'required';
-            $rules['OpBeadHeight'] = 'required';
-        }
+            // Optional Section: Overpanel
+            if ($door['Overpanel'] == 'Overpanel') {
+                $rules['OPHeigth'] = 'required';
+                $rules['OpBeadThickness'] = 'required';
+                $rules['OpBeadHeight'] = 'required';
+            }
 
-          // Optional Section: Fanlight
-        if ($door['Overpanel'] == 'Fan_Light') {
-            $rules['OPHeigth'] = 'required';
-            $rules['OpBeadThickness'] = 'required';
-            $rules['OpBeadHeight'] = 'required';
-            $rules['opGlassIntegrity'] = 'required';
-            $rules['OPGlassType'] = 'required';
-            $rules['OPGlassThickness'] = 'required';
-            $rules['OPGlazingSystems'] = 'required';
-            $rules['OPGlazingSystemsThickness'] = 'required';
-            $rules['OPGlazingBeads'] = 'required';
-            $rules['OPGlazingBeadsThickness'] = 'required';
-            $rules['OPGlazingBeadsHeight'] = 'required';
-            $rules['OPGlazingBeadsFixingDetail'] = 'required';
-        }
+            // Optional Section: Fanlight
+            if ($door['Overpanel'] == 'Fan_Light') {
+                $rules['OPHeigth'] = 'required';
+                $rules['opGlassIntegrity'] = 'required';
+                $rules['OPGlassType'] = 'required';
+                $rules['OPGlassThickness'] = 'required';
+                $rules['OPGlazingSystems'] = 'required';
+                $rules['OPGlazingSystemsThickness'] = 'required';
+                $rules['OPGlazingBeads'] = 'required';
+                $rules['OPGlazingBeadsThickness'] = 'required';
+                $rules['OPGlazingBeadsHeight'] = 'required';
+                $rules['OPGlazingBeadsFixingDetail'] = 'required';
+            }
 
-        // Optional Section: Lipping
-        if (!empty($door['FireRating'])) {
-            if($door['FireRating'] != "NFR"){
-                $rules['IntumescentLeapingSealType'] = 'required';
-                $rules['IntumescentLeapingSealLocation'] = 'required';
-                $rules['IntumescentLeapingSealColor'] = 'required';
-                $rules['IntumescentLeapingSealArrangement'] = 'required';
+            // Optional Section: Lipping
+            if (!empty($door['FireRating'])) {
+                if($door['FireRating'] != "NFR"){
+                    $rules['IntumescentLeapingSealType'] = 'required';
+                    $rules['IntumescentLeapingSealLocation'] = 'required';
+                    $rules['IntumescentLeapingSealColor'] = 'required';
+                    $rules['IntumescentLeapingSealArrangement'] = 'required';
+                }
+            }
+
+            if ($door['accoustics'] == 'Yes') {
+                $rules['rWdBRating'] = 'required';
+                $rules['perimeterSeal1'] = 'required';
+                $rules['perimeterSeal2'] = 'required';
+            }
+
+            // Optional Section: Architrave
+            if ($door['Architrave'] == 'Yes') {
+                $rules['ArchitraveMaterial'] = 'required';
+                $rules['ArchitraveType'] = 'required';
+                $rules['ArchitraveWidth'] = 'required';
+                $rules['ArchitraveHeight'] = 'required';
+                $rules['ArchitraveFinish'] = 'required';
+                $rules['ArchitraveSetQty'] = 'required';
+            }
+
+            // Validate the current door
+            $validator = Validator::make($door->toArray(), $rules);
+
+            // Vision Panel reset for Leaf2 if SD
+            if ($door->DoorsetType == 'SD' && $door->Leaf2VisionPanel == 'Yes') {
+                DB::table('items')
+                    ->where('itemId', $door->itemId)
+                    ->update([
+                        'Leaf2VisionPanel' => "No",
+                        'sVPSameAsLeaf1' => null,
+                        'Leaf2VisionPanelQuantity' => null,
+                        'AreVPsEqualSizesForLeaf2' => null,
+                        'DistanceFromTopOfDoorForLeaf2' => null,
+                        'DistanceFromTheEdgeOfDoorforLeaf2' => null,
+                        'DistanceBetweenVp' => null,
+                        'Leaf2VPWidth' => null,
+                        'Leaf2VPHeight1' => null,
+                        'Leaf2VPHeight2' => null,
+                        'Leaf2VPHeight3' => null,
+                        'Leaf2VPHeight4' => null,
+                        'Leaf2VPHeight5' => null,
+                        'updated_at' => now(),
+                    ]);
+            }
+
+            // Ironmongary packets updates
+            $IronmongaryPrice = 0;
+            if(!empty($door->IronmongeryID)){
+                $AI = AddIronmongery::select('discountprice')->where('id',$door->IronmongeryID)->first();
+                $userIds = CompanyUsers();
+                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+                $marginDiscount = discountQuotationValue($door->QuotationId,$door->VersionId);
+                if($marginDiscount != 0){
+                    $margin += $marginDiscount;
+                }
+                $marginwithcal = 100 - $margin;
+                $testvar = $marginwithcal/100;
+                $totalcost = $AI->discountprice / $testvar;
+                $IronmongaryPrice = round(($totalcost),2);
+                if($IronmongaryPrice != $door->IronmongaryPrice){
+                    DB::table('items')
+                        ->where('itemId', $door->itemId)
+                        ->update([
+                            'IronmongaryPrice' => $IronmongaryPrice,
+                        ]);
+                }
+            }
+
+            if ($validator->fails()) {
+                $errors["door_Type_" . $door->DoorType] = $validator->errors()->all();
             }
         }
 
-         if ($door['accoustics'] == 'Yes') {
-            $rules['rWdBRating'] = 'required';
-            $rules['perimeterSeal1'] = 'required';
-            $rules['perimeterSeal2'] = 'required';
-        }
+        $allSvgAvailable = collect($items)->every(function ($item) {
+            return !empty($item->SvgImage);
+        });
 
-        // Optional Section: Architrave
-        if ($door['Architrave'] == 'Yes') {
-            $rules['ArchitraveMaterial'] = 'required';
-            $rules['ArchitraveType'] = 'required';
-            $rules['ArchitraveWidth'] = 'required';
-            $rules['ArchitraveHeight'] = 'required';
-            $rules['ArchitraveFinish'] = 'required';
-            $rules['ArchitraveSetQty'] = 'required';
-        }
-
-        // Validate the current door
-         $validator = Validator::make($door->toArray(), $rules);
-
-        if ($validator->fails()) {
-            $errors["door_Type_" . $door->DoorType] = $validator->errors()->all();
-        }
-
-        }
-
-        // If there are validation errors, return them as JSON
         if (!empty($errors)) {
             return response()->json([
                 'status' => 'error',
@@ -9589,12 +9636,12 @@ class DoorScheduleController extends Controller
             ]);
         }
 
-        // If all validations pass
         return response()->json([
             'status' => 'success',
             'message' => 'All doors passed validation.',
             'items' => $items,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
+            'all_svg_available' => $allSvgAvailable,
         ]);
     }
 
