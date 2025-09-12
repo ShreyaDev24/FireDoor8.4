@@ -246,7 +246,7 @@
                     @endif
                 </div>
                 </form>
-                <div class="tab-content item-form" id="opDiv">
+                <div class="tab-content " id="opDiv">
                     <div id="door" class="tab-pane active">
                         <div id='container'></div>
                     </div>
