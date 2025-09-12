@@ -447,7 +447,44 @@ margin-top: 40px;
 
         var GlassPane16Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
+        if(TransomQuantity == 1){
+            GlassPane1Height = parseInt(TransomHeightPoint1);
+            GlassPane2Height = parseInt(TransomHeightPoint1);
+            GlassPane3Height = parseInt(TransomHeightPoint1);
+            GlassPane4Height = parseInt(TransomHeightPoint1);
+        }
 
+        if(TransomQuantity == 2){
+            GlassPane1Height = parseInt(TransomHeightPoint1);
+            GlassPane2Height = parseInt(TransomHeightPoint1);
+            GlassPane3Height = parseInt(TransomHeightPoint1);
+            GlassPane4Height = parseInt(TransomHeightPoint1);
+
+            GlassPane5Height = parseInt(TransomHeightPoint2);
+            GlassPane6Height = parseInt(TransomHeightPoint2);
+            GlassPane7Height = parseInt(TransomHeightPoint2);
+            GlassPane8Height = parseInt(TransomHeightPoint2);
+        }
+
+        if(MullionQuantity == 1){
+            GlassPane1Width = parseInt(MullionWidthPoint1);
+            GlassPane5Width = parseInt(MullionWidthPoint1);
+            GlassPane9Width = parseInt(MullionWidthPoint1);
+            GlassPane13Width = parseInt(MullionWidthPoint1);
+        }
+
+        if(MullionQuantity == 2){
+            GlassPane1Width = parseInt(MullionWidthPoint1);
+            GlassPane5Width = parseInt(MullionWidthPoint1);
+            GlassPane9Width = parseInt(MullionWidthPoint1);
+            GlassPane13Width = parseInt(MullionWidthPoint1);
+
+            GlassPane2Width = parseInt(MullionWidthPoint2);
+            GlassPane6Width = parseInt(MullionWidthPoint2);
+            GlassPane10Width = parseInt(MullionWidthPoint2);
+            GlassPane14Width = parseInt(MullionWidthPoint2);
+        }
+        
         var TransomWidth1 = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness);
         var MullionHeight1 = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness);
 
