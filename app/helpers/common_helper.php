@@ -2234,11 +2234,15 @@ function getDoorDimensionData($userIds,$issingleconfiguration,$fireRatingVal){
     return $doordimension;
 }
 
-function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireRatingVal,$DoorDimensions){
+function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireRatingVal,$DoorDimensions,$doorthickness){
     if($fireRatingVal == "NFR"){
         $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('selected_doordimension.doordimension_id',$DoorDimensions)->first();
     }else{
-        $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('door_dimension.fire_rating', $fireRatingVal)->where('selected_doordimension.doordimension_id',$DoorDimensions)->first();
+        if($doorthickness == 54 && $fireRatingVal == 'FD30'){
+            $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('door_dimension.fire_rating', 'FD60')->where('selected_doordimension.doordimension_id',$DoorDimensions)->first();
+        } else {
+            $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('door_dimension.fire_rating', $fireRatingVal)->where('selected_doordimension.doordimension_id',$DoorDimensions)->first();
+        }
     }
 
     return $doordimension;
@@ -4033,7 +4037,7 @@ function BomCalculationVicaima($request): void{
         $description = $doorConfiguration.'| '.$lipping_type.'| '.$request->lippingThickness.'mm /'.$selected_lipping_species->SpeciesName. '| '.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
         $lippingSpecies = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
         $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
-        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
+        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions,$request->doorThickness);
         $door_core1 =  $door_core_size->selected_cost ?? 0;
         $unitcost1 = empty($unitcost) ? 0 : $unitcost->selected_price;
         $lm = 0;
@@ -4058,7 +4062,7 @@ function BomCalculationVicaima($request): void{
         $lm2 = 0;
         $leafandhalfunitcost = 0;
         if($request->doorsetType == 'leaf_and_a_half'){
-            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
+            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2,$request->doorThickness);
 
             $door_core2 =  $door_core_size2->selected_cost ?? 0;
 
@@ -4091,11 +4095,11 @@ function BomCalculationVicaima($request): void{
         }
 
         $description = $doorConfiguration. '| - | - |'.$request->leafWidth1.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness;
-        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions);
+        $door_core_size = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions,$request->doorThickness);
         $door_core1 =  $door_core_size->selected_cost ?? 0;
         $door_core2 = 0;
         if($request->doorsetType == 'leaf_and_a_half'){
-            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2);
+            $door_core_size2 = getDoorDimensionFirstVicaimaData($userIds,$request->issingleconfiguration,$fireRatingVal,$request->DoorDimensions2,$request->doorThickness);
 
             $door_core2 =  $door_core_size2->selected_cost ?? 0;
 
