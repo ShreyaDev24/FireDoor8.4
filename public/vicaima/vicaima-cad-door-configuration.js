@@ -703,484 +703,350 @@ const render = (CustomElement = null) => {
          $('input[name="hinge4Location"]').val('');
      }
 
-     if (SideLightPanel1 == "Yes") {
-         // console.log(FrameThicknessForMap, 'llllllllllllll')
-         if (OverPanelHeight) {
-             svg.append('rect') //outer sidepanel rect
-                 .attr('x', ix)
-                 .attr('y', iy)
-                 //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
-                 .attr('width', SideLightPanel1Width)
-                 //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
-                 .attr('height', (FrameHeight / 5) + OverPanelHeight)
-                 .attr('stroke', 'black')
-                 .attr('fill', '#D0D0C6');
 
-             svg.append('rect')// inner side panel rect
-                 //.attr('x', ix + LeftGapForLeaf1)
-                 .attr('x', ix + FrameThicknessForMap)
-                 //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-                 .attr('y', iy + GapAfterOverPanelApplied - OverPanelHeight + FrameThicknessForMap)
-                 //.attr('width', SideLightPanel1Width)
-                 .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
-                 //.attr('height', SideLightPanel1Height)
-                 .attr('height', (FrameHeight / 5) - (2 * FrameThicknessForMap) + OverPanelHeight)
-                 .attr('stroke', 'black')
-                 .attr('fill', '#CDD8DD');
-         } else {
-             svg.append('rect') //outer sidepanel rect
-                 .attr('x', ix)
-                 .attr('y', iy + GapAfterOverPanelApplied)
-                 //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
-                 .attr('width', SideLightPanel1Width)
-                 //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
-                 .attr('height', (FrameHeight / 5))
-                 .attr('stroke', 'black')
-                 .attr('fill', '#D0D0C6');
+        if (SideLightPanel1 == "Yes") {
+            // console.log(FrameThicknessForMap, 'llllllllllllll')
+            // if (OverPanelHeight) {
+            //     svg.append('rect') //outer sidepanel rect
+            //         .attr('x', ix)
+            //         .attr('y', iy)
+            //         //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
+            //         .attr('width', SideLightPanel1Width)
+            //         //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
+            //         .attr('height', (FrameHeight / 5) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#D0D0C6');
 
-             svg.append('rect')// inner side panel rect
-                 //.attr('x', ix + LeftGapForLeaf1)
-                 .attr('x', ix + FrameThicknessForMap)
-                 //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-                 .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap)
-                 //.attr('width', SideLightPanel1Width)
-                 .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
-                 //.attr('height', SideLightPanel1Height)
-                 .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                 .attr('stroke', 'black')
-                 .attr('fill', '#CDD8DD');
-         }
-         if (ShowMeasurements) {
-             // console.log('================================', SideLightPanel1Width)
-             if (SideLightPanel1Width > 0) {
+            //     svg.append('rect')// inner side panel rect
+            //         //.attr('x', ix + LeftGapForLeaf1)
+            //         .attr('x', ix + FrameThicknessForMap)
+            //         //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+            //         .attr('y', iy + GapAfterOverPanelApplied - OverPanelHeight + FrameThicknessForMap)
+            //         //.attr('width', SideLightPanel1Width)
+            //         .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
+            //         //.attr('height', SideLightPanel1Height)
+            //         .attr('height', (FrameHeight / 5) - (2 * FrameThicknessForMap) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#CDD8DD');
+            // } else {
+                svg.append('rect') //outer sidepanel rect
+                    .attr('x', ix)
+                    .attr('y', iy + GapAfterOverPanelApplied)
+                    //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
+                    .attr('width', SideLightPanel1Width)
+                    //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
+                    .attr('height', (FrameHeight / 5))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#D0D0C6');
 
-                 if (SideLightPanel1Width < 40) {
-                     svg.append('line')//vertical line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix - 10)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix - 10)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
+                svg.append('rect')// inner side panel rect
+                    //.attr('x', ix + LeftGapForLeaf1)
+                    .attr('x', ix + FrameThicknessForMap)
+                    //.attr('y', iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+                    .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap)
+                    //.attr('width', SideLightPanel1Width)
+                    .attr('width', SideLightPanel1Width - (FrameThicknessForMap * 2))
+                    //.attr('height', SideLightPanel1Height)
+                    .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#CDD8DD');
+            // }
+            if (ShowMeasurements) {
+                if (SideLightPanel1Width > 0) {
 
-                     svg.append("text")           // vertical line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix - 15)
-                         .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                         .attr("transform", `rotate(-90, ${ix - 15},
-                            ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                         .text( Number(LeafHeightNoOP) + (OverPanelHeightToShow ?? 0));
+                        svg.append('line')//vertical line to show measurement of side panel
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - 10)
+                            .attr("y1", iy + GapAfterOverPanelApplied  )
+                            .attr("x2", ix - 10)
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
 
-                     svg.append('line')//vertical line to show measurement of side panel joining line top
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix - 10 - 5)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix + FrameThicknessForMap)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                        svg.append("text")           // vertical line to show measurement text of side panel
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix - 15)
+                            .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
+                            .attr("transform", `rotate(-90, ${ix - 15},
+                               ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5) );
 
-                     svg.append('line')//vertical line to show measurement of side panel joining line bottom
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix - 10 - 5)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("x2", ix + FrameThicknessForMap)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                        svg.append('line')//vertical line to show measurement of side panel joining line top
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - 10 - 5)
+                            .attr("y1", iy + GapAfterOverPanelApplied )
+                            .attr("x2", ix + FrameThicknessForMap)
+                            .attr("y2", iy + GapAfterOverPanelApplied )
 
-                     svg.append('line')//horizontal line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                         .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
-                     svg.append("text")           //horizontal line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + (SideLightPanel1Width / 2) - 5)
-                         .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                         .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                     svg.append('line')//horizontal line to show measurement of side panel joining line
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                         .attr("x2", ix + FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                     svg.append('line')//horizontal line to show measurement of side panel joining line
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + SideLightPanel1Width - FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                         .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                 } else {
-                     svg.append('line')//horizontal line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                         .attr("x2", ix + SideLightPanel1Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
-                     svg.append("text")           //horizontal line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + (SideLightPanel1Width / 2) - 5)
-                         .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 25)
-                         .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                     svg.append('line')//vertical line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameThicknessForMap + ((SideLightPanel1Width - (FrameThicknessForMap * 2))) - 10)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix + FrameThicknessForMap + ((SideLightPanel1Width - (FrameThicknessForMap * 2))) - 10)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//vertical line to show measurement of side panel joining line bottom
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - 10 - 5)
+                            .attr("y1", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
+                            .attr("x2", ix + FrameThicknessForMap)
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
 
-                     svg.append("text")           // vertical line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + FrameThicknessForMap + (SideLightPanel1Width - (FrameThicknessForMap * 2)) - 15)
-                         .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                         .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + (SideLightPanel1Width - (FrameThicknessForMap * 2)) - 15},
-                            ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                         .text( Number(LeafHeightNoOP) + (OverPanelHeightToShow ?? 0));
-                 }
-             }
+                        svg.append('line')//horizontal line to show measurement of side panel
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix )
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
+                            .attr("x2", ix + SideLightPanel1Width )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append("text")           //horizontal line to show measurement text of side panel
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + (SideLightPanel1Width / 2) - 5)
+                            .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
+                            .text(SideLightPanel1WidthToShow );
+                        svg.append('line')//horizontal line to show measurement of side panel joining line
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix )
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
+                            .attr("x2", ix )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
+                        svg.append('line')//horizontal line to show measurement of side panel joining line
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + SideLightPanel1Width )
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
+                            .attr("x2", ix + SideLightPanel1Width )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
+                    
+                }
 
 
-         }
+            }
 
-         //ix = ix + ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width;
-         ix = ix + SideLightPanel1Width;
-     }
+            //ix = ix + ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width;
+            ix = ix + SideLightPanel1Width;
+        }
 
-     if (SideLightPanel2 == "Yes") {
+        if (SideLightPanel2 == "Yes") {
+//  svg.append('rect') //outer sidepanel rect
+//                     .attr('x', ix)
+//                     .attr('y', iy + GapAfterOverPanelApplied)
+//                     //.attr('width', ( LeftGapForLeaf1 * 2 ) + SideLightPanel1Width)
+//                     .attr('width', SideLightPanel1Width)
+//                     //.attr('height', ( UpperAndLowerGap * 2 ) + SideLightPanel1Height)
+//                     .attr('height', (FrameHeight / 5))
+//                     .attr('stroke', 'black')
+//                     .attr('fill', '#D0D0C6');
+            // if (OverPanelHeight) {
+            //     svg.append('rect') //outer sidepanel rect
+            //         .attr('x', ix + FrameWidthForMap)
+            //         .attr('y', iy)
+            //         .attr('width', SideLightPanel2Width)
+            //         .attr('height', (FrameHeight / 5) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#D0D0C6');
 
-         if (OverPanelHeight) {
-             svg.append('rect') //outer sidepanel rect
-                 .attr('x', ix + FrameWidthForMap)
-                 .attr('y', iy)
-                 .attr('width', SideLightPanel2Width)
-                 .attr('height', (FrameHeight / 5) + OverPanelHeight)
-                 .attr('stroke', 'black')
-                 .attr('fill', '#D0D0C6');
+            //     svg.append('rect')//copy inner side light
+            //         .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
+            //         .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap - OverPanelHeight)
+            //         .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
+            //         .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2) + OverPanelHeight)
+            //         .attr('stroke', 'black')
+            //         .attr('fill', '#CDD8DD');
 
-             svg.append('rect')//copy inner side light
-                 .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
-                 .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap - OverPanelHeight)
-                 .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
-                 .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2) + OverPanelHeight)
-                 .attr('stroke', 'black')
-                 .attr('fill', '#CDD8DD');
+            // } else {
+                svg.append('rect') //outer sidepanel rect
+                    .attr('x', ix + FrameWidthForMap)
+                    .attr('y', iy + GapAfterOverPanelApplied)
+                    .attr('width', SideLightPanel2Width)
+                    .attr('height', (FrameHeight / 5))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#D0D0C6');
 
-         } else {
-             svg.append('rect') //outer sidepanel rect
-                 .attr('x', ix + FrameWidthForMap)
-                 .attr('y', iy)
-                 .attr('width', SideLightPanel2Width)
-                 .attr('height', (FrameHeight / 5))
-                 .attr('stroke', 'black')
-                 .attr('fill', '#D0D0C6');
+                svg.append('rect')//copy inner side light
+                    .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
+                    .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap)
+                    .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
+                    .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
+                    .attr('stroke', 'black')
+                    .attr('fill', '#CDD8DD');
+            // }
 
-             svg.append('rect')//copy inner side light
-                 .attr('x', ix + FrameWidthForMap + FrameThicknessForMap)
-                 .attr('y', iy + GapAfterOverPanelApplied + FrameThicknessForMap)
-                 .attr('width', SideLightPanel2Width - (FrameThicknessForMap * 2))
-                 .attr('height', (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                 .attr('stroke', 'black')
-                 .attr('fill', '#CDD8DD');
-         }
+            if (ShowMeasurements) {
+                
+                if (SideLightPanel2Width > 0) {
 
-         if (ShowMeasurements) {
-             // svg.append('line')
-             //     .style("stroke", "black")
-             //     .style("stroke-width", 0.5)
-             //     .attr("x1", ix + FrameWidthForMap)
-             //     .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-             //     .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width)
-             //     .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-             //     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-             //     .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//vertical line to show measurement of side panel
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10)
+                            .attr("y1", iy + GapAfterOverPanelApplied  )
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + 10)
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
 
-             // svg.append("text")            // append text
-             //     .style("fill", "black")      // make the text black
-             //     .attr("font-size", 10)
-             //     .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2))         // set x position of left side of text
-             //     .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-             //     .text(SideLightPanel2WidthToShow);   // define the text to display
-             if (SideLightPanel2Width > 0) {
+                        svg.append("text")           // vertical line to show measurement text of side panel
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameWidthForMap + SideLightPanel2Width + 20)
+                            .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
+                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
+                               ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
+                            .text((SideLightPanel1Height*5));
 
-                 if (SideLightPanel2Width < 40) {
-                     svg.append('line')//vertical line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + 10)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//vertical line to show measurement of side panel joining line top
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10 + 5)
+                            .attr("y1", iy + GapAfterOverPanelApplied )
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap)
+                            .attr("y2", iy + GapAfterOverPanelApplied )
 
-                     svg.append("text")           // vertical line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + FrameWidthForMap + SideLightPanel2Width + 25)
-                         .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                         .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 25},
-                            ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                         .text( Number(LeafHeightNoOP) + (OverPanelHeightToShow ?? 0));
+                        svg.append('line')//vertical line to show measurement of side panel joining line bottom
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
+                            .attr("y1", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap + 10)
+                            .attr("y2", iy + GapAfterOverPanelApplied  + (FrameHeight / 5) )
 
-                     svg.append('line')//vertical line to show measurement of side panel joining line top
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width + 10 + 5)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
+                        svg.append('line')//horizontal line to show measurement of side panel
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap )
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append("text")           //horizontal line to show measurement text of side panel
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
+                            .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
+                            .text(SideLightPanel2WidthToShow );
+                        svg.append('line')//horizontal line to show measurement of side panel joining line
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap)
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
+                            .attr("x2", ix + FrameWidthForMap )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
+                        svg.append('line')//horizontal line to show measurement of side panel joining line
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width )
+                            .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
+                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width )
+                            .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
+                  
+                }
+            }
 
-                     svg.append('line')//vertical line to show measurement of side panel joining line bottom
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width + FrameThicknessForMap + 10)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
+        }
 
-                     svg.append('line')//horizontal line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 10)
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
-                     svg.append("text")           //horizontal line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
-                         .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                         .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                     svg.append('line')//horizontal line to show measurement of side panel joining line
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                         .attr("x2", ix + FrameWidthForMap + FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                     svg.append('line')//horizontal line to show measurement of side panel joining line
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5))
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 15)
-                 } else {
-                     svg.append('line')//horizontal line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap)
-                         .attr("y1", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                         .attr("x2", ix + FrameWidthForMap + SideLightPanel2Width - FrameThicknessForMap)
-                         .attr("y2", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 20)
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
-                     svg.append("text")           //horizontal line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
-                         .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 25)
-                         .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
-                     svg.append('line')//vertical line to show measurement of side panel
-                         .style("stroke", "black")
-                         .style("stroke-width", 0.5)
-                         .attr("x1", ix + FrameWidthForMap + FrameThicknessForMap + ((SideLightPanel2Width - (FrameThicknessForMap * 2))) - 10)
-                         .attr("y1", iy + GapAfterOverPanelApplied + FrameThicknessForMap - (typeof OverPanelHeight !== 'undefined' ? OverPanelHeight : 0))
-                         .attr("x2", ix + FrameWidthForMap + FrameThicknessForMap + ((SideLightPanel2Width - (FrameThicknessForMap * 2))) - 10)
-                         .attr("y2", iy + GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2))
-                         .attr("marker-start", "url(#arrowLeft)")
-                         .attr("marker-end", "url(#arrowRight)")
-
-                     svg.append("text")           // vertical line to show measurement text of side panel
-                         .style("fill", "black")
-                         .attr("font-size", 10)
-                         .attr("x", ix + FrameWidthForMap + FrameThicknessForMap + (SideLightPanel2Width - (FrameThicknessForMap * 2)) - 15)
-                         .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
-                         .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + FrameThicknessForMap + (SideLightPanel2Width - (FrameThicknessForMap * 2)) - 15},
-                            ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                         .text( Number(LeafHeightNoOP) + (OverPanelHeightToShow ?? 0));
-                 }
-             }
-         }
-
-     }
+        /* Frame */
 
 
+        var IronmongerySet = $('select[name="ironmongerySet"]').val();
+        var IronmongeryID = $('select[name="IronmongeryID"]').val();
 
-  /* Frame */
+if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
 
+            svg.append('rect') // over panel rect (upper part)
+                .attr('x', ix -SideLightPanel1Width )
+                .attr('y', iy) // Remove FrameThicknessForMap from y
+                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
+                .attr('stroke', 'black')
+                .attr('fill', '#D0D0C6');
 
-  var IronmongerySet = $('select[name="ironmongerySet"]').val();
-  var IronmongeryID = $('select[name="IronmongeryID"]').val();
-
-
-  // svg.append('rect')
-  //     .attr('x', ix)
-  //     .attr('y', iy)
-  //     .attr('width', FrameWidthForMap)
-  //     .attr('height', TopFrameHeight)
-  //     .attr('stroke', 'black')
-  //     .attr('fill', '#D0D0C6');
-
-
-  if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
-
-      svg.append('rect') // over panel rect (upper part)
-          .attr('x', ix)
-          .attr('y', iy) // Remove FrameThicknessForMap from y
-          .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap))
-          .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
-          .attr('stroke', 'black')
-          .attr('fill', '#D0D0C6');
-
-      svg.append('rect') // over panel rect (upper part)
-          .attr('x', ix + FrameThicknessForMap + GapForMap)
-          .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
-          .attr('width', OverPanelWidth)
-          .attr('height', OverPanelHeight - (2 * FrameThicknessForMap)) // Reduce height
-          .attr('stroke', 'black')
-          .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
-
-      // // Second rectangle (below)
-      // svg.append('rect') // over panel rect (lower part)
-      // .attr('x', ix + ((GapForOverPanel / 5) / 2) )
-      // .attr('y', iy + OverPanelHeight - FrameThicknessForMap) // Position directly below the first rect
-      // .attr('width', FrameWidthForMap)
-      // .attr('height', FrameThicknessForMap) // Height equals FrameThicknessForMap
-      // .attr('stroke', 'black')
-      // .attr('fill', '#CDD8DD');
+            svg.append('rect') // over panel rect (upper part)
+                .attr('x',  ix + FrameThicknessForMap + GapForMap -SideLightPanel1Width )
+                .attr('y', iy + (FrameThicknessForMap)) // Remove FrameThicknessForMap from y
+                .attr('width', OverPanelWidth + + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0) )
+                .attr('height', OverPanelHeight - (2 * FrameThicknessForMap) ) // Reduce height
+                .attr('stroke', 'black')
+                .attr('fill', IsOverPanelActive === 'Fan_Light' ? '#CDD8DD' : (IsOverPanelActive === 'Overpanel' ? '#EBECE6' : ''));
 
 
-      if (ShowMeasurements) {
-          // console.log(OverPanelHeight, 'OverPanelHeight')
-          if (OverPanelHeight > 0) {
+            if (ShowMeasurements) {
+                if (OverPanelHeight > 0) {
 
-              if (OverPanelHeight > 40) {
-                  // console.log(OverPanelHeight, 'oooooooooooooooooooOverPanelHeight')
+                        svg.append("text")           
+                            .style("fill", "black")      
+                            .attr("font-size", 10)
+                            .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         
+                            .attr("y", iy - 15)        
+                            .text(FrameWidth + (( SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))*5));   
+                       
 
-                  svg.append("text")           //Text of Width of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         // set x position of left side of text
-                      .attr("y", iy + OverPanelHeight - 20)         // set y position of bottom of text
-                      .text(OverPanelWidthToShow);   // define the text to display
-                  //Text of Width of Outer frame of door
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width )
+                            .attr("y1", iy - 10)
+                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("y2", iy - 10)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width)
+                            .attr("y1", iy + FrameThicknessForMap - 20)
+                            .attr("x2", ix - SideLightPanel1Width)
+                            .attr("y2", iy + FrameThicknessForMap)
+                        svg.append('line')//measurement line of Width of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("y1", iy + FrameThicknessForMap - 20)
+                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("y2", iy + FrameThicknessForMap)
 
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy + OverPanelHeight - 15)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy + OverPanelHeight - 15)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
+                       svg.append("text")           //Text of height of over panel of door
+                            .style("fill", "black")      // make the text black
+                            .attr("font-size", 10)
+                            .attr("x", ix - SideLightPanel1Width -35)         // set x position of left side of text
+                            .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
+                             .attr("transform", `rotate(-90, ${ix - SideLightPanel1Width - 35}, ${iy + FrameThicknessForMap + (OverPanelHeight / 2)})`) // rotate 45° around (x, y)
+                            .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) );    // define the text to display
+                        //Text of Width of Outer frame of door
 
-                  svg.append("text")           //Text of height of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 35)         // set x position of left side of text
-                      .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                       .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
-                  //Text of Width of Outer frame of door
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -30)
+                            .attr("y1", iy )
+                            .attr("x2", ix - SideLightPanel1Width -30)
+                            .attr("y2", iy + OverPanelHeight)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -35)
+                            .attr("y1", iy )
+                            .attr("x2", ix )
+                            .attr("y2", iy )
+                        svg.append('line')//measurement line of height of over panel of door
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - SideLightPanel1Width -35)
+                            .attr("y1", iy + OverPanelHeight)
+                            .attr("x2", ix )
+                            .attr("y2", iy + OverPanelHeight)
+                   
+                }
+            }
 
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 10)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth - 10)
-                      .attr("y2", iy + OverPanelHeight - FrameThicknessForMap)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-              } else {
-                  svg.append("text")           //Text of Width of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + (OverPanelWidth / 2))         // set x position of left side of text
-                      .attr("y", iy - 15)         // set y position of bottom of text
-                      .text(OverPanelWidthToShow);   // define the text to display
-                  //Text of Width of Outer frame of door
+        }
 
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy - 10)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy - 10)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y1", iy + FrameThicknessForMap - 20)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2))
-                      .attr("y2", iy + FrameThicknessForMap)
-                  svg.append('line')//measurement line of Width of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy + FrameThicknessForMap - 20)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y2", iy + FrameThicknessForMap)
 
-                  svg.append("text")           //Text of height of over panel of door
-                      .style("fill", "black")      // make the text black
-                      .attr("font-size", 10)
-                      .attr("x", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)         // set x position of left side of text
-                      .attr("y", iy + FrameThicknessForMap + (OverPanelHeight / 2))         // set y position of bottom of text
-                       .text((typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0) - (2*OpFrameThickness));   // define the text to display
-                  //Text of Width of Outer frame of door
 
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 15)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 15)
-                      .attr("y2", iy - FrameThicknessForMap + OverPanelHeight)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy + FrameThicknessForMap)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)
-                      .attr("y2", iy + FrameThicknessForMap)
-                  svg.append('line')//measurement line of height of over panel of door
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth)
-                      .attr("y1", iy - FrameThicknessForMap + OverPanelHeight)
-                      .attr("x2", ix + ((GapForOverPanel / 5) / 2) + OverPanelWidth + 20)
-                      .attr("y2", iy - FrameThicknessForMap + OverPanelHeight)
-              }
-          }
-      }
-
-  }
 
   if (ShowMeasurements && frameonoff && FrameThickness) {
 
@@ -3064,202 +2930,398 @@ if (IsFourSidedFrame == true) {
   hingelinex = ix - SideLightPanel2WidthSpaceForVerticalLines - 30;
   hingetextx = hingelinex - 28;
 
-  var IsKickPlateEnable = false;
-  var IsLockNLatchesEnable = false;
-  var IsLeverHandlesEnable = false;
-  var IsDoorSinageEnable = false;
-  var IsPullHandlesEnable = false;
-  var IsPushHandlesEnable = false;
-  var IsSecurityViewerEnable = false;
-  var IsLetterPlatesEnable = false;
-  var IsHingesEnable = false;
-  var IsAirTransferGrillsEnable = false;
-  var IsFlushBoltsEnable = false;
-  var IsMorticedDropdownSealsEnable = false;
-  var IsFacefixeddropsealsEnable= false;
-  var IsConcealedOverheadCloserEnable = false;
-  var IsFaceFixedDoorClosersEnable = false;
-  var IsCylindersEnable = false;
-  var IsThumbturnEnable = false;
-  /** Doorsecurityviewer Measurements */
-  var DoorsecurityviewerdistanceFromBottomOfDoor = 0;
-  /** DoorSignage Measurements */
-  var DoorSignagedistanceFromLeadingEdgeOfDoor = 0
-  var DoorSignageCentered = 0
-  /** Letterplates Measurements */
-  var LetterplatesHeight = 0
-  var LetterplatesWidth = 0
-  var LetterplatesDistanceFromBottomOfDoor = 0
-  var LetterplatesDistanceFromLeadingEdgeOfDoor = 0
-  var LetterplatesCentered = 0
-  /** AirTransferGrills Measurements */
-  var AirTransferGrillsHeight = 0
-  var AirTransferGrillsWidth = 0
-  var AirTransferGrillsDistanceFromBottomOfDoor = 0
-  /** PullHandle Measurements */
-  var PullHandleHeight = 0
-  var PullHandleDistanceFromBottomOfDoor = 0
-  var PullHandleDistanceFromLeadingEdgeOfDoor = 0
-  /** LeverHandle Measurements */
-  var LeverHandleDistanceFromBottomOfDoor = 0
-  var LeverHandleDistanceFromLeadingEdgeOfDoor = 0
-  /** KickPlates Measurements */
-  var KickPlatesHeight = 0
-  /** FlushBoltsData Measurements */
-  var FlushBoltsHeight = 0
-  var FlushBoltsWidth = 0
-  /** PushHandle Measurements */
-  var PushHandleHeight = 0
-  var PushHandleDistanceFromBottomOfDoor = 0
-  var PushHandleDistanceFromLeadingEdgeOfDoor = 0
-  /** LockNLatches Measurements */
-  var LockNLatchesDistanceFromBottomOfDoor = 0
-  var LockNLatchesDistanceFromLeadingEdgeOfDoor=0
-  /** LockNLatches Measurements */
-  var ConcealedOverheadCloserHeight = 0
-  var ConcealedOverheadCloserWidth = 0
-  /** FaceFixedDoorCloser Measurements */
-  var FaceFixedDoorCloserDataHeight = 0
-  var FaceFixedDoorClosersWidth = 0
-  /** Thumbturn Measurements */
-  var ThumbturnDistanceFromBottomOfDoor = 0
-  var ThumbturnDistanceFromLeadingEdgeOfDoor=0
-  /** Cylinders Measurements */
-  var CylindersDistanceFromBottomOfDoor = 0
-  var CylindersDistanceFromLeadingEdgeOfDoor=0
+   var IsKickPlateEnable = false;
+        var IsLockNLatchesEnable2 = false;
+        var IsLockNLatchesEnable = false;
+        var IsLeverHandlesEnable = false;
+        var IsDoorSinageEnable = false;
+        var IsDoorSinageEnable2 = false;
+        var IsPullHandlesEnable = false;
+        var IsPullHandlesEnable2 = false;
+        var IsPushHandlesEnable = false;
+        var IsPushHandlesEnable2 = false;
+        var IsSecurityViewerEnable = false;
+         var IsSecurityViewerEnable2 = false;
+        var IsLetterPlatesEnable = false;
+        var IsLetterPlatesEnable2 = false;
+        var IsHingesEnable = false;
+        var IsAirTransferGrillsEnable = false;
+         var IsAirTransferGrillsEnable2 = false;
+        var IsFlushBoltsEnable = false;
+        var IsFlushBoltsEnable2 = false;
+        var IsMorticedDropdownSealsEnable = false;
+        var IsFacefixeddropsealsEnable = false;
+         var IsConcealedOverheadCloserEnable = false;
+        var IsConcealedOverheadCloserEnable2 = false;
+         var IsFaceFixedDoorClosersEnable = false;
+        var IsFaceFixedDoorClosersEnable2 = false;
+        var IsCylindersEnable = false;
+        var IsThumbturnEnable = false;
+        var IsCylindersEnable2 = false;
+        var IsThumbturnEnable2 = false;
+        /** Doorsecurityviewer Measurements */
+        var DoorsecurityviewerdistanceFromBottomOfDoor = 0;
+         var DoorsecurityviewerdistanceFromBottomOfDoor2 = 0;
+        /** DoorSignage Measurements */
+        var DoorSignagedistanceFromLeadingEdgeOfDoor = 0
+        var DoorSignageCentered = 0
+        var DoorSignageDistanceFromBottomOfDoor = 0
+   var DoorSignagedistanceFromLeadingEdgeOfDoor2 = 0
+  var DoorSignageCentered2 = 0
+   var DoorSignageDistanceFromBottomOfDoor2 = 0
+        /** Letterplates Measurements */
+        var LetterplatesHeight = 0
+        var LetterplatesWidth = 0
+        var LetterplatesDistanceFromBottomOfDoor = 0
+        var LetterplatesDistanceFromLeadingEdgeOfDoor = 0
+        var LetterplatesCentered = 0
+         var LetterplatesHeight2 = 0
+        var LetterplatesWidth2 = 0
+        var LetterplatesDistanceFromBottomOfDoor2 = 0
+        var LetterplatesDistanceFromLeadingEdgeOfDoor2 = 0
+        var LetterplatesCentered2 = 0
+        /** AirTransferGrills Measurements */
+        var AirTransferGrillsHeight = 0
+        var AirTransferGrillsWidth = 0
+        var AirTransferGrillsDistanceFromBottomOfDoor = 0
+        var AirTransferGrillsHeight2 = 0
+        var AirTransferGrillsWidth2 = 0
+        var AirTransferGrillsDistanceFromBottomOfDoor2 = 0
+        /** PullHandle Measurements */
+        var PullHandleHeight = 0
+        var PullHandleDistanceFromBottomOfDoor = 0
+        var PullHandleDistanceFromLeadingEdgeOfDoor = 0
+           var PullHandleHeight2 = 0
+        var PullHandleDistanceFromBottomOfDoor2 = 0
+        var PullHandleDistanceFromLeadingEdgeOfDoor2 = 0
+        /** LeverHandle Measurements */
+        var LeverHandleDistanceFromBottomOfDoor = 0
+        var LeverHandleDistanceFromLeadingEdgeOfDoor = 0
+        /** KickPlates Measurements */
+        var KickPlatesHeight = 0
+        /** FlushBoltsData Measurements */
+        var FlushBoltsHeight = 0
+        var FlushBoltsWidth = 0
+        var FlushBoltsHeight2 = 0
+        var FlushBoltsWidth2 = 0
+        /** PushHandle Measurements */
+        var PushHandleHeight = 0
+        var PushHandleDistanceFromBottomOfDoor = 0
+        var PushHandleDistanceFromLeadingEdgeOfDoor = 0
+        var PushHandleHeight2 = 0
+        var PushHandleDistanceFromBottomOfDoor2 = 0
+        var PushHandleDistanceFromLeadingEdgeOfDoor2 = 0
+        /** LockNLatches Measurements */
+        var LockNLatchesDistanceFromBottomOfDoor = 0
+        var LockNLatchesDistanceFromLeadingEdgeOfDoor=0
+        var LockNLatchesDistanceFromBottomOfDoor2 = 0
+        var LockNLatchesDistanceFromLeadingEdgeOfDoor2=0
+        /** LockNLatches Measurements */
+        var ConcealedOverheadCloserHeight = 0
+        var ConcealedOverheadCloserWidth = 0
+         var ConcealedOverheadCloserHeight2 = 0
+        var ConcealedOverheadCloserWidth2 = 0
+        /** FaceFixedDoorCloser Measurements */
+        var FaceFixedDoorCloserDataHeight = 0
+        var FaceFixedDoorClosersWidth = 0
+         var FaceFixedDoorCloserDataHeight2 = 0
+        var FaceFixedDoorClosersWidth2 = 0
+        /** Thumbturn Measurements */
+        var ThumbturnDistanceFromBottomOfDoor = 0
+        var ThumbturnDistanceFromLeadingEdgeOfDoor=0
+        var ThumbturnDistanceFromBottomOfDoor2 = 0
+        var ThumbturnDistanceFromLeadingEdgeOfDoor2=0
+        /** Cylinders Measurements */
+        var CylindersDistanceFromBottomOfDoor = 0
+        var CylindersDistanceFromLeadingEdgeOfDoor=0
+        var CylindersDistanceFromBottomOfDoor2 = 0
+        var CylindersDistanceFromLeadingEdgeOfDoor2=0
 
-  if (IronmongerySet == "Yes" && IronmongeryID != "") {
 
-      var ParsedIronmongerySet = JSON.parse(IronmongeryJson);
+   if (IronmongerySet == "Yes" && IronmongeryID != "") {
 
-      ParsedIronmongerySet.forEach(function (elem, index) {
-          if (elem.id == IronmongeryID) {
-            const item = elem.additional_info?.find(info => info.Category === "ConcealedOverheadCloser");
-            if (item) {
-                const staticWidth = Number(item.staticWidth); // Convert to number
-                const leafWidth = Number($("#leafWidth1").val()); // Convert leafWidth1 to number
-                console.log(staticWidth,leafWidth)
-                if (!isNaN(leafWidth) && !isNaN(staticWidth) && leafWidth < staticWidth) {
-                    swal('Warning!', "The door closer is too big for the size of the door");
+            var ParsedIronmongerySet = JSON.parse(IronmongeryJson);
+
+            ParsedIronmongerySet.forEach(function (elem, index) {
+                if (elem.id == IronmongeryID) {
+
+                    // console.log(elem);
+
+                    if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
+                        IsKickPlateEnable = true;
+                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
+                        KickPlatesHeight = KickPlatesData.staticHeight
+                    }
+
+                   if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
+                    IsDoorSinageEnable = true;
+                    IsDoorSinageEnable2 = true;
+
+                    const doorSignages = elem.additional_info.filter(item => item.Category === "DoorSignage");
+
+                    if (doorSignages.length > 0) {
+                        const DoorSignageData1 = doorSignages[0];
+                        DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData1.distanceFromLeadingEdgeOfDoor;
+                        DoorSignageCentered = DoorSignageData1.centered;
+                        DoorSignageDistanceFromBottomOfDoor = DoorSignageData1.distanceFromBottomOfDoor
+                    }
+
+                    if (doorSignages.length > 1) {
+                        const DoorSignageData2 = doorSignages[1];
+                        DoorSignagedistanceFromLeadingEdgeOfDoor2 = DoorSignageData2.distanceFromLeadingEdgeOfDoor;
+                        DoorSignageCentered2 = DoorSignageData2.centered;
+                        DoorSignageDistanceFromBottomOfDoor2 = DoorSignageData2.distanceFromBottomOfDoor
+                    }
+               }
+
+                    if (elem.hingesQty != '' && elem.hingesQty != null) {
+                        IsHingesEnable = true;
+                    }
+
+                    if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null) {
+
+                          const LocksAndLatches = elem.additional_info.filter(item => item.Category === "LocksandLatches");
+   
+                    if (LocksAndLatches.length > 0) {
+                        IsLockNLatchesEnable = true;
+                        const LockNLatchesData1 = LocksAndLatches[0];
+                      LockNLatchesDistanceFromBottomOfDoor = LockNLatchesData1.distanceFromBottomOfDoor
+                        LockNLatchesDistanceFromLeadingEdgeOfDoor=LockNLatchesData1.distanceFromLeadingEdgeOfDoor
+                    }
+
+                    if (LocksAndLatches.length > 1) {
+                        IsLockNLatchesEnable2 = true;
+                        const LockNLatchesData2 = LocksAndLatches[1];
+                        LockNLatchesDistanceFromBottomOfDoor2 = LockNLatchesData2.distanceFromBottomOfDoor
+                        LockNLatchesDistanceFromLeadingEdgeOfDoor2=LockNLatchesData2.distanceFromLeadingEdgeOfDoor
+                    }
+                    }
+                    if (elem.Thumbturn != '' && elem.Thumbturn != null) {
+                    
+                         const Thumbturns = elem.additional_info.filter(item => item.Category === "Thumbturn");
+   
+                    if (Thumbturns.length > 0) {
+                        IsThumbturnEnable = true;
+                        const ThumbturnData1 = Thumbturns[0];
+                      ThumbturnDistanceFromBottomOfDoor = ThumbturnData1.distanceFromBottomOfDoor
+                        ThumbturnDistanceFromLeadingEdgeOfDoor=ThumbturnData1.distanceFromLeadingEdgeOfDoor
+                    }
+
+                    if (Thumbturns.length > 1) {
+                        IsThumbturnEnable2 = true;
+                        const ThumbturnData2 = Thumbturns[1];
+                        ThumbturnDistanceFromBottomOfDoor2 = ThumbturnData2.distanceFromBottomOfDoor
+                        ThumbturnDistanceFromLeadingEdgeOfDoor2=ThumbturnData2.distanceFromLeadingEdgeOfDoor
+                    }
+                    }
+                    if (elem.Cylinders != '' && elem.Cylinders != null) {
+                        
+
+                          const Cylinders = elem.additional_info.filter(item => item.Category === "Cylinders");
+   
+                    if (Cylinders.length > 0) {
+                        IsCylindersEnable = true;
+                        const CylindersData1 = Cylinders[0];
+                      CylindersDistanceFromBottomOfDoor = CylindersData1.distanceFromBottomOfDoor
+                        CylindersDistanceFromLeadingEdgeOfDoor=CylindersData1.distanceFromLeadingEdgeOfDoor
+                    }
+
+                    if (Cylinders.length > 1) {
+                        IsCylindersEnable2 = true;
+                        const CylindersData2 = Cylinders[1];
+                        CylindersDistanceFromBottomOfDoor2 = CylindersData2.distanceFromBottomOfDoor
+                        CylindersDistanceFromLeadingEdgeOfDoor2=CylindersData2.distanceFromLeadingEdgeOfDoor
+                    }
+                    }
+
+                    if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
+                
+
+                                               const ConcealedOverheadCloser = elem.additional_info.filter(item => item.Category === "ConcealedOverheadCloser");
+
+                    if (ConcealedOverheadCloser.length > 0) {
+                        IsConcealedOverheadCloserEnable = true;
+                        const ConcealedOverheadCloserData1 = ConcealedOverheadCloser[0];
+                       ConcealedOverheadCloserWidth = ConcealedOverheadCloserData1.staticWidth
+                        ConcealedOverheadCloserHeight = ConcealedOverheadCloserData1.staticHeight
+                    }
+
+                    if (ConcealedOverheadCloser.length > 1) {
+                        IsConcealedOverheadCloserEnable2 = true;
+                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
+                        const ConcealedOverheadCloserData2 = ConcealedOverheadCloser[1];
+                       ConcealedOverheadCloserWidth2 = ConcealedOverheadCloserData2.staticWidth
+                        ConcealedOverheadCloserHeight2 = ConcealedOverheadCloserData2.staticHeight
+                    }
+                    }
+                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
+                                 const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
+   console.log(FaceFixedDoorClosers.length,'/////////////////////////')
+                    if (FaceFixedDoorClosers.length > 0) {
+                        IsFaceFixedDoorClosersEnable = true;
+                        const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
+                       FaceFixedDoorClosersWidth = FaceFixedDoorClosersData1.staticWidth
+                        FaceFixedDoorCloserDataHeight = FaceFixedDoorClosersData1.staticHeight
+                    }
+
+                    if (FaceFixedDoorClosers.length > 1) {
+                        IsFaceFixedDoorClosersEnable2 = true;
+                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
+                        const FaceFixedDoorClosersData2 = FaceFixedDoorClosers[1];
+                       FaceFixedDoorClosersWidth2 = FaceFixedDoorClosersData2.staticWidth
+                        FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosersData2.staticHeight
+                    }
+                    }
+
+                    if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
+                       
+
+                         const PullHandles = elem.additional_info.filter(item => item.Category === "PullHandles");
+   
+                    if (PullHandles.length > 0) {
+                        IsPullHandlesEnable = true;
+                        const PullHandlesData1 = PullHandles[0];
+                        PullHandleHeight = PullHandlesData1.staticHeight
+                        PullHandleDistanceFromBottomOfDoor = PullHandlesData1.distanceFromBottomOfDoor
+                        PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData1.distanceFromLeadingEdgeOfDoor
+                        console.log(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                    }
+
+                    if (PullHandles.length > 1) {
+                        IsPullHandlesEnable2 = true;
+                        const PullHandlesData2 = PullHandles[1];
+                        PullHandleHeight2 = PullHandlesData2.staticHeight
+                        PullHandleDistanceFromBottomOfDoor2 = PullHandlesData2.distanceFromBottomOfDoor
+                        PullHandleDistanceFromLeadingEdgeOfDoor2 = PullHandlesData2.distanceFromLeadingEdgeOfDoor
+                        console.log(PullHandleHeight2,PullHandleDistanceFromBottomOfDoor2,PullHandleDistanceFromLeadingEdgeOfDoor2)
+                    }
+                    }
+
+                    if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null) {
+
+                        const PushHandles = elem.additional_info.filter(item => item.Category === "PushHandles");
+   
+                    if (PushHandles.length > 0) {
+                        IsPushHandlesEnable = true;
+                        const PushHandlesData1 = PushHandles[0];
+                        PushHandleHeight = PushHandlesData1.staticHeight
+                        PushHandleDistanceFromBottomOfDoor = PushHandlesData1.distanceFromBottomOfDoor
+                        PushHandleDistanceFromLeadingEdgeOfDoor = PushHandlesData1.distanceFromLeadingEdgeOfDoor
+                    }
+
+                    if (PushHandles.length > 1) {
+                        IsPushHandlesEnable2 = true;
+                        const PushHandlesData2 = PushHandles[1];
+                        PushHandleHeight2 = PushHandlesData2.staticHeight
+                        PushHandleDistanceFromBottomOfDoor2 = PushHandlesData2.distanceFromBottomOfDoor
+                        PushHandleDistanceFromLeadingEdgeOfDoor2 = PushHandlesData2.distanceFromLeadingEdgeOfDoor
+                    }
+                    }
+
+                    if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
+                        IsLeverHandlesEnable = true;
+                        const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
+                        LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
+                        LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor
+                        // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
+                    }
+
+                    if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
+                        
+
+                    const SecurityViewers = elem.additional_info.filter(item => item.Category === "Doorsecurityviewer");
+   
+                    if (SecurityViewers.length > 0) {
+                        IsSecurityViewerEnable = true;
+                        const DoorsecurityviewerData1 = SecurityViewers[0];
+                        DoorsecurityviewerdistanceFromBottomOfDoor = DoorsecurityviewerData1.distanceFromBottomOfDoor;
+                    }
+
+                    if (SecurityViewers.length > 1) {
+                   IsSecurityViewerEnable2 = true;
+                        const DoorsecurityviewerData2 = SecurityViewers[1];
+                        DoorsecurityviewerdistanceFromBottomOfDoor2 = DoorsecurityviewerData2.distanceFromBottomOfDoor;
+                    }
+
+                    }
+                    if (elem.Letterplates != '' && elem.Letterplates != null) {
+                        
+
+                         const LetterPlates = elem.additional_info.filter(item => item.Category === "Letterplates");
+   
+                    if (LetterPlates.length > 0) {
+                        IsLetterPlatesEnable = true;
+                        const LetterplatesData1 = LetterPlates[0];
+                        LetterplatesHeight = LetterplatesData1.staticHeight
+                        LetterplatesWidth = LetterplatesData1.staticWidth
+                        LetterplatesDistanceFromBottomOfDoor = LetterplatesData1.distanceFromBottomOfDoor
+                        LetterplatesDistanceFromLeadingEdgeOfDoor = LetterplatesData1.distanceFromLeadingEdgeOfDoor
+                        LetterplatesCentered = LetterplatesData1.centered
+                    }
+
+                    if (LetterPlates.length > 1) {
+                        IsLetterPlatesEnable2 = true;
+                        const LetterplatesData2 = LetterPlates[1];
+                       LetterplatesHeight2 = LetterplatesData2.staticHeight
+                        LetterplatesWidth2 = LetterplatesData2.staticWidth
+                        LetterplatesDistanceFromBottomOfDoor2 = LetterplatesData2.distanceFromBottomOfDoor
+                        LetterplatesDistanceFromLeadingEdgeOfDoor2 = LetterplatesData2.distanceFromLeadingEdgeOfDoor
+                        LetterplatesCentered2 = LetterplatesData2.centered
+                    }
+
+
+                    }
+                    if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null) {
+
+                    const AirTransfers = elem.additional_info.filter(item => item.Category === "Airtransfergrills");
+   
+                    if (AirTransfers.length > 0) {
+                        IsAirTransferGrillsEnable = true;
+                        const AirTransferGrillData1 = AirTransfers[0];
+                        AirTransferGrillsHeight = AirTransferGrillData1.staticHeight;
+                        AirTransferGrillsWidth = AirTransferGrillData1.staticWidth;
+                        AirTransferGrillsDistanceFromBottomOfDoor = AirTransferGrillData1.distanceFromBottomOfDoor
+                    }
+
+                    if (AirTransfers.length > 1) {
+                        IsAirTransferGrillsEnable2 = true;
+                        const AirTransferGrillData2 = AirTransfers[1];
+                        AirTransferGrillsHeight2 = AirTransferGrillData2.staticHeight;
+                        AirTransferGrillsWidth2 = AirTransferGrillData2.staticWidth;
+                        AirTransferGrillsDistanceFromBottomOfDoor2 = AirTransferGrillData2.distanceFromBottomOfDoor
+                    }
+
+                    }
+                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
+
+                        const FlushBoltsData = elem.additional_info.filter(item => item.Category === "FlushBolts");
+   
+                    if (FlushBoltsData.length > 0) {
+                        IsFlushBoltsEnable = true;
+                        const FlushBoltsData1 = FlushBoltsData[0];
+                        FlushBoltsHeight = FlushBoltsData1.staticHeight
+                        FlushBoltsWidth = FlushBoltsData1.staticWidth
+                    }
+
+                    if (FlushBoltsData.length > 1) {
+                        IsFlushBoltsEnable2 = true;
+                        const FlushBoltsData2 = FlushBoltsData[1];
+                        FlushBoltsHeight2 = FlushBoltsData2.staticHeight
+                        FlushBoltsWidth2 = FlushBoltsData2.staticWidth
+                    }
+                    }
+                    if (elem.Morticeddropdownseals != '' && elem.Morticeddropdownseals != null) {
+                        IsMorticedDropdownSealsEnable = true;
+
+                    }
+                    if (elem.Facefixeddropseals != '' && elem.Facefixeddropseals != null) {
+                        IsFacefixeddropsealsEnable = true;
+
+                    }
                 }
-            }
-              if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
-                  IsKickPlateEnable = true;
-                  const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                  KickPlatesHeight = KickPlatesData.staticHeight
-              }
+            });
 
-              if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
-                  IsDoorSinageEnable = true;
-                  const DoorSignageData = elem.additional_info.find((item) => item.Category === "DoorSignage");
-                  DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData.distanceFromLeadingEdgeOfDoor
-                  DoorSignageCentered = DoorSignageData.centered
-              }
-
-              if (elem.hingesQty != '' && elem.hingesQty != null) {
-                  IsHingesEnable = true;
-              }
-
-              if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null) {
-                  IsLockNLatchesEnable = true;
-                  const LockNLatchesData = elem.additional_info.find((item) => item.Category === "LocksandLatches");
-                  LockNLatchesDistanceFromBottomOfDoor = LockNLatchesData.distanceFromBottomOfDoor
-                  LockNLatchesDistanceFromLeadingEdgeOfDoor=LockNLatchesData.distanceFromLeadingEdgeOfDoor
-              }
-              if (elem.Thumbturn != '' && elem.Thumbturn != null) {
-                  IsThumbturnEnable = true;
-                  const ThumbturnData = elem.additional_info.find((item) => item.Category === "Thumbturn");
-                  ThumbturnDistanceFromBottomOfDoor = ThumbturnData.distanceFromBottomOfDoor
-                  ThumbturnDistanceFromLeadingEdgeOfDoor=ThumbturnData.distanceFromLeadingEdgeOfDoor
-              }
-              if (elem.Cylinders != '' && elem.Cylinders != null) {
-                  IsCylindersEnable = true;
-                  const CylindersData = elem.additional_info.find((item) => item.Category === "Cylinders");
-                  CylindersDistanceFromBottomOfDoor = CylindersData.distanceFromBottomOfDoor
-                  CylindersDistanceFromLeadingEdgeOfDoor=CylindersData.distanceFromLeadingEdgeOfDoor
-              }
-
-              if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
-                  IsConcealedOverheadCloserEnable = true;
-                  const ConcealedOverheadCloserData = elem.additional_info.find((item) => item.Category === "ConcealedOverheadCloser");
-                  ConcealedOverheadCloserWidth = ConcealedOverheadCloserData.staticWidth
-                  ConcealedOverheadCloserHeight = ConcealedOverheadCloserData.staticHeight
-                  // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
-              }
-              if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
-                  IsFaceFixedDoorClosersEnable = true;
-                  const FaceFixedDoorCloserData = elem.additional_info.find((item) => item.Category === "FaceFixedDoorClosers");
-                  FaceFixedDoorClosersWidth = FaceFixedDoorCloserData.staticWidth
-                  FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData.staticHeight
-                  // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
-              }
-
-              if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
-                  IsPullHandlesEnable = true;
-                  const PullHandlesData = elem.additional_info.find((item) => item.Category === "PullHandles");
-                  PullHandleHeight = PullHandlesData.staticHeight
-                  PullHandleDistanceFromBottomOfDoor = PullHandlesData.distanceFromBottomOfDoor
-                  PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData.distanceFromLeadingEdgeOfDoor
-              }
-
-              if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null) {
-                  IsPushHandlesEnable = true;
-                  const PushHandlesData = elem.additional_info.find((item) => item.Category === "PushHandles");
-                  PushHandleHeight = PushHandlesData.staticHeight
-                  PushHandleDistanceFromBottomOfDoor = PushHandlesData.distanceFromBottomOfDoor
-                  PushHandleDistanceFromLeadingEdgeOfDoor = PushHandlesData.distanceFromLeadingEdgeOfDoor
-                  // console.log("PushhandlesData: ", PushHandleHeight, PushHandleDistanceFromBottomOfDoor, PushHandleDistanceFromLeadingEdgeOfDoor)
-              }
-
-              if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
-                  IsLeverHandlesEnable = true;
-                  const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
-                  LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
-                  LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor
-                  // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
-              }
-
-              if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
-                  IsSecurityViewerEnable = true;
-                  const DoorsecurityviewerData = elem.additional_info.find((item) => item.Category === "Doorsecurityviewer");
-                  DoorsecurityviewerdistanceFromBottomOfDoor = DoorsecurityviewerData.distanceFromBottomOfDoor
-              }
-              if (elem.Letterplates != '' && elem.Letterplates != null) {
-                  IsLetterPlatesEnable = true;
-                  const LetterplatesData = elem.additional_info.find((item) => item.Category === "Letterplates");
-                  LetterplatesHeight = LetterplatesData.staticHeight
-                  LetterplatesWidth = LetterplatesData.staticWidth
-                  LetterplatesDistanceFromBottomOfDoor = LetterplatesData.distanceFromBottomOfDoor
-                  LetterplatesDistanceFromLeadingEdgeOfDoor = LetterplatesData.distanceFromLeadingEdgeOfDoor
-                  LetterplatesCentered = LetterplatesData.centered
-              }
-              if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null) {
-                  IsAirTransferGrillsEnable = true;
-                  const AirTransferGrillData = elem.additional_info.find((item) => item.Category === "Airtransfergrills");
-                  AirTransferGrillsHeight = AirTransferGrillData.staticHeight
-                  AirTransferGrillsWidth = AirTransferGrillData.staticWidth
-                  AirTransferGrillsDistanceFromBottomOfDoor = AirTransferGrillData.distanceFromBottomOfDoor
-
-
-              }
-              if (elem.FlushBolts != '' && elem.FlushBolts != null) {
-                  IsFlushBoltsEnable = true;
-                  const FlushBoltsData = elem.additional_info.find((item) => item.Category === "FlushBolts");
-                  FlushBoltsHeight = FlushBoltsData.staticHeight
-                  FlushBoltsWidth = FlushBoltsData.staticWidth
-              }
-              if (elem.Morticeddropdownseals != '' && elem.Morticeddropdownseals != null) {
-                  IsMorticedDropdownSealsEnable = true;
-
-              }
-              if (elem.Facefixeddropseals != '' && elem.Facefixeddropseals != null) {
-                IsFacefixeddropsealsEnable = true;
-
-            }
-          }
-      });
-
-  }
+        }
 
   var DecorativeGroves = $('select[name="decorativeGroves"]').val();
 
@@ -4063,7 +4125,7 @@ if (IsFourSidedFrame == true) {
 
       }
 
-      if (IsPushHandlesEnable && DoorSetType == "SD") {
+      if (IsPushHandlesEnable && DoorSetType == "SD" && !IsPullHandlesEnable) {
           if (LeafWidth1ForMap > 32) {
               if (Handing == 'Right') {
                   svg.append("rect")
@@ -4189,136 +4251,136 @@ if (IsFourSidedFrame == true) {
           }
       }
 
-      if (IsPullHandlesEnable && DoorSetType == "SD") {
-        if (LeafWidth1ForMap > 32) {
-            if (Handing == 'Right') {
+   if (IsPullHandlesEnable && DoorSetType == "SD") {
+                if (LeafWidth1ForMap > 32) {
+                    if (Handing == 'Right') {
 
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PullHandleHeight / 5))
+                            .attr("rx", 4)
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 175)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
 
-                svg.append("text")
-                    .style("fill", "black")
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 175)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 175}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
+                        svg.append("text")
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 170)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 170)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 160)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 160)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
 
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
+                    }
+                    else {
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PullHandleHeight / 5))
+                            .attr("rx", 4)
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 205 -10)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 205 -10}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 200)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 200)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 185)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 180)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 180)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
+
+                    }
+                }
             }
-            else {
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 205)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 205}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 200)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 200)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 185)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 180)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 180)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
-
-            }
-        }
-    }
 
       //if(DoorSetType == "SD"){
       // if (IsLockNLatchesEnable) {
@@ -5454,52 +5516,135 @@ if (IsFourSidedFrame == true) {
       }
 
 
-      var DistanceOfDoorSinageFromTop = 1800 / 5;
-
-      if (IsDoorSinageEnable && DoorSetType == "SD") {
+      function drawDoorSignage(distanceFromEdge, isCentered, distanceFromBottom,rightDistance,leftdistance,centerdistances) {
+        if ( DoorSetType == "SD") {
           if (LeafWidth1ForMap > 32) {
 
-              if (DoorSignageCentered == 1) {
-                  svg.append("circle")
+              if (isCentered == 1) {
+
+                if (Handing == 'Right'){
+svg.append("circle")
                       .style("stroke", "black")
                       .style("fill", "#2C3360")
                       .attr("r", 7)
                       .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                      .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+
+                                        svg.append('line')
+                          .style("stroke", "black")
+                          .style("stroke-width", 0.5)
+                          .attr("x1",  ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
+
+                      svg.append('line')
+                          .style("stroke", "black")
+                          .style("stroke-width", 0.5)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
+                          .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                          .attr("marker-end", "url(#arrowRight)")
+
+                      svg.append("text")            // append text
+                          .style("fill", "black")   // make the text
+                          .attr("font-size", 10)
+                          .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance-5)    // set x position
+                          .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance-5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                          .text(distanceFromBottom);
 
                   svg.append('line')
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
                       .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
+                      .attr("marker-start", "url(#arrowLeft)")
+                      .attr("marker-end", "url(#arrowRight)")
 
                   svg.append('line')
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
+                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
+
+                  svg.append("text")            // append text
+                      .style("fill", "black")   // make the text
+                      .attr("font-size", 10)
+                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
+                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
+                      .text("eq");
+                  svg.append('line')
+                      .style("stroke", "black")
+                      .style("stroke-width", 0.5)
+                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
+                      .attr("marker-start", "url(#arrowLeft)")
+                      .attr("marker-end", "url(#arrowRight)")
+
+                  svg.append('line')
+                      .style("stroke", "black")
+                      .style("stroke-width", 0.5)
+                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
+
+                  svg.append("text")            // append text
+                      .style("fill", "black")   // make the text
+                      .attr("font-size", 10)
+                      .attr("x", ix - FrameThicknessForMap - GapForMap + ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
+                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
+                      .text("eq");
+                }else{
+                  svg.append("circle")
+                      .style("stroke", "black")
+                      .style("fill", "#2C3360")
+                      .attr("r", 7)
+                      .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+
+                  svg.append('line')
+                      .style("stroke", "black")
+                      .style("stroke-width", 0.5)
+                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
+
+                  svg.append('line')
+                      .style("stroke", "black")
+                      .style("stroke-width", 0.5)
+                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
                       .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                       .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                       .attr("marker-end", "url(#arrowRight)")
 
                   svg.append("text")            // append text
                       .style("fill", "black")   // make the text
                       .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)    // set x position
-                      .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                      .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                      .text(1550);
+                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5)    // set x position
+                      .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                      .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                      .text(distanceFromBottom);
 
                   svg.append('line')
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
                       .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                       .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                       .attr("marker-start", "url(#arrowLeft)")
                       .attr("marker-end", "url(#arrowRight)")
 
@@ -5507,23 +5652,23 @@ if (IsFourSidedFrame == true) {
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
                       .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                       .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                   svg.append("text")            // append text
                       .style("fill", "black")   // make the text
                       .attr("font-size", 10)
                       .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                       .text("eq");
                   svg.append('line')
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
                       .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                       .attr("x2", ix + FrameThicknessForMap + GapForMap)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                       .attr("marker-start", "url(#arrowLeft)")
                       .attr("marker-end", "url(#arrowRight)")
 
@@ -5531,16 +5676,17 @@ if (IsFourSidedFrame == true) {
                       .style("stroke", "black")
                       .style("stroke-width", 0.5)
                       .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                      .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                       .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                      .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                   svg.append("text")            // append text
                       .style("fill", "black")   // make the text
                       .attr("font-size", 10)
                       .attr("x", ix - FrameThicknessForMap - GapForMap + ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                      .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                       .text("eq");
+                } 
               } else {
 
                   if (Handing == 'Right') {
@@ -5549,152 +5695,151 @@ if (IsFourSidedFrame == true) {
                           .style("stroke", "black")
                           .style("fill", "#2C3360")
                           .attr("r", 7)
-                          .attr("cx", ix + FrameThicknessForMap + GapForMap + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                          .attr("cx", ix + FrameThicknessForMap + GapForMap + ((distanceFromEdge / 5)))
+                          .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - 180)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - 180)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
                           .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - 180)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                           .attr("marker-end", "url(#arrowRight)")
 
                       svg.append("text")            // append text
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
-                          .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - 185)    // set x position
-                          .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - 185}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                          .text(1550);
+                          .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance-5)    // set x position
+                          .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel2WidthSpaceForVerticalLines - leftdistance - 5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                          .text(distanceFromBottom);
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                           .attr("x2", ix + FrameThicknessForMap + GapForMap)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                           .attr("marker-start", "url(#arrowLeft)")
                           .attr("marker-end", "url(#arrowRight)")
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + ((distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap + ((distanceFromEdge / 5)))
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                       svg.append("text")            // append text
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
-                          .attr("x", ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) + 5)    // set x position
-                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25})`) // rotate
-                          .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                          .attr("x", ix + FrameThicknessForMap + GapForMap + (distanceFromEdge / 10) + 5)    // set x position
+                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (distanceFromEdge / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25})`) // rotate
+                          .text(distanceFromEdge);
                   } else {
 
                       svg.append("circle")
                           .style("stroke", "black")
                           .style("fill", "#2C3360")
                           .attr("r", 7)
-                          .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                          .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                          .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
                           .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                           .attr("marker-end", "url(#arrowRight)")
 
                       svg.append("text")            // append text
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
-                          .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)    // set x position
-                          .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                          .text(1550);
+                          .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5)    // set x position
+                          .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                          .text(distanceFromBottom);
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                           .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                           .attr("marker-start", "url(#arrowLeft)")
                           .attr("marker-end", "url(#arrowRight)")
 
                       svg.append('line')
                           .style("stroke", "black")
                           .style("stroke-width", 0.5)
-                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                          .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                          .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                          .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                          .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                          .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                       svg.append("text")            // append text
                           .style("fill", "black")   // make the text
                           .attr("font-size", 10)
-                          .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10))    // set x position
-                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
-                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) + 5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
-                          .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                          .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10))    // set x position
+                          .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30) // set y position
+                          .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10) + 5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30})`) // rotate
+                          .text(distanceFromEdge);
                   }
               }
 
           }
       }
+      }
 
-      if (DoorSetType == "DD") {
+     if (IsDoorSinageEnable ) {
+    drawDoorSignage(DoorSignagedistanceFromLeadingEdgeOfDoor, DoorSignageCentered, DoorSignageDistanceFromBottomOfDoor,225,185,220);
+    }
 
-          // svg.append('rect') // double door rect
-          // .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles)
-          // .attr('y', iy + TopFrameHeight + GapForMap)
-          // .attr('width', LeafWidth2ForMap)
-          // .attr('height', LeafHeightNoOPForMap)
-          // .attr('stroke', 'black')
-          // .attr('fill', '#EBECE6');
-
-          if (IsDoorSinageEnable) {
-            if (DoorSignageCentered == 1) {
+    if (IsDoorSinageEnable2 ) {
+    drawDoorSignage(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,245,205,245);
+    }
+      function drawDoorSignageDD(distanceFromEdge, isCentered, distanceFromBottom,rightDistance,leftdistance){
+         
+            if (isCentered == 1) {
                 svg.append("circle")
                     .style("stroke", "black")
                     .style("fill", "#2C3360")
                     .attr("r", 7)
                     .attr("cx", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5702,23 +5847,23 @@ if (IsFourSidedFrame == true) {
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap)+ GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + (FrameThicknessForMap) + GapForMap + LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + (FrameThicknessForMap) + GapForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5726,15 +5871,15 @@ if (IsFourSidedFrame == true) {
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix - (FrameThicknessForMap) - GapForMap + ((FrameThicknessForMap + GapForMap + (LeafWidth1ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
 
                     // ...........................................................
@@ -5743,15 +5888,15 @@ if (IsFourSidedFrame == true) {
                     .style("fill", "#2C3360")
                     .attr("r", 7)
                     .attr("cx", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap +MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
                 svg.append('line')
                     .style("stroke", "black")
@@ -5759,7 +5904,7 @@ if (IsFourSidedFrame == true) {
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
                     .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 220)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5767,17 +5912,17 @@ if (IsFourSidedFrame == true) {
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                    .text(1550);
+                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 215}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                    .text(distanceFromBottom);
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5785,23 +5930,23 @@ if (IsFourSidedFrame == true) {
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap)+ GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix + (FrameThicknessForMap) + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("x2", ix + (FrameThicknessForMap) + GapForMap)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                     .attr("marker-start", "url(#arrowLeft)")
                     .attr("marker-end", "url(#arrowRight)")
 
@@ -5809,15 +5954,15 @@ if (IsFourSidedFrame == true) {
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
                     .attr("x1", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                    .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                     .attr("x2", ix + (2*FrameThicknessForMap) + GapForMap + (LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap - ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 2))))
-                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                    .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
                 svg.append("text")            // append text
                     .style("fill", "black")   // make the text
                     .attr("font-size", 10)
                     .attr("x", ix - (FrameThicknessForMap) - GapForMap +MeetingStiles+LeafWidth1ForMap+ ((FrameThicknessForMap + GapForMap + (LeafWidth2ForMap) / 4)))    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25) // set y position
+                    .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25) // set y position
                     .text("eq");
             } else {
 
@@ -5826,36 +5971,36 @@ if (IsFourSidedFrame == true) {
                 .style("stroke", "black")
                 .style("fill", "#2C3360")
                 .attr("r", 7)
-                .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
 
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("marker-start", "url(#arrowLeft)")
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - (distanceFromEdge / 5)))
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10))    // set x position
-                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (DoorSignagedistanceFromLeadingEdgeOfDoor / 10) }, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
-                .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10))    // set x position
+                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (distanceFromEdge / 10) }, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30})`) // rotate
+                .text(distanceFromEdge);
 
                 // ..........................................
 
@@ -5863,2003 +6008,2189 @@ if (IsFourSidedFrame == true) {
                 .style("stroke", "black")
                 .style("fill", "#2C3360")
                 .attr("r", 7)
-                .attr("cx", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("cx", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
 
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 20)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 20)
                 .attr("marker-start", "url(#arrowLeft)")
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 25)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 25)
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5)    // set x position
-                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (DoorSignagedistanceFromLeadingEdgeOfDoor / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)) - 30})`) // rotate
-                .text(DoorSignagedistanceFromLeadingEdgeOfDoor);
+                .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (distanceFromEdge / 10)+5)    // set x position
+                .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (distanceFromEdge / 10)+5}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)) - 30})`) // rotate
+                .text(distanceFromEdge);
 
                 svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((DoorSignagedistanceFromLeadingEdgeOfDoor / 5)))
-                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + SideLightPanel2WidthSpaceForVerticalLines + 250)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)));
+                .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + ((distanceFromEdge / 5)))
+                .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)));
 
             svg.append('line')
                 .style("stroke", "black")
                 .style("stroke-width", 0.5)
-                .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 250)
+                .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
                 .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 250)
-                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5)))
+                .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance)
+                .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5)))
                 .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                 .attr("marker-end", "url(#arrowRight)")
 
             svg.append("text")            // append text
                 .style("fill", "black")   // make the text
                 .attr("font-size", 10)
-                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 235)    // set x position
-                .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5) // set y position
-                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + 235}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (1550 / 5))) / 2 + 5)})`) // rotate
-                .text(1550);
+                .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5)    // set x position
+                .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5) // set y position
+                .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + SideLightPanel2WidthSpaceForVerticalLines + rightDistance-5}, ${((iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distanceFromBottom / 5))) / 2 + 5)})`) // rotate
+                .text(distanceFromBottom);
             }
+        
+ }
+
+     
+            if (DoorSetType == "DD") {
+
+
+        if (IsDoorSinageEnable ) {
+    drawDoorSignageDD(DoorSignagedistanceFromLeadingEdgeOfDoor, DoorSignageCentered, DoorSignageDistanceFromBottomOfDoor,235,265,245);
+    }
+    if (IsDoorSinageEnable2 ) {
+    drawDoorSignageDD(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,255,275,255);
+    }
+
+                       
+
+                 if (IsPushHandlesEnable && !IsPushHandlesEnable2 && !IsPullHandlesEnable  ) {
+                        if (LeafWidth2ForMap == LeafWidth1ForMap){
+                            if(Handing == 'DD'){
+                                LeftPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                            else{
+                                RightPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                            RightPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                            LeftPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                }
+
+                if (IsPushHandlesEnable2   && !IsPullHandlesEnable  ) {
+                     LeftPushHandle(PushHandleHeight,PushHandleDistanceFromBottomOfDoor,PushHandleDistanceFromLeadingEdgeOfDoor)
+                     RightPushHandle(PushHandleHeight2,PushHandleDistanceFromBottomOfDoor2,PushHandleDistanceFromLeadingEdgeOfDoor2)
+                }
+
+                  function LeftPushHandle(PHheight,PHdistancefrombottom,PHdistancefromedge){
+                    
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PHdistancefromedge / 5) - 6)
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PHheight / 5))
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap  + LeafWidth1ForMap - (PHdistancefromedge / 5) - 6)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 155)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5));
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 155)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 155}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom) + parseInt(PHheight)}`);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 150)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 150)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PHdistancefromedge / 5) - 6)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 125)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5));
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 120)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 120)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 125)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 125}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom)}`);
+                  }
+
+                  function RightPushHandle(PHheight,PHdistancefrombottom,PHdistancefromedge){
+
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5))
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PHheight / 5))
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
+
+                           
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 160)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5));
+
+                        svg.append("text")
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom) + parseInt(PHheight)}`);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 155)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 155)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5));
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 140)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 140)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom)}`);
+                    
+                  }
+         
+
+             if (IsPullHandlesEnable && !IsPullHandlesEnable2  ) {
+           
+                        if (LeafWidth2ForMap == LeafWidth1ForMap){
+                            if(Handing == 'DD'){
+                                LeftPullHandle(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                            else{
+                                RightPullHandle(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                            RightPullHandle(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                            LeftPullHandle(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                            }
+
+            }
+
+                if (IsPullHandlesEnable2 ) {
+                     LeftPullHandle(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
+                     RightPullHandle(PullHandleHeight2,PullHandleDistanceFromBottomOfDoor2,PullHandleDistanceFromLeadingEdgeOfDoor2)
+
+            }
+
+                function LeftPullHandle(PHheight,PHdistancefrombottom,PHdistancefromedge){
+
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PHdistancefromedge / 5) - 6)
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PHheight / 5))
+                            .attr("rx", 4)
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
+
+                
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + LeafWidth1ForMap - (PHdistancefromedge / 5) - 6)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5));
+
+                        svg.append("text")
+                            .style("fill", "black")
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 165}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom) + parseInt(PHheight)}`);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 160)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 160)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PHdistancefromedge / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5));
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 140)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap - SideLightPanel1WidthSpaceForVerticalLines - 145}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom)}`);
+
+                    
+                }
+                function RightPullHandle(PHheight,PHdistancefrombottom,PHdistancefromedge){
+                    
+                        svg.append("rect")
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5))
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("width", 6)
+                            .attr("height", (PHheight / 5))
+                            .attr("rx", 4)
+                            .style("fill", '#D0D0C6')
+                            .style("stroke", 'black')
+
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5));
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 165)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 165}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom) + parseInt(PHheight)}`);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5) - (PHheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PHdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5));
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 140)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 140)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PHdistancefrombottom / 5)) / 2 + 5})`) // rotate
+                            .text(`${parseInt(PHdistancefrombottom)}`);
+                    
+                }
+
+               if(IsFlushBoltsEnable)
+                    {
+                        // if(LeafWidth2ForMap<LeafWidth1ForMap) {
+
+
+                            svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr('y', iy + TopFrameHeight + GapForMap + 1)
+                            .attr('width', (FlushBoltsWidth / 5))
+                            .attr('height', (FlushBoltsHeight / 5))
+                            .attr('stroke', 'none')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5 + 5 + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
+                            .text(FlushBoltsHeight);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 10) + 1)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
+                            .text(FlushBoltsWidth);
+
+                            svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                                            .attr("marker-start", "url(#arrowLeft)")
+                                            .attr("marker-end", "url(#arrowRight)")
+
+                                        svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+(FlushBoltsWidth / 5)  + 1 )
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
+
+                                        svg.append("text")            // append text
+                                            .style("fill", "black")   // set text color
+                                            .attr("font-size", 10)    // set font size
+                                            .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
+                                            .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
+                                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
+                                            .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
+                        // }else{
+                        //     svg.append('rect')
+                        //     .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr('y', iy + TopFrameHeight + GapForMap + 1)
+                        //     .attr('width', (FlushBoltsWidth / 5))
+                        //     .attr('height', (FlushBoltsHeight / 5))
+                        //     .attr('stroke', 'none')
+                        //     .attr('fill', '#D0D0C6')
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1)
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("marker-start", "url(#arrowLeft)")
+                        //     .attr("marker-end", "url(#arrowRight)")
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5 - 5 - 1)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+
+
+                        // svg.append("text")            // append text
+                        //     .style("fill", "black")   // make the text
+                        //     .attr("font-size", 10)
+                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10)    // set x position
+                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
+                        //     .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
+                        //     .text(FlushBoltsHeight);
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1 + (FlushBoltsWidth / 5))
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
+                        //     .attr("marker-start", "url(#arrowLeft)")
+                        //     .attr("marker-end", "url(#arrowRight)")
+
+                        // svg.append('line')
+                        //     .style("stroke", "black")
+                        //     .style("stroke-width", 0.5)
+                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
+                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
+
+                        // svg.append("text")            // append text
+                        //     .style("fill", "black")   // make the text
+                        //     .attr("font-size", 10)
+                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 10) - 1 - 5)    // set x position
+                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
+                        //     .text(FlushBoltsWidth);
+
+                        //     svg.append('line')
+                        //                     .style("stroke", "black")
+                        //                     .style("stroke-width", 0.5)
+                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        //                     .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //                     .attr("marker-start", "url(#arrowLeft)")
+                        //                     .attr("marker-end", "url(#arrowRight)")
+
+                        //                 svg.append('line')
+                        //                     .style("stroke", "black")
+                        //                     .style("stroke-width", 0.5)
+                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
+                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
+                        //                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
+                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
+
+                        //                 svg.append("text")            // append text
+                        //                     .style("fill", "black")   // set text color
+                        //                     .attr("font-size", 10)    // set font size
+                        //                     .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
+                        //                     .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
+                        //                     .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
+                        //                     .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
+                        // }
+                    }
+
+                     if(IsFlushBoltsEnable2)
+                    {
+                            svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr('y',  iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1 - (FlushBoltsHeight2 / 5))
+                            .attr('width', (FlushBoltsWidth2 / 5))
+                            .attr('height', (FlushBoltsHeight2 / 5))
+                            .attr('stroke', 'none')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) + 5 ) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20}, ${iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) +5 })`) // rotate
+                            .text(FlushBoltsHeight2);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+               
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 10) + 1)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 10) // set y position
+                            .text(FlushBoltsWidth2);
+
+                    }
+                if (IsMorticedDropdownSealsEnable || IsFacefixeddropsealsEnable) {
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .style("stroke-dasharray", "4, 2")
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
+
+                        svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .style("stroke-dasharray", "4, 2")
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap+ MeetingStiles+LeafWidth1ForMap)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth2ForMap+ MeetingStiles+LeafWidth1ForMap)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
+                }
+
+
+               if (IsFaceFixedDoorClosersEnable && !IsFaceFixedDoorClosersEnable2 ) {
+           
+                   if (LeafWidth2ForMap == LeafWidth1ForMap){
+                        if(Handing == 'DD'){
+                            faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+                        }
+                    else{
+                        faceFixedDoorCloserRight(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+                    }
+                }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            faceFixedDoorCloserRight(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            }
+
+
+          
+
+            }
+
+                if (IsFaceFixedDoorClosersEnable2 ) {
+                     faceFixedDoorCloserLeft(FaceFixedDoorClosersWidth,FaceFixedDoorCloserDataHeight)
+            faceFixedDoorCloserRight(FaceFixedDoorClosersWidth2,FaceFixedDoorCloserDataHeight2)
+
+            }
+
+                function faceFixedDoorCloserLeft(width, height){
+                       svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
+                            .attr('y', iy + TopFrameHeight + GapForMap + 10)
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
+                            .attr('stroke', 'black')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10)
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + (width / 5) + 30)    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + 10+iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2 +10) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (width / 5) + 30}, ${(iy + TopFrameHeight + GapForMap + 10+iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2+10})`) // rotate
+                            .text(height);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (width / 10) - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 19) // set y position
+                            .text(width);
+                }
+
+                  function faceFixedDoorCloserRight(width,height){
+ svg.append('rect')
+                            .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr('y', iy + TopFrameHeight + GapForMap + 10)
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
+                            .attr('stroke', 'black')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10)
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))    // set x position
+                            .attr("y", (iy + TopFrameHeight + GapForMap + 10 + iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2 +10) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5)}, ${ (iy + TopFrameHeight + GapForMap + 10 + iy + TopFrameHeight + GapForMap + 10 + (height / 5))/2+10})`) // rotate
+                            .text(height);
+
+                            
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                            .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 10) - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 15) // set y position
+                            .text(width);
+                  }
+
+                 if(IsConcealedOverheadCloserEnable && !IsConcealedOverheadCloserEnable2){
+      if (LeafWidth2ForMap == LeafWidth1ForMap){
+                        if(Handing == 'DD'){
+                            ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+                        }
+                    else{
+                        ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+                    }
+                }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            }
+            }
+
+               if (IsConcealedOverheadCloserEnable2 ) {
+                     ConcealedOverheadCloserLeft(ConcealedOverheadCloserWidth,ConcealedOverheadCloserHeight)
+            ConcealedOverheadCloserRight(ConcealedOverheadCloserWidth2,ConcealedOverheadCloserHeight2)
+
+            }
+            function ConcealedOverheadCloserLeft(width,height){
+                    svg.append('rect')
+                        .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
+                        .attr('y', iy + TopFrameHeight + GapForMap + 10)
+                        .attr('width', (width / 5))
+                        .attr('height', (height / 5))
+                        .attr('stroke', 'black')
+                        .attr('fill', '#D0D0C6')
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10)
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + (width / 5) + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5) + 10 + 5)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + (width / 5) + 30)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 10) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (width / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
+                        .text(height);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (width / 10) - 5)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 19) // set y position
+                        .text(width);
+            }
+             function ConcealedOverheadCloserRight(width,height){
+                {
+                    svg.append('rect')
+                        .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr('y', iy + TopFrameHeight + GapForMap + 10)
+                        .attr('width', (width / 5))
+                        .attr('height', (height / 5))
+                        .attr('stroke', 'black')
+                        .attr('fill', '#D0D0C6')
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10)
+                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10)
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (width / 5))    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 10) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (width / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
+                        .text(height);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 5)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (height / 5))
+                        .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 5))
+                        .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 10);
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (width / 10) - 5)    // set x position
+                        .attr("y", iy + TopFrameHeight + GapForMap + 10 + (height / 5) + 15) // set y position
+                        .text(width);
+
+                }
+            }
+            
+               if (IsSecurityViewerEnable && !IsSecurityViewerEnable2 ) {
+           
+                   if (LeafWidth2ForMap == LeafWidth1ForMap){
+                        if(Handing == 'DD'){
+                            LeftSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor)
+                        }
+                    else{
+                        RightSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor)
+                    }
+                }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            RightSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              LeftSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor)
+            }
+
+
+          
+
+            }
+
+                if (IsSecurityViewerEnable2 ) {
+                     LeftSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor)
+            RightSecurityViewer(DoorsecurityviewerdistanceFromBottomOfDoor2)
+
+            }
+
+              function LeftSecurityViewer(SVdistancefrombottom){
+
+
+                                 svg.append("circle")
+                        .style("stroke", "black")
+                        .style("fill", "black")
+                        .attr("r", 3)
+                        .attr("cx", ix + (LeafWidth1ForMap / 2))
+                        .attr("cy", iy + FrameHeightForMap - (SVdistancefrombottom / 5));
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1",  ix + (LeafWidth1ForMap / 2))
+                        .attr("y1", iy + FrameHeightForMap - (SVdistancefrombottom / 5))
+                        .attr("x2", ix - SideLightPanel2WidthSpaceForVerticalLines - 97)
+                        .attr("y2", iy + FrameHeightForMap - (SVdistancefrombottom / 5));
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix - SideLightPanel2WidthSpaceForVerticalLines - 92)
+                        .attr("y1", iy + FrameHeightForMap - (SVdistancefrombottom / 5))
+                        .attr("x2", ix - SideLightPanel2WidthSpaceForVerticalLines - 92)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text green
+                        .attr("font-size", 10)
+                        .attr("x", ix - SideLightPanel2WidthSpaceForVerticalLines - 97) // set x position
+                        .attr("y", (iy + FrameHeightForMap - (SVdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)        // set y position
+                        .attr("transform", `rotate(-90, ${ix - SideLightPanel2WidthSpaceForVerticalLines - 97}, ${(iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate the text
+                        .text(SVdistancefrombottom);  
+              }
+                function RightSecurityViewer(SVdistancefrombottom){
+
+                    svg.append("circle")
+                        .style("stroke", "black")
+                        .style("fill", "black")
+                        .attr("r", 3)
+                        .attr("cx", ix +LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2))
+                        .attr("cy", iy + FrameHeightForMap - (SVdistancefrombottom / 5));
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2))
+                        .attr("y1", iy + FrameHeightForMap - (SVdistancefrombottom / 5))
+                        .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 25)
+                        .attr("y2", iy + FrameHeightForMap - (SVdistancefrombottom / 5));
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 25)
+                        .attr("y1", iy + FrameHeightForMap - (SVdistancefrombottom / 5))
+                        .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 25)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text green
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 21) // set x position
+                        .attr("y", (iy + FrameHeightForMap - (SVdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)        // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 21}, ${(iy + FrameHeightForMap - (SVdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate the text
+                        .text(SVdistancefrombottom);        // define the text to display               
+                }
+
+             if (IsLetterPlatesEnable && !IsLetterPlatesEnable2 ) {
+           
+                if (LeafWidth2ForMap == LeafWidth1ForMap){
+                    if(Handing == 'DD'){
+                        if (LetterplatesCentered == 1) {
+                            LeftLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
+                        }
+                        else{
+                            LeftLetterPlate(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor,LetterplatesDistanceFromLeadingEdgeOfDoor)
+                        }
+                        
+                    }
+                else{
+                    if (LetterplatesCentered == 1) {
+                        RightLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
+                    }
+                    else{
+                        RightLetterPlate(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor,LetterplatesDistanceFromLeadingEdgeOfDoor)
+                    }
+                    
+                }
+            }
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                 if (LetterplatesCentered == 1) {
+                    RightLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
+                 }
+                else{
+                    RightLetterPlate(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor,LetterplatesDistanceFromLeadingEdgeOfDoor)
+                }
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                 if (LetterplatesCentered == 1) {
+                    LeftLetterPlateCentered(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor)
+                 }
+                else{
+                    LeftLetterPlate(LetterplatesHeight,LetterplatesWidth,LetterplatesDistanceFromBottomOfDoor,LetterplatesDistanceFromLeadingEdgeOfDoor)
+                }      
+            }
+            }
+
+                        if (IsLetterPlatesEnable2) {
+    
+    // Case 1: Both plates centered
+    if (LetterplatesCentered == 1 && LetterplatesCentered2 == 1) {
+        LeftLetterPlateCentered(
+            LetterplatesHeight,
+            LetterplatesWidth,
+            LetterplatesDistanceFromBottomOfDoor
+        );
+        RightLetterPlateCentered(
+            LetterplatesHeight,
+            LetterplatesWidth,
+            LetterplatesDistanceFromBottomOfDoor
+        );
+    }
+    else {
+        // Handle Left Plate
+        if (LetterplatesCentered == 1) {
+            LeftLetterPlateCentered(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor
+            );
+        } else {
+            LeftLetterPlate(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor,
+                LetterplatesDistanceFromLeadingEdgeOfDoor
+            );
         }
 
-          if (IsPushHandlesEnable) {
-            if(LeafWidth2ForMap<LeafWidth1ForMap) {
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PushHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PushHandleHeight / 5))
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
+        // Handle Right Plate
+        if (LetterplatesCentered2 == 1) {
+            RightLetterPlateCentered(
+                LetterplatesHeight,
+                LetterplatesWidth,
+                LetterplatesDistanceFromBottomOfDoor
+            );
+        } else {
+            RightLetterPlate(
+                LetterplatesHeight2,
+                LetterplatesWidth2,
+                LetterplatesDistanceFromBottomOfDoor2,
+                LetterplatesDistanceFromLeadingEdgeOfDoor2
+            );
+        }
+    }
+}
 
-                    svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PushHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PushHandleHeight / 5))
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PushHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 155)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5));
 
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 145)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PushHandleDistanceFromBottomOfDoor) + parseInt(PushHandleHeight)}`);
+            function RightLetterPlate(LPheight,LPwidth,LPdistancefrombottom,LPdistancefromedge){
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
+                        svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5) )
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr('width', (LPwidth / 5))
+                            .attr('height', (LPheight / 5))
+                            .attr('stroke', 'black')
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PushHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 125)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5));
+                            .attr('fill', '#D0D0C6')
 
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 120)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 120)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
 
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles +LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 115)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 115}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PushHandleDistanceFromBottomOfDoor)}`);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + (LPdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + (LPdistancefromedge / 5) )
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text green
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 10)-5) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))        // set y position
+                            .text(LPwidth);        // define the text to display
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5)+5)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5) + 5)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + (LPheight / 5) - (LPheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5) + 15) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5)- (LPheight / 10) +5) // set y position
+                            // .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5) + 15}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LPheight / 5) - (LPheight / 10)+5})`) // rotate around (x, y)
+                            .text(LPheight);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", (ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 10)) - 5) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5) // set y position
+                            .text(LPdistancefromedge);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5)+5)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5)+5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5)+ 20) // set x position
+                            .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LPdistancefromedge / 5)+ 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
+                            .text(LPdistancefrombottom);
+                    
+            }
+             function LeftLetterPlate(LPheight,LPwidth,LPdistancefrombottom,LPdistancefromedge){
+                        svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) - (LPdistancefromedge / 5) )
+                            .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr('width', (LPwidth / 5))
+                            .attr('height', (LPheight / 5))
+                            .attr('stroke', 'black')
+
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LPwidth / 5) -  (LPdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) - (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LPwidth / 5) -  (LPdistancefromedge / 5) )
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LPwidth / 5) - (LPdistancefromedge / 5) )
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) - (LPdistancefromedge / 5) + (LPwidth / 5))
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text green
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5) + (LPwidth / 10)-5) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))        // set y position
+                            .text(LPwidth);        // define the text to display
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5) -5)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5) - 5)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + (LPheight / 5) - (LPheight / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5)- 25) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5)- (LPheight / 10) +5) // set y position
+                            // .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LPdistancefromedge / 5) + (LPwidth / 5) + 15}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LPheight / 5) - (LPheight / 10)+5})`) // rotate around (x, y)
+                            .text(LPheight);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LPwidth / 5) -  (LPdistancefromedge / 5))
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                            .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", (ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LPdistancefromedge / 10)) -5) // set x position
+                            .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5) // set y position
+                            .text(LPdistancefromedge);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LPdistancefromedge / 5)-5)
+                            .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LPdistancefromedge / 5)-5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LPdistancefromedge / 5)- 20) // set x position
+                            .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  - (LPdistancefromedge / 5)- 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
+                            .text(LPdistancefrombottom);
+                    
+            }
+
+             function RightLetterPlateCentered(LPheight,LPwidth,LPdistancefrombottom){
+
+                        svg.append('rect')
+                        .attr('x', ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr('width', (LPwidth / 5))
+                        .attr('height', (LPheight / 5))
+                        .attr('stroke', 'black')
+
+                        .attr('fill', '#D0D0C6')
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                        .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("x2", ix + GapForMap + FrameThicknessForMap +LeafWidth1ForMap+MeetingStiles)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", (ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + ix + GapForMap + FrameThicknessForMap +LeafWidth1ForMap+MeetingStiles) / 2) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5)) // set y position
+                        .text('eq');
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) + ((LPwidth / 5) / 2) )
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("x2", ix + FrameWidthForMap)//hjhjhj
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", (ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5) + ix + FrameWidthForMap) / 2) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5)) // set y position
+                        .text('eq');
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text green
+                        .attr("font-size", 10)
+                        .attr("x", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + ((LPwidth / 5) / 2) - 5) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))        // set y position
+                        .text(LPwidth);        // define the text to display
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) - 5)
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) - 5)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + (LPheight / 5) - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) - 15) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + ((LPheight / 5) / 2) - (LPheight / 5)) // set y position
+                        .attr("transform", `rotate(-90, ${ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) - 10}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5) + ((LPheight / 5) / 2)})`) // rotate around (x, y)
+                        .text(LPheight);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + 10)
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + 10)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + 25) // set x position
+                        .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
+                        .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + 25}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
+                        .text(LPdistancefrombottom);
+                    
+             }
+              function LeftLetterPlateCentered(LPheight,LPwidth,LPdistancefrombottom){
+
+                    svg.append('rect')
+                        .attr('x', ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr('width', (LPwidth / 5))
+                        .attr('height', (LPheight / 5))
+                        .attr('stroke', 'black')
+
+                        .attr('fill', '#D0D0C6')
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                        .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 5 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("x2", ix + GapForMap + FrameThicknessForMap)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", (ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + ix) / 2) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5)) // set y position
+                        .text('eq');
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 20 - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", (ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5) + ix + LeafWidth1ForMap) / 2) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 25 - (LPheight / 5)) // set y position
+                        .text('eq');
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text green
+                        .attr("font-size", 10)
+                        .attr("x", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + ((LPwidth / 5) / 2) - 5) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - 10 - (LPheight / 5))        // set y position
+                        .text(LPwidth);        // define the text to display
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) - 5)
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5))
+                        .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) - 5)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + (LPheight / 5) - (LPheight / 5))
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) - 15) // set x position
+                        .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + ((LPheight / 5) / 2) - (LPheight / 5)) // set y position
+                        .attr("transform", `rotate(-90, ${ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) - 10}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) - (LPheight / 5) + ((LPheight / 5) / 2)})`) // rotate around (x, y)
+                        .text(LPheight);
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LPwidth / 5) / 2) + (LPwidth / 5))
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
+                        .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 10)
+                        .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5))
+                        .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 10)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 15) // set x position
+                        .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
+                        .attr("transform", `rotate(-90, ${ix + LeafWidth1ForMap - 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LPdistancefrombottom / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
+                        .text(LPdistancefrombottom);
+                    
+             }
+
+
+            if (IsAirTransferGrillsEnable && !IsAirTransferGrillsEnable2 ) {
+           
+if (LeafWidth2ForMap == LeafWidth1ForMap){
+    if(Handing == 'DD'){
+        LeftAirTransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
+    }
+    else{
+         RightAirtransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
+    }
+}
+            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+            RightAirtransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
+            }
+            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+              LeftAirTransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
+            }
+
+
+          
 
             }
-            else{
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PushHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PushHandleHeight / 5))
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
 
-                    svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PushHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PushHandleHeight / 5))
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
+                if (IsAirTransferGrillsEnable2 ) {
+                     LeftAirTransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
+            RightAirtransferGrill(AirTransferGrillsDistanceFromBottomOfDoor2,AirTransferGrillsHeight2,AirTransferGrillsWidth2)
+
+            }
+
+            
+            function RightAirtransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth){
+                const grillrightX = ix +FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2) - ((ATGwidth / 5) / 2);
+                const grillrightY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (ATGDistanceFromBottomOfDoor / 5) - (ATGheight / 5);
+                const grillrightWidth = ATGwidth / 5;
+                const grillrightHeight = ATGheight / 5;
+
+                // Draw the outer rectangle
+                svg.append('rect')
+                    .attr('x', grillrightX)
+                    .attr('y', grillrightY)
+                    .attr('width', grillrightWidth)
+                    .attr('height', grillrightHeight)
+                    .attr('stroke', 'black')
+                    .attr('fill', '#D0D0C6');
+
+                // Draw the horizontal slots
+                const numSlotsright = ATGheight / 20; // Number of horizontal slots
+                const slotHeightright = grillrightHeight / (2 * numSlotsright); // Slot height
+                const gapHeightright = slotHeightright; // Gap between slots
+
+                for (let i = 0; i < numSlotsright; i++) {
+                    svg.append('rect')
+                        .attr('x', grillrightX + 2) // Slight margin from the left
+                        .attr('y', grillrightY + i * (slotHeightright + gapHeightright) + 2) // Space out slots
+                        .attr('width', grillrightWidth - 4) // Slight margin on both sides
+                        .attr('height', slotHeightright)
+                        .attr('fill', 'black'); // Black slots
+                }
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillrightX - 5)
+                    .attr("y1", grillrightY)
+                    .attr("x2", grillrightX - 5)
+                    .attr("y2", grillrightY + grillrightHeight)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)")
+
+                svg.append("text")            // append text
+                    .style("fill", "black")   // make the text
+                    .attr("font-size", 10)
+                    .attr("x", grillrightX - 10)    // set x position
+                    .attr("y", grillrightY + (grillrightHeight / 2) + 5) // set y position
+                    .attr("transform", `rotate(-90, ${grillrightX - 10}, ${grillrightY + (grillrightHeight / 2) + 5})`) // rotate around the text's position
+                    .text(ATGheight);
+
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PushHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 155)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5));
+                    .attr("x1", grillrightX)
+                    .attr("y1", grillrightY)
+                    .attr("x2", grillrightX)
+                    .attr("y2", grillrightY - 10)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillrightX + grillrightWidth)
+                    .attr("y1", grillrightY)
+                    .attr("x2", grillrightX + grillrightWidth)
+                    .attr("y2", grillrightY - 10)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillrightX)
+                    .attr("y1", grillrightY - 5)
+                    .attr("x2", grillrightX + grillrightWidth)
+                    .attr("y2", grillrightY - 5)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)")
 
                 svg.append("text")
                     .style("fill", "black")
                     .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PushHandleDistanceFromBottomOfDoor) + parseInt(PushHandleHeight)}`);
+                    .attr("x", grillrightX + (grillrightWidth / 2) - 5)
+                    .attr("y", grillrightY - 10)
+                    .text(ATGwidth);
 
                 svg.append('line')
                     .style("stroke", "black")
                     .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 150)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5) - (PushHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PushHandleDistanceFromLeadingEdgeOfDoor / 5) )
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 125)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5));
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 120)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 120)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 115)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 115}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PushHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PushHandleDistanceFromBottomOfDoor)}`);
-            }
-
-        }
-
-        if (IsPullHandlesEnable) {
-            if(LeafWidth2ForMap<LeafWidth1ForMap) {
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
-
-                    svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 165)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 165}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 3)
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 140)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 140)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles +LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 135)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles +LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
-
-            }
-            else{
-                svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
-
-                    svg.append("rect")
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (PullHandleDistanceFromLeadingEdgeOfDoor / 5) - 6)
-                    .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("width", 6)
-                    .attr("height", (PullHandleHeight / 5))
-                    .attr("rx", 4)
-                    .style("fill", '#D0D0C6')
-                    .style("stroke", 'black')
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PullHandleDistanceFromLeadingEdgeOfDoor / 5))
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 175)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5));
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 165)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 165}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor) + parseInt(PullHandleHeight)}`);
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 170)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5) - (PullHandleHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (PullHandleDistanceFromLeadingEdgeOfDoor / 5) )
-                    .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 145)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5));
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 140)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+ SideLightPanel2WidthSpaceForVerticalLines + 140)
-                    .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5))
-                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135)    // set x position
-                    .attr("y", (iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap + SideLightPanel2WidthSpaceForVerticalLines + 135}, ${(iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap + iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (PullHandleDistanceFromBottomOfDoor / 5)) / 2 + 5})`) // rotate
-                    .text(`${parseInt(PullHandleDistanceFromBottomOfDoor)}`);
-            }
-
-        }
-        if(IsFlushBoltsEnable)
-            {
-                if(LeafWidth2ForMap<LeafWidth1ForMap) {
-
-
-                    svg.append('rect')
-                    .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                    .attr('y', iy + TopFrameHeight + GapForMap + 1)
-                    .attr('width', (FlushBoltsWidth / 5))
-                    .attr('height', (FlushBoltsHeight / 5))
-                    .attr('stroke', 'none')
-                    .attr('fill', '#D0D0C6')
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5 + 5 + 1)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20)    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
-                    .text(FlushBoltsHeight);
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                    .attr("marker-start", "url(#arrowLeft)")
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 10) + 1)    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
-                    .text(FlushBoltsWidth);
+                    .attr("x1", grillrightX)
+                    .attr("y1", grillrightY)
+                    .attr("x2", grillrightX - 10)
+                    .attr("y2", grillrightY)
 
                     svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                                    .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                    .attr("marker-start", "url(#arrowLeft)")
-                                    .attr("marker-end", "url(#arrowRight)")
-
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
-                                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+(FlushBoltsWidth / 5)  + 1 )
-                                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
-
-                                svg.append("text")            // append text
-                                    .style("fill", "black")   // set text color
-                                    .attr("font-size", 10)    // set font size
-                                    .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
-                                    .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
-                                    .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
-                                    .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
-                }else{
-                    svg.append('rect')
-                    .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                    .attr('y', iy + TopFrameHeight + GapForMap + 1)
-                    .attr('width', (FlushBoltsWidth / 5))
-                    .attr('height', (FlushBoltsHeight / 5))
-                    .attr('stroke', 'none')
-                    .attr('fill', '#D0D0C6')
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("marker-start", "url(#arrowLeft)")
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5 - 5 - 1)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10)    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
-                    .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
-                    .text(FlushBoltsHeight);
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1 + (FlushBoltsWidth / 5))
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                    .attr("marker-start", "url(#arrowLeft)")
-                    .attr("marker-end", "url(#arrowRight)")
-
-                svg.append('line')
-                    .style("stroke", "black")
-                    .style("stroke-width", 0.5)
-                    .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
-
-                svg.append("text")            // append text
-                    .style("fill", "black")   // make the text
-                    .attr("font-size", 10)
-                    .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 10) - 1 - 5)    // set x position
-                    .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
-                    .text(FlushBoltsWidth);
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", grillrightX + grillrightWidth)
+                        .attr("y1", grillrightY + grillrightHeight)
+                        .attr("x2", grillrightX + grillrightWidth + 30)
+                        .attr("y2", grillrightY + grillrightHeight)
 
                     svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                    .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                                    .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                    .attr("marker-start", "url(#arrowLeft)")
-                                    .attr("marker-end", "url(#arrowRight)")
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", grillrightX + grillrightWidth + 25)
+                        .attr("y1", grillrightY + grillrightHeight)
+                        .attr("x2", grillrightX + grillrightWidth + 25)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
 
-                                svg.append('line')
-                                    .style("stroke", "black")
-                                    .style("stroke-width", 0.5)
-                                    .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
-                                    .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                    .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
-                                    .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", grillrightX + grillrightWidth + 30)    // set x position
+                        .attr("y", ((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${grillrightX + grillrightWidth + 30}, ${((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
+                        .text(ATGDistanceFromBottomOfDoor);
+            
+            }
+            function LeftAirTransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth){
+                const grillX = ix +FrameThicknessForMap + GapForMap+ (LeafWidth1ForMap / 2) - ((ATGwidth / 5) / 2);
+                const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (ATGDistanceFromBottomOfDoor / 5) - (ATGheight / 5);
+                const grillWidth = ATGwidth / 5;
+                const grillHeight = ATGheight / 5;
 
-                                svg.append("text")            // append text
-                                    .style("fill", "black")   // set text color
-                                    .attr("font-size", 10)    // set font size
-                                    .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
-                                    .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
-                                    .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
-                                    .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
+                // Draw the outer rectangle
+                svg.append('rect')
+                    .attr('x', grillX)
+                    .attr('y', grillY)
+                    .attr('width', grillWidth)
+                    .attr('height', grillHeight)
+                    .attr('stroke', 'black')
+                    .attr('fill', '#D0D0C6');
+
+                // Draw the horizontal slots
+                const numSlots = ATGheight / 20; // Number of horizontal slots
+                const slotHeight = grillHeight / (2 * numSlots); // Slot height
+                const gapHeight = slotHeight; // Gap between slots
+
+                for (let i = 0; i < numSlots; i++) {
+                    svg.append('rect')
+                        .attr('x', grillX + 2) // Slight margin from the left
+                        .attr('y', grillY + i * (slotHeight + gapHeight) + 2) // Space out slots
+                        .attr('width', grillWidth - 4) // Slight margin on both sides
+                        .attr('height', slotHeight)
+                        .attr('fill', 'black'); // Black slots
                 }
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillX - 5)
+                    .attr("y1", grillY)
+                    .attr("x2", grillX - 5)
+                    .attr("y2", grillY + grillHeight)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)")
+
+                svg.append("text")            // append text
+                    .style("fill", "black")   // make the text
+                    .attr("font-size", 10)
+                    .attr("x", grillX - 10)    // set x position
+                    .attr("y", grillY + (grillHeight / 2) + 5) // set y position
+                    .attr("transform", `rotate(-90, ${grillX - 10}, ${grillY + (grillHeight / 2) + 5})`) // rotate around the text's position
+                    .text(ATGheight);
 
 
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillX)
+                    .attr("y1", grillY)
+                    .attr("x2", grillX)
+                    .attr("y2", grillY - 10)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillX + grillWidth)
+                    .attr("y1", grillY)
+                    .attr("x2", grillX + grillWidth)
+                    .attr("y2", grillY - 10)
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillX)
+                    .attr("y1", grillY - 5)
+                    .attr("x2", grillX + grillWidth)
+                    .attr("y2", grillY - 5)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)")
+
+                svg.append("text")
+                    .style("fill", "black")
+                    .attr("font-size", 10)
+                    .attr("x", grillX + (grillWidth / 2) - 5)
+                    .attr("y", grillY - 10)
+                    .text(ATGwidth);
+
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", grillX)
+                    .attr("y1", grillY)
+                    .attr("x2", grillX - 10)
+                    .attr("y2", grillY)
+
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", grillX)
+                        .attr("y1", grillY + grillHeight)
+                        .attr("x2", grillX - 30)
+                        .attr("y2", grillY + grillHeight)
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", grillX - 25)
+                        .attr("y1", grillY + grillHeight)
+                        .attr("x2", grillX - 25)
+                        .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")   // make the text
+                        .attr("font-size", 10)
+                        .attr("x", grillX - 30)    // set x position
+                        .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
+                        .attr("transform", `rotate(-90, ${grillX - 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
+                        .text(ATGDistanceFromBottomOfDoor);
+            
             }
-
-
-          if (IsMorticedDropdownSealsEnable || IsFacefixeddropsealsEnable ) {
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .style("stroke-dasharray", "4, 2")
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
-
-                  svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .style("stroke-dasharray", "4, 2")
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap+ MeetingStiles+LeafWidth1ForMap)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth2ForMap+ MeetingStiles+LeafWidth1ForMap)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 10)
-          }
-
-
-          if(IsFaceFixedDoorClosersEnable){
-
-                  svg.append('rect')
-                      .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
-                      .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                      .attr('width', (FaceFixedDoorClosersWidth / 5))
-                      .attr('height', (FaceFixedDoorCloserDataHeight / 5))
-                      .attr('stroke', 'black')
-                      .attr('fill', '#D0D0C6')
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 10)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10 + 5)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10)
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 10)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5) + 10 + 5)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 30)    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5) // set y position
-                      .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (FaceFixedDoorClosersWidth / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5})`) // rotate
-                      .text(FaceFixedDoorCloserDataHeight);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
-                      .attr("marker-start", "url(#arrowLeft)")
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (FaceFixedDoorClosersWidth / 10) - 5)    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 19) // set y position
-                      .text(FaceFixedDoorClosersWidth);
-              // .........................................................................................................
-              {
-                  svg.append('rect')
-                      .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                      .attr('width', (FaceFixedDoorClosersWidth / 5))
-                      .attr('height', (FaceFixedDoorCloserDataHeight / 5))
-                      .attr('stroke', 'black')
-                      .attr('fill', '#D0D0C6')
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                      .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                      .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10)
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 10) + 5) // set y position
-                      .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                      .text(FaceFixedDoorCloserDataHeight);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
-                      .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 5)
-                      .attr("marker-start", "url(#arrowLeft)")
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5))
-                      .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 5))
-                      .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 10);
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (FaceFixedDoorClosersWidth / 10) - 5)    // set x position
-                      .attr("y", iy + TopFrameHeight + GapForMap + 10 + (FaceFixedDoorCloserDataHeight / 5) + 15) // set y position
-                      .text(FaceFixedDoorClosersWidth);
-
-              }
-          }
-
-          if(IsConcealedOverheadCloserEnable){
-
-              svg.append('rect')
-                  .attr('x', ix + FrameThicknessForMap + GapForMap + 10)
-                  .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                  .attr('width', (ConcealedOverheadCloserWidth / 5))
-                  .attr('height', (ConcealedOverheadCloserHeight / 5))
-                  .attr('stroke', 'black')
-                  .attr('fill', '#D0D0C6')
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 10)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10 + 5)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10)
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 10)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5) + 10 + 5)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 30)    // set x position
-                  .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5) // set y position
-                  .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + (ConcealedOverheadCloserWidth / 5) + 30}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                  .text(ConcealedOverheadCloserHeight);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
-                  .attr("marker-start", "url(#arrowLeft)")
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + 10)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameThicknessForMap + GapForMap + 10 + (ConcealedOverheadCloserWidth / 10) - 5)    // set x position
-                  .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 19) // set y position
-                  .text(ConcealedOverheadCloserWidth);
-          // .........................................................................................................
-          {
-              svg.append('rect')
-                  .attr('x', ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr('y', iy + TopFrameHeight + GapForMap + 10)
-                  .attr('width', (ConcealedOverheadCloserWidth / 5))
-                  .attr('height', (ConcealedOverheadCloserHeight / 5))
-                  .attr('stroke', 'black')
-                  .attr('fill', '#D0D0C6')
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                  .attr("x2", ix + FrameWidthForMap - GapForMap - 20 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10)
-                  .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10)
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 25 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameWidthForMap - GapForMap + 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))    // set x position
-                  .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5) // set y position
-                  .attr("transform", `rotate(-90, ${ix + FrameWidthForMap - GapForMap - 30 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5)}, ${iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 10) + 5})`) // rotate
-                  .text(ConcealedOverheadCloserHeight);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
-                  .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 5)
-                  .attr("marker-start", "url(#arrowLeft)")
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y1", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5))
-                  .attr("x2", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 5))
-                  .attr("y2", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 10);
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameWidthForMap - GapForMap - 10 - FrameThicknessForMap - (ConcealedOverheadCloserWidth / 10) - 5)    // set x position
-                  .attr("y", iy + TopFrameHeight + GapForMap + 10 + (ConcealedOverheadCloserHeight / 5) + 15) // set y position
-                  .text(ConcealedOverheadCloserWidth);
-
-          }
-      }
-      if (IsSecurityViewerEnable ) {
-          if (LeafWidth2ForMap<LeafWidth1ForMap) {
-
-              svg.append("circle")
-                  .style("stroke", "black")
-                  .style("fill", "black")
-                  .attr("r", 3)
-                  .attr("cx", ix + (LeafWidth1ForMap / 2))
-                  .attr("cy", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5));
-
-                  svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2))
-                  .attr("y1", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y2", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5));
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y1", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text green
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40) // set x position
-                  .attr("y", (iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)        // set y position
-                  .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 35}, ${(iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate the text
-                  .text(DoorsecurityviewerdistanceFromBottomOfDoor);       // define the text to display
-          } else {
-
-              svg.append("circle")
-                  .style("stroke", "black")
-                  .style("fill", "black")
-                  .attr("r", 3)
-                  .attr("cx", ix +LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2))
-                  .attr("cy", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5));
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2))
-                  .attr("y1", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y2", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5));
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y1", iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text green
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 40) // set x position
-                  .attr("y", (iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)        // set y position
-                  .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 92 + 35}, ${(iy + FrameHeightForMap - (DoorsecurityviewerdistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate the text
-                  .text(DoorsecurityviewerdistanceFromBottomOfDoor);        // define the text to display
-          }
-      }
-
-      if (IsLetterPlatesEnable ) {
-
-          if (LetterplatesCentered == 1) {
-
-              if (LeafWidth2ForMap<LeafWidth1ForMap) {
-              svg.append('rect')
-                  .attr('x', ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr('width', (LetterplatesWidth / 5))
-                  .attr('height', (LetterplatesHeight / 5))
-                  .attr('stroke', 'black')
-
-                  .attr('fill', '#D0D0C6')
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                  .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("x2", ix + GapForMap + FrameThicknessForMap)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", (ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + ix) / 2) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5)) // set y position
-                  .text('eq');
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", (ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5) + ix + LeafWidth1ForMap) / 2) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5)) // set y position
-                  .text('eq');
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text green
-                  .attr("font-size", 10)
-                  .attr("x", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + ((LetterplatesWidth / 5) / 2) - 5) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))        // set y position
-                  .text(LetterplatesWidth);        // define the text to display
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 5)
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 5)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 15) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + ((LetterplatesHeight / 5) / 2) - (LetterplatesHeight / 5)) // set y position
-                  .attr("transform", `rotate(-90, ${ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 10}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5) + ((LetterplatesHeight / 5) / 2)})`) // rotate around (x, y)
-                  .text(LetterplatesHeight);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + (LeafWidth1ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 10)
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 10)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - 15) // set x position
-                  .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
-                  .attr("transform", `rotate(-90, ${ix + LeafWidth1ForMap - 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
-                  .text(LetterplatesDistanceFromBottomOfDoor);
-              }else{
-                  svg.append('rect')
-                  .attr('x', ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr('width', (LetterplatesWidth / 5))
-                  .attr('height', (LetterplatesHeight / 5))
-                  .attr('stroke', 'black')
-
-                  .attr('fill', '#D0D0C6')
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                  .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("x2", ix + GapForMap + FrameThicknessForMap +LeafWidth1ForMap+MeetingStiles)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", (ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + ix + GapForMap + FrameThicknessForMap +LeafWidth1ForMap+MeetingStiles) / 2) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5)) // set y position
-                  .text('eq');
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) + ((LetterplatesWidth / 5) / 2) )
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("x2", ix + FrameWidthForMap)//hjhjhj
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 20 - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", (ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5) + ix + FrameWidthForMap) / 2) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 25 - (LetterplatesHeight / 5)) // set y position
-                  .text('eq');
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text green
-                  .attr("font-size", 10)
-                  .attr("x", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + ((LetterplatesWidth / 5) / 2) - 5) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))        // set y position
-                  .text(LetterplatesWidth);        // define the text to display
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 5)
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                  .attr("x2", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 5)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 5))
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 15) // set x position
-                  .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + ((LetterplatesHeight / 5) / 2) - (LetterplatesHeight / 5)) // set y position
-                  .attr("transform", `rotate(-90, ${ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) - 10}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5) + ((LetterplatesHeight / 5) / 2)})`) // rotate around (x, y)
-                  .text(LetterplatesHeight);
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix +FrameWidthForMap- (LeafWidth2ForMap / 2) - ((LetterplatesWidth / 5) / 2) + (LetterplatesWidth / 5))
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                  .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-
-              svg.append('line')
-                  .style("stroke", "black")
-                  .style("stroke-width", 0.5)
-                  .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + 10)
-                  .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                  .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + 10)
-                  .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                  .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                  .attr("marker-end", "url(#arrowRight)")
-
-              svg.append("text")            // append text
-                  .style("fill", "black")   // make the text
-                  .attr("font-size", 10)
-                  .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + 25) // set x position
-                  .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
-                  .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles + 25}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
-                  .text(LetterplatesDistanceFromBottomOfDoor);
-              }
-
-          } else {
-               if (LeafWidth2ForMap<LeafWidth1ForMap) {
-                  svg.append('rect')
-                      .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) - (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr('width', (LetterplatesWidth / 5))
-                      .attr('height', (LetterplatesHeight / 5))
-                      .attr('stroke', 'black')
-
-                      .attr('fill', '#D0D0C6')
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) - (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap-(LetterplatesWidth / 5) - (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) - (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text green
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 10)-5) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))        // set y position
-                      .text(LetterplatesWidth);        // define the text to display
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) -5)
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) - 5)
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)- 25) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5)- (LetterplatesHeight / 10) +5) // set y position
-                      // .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5) + 15}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 10)+5})`) // rotate around (x, y)
-                      .text(LetterplatesHeight);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap -(LetterplatesWidth / 5) -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5))
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", (ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 10)) -5) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5) // set y position
-                      .text(LetterplatesDistanceFromLeadingEdgeOfDoor);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)-5)
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)-5)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  -  (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)- 20) // set x position
-                      .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
-                      .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap  - (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)- 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
-                      .text(LetterplatesDistanceFromBottomOfDoor);
-              } else {
-                  svg.append('rect')
-                      .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr('y', iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr('width', (LetterplatesWidth / 5))
-                      .attr('height', (LetterplatesHeight / 5))
-                      .attr('stroke', 'black')
-
-                      .attr('fill', '#D0D0C6')
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5 - (LetterplatesHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles + (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) )
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5))
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text green
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 10)-5) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 10 - (LetterplatesHeight / 5))        // set y position
-                      .text(LetterplatesWidth);        // define the text to display
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5)+5)
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - (LetterplatesHeight / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5) + 5)
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5) + 15) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5)- (LetterplatesHeight / 10) +5) // set y position
-                      // .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap +MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5) + (LetterplatesWidth / 5) + 15}, ${iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + (LetterplatesHeight / 5) - (LetterplatesHeight / 10)+5})`) // rotate around (x, y)
-                      .text(LetterplatesHeight);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5))
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap)
-                      .attr("y2", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", (ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 10)) - 5) // set x position
-                      .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) - 5) // set y position
-                      .text(LetterplatesDistanceFromLeadingEdgeOfDoor);
-
-                  svg.append('line')
-                      .style("stroke", "black")
-                      .style("stroke-width", 0.5)
-                      .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)+5)
-                      .attr("y1", iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5))
-                      .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)+5)
-                      .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                      .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-                      .attr("marker-end", "url(#arrowRight)")
-
-                  svg.append("text")            // append text
-                      .style("fill", "black")   // make the text
-                      .attr("font-size", 10)
-                      .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)+ 20) // set x position
-                      .attr("y", (iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) // set y position
-                      .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap + MeetingStiles+ (LetterplatesDistanceFromLeadingEdgeOfDoor / 5)+ 15}, ${(iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (LetterplatesDistanceFromBottomOfDoor / 5) + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2})`) // rotate
-                      .text(LetterplatesDistanceFromBottomOfDoor);
-              }
-
-          }
-
-
-      }
-
-      if (IsAirTransferGrillsEnable ) {
-        if (LeafWidth2ForMap == LeafWidth1ForMap){
-         const grillX = ix +FrameThicknessForMap + GapForMap+ (LeafWidth1ForMap / 2) - ((AirTransferGrillsWidth / 5) / 2);
-         const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (AirTransferGrillsDistanceFromBottomOfDoor / 5) - (AirTransferGrillsHeight / 5);
-         const grillWidth = AirTransferGrillsWidth / 5;
-         const grillHeight = AirTransferGrillsHeight / 5;
-
-         // Draw the outer rectangle
-         svg.append('rect')
-             .attr('x', grillX)
-             .attr('y', grillY)
-             .attr('width', grillWidth)
-             .attr('height', grillHeight)
-             .attr('stroke', 'black')
-             .attr('fill', '#D0D0C6');
-
-         // Draw the horizontal slots
-         const numSlots = AirTransferGrillsHeight / 20; // Number of horizontal slots
-         const slotHeight = grillHeight / (2 * numSlots); // Slot height
-         const gapHeight = slotHeight; // Gap between slots
-
-         for (let i = 0; i < numSlots; i++) {
-             svg.append('rect')
-                 .attr('x', grillX + 2) // Slight margin from the left
-                 .attr('y', grillY + i * (slotHeight + gapHeight) + 2) // Space out slots
-                 .attr('width', grillWidth - 4) // Slight margin on both sides
-                 .attr('height', slotHeight)
-                 .attr('fill', 'black'); // Black slots
-         }
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX - 5)
-             .attr("y1", grillY)
-             .attr("x2", grillX - 5)
-             .attr("y2", grillY + grillHeight)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")            // append text
-             .style("fill", "black")   // make the text
-             .attr("font-size", 10)
-             .attr("x", grillX - 10)    // set x position
-             .attr("y", grillY + (grillHeight / 2) + 5) // set y position
-             .attr("transform", `rotate(-90, ${grillX - 10}, ${grillY + (grillHeight / 2) + 5})`) // rotate around the text's position
-             .text(AirTransferGrillsHeight);
-
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY)
-             .attr("x2", grillX)
-             .attr("y2", grillY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX + grillWidth)
-             .attr("y1", grillY)
-             .attr("x2", grillX + grillWidth)
-             .attr("y2", grillY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY - 5)
-             .attr("x2", grillX + grillWidth)
-             .attr("y2", grillY - 5)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")
-             .style("fill", "black")
-             .attr("font-size", 10)
-             .attr("x", grillX + (grillWidth / 2) - 5)
-             .attr("y", grillY - 10)
-             .text(AirTransferGrillsWidth);
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY)
-             .attr("x2", grillX - 10)
-             .attr("y2", grillY)
-
-
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillX)
-                 .attr("y1", grillY + grillHeight)
-                 .attr("x2", grillX - 30)
-                 .attr("y2", grillY + grillHeight)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillX - 25)
-                 .attr("y1", grillY + grillHeight)
-                 .attr("x2", grillX - 25)
-                 .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                 .attr("marker-start", "url(#arrowLeft)")
-                 .attr("marker-end", "url(#arrowRight)")
-
-             svg.append("text")            // append text
-                 .style("fill", "black")   // make the text
-                 .attr("font-size", 10)
-                 .attr("x", grillX - 30)    // set x position
-                 .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                 .attr("transform", `rotate(-90, ${grillX - 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
-                 .text(AirTransferGrillsDistanceFromBottomOfDoor);
-
-
-         const grillrightX = ix +FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2) - ((AirTransferGrillsWidth / 5) / 2);
-         const grillrightY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (AirTransferGrillsDistanceFromBottomOfDoor / 5) - (AirTransferGrillsHeight / 5);
-         const grillrightWidth = AirTransferGrillsWidth / 5;
-         const grillrightHeight = AirTransferGrillsHeight / 5;
-
-         // Draw the outer rectangle
-         svg.append('rect')
-             .attr('x', grillrightX)
-             .attr('y', grillrightY)
-             .attr('width', grillrightWidth)
-             .attr('height', grillrightHeight)
-             .attr('stroke', 'black')
-             .attr('fill', '#D0D0C6');
-
-         // Draw the horizontal slots
-         const numSlotsright = AirTransferGrillsHeight / 20; // Number of horizontal slots
-         const slotHeightright = grillrightHeight / (2 * numSlotsright); // Slot height
-         const gapHeightright = slotHeightright; // Gap between slots
-
-         for (let i = 0; i < numSlotsright; i++) {
-             svg.append('rect')
-                 .attr('x', grillrightX + 2) // Slight margin from the left
-                 .attr('y', grillrightY + i * (slotHeightright + gapHeightright) + 2) // Space out slots
-                 .attr('width', grillrightWidth - 4) // Slight margin on both sides
-                 .attr('height', slotHeightright)
-                 .attr('fill', 'black'); // Black slots
-         }
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX - 5)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX - 5)
-             .attr("y2", grillrightY + grillrightHeight)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")            // append text
-             .style("fill", "black")   // make the text
-             .attr("font-size", 10)
-             .attr("x", grillrightX - 10)    // set x position
-             .attr("y", grillrightY + (grillrightHeight / 2) + 5) // set y position
-             .attr("transform", `rotate(-90, ${grillrightX - 10}, ${grillrightY + (grillrightHeight / 2) + 5})`) // rotate around the text's position
-             .text(AirTransferGrillsHeight);
-
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX)
-             .attr("y2", grillrightY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX + grillrightWidth)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX + grillrightWidth)
-             .attr("y2", grillrightY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY - 5)
-             .attr("x2", grillrightX + grillrightWidth)
-             .attr("y2", grillrightY - 5)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")
-             .style("fill", "black")
-             .attr("font-size", 10)
-             .attr("x", grillrightX + (grillrightWidth / 2) - 5)
-             .attr("y", grillrightY - 10)
-             .text(AirTransferGrillsWidth);
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX - 10)
-             .attr("y2", grillrightY)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillrightX + grillrightWidth)
-                 .attr("y1", grillrightY + grillrightHeight)
-                 .attr("x2", grillrightX + grillrightWidth + 30)
-                 .attr("y2", grillrightY + grillrightHeight)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillrightX + grillrightWidth + 25)
-                 .attr("y1", grillrightY + grillrightHeight)
-                 .attr("x2", grillrightX + grillrightWidth + 25)
-                 .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                 .attr("marker-start", "url(#arrowLeft)")
-                 .attr("marker-end", "url(#arrowRight)")
-
-             svg.append("text")            // append text
-                 .style("fill", "black")   // make the text
-                 .attr("font-size", 10)
-                 .attr("x", grillrightX + grillrightWidth + 35)    // set x position
-                 .attr("y", ((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                 .attr("transform", `rotate(-90, ${grillrightX + grillrightWidth + 35}, ${((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)+5})`) // rotate around the text's position
-                 .text(AirTransferGrillsDistanceFromBottomOfDoor);
-     }
-
-     if(LeafWidth2ForMap > LeafWidth1ForMap){
-         const grillrightX = ix +FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2) - ((AirTransferGrillsWidth / 5) / 2);
-         const grillrightY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (AirTransferGrillsDistanceFromBottomOfDoor / 5) - (AirTransferGrillsHeight / 5);
-         const grillrightWidth = AirTransferGrillsWidth / 5;
-         const grillrightHeight = AirTransferGrillsHeight / 5;
-
-         // Draw the outer rectangle
-         svg.append('rect')
-             .attr('x', grillrightX)
-             .attr('y', grillrightY)
-             .attr('width', grillrightWidth)
-             .attr('height', grillrightHeight)
-             .attr('stroke', 'black')
-             .attr('fill', '#D0D0C6');
-
-         // Draw the horizontal slots
-         const numSlotsright = AirTransferGrillsHeight / 20; // Number of horizontal slots
-         const slotHeightright = grillrightHeight / (2 * numSlotsright); // Slot height
-         const gapHeightright = slotHeightright; // Gap between slots
-
-         for (let i = 0; i < numSlotsright; i++) {
-             svg.append('rect')
-                 .attr('x', grillrightX + 2) // Slight margin from the left
-                 .attr('y', grillrightY + i * (slotHeightright + gapHeightright) + 2) // Space out slots
-                 .attr('width', grillrightWidth - 4) // Slight margin on both sides
-                 .attr('height', slotHeightright)
-                 .attr('fill', 'black'); // Black slots
-         }
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX - 5)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX - 5)
-             .attr("y2", grillrightY + grillrightHeight)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")            // append text
-             .style("fill", "black")   // make the text
-             .attr("font-size", 10)
-             .attr("x", grillrightX - 10)    // set x position
-             .attr("y", grillrightY + (grillrightHeight / 2) + 5) // set y position
-             .attr("transform", `rotate(-90, ${grillrightX - 10}, ${grillrightY + (grillrightHeight / 2) + 5})`) // rotate around the text's position
-             .text(AirTransferGrillsHeight);
-
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX)
-             .attr("y2", grillrightY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX + grillrightWidth)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX + grillrightWidth)
-             .attr("y2", grillrightY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY - 5)
-             .attr("x2", grillrightX + grillrightWidth)
-             .attr("y2", grillrightY - 5)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")
-             .style("fill", "black")
-             .attr("font-size", 10)
-             .attr("x", grillrightX + (grillrightWidth / 2) - 5)
-             .attr("y", grillrightY - 10)
-             .text(AirTransferGrillsWidth);
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillrightX)
-             .attr("y1", grillrightY)
-             .attr("x2", grillrightX - 10)
-             .attr("y2", grillrightY)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillrightX + grillrightWidth)
-                 .attr("y1", grillrightY + grillrightHeight)
-                 .attr("x2", grillrightX + grillrightWidth + 30)
-                 .attr("y2", grillrightY + grillrightHeight)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillrightX + grillrightWidth + 25)
-                 .attr("y1", grillrightY + grillrightHeight)
-                 .attr("x2", grillrightX + grillrightWidth + 25)
-                 .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                 .attr("marker-start", "url(#arrowLeft)")
-                 .attr("marker-end", "url(#arrowRight)")
-
-             svg.append("text")            // append text
-                 .style("fill", "black")   // make the text
-                 .attr("font-size", 10)
-                 .attr("x", grillrightX + grillrightWidth + 30)    // set x position
-                 .attr("y", ((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                 .attr("transform", `rotate(-90, ${grillrightX + grillrightWidth + 30}, ${((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
-                 .text(AirTransferGrillsDistanceFromBottomOfDoor);
-     }
-     if(LeafWidth2ForMap < LeafWidth1ForMap){
-         const grillX = ix +FrameThicknessForMap + GapForMap+ (LeafWidth1ForMap / 2) - ((AirTransferGrillsWidth / 5) / 2);
-         const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (AirTransferGrillsDistanceFromBottomOfDoor / 5) - (AirTransferGrillsHeight / 5);
-         const grillWidth = AirTransferGrillsWidth / 5;
-         const grillHeight = AirTransferGrillsHeight / 5;
-
-         // Draw the outer rectangle
-         svg.append('rect')
-             .attr('x', grillX)
-             .attr('y', grillY)
-             .attr('width', grillWidth)
-             .attr('height', grillHeight)
-             .attr('stroke', 'black')
-             .attr('fill', '#D0D0C6');
-
-         // Draw the horizontal slots
-         const numSlots = AirTransferGrillsHeight / 20; // Number of horizontal slots
-         const slotHeight = grillHeight / (2 * numSlots); // Slot height
-         const gapHeight = slotHeight; // Gap between slots
-
-         for (let i = 0; i < numSlots; i++) {
-             svg.append('rect')
-                 .attr('x', grillX + 2) // Slight margin from the left
-                 .attr('y', grillY + i * (slotHeight + gapHeight) + 2) // Space out slots
-                 .attr('width', grillWidth - 4) // Slight margin on both sides
-                 .attr('height', slotHeight)
-                 .attr('fill', 'black'); // Black slots
-         }
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX - 5)
-             .attr("y1", grillY)
-             .attr("x2", grillX - 5)
-             .attr("y2", grillY + grillHeight)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")            // append text
-             .style("fill", "black")   // make the text
-             .attr("font-size", 10)
-             .attr("x", grillX - 10)    // set x position
-             .attr("y", grillY + (grillHeight / 2) + 5) // set y position
-             .attr("transform", `rotate(-90, ${grillX - 10}, ${grillY + (grillHeight / 2) + 5})`) // rotate around the text's position
-             .text(AirTransferGrillsHeight);
-
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY)
-             .attr("x2", grillX)
-             .attr("y2", grillY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX + grillWidth)
-             .attr("y1", grillY)
-             .attr("x2", grillX + grillWidth)
-             .attr("y2", grillY - 10)
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY - 5)
-             .attr("x2", grillX + grillWidth)
-             .attr("y2", grillY - 5)
-             .attr("marker-start", "url(#arrowLeft)")
-             .attr("marker-end", "url(#arrowRight)")
-
-         svg.append("text")
-             .style("fill", "black")
-             .attr("font-size", 10)
-             .attr("x", grillX + (grillWidth / 2) - 5)
-             .attr("y", grillY - 10)
-             .text(AirTransferGrillsWidth);
-
-         svg.append('line')
-             .style("stroke", "black")
-             .style("stroke-width", 0.5)
-             .attr("x1", grillX)
-             .attr("y1", grillY)
-             .attr("x2", grillX - 10)
-             .attr("y2", grillY)
-
-
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillX)
-                 .attr("y1", grillY + grillHeight)
-                 .attr("x2", grillX - 30)
-                 .attr("y2", grillY + grillHeight)
-
-             svg.append('line')
-                 .style("stroke", "black")
-                 .style("stroke-width", 0.5)
-                 .attr("x1", grillX - 25)
-                 .attr("y1", grillY + grillHeight)
-                 .attr("x2", grillX - 25)
-                 .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                 .attr("marker-start", "url(#arrowLeft)")
-                 .attr("marker-end", "url(#arrowRight)")
-
-             svg.append("text")            // append text
-                 .style("fill", "black")   // make the text
-                 .attr("font-size", 10)
-                 .attr("x", grillX - 30)    // set x position
-                 .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                 .attr("transform", `rotate(-90, ${grillX - 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
-                 .text(AirTransferGrillsDistanceFromBottomOfDoor);
-     }
-     }
-
-               // Calculate distances
                const lockDistance = LockNLatchesDistanceFromBottomOfDoor / 5;
-               const cylinderDistance = CylindersDistanceFromBottomOfDoor / 5;
-               const thumbturnDistance = ThumbturnDistanceFromBottomOfDoor / 5;
-               const lockDistanceFromEdge = LockNLatchesDistanceFromLeadingEdgeOfDoor / 5;
-               const cylinderDistanceFromEdge = CylindersDistanceFromLeadingEdgeOfDoor / 5;
-               const thumbturnDistanceFromEdge =  ThumbturnDistanceFromLeadingEdgeOfDoor/ 5;
+                   const cylinderDistance = CylindersDistanceFromBottomOfDoor / 5;
+                   const thumbturnDistance = ThumbturnDistanceFromBottomOfDoor / 5;
+                   const lockDistanceFromEdge = LockNLatchesDistanceFromLeadingEdgeOfDoor / 5;
+                   const cylinderDistanceFromEdge = CylindersDistanceFromLeadingEdgeOfDoor / 5;
+                   const thumbturnDistanceFromEdge =  ThumbturnDistanceFromLeadingEdgeOfDoor/ 5;
+                   const lockDistance2 = LockNLatchesDistanceFromBottomOfDoor2 / 5;
+                   const cylinderDistance2 = CylindersDistanceFromBottomOfDoor2 / 5;
+                   const thumbturnDistance2 = ThumbturnDistanceFromBottomOfDoor2 / 5;
+                   const lockDistanceFromEdge2 = LockNLatchesDistanceFromLeadingEdgeOfDoor2 / 5;
+                   const cylinderDistanceFromEdge2 = CylindersDistanceFromLeadingEdgeOfDoor2 / 5;
+                   const thumbturnDistanceFromEdge2 =  ThumbturnDistanceFromLeadingEdgeOfDoor2 / 5;
 
-               // Collect distances in an array
-               const distances = [lockDistance, cylinderDistance, thumbturnDistance];
-           const distanceFromEdge=[lockDistanceFromEdge,cylinderDistanceFromEdge,thumbturnDistanceFromEdge]
+                   // Collect distances in an array
+                   const distances = [lockDistance, cylinderDistance, thumbturnDistance];
+               const distanceFromEdge=[lockDistanceFromEdge,cylinderDistanceFromEdge,thumbturnDistanceFromEdge]
 
-           const uniqueDistances = Array.from(new Set(distances)).filter(num => num !== 0);
+               const uniqueDistances = Array.from(new Set(distances)).filter(num => num !== 0);
 
-           const uniqueDistancesFromEdge=Array.from(new Set(distanceFromEdge)).filter(num => num !== 0);
+               const uniqueDistancesFromEdge=Array.from(new Set(distanceFromEdge)).filter(num => num !== 0);
 
-               function conditionalRenderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
-                   if (distance !== 0) { // Check if the distance is not zero
-                       renderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+               const distances2= [lockDistance2, cylinderDistance2, thumbturnDistance2];
+               const distanceFromEdge2=[lockDistanceFromEdge2,cylinderDistanceFromEdge2,thumbturnDistanceFromEdge2]
+
+               const uniqueDistances2 = Array.from(new Set(distances2)).filter(num => num !== 0);
+
+               const uniqueDistancesFromEdge2=Array.from(new Set(distanceFromEdge2)).filter(num => num !== 0);
+                   function conditionalRenderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+                       if (distance !== 0 ) { // Check if the distance is not zero
+
+                        if (LeafWidth2ForMap == LeafWidth1ForMap){
+                            if(Handing == 'DD'){
+                                 renderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                            }
+                            else{
+                                 renderItem2(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                            }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                            renderItem2(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                             renderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                            }
+                       }
                    }
-               }
-
-               // Function to render an item
-               function renderItem(distance, label, edgeDistance,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
-
-                   if(LeafWidth2ForMap<LeafWidth1ForMap){
-                       svg.append("circle")
-                           .style("stroke", "black")
-                           .style("fill", "grey")
-                           .attr("r", 5)
-                           .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - edgeDistance)-2.5)
-                           .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
-
-                       svg.append('line')
-                           .style("stroke", "black")
-                           .style("stroke-width", 0.5)
-                           .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - edgeDistance))
-                           .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
-                           .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + linedistanceLeaf1)
-                           .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
-
-                       svg.append('line')
-                           .style("stroke", "black")
-                           .style("stroke-width", 0.5)
-                           .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + linedistanceLeaf1)
-                           .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
-                           .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + linedistanceLeaf1)
-                           .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                           .attr("marker-start", "url(#arrowLeft)")
-                           .attr("marker-end", "url(#arrowRight)");
-
-                       svg.append("text")
-                           .style("fill", "black")
-                           .attr("font-size", 10)
-                           .attr("x", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth2ForMap + LeafWidth1ForMap +SideLightPanel2WidthSpaceForVerticalLines+ textdistanceLeaf1)
-                           .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2)))
-                           .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + textdistanceLeaf1}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2))})`)
-                           .text(label);
-                   }
-                   else{
-                       svg.append("circle")
-                           .style("stroke", "black")
-                           .style("fill", "grey")
-                           .attr("r", 5)
-                           .attr("cx", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth1ForMap + edgeDistance+2.5)
-                           .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
-                           // ix + FrameThicknessForMap + GapForMap +MeetingStiles+LeafWidth1ForMap+ (LeverHandleDistanceFromLeadingEdgeOfDoor / 5) + 3.5
-                       svg.append('line')
-                           .style("stroke", "black")
-                           .style("stroke-width", 0.5)
-                           .attr("x1", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth1ForMap + edgeDistance+2.5)
-                           .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
-                           .attr("x2", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth2ForMap + LeafWidth1ForMap +SideLightPanel2WidthSpaceForVerticalLines+ linedistanceLeaf2)
-                           .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
-
-                       svg.append('line')
-                           .style("stroke", "black")
-                           .style("stroke-width", 0.5)
-                           .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + linedistanceLeaf2)
-                           .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
-                           .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines  + linedistanceLeaf2)
-                           .attr("y2", iy + TopFrameHeight + GapForMap+ LeafHeightNoOPForMap)
-                           .attr("marker-start", "url(#arrowLeft)")
-                           .attr("marker-end", "url(#arrowRight)");
-
-                       svg.append("text")
-                           .style("fill", "black")
-                           .attr("font-size", 10)
-                           .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + textdistanceLeaf2)
-                           .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2)))
-                           .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + textdistanceLeaf2}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2))})`)
-                           .text(label);
-                   }
-               }
-
-               if (uniqueDistances.length === 1) {
-                if(uniqueDistancesFromEdge.length ===1){
-                    conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                }else{
-                    conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,0,160,165,160,165);
-                }
-            } else if (uniqueDistances.length === 2) {
-                // Two distances are the same; show one item for each unique distance
-                console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
-                if(uniqueDistancesFromEdge.length === 1){
-
-                    conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                    conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[0],180,185,180,185);
-                }else if(uniqueDistancesFromEdge.length === 2){
-
-                   conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                   conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[1],180,185,180,185);
-                }else{
-
-                   conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,0,160,165,160,165);
-                   conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,0,180,185,180,185);
-                }
-
-            } else {
-                if(uniqueDistancesFromEdge.length ===1){
-                    conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                   conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[0],180,185,180,185);
-                   conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[0],200,205,200,205);
-                 }else if(uniqueDistancesFromEdge.length ===2){
-        const matchingIndices = [];
-        const seen = new Map();
-            distanceFromEdge.forEach((value, index) => {
-                if (value !== 0) {
-                    if (seen.has(value)) {
-                        matchingIndices.push([seen.get(value), index]);
-                    } else {
-                        seen.set(value, index);
+                    function conditionalRenderItemleft(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+ renderItem(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
                     }
-                }
-            });
-                    conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                   conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
-                   conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[matchingIndices[0][1]],200,205,200,205);
-                 }  else if(uniqueDistancesFromEdge.length ===3){
-                    conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],160,165,160,165);
-                    conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
-                    conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[2],200,205,200,205);
-                 }else{
-                    conditionalRenderItem(lockDistance, lockDistance * 5,0,160,165,160,165);
-                    conditionalRenderItem(cylinderDistance, cylinderDistance * 5,0,180,185,180,185);
-                    conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,0,200,205,200,205);
-                 }
 
+                     function conditionalRenderItemright(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+ renderItem2(distance, label,distanceFromEdge,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1);
+                    }
+
+                   // Function to render an item
+                   function renderItem(distance, label, edgeDistance,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1) {
+
+                    //    if(LeafWidth2ForMap<LeafWidth1ForMap){
+                           svg.append("circle")
+                               .style("stroke", "black")
+                               .style("fill", "grey")
+                               .attr("r", 5)
+                               .attr("cx", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - edgeDistance)-2.5)
+                               .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
+
+                           svg.append('line')
+                               .style("stroke", "black")
+                               .style("stroke-width", 0.5)
+                               .attr("x1", ix + FrameThicknessForMap + GapForMap + (LeafWidth1ForMap - edgeDistance))
+                               .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
+                               .attr("x2", ix - SideLightPanel1WidthSpaceForVerticalLines - linedistanceLeaf1)
+                               .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
+                           svg.append('line')
+                               .style("stroke", "black")
+                               .style("stroke-width", 0.5)
+                               .attr("x1", ix - SideLightPanel1WidthSpaceForVerticalLines - linedistanceLeaf1)
+                               .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
+                               .attr("x2", ix - SideLightPanel1WidthSpaceForVerticalLines - linedistanceLeaf1)
+                               .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                               .attr("marker-start", "url(#arrowLeft)")
+                               .attr("marker-end", "url(#arrowRight)");
+
+                           svg.append("text")
+                               .style("fill", "black")
+                               .attr("font-size", 10)
+                               .attr("x",ix - SideLightPanel1WidthSpaceForVerticalLines - textdistanceLeaf1 -10)
+                               .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2)))
+                               .attr("transform", `rotate(-90, ${ix - SideLightPanel1WidthSpaceForVerticalLines - textdistanceLeaf1 -10}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2))})`)
+                               .text(label);
+                    //    }
+                      
+                   }
+
+                     function renderItem2(distance, label, edgeDistance,textdistanceLeaf2,linedistanceLeaf2,textdistanceLeaf1,linedistanceLeaf1){
+                           svg.append("circle")
+                               .style("stroke", "black")
+                               .style("fill", "grey")
+                               .attr("r", 5)
+                               .attr("cx", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth1ForMap + edgeDistance+2.5)
+                               .attr("cy", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
+                               // ix + FrameThicknessForMap + GapForMap +MeetingStiles+LeafWidth1ForMap+ (LeverHandleDistanceFromLeadingEdgeOfDoor / 5) + 3.5
+                           svg.append('line')
+                               .style("stroke", "black")
+                               .style("stroke-width", 0.5)
+                               .attr("x1", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth1ForMap + edgeDistance+2.5)
+                               .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
+                               .attr("x2", ix + FrameThicknessForMap + GapForMap+MeetingStiles+LeafWidth2ForMap + LeafWidth1ForMap +SideLightPanel2WidthSpaceForVerticalLines+ linedistanceLeaf2)
+                               .attr("y2", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance));
+
+                           svg.append('line')
+                               .style("stroke", "black")
+                               .style("stroke-width", 0.5)
+                               .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + linedistanceLeaf2)
+                               .attr("y1", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - distance))
+                               .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines  + linedistanceLeaf2)
+                               .attr("y2", iy + TopFrameHeight + GapForMap+ LeafHeightNoOPForMap)
+                               .attr("marker-start", "url(#arrowLeft)")
+                               .attr("marker-end", "url(#arrowRight)");
+
+                           svg.append("text")
+                               .style("fill", "black")
+                               .attr("font-size", 10)
+                               .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + textdistanceLeaf2)
+                               .attr("y", iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2)))
+                               .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+LeafWidth2ForMap+SideLightPanel2WidthSpaceForVerticalLines + textdistanceLeaf2}, ${iy + TopFrameHeight + GapForMap + (LeafHeightNoOPForMap - (distance / 2))})`)
+                               .text(label);
+                       
+                    }
+if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockNLatchesEnable2 && !IsThumbturnEnable2 && !IsCylindersEnable2)){
+                   if (uniqueDistances.length === 1) {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                    }else{
+                        conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                    }
+                } else if (uniqueDistances.length === 2) {
+                    // Two distances are the same; show one item for each unique distance
+                    console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
+                    if(uniqueDistancesFromEdge.length === 1){
+                        conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                    }else if(uniqueDistancesFromEdge.length === 2){
+                       conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                    }else{
+                       conditionalRenderItem(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                       conditionalRenderItem(uniqueDistances[1], uniqueDistances[1] * 5,0,180,185,180,185);
+                    }
+
+                } else {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                       conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[0],200,205,200,205);
+                     }else if(uniqueDistancesFromEdge.length ===2){
+            const matchingIndices = [];
+            const seen = new Map();
+                distanceFromEdge.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (seen.has(value)) {
+                            matchingIndices.push([seen.get(value), index]);
+                        } else {
+                            seen.set(value, index);
+                        }
+                    }
+                });
+                        conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                       conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[matchingIndices[0][1]],200,205,200,205);
+                     }  else if(uniqueDistancesFromEdge.length ===3){
+                        conditionalRenderItem(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItem(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                        conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[2],200,205,200,205);
+                     }else{
+                        conditionalRenderItem(lockDistance, lockDistance * 5,0,165,170,165,170);
+                        conditionalRenderItem(cylinderDistance, cylinderDistance * 5,0,180,185,180,185);
+                        conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5,0,200,205,200,205);
+                     }
+
+                }
             }
-      }
+
+            if((IsLockNLatchesEnable2 || IsThumbturnEnable2 || IsCylindersEnable2)){
+                   if (uniqueDistances.length === 1) {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                    }else{
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                    }
+                } else if (uniqueDistances.length === 2) {
+                    // Two distances are the same; show one item for each unique distance
+                    console.log(uniqueDistancesFromEdge.length,'llllllllllllllllllllllll')
+                    if(uniqueDistancesFromEdge.length === 1){
+                        conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                    }else if(uniqueDistancesFromEdge.length === 2){
+                       conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                    }else{
+                       conditionalRenderItemleft(uniqueDistances[0], uniqueDistances[0] * 5,0,165,170,165,170);
+                       conditionalRenderItemleft(uniqueDistances[1], uniqueDistances[1] * 5,0,180,185,180,185);
+                    }
+
+                } else {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[0],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[0],200,205,200,205);
+                     }else if(uniqueDistancesFromEdge.length ===2){
+            const matchingIndices = [];
+            const seen = new Map();
+                distanceFromEdge.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (seen.has(value)) {
+                            matchingIndices.push([seen.get(value), index]);
+                        } else {
+                            seen.set(value, index);
+                        }
+                    }
+                });
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[matchingIndices[0][1]],200,205,200,205);
+                     }  else if(uniqueDistancesFromEdge.length ===3){
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,uniqueDistancesFromEdge[0],165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,uniqueDistancesFromEdge[1],180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,uniqueDistancesFromEdge[2],200,205,200,205);
+                     }else{
+                        conditionalRenderItemleft(lockDistance, lockDistance * 5,0,165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance, cylinderDistance * 5,0,180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance, thumbturnDistance * 5,0,200,205,200,205);
+                     }
+
+                }
+
+                  if (uniqueDistances2.length === 1) {
+                    if(uniqueDistancesFromEdge2.length ===1){
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                    }else{
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,0,165,170,165,170);
+                    }
+                } else if (uniqueDistances2.length === 2) {
+                    // Two distances are the same; show one item for each unique distance
+                    console.log(uniqueDistancesFromEdge2.length,'llllllllllllllllllllllll')
+                    if(uniqueDistancesFromEdge2.length === 1){
+                        conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                        conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,uniqueDistancesFromEdge2[0],180,185,180,185);
+                    }else if(uniqueDistancesFromEdge2.length === 2){
+                       conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                    }else{
+                       conditionalRenderItemright(uniqueDistances2[0], uniqueDistances2[0] * 5,0,165,170,165,170);
+                       conditionalRenderItemright(uniqueDistances2[1], uniqueDistances2[1] * 5,0,180,185,180,185);
+                    }
+
+                } else {
+                    if(uniqueDistancesFromEdge.length ===1){
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[0],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[0],200,205,200,205);
+                     }else if(uniqueDistancesFromEdge2.length ===2){
+            const matchingIndices = [];
+            const seen = new Map();
+                distanceFromEdge2.forEach((value, index) => {
+                    if (value !== 0) {
+                        if (seen.has(value)) {
+                            matchingIndices.push([seen.get(value), index]);
+                        } else {
+                            seen.set(value, index);
+                        }
+                    }
+                });
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                       conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                       conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[matchingIndices[0][1]],200,205,200,205);
+                     }  else if(uniqueDistancesFromEdge2.length ===3){
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,uniqueDistancesFromEdge2[0],165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,uniqueDistancesFromEdge2[1],180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,uniqueDistancesFromEdge2[2],200,205,200,205);
+                     }else{
+                        conditionalRenderItemleft(lockDistance2, lockDistance2 * 5,0,165,170,165,170);
+                        conditionalRenderItemleft(cylinderDistance2, cylinderDistance2 * 5,0,180,185,180,185);
+                        conditionalRenderItemleft(thumbturnDistance2, thumbturnDistance2 * 5,0,200,205,200,205);
+                     }
+
+                }
+            }
+            }
   }
 
   /* Ironmongery */
@@ -10203,388 +10534,779 @@ if (IsFourSidedFrame == true) {
                   .attr('fill', '#fff');
           }
 
-        //   if (ShowMeasurements) {
+       if (Leaf2VisionPanel1Height && Leaf2VisionPanelWidth) {
 
-        //       /* Horizontal Line for vision panel */
+     if ((Leaf2VisionPanelWidth * 2) > (LeafWidth2ForMap)) {
+                            if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
+                                svg.append("text")
+                                    .style("fill", "black")
+                                    .attr("font-size", 10)
+                                    .attr("x", DistanceXForLeaf2VPShape + (parseFloat(Leaf2VisionPanelWidth) / 2) - 7)
+                                    .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel2Height / 2) + 10)
+                                    .text(Leaf2VisionPanelWidthToShow);
 
-        //       svg.append("text")            // append text
-        //           .style("fill", "black")      // make the text black
-        //           .attr("font-size", 10)
-        //           .attr("x", TotalDistanceForLeaf2VisionPanel1WithOutRemainingSpace + (DistanceFromTheEdgeOfDoorForLeaf2 / 2))         // set x position of left side of text
-        //           .attr("y", iy - 40)         // set y position of bottom of text
-        //           .text(DistanceFromTheEdgeOfDoorForLeaf2ToShow);   // define the text to display
+                                svg.append('line')
+                                    .style("stroke", "black")
+                                    .style("stroke-width", 0.5)
+                                    .attr("x1", DistanceXForLeaf2VPShape)
+                                    .attr("y1", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))
+                                    .attr("x2", DistanceXForLeaf2VPShape + parseFloat(Leaf2VisionPanelWidth))
+                                    .attr("y2", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))
+                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                                    .attr("marker-end", "url(#arrowRight)");
+                            } else {
+                                svg.append("text")
+                                    .style("fill", "black")
+                                    .attr("font-size", 10)
+                                    .attr("x", DistanceXForLeaf2VPShape + (parseFloat(Leaf2VisionPanelWidth) / 2) - 7)
+                                    .attr("y", iy + TopFrameHeight + GapForMap + 50)
+                                    .text(Leaf2VisionPanelWidthToShow);
 
-        //       svg.append('line')
-        //           .style("stroke", "black")
-        //           .style("stroke-width", 0.5)
-        //           .attr("x1", TotalDistanceForLeaf2VisionPanel1WithOutRemainingSpace)
-        //           .attr("y1", iy - 35)
-        //           .attr("x2", DistanceXForLeaf2VPShape)
-        //           .attr("y2", iy - 35)
-        //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-        //           .attr("marker-end", "url(#arrowRight)")
-
-        //       svg.append("text")            // append text
-        //           .style("fill", "black")      // make the text black
-        //           .attr("font-size", 10)
-        //           .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))         // set x position of left side of text
-        //           .attr("y", iy - 40)         // set y position of bottom of text
-        //           .text(Leaf2VisionPanelWidthToShow);   // define the text to display
-
-        //       svg.append('line')
-        //           .style("stroke", "black")
-        //           .style("stroke-width", 0.5)
-        //           .attr("x1", DistanceXForLeaf2VPShape)
-        //           .attr("y1", iy - 35)
-        //           .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth)
-        //           .attr("y2", iy - 35)
-        //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-        //           .attr("marker-end", "url(#arrowRight)")
-
-
-        //       svg.append("text")            // append text
-        //           .style("fill", "black")      // make the text black
-        //           .attr("font-size", 10)
-        //           .attr("x", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + (RightSideDistanceOfVisonPanelOfDoorLeaf2 / 2))         // set x position of left side of text
-        //           .attr("y", iy - 40)         // set y position of bottom of text
-        //           .text(RightSideDistanceOfVisonPanelOfDoorLeaf2ToShow);   // define the text to display
-
-        //       svg.append('line')
-        //           .style("stroke", "black")
-        //           .style("stroke-width", 0.5)
-        //           .attr("x1", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth)
-        //           .attr("y1", iy - 35)
-        //           .attr("x2", TotalDistanceForLeaf2VisionPanel1WithOutRemainingSpace + LeafWidth2ForMap)
-        //           .attr("y2", iy - 35)
-        //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-        //           .attr("marker-end", "url(#arrowRight)")
-
-        //       /* Horizontal Line for vision panel */
-
-        //       /* Vertical Line for vision panel */
-
-        //       svg.append('line')
-        //           .style("stroke", "black")
-        //           .style("stroke-width", 0.5)
-        //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-        //           .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
-        //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-        //           .attr("y2", DistanceYForLeaf2VPShape)
-        //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-        //           .attr("marker-end", "url(#arrowRight)")
-
-        //       svg.append("text")            // append text
-        //           .style("fill", "black")      // make the text black
-        //           .style("writing-mode", WritingMode) // set the writing mode
-        //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-        //           .attr("font-size", 10)
-        //           .attr("y", (DistanceYForLeaf2VPShape - DistanceFromTopOfDoorForLeaf2) + (DistanceFromTopOfDoorForLeaf2 / 2))         // set y position of bottom of text
-        //           .text(DistanceFromTopOfDoorForLeaf2ToShow);   // define the text to display
+                                svg.append('line')
+                                    .style("stroke", "black")
+                                    .style("stroke-width", 0.5)
+                                    .attr("x1", DistanceXForLeaf2VPShape)
+                                    .attr("y1", iy + TopFrameHeight + GapForMap + 30)
+                                    .attr("x2", DistanceXForLeaf2VPShape + parseFloat(Leaf2VisionPanelWidth))
+                                    .attr("y2", iy + TopFrameHeight + GapForMap + 30)
+                                    .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                                    .attr("marker-end", "url(#arrowRight)");
+                            }
 
 
-        //       svg.append('line')
-        //           .style("stroke", "black")
-        //           .style("stroke-width", 0.5)
-        //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-        //           .attr("y1", DistanceYForLeaf2VPShape)
-        //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-        //           .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel1Height)
-        //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-        //           .attr("marker-end", "url(#arrowRight)")
+                        } else {
+                            svg.append("text")
+                                .style("fill", "black")
+                                .attr("font-size", 10)
+                                .attr("x", DistanceXForLeaf2VPShape + (parseFloat(Leaf2VisionPanelWidth) / 2) - 7)
+                                .attr("y", iy - 40)
+                                .text(Leaf2VisionPanelWidthToShow);
 
-        //       svg.append("text")            // append text
-        //           .style("fill", "black")      // make the text black
-        //           .style("writing-mode", WritingMode) // set the writing mode
-        //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-        //           .attr("font-size", 10)
-        //           .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))         // set y position of bottom of text
-        //           .text(Leaf2VisionPanel1HeightToShow);   // define the text to display
+                            svg.append('line')
+                                .style("stroke", "black")
+                                .style("stroke-width", 0.5)
+                                .attr("x1", DistanceXForLeaf2VPShape)
+                                .attr("y1", iy - 35)
+                                .attr("x2", DistanceXForLeaf2VPShape + parseFloat(Leaf2VisionPanelWidth))
+                                .attr("y2", iy - 35)
+                                .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                                .attr("marker-end", "url(#arrowRight)");
 
-        //       /* Vertical Line for vision panel */
-        //   }
+                            svg.append('line')
+                                .style("stroke", "black")
+                                .style("stroke-width", 0.5)
+                                .attr("x1", DistanceXForLeaf2VPShape)
+                                .attr("y1", iy - 35 - 5)
+                                .attr("x2", DistanceXForLeaf2VPShape)
+                                .attr("y2", DistanceYForLeaf2VPShape + (Leaf2VisionPanel2Height / 2))
 
-          if (VisionPanelQuantityForLeaf2 > 1) {
+                            svg.append('line')
+                                .style("stroke", "black")
+                                .style("stroke-width", 0.5)
+                                .attr("x1", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth)
+                                .attr("y1", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))
+                                .attr("x2", DistanceXForLeaf2VPShape + parseFloat(Leaf2VisionPanelWidth))
+                                .attr("y2", iy - 35 - 5)
+                        }
+var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
 
-              DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel1Height + DistanceBetweenVPsForLeaf2;
+  if (ShowMeasurements) {
+    
+                svg.append("text")           //
+                    .style("fill", "black")
+                    .attr("font-size", 10)
+                    .attr("x", ((TotalDistanceForLeaf2VisionPanel1WithOutRemainingSpace+DistanceXForLeaf2VPShape)/2)-7)
+                    .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2) - 10)
+                    .text(RemainedSpaceInLeaf2);
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", TotalDistanceForLeaf2VisionPanel1WithOutRemainingSpace)
+                    .attr("y1", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))
+                    .attr("x2", DistanceXForLeaf2VPShape)
+                    .attr("y2", DistanceYForLeaf2VPShape + (Leaf2VisionPanel1Height / 2))
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)");
 
-              if (VisionPanelShape == "Diamond") {
-                  svg.append('path')
-                      .attr('d', DiamondDimensionForLeaf2)
-                      .attr("fill", "#fff")
-                      .style("stroke", "black")
-                      .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
-                  // console.log(DistanceXForLeaf2VPShape, "DistanceXForLeaf2VPShape")
-              } else if (VisionPanelShape == "Circle") {
-                  svg.append("circle")
-                      .style("stroke", "black")
-                      .style("fill", "#fff")
-                      .attr("r", CircleRadiusForLeaf2)
-                      .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
-                      .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
-              } else {
-                  svg.append('rect')
-                      .attr('x', DistanceXForLeaf2VPShape)
-                      .attr('y', DistanceYForLeaf2VPShape)
-                      .attr('width', Leaf2VisionPanelWidth)
-                      .attr('height', Leaf2VisionPanel2Height)
-                      .attr('stroke', 'black')
-                      .attr('fill', '#fff');
-              }
+                    {
+                //default distance from top (vission panel)
 
-            //   if (ShowMeasurements) {
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
+                svg.append('line')
+                    .style("stroke", "black")
+                    .style("stroke-width", 0.5)
+                    .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                    .attr("y1", iy + GapAfterOverPanelApplied + UpperAndLowerGap)
+                    .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                    .attr("y2", DistanceYForLeaf2VPShape)
+                    .attr("marker-start", "url(#arrowLeft)")
+                    .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2))
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)")
+                svg.append("text")
+                    .style("fill", "black")
+                    .style("writing-mode", WritingMode)
+                    .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 20 )
+                    .attr("font-size", 10)
+                    .attr("y", iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf2 / 2))
+                    .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+ 20}, ${iy + GapAfterOverPanelApplied + UpperAndLowerGap + (DistanceFromTopOfDoorForLeaf2 / 2) + 7})`)
+                    .text(DistanceFromTopOfDoorForLeaf2*5);
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2))         // set y position of bottom of text
-            //           .text(DistanceBetweenVPsForLeaf2ToShow);   // define the text to display
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)")
+                if ((Leaf2VisionPanel1Height * 5) < ((LeafHeightNoOPForMap * 5) / 2)) { // when height of vission pannel is less then half of height of inner frame
+                    svg.append('line')   // yellow
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape+Leaf2VisionPanelWidth+ 10)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape+Leaf2VisionPanelWidth+ 10)
+                        .attr("y2", DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height))
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel2Height / 2))         // set y position of bottom of text
-            //           .text(Leaf2VisionPanel2HeightToShow);   // define the text to display
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf2VPShape+ Leaf2VisionPanelWidth+ 25)
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf2VPShape + (parseFloat(Leaf2VisionPanel1Height) / 2))
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape+Leaf2VisionPanelWidth+25}, ${DistanceYForLeaf2VPShape + (parseFloat(Leaf2VisionPanel1Height) / 2)})`)
+                        .text(Leaf2VisionPanel1HeightToShow);
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
-            //   }
-          }
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf2VPShape + Leaf2VisionPanel1Height)
+                        .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15)
+                        .attr("y2", DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height))
 
-          if (VisionPanelQuantityForLeaf2 > 2) {
+                    svg.append('line')   //
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf2VPShape)
 
-              DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height + DistanceBetweenVPsForLeaf2;
 
-              if (VisionPanelShape == "Diamond") {
-                  svg.append('path')
-                      .attr('d', DiamondDimensionForLeaf2)
-                      .attr("fill", "#fff")
-                      .style("stroke", "black")
-                      .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
-              } else if (VisionPanelShape == "Circle") {
-                  svg.append("circle")
-                      .style("stroke", "black")
-                      .style("fill", "#fff")
-                      .attr("r", CircleRadiusForLeaf2)
-                      .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
-                      .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
-              } else {
-                  svg.append('rect')
-                      .attr('x', DistanceXForLeaf2VPShape)
-                      .attr('y', DistanceYForLeaf2VPShape)
-                      .attr('width', Leaf2VisionPanelWidth)
-                      .attr('height', Leaf2VisionPanel3Height)
-                      .attr('stroke', 'black')
-                      .attr('fill', '#fff');
-              }
+                } else {  // when height of vission pannel is more then half of height of inner frame
 
-            //   if (ShowMeasurements) {
+                    if (VisionPanelShape == "Diamond" || VisionPanelShape == "Circle") {
+                        // ix - 15 - SideLightPanel1WidthSpaceForVerticalLines
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
+                        svg.append('line')   // yellow
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y1", DistanceYForLeaf2VPShape)
+                            .attr("x2", ix - 15 - SideLightPanel1WidthSpaceForVerticalLines)
+                            .attr("y2", DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height))
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2))
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)")
+                        svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf2VPShape + 20)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf2VPShape + (parseFloat(Leaf2VisionPanel1Height) / 2) + 5)         // set y position of bottom of text
+                            .text(Leaf2VisionPanel1HeightToShow);   // define the text to display
+                    } else {
+                        svg.append('line')   // yellow
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf2VPShape + 20)
+                            .attr("y1", DistanceYForLeaf2VPShape)
+                            .attr("x2", DistanceXForLeaf2VPShape + 20)
+                            .attr("y2", DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2))         // set y position of bottom of text
-            //           .text(DistanceBetweenVPsForLeaf2ToShow);   // define the text to display
+                        svg.append("text")
+                            .style("fill", "black")
+                            .style("writing-mode", WritingMode)
+                            .attr("x", DistanceXForLeaf2VPShape + 10)
+                            .attr("font-size", 10)
+                            .attr("y", DistanceYForLeaf2VPShape + (parseFloat(Leaf2VisionPanel1Height) / 2) + 5)
+                            .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + 10}, ${DistanceYForLeaf2VPShape + (parseFloat(Leaf2VisionPanel1Height) / 2)})`)
+                            .text(Leaf2VisionPanel1HeightToShow);
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)")
+                    }
+                }
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel3Height / 2))         // set y position of bottom of text
-            //           .text(Leaf2VisionPanel3HeightToShow);   // define the text to display
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
-            //   }
-          }
 
-          if (VisionPanelQuantityForLeaf2 > 3) {
 
-              DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height + DistanceBetweenVPsForLeaf2;
+                const totalShapeHeight = (parseFloat(Leaf2VisionPanel1Height) * (VisionPanelQuantityForLeaf2)) + parseFloat(Leaf2VisionPanel1Height) / 2;
+                const spaceBetweenShapes = (VisionPanelQuantityForLeaf2 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
 
-              if (VisionPanelShape == "Diamond") {
-                  svg.append('path')
-                      .attr('d', DiamondDimensionForLeaf2)
-                      .attr("fill", "#fff")
-                      .style("stroke", "black")
-                      .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
-              } else if (VisionPanelShape == "Circle") {
-                  svg.append("circle")
-                      .style("stroke", "black")
-                      .style("fill", "#fff")
-                      .attr("r", CircleRadiusForLeaf2)
-                      .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
-                      .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
-              } else {
-                  svg.append('rect')
-                      .attr('x', DistanceXForLeaf2VPShape)
-                      .attr('y', DistanceYForLeaf2VPShape)
-                      .attr('width', Leaf2VisionPanelWidth)
-                      .attr('height', Leaf2VisionPanel4Height)
-                      .attr('stroke', 'black')
-                      .attr('fill', '#fff');
-              }
+                if (VisionPanelQuantityForLeaf1 == 1) {
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height))
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", iy + SOHeightForMap)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+                        svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                        .attr("font-size", 10)
+                        .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                        .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) - (VisionPanelQuantityForLeaf2 * (Leaf2VisionPanel1Height * 5)));
+                        if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) - (VisionPanelQuantityForLeaf2 * (Leaf2VisionPanel1Height * 5)))<200){
+                           var newHeight = (Leaf2VisionPanel1Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) - (VisionPanelQuantityForLeaf2 * (Leaf2VisionPanel1Height * 5))))
+                           swal('Warning!', "Distance from bottom cannot be less than 200");
+                                 $(document).ready(function () {
+    $('#vP2Height1').on('input', function () {
+      first=true
+      console.log("aaaaaaaaaaaaaaa") 
+    });
+     $('#distanceFromTopOfDoorforLeaf2').on('input', function () {
+        first=true
+        console.log("bbbbbbbbbbbbbb")
+    });
+});
+                    if(first){
+                            $('input[name="vP2Height1"]').val(newHeight).trigger('change');
+                            first=false
+                           }
+                           
+                        }
+                }
 
-            //   if (ShowMeasurements) {
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2))         // set y position of bottom of text
-            //           .text(DistanceBetweenVPsForLeaf2ToShow);   // define the text to display
+            }
+            
+  }
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel4Height / 2))         // set y position of bottom of text
-            //           .text(Leaf2VisionPanel4HeightToShow);   // define the text to display
+  if (VisionPanelQuantityForLeaf2 > 1) {
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
-            //   }
-          }
+                    DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel1Height + DistanceBetweenVPsForLeaf2;
 
-          if (VisionPanelQuantityForLeaf2 > 4) {
+                    if (VisionPanelShape == "Diamond") {
+                        svg.append('path')
+                            .attr('d', DiamondDimensionForLeaf2)
+                            .attr("fill", "#fff")
+                            .style("stroke", "black")
+                            .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
+                        // console.log(DistanceXForLeaf2VPShape, "DistanceXForLeaf2VPShape")
+                    } else if (VisionPanelShape == "Circle") {
+                        svg.append("circle")
+                            .style("stroke", "black")
+                            .style("fill", "#fff")
+                            .attr("r", CircleRadiusForLeaf2)
+                            .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
+                            .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
+                    } else {
+                        svg.append('rect')
+                            .attr('x', DistanceXForLeaf2VPShape)
+                            .attr('y', DistanceYForLeaf2VPShape)
+                            .attr('width', Leaf2VisionPanelWidth)
+                            .attr('height', Leaf2VisionPanel2Height)
+                            .attr('stroke', 'black')
+                            .attr('fill', '#fff');
+                    }
 
-              DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height + DistanceBetweenVPsForLeaf2;
+                     if (ShowMeasurements) {
 
-              if (VisionPanelShape == "Diamond") {
-                  svg.append('path')
-                      .attr('d', DiamondDimensionForLeaf2)
-                      .attr("fill", "#fff")
-                      .style("stroke", "black")
-                      .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
-              } else if (VisionPanelShape == "Circle") {
-                  svg.append("circle")
-                      .style("stroke", "black")
-                      .style("fill", "#fff")
-                      .attr("r", CircleRadiusForLeaf2)
-                      .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
-                      .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
-              } else {
-                  svg.append('rect')
-                      .attr('x', DistanceXForLeaf2VPShape)
-                      .attr('y', DistanceYForLeaf2VPShape)
-                      .attr('width', Leaf2VisionPanelWidth)
-                      .attr('height', Leaf2VisionPanel5Height)
-                      .attr('stroke', 'black')
-                      .attr('fill', '#fff');
-              }
+                /* Vertical Line for vision panel */
+                
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2)
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf2VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
 
-            //   if (ShowMeasurements) {
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20) // set x position of the text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2)) // set y position of the text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20}, ${(DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf2ToShow); // define the text to display
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2))         // set y position of bottom of text
-            //           .text(DistanceBetweenVPsForLeaf2ToShow);   // define the text to display
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
 
-            //       svg.append('line')
-            //           .style("stroke", "black")
-            //           .style("stroke-width", 0.5)
-            //           .attr("x1", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y1", DistanceYForLeaf2VPShape)
-            //           .attr("x2", ix + SOWidthForMap + 15 + SideLightPanel2WidthSpaceForVerticalLines)
-            //           .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel5Height)
-            //           .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
-            //           .attr("marker-end", "url(#arrowRight)");
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape +Leaf2VisionPanelWidth + 25) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel2Height / 2)) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape +Leaf2VisionPanelWidth + 25}, ${DistanceYForLeaf2VPShape + (Leaf2VisionPanel2Height / 2) + 5})`)
+                        .text(Leaf2VisionPanel2HeightToShow);
 
-            //       svg.append("text")            // append text
-            //           .style("fill", "black")      // make the text black
-            //           .style("writing-mode", WritingMode) // set the writing mode
-            //           .attr("x", SOWidthForMap + ix + 20 + SideLightPanel2WidthSpaceForVerticalLines)         // set x position of left side of text
-            //           .attr("font-size", 10)
-            //           .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel5Height / 2))         // set y position of bottom of text
-            //           .text(Leaf2VisionPanel5HeightToShow);   // define the text to display
 
-            //       /* Vertical Line for vision panel 2 of leaf 2  */
-            //   }
-          }
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape +Leaf2VisionPanelWidth+ 15, DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height);
+                    if (Leaf2VisionPanel2Height && VisionPanelQuantityForLeaf2 == 2) {
+
+                        const totalShapeHeight = (parseFloat(Leaf2VisionPanel1Height) * (VisionPanelQuantityForLeaf2)) + parseFloat(Leaf2VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf2 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height)
+                            .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap)
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5));
+                               if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5))<200){
+                           var newHeight = (Leaf2VisionPanel2Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5)))
+                           swal('Warning!', "Distance from bottom cannot be less than 200");
+                           
+      $(document).ready(function () {
+    $('#vP2Height2').on('input', function () {
+        first=true
+        
+    });
+     $('#vP2Height1').on('input', function () {
+        first=true });
+     $('#DistanceFromTopOfDoorForLeaf2').on('input', function () {
+        first=true
+       
+    });
+});
+                            if(first){
+                            $('input[name="vP2Height2"]').val(newHeight).trigger('change');
+                            first=false
+                           }
+                        }
+                    }
+                
+
+            }
+                }
+    if (VisionPanelQuantityForLeaf2 > 2) {
+
+                    DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel2Height + DistanceBetweenVPsForLeaf2;
+
+                    if (VisionPanelShape == "Diamond") {
+                        svg.append('path')
+                            .attr('d', DiamondDimensionForLeaf2)
+                            .attr("fill", "#fff")
+                            .style("stroke", "black")
+                            .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
+                    } else if (VisionPanelShape == "Circle") {
+                        svg.append("circle")
+                            .style("stroke", "black")
+                            .style("fill", "#fff")
+                            .attr("r", CircleRadiusForLeaf2)
+                            .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
+                            .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
+                    } else {
+                        svg.append('rect')
+                            .attr('x', DistanceXForLeaf2VPShape)
+                            .attr('y', DistanceYForLeaf2VPShape)
+                            .attr('width', Leaf2VisionPanelWidth)
+                            .attr('height', Leaf2VisionPanel3Height)
+                            .attr('stroke', 'black')
+                            .attr('fill', '#fff');
+                    }
+
+                     if (ShowMeasurements) {
+
+                /* Vertical Line for vision panel */
+               
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2)
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf2VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")
+                        .style("fill", "black")
+                        .style("writing-mode", WritingMode)
+                        .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+ 20)
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20}, ${(DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf2ToShow);
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 25) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel3Height / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 25}, ${DistanceYForLeaf2VPShape + (Leaf2VisionPanel3Height / 2) + 5})`)
+                        .text(Leaf2VisionPanel3HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height);
+
+                    if (Leaf2VisionPanel3Height && VisionPanelQuantityForLeaf2 == 3) {
+
+                        const totalShapeHeight = (parseFloat(Leaf2VisionPanel1Height) * (VisionPanelQuantityForLeaf2)) + parseFloat(Leaf2VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf2 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height)
+                            .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap )
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                                                      .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5)  );
+                           if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5))<200){
+                           var newHeight = (Leaf2VisionPanel3Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5)))
+                           swal('Warning!', "Distance from bottom cannot be less than 200");
+                                 $(document).ready(function () {
+    $('#vP2Height1').on('input', function () {
+        first=true });
+    $('#vP2Height2').on('input', function () {
+        first=true  
+    });
+    $('#vP2Height3').on('input', function () {
+        first=true
+        console.log('User changed the input. isUserChanged =', isUserChanged);
+    });
+     $('#distanceFromTopOfDoorforLeaf2').on('input', function () {
+        first=true
+    });
+});
+                          if(first){
+                            $('input[name="vP1Height3"]').val(newHeight).trigger('change');
+                            first=false
+                           }
+                           
+
+                        }
+                    }
+                /* Vertical Line for vision panel */
+            }
+
+                }
+
+                
+                if (VisionPanelQuantityForLeaf2 > 3) {
+
+                    DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel3Height + DistanceBetweenVPsForLeaf2;
+
+                    if (VisionPanelShape == "Diamond") {
+                        svg.append('path')
+                            .attr('d', DiamondDimensionForLeaf2)
+                            .attr("fill", "#fff")
+                            .style("stroke", "black")
+                            .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
+                    } else if (VisionPanelShape == "Circle") {
+                        svg.append("circle")
+                            .style("stroke", "black")
+                            .style("fill", "#fff")
+                            .attr("r", CircleRadiusForLeaf2)
+                            .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
+                            .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
+                    } else {
+                        svg.append('rect')
+                            .attr('x', DistanceXForLeaf2VPShape)
+                            .attr('y', DistanceYForLeaf2VPShape)
+                            .attr('width', Leaf2VisionPanelWidth)
+                            .attr('height', Leaf2VisionPanel4Height)
+                            .attr('stroke', 'black')
+                            .attr('fill', '#fff');
+                    }
+
+                    if (ShowMeasurements) {
+                /* Vertical Line for vision panel */
+               
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2))
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf2VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20) // set x position
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2)) // set y position
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20}, ${(DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf2ToShow); // display text
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape +Leaf2VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)");
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 25) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel4Height / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 25}, ${DistanceYForLeaf2VPShape + (Leaf2VisionPanel4Height / 2) + 5})`)
+                        .text(Leaf2VisionPanel4HeightToShow);
+                    // define the text to display
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height);
+                    if (Leaf2VisionPanel4Height && VisionPanelQuantityForLeaf2 == 4) {
+
+                        const totalShapeHeight = (parseFloat(Leaf2VisionPanel1Height) * (VisionPanelQuantityForLeaf2)) + parseFloat(Leaf2VisionPanel1Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf2 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height)
+                            .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap )
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+
+                            svg.append("text")            // append text
+                            .style("fill", "black")      // make the text black
+                            .style("writing-mode", WritingMode) // set the writing mode
+                            .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                            .attr("font-size", 10)
+                            .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5));
+                            
+                             if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5))<200){
+                           var newHeight = (Leaf2VisionPanel4Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5)))
+                           swal('Warning!', "Distance from bottom cannot be less than 200");
+      $(document).ready(function () {
+        $('#vP2Height1').on('input', function () {
+        first=true });
+    $('#vP2Height2').on('input', function () {
+        first=true
+       
+    });
+    $('#vP2Height3').on('input', function () {
+        first=true
+        console.log('User changed the input. isUserChanged =', isUserChanged);
+    });
+    $('#vP2Height4').on('input', function () {
+        
+        first=true
+       
+    });
+     $('#distanceFromTopOfDoor').on('input', function () {
+        first=true
+       
+    });
+
+});
+                           if(first){
+                            $('input[name="vP2Height4"]').val(newHeight).trigger('change');
+                            first=false
+                           }
+   
+                        }
+
+                    }
+
+                
+
+                /* Vertical Line for vision panel */
+            }
+
+                    
+                }
+
+                 if (VisionPanelQuantityForLeaf2 > 4) {
+
+                    DistanceYForLeaf2VPShape = DistanceYForLeaf2VPShape + Leaf2VisionPanel4Height + DistanceBetweenVPsForLeaf2;
+
+                    if (VisionPanelShape == "Diamond") {
+                        svg.append('path')
+                            .attr('d', DiamondDimensionForLeaf2)
+                            .attr("fill", "#fff")
+                            .style("stroke", "black")
+                            .attr("transform", "translate(" + DistanceXForLeaf2VPShape + "," + DistanceYForLeaf2VPShape + ")");
+                    } else if (VisionPanelShape == "Circle") {
+                        svg.append("circle")
+                            .style("stroke", "black")
+                            .style("fill", "#fff")
+                            .attr("r", CircleRadiusForLeaf2)
+                            .attr("cx", DistanceXForLeaf2VPShape + CircleRadiusForLeaf2)
+                            .attr("cy", DistanceYForLeaf2VPShape + CircleRadiusForLeaf2);
+                    } else {
+                        svg.append('rect')
+                            .attr('x', DistanceXForLeaf2VPShape)
+                            .attr('y', DistanceYForLeaf2VPShape)
+                            .attr('width', Leaf2VisionPanelWidth)
+                            .attr('height', Leaf2VisionPanel5Height)
+                            .attr('stroke', 'black')
+                            .attr('fill', '#fff');
+                    }
+
+                     if (ShowMeasurements) {
+
+                /* Vertical Line for vision panel */
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y1", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2))
+                        .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                        .attr("y2", DistanceYForLeaf2VPShape)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // set text color
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20) // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", (DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2)) // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2)+20}, ${(DistanceYForLeaf2VPShape - DistanceBetweenVPsForLeaf2) + (DistanceBetweenVPsForLeaf2 / 2) + 5})`)
+                        .text(DistanceBetweenVPsForLeaf2ToShow); // define the text to display
+
+
+                    svg.append('line')
+                        .style("stroke", "black")
+                        .style("stroke-width", 0.5)
+                        .attr("x1", DistanceXForLeaf2VPShape+Leaf2VisionPanelWidth + 10)
+                        .attr("y1", DistanceYForLeaf2VPShape)
+                        .attr("x2", DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 10)
+                        .attr("y2", DistanceYForLeaf2VPShape + Leaf2VisionPanel5Height)
+                        .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                        .attr("marker-end", "url(#arrowRight)")
+
+                    svg.append("text")            // append text
+                        .style("fill", "black")      // make the text black
+                        .style("writing-mode", WritingMode) // set the writing mode
+                        .attr("x", DistanceXForLeaf2VPShape +Leaf2VisionPanelWidth +25)         // set x position of text
+                        .attr("font-size", 10)
+                        .attr("y", DistanceYForLeaf2VPShape + (Leaf2VisionPanel5Height / 2))        // set y position of text
+                        .attr("transform", `rotate(-90, ${DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 25}, ${DistanceYForLeaf2VPShape + (Leaf2VisionPanel5Height / 2) + 5})`)
+                        .text(Leaf2VisionPanel5HeightToShow);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape, DistanceXForLeaf2VPShape + Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape);
+                    createLine("black", 0.5, DistanceXForLeaf2VPShape+ Leaf2VisionPanelWidth + 15, DistanceYForLeaf2VPShape + Leaf2VisionPanel5Height, DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2), DistanceYForLeaf2VPShape + Leaf2VisionPanel5Height);
+                    if (Leaf2VisionPanel5Height && VisionPanelQuantityForLeaf2 == 5) {
+
+                        const totalShapeHeight = (parseFloat(Leaf1VisionPanel2Height) * (VisionPanelQuantityForLeaf2)) + parseFloat(Leaf1VisionPanel2Height) / 2;
+                        const spaceBetweenShapes = (VisionPanelQuantityForLeaf2 - 1) * ((+DistanceBetweenVPsMinValue) / 5);
+                        const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
+                        // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y1", DistanceYForLeaf2VPShape + Leaf2VisionPanel5Height)
+                            .attr("x2", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2))
+                            .attr("y2", iy + SOHeightForMap )
+                            .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
+                            .attr("marker-end", "url(#arrowRight)");
+                             svg.append("text")            // append text
+                    .style("fill", "black")      // make the text black
+                    .style("writing-mode", WritingMode) // set the writing mode
+                    .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
+                    .attr("font-size", 10)
+                    .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                            .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5));
+                   
+  if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5))<200){
+                           var newHeight = (Leaf2VisionPanel5Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5)))
+                           swal('Warning!', "Distance from bottom cannot be less than 200");
+      $(document).ready(function () {
+         $('#vP2Height1').on('input', function () {
+        first=true });
+    $('#vP2Height2').on('input', function () {
+        first=true  
+    });
+    $('#vP2Height3').on('input', function () {
+        first=true
+        console.log('User changed the input. isUserChanged =', isUserChanged);
+    });
+    $('#vP2Height4').on('input', function () {
+        
+        first=true
+       
+    });
+    $('#vP2Height5').on('input', function () {
+        
+        first=true
+       
+    });
+     $('#distanceFromTopOfDoor').on('input', function () {
+        first=true
+    });
+
+});
+                           if(first){
+                            $('input[name="vP2Height5"]').val(newHeight).trigger('change');
+                            first=false
+                           }
+   
+                        }
+                    }
+
+                
+
+                /* Vertical Line for vision panel */
+            }
+                }
+}
       }
   }
 
@@ -10900,6 +11622,46 @@ if (IsFourSidedFrame == true) {
 
 }
 
+
+//  setTimeout(() => {
+//         const svgElement = d3.select("#container svg").node();
+//         const bbox = svgElement.getBBox();
+
+//         const paddingY = 100;
+// const paddingX = 70;
+//         const viewBoxX = bbox.x - paddingX;
+//         const viewBoxY = bbox.y - paddingY;
+//         const viewBoxWidth = bbox.width + paddingX * 2;
+//         const viewBoxHeight = bbox.height + paddingY * 2;
+
+//         d3.select(svgElement)
+//             .attr("viewBox", `${viewBoxX} ${viewBoxY} ${viewBoxWidth} ${viewBoxHeight}`);
+
+//         svgPanZoom(svgElement, options);
+//     }, 100);
+
+setTimeout(() => {
+  const svgElement = d3.select("#container svg").node();
+  if (!svgElement) return;
+
+  const bbox = svgElement.getBBox();
+
+  const paddingX = 70;
+  const paddingY = 100;
+
+  const vbX = bbox.x - paddingX;
+  const vbY = bbox.y - paddingY;
+  const vbW = bbox.width + paddingX * 2;
+  const vbH = bbox.height + paddingY * 2;
+
+  // ✅ Set viewBox tightly around content + padding
+  d3.select(svgElement)
+    .attr("viewBox", `${vbX} ${vbY} ${vbW} ${vbH}`)
+    .attr("preserveAspectRatio", "xMidYMid meet"); // 🧠 center in both X and Y
+
+  // ✅ Zoom & pan enabled
+  svgPanZoom(svgElement, options);
+}, 100);
 
 
 }
