@@ -252,6 +252,7 @@
                             </div>
                         </div>
                     </div>
+                    <input name="doorthickness" value="@if(!empty($Item['LeafThickness'])){{$Item['LeafThickness']}}@endif" type="hidden" id="doorthickness">
                     {{-- ADD HINGE LOCATION (15-12-2023) --}}
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
