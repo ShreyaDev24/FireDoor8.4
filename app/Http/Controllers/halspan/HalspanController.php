@@ -225,6 +225,18 @@ class HalspanController extends Controller
         }
 
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $id,
@@ -417,6 +429,18 @@ class HalspanController extends Controller
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
         $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
