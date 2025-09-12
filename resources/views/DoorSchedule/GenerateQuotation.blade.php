@@ -1871,15 +1871,11 @@
                         $('.loader').hide(); // hide loader after success
 
                         if (data.status === 'success') {
-                        //    $.getScript('/Halspan/common-cad-configuration.js');
-
-                            // Loop through items
-
-                                // Either use global variable or function call
-                                generateCADImage(data.items); // ⬅️ Use a function in your JS
-                            // });
-                        // });
-
+                            if (data.all_svg_available) {
+                                location.reload(); // <-- ✅ Skip generateCADImage
+                            } else {
+                                generateCADImage(data.items); // Generate CAD images
+                            }
                         } else if (data.status === 'error') {
                             let errorMessages = '';
 

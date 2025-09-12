@@ -1840,6 +1840,7 @@ $(function () {
 // function
 function FireRatingChange() {
     if ($("#fireRating").val() != '') {
+        let selectedValue = $("#doorthickness").val();
         if ($("#fireRating").val() == "NFR") {
             $("#glazingBeadsThickness").attr('min',19);
             $("#grooveDepth").attr("max", "");
@@ -1902,6 +1903,9 @@ function FireRatingChange() {
                     $("#opglazingBeadsHeight").val('');
                 }
                 $("#opglazingBeadsHeight").attr('min',37);
+            }
+            if (selectedValue) {
+                    $("#doorThickness").val(selectedValue);
             }
         }
         $('#opGlassIntegrity').val('');
