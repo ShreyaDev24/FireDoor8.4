@@ -356,8 +356,9 @@ margin-top: 40px;
         var Mullion2Thickness = $('#Mullion2Thickness').val() ?? 0;
         var Mullion3Thickness = $('#Mullion3Thickness').val() ?? 0;
 
-        var TransomQuantity = $('#TransomQuantity').val() ?? 0;
-        var MullionQuantity = $('#MullionQuantity').val() ?? 0;
+        let TransomQuantity = parseInt($('#TransomQuantity').val() || 0, 10);
+        let MullionQuantity = parseInt($('#MullionQuantity').val() || 0, 10);
+
 
         var SinglePaneValue = document.getElementById('SinglePane-value');
         if(SinglePaneValue != null  && isstatus == true){
@@ -456,38 +457,80 @@ margin-top: 40px;
 
         console.log(parseInt(frameWidth) , parseInt(FrameThickness),parseInt(FrameThickness),parseInt(MullionWidthPoint2),parseInt(MullionWidthPoint3),parseInt(MullionWidthPoint4),parseInt(Mullion1Thickness),parseInt(Mullion2Thickness),parseInt(Mullion3Thickness))
 
-        $('#GlassPane1Width').val(GlassPane1Width);
-        $('#GlassPane1Height').val(GlassPane1Height);
-        $('#GlassPane2Width').val(GlassPane2Width);
-        $('#GlassPane2Height').val(GlassPane2Height);
-        $('#GlassPane3Width').val(GlassPane3Width);
-        $('#GlassPane3Height').val(GlassPane3Height);
-        $('#GlassPane4Width').val(GlassPane4Width);
-        $('#GlassPane4Height').val(GlassPane4Height);
-        $('#GlassPane5Width').val(GlassPane5Width);
-        $('#GlassPane5Height').val(GlassPane5Height);
-        $('#GlassPane6Width').val(GlassPane6Width);
-        $('#GlassPane6Height').val(GlassPane6Height);
-        $('#GlassPane7Width').val(GlassPane7Width);
-        $('#GlassPane7Height').val(GlassPane7Height);
-        $('#GlassPane8Width').val(GlassPane8Width);
-        $('#GlassPane8Height').val(GlassPane8Height);
-        $('#GlassPane9Width').val(GlassPane9Width);
-        $('#GlassPane9Height').val(GlassPane9Height);
-        $('#GlassPane10Width').val(GlassPane10Width);
-        $('#GlassPane10Height').val(GlassPane10Height);
-        $('#GlassPane11Width').val(GlassPane11Width);
-        $('#GlassPane11Height').val(GlassPane11Height);
-        $('#GlassPane12Width').val(GlassPane12Width);
-        $('#GlassPane12Height').val(GlassPane12Height);
-        $('#GlassPane13Width').val(GlassPane13Width);
-        $('#GlassPane13Height').val(GlassPane13Height);
-        $('#GlassPane14Width').val(GlassPane14Width);
-        $('#GlassPane14Height').val(GlassPane14Height);
-        $('#GlassPane15Width').val(GlassPane15Width);
-        $('#GlassPane15Height').val(GlassPane15Height);
-        $('#GlassPane16Width').val(GlassPane16Width);
-        $('#GlassPane16Height').val(GlassPane16Height);
+
+       const alphabet = ['A', 'B', 'C', 'D']; // For row labels (A, B, C, D)
+
+        // Glass pane mapping like in PHP
+        const glassPaneMap = {
+            'A1': { width: 'GlassPane1Width', height: 'GlassPane1Height' },
+            'A2': { width: 'GlassPane2Width', height: 'GlassPane2Height' },
+            'A3': { width: 'GlassPane3Width', height: 'GlassPane3Height' },
+            'A4': { width: 'GlassPane4Width', height: 'GlassPane4Height' },
+            'B1': { width: 'GlassPane5Width', height: 'GlassPane5Height' },
+            'B2': { width: 'GlassPane6Width', height: 'GlassPane6Height' },
+            'B3': { width: 'GlassPane7Width', height: 'GlassPane7Height' },
+            'B4': { width: 'GlassPane8Width', height: 'GlassPane8Height' },
+            'C1': { width: 'GlassPane9Width', height: 'GlassPane9Height' },
+            'C2': { width: 'GlassPane10Width', height: 'GlassPane10Height' },
+            'C3': { width: 'GlassPane11Width', height: 'GlassPane11Height' },
+            'C4': { width: 'GlassPane12Width', height: 'GlassPane12Height' },
+            'D1': { width: 'GlassPane13Width', height: 'GlassPane13Height' },
+            'D2': { width: 'GlassPane14Width', height: 'GlassPane14Height' },
+            'D3': { width: 'GlassPane15Width', height: 'GlassPane15Height' },
+            'D4': { width: 'GlassPane16Width', height: 'GlassPane16Height' },
+        };
+
+        const paneValues = {
+            GlassPane1Width, GlassPane1Height,
+            GlassPane2Width, GlassPane2Height,
+            GlassPane3Width, GlassPane3Height,
+            GlassPane4Width, GlassPane4Height,
+            GlassPane5Width, GlassPane5Height,
+            GlassPane6Width, GlassPane6Height,
+            GlassPane7Width, GlassPane7Height,
+            GlassPane8Width, GlassPane8Height,
+            GlassPane9Width, GlassPane9Height,
+            GlassPane10Width, GlassPane10Height,
+            GlassPane11Width, GlassPane11Height,
+            GlassPane12Width, GlassPane12Height,
+            GlassPane13Width, GlassPane13Height,
+            GlassPane14Width, GlassPane14Height,
+            GlassPane15Width, GlassPane15Height,
+            GlassPane16Width, GlassPane16Height
+        };
+
+        // Reset all to 0 first
+        Object.keys(glassPaneMap).forEach(pane => {
+            $('#' + glassPaneMap[pane].width).val(0);
+            $('#' + glassPaneMap[pane].height).val(0);
+        });
+
+       // Get values safely as numbers
+
+        // Fill only valid Transom × Mullion panes
+        for (let row = 0; row <= TransomQuantity; row++) {
+            for (let col = 1; col <= MullionQuantity + 1; col++) {
+
+                // Debug to see exact values
+                console.log(`T:${TransomQuantity} M:${MullionQuantity} Row:${row} Col:${col}`);
+
+                // Create pane key like A1, A2, B1, etc.
+                let paneKey = alphabet[row] + col;
+
+                // Fill only if pane exists in map
+                if (glassPaneMap[paneKey]) {
+                    console.log(paneKey);
+                    let widthField = glassPaneMap[paneKey].width;
+                    let heightField = glassPaneMap[paneKey].height;
+
+                    // Set values safely
+                    $('#' + widthField).val(paneValues[widthField] || 0);
+                    $('#' + heightField).val(paneValues[heightField] || 0);
+                }
+            }
+        }
+
+
 
 
         $('#TransomWidth1').val(TransomWidth1);

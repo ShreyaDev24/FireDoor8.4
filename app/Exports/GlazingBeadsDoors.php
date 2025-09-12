@@ -155,9 +155,12 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->GlazingBeadsThickness,
                     $value->glazingBeadsHeight,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL1Width + $VisionPanelWidthNFR) : ($value->SL1Width + $VisionPanelWidthFD60),
-                    $value->SlBeadThickness,
+
+                    4,
+
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL1Height + $VisionPanelHeightFD60 : $value->SL1Height + $VisionPanelHeightNFR,
-                    $value->SlBeadThickness,
+
+                    4,
                     '',
                     '',
                     '',
@@ -192,9 +195,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->GlazingBeadsThickness,
                     $value->glazingBeadsHeight,
                     ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL2Width + $VisionPanelWidthNFR) : ($value->SL2Width + $VisionPanelWidthFD60),
-                    $value->SlBeadThickness,
+                    4,
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL2Height + $VisionPanelHeightFD60 : $value->SL2Height + $VisionPanelHeightNFR,
-                    $value->SlBeadThickness,
+                    4,
                     '',
                     '',
                     '',
