@@ -376,76 +376,76 @@ margin-top: 40px;
         var MullionWidthPoint4 = 0;
 
         if(TransomQuantity == 3){
-            TransomHeightPoint4 = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+            TransomHeightPoint4 = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
         }
 
         if(MullionQuantity == 3){
-            MullionWidthPoint4 = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+            MullionWidthPoint4 = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
         }
 
-        var GlassPane1Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane1Width = parseInt(frameWidth) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane1Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane1Height = parseInt(frameHeight) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane2Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane2Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane2Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane2Height = parseInt(frameHeight) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane3Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane3Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane3Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane3Height = parseInt(frameHeight) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane4Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane4Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane4Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane4Height = parseInt(frameHeight) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane5Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane5Width = parseInt(frameWidth) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane5Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane5Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane6Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane6Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane6Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane6Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane7Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane7Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane7Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane7Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane8Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane8Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane8Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane8Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint3) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane9Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane9Width = parseInt(frameWidth) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane9Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane9Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane10Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane10Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane10Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane10Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane11Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane11Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane11Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane11Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane12Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane12Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane12Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane12Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint4) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane13Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane13Width = parseInt(frameWidth) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane13Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane13Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane14Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane14Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint3) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane14Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane14Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane15Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane15Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint4) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane15Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane15Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
-        var GlassPane16Width = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
+        var GlassPane16Width = parseInt(frameWidth) - parseInt(MullionWidthPoint1) - parseInt(MullionWidthPoint2) - parseInt(MullionWidthPoint3) - parseInt(Mullion1Thickness) - parseInt(Mullion2Thickness) - parseInt(Mullion3Thickness);
 
-        var GlassPane16Height = parseInt(frameHeight) - parseInt(FrameThickness) - parseInt(FrameThickness) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
+        var GlassPane16Height = parseInt(frameHeight) - parseInt(TransomHeightPoint1) - parseInt(TransomHeightPoint2) - parseInt(TransomHeightPoint3) - parseInt(Transom1Thickness) - parseInt(Transom2Thickness) - parseInt(Transom3Thickness);
 
 
         var TransomWidth1 = parseInt(frameWidth) - parseInt(FrameThickness) - parseInt(FrameThickness);
