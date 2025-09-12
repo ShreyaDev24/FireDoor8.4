@@ -210,6 +210,18 @@ class StredorController extends Controller
     // Simplified null check with optional chaining
 
 // dd($defaultItemsCustom,$quotation->ProjectId);
+$folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         $BOMSetting = BOMSetting::where("id", 1)->get()->first();
         return view('Items/Stredor/StredorDoorConfiguration', [
             "QuotationId" => $id,
@@ -418,7 +430,18 @@ class StredorController extends Controller
         $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',8)->where('status',1)->get();
 
         // dd(\Config::get('constants.PossibleSelectedOptions'));
-
+$folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
         return view('Items/Stredor/StredorDoorConfiguration', [
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
