@@ -634,6 +634,23 @@
                                             value="@if(!empty($allSettings['ScreenBead.NFR'])){{$allSettings['ScreenBead.NFR']->Height}}@endif">
                                     </div>
                                 </div>
+
+                                <!-- Architrave Size Adjustment -->
+                                <div class="col-12 font-weight-bold">ARCHITRAVE SIZE ADJUSTMENT</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="architraveWidth">ARCHITRAVE WIDTH (CAN BE + OR -)</label>
+                                        <input type="number" name="architraveWidth" id="architraveWidth" class="form-control" placeholder="Enter Width"
+                                            value="@if(!empty($allSettings['Architrave.NFR'])){{$allSettings['Architrave.NFR']->Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="architraveHeight">ARCHITRAVE HEIGHT (CAN BE + OR -)</label>
+                                        <input type="number" name="architraveHeight" id="architraveHeight" class="form-control" placeholder="Enter Height"
+                                            value="@if(!empty($allSettings['Architrave.NFR'])){{$allSettings['Architrave.NFR']->Height}}@endif">
+                                    </div>
+                                </div>
                             </div>
 
 
