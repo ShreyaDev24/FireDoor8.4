@@ -3129,9 +3129,9 @@ function commonGeneralLabourCost($request,$userIds): void{
             }
 
             //vision panel and fire rating
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
+            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "NFR" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                $description = "VP (Hockey Stick) - NFR/FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
@@ -3143,9 +3143,9 @@ function commonGeneralLabourCost($request,$userIds): void{
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
 
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
+            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "NFR" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                $description = "VP (Flush) - NFR/FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
                 SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
             }
@@ -3214,19 +3214,21 @@ function commonGeneralLabourCost($request,$userIds): void{
         }
 
         //decorativeGroves
-        if (!empty($request->decorativeGroves) && $request->decorativeGroves == "Yes" && $GeneralLabourCost->DecorativeGroves == 1) {
-            $data = getMyLaborCost('DecorativeGroves', $GeneralLabourCost->genLaborCost);
-            $description = "V Grooves |".($GeneralLabourCost->DecorativeGrovesManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-            $unit_cost = ($GeneralLabourCost->DecorativeGrovesManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-        }
+        if (in_array($request->issingleconfiguration, [1, 2, 7, 8])) {
+            if (!empty($request->decorativeGroves) && $request->decorativeGroves == "Yes" && $GeneralLabourCost->DecorativeGroves == 1) {
+                $data = getMyLaborCost('DecorativeGroves', $GeneralLabourCost->genLaborCost);
+                $description = "V Grooves |".($GeneralLabourCost->DecorativeGrovesManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                $unit_cost = ($GeneralLabourCost->DecorativeGrovesManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesMachineMinutes * ($data->labour_cost_per_machine/ 60));
+                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            }
 
-        //decorativeGrovesLeaf2
-        if (!empty($request->DecorativeGrovesLeaf2) && $request->DecorativeGrovesLeaf2 == "Yes" && $GeneralLabourCost->DecorativeGrovesLeaf2 == 1) {
-            $data = getMyLaborCost('DecorativeGrovesLeaf2', $GeneralLabourCost->genLaborCost);
-            $description = "V Grooves Leaf2 |".($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-            $unit_cost = ($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            //decorativeGrovesLeaf2
+            if (!empty($request->DecorativeGrovesLeaf2) && $request->DecorativeGrovesLeaf2 == "Yes" && $GeneralLabourCost->DecorativeGrovesLeaf2 == 1) {
+                $data = getMyLaborCost('DecorativeGrovesLeaf2', $GeneralLabourCost->genLaborCost);
+                $description = "V Grooves Leaf2 |".($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                $unit_cost = ($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            }
         }
 
         if(!empty($request->doorsetType)){
@@ -3372,21 +3374,30 @@ function commonGeneralLabourCost($request,$userIds): void{
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
         }
 
-        if($GeneralLabourCost->LeafSizing == 1){
+        $isStatus = true;
+        if (in_array($request->issingleconfiguration, [4,5,6,9])) {
+            if((!empty($request->adjustmentLeafWidth1) && $request->adjustmentLeafWidth1 != 0) || (!empty($request->adjustmentLeafWidth2) && $request->adjustmentLeafWidth2 != 0) || (!empty($request->adjustmentLeafHeightNoOP) && $request->adjustmentLeafHeightNoOP != 0)){
+                $isStatus = true;
+            }else{
+                $isStatus = false;
+            }
+        }
+
+        if($GeneralLabourCost->LeafSizing == 1 && $isStatus == true){
             $data = getMyLaborCost('LeafSizing', $GeneralLabourCost->genLaborCost);
             $description = "Leaf sizing |".($GeneralLabourCost->LeafSizingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafSizingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafSizingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafSizingMachineMinutes * ($data->labour_cost_per_machine/ 60));
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
         }
 
-        if($GeneralLabourCost->LeafLiping == 1){
+        if($GeneralLabourCost->LeafLiping == 1 && $isStatus == true){
             $data = getMyLaborCost('LeafLiping', $GeneralLabourCost->genLaborCost);
             $description = "Leaf Lipping |".($GeneralLabourCost->LeafLipingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafLipingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafLipingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafLipingMachineMinutes * ($data->labour_cost_per_machine/ 60));
             SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
         }
 
-        if($GeneralLabourCost->LeafCalibration == 1){
+        if($GeneralLabourCost->LeafCalibration == 1 && $isStatus == true){
             $data = getMyLaborCost('LeafCalibration', $GeneralLabourCost->genLaborCost);
             $description = "Leaf Calibration (sanding) |".($GeneralLabourCost->LeafCalibrationManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafCalibrationMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafCalibrationManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafCalibrationMachineMinutes * ($data->labour_cost_per_machine/ 60));
