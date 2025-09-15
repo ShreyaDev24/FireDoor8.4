@@ -3461,32 +3461,37 @@ function commonGeneralLabourCost($request,$userIds): void{
             }
 
             //vision panel and fire rating
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
-                $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            if ($request->glazingBeads == 'Chamfer_Boleaction' || $request->glazingBeads == 'Square_Boleaction') {
+                if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
+                    $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
+                    $description = "VP (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                    $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                }
+
+                if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
+                    $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
+                    $description = "VP (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                    $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                }
             }
 
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
-                $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-            }
 
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
-                $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
-            }
+            if ($request->glazingBeads == 'Chamfer_Flush' || $request->glazingBeads == 'Square_Flush') {
+                if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
+                    $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
+                    $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                    $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                }
 
-            if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
-                $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
-                $description = "VP (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
-                $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
+                    $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
+                    $description = "VP (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
+                    $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
+                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                }
             }
         }
 
