@@ -767,6 +767,8 @@ $(document).ready(function() {
     doorLeafFacingPrice('glazingBead',"{{$Item['GlazingBeads']}}");
     @endif
 
+    validateFrameDepth();
+
     var identifier = $("#OpBeadThickness");
     if(identifier.length > 0){ // Check if element exists
         SetBuildOfMaterial(identifier);
