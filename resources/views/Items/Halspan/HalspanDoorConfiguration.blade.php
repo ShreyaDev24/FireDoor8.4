@@ -376,6 +376,7 @@
         $("#DoorLeafFinish-value").data("value",$("#DoorLeafFinish-import").data("value"));
         $("#FrameFinishColor-value").val($("#FrameFinishColor-import").data("value"));
         $("select[name=fireRating]").val($("#FireRating-import").data("value")).trigger("change");
+        $("#savedfirerating").val($("#FireRating-import").data("value"));
         FireRatingChange();
         $("select[name=doorsetType]").val($("#DoorsetType-import").data("value")).trigger("change");
         $("select[name=swingType]").val($("#SwingType-import").data("value")).trigger("change");
@@ -438,6 +439,7 @@
         $("#FrameMaterial-value").data("value",$("#FrameMaterial-import").data("value"));
         $("#frameMaterialNew").val($("#FrameMaterial-import").data("value"));
         $("select[name=frameType]").val($("#FrameType-import").data("value"));
+        $("#frametypevalue").val($("#FrameType-import").data("value"));
         $("#frameDepth").val($("#FrameDepth-import").data("value"));
         $("select[name=frameFinish]").val($("#FrameFinish-import").data("value"));
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){
@@ -475,6 +477,7 @@
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedHeight").removeAttr('min', '12');
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
