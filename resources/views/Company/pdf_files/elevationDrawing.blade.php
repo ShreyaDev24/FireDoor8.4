@@ -1028,7 +1028,7 @@ margin-left: -12px;
     right: -533px;
        }
 
-       
+
         .scalloped-Right-1{
          position: absolute;
     width: 64px;
@@ -1080,7 +1080,7 @@ margin-left: -12px;
     top: 98px;
     right: -533px;
        }
-       
+
 
         /* .Door_right_strip_SD.sidelight {
             margin-left: -35.5px !important;
@@ -1140,6 +1140,27 @@ margin-left: -12px;
 .fir-dr-tbl, .mytableclass{
     width: 800px;
     margin: 40px auto 0 !important;
+}
+
+#WithBorderNew {
+    border: 1px solid #000;
+    border-collapse: collapse;
+    width: 100%;
+}
+#WithBorderNew td {
+    border: 1px solid #000;
+    padding: 5px;
+    font-size: 13px;
+    vertical-align: middle;
+}
+#WithBorderNew .tbl_color {
+    background: #f1f1f1;
+    font-weight: bold;
+    text-align: center;
+}
+#WithBorderNew .imgClass {
+    max-height: 40px;
+    max-width: 120px;
 }
 
     </style>

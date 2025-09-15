@@ -65,6 +65,12 @@ Route::post('ResetPasswordstore', [App\Http\Controllers\ForgotPasswordController
 Route::get('quotationApproval/{qId}/{vId}', [App\Http\Controllers\SendToClientController::class,'quotationApproval'])->name('quotationApproval');
 Route::post('quotaionAccept', [App\Http\Controllers\SendToClientController::class,'quotaionAccept'])->name('quotaionAccept');
 Route::post('quotaionReject', [App\Http\Controllers\SendToClientController::class,'quotaionReject'])->name('quotaionReject');
+Route::get('quotationSignature/{qId}/{vId}/{cId}', [App\Http\Controllers\SendToClientController::class,'quotationSignature'])->name('quotationSignature');
+Route::post('/quotationSignature/submit',
+    [App\Http\Controllers\PrintInvoiceController::class, 'submitSignature']
+)->withoutMiddleware(['auth'])
+ ->name('signaturesubmit');
+Route::get('printinvoiceclient/{v}/{qid}/{isActive?}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceclient'])->name('printinvoiceclient');
 
 Route::middleware('auth:web')->group(function(): void{
 
@@ -446,7 +452,6 @@ Route::prefix('quotation')->group(function (): void {
 
     // Send To Client
     Route::post('/sendToClientUrl',[App\Http\Controllers\SendToClientController::class,'sendToClientUrl'])->name('sendToClientUrl');
-
     // showAccousticdata in Modal
     Route::post('/showAccoustic', [App\Http\Controllers\DoorScheduleController::class,'showAccoustic'])->name('showAccoustic');
     Route::post('/doorStandardPrice', [App\Http\Controllers\DoorScheduleController::class,'doorStandardPrice'])->name('doorStandardPrice');

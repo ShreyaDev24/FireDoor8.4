@@ -1430,6 +1430,162 @@ function IronmongerySetData($IronmongeryID): string{
     return $table;
 }
 
+function IronmongerySetDataClient($IronmongeryID,$userid): string{
+    $IronmongeryInfo = AddIronmongery::select('*')->where('id', $IronmongeryID)->where('UserId',$userid)->get()->first();
+
+    $IronmongeryInfoSet = [
+        'Hinges',
+        'FloorSpring',
+        'LocksAndLatches',
+        'FlushBolts',
+        'ConcealedOverheadCloser',
+        'PullHandles',
+        'PushHandles',
+        'KickPlates',
+        'DoorSelectors',
+        'PanicHardware',
+        'Doorsecurityviewer',
+        'Morticeddropdownseals',
+        'Facefixeddropseals',
+        'ThresholdSeal',
+        'AirTransferGrill',
+        'Letterplates',
+        'CableWays',
+        'SafeHinge',
+        'LeverHandle',
+        'DoorSinage',
+        'FaceFixedDoorCloser',
+        'Thumbturn',
+        'KeyholeEscutchen',
+        'DoorStops',
+        'Cylinders'
+    ];
+    $IronmongeryInfoName = [
+        'Hinges',
+        'Floor Spring',
+        'Locks And Latches',
+        'Flush Bolts',
+        'Concealed Overhead Closer',
+        'Pull Handles',
+        'Push Handles',
+        'Kick Plates',
+        'Door Selectors',
+        'Panic Hardware',
+        'Door security viewer',
+        'Morticed drop down seals',
+        'Face fixed drop seals',
+        'Threshold Seal',
+        'Air Transfer Grill',
+        'Letter plates',
+        'Cable Ways',
+        'Safe Hinge',
+        'Lever Handle',
+        'Door Sinage',
+        'Face Fixed Door Closer',
+        'Thumbturn',
+        'Keyhole Escutchen',
+        'Door Stops',
+        'Cylinders'
+    ];
+
+    $IronmongeryInfoSetQut = [
+        'hingesQty',
+        'floorSpringQty',
+        'lockesAndLatchesQty',
+        'flushBoltsQty',
+        'concealedOverheadCloserQty',
+        'pullHandlesQty',
+        'pushHandlesQty',
+        'kickPlatesQty',
+        'doorSelectorsQty',
+        'panicHardwareQty',
+        'doorSecurityViewerQty',
+        'morticeddropdownsealsQty',
+        'facefixeddropsealsQty',
+        'thresholdSealQty',
+        'airtransfergrillsQty',
+        'letterplatesQty',
+        'cableWaysQty',
+        'safeHingeQty',
+        'leverHandleQty',
+        'doorSignageQty',
+        'faceFixedDoorClosersQty',
+        'thumbturnQty',
+        'keyholeEscutcheonQty',
+        'DoorStopsQty',
+        'CylindersQty',
+
+    ];
+
+
+    $table = ' <tr class="d-flex">
+                    <td colspan="6" style="text-align:center;"><b>'.$IronmongeryInfo->Setname.'</b></td>
+                </tr>
+                <tr class="d-flex">
+                <td style="text-align:center; width:5%"><b>#</b></td>
+                <td style="text-align:center; width:10%"><b>Image</b></td>
+                <td style="text-align:center; width:10%"><b>Category</b></td>
+                <td style="text-align:center; width:30%"><b>Code/Name</b></td>
+                <td style="text-align:center; width:40%"><b>Description</b></td>
+                <td style="text-align:center; width:5%"><b>Qty</b></td>
+            </tr>';
+    $Counter = 1;
+    for($i = 0; $i <= 24; $i++){
+
+        $valIronmongey = $IronmongeryInfoSet[$i];
+        $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
+        $valIronmongeryInfoName = $IronmongeryInfoName[$i];
+
+        if(!empty($IronmongeryInfo->$valIronmongey)){
+
+            $Ironmongey = explode(',',(string) $IronmongeryInfo->$valIronmongey);
+            $IronmongeyQty = explode(',',(string) $IronmongeryInfo->$valIronmongeyQty);
+            $count = count($Ironmongey);
+
+            for($j = 0; $j < $count; $j++){
+
+                $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',$userid)->first();
+
+                if(!empty($SelectedIronmongery)){
+                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                    $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
+
+                    $QtyPerDoorType = intval($IronmongeyQty[$j]);
+                    if(!empty($IronmongeryInfoModel))
+                    {
+
+                        $file = $IronmongeryInfoModel->Image;
+                        $base64 = '';
+                        if(!empty($file)){
+                            try {
+                                $filepath = public_path('uploads/IronmongeryInfo/'.$IronmongeryInfoModel->Image);
+                                $type = pathinfo($filepath, PATHINFO_EXTENSION); // Corrected variable name
+                                $filedata = file_get_contents($filepath);
+                                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
+                            } catch (\Exception $e) { // Added exception type
+                                // Handle the exception or log the error message
+                                \Log::error("Error encoding image to base64: " . $e->getMessage());
+                            }
+                        }
+
+                       $table.= '<tr class="d-flex">
+                                    <td style="text-align:center;width:5%">'.$Counter++.'</td>
+                                    <td style="text-align:center;width:10%"><img class="imgClass" alt="Logo" src="'.$base64 .'"></td>
+                                    <td style="text-align:center;width:10%">'.$valIronmongeryInfoName.'</td>
+                                    <td style="text-align:center;width:30%">'.$name.'</td>
+                                    <td style="text-align:center;width:40%">'.$IronmongeryInfoModel->Description.'</td>
+                                    <td style="text-align:center;width:5%">' . $QtyPerDoorType . '</td>
+                                </tr>';
+                    }
+                }
+            }
+        }
+    }
+
+    // dd($table);
+    return $table;
+}
+
 function CurrencyBeautify($cur=''): string{
     $currency = '';
     if ($cur == '£_GBP') {
@@ -4820,6 +4976,22 @@ function CompanyUsers($isstatus = false){
     return $UserId;
 }
 
+function CompanyUsersClient($isstatus = false,$userid){
+    $users = User::where('UserType',3)->where('id',$userid)->first();
+    if($users){
+        if($isstatus == true){
+            $UserId = [$userid];
+        }
+    } else{
+        $users = User::where('UserType','!=',3)->where('id',$userid)->first();
+        if($users){
+            $UserId = ['1', $userid];
+        } else {
+            $UserId = ['1'];
+        }
+    }
+    return $UserId;
+}
 function user_id(){
     $user_id = Auth::user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
 
