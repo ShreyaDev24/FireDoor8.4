@@ -31,21 +31,22 @@ function floor_finish_change(){
 
     let foursidedframe = document.getElementById("foursidedframe");
 
-    if (foursidedframe.checked) {
-        $("#frameType option[value='Scalloped']").prop("disabled", true);
-        $("#undercut,#floorFinish").val(0).prop("readonly", true);
-    }else{
-     // Enable the option
-        $("#frameType option[value='Scalloped']").prop("disabled", false);
+    if(foursidedframe.checked){
+        if (foursidedframe.checked) {
+            $("#frameType option[value='Scalloped']").prop("disabled", true);
+            $("#undercut,#floorFinish").val(0).prop("readonly", true);
+        }else{
+        // Enable the option
+            $("#frameType option[value='Scalloped']").prop("disabled", false);
 
-        // Refresh Select2 UI
-        $("#frameType").trigger("change");
+            // Refresh Select2 UI
+            $("#frameType").trigger("change");
 
-        // Enable the input field
-        $("#floorFinish").prop("readonly", false);
-
-
+            // Enable the input field
+            $("#floorFinish").prop("readonly", false);
+        }
     }
+
     swingTypeFrameType();
     let elements = $(this);
     render(elements);
@@ -68,7 +69,10 @@ function swingTypeFrameType(){
         // Refresh Select2 UI
         $("#frameType").trigger("change");
     }else if($("#swingType").val() == 'SA'){
-        let frameType = $("#frameType").val() || $("#frametypevalue").val();
+        let frameType = $("#frameType").val();
+        if (frameType === null || frameType === "") {
+            frameType = $("#frametypevalue").val();
+        }
         $("select[name=frameType]").val(frameType).trigger("change");
         $("#frameType option[value='Plant_on_Stop']").prop("disabled", false);
         $("#frameType option[value='Rebated_Frame']").prop("disabled", false);
