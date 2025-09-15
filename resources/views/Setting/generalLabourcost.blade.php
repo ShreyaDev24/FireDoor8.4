@@ -82,7 +82,7 @@
                                     <input type='checkbox' class='check-btn'  id='DoorLeafFacingVaneer' name='DoorLeafFacingVaneer' @if(!empty($set->DoorLeafFacingVaneer) && $set->DoorLeafFacingVaneer== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Facing Vaneer</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Door Leaf Facing Veneer</span></h5>
                                         </div>
                                         <input type="hidden" class="DoorLeafFacingVaneer" name="type[]" value="DoorLeafFacingVaneer">
                                         <div class="col-md-6">
@@ -1444,7 +1444,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLight' name='SideLight' @if(!empty($set->SideLight) && $set->SideLight== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light Assembley</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 1 Assembly</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLight" name="type[]" value="SideLight">
                                         <div class="col-md-6">
@@ -1487,7 +1487,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLight2' name='SideLight2' @if(!empty($set->SideLight2) && $set->SideLight2== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 2 Assembley</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light 2 Assembly</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLight2" name="type[]" value="SideLight2">
                                         <div class="col-md-6">
@@ -1531,7 +1531,7 @@
                                     <input type='checkbox' class='check-btn'  id='SideLightGlazing' name='SideLightGlazing' @if(!empty($set->SideLightGlazing) && $set->SideLightGlazing== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side Light Glazing</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Side light 1 Glazing</span></h5>
                                         </div>
                                         <input type="hidden" class="SideLightGlazing" name="type[]" value="SideLightGlazing">
                                         <div class="col-md-6">
@@ -2955,7 +2955,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-6">
+                            {{--  <div class="col-md-6">
                                 <div class="field-name">
                                     <input type='checkbox' class='check-btn'  id='SprayFinishOf' name='SprayFinishOf' @if(!empty($set->SprayFinishOf) && $set->SprayFinishOf== 1){{ 'checked' }}@endif>
                                     <div class="row">
@@ -2996,7 +2996,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>  --}}
 
                             <div class="col-md-6">
                                 <div class="field-name">
@@ -3311,7 +3311,7 @@
     });
 
     $('#check_all').click(function() {
-        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembley','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep', 'LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead', 'SprayFinishOf','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
+        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembley','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep', 'LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead', 'SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
         for(i = 0; i < checkId.length; i++){
             if ($(this).is(':checked')) {
                 $('#' + checkId[i]).prop('checked', true);
@@ -3333,7 +3333,7 @@
     });
 
     function checked(){
-        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOf','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
+        var checkId = ['DoorLeafFacingVaneer', 'DoorLeafFacingKraftPaper', 'DoorLeafFacingLaminate', 'DoorLeafFacingPVC', 'DoorLeafFinishPrimed','DoorLeafFinishPainted','DoorLeafFinishLacquered','FrameFinishPrimed','FrameFinishPainted','FrameFinishLacqured','ExtLiner', 'ExtLinerandFrameFinish', 'ExtLinerandFrameFinishPainted', 'ExtLinerandFrameFinishLacqured', 'VisionPanel2','DoorLeafFinishPrimed2','DoorLeafFinishPainted2','DoorLeafFinishLacquered2','VisionPanel','VisionPanelandFireRatingFD30','VisionPanelandFireRatingFD60', 'VisionPanelandFireRating2FD30', 'VisionPanelandFireRating2FD60', 'DecorativeGroves','DecorativeGrovesLeaf2', 'DoorsetTypeSD','DoorsetTypeSD2','DoorsetTypeDD','DoorsetTypeDD2','OverpanelFanlight','OverpanelFanlightGlazing','SideLight','SideLight2', 'SideLightGlazing','SideLight2Glazing', 'MachiningOfDoorFrame', 'FittingOfIntumescentToFrame','FittingOfIntumescentToFrameFD60', 'HingeAssembley','HingeAssembleyLeafandHalfDD','LocksetAssembley','PlotLabelDoorsets','FrameAssembley','PalletPackaging','DoorLeafProtectionPlasticSleeve','DoorLeafProtectionPlasticSleeveFD60','LeafSizing','LeafLiping','LeafCalibration','PaintPrep','LabourProcessForScallopedFrame', 'LabourAssemblyFor4SidedFrame','MachiningOfScreenframe','MachiningOfGlazingBead','MachiningOfTransom','MachiningOfSubFrame','CuttingOfScreenframe','CuttingOfGlazingBead','CuttingOfTransom','CuttingOfSubFrame','ScreenAssembley','TransomAssembley','SubFrameAssembley','FittingOfGlass','FittingOfGlazingSystem','FittingOfGlazingBead','SprayFinishOfScreenframe','SprayFinishGlazingBead','SprayFinishOfTransom','SprayFinishOfSubFrame','PallettingPackaging','LoadingOfLorry','labour_cost_per_man[]','labour_cost_per_machine[]','type[]'];
         for(i = 0; i < checkId.length; i++){
             if($('#' + checkId[i]).is(":checked")){
                 $('#' + checkId[i]).val('1');
