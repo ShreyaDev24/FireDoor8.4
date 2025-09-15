@@ -75,7 +75,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             if($value->FireRating == '60-60' || $value->FireRating == '60-0'){
                 $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
-                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
+                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassHeightFD60;
             }else{
                 $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthNFR;
                 $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassHeightNFR;
