@@ -9778,16 +9778,30 @@ class DoorScheduleController extends Controller
     }
 
     public function ExportScreenBomCalculation($quotationId,$versionID){
-        $quotation = Quotation::where('quotation.id',$quotationId)->first();
         $vid = ['selectVersionID'=>0,'selectVersion'=>0];
         if($vid > 0){
             $QV = QuotationVersion::where('id',$versionID)->first();
             $vid = $QV->version;
         }
 
-        return Excel::download(new BomCalculationScreenExport($quotationId,$versionID), "Screen BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        ]);
+        // $vid means version number(1,2,3,4 etc) and $version means version id or number
+        $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$quotationId)->first();
+
+        $bomVersion = ScreenBOMCalculation::where('QuotationId',$quotationId)->get()->first();
+        if ($vid == 0 || !isset($bomVersion->VersionId) || $bomVersion->VersionId == 0) {
+            $data = ScreenBOMCalculation::join('side_screen_item_master','side_screen_item_master.ScreenID','screen_bom_calculations.ScreenID')->where('screen_bom_calculations.QuotationId',$quotationId)->whereNotNull('screen_bom_calculations.ScreenID')->select('screen_bom_calculations.*')->distinct('side_screenitem_master.ScreenID')->get();
+        }else{
+            $data = ScreenBOMCalculation::join('side_screen_item_master','side_screen_item_master.ScreenID','screen_bom_calculations.ScreenID')->where('screen_bom_calculations.QuotationId',$quotationId)->where('screen_bom_calculations.VersionId',$vid)->whereNotNull('screen_bom_calculations.ScreenID')->select('screen_bom_calculations.*')->distinct('side_screen_item_master.ScreenID')->get();
+        }
+
+
+        if ($data->isEmpty()) {
+            return redirect()->back()->withErrors(['Please add screen type first']);
+        }else{
+            return Excel::download(new BomCalculationScreenExport($quotationId,$versionID), "Screen BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+                [
+                    'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+        }
     }
 }
