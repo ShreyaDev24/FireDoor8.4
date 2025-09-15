@@ -2712,7 +2712,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
                 $frameWidth = is_numeric($tt->FrameWidth) ? $tt->FrameWidth : 0;
                 $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
-                $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+                $SideLight1Width = is_numeric($tt->SL1Width) ? $tt->SL1Width : 0;
+                $SideLight2Width = is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
+                // old formula before 15-09-2025
+                // $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+                //new formula after 15-09-2025
+                $OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width;
             }
 
             $elevTbl .= '</table>
@@ -2953,18 +2958,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">Overpanel/Fanlight Section</th>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glass Type</td>
-                                    <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glazing Beads</td>
-                                    <td class="dicription_blank">' . $OPGlazingBeads . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glazing Bead Species</td>
-                                    <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
                                 </tr>';
                                 if($tt->Overpanel == 'Overpanel'){
                                 $elevTbl .= '
@@ -2978,6 +2971,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>';
                                 } else if($tt->Overpanel == 'Fan_Light'){
                                 $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glass Type</td>
+                                    <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glazing Beads</td>
+                                    <td class="dicription_blank">' . $OPGlazingBeads . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glazing Bead Species</td>
+                                    <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
+                                </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Width</td>
                                     <td class="dicription_blank">' . $OPFLWeidth . '</td>
