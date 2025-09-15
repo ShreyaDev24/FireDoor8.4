@@ -766,8 +766,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // Green border for SCREEN INFO title
                     if ($val === 'SCREEN INFO') {
-                        $sheet->mergeCells("A{$i}:K{$i}");
-                        $sheet->getStyle("A{$i}:K{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:U{$i}");
+                        $sheet->getStyle("A{$i}:U{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // Red border for headings (Door Section and Screen Section)
