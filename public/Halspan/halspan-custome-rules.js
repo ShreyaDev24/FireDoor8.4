@@ -3288,8 +3288,10 @@ $(document).ready(function() {
                                 $("#sideLight2GlazingSystemsThickness").val(data.GlazingThickness);
                                 $('#sideLight2GlazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
                             }else{
-                                $("#glazingSystemsThickness").val(data.GlazingThickness);
-                                $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                setTimeout(function(){
+                                   $("#glazingSystemsThickness").val(data.GlazingThickness);
+                                   $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                }, 4000);
                             }
 
                         } else {
