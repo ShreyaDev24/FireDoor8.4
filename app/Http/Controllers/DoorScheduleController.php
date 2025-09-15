@@ -8891,12 +8891,13 @@ class DoorScheduleController extends Controller
     public function favoriteItemShow(Request $request)
     {
         $id = $request->id;
-        if(!empty($id)){
+        if(!empty($id) && !empty($request->favorite_type)){
             $UserIds = CompanyMultiUsers();
             $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
             ->join('favorite','favorite.id','favorite_item.favorite_id')
             ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
             ->where('favorite_item.favorite_id',$id)
+            ->where('favorite_item.favorite_type',$request->favorite_type)
             ->wherein('favorite_item.userId', $UserIds)->get();
 
            $html = '';
@@ -8906,7 +8907,7 @@ class DoorScheduleController extends Controller
                 $html .= '<thead>';
                 $html .= '<tr>';
                 $html .= '<th>Favourite Name</th>';
-                $html .= '<th>Door Type</th>';
+                $html .= '<th>'.$request->favorite_type.' Type</th>';
                 $html .= '<th>Assign</th>';
                 $html .= '</tr>';
                 $html .= '</thead>';
@@ -8918,7 +8919,7 @@ class DoorScheduleController extends Controller
                     $html .= '<td>' . $value->DoorType . '</td>';
 
                     $html .= '<td>';
-                    $html .= '<button onclick="favoriteItemAdd(\'' . $value->itemId . '\', \'' . $value->itemMasterId . '\', \'' . $value->quotationId . '\', \'' . $value->versionId . '\')" class="btn btn-success">Assign</button>';
+                    $html .= '<button onclick="favoriteItemAdd(\'' . $value->itemId . '\', \'' . $value->itemMasterId . '\', \'' . $value->quotationId . '\', \'' . $value->versionId . '\', \'' . $value->favorite_type . '\')" class="btn btn-success">Assign</button>';
                     $html .= '</td>';
 
                     $html .= '</tr>';
@@ -8955,12 +8956,14 @@ class DoorScheduleController extends Controller
         }
 
         // echo $request->itemId;die;
-        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId) && !empty($request->favName)) {
-            $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('userId', Auth::user()->id)->get()->first();
+        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId) && !empty($request->favName) && !empty($request->favType)) {
+            $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('favorite_type', $request->favType)->where('userId', Auth::user()->id)->get()->first();
+
             if (empty($Favorite)) {
                 $FavoriteItem = new FavoriteItem();
                 $FavoriteItem->itemId = $request->itemId;
                 $FavoriteItem->favorite_id = $request->favName;
+                $FavoriteItem->favorite_type = $request->favType;
                 $FavoriteItem->itemMasterId = $request->itemMasterId;
                 $FavoriteItem->quotationId = $request->quotationId;
                 $FavoriteItem->versionId = $request->versionId;
@@ -9042,60 +9045,30 @@ class DoorScheduleController extends Controller
     public function favoriteItemAdd(Request $request)
     {
 
-        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId)) {
+        if (!empty($request->itemId) && !empty($request->itemMasterId) && !empty($request->quotationId) && !empty($request->favorite_type)) {
+            $favorite_type = $request->favorite_type;
+            if($favorite_type == 'Door'){
+                if ($request->quotationId != $request->qId && ($request->versionId != $request->vId || ($request->versionId == 0 && $request->vId == 0))) {
 
-            if ($request->quotationId != $request->qId && ($request->versionId != $request->vId || ($request->versionId == 0 && $request->vId == 0))) {
+                    $version_id = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
+                    $old_version_id = QuotationVersion::where('quotation_id', $request->quotationId)->where('id', $request->versionId)->value('version');
+                    if (empty($version_id)) {
+                        $version_id = 1;
+                    }
 
-                $version_id = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
-                $old_version_id = QuotationVersion::where('quotation_id', $request->quotationId)->where('id', $request->versionId)->value('version');
-                if (empty($version_id)) {
-                    $version_id = 1;
-                }
-
-                //JFDS 1042 START
-                $currentquotation = Quotation::where('id', $request->qId)->first();
-                $favquotation = Quotation::where('id', $request->quotationId)->first();
-                $configurableitems = configurationDoor($favquotation->configurableitems);
-                $current = configurationDoor($currentquotation->configurableitems);
-                if (
-                    !is_null($currentquotation->configurableitems) &&
-                    !is_null($favquotation->configurableitems) &&
-                    $currentquotation->configurableitems !== $favquotation->configurableitems
-                ) {
-                    $response = [
-                        'status' => false,
-                        'msg' => 'The selected Favourite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
-                    ];
-                    return response()->json(
-                        $response,
-                        200,
-                        ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-                        JSON_UNESCAPED_UNICODE
-                    );
-                }
-                // JFDS 1042 END
-
-                if (empty($request->versionId)) {
-                    $request->versionId = 0;
-                }
-
-                $userId = CompanyMultiUsers();
-                $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->wherein('userId', $userId)->get()->first();
-                if (!empty($Favorite)) {
-                    $item = Item::where('itemId', $Favorite->itemId)->get()->first();
-                    $itemMaster = ItemMaster::where('id', $Favorite->itemMasterId)->get()->first();
-                    $version_ids = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
-                    $itemListValidate = Item::where(['items.QuotationId' => $request->qId, 'items.DoorType' => $item->DoorType, 'items.VersionId' => $request->vId])->count();
-                    // if(empty($version_ids)){
-                    //     $itemListValidate = Item::join('item_master','item_master.itemID','items.itemId')->where(['items.QuotationId' => $request->qId, 'items.DoorType' => $item->DoorType,'item_master.doorNumber' => $itemMaster->doorNumber])->count();
-                    // }else{
-                    //     $itemListValidate = Item::join('quotation_version_items','quotation_version_items.itemID','items.itemId')->join('item_master','item_master.itemID','items.itemId')->where(['items.QuotationId' => $request->qId, 'items.DoorType' => $item->DoorType,'item_master.doorNumber' => $itemMaster->doorNumber, 'quotation_version_items.version_id'=>$request->vId])->count();
-                    // }
-                    if ($itemListValidate > 0) {
+                    //JFDS 1042 START
+                    $currentquotation = Quotation::where('id', $request->qId)->first();
+                    $favquotation = Quotation::where('id', $request->quotationId)->first();
+                    $configurableitems = configurationDoor($favquotation->configurableitems);
+                    $current = configurationDoor($currentquotation->configurableitems);
+                    if (
+                        !is_null($currentquotation->configurableitems) &&
+                        !is_null($favquotation->configurableitems) &&
+                        $currentquotation->configurableitems !== $favquotation->configurableitems
+                    ) {
                         $response = [
                             'status' => false,
-                            'msg' => 'Door Type ' . $item->DoorType . ' is already exist for these quotation.'
-                            // 'msg'=> 'Door Type '.$item->DoorType.' and Door number '.$itemMaster->doorNumber.' is already exist for these quotation.
+                            'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
                         ];
                         return response()->json(
                             $response,
@@ -9103,85 +9076,140 @@ class DoorScheduleController extends Controller
                             ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
                             JSON_UNESCAPED_UNICODE
                         );
-                    } else {
+                    }
+                    // JFDS 1042 END
+
+                    if (empty($request->versionId)) {
+                        $request->versionId = 0;
+                    }
+
+                    $userId = CompanyMultiUsers();
+                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('favorite_type', $favorite_type)->wherein('userId', $userId)->get()->first();
+                    if (!empty($Favorite)) {
                         $item = Item::where('itemId', $Favorite->itemId)->get()->first();
-                        if (!empty($item)) {
-                            $NewItemInformation = $item->replicate();
-                            $NewItemInformation->itemId = Item::max('itemId') + 1;
-                            $NewItemInformation->QuotationId = $request->qId;
-                            $NewItemInformation->VersionId = $request->vId;
-                            $NewItemInformation->save();
-
-                            // $OldItemMasterInformation = ItemMaster::find($Favorite->itemMasterId);
-                            // if($OldItemMasterInformation != null){
-                            //     $NewItemMasterInformation = $OldItemMasterInformation->replicate();
-                            //     $NewItemMasterInformation->id = ItemMaster::max('id') + 1;
-                            //     $NewItemMasterInformation->itemID = $NewItemInformation->itemId;
-                            //     $NewItemMasterInformation->save();
-
-
-                            //     if($request->vId == 0){
-                            //         $request->vId = 1;
-                            //     }else{
-                            //         $QV = new QuotationVersionItems();
-                            //         $QV->version_id = $request->vId;
-                            //         $QV->itemID = $NewItemInformation->itemId;
-                            //         $QV->itemmasterID = $NewItemMasterInformation->id;
-                            //         $QV->save();
-                            //     }
-
-                            //$qId and $vId is current quotation Ids
-                            // $BOMCalculation = BOMCalculation::where('QuotationId', $request->quotationId)->where('VersionId', $old_version_id)->where('itemId', $request->itemId)->get();
-                            // if (!empty($BOMCalculation)) {
-                            //     foreach ($BOMCalculation as $value) {
-                            //         $BOM = $value->replicate();
-                            //         $BOM->id = BOMCalculation::max('id') + 1;
-                            //         $BOM->QuotationId = $request->qId;
-                            //         $BOM->VersionId = $version_id;
-                            //         $BOM->itemId = $NewItemInformation->itemId;
-                            //         $BOM->save();
-                            //     }
-                            //     // BOMQuatityOfDoorUpdate($NewItemInformation->itemId, $request->qId);
-                            //     $data = Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->itemId])->first();
-
-                            //     $quotation = Quotation::where('id',$request->quotationId)->first();
-
-                            //     BOMUpdate($data, $quotation->configurableitems);
-                            // }
-
-                            //adding configurableitems like streboard etc to quotation table
-                            $quotationConfigurableitems = Quotation::where('id', $request->quotationId)->first();
-                            $quotation = Quotation::where('id', $request->qId)->first();
-                            if (!empty($quotation)) {
-                                $quotation->configurableitems = $quotationConfigurableitems->configurableitems;
-                                $quotation->save();
-                            }
-
-                            // }
-                            $response = [
-                                'status' => true,
-                                'QuotationId' => $request->qId,
-                                'VersionId' => $request->vId,
-                                'msg' => 'Door added successfully!'
-                            ];
-                        } else {
+                        $itemMaster = ItemMaster::where('id', $Favorite->itemMasterId)->get()->first();
+                        $version_ids = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
+                        $itemListValidate = Item::where(['items.QuotationId' => $request->qId, 'items.DoorType' => $item->DoorType, 'items.VersionId' => $request->vId])->count();
+                        if ($itemListValidate > 0) {
                             $response = [
                                 'status' => false,
-                                'msg' => 'something went wrong!'
+                                'msg' => 'Door Type ' . $item->DoorType . ' is already exist for these quotation.'
+                                // 'msg'=> 'Door Type '.$item->DoorType.' and Door number '.$itemMaster->doorNumber.' is already exist for these quotation.
                             ];
+                            return response()->json(
+                                $response,
+                                200,
+                                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                                JSON_UNESCAPED_UNICODE
+                            );
+                        } else {
+                            $item = Item::where('itemId', $Favorite->itemId)->get()->first();
+                            if (!empty($item)) {
+                                $NewItemInformation = $item->replicate();
+                                $NewItemInformation->itemId = Item::max('itemId') + 1;
+                                $NewItemInformation->QuotationId = $request->qId;
+                                $NewItemInformation->VersionId = $request->vId;
+                                $NewItemInformation->save();
+
+                                //adding configurableitems like streboard etc to quotation table
+                                $quotationConfigurableitems = Quotation::where('id', $request->quotationId)->first();
+                                $quotation = Quotation::where('id', $request->qId)->first();
+                                if (!empty($quotation)) {
+                                    $quotation->configurableitems = $quotationConfigurableitems->configurableitems;
+                                    $quotation->save();
+                                }
+
+                                // }
+                                $response = [
+                                    'status' => true,
+                                    'QuotationId' => $request->qId,
+                                    'VersionId' => $request->vId,
+                                    'msg' => 'Door added successfully!'
+                                ];
+                            } else {
+                                $response = [
+                                    'status' => false,
+                                    'msg' => 'something went wrong!'
+                                ];
+                            }
                         }
+                    } else {
+                        $response = [
+                            'status' => false,
+                            'msg' => 'Data not found!'
+                        ];
                     }
                 } else {
                     $response = [
                         'status' => false,
-                        'msg' => 'Data not found!'
+                        'msg' => 'Door already added!'
                     ];
                 }
-            } else {
-                $response = [
-                    'status' => false,
-                    'msg' => 'Door already added!'
-                ];
+            }else if($favorite_type == 'Screen'){
+                if ($request->quotationId != $request->qId && ($request->versionId != $request->vId || ($request->versionId == 0 && $request->vId == 0))) {
+                    $version_id = QuotationVersion::where('quotation_id', $request->qId)->where('id', $request->vId)->value('version');
+                    $old_version_id = QuotationVersion::where('quotation_id', $request->quotationId)->where('id', $request->versionId)->value('version');
+                    if (empty($version_id)) {
+                        $version_id = 1;
+                    }
+                    // JFDS 1042 END
+
+                    if (empty($request->versionId)) {
+                        $request->versionId = 0;
+                    }
+
+                    $userId = CompanyMultiUsers();
+                    $Favorite = FavoriteItem::where('itemId', $request->itemId)->where('itemMasterId', $request->itemMasterId)->where('quotationId', $request->quotationId)->where('versionId', $request->versionId)->where('favorite_type', $favorite_type)->wherein('userId', $userId)->get()->first();
+                    if (!empty($Favorite)) {
+                        $SideScreenItem = SideScreenItem::where('id', $Favorite->itemId)->get()->first();
+                        $itemListValidate = SideScreenItem::where(['side_screen_items.QuotationId' => $request->qId, 'side_screen_items.ScreenType' => $SideScreenItem->ScreenType, 'side_screen_items.VersionId' => $request->vId])->count();
+                        if ($itemListValidate > 0) {
+                            $response = [
+                                'status' => false,
+                                'msg' => 'Screen Type ' . $SideScreenItem->ScreenType . ' is already exist for these quotation.'
+                                // 'msg'=> 'Door Type '.$item->DoorType.' and Door number '.$itemMaster->doorNumber.' is already exist for these quotation.
+                            ];
+                            return response()->json(
+                                $response,
+                                200,
+                                ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                                JSON_UNESCAPED_UNICODE
+                            );
+                        } else {
+                            $SideScreenItem = SideScreenItem::where('id', $Favorite->itemId)->get()->first();
+                            if (!empty($SideScreenItem)) {
+                                $NewItemInformation = $SideScreenItem->replicate();
+                                $NewItemInformation->id = SideScreenItem::max('id') + 1;
+                                $NewItemInformation->QuotationId = $request->qId;
+                                $NewItemInformation->VersionId = $request->vId;
+                                $NewItemInformation->save();
+
+                                // }
+                                $response = [
+                                    'status' => true,
+                                    'QuotationId' => $request->qId,
+                                    'VersionId' => $request->vId,
+                                    'msg' => 'Screens added successfully!'
+                                ];
+                            } else {
+                                $response = [
+                                    'status' => false,
+                                    'msg' => 'something went wrong!'
+                                ];
+                            }
+                        }
+                    } else {
+                        $response = [
+                            'status' => false,
+                            'msg' => 'Data not found!'
+                        ];
+                    }
+                } else {
+                    $response = [
+                        'status' => false,
+                        'msg' => 'Screen already added!'
+                    ];
+                }
             }
         } else {
             $response = [

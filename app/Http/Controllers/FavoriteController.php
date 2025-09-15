@@ -45,6 +45,7 @@ class FavoriteController extends Controller
     public function show(Favorite $favorite)
     {
         $html = '';
+        $htmlScreen = '';
 
         $UserIds = CompanyMultiUsers();
         $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
@@ -58,6 +59,7 @@ class FavoriteController extends Controller
             $html .= '<thead>';
             $html .= '<tr>';
             $html .= '<th>Favourite Type</th>';
+            $html .= '<th>Favorite Name</th>';
             $html .= '<th>Door Type</th>';
             $html .= '<th>Edit</th>';
             $html .= '<th>Delete</th>';
@@ -66,19 +68,22 @@ class FavoriteController extends Controller
             $html .= '<tbody>';
 
             foreach ($Favorite as $value) {
-                $html .= '<tr>';
-                $html .= '<td>' . $value->name . '</td>';
-                $html .= '<td>' . $value->DoorType . '</td>';
+                if($value->favorite_type == 'Door'){
+                    $html .= '<tr>';
+                    $html .= '<td>' . $value->favorite_type . '</td>';
+                    $html .= '<td>' . $value->name . '</td>';
+                    $html .= '<td>' . $value->DoorType . '</td>';
 
-                $html .= '<td>';
-                $html .= '<a href="' . ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) . '" class="btn btn-info">Edit</a>';
-                $html .= '</td>';
+                    $html .= '<td>';
+                    $html .= '<a href="' . ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) . '" class="btn btn-info">Door Edit</a>';
+                    $html .= '</td>';
 
-                $html .= '<td>';
-                $html .= '<button onclick="favoriteDeleteItem(\'' . $value->id . '\')" class="btn btn-danger">Delete</button>';
-                $html .= '</td>';
+                    $html .= '<td>';
+                    $html .= '<button onclick="favoriteDeleteItem(\'' . $value->id . '\')" class="btn btn-danger">Delete</button>';
+                    $html .= '</td>';
 
-                $html .= '</tr>';
+                    $html .= '</tr>';
+                }
             }
 
             $html .= '</tbody>';
@@ -87,7 +92,45 @@ class FavoriteController extends Controller
             $html .= '<p>Data not found!</p>';
         }
 
-        return view('favorites.show', compact('favorite','html'));
+        if (!empty($Favorite) && $Favorite != '') {
+            $htmlScreen .= '<table class="table table-bordered">';
+            $htmlScreen .= '<thead>';
+            $htmlScreen .= '<tr>';
+            $htmlScreen .= '<th>Favorite Type</th>';
+            $htmlScreen .= '<th>Favorite Name</th>';
+            $htmlScreen .= '<th>Screen Type</th>';
+            $htmlScreen .= '<th>Edit</th>';
+            $htmlScreen .= '<th>Delete</th>';
+            $htmlScreen .= '</tr>';
+            $htmlScreen .= '</thead>';
+            $htmlScreen .= '<tbody>';
+
+            foreach ($Favorite as $value) {
+                if($value->favorite_type == 'Screen'){
+                    $htmlScreen .= '<tr>';
+                    $htmlScreen .= '<td>' . $value->favorite_type . '</td>';
+                    $htmlScreen .= '<td>' . $value->name . '</td>';
+                    $htmlScreen .= '<td>' . $value->DoorType . '</td>';
+
+                    $htmlScreen .= '<td>';
+                    $htmlScreen .= '<a href="' . url('quotation/edit-side-screen-item/'.$value->itemId.'/'.$value->versionId) . '" class="btn btn-info">Screen Edit</a>';
+                    $htmlScreen .= '</td>';
+
+                    $htmlScreen .= '<td>';
+                    $htmlScreen .= '<button onclick="favoriteDeleteItem(\'' . $value->id . '\')" class="btn btn-danger">Delete</button>';
+                    $htmlScreen .= '</td>';
+
+                    $htmlScreen .= '</tr>';
+                }
+            }
+
+            $htmlScreen .= '</tbody>';
+            $htmlScreen .= '</table>';
+        } else {
+            $htmlScreen .= '<p>Data not found!</p>';
+        }
+
+        return view('favorites.show', compact('favorite','html','htmlScreen'));
     }
 
     public function edit(Favorite $favorite)

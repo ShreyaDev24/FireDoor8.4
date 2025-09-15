@@ -212,32 +212,82 @@
 
                             <div class="main-card mb-3" id="favorite-section" style="display: none;">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped">
-                                        <thead class="table-header-bg">
-                                            <tr class="text-white">
-                                                <th>Sr No</th>
-                                                <th>Name</th>
-                                                <th>Created At</th>
-                                                <th class="text-center">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="versionData">
-                                            @if (!empty($favorites) && count($favorites) > 0)
-                                                <?php
-                                                $SI = 1; ?>
-                                                @foreach ($favorites as $fav)
-                                                    <tr>
-                                                        <td>{{ $SI++ }}</td>
-                                                        <td>{{ $fav->name }}</td>
-                                                        <td>{{ $fav->created_at->format('d M Y') }}</td>
-                                                        <td class="text-center">
-                                                            <button class="btn btn-success" onClick="favoriteItemList({{ $fav->id }});">List</button>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
+                                    <div class="container-fluid">
+                                        <div class="row">
+                                            <div class="col-sm-12 p-0">
+                                                <ul class="CustomTabs tabs inline_tab">
+                                                    <li class="active"><a data-toggle="tab" href="#DoorFav">Favorite Configurable Items</a></li>
+                                                    <li><a data-toggle="tab" href="#screenFav">Favorite Screen Items</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-sm-12 mt-3">
+                                                <div class="CustomTabContent tab-content">
+                                                    <div id="DoorFav" class="tab-pane active">
+                                                        <h3 class="card-title ">Favorite Configurable Items</h3>
+                                                        <div class="row m-0">
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead class="table-header-bg">
+                                                                    <tr class="text-white">
+                                                                        <th>Sr No</th>
+                                                                        <th>Name</th>
+                                                                        <th>Created At</th>
+                                                                        <th class="text-center">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="versionData">
+                                                                    @if (!empty($favorites) && count($favorites) > 0)
+                                                                        <?php
+                                                                        $SI = 1; ?>
+                                                                        @foreach ($favorites as $fav)
+                                                                            <tr>
+                                                                                <td>{{ $SI++ }}</td>
+                                                                                <td>{{ $fav->name }}</td>
+                                                                                <td>{{ $fav->created_at->format('d M Y') }}</td>
+                                                                                <td class="text-center">
+                                                                                    <button class="btn btn-success" onClick="favoriteItemList({{ $fav->id }},'Door');">Configurable List</button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div id="screenFav" class="tab-pane fade">
+                                                        <h3 class="card-title">Favorite Screen Items</h3>
+                                                        <div class="row m-0">
+                                                            <table class="table table-bordered table-striped">
+                                                                <thead class="table-header-bg">
+                                                                    <tr class="text-white">
+                                                                        <th>Sr No</th>
+                                                                        <th>Name</th>
+                                                                        <th>Created At</th>
+                                                                        <th class="text-center">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="versionData">
+                                                                    @if (!empty($favorites) && count($favorites) > 0)
+                                                                        <?php
+                                                                        $SI = 1; ?>
+                                                                        @foreach ($favorites as $fav)
+                                                                            <tr>
+                                                                                <td>{{ $SI++ }}</td>
+                                                                                <td>{{ $fav->name }}</td>
+                                                                                <td>{{ $fav->created_at->format('d M Y') }}</td>
+                                                                                <td class="text-center">
+                                                                                    <button class="btn btn-success" onClick="favoriteItemList({{ $fav->id }},'Screen');">Screen List</button>
+                                                                                </td>
+                                                                            </tr>
+                                                                        @endforeach
+                                                                    @endif
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="main-card mb-3" id="side-screen-section" style="display: none;">
@@ -277,7 +327,7 @@
                                                             {{ $SI }}
                                                             <input type="hidden" class=""
                                                                 value="{{ $row->id }}">
-                                                            <input type="hidden" class="doors_{{ $index }}"
+                                                            <input type="hidden" class=""
                                                                 value="{{ $row->screenMasterid }}">
                                                         </td>
                                                         <td>{{ $row->FireRating }}</td>
@@ -296,6 +346,9 @@
                                                                     data-toggle="dropdown"><i
                                                                         class="fa fa-ellipsis-h"></i></a>
                                                                 <ul class="dropdown-menu drop_style">
+                                                                     <li><a onclick="favoriteItem('{{ $row->id }}','{{ $row->screenMasterid }}','Screen','Screen Favorite Item','Screen Type Name')"
+                                                                            href="javascript:void(0);">Name
+                                                                            Configuration</a></li>
                                                                     <li><a
                                                                             href="{{ url('quotation/edit-side-screen-item/'.$row->id.'/'.$version_id) }}">Edit Screen</a>
                                                                     </li>
@@ -506,7 +559,7 @@
                                                                     <li><a
                                                                             href="{{ ConfigurationURL($quotation->configurableitems, $row->itemId, $version_id) }}">Edit</a>
                                                                     </li>
-                                                                    <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}')"
+                                                                    <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name')"
                                                                             href="javascript:void(0);">Name
                                                                             Configuration</a></li>
                                                                     <li><a onclick="adjustPrice('{{ $row->itemId }}','{{ $row->id }}','{{ floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice) }}')"
@@ -1171,6 +1224,7 @@
                 var favName = $('#favName').val();
                 var itemMasterId = $('#itemMasterId').val();
                 var doorTypeName = $('#doorTypeName').val();
+                var favType = $('#favType').val();
                 $.ajax({
                     url: $("#favoriteItem").val(),
                     method: "POST",
@@ -1181,6 +1235,7 @@
                         versionId: versionId,
                         itemId: itemId,
                         itemMasterId: itemMasterId,
+                        favType: favType,
                         doorTypeName: doorTypeName
                     },
                     dataType: "Json",
@@ -1197,7 +1252,7 @@
                     }
                 });
             }
-            function favoriteItemAdd(itemId, itemMasterId, quotationId, versionId) {
+            function favoriteItemAdd(itemId, itemMasterId, quotationId, versionId, favorite_type) {
                 $('.loader').empty().css({
                     'display': 'block'
                 });
@@ -1212,16 +1267,24 @@
                         versionId: versionId,
                         itemId: itemId,
                         itemMasterId: itemMasterId,
+                        favorite_type: favorite_type,
                         vId: vId,
                         qId: qId
                     },
                     dataType: "Json",
                     success: function(data) {
                         if (data.status == true) {
-                            swal('success', data.msg, 'success').then(function() {
-                                window.location.href = "{{ url('/') }}/quotation/add-new-doors/" +
-                                    data.QuotationId + "/" + data.VersionId;
-                            });
+                            if(favorite_type == 'Door'){
+                                swal('success', data.msg, 'success').then(function() {
+                                    window.location.href = "{{ url('/') }}/quotation/add-new-doors/" +
+                                        data.QuotationId + "/" + data.VersionId;
+                                });
+                            }else{
+                                swal('success', data.msg, 'success').then(function() {
+                                    window.location.href = "{{ url('/') }}/quotation/add-new-screens/" +
+                                        data.QuotationId + "/" + data.VersionId;
+                                });
+                            }
                         } else {
                             swal('error', data.msg, 'error').then(function() {
                                 location.reload();
@@ -1230,32 +1293,7 @@
                     }
                 });
             }
-            function favoriteDeleteItem(id) {
-                $('.loader').empty().css({
-                    'display': 'block'
-                });
-                var r = confirm("Are you sure! you wan't to delete it.");
-                if (r == true) {
-                    $.ajax({
-                        url: $("#favoriteDeleteItem").val(),
-                        method: "POST",
-                        data: {
-                            _token: $("#_token").val(),
-                            id: id
-                        },
-                        dataType: "Json",
-                        success: function(data) {
-                            if (data.status == true) {
-                                location.reload();
-                            } else {
-                                swal('error', data.msg, 'error').then(function() {
-                                    location.reload();
-                                });
-                            }
-                        }
-                    });
-                }
-            }
+
             function edit_image1(element) {
 
                 $('.loader').empty().css({
@@ -1983,13 +2021,14 @@
             function openVersionModal() {
                 $("#quotation-version-modal").modal("show");
             }
-            function favoriteItemList(id) {
+            function favoriteItemList(id,favorite_type) {
                 $.ajax({
                     url: "{{ route('quotation/favoriteItemShow') }}",
                     type: 'post',
                     data: {
                         _token: $("#_token").val(),
-                        'id': id
+                        'id': id,
+                        'favorite_type': favorite_type
                     },
                     success: function(data) {
 
@@ -3148,9 +3187,12 @@
                 } else {
                 }
             }
-            function favoriteItem(itemId, id) {
+            function favoriteItem(itemId, id,favType,title,name) {
                 $('#itemId').val(itemId);
                 $('#itemMasterId').val(id);
+                $('#favType').val(favType);
+                $('#title').text(title);
+                $('#FavTypeName').text(name);
                 $("#Favorite-modal").modal("show");
             }
             function adjustPrice(itemId, id, totalPrice) {
@@ -3201,7 +3243,7 @@
             <!-- Modal content-->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Favourite Item</h5>
+                    <h5 class="modal-title" id="title"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
@@ -3220,10 +3262,11 @@
                             </select>
                         </div>
                         <div class="col-sm-12 mb-2">
-                            <label for="doorTypeName">Door Type Name</label>
+                            <label for="doorTypeName" id="FavTypeName"></label>
                             <input type="text" class="form-control" id="doorTypeName">
                             <input type="hidden" class="form-control" id="itemId">
                             <input type="hidden" class="form-control" id="itemMasterId">
+                            <input type="hidden" class="form-control" id="favType">
                         </div>
                     </div>
                 </div>
