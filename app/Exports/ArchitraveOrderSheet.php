@@ -108,7 +108,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
             "Leg x2",
             "Head"
         ];
-        $b = ['Architrave Order Sheet'];
+        $b = ['Architrave '];
 
         $d = [$b,$a];
         return $d;
@@ -161,6 +161,6 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
 
     public function title(): string
     {
-        return 'Architrave Order Sheet';
+        return 'Architrave';
     }
 }
