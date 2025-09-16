@@ -235,6 +235,12 @@ class GeneralSettingController extends Controller
                     'height' => $request->input('screenBeadHeightNFR'),
                 ],
             ],
+            'Architrave' => [
+                'NFR' => [
+                    'width' => $request->input('architraveWidth'),
+                    'height' => $request->input('architraveHeight'),
+                ],
+            ],
         ];
 
         // Loop through and flatten if needed
