@@ -2717,7 +2717,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 // old formula before 15-09-2025
                 // $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
                 //new formula after 15-09-2025
-                $OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width;
+                $OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width - $beadThickness - $beadThickness;
             }
 
             $elevTbl .= '</table>
