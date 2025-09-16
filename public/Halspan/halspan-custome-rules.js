@@ -1865,6 +1865,9 @@ $(document).ready(function() {
                 $('#intumescentSealColor').removeAttr('required')
                 $("#SlBeadHeight").attr({min: 20});
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -3325,8 +3328,10 @@ $(document).ready(function() {
                                 $("#sideLight2GlazingSystemsThickness").val(data.GlazingThickness);
                                 $('#sideLight2GlazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
                             }else{
-                                $("#glazingSystemsThickness").val(data.GlazingThickness);
-                                $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                setTimeout(function(){
+                                   $("#glazingSystemsThickness").val(data.GlazingThickness);
+                                   $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                }, 4000);
                             }
 
                         } else {

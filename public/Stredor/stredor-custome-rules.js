@@ -1838,6 +1838,7 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap_NFR"]').css({'display':'block'});
                 $("#SlBeadHeight").attr({min: 20});
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealArrangement').removeAttr('required')
                 $('#intumescentSealType').removeAttr('required')
                 $('#intumescentSealLocation').removeAttr('required')
                 $('#intumescentSealColor').removeAttr('required')
@@ -1852,6 +1853,7 @@ function copyOfSideLite1Change(isstatus = false){
                 // $("#gap").val('');
                 $('label[for="gap"]').show();
                 $('label[for="gap_NFR"]').css({'display':'none'});
+                $('#intumescentSealArrangement').attr('required', true)
                 $('#intumescentSealType').attr('required', true)
                 $('#intumescentSealLocation').attr('required', true)
                 $('#intumescentSealColor').attr('required', true)
