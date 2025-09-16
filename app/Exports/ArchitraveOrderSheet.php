@@ -18,6 +18,8 @@ use Carbon\Carbon;
 use App\Models\Company;
 use App\Models\LippingSpecies;
 use App\Models\SideScreenItemMaster;
+use App\Models\DoorFrameConstruction;
+use App\Models\User;
 use Auth;
 
 class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
@@ -39,6 +41,15 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
 
         $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.LippingSpecies')->where('QuotationId',$this->id)->where('VersionId',$this->vid)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderBy('items.itemId','ASC')->get();
 
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
         $k = 1;
         $data = [];
         foreach ($item as $value) {
@@ -47,6 +58,11 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
             $OPHeight = $value->OPHeigth ?? 0;
             $SL1Width = $value->SL1Width ?? 0;
             $SL2Width = $value->SL2Width ?? 0;
+
+            if(!empty($allSettings['Architrave.NFR'])){
+                $ArchitraveWidth = $allSettings['Architrave.NFR']->Width;
+                $ArchitraveHeight = $allSettings['Architrave.NFR']->Height;
+            }
 
             if ($value->Architrave == 'Yes') {
                 $ls = LippingSpecies::where('id', $value->ArchitraveMaterial)->first();
@@ -75,9 +91,9 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                     $SpeciesName,
                     $value->ArchitraveFinish,
                     $value->ArchitraveSetQty,
-                    number_format($lm / 1000, 3), // LM Per Door Type
-                    $totalHeight, // Leg x2
-                    $totalWidth  // Head
+                    (($FrameHeight*2)+$FrameWidth)/1000, // LM Per Door Type
+                    $totalHeight + $ArchitraveHeight, // Leg x2
+                    $totalWidth + $ArchitraveWidth  // Head
                 ];
             }
         }
