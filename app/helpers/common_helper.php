@@ -3461,7 +3461,7 @@ function commonGeneralLabourCost($request,$userIds): void{
             }
 
             //vision panel and fire rating
-            if ($request->glazingBeads == 'Chamfer_Boleaction' || $request->glazingBeads == 'Square_Boleaction') {
+            if ($request->glazingBeads == 'Chamfer_Boleaction' || $request->glazingBeads == 'Chamfered_Boleaction' || $request->glazingBeads == 'Square_Boleaction') {
                 if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRatingFD30 == 1) {
                     $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
@@ -3478,7 +3478,7 @@ function commonGeneralLabourCost($request,$userIds): void{
             }
 
 
-            if ($request->glazingBeads == 'Chamfer_Flush' || $request->glazingBeads == 'Square_Flush') {
+            if ($request->glazingBeads == 'Chamfer_Flush' || $request->glazingBeads == 'Square_Flush' || $request->glazingBeads == 'Square_Flush_with_3mmx3mm_Rebate') {
                 if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
                     $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
