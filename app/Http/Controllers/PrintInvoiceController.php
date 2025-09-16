@@ -5996,7 +5996,7 @@ $elevTbl .= '</span>
                     <td>' . $project->intumescentPoOne . '</td>
                     <td>' . $project->intumescentPoTwo . '</td>
                     <td>' . $project->intumescentPoThree . '</td>
-                </tr>
+                </tr>';
 
             $elevTbl .=
                 '</span>
