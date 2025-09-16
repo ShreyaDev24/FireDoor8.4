@@ -34,36 +34,31 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="17">Glazing Beads for Doors BOM</th>
+                <th colspan="21">Glazing Beads for Doors BOM</th>
             </tr>
             <tr>
-                <th colspan="2">Ref</th>
-                <td colspan="3">{{ $quotation->QuotationGenerationId }}</td>
-
-                <th colspan="3">Project</th>
+                <th colspan="3">Ref</th>
+                <td colspan="2">{{ $quotation->QuotationGenerationId }}</td>
+                <th colspan="5">Project</th>
                 <td colspan="3">{{ $quotation->projectname }}</td>
-
-                <th colspan="3">Prepared By</th>
+                <th colspan="5">Prepared By</th>
                 <td colspan="3">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="2">Revision</th>
-                <td colspan="2">{{ $item[0]->VersionId }}</td>
-
+                <th>Revision</th>
+                <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
-                <td colspan="2">{{ $today }}</td>
-
+                <td colspan="3">{{ $today }}</td>
                 <th colspan="3">Main Contractor</th>
-                <td colspan="2">{{ $quotation->CstCompanyName }}</td>
-
-                <th colspan="2">Sales Contact</th>
-                <td colspan="2">{{ $quotation->SalesContact }}</td>
+                <td colspan="3">{{ $quotation->CstCompanyName }}</td>
+                <th colspan="4">Sales Contact</th>
+                <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="17">Text</th>
+                <th colspan="21">Text</th>
             </tr>
             <tr>
-                <th colspan="17">Items</th>
+                <th colspan="21">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -72,24 +67,29 @@
             @foreach ($item as $value)
                 @if ($i++ == 0)
                     <tr>
-                        <th>DOOR REF</th>
-                        <th>DOOR TYPE</th>
-                        <th>TIMTION</th>
-                        <th>FINBER</th>
-                        <th>SECISH ON BEAD</th>
-                        <th>VP 1 W </th>
-                        <th>QUANT</th>
+                        <th>Door Ref</th>
+                        <th>Door Type</th>
+                        <th>Plot Number/Ref</th>
+                        <th>IFC/Certifire No/Q mark Plug</th>
+                        <th>Timber</th>
+                        <th>Profile</th>
+                        <th>Finish on Bead</th>
+                        <th>Glazing Bead Height</th>
+                        <th>Glazing Bead Depth</th>
+                        <th>VP1 W</th>
+                        <th>QTY</th>
                         <th>VP1 H</th>
-                        <th>QUANT</th>
+                        <th>QTY</th>
                         <th>VP2 H</th>
-                        <th>QUANT</th>
+                        <th>QTY</th>
                         <th>VP3 H</th>
-                        <th>QUANT</th>
+                        <th>QTY</th>
                         <th>VP4 H</th>
-                        <th>QUANT</th>
+                        <th>QTY</th>
                         <th>VP5 H</th>
-                        <th>QUANT</th>
+                        <th>QTY</th>
                     </tr>
+
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
                         <td></td>
@@ -108,28 +108,14 @@
                         <td></td>
                         <td></td>
                         <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                 @endif
-                <tr>
-                    <td>{{ $value->doorNumber }}</td>
-                    <td>{{ $value->DoorType }}</td>
-                    <td>{{ $value->SpeciesName }}</td>
-                    <td>{{ str_replace('_', ' ', $value->GlazingBeads) }}</td>
-                    <td>{{ str_replace('_', ' ', $value->DoorLeafFinish) }}</td>
-                    <td>{{ $value->Leaf1VPWidth - 1}}</td>
-                    <td>{{ $value->VisionPanelQuantity * 4 }}</td>
-                    <td>{{ $value->Leaf1VPHeight1 }}</td>
-                    <td>{{ $value->Leaf1VPHeight1 ? 1 : '' }}</td>
-                    <td>{{ $value->Leaf1VPHeight2 }}</td>
-                    <td>{{ $value->Leaf1VPHeight2 ? 1 : '' }}</td>
-                    <td>{{ $value->Leaf1VPHeight3 }}</td>
-                    <td>{{ $value->Leaf1VPHeight3 ? 1 : '' }}</td>
-                    <td>{{ $value->Leaf1VPHeight4 }}</td>
-                    <td>{{ $value->Leaf1VPHeight4 ? 1 : '' }}</td>
-                    <td>{{ $value->Leaf1VPHeight5 }}</td>
-                    <td>{{ $value->Leaf1VPHeight5 ? 1 : '' }}</td>
-                </tr>
-            @endforeach
+                @endforeach
+                {!! implode('', $data) !!}
         </tbody>
     </table>
 </body>

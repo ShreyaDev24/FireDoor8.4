@@ -40,6 +40,7 @@ class cuttingListExport implements WithMultipleSheets
             'Frames and Transoms' => new FramesTransoms($this->id,$this->vid,$this->result),
             'Glass Order Sheet' => new GlassOrderSheet ($this->id,$this->vid,$this->result),
             'Glazing Beads for Doors' => new GlazingBeadsDoors ($this->id,$this->vid,$this->result),
+            'Architrave Order Sheet' => new ArchitraveOrderSheet ($this->id,$this->vid,$this->result),
             'Screen Glass' => new ScreenGlass($this->id,$this->vid,$this->result),
             'Screen Frame' => new ScreenFrame($this->id,$this->vid,$this->result),
             'Screen Glazing Beads' => new ScreenGlazingBeads($this->id,$this->vid,$this->result),

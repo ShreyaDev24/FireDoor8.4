@@ -16,7 +16,8 @@ use App\Models\QuotationVersion;
 use App\Models\BOMCalculation;
 use Carbon\Carbon;
 use App\Models\Company;
-use App\Models\SideScreenItemMaster;
+use App\Models\DoorFrameConstruction;
+use App\Models\User;
 use Auth;
 
 class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
@@ -42,14 +43,37 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         $k = 1;
         $data = [];
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
         foreach($this->result as $value){
             if(empty($value->TransomQuantity)){
                 $value->TransomQuantity = 0;
             }
-            
+
             if(empty($value->MullionQuantity)){
                 $value->MullionQuantity = 0;
             }
+            $ScreenGlassWidthNFR = $ScreenGlassHeightNFR = $ScreenGlassWidthFD60 = $ScreenGlassHeightFD60 = 0;
+            if(!empty($allSettings['ScreenGlass.NFR'])){
+                $ScreenGlassWidthNFR = $allSettings['ScreenGlass.NFR']->Width;
+                $ScreenGlassHeightNFR = $allSettings['ScreenGlass.NFR']->Height;
+            }
+            if(!empty($allSettings['ScreenGlass.FD60'])){
+                $ScreenGlassWidthFD60 = $allSettings['ScreenGlass.FD60']->Width;
+                $ScreenGlassHeightFD60 = $allSettings['ScreenGlass.FD60']->Height;
+            }
+
+            $FrameHeight = $value->FrameHeight;
+            $FrameWidth = $value->FrameWidth;
+            $FrameThickness = $value->FrameThickness;
+
+
 
             $TransomQuantity = $value->TransomQuantity + 1;
             $MullionQuantity = $value->MullionQuantity + 1;
@@ -90,6 +114,14 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $GlassPaneHeight = 0;
                     }
 
+                    if($value->FireRating == '60-60' || $value->FireRating == '60-0'){
+                        $GlassWidth = $GlassPaneWidth + $ScreenGlassWidthFD60;
+                        $GlassHeight = $GlassPaneHeight + $ScreenGlassHeightFD60;
+                    }else{
+                        $GlassWidth = $GlassPaneWidth + $ScreenGlassWidthNFR;
+                        $GlassHeight = $GlassPaneHeight + $ScreenGlassHeightNFR;
+                    }
+
                     $screenQty = 1;
                     $screenNumber = $value->screenNumber;
 
@@ -101,8 +133,8 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                         $ScreenType,
                         $glasspane,
                         $glassType,
-                        $GlassPaneWidth,
-                        $GlassPaneHeight,
+                        $GlassWidth,
+                        $GlassHeight,
                         $screenQty,
                     ];
                     $k++;
@@ -118,7 +150,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -138,7 +170,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 

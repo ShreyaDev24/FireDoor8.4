@@ -1312,7 +1312,140 @@ class BOMController extends Controller
         $totDoorsetType = NumberOfDoorSets($version,$id);
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
 
-        $pdf = PDF::loadView('DoorSchedule.DoorOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
+        $data = [];
+        foreach($item as $value){
+
+            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
+                $cutSizeW = ($value->LeafWidth1 - $value->LippingThickness - $value->LippingThickness);
+                $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2 - $value->LippingThickness - $value->LippingThickness): '';
+
+                $LFH = ($value->LeafHeight  - $value->LippingThickness + $value->LippingThickness);
+                $LFW = ($value->LeafWidth1 - $value->LippingThickness + $value->LippingThickness);
+            }else{
+
+                $AdjustmentLeafWidth1 = $value->AdjustmentLeafWidth1 ?? 0;
+                $AdjustmentLeafWidth2 = $value->AdjustmentLeafWidth2 ?? 0;
+                $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
+
+                if($AdjustmentLeafWidth1 == 0){
+                    $cutSizeW = $value->LeafWidth1;
+                    $LFW = $cutSizeW;
+                }else{
+                    $cutSizeW = (floatval($value->LeafWidth1 ?? 0) + floatval($AdjustmentLeafWidth1 ?? 0)) - floatval($AdjustmentLeafWidth1 ?? 0) - floatval($value->LippingThickness ?? 0);
+                    $LFW = $cutSizeW + $value->LippingThickness;
+                }
+
+                if($AdjustmentLeafWidth2 == 0){
+                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2): '';
+                }else{
+                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 !== null && $value->LeafWidth2 !== ''
+                    ? (floatval($value->LeafWidth2) + floatval($AdjustmentLeafWidth2) - floatval($AdjustmentLeafWidth2) - floatval($value->LippingThickness))
+                    : '';
+                }
+
+                if($AdjustmentLeafHeightNoOP == 0){
+                    $cutSizeH = $value->LeafHeight;
+                    $LFH = $cutSizeH;
+                }else{
+                    $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
+
+                    $LFH = $cutSizeH + $value->LippingThickness;
+                }
+            }
+            if($cutSizeW2 <= 0){
+                $cutSizeW2 = '';
+            }
+            $DoorDimensionsCode = '';
+            $DoorDimensionsCode2 = '';
+            if(isset($quotation->configurableitems) && $quotation->configurableitems == '1'){
+                $configurableitems = 'Streboard';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '2'){
+                $configurableitems = 'Halspan';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '3'){
+                $configurableitems = 'Norma';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
+                $configurableitems = 'Vicaima';
+                $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
+                if($value->DoorsetType == 'leaf_and_a_half'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }else if($value->DoorsetType == 'DD'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '5'){
+                $configurableitems = 'Seadec';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '6'){
+                $configurableitems = 'Deanta';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '7'){
+                $configurableitems = 'Flamebreak';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '8'){
+                $configurableitems = 'StreDoor';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '9'){
+                $configurableitems = 'MMM';
+            }
+
+            $data[] = '<tr>'
+                . '<td>' . (($value->DoorQuantity) ? $value->DoorQuantity : 1) . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->DoorType . '</td>'
+                . '<td>' . $value->LeafThickness . '</td>'
+                . '<td>' . $configurableitems . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
+                . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                . '<td>' . $DoorDimensionsCode2 . '</td>'
+                . '<td>' . $cutSizeH . '</td>'
+                . '<td>' . $cutSizeW . '</td>'
+                . '<td>' . $cutSizeW2 . '</td>'
+                . '<td>' . $value->LippingThickness . '</td>'
+                . '<td>' . $LFW . '</td>'
+                . '<td>' . $LFH . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                . '<td></td>'
+                . '</tr>';
+
+
+            if($value->Overpanel == 'Overpanel'){
+
+                if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                    $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness - $value->LippingThickness;
+                }else{
+                    $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . (($value->DoorQuantity) ? $value->DoorQuantity : 1) . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->DoorType . ' OP LEAF SIZE' . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $configurableitems . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
+                    . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                    . '<td>' . $DoorDimensionsCode2 . '</td>'
+                    . '<td>' . $cutSizeH . '</td>'
+                    . '<td>' . $cutSizeW . '</td>'
+                    . '<td>' . $cutSizeW2 . '</td>'
+                    . '<td>' . $value->LippingThickness . '</td>'
+                    . '<td>' . $LFW . '</td>'
+                    . '<td>' . $LFH . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                    . '<td></td>'
+                    . '</tr>';
+            }
+
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.DoorOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'data' => $data, 'totIronmongerySet' => $totIronmongerySet]);
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
@@ -1336,8 +1469,334 @@ class BOMController extends Controller
         }
 
         $halflapedjoint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Half_Lapped_Joint')->first();
+        $mitre_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mitre_Joint')->first();
+        $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
+        $butt_joint = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+        $data = [];
+        foreach ($item as $value) {
+            $leg = $value->FrameHeight + $value->Height;
+            $head = $value->FrameWidth + $value->Width;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
 
-        $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint]);
+            $FrameType = '';
+            if($value->FrameType == 'Plant_on_Stop'){
+                $FrameType = $value->PlantonStopHeight;
+            }elseif($value->FrameType == 'Rebated_Frame'){
+                $FrameType = $value->RebatedHeight;
+            }
+            $stopleg2 = $leg - floatval($FrameType) - 0;
+
+            $Height = 0;
+            $Width = 0;
+            if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                $Height = $halflapedjoint->Height ?? 0;
+                $Width = $halflapedjoint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                $Height = $mitre_joint->Height ?? 0;
+                $Width = $mitre_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                $Height = $mortice_tenon_joint->Height ?? 0;
+                $Width = $mortice_tenon_joint->Width ?? 0;
+            }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                $Height = $butt_joint->Height ?? 0;
+                $Width = $butt_joint->Width ?? 0;
+            }
+
+            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $head = $value->FrameWidth - $Width;
+            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+
+            if($value->FrameType == 'Plant_on_Stop'){
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['PlantOn.HalfLipped'])){
+                        $stophead += $allSettings['PlantOn.HalfLipped']->Width;
+                        $stopleg2 += $allSettings['PlantOn.HalfLipped']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['PlantOn.Mitre'])){
+                        $stophead += $allSettings['PlantOn.Mitre']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mitre']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['PlantOn.Mortice1'])){
+                        $stophead += $allSettings['PlantOn.Mortice1']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Mortice1']->Height;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['PlantOn.Butt'])){
+                        $stophead += $allSettings['PlantOn.Butt']->Width;
+                        $stopleg2 += $allSettings['PlantOn.Butt']->Height;
+                    }
+                }
+            }
+
+            $foursidedFrame = 0;
+            $stopbottom = 0;
+            if($value->FourSidedFrame == 1){
+                $foursidedFrame = $head;
+                $stopbottom = $stophead;
+                $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
+            }
+
+           $data[] = '<tr>'
+            . '<td>' . $value->doorNumber . '</td>'
+            . '<td>' . $value->plot_ref_no . '</td>'
+            . '<td>' . $value->certification_no . '</td>'
+            . '<td>' . $value->DoorType . '</td>'
+            . '<td>' . $value->FireRating . '</td>'
+            . '<td>' . $value->LeafThickness . '</td>'
+            . '<td>' . $value->SpeciesName . '</td>'
+            . '<td>' . $value->FrameHeight . '</td>'
+            . '<td>' . $value->FrameWidth . '</td>'
+            . '<td>' . $value->FrameThickness . '</td>'
+            . '<td>' . $value->PlantonStopHeight . '</td>'
+            . '<td>' . $value->PlantonStopWidth . '</td>'
+            . '<td>' . $value->RebatedWidth . '</td>'
+            . '<td>' . $value->RebatedHeight . '</td>'
+            . '<td>' . $value->ScallopedWidth . '</td>'
+            . '<td>' . $value->ScallopedHeight . '</td>'
+            . '<td>' . $value->FrameDepth . '</td>'
+            . '<td>' . $leg . '</td>'
+            . '<td>' . $head . '</td>'
+            . '<td>' . $stopleg2 . '</td>'
+            . '<td>' . $stophead . '</td>'
+            . '<td>' . $stopbottom . '</td>' // Can be empty string
+            . '<td>' . $foursidedFrame . '</td>' // Can be empty string
+            . '<td>' . $value->Handing . '</td>'
+            . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+            . '<td>' . $value->Undercut . '</td>'
+            . '<td></td>' // Empty column
+            . '<td></td>' // Empty column
+            . '<td></td>' // Empty column
+            . '</tr>';
+
+
+
+
+            if($value->Overpanel == 'Fan_Light' || $value->Overpanel == 'Overpanel'){
+
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['Fanlight.HalfLipped'])){
+                        $Height = $allSettings['Fanlight.HalfLipped']->Height;
+                        $Width = $allSettings['Fanlight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['Fanlight.Mitre'])){
+                        $Height = $allSettings['Fanlight.Mitre']->Height;
+                        $Width = $allSettings['Fanlight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['Fanlight.Mortice1'])){
+                        $Height = $allSettings['Fanlight.Mortice1']->Height;
+                        $Width = $allSettings['Fanlight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['Fanlight.Butt'])){
+                        $Height = $allSettings['Fanlight.Butt']->Height;
+                        $Width = $allSettings['Fanlight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->OPHeigth - $value->FrameThickness + $Height;
+                $head = $value->OPWidth - $Width;
+
+               $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                     $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
+                    . '<td>' . $value->FireRating . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . $value->OPHeigth . '</td>'
+                    . '<td>' . $value->FrameWidth . '</td>'
+                    . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $value->FrameDepth . '</td>'
+                    . '<td>' . $leg . '</td>'
+                    . '<td>' . $head . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $foursidedFrame . '</td>'
+                    . '<td></td>'
+                    . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '</tr>';
+
+            }
+            if($value->SideLight1 == 'Yes'){
+
+                $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL1Height - $value->FrameThickness + $Height;
+                $head = $value->SL1Width - $Width;
+
+                $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                    $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
+                }
+
+                $data[] = '<tr>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->DoorType . ' Side Light 1' . '</td>'
+                . '<td>' . $value->FireRating . '</td>'
+                . '<td>' . $value->LeafThickness . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . $value->SL1Height . '</td>'
+                . '<td>' . $value->SL1Width . '</td>'
+                . '<td>' . $value->FrameThickness . '</td>'
+                . '<td></td>' // Empty column
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td>' . $value->FrameDepth . '</td>'
+                . '<td>' . $leg . '</td>'       // Pre-calculated
+                . '<td>' . $head . '</td>'      // Pre-calculated
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td>' . $foursidedFrame . '</td>'  // Pre-calculated
+                . '<td></td>'
+                . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+            if($value->SideLight2 == 'Yes'){
+
+                 $Height = 0;
+                $Width = 0;
+
+
+                if($value->DoorFrameConstruction == 'Half_Lapped_Joint'){
+                    if(!empty($allSettings['SideLight.HalfLipped'])){
+                        $Height = $allSettings['SideLight.HalfLipped']->Height;
+                        $Width = $allSettings['SideLight.HalfLipped']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mitre_Joint'){
+                    if(!empty($allSettings['SideLight.Mitre'])){
+                        $Height = $allSettings['SideLight.Mitre']->Height;
+                        $Width = $allSettings['SideLight.Mitre']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Mortice_&_Tenon_Joint'){
+                    if(!empty($allSettings['SideLight.Mortice1'])){
+                        $Height = $allSettings['SideLight.Mortice1']->Height;
+                        $Width = $allSettings['SideLight.Mortice1']->Width;
+                    }
+                }else if($value->DoorFrameConstruction == 'Butt_Joint'){
+                    if(!empty($allSettings['SideLight.Butt'])){
+                        $Height = $allSettings['SideLight.Butt']->Height;
+                        $Width = $allSettings['SideLight.Butt']->Width;
+                    }
+                }
+
+
+                $leg = $value->SL2Height - $value->FrameThickness + $Height;
+                $head = $value->SL2Width - $Width;
+
+                $foursidedFrame = 0;
+                $stopbottom = 0;
+                if($value->FourSidedFrame == 1){
+                    $foursidedFrame = $head;
+                    $stopbottom = $stophead;
+                    $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->DoorType . ' Side Light 2' . '</td>'
+                    . '<td>' . $value->FireRating . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . $value->SL2Height . '</td>'
+                    . '<td>' . $value->SL2Width . '</td>'
+                    . '<td>' . $value->FrameThickness . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $value->FrameDepth . '</td>'
+                    . '<td>' . $leg . '</td>'
+                    . '<td>' . $head . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td>' . $foursidedFrame . '</td>'
+                    . '<td></td>'
+                    . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '<td></td>'
+                    . '</tr>';
+
+            }
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.FrameTransoms',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'halflapedjoint' => $halflapedjoint,'mitre_joint' => $mitre_joint,'mortice_tenon_joint' => $mortice_tenon_joint,'butt_joint' => $butt_joint, 'allSettings' => $allSettings, 'data' => $data]);
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
@@ -1353,8 +1812,219 @@ class BOMController extends Controller
         $userName = Auth::user()->FirstName ." ".Auth::user()->LastName;
         $totDoorsetType = NumberOfDoorSets($version,$id);
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
 
-        $pdf = PDF::loadView('DoorSchedule.GlassOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
+        $data = [];
+        foreach($item as $value){
+           if ($value->GlassType != '' && $value->GlassThickness != '' &&
+            (($value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0 && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0) ||
+                ($value->Leaf2VPHeight1 != '' && $value->Leaf2VPHeight1 != 0 && $value->Leaf2VPWidth != '' && $value->Leaf2VPWidth != 0))) {
+
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if (!empty($allSettings['VisionPanel.NRF'])) {
+                    $VisionPanelWidthNFR = $allSettings['VisionPanel.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['VisionPanel.NRF']->Height;
+                }
+                if (!empty($allSettings['VisionPanel.FD60'])) {
+                    $VisionPanelWidthFD60 = $allSettings['VisionPanel.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['VisionPanel.FD60']->Height;
+                }
+
+                if ($value->DoorsetType == 'SD') {
+                    $qty = ($value->AreVPsEqualSizesForLeaf1 == 'Yes') ? $value->VisionPanelQuantity : 1;
+                } else {
+                    if ($value->AreVPsEqualSizesForLeaf2 == 'Yes') {
+                        $qty = $value->Leaf2VisionPanelQuantity + $value->VisionPanelQuantity;
+                    } else {
+                        $qty = (empty($value->VisionPanelQuantity)) ? 1 :
+                            (($value->Leaf1VPHeight1 ? 1 : 0) + ($value->Leaf2VPHeight1 ? 1 : 0));
+                    }
+                }
+
+                $fireRatingFD60 = ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60');
+                $fireRatingNFR = ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30');
+
+                $row = '<tr>'
+                    . '<td>' . $value->DoorType . '</td>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->GlassThickness . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->GlassType) . '</td>'
+                    . '<td>' . (
+                        $fireRatingFD60
+                            ? (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightFD60)
+                            : (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightNFR)
+                    ) . '</td>'
+                    . '<td>' . (
+                        $fireRatingNFR
+                            ? (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthNFR)
+                            : (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthFD60)
+                    ) . '</td>'
+                    . '<td>' . $qty . '</td>';
+
+                for ($i = 2; $i <= 5; $i++) {
+                    $leaf1Height = $value->{'Leaf1VPHeight' . $i};
+                    $leaf2Height = $value->{'Leaf2VPHeight' . $i};
+                    $height = ($leaf1Height ?: $leaf2Height);
+                    $panelQty = ($leaf1Height ? 1 : 0) + ($leaf2Height ? 1 : 0);
+
+                    $heightCol = $height
+                        ? ($fireRatingFD60 ? ($height + $VisionPanelHeightFD60) : ($height + $VisionPanelHeightNFR))
+                        : '';
+                    $qtyCol = $height ? $panelQty : '';
+
+                    $row .= '<td>' . $heightCol . '</td>'
+                        . '<td>' . $qtyCol . '</td>';
+                }
+
+                $row .= '</tr>';
+                $data[] = $row;
+            }
+
+            if($value->Overpanel == 'Fan_Light'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['FanlightSize.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['FanlightSize.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['FanlightSize.NRF']->Height;
+                }
+                if(!empty($allSettings['FanlightSize.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['FanlightSize.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['FanlightSize.FD60']->Height;
+                }
+
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->OPGlassThickness . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->OPGlassType) . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                    ? $value->OPHeigth + $VisionPanelHeightFD60
+                    : $value->OPHeigth + $VisionPanelHeightNFR
+                ) . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                    ? ($value->OPWidth + $VisionPanelWidthNFR)
+                    : ($value->OPWidth + $VisionPanelWidthFD60)
+                ) . '</td>'
+                . '<td>1</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+
+            if($value->SideLight1 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['SideLightFD.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                }
+                if(!empty($allSettings['SideLightFD.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                }
+
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' Side Light 1' . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SideLight1GlassThickness . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->SideLight1GlassType) . '</td>'
+                . '<td>' . (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                    ? $value->SL1Height + $VisionPanelHeightFD60
+                    : $value->SL1Height + $VisionPanelHeightNFR) . '</td>'
+                . '<td>' . (($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                    ? $value->SL1Width + $VisionPanelWidthNFR
+                    : $value->SL1Width + $VisionPanelWidthFD60) . '</td>'
+                . '<td>1</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+
+            if($value->SideLight2 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+
+                if(!empty($allSettings['SideLightFD.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                }
+                if(!empty($allSettings['SideLightFD.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideLightFD.FD60']->Height;
+                }
+
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' Side Light 2' . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SideLight2GlassThickness . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->SideLight2GlassType) . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->SL2Height + $VisionPanelHeightFD60
+                        : $value->SL2Height + $VisionPanelHeightNFR
+                ) . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                        ? $value->SL2Width + $VisionPanelWidthNFR
+                        : $value->SL2Width + $VisionPanelWidthFD60
+                ) . '</td>'
+                . '<td>1</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.GlassOrderSheet',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet,'allSettings' => $allSettings,'data' => $data]);
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
@@ -1371,7 +2041,219 @@ class BOMController extends Controller
         $totDoorsetType = NumberOfDoorSets($version,$id);
         $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
 
-        $pdf = PDF::loadView('DoorSchedule.GlazingBeadsDoors',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet]);
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        }else{
+            $ids = Auth::user()->id;
+        }
+        $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+        $data = [];
+        foreach($item as $value){
+            if ($value->GlazingBeads != '' && $value->Leaf1VPHeight1 != '' && $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 ){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['VPBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['VPBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['VPBead.NRF']->Height;
+                }
+                if(!empty($allSettings['VPBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['VPBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
+                }
+
+               $data[] = '<tr>'
+                . '<td>' . $value->DoorType . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
+                . '<td>' . $value->GlazingBeadsThickness . '</td>'
+                . '<td>' . $value->glazingBeadsWidth . '</td>'
+                . '<td>' . (($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                    ? ($value->Leaf1VPWidth + $VisionPanelWidthNFR)
+                    : ($value->Leaf1VPWidth + $VisionPanelWidthFD60)) . '</td>'
+                . '<td>' . ($value->VisionPanelQuantity * 4) . '</td>'
+                . '<td>' . (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                    ? $value->Leaf1VPHeight1 + $VisionPanelHeightFD60
+                    : $value->Leaf1VPHeight1 + $VisionPanelHeightNFR) . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight1 ? 4 : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight2
+                    ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->Leaf1VPHeight2 + $VisionPanelHeightFD60
+                        : $value->Leaf1VPHeight2 + $VisionPanelHeightNFR)
+                    : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight2 ? 4 : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight3
+                    ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->Leaf1VPHeight3 + $VisionPanelHeightFD60
+                        : $value->Leaf1VPHeight3 + $VisionPanelHeightNFR)
+                    : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight3 ? 4 : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight4
+                    ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->Leaf1VPHeight4 + $VisionPanelHeightFD60
+                        : $value->Leaf1VPHeight4 + $VisionPanelHeightNFR)
+                    : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight4 ? 4 : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight5
+                    ? (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60
+                        : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR)
+                    : '') . '</td>'
+                . '<td>' . ($value->Leaf1VPHeight5 ? 4 : '') . '</td>'
+                . '</tr>';
+
+
+            }
+
+            if($value->Overpanel == 'Fan_Light'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['FanlightBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['FanlightBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['FanlightBead.NRF']->Height;
+                }
+                if(!empty($allSettings['FanlightBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['FanlightBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['FanlightBead.FD60']->Height;
+                }
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
+                . '<td>' . $value->GlazingBeadsThickness . '</td>'
+                . '<td>' . $value->glazingBeadsWidth . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                        ? ($value->OPWidth + $VisionPanelWidthNFR)
+                        : ($value->OPWidth + $VisionPanelWidthFD60)
+                ) . '</td>'
+                . '<td></td>'
+                . '<td>' . (
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? ($value->OPHeight + $VisionPanelHeightFD60)
+                        : ($value->OPHeight + $VisionPanelHeightNFR)
+                ) . '</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+
+            if($value->SideLight1 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['SideBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideBead.NRF']->Height;
+                }
+                if(!empty($allSettings['SideBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
+                }
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' Side Light 1' . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
+                . '<td>' . $value->GlazingBeadsThickness . '</td>'
+                . '<td>' . $value->glazingBeadsWidth . '</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                        ? ($value->SL1Width + $VisionPanelWidthNFR)
+                        : ($value->SL1Width + $VisionPanelWidthFD60)
+                ) . '</td>'
+                . '<td></td>'
+                . '<td>' . (
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->SL1Height + $VisionPanelHeightFD60
+                        : $value->SL1Height + $VisionPanelHeightNFR
+                ) . '</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+
+            if($value->SideLight2 == 'Yes'){
+                $VisionPanelWidthNFR = 0;
+                $VisionPanelHeightNFR = 0;
+                $VisionPanelWidthFD60 = 0;
+                $VisionPanelHeightFD60 = 0;
+                if(!empty($allSettings['SideBead.NRF'])){
+                    $VisionPanelWidthNFR = $allSettings['SideBead.NRF']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideBead.NRF']->Height;
+                }
+                if(!empty($allSettings['SideBead.FD60'])){
+                    $VisionPanelWidthFD60 = $allSettings['SideBead.FD60']->Width;
+                    $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
+                }
+                $data[] = '<tr>'
+                . '<td>' . $value->DoorType . ' Side Light 2' . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
+                . '<td>' . $value->GlazingBeadsThickness . '</td>'
+                . '<td>' . $value->glazingBeadsWidth . '</td>'
+                . '<td>'
+                    . (($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                        ? ($value->SL2Width + $VisionPanelWidthNFR)
+                        : ($value->SL2Width + $VisionPanelWidthFD60))
+                . '</td>'
+                . '<td></td>' // empty VisionPanelQuantity
+                . '<td>'
+                    . (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? $value->SL2Height + $VisionPanelHeightFD60
+                        : $value->SL2Height + $VisionPanelHeightNFR)
+                . '</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
+            }
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.GlazingBeadsDoors',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'allSettings' => $allSettings, 'data' => $data]);
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
@@ -1445,9 +2327,9 @@ class BOMController extends Controller
                 $ProjectName = $project->ProjectName;
             }
 
-            // if (!empty($version)) {
-            //     $version = $version;
-            // }
+            if (!empty($version)) {
+                $version = $version;
+            }
 
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {

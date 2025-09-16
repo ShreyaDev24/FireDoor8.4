@@ -64,84 +64,38 @@
                 $i = 0;
             @endphp
 
-            @foreach ($item as $value)
-                    @if ($i++ == 0)
-                        <tr>
-                            <th>DOOR NUMBER</th>
-                            <th>Plot Number/Ref</th>
-                            <th>Door Type</th>
-                            <th>IFC/Certifire No/Q mark Plug</th>
-                            <th>GLASS THICKNESS IN MM</th>
-                            <th>GLASS TYPE</th>
-                            <th>VP1 H</th>
-                            <th>VP1 W</th>
-                            <th>QTY</th>
-                            <th>VP2 H</th>
-                            <th>QTY</th>
-                            <th>VP3 H</th>
-                            <th>QTY</th>
-                            <th>VP4 H</th>
-                            <th>QTY</th>
-                            <th>VP5 H</th>
-                            <th>QTY</th>
-                        </tr>
-                        <tr style="background:#00B0F0">
-                            <td><b></b></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                    @endif
-                    @if ($value->GlassType != '' && $value->GlassThickness != '' || $value->Leaf1VPHeight1 != '' || $value->Leaf1VPHeight1 != 0  && $value->Leaf1VPWidth != '' && $value->Leaf1VPWidth != 0 )
-                    <tr>
-                        <td>{{ $value->doorNumber }}</td>
-                        <td>{{ $value->plot_ref_no }}</td>
-                        <td>{{ $value->DoorType }}</td>
-                        <td>{{ $value->certification_no }}</td>
-                        <td>{{ $value->GlassThickness }}</td>
-                        <td>{{ str_replace('_', ' ', $value->GlassType) }}</td>
-                        @if($value->Leaf1VPWidth && $value->Leaf1VPHeight1)
-                        @php
-                            if($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30'){
-                                $wdth = 5;
-                            }elseif($value->FireRating == 'FD60s' || $value->FireRating == 'FD60'){
-                                $wdth = 10;
-                            }else{
-                                $wdth = 0;
-                            }
-                        @endphp
-                        <td>{{ ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight1 - 10 : $value->Leaf1VPHeight1 - 5 }}</td>
-                        <td>{{ $value->Leaf1VPWidth - $wdth }}</td>
-                        <td>{{ $value->Leaf1VPHeight1 ? 1 : '' }} </td>
-                        @else
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        @endif
-                        <td>{{ $value->Leaf1VPHeight2 }}</td>
-                        <td>{{ $value->Leaf1VPHeight2 ? $value->VisionPanelQuantity * 1 : '' }} </td>
-                        <td>{{ $value->Leaf1VPHeight3 }}</td>
-                        <td>{{ $value->Leaf1VPHeight3 ? $value->VisionPanelQuantity * 1 : '' }}</td>
-                        <td>{{ $value->Leaf1VPHeight4 }}</td>
-                        <td>{{ $value->Leaf1VPHeight4 ? $value->VisionPanelQuantity * 1 : '' }}</td>
-                        <td>{{ $value->Leaf1VPHeight5 }}</td>
-                        <td>{{ $value->Leaf1VPHeight5 ? $value->VisionPanelQuantity * 1 : '' }}</td>
-                    </tr>
-                @endif
+           @foreach ($item as $value)
+            @if ($i++ == 0)
+                <tr>
+                    <th>Door Type</th>
+                    <th>DOOR NUMBER</th>
+                    <th>Plot Number/Ref</th>
+                    <th>IFC/Certifire No/Q mark Plug</th>
+                    <th>GLASS THICKNESS IN MM</th>
+                    <th>GLASS TYPE</th>
+                    <th>VP1 H</th>
+                    <th>VP1 W</th>
+                    <th>QTY</th>
+                    <th>VP2 H</th>
+                    <th>QTY</th>
+                    <th>VP3 H</th>
+                    <th>QTY</th>
+                    <th>VP4 H</th>
+                    <th>QTY</th>
+                    <th>VP5 H</th>
+                    <th>QTY</th>
+                </tr>
+                <tr style="background:#00B0F0">
+                    <td><b></b></td>
+                    <td></td><td></td><td></td><td></td><td></td>
+                    <td></td><td></td><td></td><td></td><td></td>
+                    <td></td><td></td><td></td><td></td><td></td>
+                    <td></td>
+                </tr>
+            @endif
             @endforeach
+            {!! implode('', $data) !!}
+
         </tbody>
     </table>
 </body>
