@@ -11473,7 +11473,13 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                 if(THeight >= 2950){
                     swal('.','The overall height of the door and fanlight exceeds 2950 mm')
                 }
-                $("#SL1Height,#SL2Height").attr({ 'readonly': true, "required": true }).val(THeight);
+                if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+                    THeight = FrameHeight;
+                    $("#SL1Height,#SL2Height").attr({ 'readonly': true, "required": true }).val(THeight);
+                } else {
+                    $("#SL1Height,#SL2Height").attr({ 'readonly': true, "required": true }).val(THeight);
+                }
+
 
                 svg.append('line') //height with overpanel of door
                     .style("stroke", "black")
