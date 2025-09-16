@@ -59,6 +59,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
             $SL1Width = $value->SL1Width ?? 0;
             $SL2Width = $value->SL2Width ?? 0;
 
+            $ArchitraveWidth = $ArchitraveHeight = 0;
             if(!empty($allSettings['Architrave.NFR'])){
                 $ArchitraveWidth = $allSettings['Architrave.NFR']->Width;
                 $ArchitraveHeight = $allSettings['Architrave.NFR']->Height;
