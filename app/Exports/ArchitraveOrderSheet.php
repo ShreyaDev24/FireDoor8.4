@@ -41,36 +41,47 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
 
         $k = 1;
         $data = [];
-        foreach($item as $value){
-
-            $FrameHeight = $value->FrameHeight;
-            $FrameWidth = $value->FrameWidth;
-            $OPHeigth = $value->OPHeigth ?? 0;
+        foreach ($item as $value) {
+            $FrameHeight = $value->FrameHeight ?? 0;
+            $FrameWidth = $value->FrameWidth ?? 0;
+            $OPHeight = $value->OPHeigth ?? 0;
             $SL1Width = $value->SL1Width ?? 0;
             $SL2Width = $value->SL2Width ?? 0;
 
-            if($value->Architrave == 'Yes'){
+            if ($value->Architrave == 'Yes') {
                 $ls = LippingSpecies::where('id', $value->ArchitraveMaterial)->first();
-                $SpeciesName = $ls->SpeciesName;
+                $SpeciesName = $ls->SpeciesName ?? '';
 
-                $data[] = array(
+                // Calculate total height (2 * FrameHeight + OPHeight if any)
+                $totalHeight = ($FrameHeight * 2) + ($OPHeight > 0 ? $OPHeight : 0);
+
+                // Calculate total width (FrameWidth + SL1Width + SL2Width)
+                $totalWidth = $FrameWidth + $SL1Width + $SL2Width;
+
+               if($value->ArchitraveSetQty == 1){
+                    $lm = $FrameHeight + ($OPHeight * 2) + $FrameWidth + $SL1Width + $SL2Width;
+                }else if($value->ArchitraveSetQty == 2){
+                    $lm = $FrameHeight + ($OPHeight * 2) + $FrameWidth + $SL1Width + ($SL2Width * 2);
+                }
+
+                // Prepare data array
+                $data[] = [
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->doorNumber,
                     $value->DoorType,
-                    $value->ArchitraveWidth . 'x'. $value->ArchitraveHeight,
+                    $value->ArchitraveWidth . 'x' . $value->ArchitraveHeight,
                     $value->ArchitraveType,
                     $SpeciesName,
                     $value->ArchitraveFinish,
                     $value->ArchitraveSetQty,
-                    '',
-                    ($FrameHeight * 2) + $OPHeigth,
-                    $SL1Width + $SL2Width + $FrameWidth
-                );
-
-                $k++;
+                    number_format($lm / 1000, 3), // LM Per Door Type
+                    $totalHeight, // Leg x2
+                    $totalWidth  // Head
+                ];
             }
         }
+
 
         $footData = [
             '','','','','','','','','','','',''
