@@ -1889,6 +1889,9 @@ function copyOfSideLite1Change(isstatus = false){
                 // $("#doorThickness").hide()
                 $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
                 // $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
                 MeetingStyle();
@@ -1899,6 +1902,9 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap"]').show();
                 $('label[for="gap_NFR"]').css({'display':'none'});
                 $('#intumescentSealArrangement').attr('required', true)
+                $('#intumescentSealType').attr('required', true)
+                $('#intumescentSealLocation').attr('required', true)
+                $('#intumescentSealColor').attr('required', true)
 
                 if($("#fireRating").val()=="FD30"){
                     $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
