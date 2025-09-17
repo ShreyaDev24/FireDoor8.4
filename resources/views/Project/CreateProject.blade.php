@@ -408,7 +408,7 @@ word-wrap: break-word;
                                 <div class="col-sm-6">
                                     <div class="form-group">
                                         <label>
-                                            <input type="checkbox" name="QualificationsStatus" value="1">
+                                            <input type="checkbox" name="QualificationsStatus" value="1" @if(isset($projects->QualificationsStatus) && $projects->QualificationsStatus == 1){{ 'checked' }}@endif>
                                              Qualifications <span
                                                 class="text-danger"></span>
                                         </label>

@@ -340,7 +340,15 @@ class PrintInvoiceController extends Controller
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
 
+        if($project->QualificationsStatus == 1){
+            $MoreInformation = $project->MoreInformation;
+            $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'MoreInformation' => $MoreInformation]);
 
+            // return $pdf2->download('file2.pdf');
+            $path2_2 = public_path() . '/allpdfFile';
+            $fileName2_2 = $id . '2_2' . '.' . 'pdf';
+            $pdf2_2->save($path2_2 . '/' . $fileName2_2);
+        }
 
         // for getting margin
         $userIds = CompanyUsers();
@@ -3650,6 +3658,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName2,
                 public_path() . '/allpdfFile' . '/' . $fileName2_1,
                 public_path() . '/allpdfFile' . '/' . $fileName3,
+                $fileName2_2 ? public_path('/allpdfFile/' . $fileName2_2) : null,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
                 public_path() . '/allpdfFile' . '/' . $fileName9,
@@ -3664,6 +3673,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName2,
                 public_path() . '/allpdfFile' . '/' . $fileName2_1,
                 public_path() . '/allpdfFile' . '/' . $fileName3,
+                $fileName2_2 ? public_path('/allpdfFile/' . $fileName2_2) : null,
                 public_path() . '/allpdfFile' . '/' . $fileName4_2,
                 public_path() . '/allpdfFile' . '/' . $fileName4,
                 public_path() . '/allpdfFile' . '/' . $fileName9,
@@ -3678,11 +3688,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
                 public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                $fileName2_2 ? public_path('/allpdfFile/' . $fileName2_2) : null,
                 public_path() . '/allpdfFile' . '/' . $fileName9,
                 public_path() . '/allpdfFile' . '/' . $fileName8,
                 public_path() . '/allpdfFile' . '/' . $fileName5,
             ];
         }
+            $pdfFiles = array_filter($pdfFiles);
 
             // Merge the PDF files using PDFMerger
             $pdfMerger = PDFMerger::init();
