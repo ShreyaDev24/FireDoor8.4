@@ -70,10 +70,10 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $SpeciesName = $ls->SpeciesName ?? '';
 
                 // Calculate total height (2 * FrameHeight + OPHeight if any)
-                $totalHeight = ($FrameHeight * 2) + ($OPHeight > 0 ? $OPHeight : 0);
+                $totalHeight = $FrameHeight + $OPHeight + $ArchitraveHeight;
 
                 // Calculate total width (FrameWidth + SL1Width + SL2Width)
-                $totalWidth = $FrameWidth + $SL1Width + $SL2Width;
+                $totalWidth = $FrameWidth + $SL1Width + $SL2Width + $ArchitraveWidth;
 
                if($value->ArchitraveSetQty == 1){
                     $lm = $FrameHeight + ($OPHeight * 2) + $FrameWidth + $SL1Width + $SL2Width;
@@ -92,9 +92,9 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                     $SpeciesName,
                     $value->ArchitraveFinish,
                     $value->ArchitraveSetQty,
-                    (($FrameHeight * 2)+$FrameWidth + $OPHeight +  $SL1Width + $SL2Width)/1000, // LM Per Door Type
-                    $totalHeight + $ArchitraveHeight, // Leg x2
-                    $totalWidth + $ArchitraveWidth  // Head
+                    (($FrameHeight * 2) + $FrameWidth + $OPHeight +  $SL1Width + $SL2Width)/1000, // LM Per Door Type
+                    $totalHeight, // Leg x2
+                    $totalWidth  // Head
                 ];
             }
         }
