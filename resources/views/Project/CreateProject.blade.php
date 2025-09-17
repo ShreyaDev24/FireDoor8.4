@@ -407,13 +407,13 @@ word-wrap: break-word;
                                 </div>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label>
-                                            <input type="checkbox" name="QualificationsStatus" value="1" @if(isset($projects->QualificationsStatus) && $projects->QualificationsStatus == 1){{ 'checked' }}@endif>
-                                             Qualifications <span
-                                                class="text-danger"></span>
+                                        <label for="QualificationsStatus">
+                                            <input type="checkbox" id="QualificationsStatus" name="QualificationsStatus" value="1"
+                                                @if(isset($projects->QualificationsStatus) && $projects->QualificationsStatus == 1) checked @endif>
+                                            Qualifications <span class="text-danger"></span>
                                         </label>
                                         <textarea rows="10" cols="10"
-                                            placeholder="Enter Qualifications ..." name="MoreInformation"
+                                            placeholder="Enter Qualifications ..." name="MoreInformation" id="MoreInformation"
                                             class="form-control">@if(isset($projects->MoreInformation)){{$projects->MoreInformation}}@else{{old('MoreInformation')}}@endif</textarea>
                                     </div>
                                 </div>
@@ -697,6 +697,27 @@ $.ajaxSetup({
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
     }
 });
+
+$(document).ready(function () {
+
+    function toggleRequired() {
+        if ($('#QualificationsStatus').is(':checked')) {
+            $('#MoreInformation').attr('required', 'required');
+        } else {
+            $('#MoreInformation').removeAttr('required');
+        }
+    }
+
+    // Run on page load
+    toggleRequired();
+
+    // Run on checkbox change or click
+    $('#QualificationsStatus').on('change click', function () {
+        toggleRequired();
+    });
+
+});
+
 $(document).ready(function() {
     $(".CategoryChangeDynamicFields").hide();
         $('.datepicker').datepicker({
