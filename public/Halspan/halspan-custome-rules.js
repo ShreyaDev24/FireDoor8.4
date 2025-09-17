@@ -132,7 +132,6 @@ function pageIdentity(){
     });
 
    function corewidth1Value(){
-    console.log('hii')
         var leafWidth1 = 0;
         var leafWidth2 = 0;
         var leafHeight =0;
@@ -263,7 +262,7 @@ function pageIdentity(){
         $("#coreWidth1").val(calculate);
         $("#coreHeight").val(calculateCoreHeight);
         console.log(opCoreWidthcalculate,opCoreHeightcalculate)
-         if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+        if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
             if($("#overpanel").val() != 'Yes'){
                 let slHeight = $("#frameHeight").val();
                  setTimeout(function(){
