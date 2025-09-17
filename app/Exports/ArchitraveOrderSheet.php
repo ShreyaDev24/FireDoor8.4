@@ -92,7 +92,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                     $SpeciesName,
                     $value->ArchitraveFinish,
                     $value->ArchitraveSetQty,
-                    (($FrameHeight * 2) + $FrameWidth + $OPHeight +  $SL1Width + $SL2Width)/1000, // LM Per Door Type
+                    ((($FrameHeight + $OPHeight) * 2) + $FrameWidth  +  $SL1Width + $SL2Width)/1000, // LM Per Door Type
                     $totalHeight, // Leg x2
                     $totalWidth  // Head
                 ];
