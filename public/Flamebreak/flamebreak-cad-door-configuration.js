@@ -787,7 +787,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5) );
+                            .text(SOHeight );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -910,7 +910,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
                                ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5));
+                            .text(SOHeight);
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
