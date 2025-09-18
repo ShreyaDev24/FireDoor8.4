@@ -350,7 +350,7 @@ class PrintInvoiceController extends Controller
             $fileName2_2 = $id . '2_2' . '.' . 'pdf';
             $pdf2_2->save($path2_2 . '/' . $fileName2_2);
         }
-dd($fileName2_2);
+
         // for getting margin
         $userIds = CompanyUsers();
         $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
