@@ -341,7 +341,7 @@ class PrintInvoiceController extends Controller
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
 
-        if($project->QualificationsStatus == 1){
+        if (!empty($project->QualificationsStatus) && $project->QualificationsStatus == 1) {
             $MoreInformation = $project->MoreInformation;
             $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'MoreInformation' => $MoreInformation]);
 
@@ -350,9 +350,6 @@ class PrintInvoiceController extends Controller
             $fileName2_2 = $id . '2_2' . '.' . 'pdf';
             $pdf2_2->save($path2_2 . '/' . $fileName2_2);
 
-            if (!file_exists($path2_2 . '/' . $fileName2_2)) {
-                dd("PDF fileName2_2 not created at: " . $path2_2 . '/' . $fileName2_2);
-            }
         }
 
         // for getting margin
