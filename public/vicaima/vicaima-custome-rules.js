@@ -291,6 +291,16 @@ function corewidth1Value(){
         $("#opCoreWidth").val('');
     }
     // $("#coreHeight").val(calculateCoreHeight);
+    if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+            if($("#overpanel").val() != 'Yes'){
+                let slHeight = $("#frameHeight").val();
+                 setTimeout(function(){
+                    $("#SL1Height").val(slHeight);
+                },1000);
+
+                console.log($("#SL1Height").val(slHeight))
+            }
+    }
 }
 
 $("#doorLeafFacing").change(function () {
@@ -1185,7 +1195,12 @@ function sideLight1Change(){
         }
 
         $("#SL1Width").attr({ 'readonly': false, "required": true });
-        $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());;
+        if($("#overpanel").val() != 'No'){
+            let frameHeight =  $("#frameHeight").val();
+            $("#SL1Height").attr({ 'readonly': true, "required": true }).val(frameHeight);
+            } else {
+            $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
+        }
         $("#SL1Depth").attr({ 'readonly': false, "required": true });
         $("#SL1Depth").attr('min',95);
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
@@ -6644,7 +6659,7 @@ function SideLightHeight(type){
       $("#SL1Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        let slHeight = frameHeight + oPHeigth;
+        let slHeight = frameHeight;
         $("#SL1Height").val(slHeight);
       }
     }
@@ -6652,7 +6667,7 @@ function SideLightHeight(type){
       $("#SL2Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        let s2Height = frameHeight + oPHeigth;
+        let s2Height = frameHeight;
         $("#SL2Height").val(s2Height);
       }
     }

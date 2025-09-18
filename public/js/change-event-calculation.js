@@ -371,7 +371,18 @@ $(".change-event-calulation").change(function(){
     // var calculateOfOpWidth = soWidth-(tollerance*TolleranceAdditionalNumberForOPWidth)-(framethikness*FrameThicknessAdditionalNumberForOPWidth)-(GapAdditionalNumberForOPWidth*gap);
     // new calculation according to 1059 => OP/FL width = Frame width - OP/Fl frame thickness X2.
     var calculateOfOpWidth = FrameWidth - (OpBeadThickness * 2);
-    $("#oPWidth").val(calculateOfOpWidth);
+    if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+        if($("#overpanel").val() != 'No'){
+           let sidelight1width = Number($("#SL1Width").val()) || 0;
+           let sidelight2width = Number($("#SL2Width").val()) || 0;
+           let TotalWidth = sidelight1width + sidelight2width + Number(FrameWidth || 0);
+
+            console.log(TotalWidth);
+            $("#oPWidth").val(TotalWidth);
+        }
+    } else{
+        $("#oPWidth").val(calculateOfOpWidth);
+    }
     //end
 
     // Leaf width 1 and leaf width 2 calculation according to doorsetType
