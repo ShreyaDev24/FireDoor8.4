@@ -2867,6 +2867,15 @@ $(document).ready(function(){
     sideLight1Change()
     sideLight2Change()
 
+    setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
+
     let overPanel = $("#overpanel").val();
     let sideLight1 = $("#sideLight1").val();
     let sideLight2 = $("#sideLight2").val();
