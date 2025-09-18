@@ -2892,7 +2892,7 @@ $(document).ready(function(){
             if($("#sideLight2").val() == 'Yes'){
                 SideLightHeight('sideLight2');
             }
-        }, 1000)
+        }, 5000)
 
     let overPanel = $("#overpanel").val();
     let sideLight1 = $("#sideLight1").val();
