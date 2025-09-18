@@ -790,7 +790,7 @@
                                             <input type="hidden" id="QuoteSummaryTotalDoorPrice"
                                                 value="@if (!empty($total_price)) {{ $total_price }} @else {{ '0.00' }} @endif">
 
-                                            <h4 class="total_amount">Total(GBP) <span>
+                                            <h4 class="total_amount">Total <span>
                                                     @if (!empty($total_price))
                                                     {{ number_format( (float) $total_price, 2, '.', '') }}
                                                     @else
