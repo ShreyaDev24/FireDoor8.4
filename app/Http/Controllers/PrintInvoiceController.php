@@ -340,7 +340,7 @@ class PrintInvoiceController extends Controller
         $fileName2_1 = $id . '2_1' . '.' . 'pdf';
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
-
+dd($project->QualificationsStatus,$project->MoreInformation);
         if($project->QualificationsStatus == 1){
             $MoreInformation = $project->MoreInformation;
             $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'MoreInformation' => $MoreInformation]);
