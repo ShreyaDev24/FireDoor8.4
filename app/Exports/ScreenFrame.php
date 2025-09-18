@@ -99,85 +99,19 @@ class ScreenFrame implements FromCollection,WithHeadings,WithEvents,WithTitle
                     2, // QtyScreenType is constant as 1
                     $Qty,
                     $screenDim,
+                    $FrameHeight,
+                    $FrameWidth,
+                    $FrameThickness,
+                    $FrameDepth,
+                    $FrameHeight - ($FrameThickness * 2) + $Height,
+                    $FrameWidth + $Width,
+                    (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($FrameWidth - ($FrameThickness * 2) + $TransomWidth) : 0,
+                    (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($value->TransomQuantity) : 0,
+                    (!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)) ? ($FrameHeight - ($FrameThickness * 2) + $MullionWidth) : 0,
+                    (!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)) ? ($value->MullionQuantity) : 0,
+                    '',
                 ];
             }
-<<<<<<<<< Temporary merge branch 1
-
-            if(!empty($value->TransomQuantity) && ($value->TransomQuantity != 0)){
-                $TransomQuantity = $value->TransomQuantity;
-                for ($i = 1; $i <= $TransomQuantity; $i++) {
-                    $FrameLocation = 'Transom'.$i;
-                    $Qty = 1;
-                    $TransomThickness ='Transom'.$i.'Thickness';
-                    $screenDim = $value->TransomWidth1.' x '.$value->TransomDepth.' x '.$value->$TransomThickness;
-                    $FrameMF = lippingName($value->TransomMaterial);
-
-                    $data[] = [
-                        $j,
-                        $value->plot_ref_no,
-                        $value->certification_no,
-                        $screenNumber,
-                        $ScreenType,
-                        $FrameLocation,
-                        $FrameMF,
-                        $Finish,
-                        $Qty,
-                        1,
-                        $screenDim
-                    ];
-                    $j++;
-                }
-            }
-
-            if(!empty($value->MullionQuantity) && ($value->MullionQuantity != 0)){
-                $MullionQuantity = $value->MullionQuantity;
-                for ($i = 1; $i <= $MullionQuantity; $i++) {
-                    $FrameLocation = 'Mullion'.$i;
-                    $Qty = 1;
-                    $MullionThickness ='Mullion'.$i.'Thickness';
-                    $screenDim = $value->MullionHeight1.' x '.$value->FrameDepth.' x '.$value->$MullionThickness;
-                    $FrameMF = lippingName($value->MullionMaterial);
-
-                    $data[] = [
-                        $j,
-                        $value->plot_ref_no,
-                        $value->certification_no,
-                        $screenNumber,
-                        $ScreenType,
-                        $FrameLocation,
-                        $FrameMF,
-                        $Finish,
-                        $Qty,
-                        1,
-                        $screenDim
-                    ];
-                    $j++;
-                }
-            }
-
-            if(!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness)){
-                $FrameLocation = 'SubFrame Bottom';
-                $FrameMF = lippingName($value->SubFrameMaterial);
-                $screenDim = $value->FrameWidth.' x '.$value->FrameDepth.' x '.$value->SubFrameBottomThickness;
-
-                $data[] = [
-                    $j,
-                    $value->plot_ref_no,
-                    $value->certification_no,
-                    $screenNumber,
-                    $ScreenType,
-                    $FrameLocation,
-                    $FrameMF,
-                    $Finish,
-                    $Qty,
-                    1,
-                    $screenDim
-                ];
-                $j++;
-            }
-
-=========
->>>>>>>>> Temporary merge branch 2
         }
 
         $footData = [
