@@ -6670,6 +6670,7 @@ function SideLightHeight(type){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
         let slHeight = frameHeight;
         $("#SL1Height").val(slHeight);
+        console.log($("#SL1Height").val(slHeight));
       }
     }
     if(type == 'sideLight2'){
