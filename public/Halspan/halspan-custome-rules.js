@@ -262,7 +262,16 @@ function pageIdentity(){
         $("#coreWidth1").val(calculate);
         $("#coreHeight").val(calculateCoreHeight);
         console.log(opCoreWidthcalculate,opCoreHeightcalculate)
+        if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+            if($("#overpanel").val() != 'Yes'){
+                let slHeight = $("#frameHeight").val();
+                 setTimeout(function(){
+                    $("#SL1Height").val(slHeight);
+                },1000);
 
+                console.log($("#SL1Height").val(slHeight))
+            }
+        }
     }
 
     // $(document).on('change','#leafHeightNoOP',function(e){
@@ -1148,7 +1157,13 @@ $(document).ready(function() {
             }
 
             $("#SL1Width").attr({ 'readonly': false, "required": true });
-            $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
+            if($("#overpanel").val() != 'No'){
+                let frameHeight =  $("#frameHeight").val();
+                $("#SL1Height").attr({ 'readonly': true, "required": true }).val(frameHeight);
+            } else {
+                $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
+            }
+
             $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
             $("#SL1Transom").attr({ 'disabled': false, "required": true });
             doorLeafFacingPrice('sideLight1',"Yes");
@@ -1865,6 +1880,9 @@ $(document).ready(function() {
                 $('#intumescentSealColor').removeAttr('required')
                 $("#SlBeadHeight").attr({min: 20});
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#doorThickness").hide()
                 // $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
@@ -3325,8 +3343,10 @@ $(document).ready(function() {
                                 $("#sideLight2GlazingSystemsThickness").val(data.GlazingThickness);
                                 $('#sideLight2GlazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
                             }else{
-                                $("#glazingSystemsThickness").val(data.GlazingThickness);
-                                $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                setTimeout(function(){
+                                   $("#glazingSystemsThickness").val(data.GlazingThickness);
+                                   $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                }, 4000);
                             }
 
                         } else {
@@ -6433,8 +6453,7 @@ function SideLightHeight(type){
       $("#SL1Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        console.log(oPHeigth)
-        let slHeight = frameHeight + oPHeigth;
+        let slHeight = frameHeight;
         setTimeout(function(){
             $("#SL1Height").val(slHeight);
         },1000);
@@ -6444,11 +6463,10 @@ function SideLightHeight(type){
       $("#SL2Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        let s2Height = frameHeight + oPHeigth;
+        let s2Height = frameHeight;
          setTimeout(function(){
             $("#SL2Height").val(s2Height);
         },1000);
-
       }
     }
 }

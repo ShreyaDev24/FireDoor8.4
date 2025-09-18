@@ -103,7 +103,7 @@
                             @endif
 
                             </label>
-                            <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control SL1 door-configuration"
+                            <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control SL1 door-configuration change-event-calulation"
                                 type="text" value="@if(isset($Item['SL1Width'])){{$Item['SL1Width']}}@endif">
                         </div>
                     </div>
@@ -469,7 +469,7 @@
                                 @else
                                     {{'readonly'}}
                                 @endif
-                            id="SL2Width" class="form-control door-configuration"
+                            id="SL2Width" class="form-control door-configuration change-event-calulation"
                                 type="text" value="@if(isset($Item['SL2Width'])){{$Item['SL2Width']}}@endif">
                         </div>
                     </div>

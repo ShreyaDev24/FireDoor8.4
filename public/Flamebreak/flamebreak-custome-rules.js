@@ -282,6 +282,16 @@ function pageIdentity(){
         $("#coreWidth1").val(calculate);
         $("#coreHeight").val(calculateCoreHeight);
         console.log(opCoreWidthcalculate,opCoreHeightcalculate)
+        if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+            if($("#overpanel").val() != 'Yes'){
+                let slHeight = $("#frameHeight").val();
+                 setTimeout(function(){
+                    $("#SL1Height").val(slHeight);
+                },1000);
+
+                console.log($("#SL1Height").val(slHeight))
+            }
+        }
 
     }
 
@@ -1900,6 +1910,9 @@ function copyOfSideLite1Change(isstatus = false){
                 // $("#doorThickness").hide()
                 $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
                 $("#glazingBeadsThickness").attr('min',19);
+                $('#intumescentSealType').removeAttr('required')
+                $('#intumescentSealLocation').removeAttr('required')
+                $('#intumescentSealColor').removeAttr('required')
                 // $("#lazingIntegrityOrInsulationIntegrity").prop('required',false);
                 // $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
                 MeetingStyle();
@@ -1910,6 +1923,9 @@ function copyOfSideLite1Change(isstatus = false){
                 $('label[for="gap"]').show();
                 $('label[for="gap_NFR"]').css({'display':'none'});
                 $('#intumescentSealArrangement').attr('required', true)
+                $('#intumescentSealType').attr('required', true)
+                $('#intumescentSealLocation').attr('required', true)
+                $('#intumescentSealColor').attr('required', true)
 
                 $('#intumescentSealType').attr('required', true)
                 $('#intumescentSealLocation').attr('required', true)
@@ -6405,7 +6421,7 @@ function SideLightHeight(type){
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
         console.log(oPHeigth)
-        let slHeight = frameHeight + oPHeigth;
+        let slHeight = frameHeight;
         setTimeout(function(){
             $("#SL1Height").val(slHeight);
         },1000);
@@ -6415,7 +6431,7 @@ function SideLightHeight(type){
       $("#SL2Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        let s2Height = frameHeight + oPHeigth;
+        let s2Height = frameHeight;
          setTimeout(function(){
             $("#SL2Height").val(s2Height);
         },1000);

@@ -73,13 +73,7 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
             $FrameWidth = $value->FrameWidth;
             $FrameThickness = $value->FrameThickness;
 
-            if($value->FireRating == '60-60' || $value->FireRating == '60-0'){
-                $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
-                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassWidthFD60;
-            }else{
-                $GlassWidth = $FrameWidth - ($FrameThickness * 2) + $ScreenGlassWidthNFR;
-                $GlassHeight = $FrameHeight - ($FrameThickness * 2) + $ScreenGlassHeightNFR;
-            }
+
 
             $TransomQuantity = $value->TransomQuantity + 1;
             $MullionQuantity = $value->MullionQuantity + 1;
@@ -127,6 +121,14 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
                     }else {
                         $GlassPaneWidth = 0;
                         $GlassPaneHeight = 0;
+                    }
+
+                    if($value->FireRating == '60-60' || $value->FireRating == '60-0'){
+                        $GlassWidth = $GlassPaneWidth + $ScreenGlassWidthFD60;
+                        $GlassHeight = $GlassPaneHeight + $ScreenGlassHeightFD60;
+                    }else{
+                        $GlassWidth = $GlassPaneWidth + $ScreenGlassWidthNFR;
+                        $GlassHeight = $GlassPaneHeight + $ScreenGlassHeightNFR;
                     }
 
                     $screenQty = 1;
