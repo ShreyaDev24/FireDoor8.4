@@ -9152,6 +9152,26 @@ class DoorScheduleController extends Controller
                 $rules['ArchitraveSetQty'] = 'required';
             }
 
+            $frameOnOff = $doorArray['FrameOnOff'] ?? ($door->FrameOnOff ?? null);
+            if ($frameOnOff == 1) {
+                $skip = [
+                    'Tollerance',
+                    'Undercut',
+                    'FloorFinish',
+                    'FrameThickness',
+                    'SOWidth',
+                    'SOHeight',
+                    'SOWallThick',
+                    'GAP',
+                    'FrameType',
+                    'FrameDepth'
+                ];
+
+                foreach ($skip as $k) {
+                    unset($rules[$k]);
+                }
+            }
+
             // Validate the current door
             $validator = Validator::make($door->toArray(), $rules);
 
