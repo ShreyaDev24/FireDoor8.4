@@ -341,17 +341,6 @@ class PrintInvoiceController extends Controller
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
 
-        if ((int)$project->QualificationsStatus === 1) {
-            $MoreInformation = $project->MoreInformation;
-            $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', [
-                'comapnyDetail' => $comapnyDetail,
-                'MoreInformation' => $MoreInformation
-            ]);
-
-            $path2_2 = public_path() . '/allpdfFile';
-            $fileName2_2 = $id . '2_2' . '.' . 'pdf';
-            $pdf2_2->save($path2_2 . '/' . $fileName2_2);
-        }
 
 
         // for getting margin
@@ -362,6 +351,17 @@ class PrintInvoiceController extends Controller
         // Details Door List PDF
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
+
+        if ((int)$project->QualificationsStatus === 1) {
+            $MoreInformation = $project->MoreInformation;
+            $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'version' => $version,'project' => $project,'MoreInformation' => $MoreInformation,'quotaion' => $quotaion]);
+
+            // return $pdf2->download('file2.pdf');
+            $path2_2 = public_path() . '/allpdfFile';
+            $fileName2_2 = $id . '2_2' . '.' . 'pdf';
+            $pdf2_2->save($path2_2 . '/' . $fileName2_2);
+        }
+
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')

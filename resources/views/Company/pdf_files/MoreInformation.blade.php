@@ -117,7 +117,38 @@
     </head>
     <body style="position: relative;">
         <!-- Page 3 Start -->
-           <h2>More Information</h2>
+         <div class="col2" style="margin-top:70px;">
+                @if(!empty($comapnyDetail->ComplogoBase64))
+                <img src="{{$comapnyDetail->ComplogoBase64}}" class="imgClass" alt="Logo" style="position:absolute; top:10px; right: 10px;"/>
+                @else
+                <!-- <img src="{{Base64Image('defaultImg')}}" class="imgClass" alt="Logo"/> -->
+                {!! Base64Image('defaultImg') !!}
+                @endif
+            </div>
+            <div class="col1">
+                <h3>Qualifications</h3>
+                @if(!empty($project->ProjectName))<h3>Project :  {{ $project->ProjectName }}</h3> @endif
+            </div>
+            <div class="roright">
+                <table class="rightTbl">
+                    <tr>
+                        <td><b>Ref</b></td>
+                        <td>:</td>
+                        <td>@if(!empty($quotaion->QuotationGenerationId)) {{ $quotaion->QuotationGenerationId }} @endif</td>
+                    </tr>
+                    <tr>
+                        <td><b>Date</b></td>
+                        <td>:</td>
+                        <td>{{ date('Y-m-d') }}</td>
+                    </tr>
+                    <tr>
+                        <td><b>Revision</b></td>
+                        <td>:</td>
+                        <td>@if(!empty($version)) {{ $version }} @endif</td>
+                    </tr>
+                </table>
+            </div>
+
             <p>{{ $MoreInformation }}</p>
 
     </body>
