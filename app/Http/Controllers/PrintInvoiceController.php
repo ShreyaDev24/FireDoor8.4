@@ -341,6 +341,7 @@ class PrintInvoiceController extends Controller
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
 
+        dd($project->QualificationsStatus, gettype($project->QualificationsStatus));
         if (!empty($project->QualificationsStatus) && $project->QualificationsStatus == 1) {
             $MoreInformation = $project->MoreInformation;
             $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'MoreInformation' => $MoreInformation]);
