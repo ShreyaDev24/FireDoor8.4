@@ -413,7 +413,7 @@
                                         <p>Discount(% Off List) <span id="QSdiscountValue">0.00</span></p>
                                         <input disabled type="text" id="QuoteSummaryDiscount"  name="QuoteSummaryDiscount" placeholder="0.00" value="@if(!empty($quotation->QuoteSummaryDiscount)){{ $quotation->QuoteSummaryDiscount }}@endif">
                                         <input type="hidden" id="QuoteSummaryTotalDoorPrice" value="@if(!empty($total_price)){{$total_price}} @else {{'0.00'}}@endif">
-                                        <h4 class="total_amount">Total(GBP) <span>@if(!empty($total_price)){{$total_price}} @else {{'0.00'}}@endif</span></h4>
+                                        <h4 class="total_amount">Total <span>@if(!empty($total_price)){{$total_price}} @else {{'0.00'}}@endif</span></h4>
 
                                         <!-- @if($quotation->QuotationStatus != 'Accept')
                                             <a tabindex="0" class="btn btn-dark btn-lg btn-block" role="button" data-toggle="popover" data-trigger="focus" title="" data-original-title="Wait For Quotation Accept.">
