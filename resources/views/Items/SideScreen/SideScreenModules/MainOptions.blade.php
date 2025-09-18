@@ -108,7 +108,7 @@
                             @php
                                 $options = ['Prime', 'Paint RAL 7016', 'Lacquer', 'Stain & Lacquer'];
                             @endphp
-                            <select name="Finish" id="Finish" class="form-control " >
+                            <select name="Finish" id="Finish" class="form-control " required>
                                 <option value="">Select Finish</option>
                                 @foreach ($options as $option)
                                     <option value="{{ $option }}" @if (isset($Item['Finish']) && $Item['Finish'] == $option) selected @endif>
