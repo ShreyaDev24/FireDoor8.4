@@ -7449,16 +7449,15 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
+        // Now prepare the main PDF files array
         $pdfFiles = [];
-
-        // Common files always included
         $pdfFiles[] = public_path('allpdfFile/' . $fileName1);
         $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
         $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
         $pdfFiles[] = public_path('allpdfFile/' . $fileName3);
 
-        // Add fileName2_2 only if it's set and not empty
-        if (!empty($fileName2_2)) {
+        // Add More Information PDF only if it exists
+        if (!empty($fileName2_2) && file_exists(public_path('allpdfFile/' . $fileName2_2))) {
             $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
         }
 
@@ -7487,7 +7486,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
 
-            if (!empty($fileName2_2)) {
+            if (!empty($fileName2_2) && file_exists(public_path('allpdfFile/' . $fileName2_2))) {
                 $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
             }
 
