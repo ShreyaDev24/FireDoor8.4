@@ -347,7 +347,7 @@ class PrintInvoiceController extends Controller
                 'comapnyDetail' => $comapnyDetail,
                 'MoreInformation' => $MoreInformation
             ]);
-
+            dd('cn');
             $path2_2 = public_path() . '/allpdfFile';
             $fileName2_2 = $id . '2_2' . '.' . 'pdf';
             $pdf2_2->save($path2_2 . '/' . $fileName2_2);
