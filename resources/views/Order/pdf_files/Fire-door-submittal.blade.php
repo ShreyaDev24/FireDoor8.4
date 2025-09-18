@@ -45,7 +45,7 @@
     </header>
 
     <section>
-      <p class="lead">This technical submittal outlines the specification, certification, installation methodology, and ongoing compliance requirements for the fire door assemblies proposed for the <strong>{{ $projectName ?? '[Insert Project Name]' }}</strong> project.</p>
+      <p class="lead">This technical submittal outlines the specification, certification, installation methodology, and ongoing compliance requirements for the fire door assemblies proposed for the <strong>{{ $data['project_name'] ?? '' }}</strong> project.</p>
 
       <p>All doorsets included in this package have been selected in accordance with the project fire strategy and are designed, manufactured, and to be installed in compliance with:</p>
 
@@ -68,15 +68,15 @@
       <table class="summary">
         <tr>
           <td>Client / Contractor</td>
-          <td>{{ $data['client_contractor'] ?? '[Insert Name]' }}</td>
+          <td>{{ $data['client_contractor'] ?? '' }}</td>
         </tr>
         <tr>
           <td>Site Address</td>
-          <td>{{ $data['site_address'] ?? '[Insert Site]' }}</td>
+          <td>{{ $data['site_address'] ?? '' }}</td>
         </tr>
         <tr>
           <td>Number of Doorsets</td>
-          <td>{{ $data['NumberOfDoorSets'] ?? '[Insert Quantity]' }}</td>
+          <td>{{ $data['NumberOfDoorSets'] ?? '' }}</td>
         </tr>
         <tr>
           <td>Fire Rating</td>

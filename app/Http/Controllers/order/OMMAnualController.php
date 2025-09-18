@@ -97,9 +97,12 @@ class OMMAnualController extends Controller
 
         $QuotationSiteDeliveryAddress = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->first();
 
+        $customerDetails = CustomerContact::join('customers','customers.id','=','customer_contacts.MainContractorId')
+                ->where('customers.UserId',$quotaion->MainContractorId)->first();
+
         $data = [
             'project_name' => $project->ProjectName ?? '',
-            'client_contractor' => $customer->FirstName.' '.$customer->LastName,
+            'client_contractor' => $customerDetails->CstCompanyName,
             'site_address' => (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')),
             'fire_door_types' => 'Door cores used '. $configurationItemName .' FD30/FD60',
             'configurationItemName' => $configurationItemName,
