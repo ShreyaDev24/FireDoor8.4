@@ -335,7 +335,7 @@
                             @endif
 
                             </label>
-                            <select name="sideLight2" id="sideLight2" class="form-control door-configuration" required>
+                            <select name="sideLight2" id="sideLight2" class="form-control door-configuration change-event-calulation" required>
                                 <option value=""> Is side light 2 is active?</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='SideLight2')
@@ -362,7 +362,7 @@
                             </script>
                             @endif
                                 </label>
-                            <select name="copyOfSideLite1" id="copyOfSideLite1" class="form-control door-configuration"
+                            <select name="copyOfSideLite1" id="copyOfSideLite1" class="form-control door-configuration change-event-calulation"
                             @if(empty($Item['DoYouWantToCopySameAsSL1'])){{'disabled'}}@endif>
                                 <option value=""> Do you want to copy Same as SL1?</option>
                                 @foreach($option_data as $row)
