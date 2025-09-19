@@ -2368,7 +2368,6 @@ class DoorScheduleController extends Controller
                     $SL2Transom = trim((string) $row[$j++]);
                     $SLtransomHeightFromTop = trim((string) $row[$j++]);
                     $SLtransomThickness = trim((string) $row[$j++]);
-                    $test1 = trim((string) $row[$j++]);
                     $LippingType = trim((string) $row[$j++]);
                     $LippingThickness = trim((string) $row[$j++]);
                     $LippingSpecies = trim((string) $row[$j++]);
