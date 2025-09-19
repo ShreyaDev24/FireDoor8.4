@@ -662,7 +662,7 @@ class DoorScheduleController extends Controller
             if (!empty($itemid)) {
 
                 // if(!empty($VersionId)){
-                $OldQuotationItems = Item::select('items.*')->join('item_master', 'item_master.itemID', 'items.itemId')->where('items.QuotationId', $QuotationId)->where('items.itemId', $itemid)->get()->first();
+                $OldQuotationItems = Item::select('items.*')->where('items.QuotationId', $QuotationId)->where('items.itemId', $itemid)->get()->first();
 
                 $door = $OldQuotationItems->DoorType . ' Copy';
                 $mm =  Item::where(['QuotationId' => $QuotationId, 'DoorType' => $door])->get()->first();
