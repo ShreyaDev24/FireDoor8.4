@@ -418,6 +418,17 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
                 }
 
+                $SLWidth = 0;
+
+                if (!empty($value->SideLight1) && $value->SideLight1 === 'Yes') {
+                    $SLWidth += (float) $value->SL1Width;
+                }
+
+                if (!empty($value->SideLight2) && $value->SideLight2 === 'Yes') {
+                    $SLWidth += (float) $value->SL2Width;
+                }
+
+
                 $data[] = [
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -427,7 +438,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->LeafThickness,
                     $value->SpeciesName,
                     $value->OPHeigth,
-                    $value->FrameWidth,
+                    $value->FrameWidth + $SLWidth,
                     $value->FrameThickness,
                     '',
                     '',
