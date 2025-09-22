@@ -729,6 +729,7 @@ $(document).ready(function() {
     $("#glassType").change(function(){
         let selectedValue = $(this).val(); // Get the value of the #glassType element
         $('#GlassType-value').attr('data-value', selectedValue);
+        GlassTypeChange();
         glazing_system();
     });
     $("#opGlassType").change(function(){
@@ -2253,11 +2254,6 @@ function copyOfSideLite1Change(isstatus = false){
                  else {
                     var lippingSpecies = result.lippingSpecies;
                     var lippingSpeciesLength =result.lippingSpecies.length;
-                    innerHtml+='<option value="">No Glazing Systems Found</option>';
-                    $("#glazingSystems").empty().append(innerHtml);
-                    $("#opglazingSystems").empty().append(innerHtml);
-                    $("#sideLight1GlazingSystems").empty().append(innerHtml);
-                    $("#sideLight2GlazingSystems").empty().append(innerHtml);
                     if(lippingSpecies!='' && lippingSpeciesLength>0){
                         innerHtml1 = "";
                         costToShow = 0;
@@ -2280,7 +2276,6 @@ function copyOfSideLite1Change(isstatus = false){
                     $("#SideLight1GlazingBeadSpecies").empty().append(innerHtml1);
                     $("#SideLight2GlazingBeadSpecies").empty().append(innerHtml1);
                 }
-                $("#glazingSystemsThickness").val(0);
             }
         });
     }
@@ -3283,19 +3278,10 @@ function copyOfSideLite1Change(isstatus = false){
 
     function GlassTypeChange(id = null,type=""){
         var glassType = (id == null)?$("#glassType").val():id;
-        if(type == "opGlassType"){
-            glassType = (id == null)?$("#opGlassType").val():id;
-        }
-        if(type == "sideLight1GlassType"){
-            glassType = (id == null)?$("#sideLight1GlassType").val():id;
-        }
-        if(type == "sideLight2GlassType"){
-            glassType = (id == null)?$("#sideLight2GlassType").val():id;
-        }
 
         if(glassType != ''){
             let pageId = pageIdentity();
-            let fireRating =$("#fireRating").val();
+            let fireRating = (id == null)?$("#fireRating").val():$("#savedfirerating").val();
             $.ajax({
                 url:  $("#glass-type-filter").html(),
                 method:"POST",
@@ -3309,15 +3295,8 @@ function copyOfSideLite1Change(isstatus = false){
                         // innerHtml+='<option value="">Select Glass thikness</option>';
 
                         var GlassThicknessValue = document.getElementById('GlassThickness-value');
-                        if(type == "opGlassType"){
-                            $("#opglassThickness").val(data[0].GlassThickness);
-                        }else if(type == "sideLight1GlassType"){
-                            $("#sideLight1GlassThickness").val(data[0].GlassThickness);
-                        }else if(type == "sideLight2GlassType"){
-                            $("#sideLight2GlassThickness").val(data[0].GlassThickness);
-                        }else{
-                            $("#glassThickness").val(data[0].GlassThickness);
-                        }
+                        $("#glassThickness").val(data[0].GlassThickness);
+
                         // $("#glassThickness").val(data[0].OptionValue);
                     }else{
                         $("#glassThickness").val(0);
@@ -5098,6 +5077,7 @@ function glass_glazing_system(isstatus = false){
                         var GlassTypeSelected = "";
                         if(GlassTypeValue == data[i].Key){
                             GlassTypeSelected = "selected";
+                            GlassTypeChange(GlassTypeValue, '');
                         }
                         glassTypeInnerHtml+='<option value="'+data[i].Key+'" '+ GlassTypeSelected +'>'+data[i].GlassType+'</option>';
                     }else{
@@ -5156,6 +5136,7 @@ function glazing_system(isIntegrity,isstatus = false){
                         var GlazingSystemSelected = "";
                         if(GlazingSystemsValue == data[i].Key){
                             GlazingSystemSelected = "selected";
+                            GlazingSystemsChange(GlazingSystemsValue,'');
                         }
                         glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected +'>'+data[i].GlazingSystem+'</option>';
                     }else{
