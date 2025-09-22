@@ -3050,6 +3050,7 @@ class DoorScheduleController extends Controller
                     $GAP = trim((string) $row[$j++]);
                     $FrameThickness = trim((string) $row[$j++]);
                     $IronmongerySet = trim((string) $row[$j++]);
+                    $FolderId = trim((string) $row[$j++]);
                     $IronmongeryID = trim((string) $row[$j++]);
                     $DoorLeafFacing = trim((string) $row[$j++]);
                     $DoorLeafFinish = trim((string) $row[$j++]);
@@ -3350,6 +3351,7 @@ class DoorScheduleController extends Controller
                             $aa->OpensInwards = $OpensInwards;
 
                             $aa->IronmongerySet = $IronmongerySet;
+                            $aa->FolderId = $FolderId;
                             $aa->IronmongeryID = floatval($IronmongeryID);
 
                             $aa->LeafWidth1 = floatval($LeafWidth1);
@@ -3567,6 +3569,7 @@ class DoorScheduleController extends Controller
                             $item->gap = $aa->GAP;
                             $item->frameThickness = $aa->FrameThickness;
                             $item->ironmongerySet = $aa->IronmongerySet;
+                            $item->FolderId = $aa->FolderId;
                             $item->IronmongeryID = $aa->IronmongeryID;
                             $item->LeafConstruction = $aa->LeafConstruction;
                             $item->DoorDimensions = $aa->DoorDimensions;
