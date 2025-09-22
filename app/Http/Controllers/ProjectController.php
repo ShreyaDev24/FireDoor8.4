@@ -242,7 +242,7 @@ class ProjectController extends Controller
                 $project->Province = $request->Province;
                 $project->Country = $request->Country;
                 $project->PostalCode = $request->PostalCode;
-                $project->QualificationsStatus = $request->QualificationsStatus;
+                $project->QualificationsStatus = $request->QualificationsStatus ?? 0;
                 $project->MoreInformation = $request->MoreInformation;
                 $project->returnTenderDate = $returnTenderDate;
                 $project->projectCurrency = $request->projectCurrency;
