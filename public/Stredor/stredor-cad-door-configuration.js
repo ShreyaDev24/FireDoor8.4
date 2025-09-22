@@ -6420,21 +6420,20 @@ svg.append("circle")
                             .text(`${parseInt(PHdistancefrombottom)}`);
 
                 }
-
-                   if (IsFlushBoltsEnable && !IsFlushBoltsEnable2 ) {
+      if (IsFlushBoltsEnable && !IsFlushBoltsEnable2 ) {
             if (LeafWidth2ForMap == LeafWidth1ForMap){
                             if(Handing == 'DD'){
-                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
                             }
                             else{
-                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
                             }
                         }
                             if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
-                                 flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                                 flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
                             }
                             if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
-                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
                             }
                     }
 
@@ -6442,24 +6441,23 @@ svg.append("circle")
            
                         if (LeafWidth2ForMap == LeafWidth1ForMap){
                             if(Handing == 'DD'){
-                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
-                                flushBoltsLeftBottom(FlushBoltsWidth2,FlushBoltsHeight2)
-                            }
-                            else{
                                 flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
                                 flushBoltsRightBottom(FlushBoltsWidth2,FlushBoltsHeight2)
                             }
-                        }
-                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
-                                 flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
-                                flushBoltsRightBottom(FlushBoltsWidth2,FlushBoltsHeight2)
-                            }
-                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                            else{
                                 flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
                                 flushBoltsLeftBottom(FlushBoltsWidth2,FlushBoltsHeight2)
                             }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                                 flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsLeftBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsRightBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
             }
-
              
 
               
