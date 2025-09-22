@@ -2911,7 +2911,7 @@ class DoorScheduleController extends Controller
                                     $dd->floor = $floor;
                                 }
 
-                                // $dd->save();
+                                $dd->save();
 
                                 if ($versionId > 0) {
                                     $itemMasterID = ItemMaster::orderBy('id', 'DESC')->limit(1)->first();
