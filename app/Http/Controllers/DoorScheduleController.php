@@ -2194,7 +2194,6 @@ class DoorScheduleController extends Controller
                         continue;
                     }
 
-                    // dd($row);
                     $j = 2;
                     $IntumescentLeafType = trim((string) $row[$j++]);
                     $FrameOnOff = trim((string) $row[$j++]);
@@ -2218,6 +2217,7 @@ class DoorScheduleController extends Controller
                     $GAP = trim((string) $row[$j++]);
                     $FrameThickness = trim((string) $row[$j++]);
                     $IronmongerySet = trim((string) $row[$j++]);
+                    $FolderId = trim((string) $row[$j++]);
                     $IronmongeryID = trim((string) $row[$j++]);
                     $SOHeight = trim((string) $row[$j++]);
                     $SOWidth = trim((string) $row[$j++]);
@@ -2340,34 +2340,34 @@ class DoorScheduleController extends Controller
                     $SL1GlazingBeadsFixingDetail = trim((string) $row[$j++]);
                     //
                     $SL1GlazingBeadSpecies = trim((string) $row[$j++]);
-                    $SL1Width = trim((string) $row[$j++]);
-                    $SL1Height = trim((string) $row[$j++]);
-                    $SlBeadThickness = trim((string) $row[$j++]);
-                    $SlBeadHeight = trim((string) $row[$j++]);
-                    $SL1Depth = trim((string) $row[$j++]);
-                    $SL1Transom = trim((string) $row[$j++]);
-                    $test2 = trim((string) $row[$j++]);
-                    $SideLight2 = trim((string) $row[$j++]);
-                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
-                    $SideLight2GlassType = trim((string) $row[$j++]);
+                    $SL1Width = trim((string) $row[$j++]); //500
+                    $SL1Height = trim((string) $row[$j++]); // 2345
+                    $SlBeadThickness = trim((string) $row[$j++]); // 250
+                    $SlBeadHeight = trim((string) $row[$j++]); // 250
+                    $SL1Depth = trim((string) $row[$j++]); // 250
+                    $SL1Transom = trim((string) $row[$j++]); // no
+                    // $test2 = trim((string) $row[$j++]);
+                    $SideLight2 = trim((string) $row[$j++]); // yes
+                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]); // yes
+                    $SideLight2GlassType = trim((string) $row[$j++]); // 15mm_Pyrostop_30-10
                     //
-                    $SL2GlassThickness = trim((string) $row[$j++]);
-                    $SL2GlazingSystems = trim((string) $row[$j++]);
-                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]);
+                    $SL2GlassThickness = trim((string) $row[$j++]); // 15
+                    $SL2GlazingSystems = trim((string) $row[$j++]); // 12x3mm Hodgsons Firestrip 30 & 5mm high x 15mm wide x 80mm long Hardwood or Non Combustable setting Blocks
+                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]); // 3
                     //
-                    $SideLight2BeadingType = trim((string) $row[$j++]);
+                    $SideLight2BeadingType = trim((string) $row[$j++]); // Chamfer_Boleaction
                     //
-                    $SL2GlazingBeadsThickness = trim((string) $row[$j++]);
-                    $SL2GlazingBeadsWidth = trim((string) $row[$j++]);
-                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsThickness = trim((string) $row[$j++]); // null
+                    $SL2GlazingBeadsWidth = trim((string) $row[$j++]); // null
+                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]); // 50mm screws at 150mm centers and 50mm from the corners
                     //
-                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
-                    $SL2Width = trim((string) $row[$j++]);
-                    $SL2Height = trim((string) $row[$j++]);
-                    $SL2Depth = trim((string) $row[$j++]);
-                    $SL2Transom = trim((string) $row[$j++]);
-                    $SLtransomHeightFromTop = trim((string) $row[$j++]);
-                    $SLtransomThickness = trim((string) $row[$j++]);
+                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]); // birch
+                    $SL2Width = trim((string) $row[$j++]); // 500
+                    $SL2Height = trim((string) $row[$j++]); // 2345
+                    $SL2Depth = trim((string) $row[$j++]); // 250
+                    $SL2Transom = trim((string) $row[$j++]); // no
+                    $SLtransomHeightFromTop = trim((string) $row[$j++]); // null
+                    $SLtransomThickness = trim((string) $row[$j++]); // null
                     $LippingType = trim((string) $row[$j++]);
                     $LippingThickness = trim((string) $row[$j++]);
                     $LippingSpecies = trim((string) $row[$j++]);
@@ -2400,6 +2400,8 @@ class DoorScheduleController extends Controller
                     $ArchitraveSetQty = trim((string) $row[$j++]);
                     $DoorsetPrice = trim((string) $row[$j++]);
                     $IronmongaryPrice = trim((string) $row[$j++]);
+
+                    // dd($LippingType);
 
                     $Checkingfirerating = Option::where(['OptionSlug' => 'fire_rating', 'OptionKey' => $FireRating])->count();
                     if ($Checkingfirerating == 0) {
@@ -2470,6 +2472,7 @@ class DoorScheduleController extends Controller
                             $aa->Dropseal = ($Dropseal == 1) ? 1 : 0;
                             $aa->OpensInwards = $OpensInwards;
                             $aa->IronmongerySet = $IronmongerySet;
+                            $aa->FolderId = $FolderId;
                             $aa->IronmongeryID = floatval($IronmongeryID);
                             $aa->LeafWidth1 = floatval($LeafWidth1);
                             $aa->LeafWidth2 = floatval($LeafWidth2);
@@ -2691,6 +2694,7 @@ class DoorScheduleController extends Controller
                             $item->gap = $aa->GAP;
                             $item->frameThickness = $aa->FrameThickness;
                             $item->ironmongerySet = $aa->IronmongerySet;
+                            $item->FolderId = $aa->FolderId;
                             $item->IronmongeryID = $aa->IronmongeryID;
                             //Door Dimensions & Door Leaf
                             $item->sOWidth = $aa->SOWidth;
@@ -2907,7 +2911,7 @@ class DoorScheduleController extends Controller
                                     $dd->floor = $floor;
                                 }
 
-                                $dd->save();
+                                // $dd->save();
 
                                 if ($versionId > 0) {
                                     $itemMasterID = ItemMaster::orderBy('id', 'DESC')->limit(1)->first();
