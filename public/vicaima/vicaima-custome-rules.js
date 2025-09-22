@@ -6559,45 +6559,48 @@ $(document).on('change','#swingType,#fireRating', function (e) {
     let DoorSetType = $('#doorsetType').val();
     let swingType = $(this).val();
     let frameThickness = $('#frameThickness').val();
-    if((defaultDoorSetType == 'SD' &&  DoorSetType == 'DD') || (defaultswingType == 'SA' && swingType == 'DA' || defaultDoorSetType == 'DD' && swingType == 'DA')){
-        if(frameThickness < 40){
-            $('#frameThickness').attr('min',40);
-            $('#frameThickness').val('');
-            $('#frameThickness').css({ 'border': '1px solid red' });
-            swal('Warning', 'FrameThickness should not be less than 40mm');
-        } else {
-            $('#frameThickness').removeAttr('min',40);
-            $('#frameThickness').css('border', '');
+    let frameonoff = $("#frameonoff").prop('checked');
+    if(frameonoff != true){
+        if((defaultDoorSetType == 'SD' &&  DoorSetType == 'DD') || (defaultswingType == 'SA' && swingType == 'DA' || defaultDoorSetType == 'DD' && swingType == 'DA')){
+            if(frameThickness < 40){
+                $('#frameThickness').attr('min',40);
+                $('#frameThickness').val('');
+                $('#frameThickness').css({ 'border': '1px solid red' });
+                swal('Warning', 'FrameThickness should not be less than 40mm');
+            } else {
+                $('#frameThickness').removeAttr('min',40);
+                $('#frameThickness').css('border', '');
+            }
         }
-    }
-    if(swingType == 'DA' && DoorSetType == 'DD'){
-        if(frameThickness < 40){
-            $('#frameThickness').attr('min',40);
-            $('#frameThickness').val('');
-            $('#frameThickness').css({ 'border': '1px solid red' });
-            swal('Warning', 'FrameThickness should not be less than 40mm');
-        } else {
-            $('#frameThickness').removeAttr('min',40);
-            $('#frameThickness').css('border', '');
+        if(swingType == 'DA' && DoorSetType == 'DD'){
+            if(frameThickness < 40){
+                $('#frameThickness').attr('min',40);
+                $('#frameThickness').val('');
+                $('#frameThickness').css({ 'border': '1px solid red' });
+                swal('Warning', 'FrameThickness should not be less than 40mm');
+            } else {
+                $('#frameThickness').removeAttr('min',40);
+                $('#frameThickness').css('border', '');
+            }
         }
-    }
 
-   else if($('#fireRating').val() == 'FD30' || $('#fireRating').val() == 'FD30s'){
-        $('#frameThickness').attr('min',28);
-        $('#frameThickness').val('');
-        $('#frameMaterial').val('');
-        $('#frameThickness').css({ 'border': '1px solid red' });
-        swal('Warning', 'FrameThickness should not be less than 28mm');
-    } else if($('#fireRating').val() == 'FD60' || $('#fireRating').val() == 'FD60s'){
-        $('#frameThickness').attr('min',32);
-        $('#frameThickness').val('');
-        $('#frameMaterial').val('');
-        $('#frameThickness').css({ 'border': '1px solid red' });
-        swal('Warning', 'FrameThickness should not be less than 32mm');
-    } else {
-        $('#frameThickness').removeAttr('min',28);
-        $('#frameThickness').removeAttr('min',32);
-        $('#frameThickness').css('border', '');
+       else if($('#fireRating').val() == 'FD30' || $('#fireRating').val() == 'FD30s'){
+            $('#frameThickness').attr('min',28);
+            $('#frameThickness').val('');
+            $('#frameMaterial').val('');
+            $('#frameThickness').css({ 'border': '1px solid red' });
+            swal('Warning', 'FrameThickness should not be less than 28mm');
+        } else if($('#fireRating').val() == 'FD60' || $('#fireRating').val() == 'FD60s'){
+            $('#frameThickness').attr('min',32);
+            $('#frameThickness').val('');
+            $('#frameMaterial').val('');
+            $('#frameThickness').css({ 'border': '1px solid red' });
+            swal('Warning', 'FrameThickness should not be less than 32mm');
+        } else {
+            $('#frameThickness').removeAttr('min',28);
+            $('#frameThickness').removeAttr('min',32);
+            $('#frameThickness').css('border', '');
+        }
     }
 });
 function overpanelcheck(){
