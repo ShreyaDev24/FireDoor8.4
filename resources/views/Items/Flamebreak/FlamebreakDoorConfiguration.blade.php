@@ -678,7 +678,6 @@ $(document).ready(function() {
 
     @if(isset($Item["GlazingSystems"]))
     glazing_system("{{$Item['FireRating']}}",true)
-    GlazingSystemsChange("{{$Item['GlazingSystems']}}");
     @endif
     @if(isset($Item["opGlazingSystems"]))
     GlazingSystemsChange("{{$Item['opGlazingSystems']}}",'opglazingSystems');
