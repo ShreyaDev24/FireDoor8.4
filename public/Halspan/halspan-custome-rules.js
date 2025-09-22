@@ -1546,6 +1546,8 @@ $(document).ready(function() {
             }
             if($("#sideLight2").val() == 'Yes'){
                 SideLightHeight('sideLight2');
+            } else {
+                $("#sideLight2").attr('required',false)
             }
         }, 1000)
     });
