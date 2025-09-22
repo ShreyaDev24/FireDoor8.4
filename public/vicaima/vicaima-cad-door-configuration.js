@@ -125,7 +125,7 @@ const render = (CustomElement = null) => {
 
     var SOHeightForMap = 0;
 
-
+var frameHeightnew = $('input[name="frameHeight"]').val();
     if (frameonoff ) {
         var SOHeight = $('input[name="sOHeight"]').val();
 
@@ -771,7 +771,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SOHeight) );
+                            .text((frameHeightnew) );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -894,7 +894,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
                                ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text(SOHeight)
+                            .text(frameHeightnew)
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -1345,7 +1345,7 @@ if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
               .attr("font-size", 10)
               .attr("y", iy + (TopFrameHeight - FrameThicknessForMap) + (FrameHeightForMap / 2) + 10)
               .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 88}, ${iy + (TopFrameHeight - FrameThicknessForMap) + (FrameHeightForMap / 2)})`)
-              .text(FrameHeight);
+              .text(frameHeightnew);
 
 
           svg.append('line') // outer frame joining line top
