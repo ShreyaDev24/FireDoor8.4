@@ -2346,6 +2346,9 @@ class DoorScheduleController extends Controller
                     $SlBeadHeight = trim((string) $row[$j++]); // 250
                     $SL1Depth = trim((string) $row[$j++]); // 250
                     $SL1Transom = trim((string) $row[$j++]); // no
+                    if($SideLight1 == 'No'){
+                        $test = trim((string) $row[$j++]);
+                    }
                     // $test2 = trim((string) $row[$j++]);
                     $SideLight2 = trim((string) $row[$j++]); // yes
                     $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]); // yes
@@ -2368,6 +2371,9 @@ class DoorScheduleController extends Controller
                     $SL2Transom = trim((string) $row[$j++]); // no
                     $SLtransomHeightFromTop = trim((string) $row[$j++]); // null
                     $SLtransomThickness = trim((string) $row[$j++]); // null
+                    if($SideLight2 == 'No'){
+                        $test1 = trim((string) $row[$j++]);
+                    }
                     $LippingType = trim((string) $row[$j++]);
                     // dd($LippingType);
                     $LippingThickness = trim((string) $row[$j++]);
