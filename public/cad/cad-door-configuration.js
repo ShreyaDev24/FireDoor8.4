@@ -786,7 +786,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5) );
+                            .text(SOHeight );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -909,7 +909,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
                                ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text((SideLightPanel1Height*5));
+                            .text(SOHeight);
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -6426,220 +6426,79 @@ svg.append("circle")
                     
                 }
 
-                 if(IsFlushBoltsEnable)
-                    {
-                        // if(LeafWidth2ForMap<LeafWidth1ForMap) {
-
-
-                            svg.append('rect')
-                            .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                            .attr('y', iy + TopFrameHeight + GapForMap + 1)
-                            .attr('width', (FlushBoltsWidth / 5))
-                            .attr('height', (FlushBoltsHeight / 5))
-                            .attr('stroke', 'none')
-                            .attr('fill', '#D0D0C6')
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 5 + 5 + 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-
-
-                        svg.append("text")            // append text
-                            .style("fill", "black")   // make the text
-                            .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
-                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 20}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
-                            .text(FlushBoltsHeight);
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                            .attr("marker-start", "url(#arrowLeft)")
-                            .attr("marker-end", "url(#arrowRight)")
-
-                        svg.append('line')
-                            .style("stroke", "black")
-                            .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 5) + 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
-
-                        svg.append("text")            // append text
-                            .style("fill", "black")   // make the text
-                            .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth / 10) + 1)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
-                            .text(FlushBoltsWidth);
-
-                            svg.append('line')
-                                            .style("stroke", "black")
-                                            .style("stroke-width", 0.5)
-                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                            .attr("marker-start", "url(#arrowLeft)")
-                                            .attr("marker-end", "url(#arrowRight)")
-
-                                        svg.append('line')
-                                            .style("stroke", "black")
-                                            .style("stroke-width", 0.5)
-                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
-                                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+(FlushBoltsWidth / 5)  + 1 )
-                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
-
-                                        svg.append("text")            // append text
-                                            .style("fill", "black")   // set text color
-                                            .attr("font-size", 10)    // set font size
-                                            .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
-                                            .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
-                                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
-                                            .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
-                        // }else{
-                        //     svg.append('rect')
-                        //     .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                        //     .attr('y', iy + TopFrameHeight + GapForMap + 1)
-                        //     .attr('width', (FlushBoltsWidth / 5))
-                        //     .attr('height', (FlushBoltsHeight / 5))
-                        //     .attr('stroke', 'none')
-                        //     .attr('fill', '#D0D0C6')
-
-                        // svg.append('line')
-                        //     .style("stroke", "black")
-                        //     .style("stroke-width", 0.5)
-                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1)
-                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5)
-                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                        //     .attr("marker-start", "url(#arrowLeft)")
-                        //     .attr("marker-end", "url(#arrowRight)")
-
-                        // svg.append('line')
-                        //     .style("stroke", "black")
-                        //     .style("stroke-width", 0.5)
-                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 5 - 5 - 1)
-                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-
-
-                        // svg.append("text")            // append text
-                        //     .style("fill", "black")   // make the text
-                        //     .attr("font-size", 10)
-                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10)    // set x position
-                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5) // set y position
-                        //     .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
-                        //     .text(FlushBoltsHeight);
-
-                        // svg.append('line')
-                        //     .style("stroke", "black")
-                        //     .style("stroke-width", 0.5)
-                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1 + (FlushBoltsWidth / 5))
-                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 5)
-                        //     .attr("marker-start", "url(#arrowLeft)")
-                        //     .attr("marker-end", "url(#arrowRight)")
-
-                        // svg.append('line')
-                        //     .style("stroke", "black")
-                        //     .style("stroke-width", 0.5)
-                        //     .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                        //     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                        //     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 5) - 1)
-                        //     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 10);
-
-                        // svg.append("text")            // append text
-                        //     .style("fill", "black")   // make the text
-                        //     .attr("font-size", 10)
-                        //     .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (FlushBoltsWidth / 10) - 1 - 5)    // set x position
-                        //     .attr("y", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5) + 15) // set y position
-                        //     .text(FlushBoltsWidth);
-
-                        //     svg.append('line')
-                        //                     .style("stroke", "black")
-                        //                     .style("stroke-width", 0.5)
-                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
-                        //                     .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
-                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                        //                     .attr("marker-start", "url(#arrowLeft)")
-                        //                     .attr("marker-end", "url(#arrowRight)")
-
-                        //                 svg.append('line')
-                        //                     .style("stroke", "black")
-                        //                     .style("stroke-width", 0.5)
-                        //                     .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
-                        //                     .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5))
-                        //                     .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
-                        //                     .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 5));
-
-                        //                 svg.append("text")            // append text
-                        //                     .style("fill", "black")   // set text color
-                        //                     .attr("font-size", 10)    // set font size
-                        //                     .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
-                        //                     .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)) // set y position
-                        //                     .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
-                        //                     .text(FrameHeight - FrameThickness - Gap - FlushBoltsHeight);
-                        // }
+                     if (IsFlushBoltsEnable && !IsFlushBoltsEnable2 ) {
+            if (LeafWidth2ForMap == LeafWidth1ForMap){
+                            if(Handing == 'DD'){
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                            }
+                            else{
+                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                            }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                                 flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                            }
                     }
 
-                     if(IsFlushBoltsEnable2)
+                                    if (IsFlushBoltsEnable2  ) {
+           
+                        if (LeafWidth2ForMap == LeafWidth1ForMap){
+                            if(Handing == 'DD'){
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsRightBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
+                            else{
+                                flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsLeftBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
+                        }
+                            if(LeafWidth2ForMap > LeafWidth1ForMap){ //right
+                                 flushBoltsLeftTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsLeftBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
+                            if(LeafWidth2ForMap < LeafWidth1ForMap){ //left
+                                flushBoltsRightTop(FlushBoltsWidth,FlushBoltsHeight)
+                                flushBoltsRightBottom(FlushBoltsWidth2,FlushBoltsHeight2)
+                            }
+            }
+                      function flushBoltsRightBottom(width, height)
                     {
                             svg.append('rect')
                             .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                            .attr('y',  iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1 - (FlushBoltsHeight2 / 5))
-                            .attr('width', (FlushBoltsWidth2 / 5))
-                            .attr('height', (FlushBoltsHeight2 / 5))
+                            .attr('y',  iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1 - (height / 5))
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
                             .attr('stroke', 'none')
                             .attr('fill', '#D0D0C6')
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 5)
                             .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 5)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5))
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) + 5 ) // set y position
-                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 20}, ${iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) +5 })`) // rotate
-                            .text(FlushBoltsHeight2);
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 10) + 5 ) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 20}, ${iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) +5 })`) // rotate
+                            .text(height);
 
                         svg.append('line')
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
                             .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
-                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
-                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 5) + 1)
-                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 5)
                             .attr("marker-start", "url(#arrowLeft)")
                             .attr("marker-end", "url(#arrowRight)")
 
@@ -6648,9 +6507,235 @@ svg.append("circle")
                         svg.append("text")            // append text
                             .style("fill", "black")   // make the text
                             .attr("font-size", 10)
-                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (FlushBoltsWidth2 / 10) + 1)    // set x position
-                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 5) - 10) // set y position
-                            .text(FlushBoltsWidth2);
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 10) + 1)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 10) // set y position
+                            .text(width);
+
+                    }
+
+
+                    function flushBoltsRightTop(width, height){
+                             svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr('y', iy + TopFrameHeight + GapForMap + 1)
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
+                            .attr('stroke', 'none')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 5 + 5 + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (height / 10) + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 20}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
+                            .text(height);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 5) + 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 10);
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles + (width / 10) + 1)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 15) // set y position
+                            .text(width);
+
+                            svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                                            .attr("marker-start", "url(#arrowLeft)")
+                                            .attr("marker-end", "url(#arrowRight)")
+
+                                        svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap+MeetingStiles+(width / 5)  + 1 )
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5));
+
+                                        svg.append("text")            // append text
+                                            .style("fill", "black")   // set text color
+                                            .attr("font-size", 10)    // set font size
+                                            .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
+                                            .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (height / 5)) / 2)) // set y position
+                                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
+                                            .text(FrameHeight - FrameThickness - Gap - height);
+                    }
+
+                    function flushBoltsLeftTop(width, height){
+                          svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr('y', iy + TopFrameHeight + GapForMap + 1)
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
+                            .attr('stroke', 'none')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5 - 5 - 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 10)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (height / 10) + 5) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 10}, ${iy + TopFrameHeight + GapForMap + 1 + (FlushBoltsHeight / 10) + 5})`) // rotate
+                            .text(height);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1 + (width / 5))
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 5)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 10);
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 10) - 1 - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + 1 + (height / 5) + 15) // set y position
+                            .text(width);
+
+                            svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
+                                            .attr("x2", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 190)
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                                            .attr("marker-start", "url(#arrowLeft)")
+                                            .attr("marker-end", "url(#arrowRight)")
+
+                                        svg.append('line')
+                                            .style("stroke", "black")
+                                            .style("stroke-width", 0.5)
+                                            .attr("x1", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 195)
+                                            .attr("y1", iy + TopFrameHeight + GapForMap + 1 + (height / 5))
+                                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
+                                            .attr("y2", iy + TopFrameHeight + GapForMap + 1 + (height / 5));
+
+                                        svg.append("text")            // append text
+                                            .style("fill", "black")   // set text color
+                                            .attr("font-size", 10)    // set font size
+                                            .attr("x", ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185) // set x position
+                                            .attr("y", iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (height / 5)) / 2)) // set y position
+                                            .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2WidthSpaceForVerticalLines + 185}, ${iy + TopFrameHeight + GapForMap + ((LeafHeightNoOPForMap + (FlushBoltsHeight / 5)) / 2)})`) // apply rotation
+                                            .text(FrameHeight - FrameThickness - Gap - height);
+                    }
+
+                      function flushBoltsLeftBottom(width, height)
+                    {
+                            svg.append('rect')
+                            .attr('x', ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 1)
+                            .attr('y',  iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1 - (height / 5))
+                            .attr('width', (width / 5))
+                            .attr('height', (height / 5))
+                            .attr('stroke', 'none')
+                            .attr('fill', '#D0D0C6')
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5)
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap- 1)
+                            .attr("x2", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5))
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 20)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 10) + 5 ) // set y position
+                            .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 20}, ${iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (FlushBoltsHeight2 / 10) +5 })`) // rotate
+                            .text(height);
+
+                        svg.append('line')
+                            .style("stroke", "black")
+                            .style("stroke-width", 0.5)
+                            .attr("x1", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap )
+                            .attr("y1", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 5)
+                            .attr("x2",ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 5) - 5)
+                            .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 5)
+                            .attr("marker-start", "url(#arrowLeft)")
+                            .attr("marker-end", "url(#arrowRight)")
+
+               
+
+                        svg.append("text")            // append text
+                            .style("fill", "black")   // make the text
+                            .attr("font-size", 10)
+                            .attr("x", ix + FrameThicknessForMap + GapForMap + LeafWidth1ForMap - (width / 10) - 1 - 5)    // set x position
+                            .attr("y", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap - 1 - (height / 5) - 10) // set y position
+                            .text(width);
 
                     }
                 if (IsMorticedDropdownSealsEnable || IsFacefixeddropsealsEnable) {
