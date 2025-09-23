@@ -47,8 +47,6 @@
                                         </li>
                                         <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
                                                     id="">Generate Elevation Drawing</a></li>
-                                            <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
-                                                    Doorset Schedule Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
                                                     Calculation</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
@@ -508,6 +506,10 @@
         value="{{ url('/quotation/ExportScreenBomCalculation') }}" />
     <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
         value="{{ url('/quotation/cuttingList') }}" />
+    <input type="hidden" name="allGlazingBeadsUrl" id="allGlazingBeadsUrl"
+        value="{{ url('/quotation/allGlazingBeadsExport') }}" />
+    <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
+        value="{{ url('/quotation/ExportIronmongery') }}" />
     @endsection
     @section('js')
     <script>
@@ -525,6 +527,113 @@
 
     let UniversalToken = $("#_token").val();
 
+    ExportBomCalculation = function() {
+        var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+
+    ExportDoorTypeBom = function() {
+        var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4){
+                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportSideScreen = function() {
+        var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportScreenBomCalculation = function() {
+        var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportIronmongery = function(){
+        var ExportIronmongeryUrl = $("#ExportIronmongeryUrl").val();
+        var quotationId = $("#quotationId").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+                window.location.href = ExportIronmongeryUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    }
+
+    ExcelExportNonConfig = function() {
+        var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+
+    cuttingList = function() {
+        var cuttingListUrl = $("#cuttingListUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    allGlazingBeadsExport = function() {
+        var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
 
     function configurableNon(id) {
         $('#add-item-section').hide();
