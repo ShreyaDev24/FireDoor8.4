@@ -128,7 +128,7 @@ const render = (CustomElement = null) => {
         //SOWidthForMap = NumberChanger(SOWidth);
         SOWidthForMap = SOWidth / 5;
     }
-
+    var frameHeightnew = $('input[name="frameHeight"]').val();
     var SOHeightForMap = 0;
     var SOHeight = $('input[name="sOHeight"]').val();//this is height of door from top to bottom Leaf Height
     if (withoutFrameId == 1) {
@@ -786,7 +786,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text(SOHeight );
+                            .text(frameHeightnew );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -909,7 +909,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
                                ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text(SOHeight);
+                            .text(frameHeightnew);
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")

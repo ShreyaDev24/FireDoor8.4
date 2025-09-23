@@ -122,6 +122,7 @@ const render = (CustomElement = null) => {
             SOWidth = parseInt($('input[name="leafWidth1"]').val()) + parseInt($('input[name="leafWidth2"]').val());
         }
     }
+    var frameHeightnew = $('input[name="frameHeight"]').val();
     if (SOWidth == "") {
         SOWidth = 0;
     } else {
@@ -788,7 +789,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied + ((FrameHeight / 5)/ 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy +GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text(SOHeight );
+                            .text(frameHeightnew );
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -911,7 +912,7 @@ const render = (CustomElement = null) => {
                             .attr("y", iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 20},
                                ${iy + GapAfterOverPanelApplied  + (( (FrameHeight / 5) ) / 2) - 15})`)
-                            .text(SOHeight);
+                            .text(frameHeightnew);
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
