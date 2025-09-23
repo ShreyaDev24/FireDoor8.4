@@ -209,7 +209,7 @@ $loginUser = Auth::user();
 
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="overview_status">
-                        <div class="row mb-3">
+                        <div class="row mb-3" onclick="listType('dataBoxType','sendtoclient')">
                             <div class="col-6 status_value">
                                 <p style="width: 160px !important;">Quote Returned</p>
                                 <h6>{!! $QuoteReturnedCount!!}</h6>
@@ -231,9 +231,9 @@ $loginUser = Auth::user();
 
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="overview_status">
-                        <div class="row mb-3">
+                        <div class="row mb-3" onclick="listType('dataBoxType')">
                             <div class="col-6 status_value">
-                                <p>Order Value</p>
+                                <p>Total Quotation</p>
                                 <h6>{!! $OrderValueCount!!}</h6>
                             </div>
                             <div class="col-6">
@@ -353,7 +353,7 @@ $loginUser = Auth::user();
         $('.BoxActive').addClass('btnActive');
     })
 
-    function listType(type = 'box', from = 0, limitTo = 20, filters = [], order = [], doEmpty = false, setPage = false) {
+    function listType(type = 'box',isbox = null, from = 0, limitTo = 20, filters = [], order = [], doEmpty = false, setPage = false) {
         if (type == '') {
             alert('please select list type')
             return false;
@@ -388,6 +388,7 @@ $loginUser = Auth::user();
                 _token: "{{ csrf_token() }}",
                 listType: type,
                 isStatus: 11,
+                isbox:isbox
             },
 
             success: function(data) {
