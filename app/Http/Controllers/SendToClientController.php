@@ -126,6 +126,7 @@ class SendToClientController extends Controller
 
             $q2 = Quotation::find($quotationId);
             $q2->linkStatus = 0;
+            $q2->QuotationStatus = 'Send To Client';
             $q2->save();
 
             echo json_encode([
