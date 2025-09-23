@@ -9689,9 +9689,9 @@ if (bottomClearance < 200) {
     let adjust = shortage / 3;
 
     // Adjust both VP1 and VP2 heights
-   let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
+   let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
 
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
@@ -9845,9 +9845,9 @@ if (bottomClearance < 200) {
     let adjust = shortage / 3;
 
     // Adjust both VP1 and VP2 heights
-    let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
+    let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
 console.log(newVP1Height,newVP2Height,newVP3Height)
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
@@ -10039,10 +10039,10 @@ if (bottomClearance < 200) {
     let adjust = shortage / 4;
 
     // Adjust both VP1 and VP2 heights
-    let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
-let newVP4Height = Math.round((Leaf1VisionPanel4Height * 5) - adjust);
+    let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
+let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
   console.log('hitt',newVP1Height,newVP2Height)   
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
@@ -10206,10 +10206,10 @@ if (bottomClearance < 200) {
     let adjust = shortage / 4;
 
     // Adjust both VP1 and VP2 heights
-       let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
-let newVP4Height = Math.round((Leaf1VisionPanel4Height * 5) - adjust);
+       let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
+let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
   console.log('hitt',newVP1Height,newVP2Height)   
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
@@ -10407,11 +10407,11 @@ if (bottomClearance < 200) {
     let adjust = shortage / 5;
 
     // Adjust both VP1 and VP2 heights
-       let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
-let newVP4Height = Math.round((Leaf1VisionPanel4Height * 5) - adjust);
-let newVP5Height = Math.round((Leaf1VisionPanel5Height * 5) - adjust);
+       let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
+let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
+let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
   console.log('hitt',newVP1Height,newVP2Height)   
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
@@ -10574,11 +10574,11 @@ if (bottomClearance < 200) {
     let adjust = shortage / 5;
 
     // Adjust both VP1 and VP2 heights
-       let newVP1Height = Math.round((Leaf1VisionPanel1Height * 5) - adjust);
-let newVP2Height = Math.round((Leaf1VisionPanel2Height * 5) - adjust);
-let newVP3Height = Math.round((Leaf1VisionPanel3Height * 5) - adjust);
-let newVP4Height = Math.round((Leaf1VisionPanel4Height * 5) - adjust);
-let newVP5Height = Math.round((Leaf1VisionPanel5Height * 5) - adjust);
+       let newVP1Height = Math.floor((Leaf1VisionPanel1Height * 5) - adjust);
+let newVP2Height = Math.floor((Leaf1VisionPanel2Height * 5) - adjust);
+let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
+let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
+let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
   console.log('hitt',newVP1Height,newVP2Height)   
     swal('Warning!', "Distance from bottom cannot be less than 200.");
           $(document).ready(function () {
