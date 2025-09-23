@@ -740,6 +740,8 @@ $sn++;
                 $loop++;
             }
 
+            $VersionId = QuotationVersion::where('quotation_id', $Id)->where('id', $vId)->value('version');
+
             $quotation_data = Quotation::where('id',$Id)->first();
             $currency = SettingCurrency::where('companyId',Auth::user()->CompanyId)->first();
             return view('DoorSchedule.Ordered',[
@@ -751,6 +753,7 @@ $sn++;
                 'companykacustomer' => $companykacustomer,
                 'customerMultiContact' => $customerMultiContact,
                 'quotation' => $Quotation,
+                'VersionId' => $VersionId,
                 'ProjectTable' => $Projects,
                 'customerDetails' => $CustomerDetails,
                 'QuotationContactInformation' => $QuotationContactInformation,
