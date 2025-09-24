@@ -54,27 +54,27 @@ class OMMAnualController extends Controller
         }
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
-        
+
         if(!empty($quotaion->MainContractorId)){
             $customerContact = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->where('customers.UserId',$quotaion->MainContractorId)->first();
         } else {
             $customerContact = '';
         }
-        
+
         $customer = '';
         $CstCompanyAddressLine1 = '';
         if(!empty($customerContact)){
             $customer = Customer::where(['id' => $customerContact->MainContractorId])->first();
             $CstCompanyAddressLine1 = $customer->CstCompanyAddressLine1;
         }
-        
+
         $SalesContact = 'N/A';
         if(!empty($quotaion->SalesContact)){
             $SalesContact = $quotaion->SalesContact;
         }
 
         $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
-        
+
         // First PDF
         // Introduction PDF
             $pdfOne = PDF::loadView('Order.pdf_files.introduction',['pdf1' => $pdf1, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
@@ -129,7 +129,7 @@ class OMMAnualController extends Controller
                 if (!empty($show->DoorsetType)) {
                     $DoorDescription = DoorDescription($show->DoorsetType);
                 }
-                
+
                 $a2 .=
                     '<tr>
                 <td>' . $show->doorNumber . '</td>
@@ -141,7 +141,7 @@ class OMMAnualController extends Controller
                 </tr>';
                 $i++;
             }
-            
+
             $pdf4 = PDF::loadView('Order.pdf_files.detaildoorlist',['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'customer' => $customer]);
             // return $pdf3->download('file3.pdf');
             $path4 = public_path().'/allpdfFile';
@@ -202,7 +202,7 @@ class OMMAnualController extends Controller
                             </tr>';
                         }
                     }
-                    
+
                     $Setname = $adIron->Setname;
                     $pdf64 = PDF::loadView('Order.pdf_files.ironmongeryList',['a23' => $a23, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'Setname' => $Setname]);
                     // return $pdf3->download('file3.pdf');
@@ -252,7 +252,7 @@ class OMMAnualController extends Controller
                 $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
                 $IronmongaryPrice = $AI->discountprice;
             }
-            
+
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
 
@@ -264,7 +264,7 @@ class OMMAnualController extends Controller
                 $dlf = DoorLeafFinish($configurationItem, $show->DoorLeafFinish);
                 $DoorLeafFinish = empty($show->SheenLevel) ? $dlf : $dlf . ' - ' . $show->SheenLevel . ' Sheen';
             }
-            
+
             $DoorLeafFinishColor = '';
             if (!empty($show->DoorLeafFinishColor)) {
                 $DoorLeafFinishColor = ' + ' . $show->DoorLeafFinishColor;
@@ -286,7 +286,7 @@ class OMMAnualController extends Controller
                     $LippingType = $SelectedLippingType->OptionValue;
                 }
             }
-            
+
             $LippingSpecies = '';
             if (!empty($show->LippingSpecies)) {
                 $SelectedLippingSpecies = LippingSpecies::find($show->LippingSpecies);
@@ -294,12 +294,12 @@ class OMMAnualController extends Controller
                     $LippingSpecies = $SelectedLippingSpecies->SpeciesName;
                 }
             }
-            
+
             $LippingThickness = '';
             if (!empty($show->LippingThickness)) {
                 $LippingThickness = $show->LippingThickness;
             }
-            
+
             if (!empty($LippingType) && !empty($LippingSpecies) && !empty($LippingThickness)) {
                 $Lipping = $LippingType . ' - ' . $LippingSpecies . ' - ' . $LippingThickness . 'mm';
                 // LY-LS-LT = 1-1-1 //
@@ -400,7 +400,7 @@ class OMMAnualController extends Controller
             } elseif (!empty($show->FrameType) && $show->FrameType == 'Plant_on_Stop') {
                 $FrameSizeForDoorDetailsTable .= $show->PlantonStopWidth . "x" . $show->PlantonStopHeight . "mm";
             }
-            
+
             // $FrameSizeForDoorDetailsTable .= $show->FrameThickness."mm";
 
             if (!empty($show->IronmongerySet)) {
@@ -414,7 +414,7 @@ class OMMAnualController extends Controller
             } else {
                 $IronmongerySet = 'N/A';
             }
-            
+
             $FrameFinishForDoorDetailsTable = 'N/A';
             if (!empty($show->FrameFinish)) {
 
@@ -431,12 +431,12 @@ class OMMAnualController extends Controller
             if (!empty($show->ExtLinerValue)) {
                 $ExtLinerValue = $show->ExtLinerValue;
             }
-            
+
             $ExtLinerThickness = '';
             if (!empty($show->ExtLinerThickness)) {
                 $ExtLinerThickness = $show->ExtLinerThickness . 'mm';
             }
-            
+
             if (empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                 $ExtLinerSizeForDoorDetailsTable = "N/A";
             } elseif (empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
@@ -498,7 +498,7 @@ class OMMAnualController extends Controller
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
-            
+
             $ArchitraveSetQty = 'N/A';
             if (!empty($show->ArchitraveSetQty)) {
                 $ArchitraveSetQty = $show->ArchitraveSetQty;
@@ -509,12 +509,12 @@ class OMMAnualController extends Controller
             if (!empty($show->SL1Width)) {
                 $SL1Width = $show->SL1Width;
             }
-            
+
             $SL1Height = '';
             if (!empty($show->SL1Height)) {
                 $SL1Height = $show->SL1Height;
             }
-            
+
             $SideScreen1 = 'N/A';
             if (!empty($SL1Width) && !empty($SL1Height)) {
                 $SideScreen1 = $SL1Width . ' x ' . $SL1Height;
@@ -531,12 +531,12 @@ class OMMAnualController extends Controller
             if (!empty($show->SL2Width)) {
                 $SL2Width = $show->SL2Width;
             }
-            
+
             $SL2Height = '';
             if (!empty($show->SL2Height)) {
                 $SL2Height = $show->SL2Height;
             }
-            
+
             $SideScreen2 = 'N/A';
             if (!empty($SL2Width) && !empty($SL2Height)) {
                 $SideScreen2 = $SL2Width . ' x ' . $SL2Height;
@@ -659,7 +659,7 @@ class OMMAnualController extends Controller
                 }else{
                     $FireRatingActualValue  =  $tt->FireRating;
                 }
-                
+
                // sidelight
                 if($tt->FireRating == 'FD30s'){
                     $tt->FireRating = 'FD30';
@@ -712,7 +712,7 @@ class OMMAnualController extends Controller
                 foreach ($DoorNumber as $bb) {
                     $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
                 }
-                
+
                 $species = LippingSpecies::where('id', $tt->FrameMaterial)->where('Status',1)->first();
                 if ($species != '') {
                     $frameMaterial = $species->SpeciesName;
@@ -820,7 +820,7 @@ class OMMAnualController extends Controller
                     $FrameImageStructureLeftLeaf2 = $RemainingSpaceBlock;
                     $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
                 }
-                
+
                 $redstripRightCommonClass = $tt->IntumescentLeapingSealLocation.'_right_strip_'.$tt->DoorsetType;
                 $redstripLeftCommonClass = $tt->IntumescentLeapingSealLocation.'_left_strip_'.$tt->DoorsetType;
 
@@ -1754,21 +1754,21 @@ class OMMAnualController extends Controller
                 if (!empty($quotaion->QuotationGenerationId)) {
                     $QuotationGenerationId = $quotaion->QuotationGenerationId;
                 }
-                
+
                 $ProjectName = null;
                 if (!empty($project->ProjectName)) {
                     $ProjectName = $project->ProjectName;
                 }
-                
+
                 if (!empty($version)) {
                     $version = $version;
                 }
-                
+
                 $CompanyAddressLine1 = null;
                 if (!empty($comapnyDetail->CompanyAddressLine1)) {
                     $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
                 }
-                
+
                 $Username = null;
                 if (!empty($user->FirstName) && !empty($user->LastName)) {
                     $Username = $user->FirstName . ' ' . $user->LastName;
@@ -1780,7 +1780,7 @@ class OMMAnualController extends Controller
                     // $svgFile = URL('/') . '/uploads/files/door.jpg';
                     $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
                 }
-                
+
                 $elevTbl .=
                     '
                     <div id="headText">
@@ -1802,7 +1802,7 @@ class OMMAnualController extends Controller
                 } else {
                     $elevTbl .= Base64Image('defaultImg');
                 }
-                
+
                 $elevTbl .=
                     '</span>
                                                     </td>
@@ -2001,7 +2001,7 @@ class OMMAnualController extends Controller
                             break;
                     }
                 endif;
-                
+
                 // }
 
 
@@ -2011,7 +2011,7 @@ class OMMAnualController extends Controller
                 if (!empty($tt->ExtLinerValue)) {
                     $ExtLinerValue = $tt->ExtLinerValue;
                 }
-                
+
                 $ExtLinerThickness = '';
                 if (!empty($tt->ExtLinerThickness)) {
                     $ExtLinerThickness = $tt->ExtLinerThickness . "mm";
@@ -2050,12 +2050,12 @@ class OMMAnualController extends Controller
                     $dlf = DoorLeafFinish($configurationItem, $tt->DoorLeafFinish);
                     $DoorLeafFinish = empty($tt->SheenLevel) ? $dlf : $dlf . ' - ' . $tt->SheenLevel . ' Sheen';
                 }
-                
+
                 $DoorLeafFinishColor = '';
                 if (!empty($tt->DoorLeafFinishColor)) {
                     $DoorLeafFinishColor = ' + ' . $tt->DoorLeafFinishColor;
                 }
-                
+
                 $DoorLeafFacing = "N/A";
                 if (!empty($tt->DoorLeafFacing)) {
                     $DoorLeafFacing = DoorLeafFacing($configurationItem, $tt->DoorLeafFacing, $tt->DoorLeafFacingValue);
@@ -2086,12 +2086,12 @@ class OMMAnualController extends Controller
                 if (!empty($tt->GlassType)) {
                     $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
                 }
-                
+
                 $OPGlassTypeForDoorDetailsTable = "N/A";
                 if (!empty($tt->OPGlassType)) {
                     $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem, $FireRatingActualValue, $tt->OPGlassType);
                 }
-                
+
                 $ArchitraveFinishForDoorDetailsTable = "N/A";
                 if (!empty($tt->ArchitraveFinish)) {
                     $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem, $tt->ArchitraveFinish, $tt->FrameFinishColor);
@@ -2105,7 +2105,7 @@ class OMMAnualController extends Controller
                         ->where("OptionKey", $tt->GlassIntegrity)->first();
                     $GlassIntegrity = $gi->OptionValue;
                 }
-                
+
                 $OPGlazingBeads = 'N/A';
                 if (!empty($tt->OPGlazingBeads)) {
                     if($FireRatingActualValue == 'NFR'){
@@ -2119,10 +2119,10 @@ class OMMAnualController extends Controller
                         ->where("OptionSlug", "leaf1_glazing_beads")
                         ->where("OptionKey", $tt->OPGlazingBeads)->first();
                     }
-                    
+
                     $OPGlazingBeads = $opgb->OptionValue;
                 }
-                
+
                 $SLBeadingType = 'N/A';
                 if (!empty($tt->BeadingType)) {
                     if($FireRatingActualValue == 'NFR'){
@@ -2136,7 +2136,7 @@ class OMMAnualController extends Controller
                         ->where("OptionSlug", "leaf1_glazing_beads")
                         ->where("OptionKey", $tt->BeadingType)->first();
                     }
-                    
+
                     $SLBeadingType = $bt->OptionValue;
                 }
 
@@ -2192,7 +2192,7 @@ class OMMAnualController extends Controller
                     $IronmongerySet = 'N/A';
                     $IronmongeryData = '';
                 }
-                
+
                 $rWdBRating = 'N/A';
                 if (!empty($tt->rWdBRating)) {
                     $rWdBRating = $tt->rWdBRating;
@@ -2220,22 +2220,22 @@ class OMMAnualController extends Controller
                         $ArchitraveMaterial = $ls->SpeciesName;
                     }
                 }
-                
+
                 $ArchitraveSetQty = 'N/A';
                 if (!empty($tt->ArchitraveSetQty)) {
                     $ArchitraveSetQty = $tt->ArchitraveSetQty;
                 }
-                
+
                 $ArchitraveWidth = 'N/A';
                 if (!empty($tt->ArchitraveWidth)) {
                     $ArchitraveWidth = $tt->ArchitraveWidth;
                 }
-                
+
                 $ArchitraveDepth = 'N/A';
                 if (!empty($tt->ArchitraveDepth)) {
                     $ArchitraveDepth = $tt->ArchitraveDepth;
                 }
-                
+
                 $ArchitraveHeight = 'N/A';
                 if (!empty($tt->ArchitraveHeight)) {
                     $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -2560,7 +2560,7 @@ class OMMAnualController extends Controller
 
                 $PageBreakCount++;
             }
-            
+
             // echo $elevTbl;die;
             $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing',['elevTbl' => $elevTbl]);
             $path6 = public_path().'/allpdfFile';
@@ -2582,7 +2582,7 @@ class OMMAnualController extends Controller
         if($fileName64 !== '' && $fileName64 !== '0'){
             $pdf64 = public_path().'/allpdfFile'.'/'.$fileName64;
         }
-        
+
         $pdf55 = public_path().'/allpdfFile'.'/'.$fileName5;
         $pdf66 = public_path().'/allpdfFile'.'/'.$fileName6;
 
@@ -2596,7 +2596,7 @@ class OMMAnualController extends Controller
         if($pdf64 !== '' && $pdf64 !== '0'){
             $pdfMerger->addPDF($pdf64, 'all');
         }
-        
+
         $pdfMerger->addPDF($pdf55, 'all');
         $pdfMerger->addPDF($pdf66, 'all');
 
@@ -2615,7 +2615,7 @@ class OMMAnualController extends Controller
         if($fileName64 !== '' && $fileName64 !== '0'){
             $unlinkpath64 = public_path().'/allpdfFile'.'/'.$fileName64;
         }
-        
+
         $unlinkpath5 = public_path().'/allpdfFile'.'/'.$fileName5;
         $unlinkpath6 = public_path().'/allpdfFile'.'/'.$fileName6;
         unlink($unlinkpath1);
@@ -2627,5 +2627,44 @@ class OMMAnualController extends Controller
         unlink($unlinkpath5);
         unlink($unlinkpath_m_p_r);
         unlink($unlinkpath64);
+    }
+
+    public function Labels($quatationId , $versionID )
+    {
+        $order = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
+                $join->on("quotation_version_items.itemID","=","items.itemId")
+                    ->on("quotation_version_items.itemmasterID","=","item_master.id");
+            })
+            ->join('quotation','quotation.id','=','items.QuotationId')
+            ->where('items.QuotationId', $quatationId)
+            ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+
+        $Quotation = Quotation::where('id',$quatationId)->first();
+
+        $html = '';
+        foreach ($order as $item) {
+            if (!empty(floatval($item->IronmongeryID)) || floatval($item->IronmongeryID) != 0) {
+                $AI = AddIronmongery::select('Setname')->where('id', floatval($item->IronmongeryID))->where('UserId', user_id())->first();
+                $Setname = empty($AI) ? '' : $AI->Setname;
+            }
+            $html .= '<div class="label">';
+            $html .= '<p><strong>Order No:</strong> ' . $Quotation->OrderNumber . '</p>';
+            $html .= '<p><strong>Fire Rating:</strong> ' . ($item->FireRating ?? '-') . '</p>';
+            $html .= '<p><strong>Handing:</strong> ' . ($item->Handing ?? '-') . '</p>';
+            $html .= '<p><strong>Door Leaf Size:</strong> ' . ($item->LeafWidth1 ?? '-') . ' x ' . ($item->LeafHeight ?? '-') . '</p>';
+            $html .= '<p><strong>Door Type:</strong> ' . ($item->DoorType ?? '-') . '</p>';
+            $html .= '<p><strong>Door No:</strong> ' . ($item->doorNumber ?? '-') . '</p>';
+            $html .= '<p><strong>Ironmongery Pk Ref:</strong> ' . ($Setname ?? '-') . '</p>';
+            $html .= '</div>';
+        }
+
+
+        // Pass order and related info to PDF view
+        $pdf = PDF::loadView('Order.pdf_files.labels', [
+            'html' => $html
+        ]);
+
+        return $pdf->download('labels.pdf');
+
     }
 }
