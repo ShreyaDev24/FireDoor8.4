@@ -34,6 +34,7 @@
                                     <a class="btn btn-light dropdown-toggle" data-toggle="dropdown">MORE</a>
                                     <ul class="dropdown-menu drop_style">
                                         <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
+                                        <li><a href="javascript:void(0);" onClick="LabelsOMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Labels</a></li>
                                         <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
                                         <li>
                                             <a href="{{ url('quotation/assign-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
@@ -510,6 +511,7 @@
         value="{{ url('/quotation/allGlazingBeadsExport') }}" />
     <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
         value="{{ url('/quotation/ExportIronmongery') }}" />
+    <input type="hidden" id="Labels" value="{{url('order/Labels')}}" />
     @endsection
     @section('js')
     <script>
