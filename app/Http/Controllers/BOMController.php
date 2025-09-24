@@ -1299,6 +1299,159 @@ class BOMController extends Controller
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
+    public function DoorPickList($id,string $vid,$version){
+        ini_set('memory_limit', '500M');
+
+        $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
+
+        $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.LippingSpecies')->where('QuotationId',$id)->where('VersionId',$version)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderByRaw("FIELD(items.DoorsetType, 'SD', 'DD', 'leaf_and_a_half')")->get();
+
+        $currency = QuotationCurrency($quotation->Currency);
+        $today = Carbon::now()->format('d-m-Y');
+        $userName = Auth::user()->FirstName ." ".Auth::user()->LastName;
+        $totDoorsetType = NumberOfDoorSets($version,$id);
+        $totIronmongerySet = Item::where(['QuotationId' => $id,'VersionId'=>$version])->whereNotNull('IronmongeryID')->count();
+
+        $data = [];
+        foreach($item as $value){
+
+            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
+                $cutSizeW = ($value->LeafWidth1 - $value->LippingThickness - $value->LippingThickness);
+                $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2 - $value->LippingThickness - $value->LippingThickness): '';
+
+                $LFH = ($value->LeafHeight  - $value->LippingThickness + $value->LippingThickness);
+                $LFW = ($value->LeafWidth1 - $value->LippingThickness + $value->LippingThickness);
+            }else{
+
+                $AdjustmentLeafWidth1 = $value->AdjustmentLeafWidth1 ?? 0;
+                $AdjustmentLeafWidth2 = $value->AdjustmentLeafWidth2 ?? 0;
+                $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
+
+                if($AdjustmentLeafWidth1 == 0){
+                    $cutSizeW = $value->LeafWidth1;
+                    $LFW = $cutSizeW;
+                }else{
+                    $cutSizeW = (floatval($value->LeafWidth1 ?? 0) + floatval($AdjustmentLeafWidth1 ?? 0)) - floatval($AdjustmentLeafWidth1 ?? 0) - floatval($value->LippingThickness ?? 0);
+                    $LFW = $cutSizeW + $value->LippingThickness;
+                }
+
+                if($AdjustmentLeafWidth2 == 0){
+                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2): '';
+                }else{
+                    $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 !== null && $value->LeafWidth2 !== ''
+                    ? (floatval($value->LeafWidth2) + floatval($AdjustmentLeafWidth2) - floatval($AdjustmentLeafWidth2) - floatval($value->LippingThickness))
+                    : '';
+                }
+
+                if($AdjustmentLeafHeightNoOP == 0){
+                    $cutSizeH = $value->LeafHeight;
+                    $LFH = $cutSizeH;
+                }else{
+                    $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
+
+                    $LFH = $cutSizeH + $value->LippingThickness;
+                }
+            }
+
+            if($cutSizeW2 <= 0){
+                $cutSizeW2 = '';
+            }
+            $DoorDimensionsCode = '';
+            $DoorDimensionsCode2 = '';
+            if(isset($quotation->configurableitems) && $quotation->configurableitems == '1'){
+                $configurableitems = 'Streboard';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '2'){
+                $configurableitems = 'Halspan';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '3'){
+                $configurableitems = 'Norma';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
+                $configurableitems = 'Vicaima';
+                $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
+                if($value->DoorsetType == 'leaf_and_a_half'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }else if($value->DoorsetType == 'DD'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '5'){
+                $configurableitems = 'Seadec';
+            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '6'){
+                $configurableitems = 'Deanta';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '7'){
+                $configurableitems = 'Flamebreak';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '8'){
+                $configurableitems = 'StreDoor';
+            }
+            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '9'){
+                $configurableitems = 'MMM';
+            }
+
+            $data[] = '<tr>'
+                . '<td>' . (($value->DoorQuantity) ? $value->DoorQuantity : 1) . '</td>'
+                . '<td>' . $value->DoorsetType . '</td>'
+                . '<td>' . $value->plot_ref_no . '</td>'
+                . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . $value->doorNumber . '</td>'
+                . '<td>' . $value->DoorType . '</td>'
+                . '<td>' . $value->LeafThickness . '</td>'
+                . '<td>' . $configurableitems . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
+                . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                . '<td>' . $DoorDimensionsCode2 . '</td>'
+                . '<td>' . $cutSizeH . '</td>'
+                . '<td>' . $cutSizeW . '</td>'
+                . '<td>' . $cutSizeW2 . '</td>'
+                . '<td>' . $value->LippingThickness . '</td>'
+                . '<td>' . $LFW . '</td>'
+                . '<td>' . $LFH . '</td>'
+                . '<td>' . $value->SpeciesName . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                . '<td></td>'
+                . '</tr>';
+
+
+            if($value->Overpanel == 'Overpanel'){
+
+                if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                    $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness - $value->LippingThickness;
+                }else{
+                    $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness;
+                    $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness;
+                }
+
+                $data[] = '<tr>'
+                    . '<td>' . (($value->DoorQuantity) ? $value->DoorQuantity : 1) . '</td>'
+                    . '<td>' . $value->DoorsetType . '</td>'
+                    . '<td>' . $value->plot_ref_no . '</td>'
+                    . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . $value->doorNumber . '</td>'
+                    . '<td>' . $value->DoorType . ' OP LEAF SIZE' . '</td>'
+                    . '<td>' . $value->LeafThickness . '</td>'
+                    . '<td>' . $configurableitems . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
+                    . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                    . '<td>' . $DoorDimensionsCode2 . '</td>'
+                    . '<td>' . $cutSizeH . '</td>'
+                    . '<td>' . $cutSizeW . '</td>'
+                    . '<td>' . $cutSizeW2 . '</td>'
+                    . '<td>' . $value->LippingThickness . '</td>'
+                    . '<td>' . $LFW . '</td>'
+                    . '<td>' . $LFH . '</td>'
+                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                    . '<td></td>'
+                    . '</tr>';
+            }
+
+        }
+
+        $pdf = PDF::loadView('DoorSchedule.DoorPickList',['item' => $item, 'quotation' => $quotation, 'currency' => $currency, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'data' => $data, 'totIronmongerySet' => $totIronmongerySet]);
+        return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+    }
+
     public function DoorOrderSheet($id,string $vid,$version){
         ini_set('memory_limit', '500M');
 

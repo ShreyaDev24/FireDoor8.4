@@ -47,6 +47,7 @@
                                             </a>
                                         </li>
                                         {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
+                                        <li><a href="javascript:void(0);" onClick="DoorPickList();">Door Pick list</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                         {{--  <li><a href="javascript:void(0);" onClick="SendToClient();">Send To Client</a></li>  --}}
                                     </ul>
@@ -456,6 +457,7 @@
     <input type="hidden" name="mainformimportUrl" id="mainformimportUrl" value="{{url('quotation/excel-upload/')}}" />
     <input type="hidden" name="generateBOM" id="generateBOM" value="{{ route('generateBOM') }}" />
     <input type="hidden" id="ommanual" value="{{url('order/ommanual')}}" />
+    <input type="hidden" name="DoorPickList" id="DoorPickList" value="{{ url('quotation/DoorPickList') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
     @endsection
     @section('js')
     <script>

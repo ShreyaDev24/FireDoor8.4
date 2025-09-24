@@ -346,6 +346,16 @@ $(function(){
         }
     };
 
+
+    DoorPickList = function(){
+        $('.loader').css({'display':'block'});
+        let DoorPickList = $('#DoorPickList').val();
+        let url = DoorPickList;
+        let filename = "DoorPickList.pdf";
+        convertToAudio(url , filename);
+    };
+
+
     DoorOrderSheet = function(){
         $('.loader').css({'display':'block'});
         let DoorOrderSheet = $("#DoorOrderSheet").val(); // goto function DoorOrderSheet()
