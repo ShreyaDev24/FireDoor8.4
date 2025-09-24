@@ -408,6 +408,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/generateBOM/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'BomCalculation'])->name('generateBOMPDF');
     Route::get('/ScreengenerateBOM/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'ScreenBomCalculation'])->name('ScreengenerateBOMPDF');
     Route::get('/DoorOrderSheet/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'DoorOrderSheet'])->name('DoorOrderSheetPDF');
+    Route::get('/DoorPickList/{id}/{vid}/{version}', [App\Http\Controllers\BOMController::class,'DoorPickList'])->name('DoorPickList');
     Route::get('/FrameTransoms/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'FrameTransoms'])->name('FrameTransomsPDF');
     Route::get('/GlassOrderSheet/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'GlassOrderSheet'])->name('GlassOrderSheet');
     Route::get('/GlazingBeadsDoors/{id}/{vid}/{version}' , [App\Http\Controllers\BOMController::class,'GlazingBeadsDoors'])->name('GlazingBeadsDoors');

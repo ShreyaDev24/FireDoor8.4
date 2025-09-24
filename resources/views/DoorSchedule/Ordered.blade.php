@@ -65,6 +65,7 @@
                                             <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
+                                        <li><a href="javascript:void(0);" onClick="DoorPickList();">Door Pick list</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                     </ul>
                                 </div>
@@ -512,6 +513,7 @@
     <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
         value="{{ url('/quotation/ExportIronmongery') }}" />
     <input type="hidden" id="Labels" value="{{url('order/Labels')}}" />
+    <input type="hidden" name="DoorPickList" id="DoorPickList" value="{{ url('quotation/DoorPickList') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
     @endsection
     @section('js')
     <script>
