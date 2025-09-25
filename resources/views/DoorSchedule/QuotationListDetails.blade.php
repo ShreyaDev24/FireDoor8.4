@@ -585,37 +585,38 @@ $loginUser = Auth::user();
     console.log(payload); // This will show filters[0][] etc.
 
     // Send via AJAX
-    $.ajax({
-    url: '{{ route("quotation/records") }}',
-    method: 'POST',
-    data: payload,
-    xhrFields: {
-        responseType: 'blob' // important: get binary file
-    },
-    headers: {
-        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-    },
-    success: function(blob, status, xhr) {
-        // Get filename from headers if needed
-        let filename = "Reports.xlsx";
+        $.ajax({
+        url: '{{ route("quotation/records") }}',
+        method: 'POST',
+        data: payload,
+        xhrFields: {
+            responseType: 'blob' // important: get binary file
+        },
+        headers: {
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        success: function(blob, status, xhr) {
+            // Get filename from headers if needed
+            let filename = "Reports.xlsx";
 
-        // Create download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        window.URL.revokeObjectURL(url);
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(url);
+
+        },
+        error: function() {
+            swal("Oops!", "Something went wrong. Please try again.", "error");
+        }
         $('.loader').empty().css({
-            'display': 'block'
+                            'display': 'none'
         });
-    },
-    error: function() {
-        swal("Oops!", "Something went wrong. Please try again.", "error");
-    }
-});
+    });
 
 }
 
