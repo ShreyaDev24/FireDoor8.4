@@ -2629,42 +2629,51 @@ class OMMAnualController extends Controller
         unlink($unlinkpath64);
     }
 
-    public function Labels($quatationId , $versionID )
-    {
-        $order = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
-                $join->on("quotation_version_items.itemID","=","items.itemId")
-                    ->on("quotation_version_items.itemmasterID","=","item_master.id");
-            })
-            ->join('quotation','quotation.id','=','items.QuotationId')
-            ->where('items.QuotationId', $quatationId)
-            ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+    public function Labels($quatationId, $versionID)
+{
+    $order = Item::join('item_master','item_master.itemID','=','items.itemId')
+        ->join("quotation_version_items", function($join) {
+            $join->on("quotation_version_items.itemID", "=", "items.itemId")
+                ->on("quotation_version_items.itemmasterID", "=", "item_master.id");
+        })
+        ->join('quotation','quotation.id','=','items.QuotationId')
+        ->where('items.QuotationId', $quatationId)
+        ->where('quotation_version_items.version_id', $versionID)
+        ->select('items.*','item_master.doorNumber','quotation.configurableitems')
+        ->groupBy('item_master.itemID')
+        ->get();
 
-        $Quotation = Quotation::where('id',$quatationId)->first();
+    $Quotation = Quotation::where('id', $quatationId)->first();
 
-        $html = '';
-        foreach ($order as $item) {
-            if (!empty(floatval($item->IronmongeryID)) || floatval($item->IronmongeryID) != 0) {
-                $AI = AddIronmongery::select('Setname')->where('id', floatval($item->IronmongeryID))->where('UserId', user_id())->first();
-                $Setname = empty($AI) ? '' : $AI->Setname;
-            }
-            $html .= '<div class="label">';
-            $html .= '<p><strong>Order No:</strong> ' . $Quotation->OrderNumber . '</p>';
-            $html .= '<p><strong>Fire Rating:</strong> ' . ($item->FireRating ?? '-') . '</p>';
-            $html .= '<p><strong>Handing:</strong> ' . ($item->Handing ?? '-') . '</p>';
-            $html .= '<p><strong>Door Leaf Size:</strong> ' . ($item->LeafWidth1 ?? '-') . ' x ' . ($item->LeafHeight ?? '-') . '</p>';
-            $html .= '<p><strong>Door Type:</strong> ' . ($item->DoorType ?? '-') . '</p>';
-            $html .= '<p><strong>Door No:</strong> ' . ($item->doorNumber ?? '-') . '</p>';
-            $html .= '<p><strong>Ironmongery Pk Ref:</strong> ' . ($Setname ?? '-') . '</p>';
-            $html .= '</div>';
+    $labels = [];
+
+    foreach ($order as $item) {
+        $Setname = '-';
+        if (!empty(floatval($item->IronmongeryID)) && floatval($item->IronmongeryID) != 0) {
+            $AI = AddIronmongery::select('Setname')
+                ->where('id', floatval($item->IronmongeryID))
+                ->where('UserId', user_id())
+                ->first();
+            $Setname = $AI->Setname ?? '-';
         }
 
-
-        // Pass order and related info to PDF view
-        $pdf = PDF::loadView('Order.pdf_files.labels', [
-            'html' => $html
-        ]);
-
-        return $pdf->download('labels.pdf');
-
+        $labels[] = [
+            'OrderNo' => $Quotation->OrderNumber,
+            'FireRating' => $item->FireRating ?? '-',
+            'Handing' => $item->Handing ?? '-',
+            'LeafWidth' => $item->LeafWidth1 ?? '-',
+            'LeafHeight' => $item->LeafHeight ?? '-',
+            'DoorType' => $item->DoorType ?? '-',
+            'DoorNo' => $item->doorNumber ?? '-',
+            'Ironmongery' => $Setname,
+        ];
     }
+
+    $pdf = PDF::loadView('Order.pdf_files.labels', [
+        'labels' => $labels
+    ])->setPaper('A4', 'portrait');
+
+    return $pdf->download('labels.pdf');
+}
+
 }
