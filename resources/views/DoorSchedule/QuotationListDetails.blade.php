@@ -613,10 +613,11 @@ $loginUser = Auth::user();
         error: function() {
             swal("Oops!", "Something went wrong. Please try again.", "error");
         }
-        $('.loader').empty().css({
-                            'display': 'none'
-        });
+
     });
+     $('.loader').empty().css({
+        'display': 'none'
+        });
 
 }
 
