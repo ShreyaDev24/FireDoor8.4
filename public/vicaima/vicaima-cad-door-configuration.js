@@ -298,7 +298,7 @@ var frameHeightnew = $('input[name="frameHeight"]').val();
     var withoutFrameId = $("#withoutFrameId").val();if (withoutFrameId == 1) {
         var FrameWidth = parseInt($('input[name="leafWidth1"]').val(), 10);
         if (DoorSetType == "DD") {
-            FrameWidth = SOWidth * 2;
+            FrameWidth = FrameWidth * 2;
         } else if (DoorSetType == "leaf_and_a_half") {
             FrameWidth = parseInt($('input[name="leafWidth1"]').val()) + parseInt($('input[name="leafWidth2"]').val());
         }
