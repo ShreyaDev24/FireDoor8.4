@@ -473,6 +473,31 @@
                                     <i class="metismenu-icon">
                                         <i class="fa fa-check"></i>
                                     </i>
+                                    Side Screen
+                                    <i class="metismenu-state-icon">
+                                        <i class="fa fa-caret-down"></i>
+                                    </i>
+                                </a>
+                                <ul>
+                                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
+                                        <a href="{{route('options/selected',['SideScreen_Glass_Type'])}}">
+                                            <i class="metismenu-icon"></i>
+                                            Glass Type
+                                        </a>
+                                    </li>
+                                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
+                                        <a href="{{route('options/selected',['SideScreen_Glazing_System'])}}">
+                                            <i class="metismenu-icon"></i>
+                                            Glazing System
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
+                                <a href="#">
+                                    <i class="metismenu-icon">
+                                        <i class="fa fa-check"></i>
+                                    </i>
                                     Side Light / Fanlight
                                     <i class="metismenu-state-icon">
                                         <i class="fa fa-caret-down"></i>
