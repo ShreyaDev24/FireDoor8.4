@@ -549,77 +549,77 @@ $loginUser = Auth::user();
     }
 
     function reportWithCurrentFilters() {
-    let dir = 'desc';
-    let fromData = 0;
-    let limit = 50;
-    let column = "quotation.created_at";
+        let dir = 'desc';
+        let fromData = 0;
+        let limit = 50;
+        let column = "quotation.created_at";
 
-    let rawFilters = JSON.parse($('#appliedFilters').val());
-    $('.loader').empty().css({
-            'display': 'block'
+        let rawFilters = JSON.parse($('#appliedFilters').val());
+        $('.loader').empty().css({
+                'display': 'block'
+            });
+
+        // Build data object
+        let payload = {
+            ajaxCall: 1,
+            from: fromData,
+            limit: limit,
+            orders: JSON.stringify([{ column: column, dir: dir }]),
+            _token: "{{ csrf_token() }}",
+            listType: 'dataListType',
+            isStatus: 11,
+            isExport: 'yes'
+        };
+
+        // Add filters in PHP-style repeated keys
+        rawFilters.forEach((f, index) => {
+            f.forEach((v) => {
+                // Append each value individually
+                if (!payload[`filters[${index}][]`]) {
+                    payload[`filters[${index}][]`] = [];
+                }
+                payload[`filters[${index}][]`].push(v);
+            });
         });
 
-    // Build data object
-    let payload = {
-        ajaxCall: 1,
-        from: fromData,
-        limit: limit,
-        orders: JSON.stringify([{ column: column, dir: dir }]),
-        _token: "{{ csrf_token() }}",
-        listType: 'dataListType',
-        isStatus: 11,
-        isExport: 'yes'
-    };
+        console.log(payload); // This will show filters[0][] etc.
 
-    // Add filters in PHP-style repeated keys
-    rawFilters.forEach((f, index) => {
-        f.forEach((v) => {
-            // Append each value individually
-            if (!payload[`filters[${index}][]`]) {
-                payload[`filters[${index}][]`] = [];
+        // Send via AJAX
+            $.ajax({
+            url: '{{ route("quotation/records") }}',
+            method: 'POST',
+            data: payload,
+            xhrFields: {
+                responseType: 'blob' // important: get binary file
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(blob, status, xhr) {
+                // Get filename from headers if needed
+                let filename = "Reports.xlsx";
+
+                // Create download link
+                $('.loader').empty().css({
+                            'display': 'none'
+                        });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+            },
+            error: function() {
+                swal("Oops!", "Something went wrong. Please try again.", "error");
             }
-            payload[`filters[${index}][]`].push(v);
-        });
-    });
 
-    console.log(payload); // This will show filters[0][] etc.
-
-    // Send via AJAX
-        $.ajax({
-        url: '{{ route("quotation/records") }}',
-        method: 'POST',
-        data: payload,
-        xhrFields: {
-            responseType: 'blob' // important: get binary file
-        },
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        success: function(blob, status, xhr) {
-            // Get filename from headers if needed
-            let filename = "Reports.xlsx";
-
-            // Create download link
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = filename;
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-
-        },
-        error: function() {
-            swal("Oops!", "Something went wrong. Please try again.", "error");
-        }
-
-    });
-     $('.loader').empty().css({
-        'display': 'none'
         });
 
-}
+    }
 
 
     $(document).on('keyup', '#QuotationSearch', function(e) {
