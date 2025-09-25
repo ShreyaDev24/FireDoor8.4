@@ -94,6 +94,7 @@ use App\Exports\cuttingListExport;
 use App\Exports\AllGlazingBeadsExport;
 use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\ExportReport;
 
 class DoorScheduleController extends Controller
 {
@@ -4627,7 +4628,7 @@ class DoorScheduleController extends Controller
         return null;
     }
 
-    public function records(request $request): void
+    public function records(request $request)
     {
         //dd($request->all());
         ini_set('memory_limit', '-1');
@@ -4845,15 +4846,18 @@ class DoorScheduleController extends Controller
             $Quotations = $Quotations->where($filters);
             $Quotations = $Quotations->where('quotation.QuotationStatus','Send To Client');
             $QuotationsCount = $Quotations->count();
-        }  else {
+        } else if($request->isExport == 'yes'){
+             $Quotations = $Quotations->where($filters)->orderBy($column, $dir)->get();
+        } else {
             $Quotations = $Quotations->where($filters);
             $QuotationsCount = $Quotations->count();
         }
-        if($request->listType=='dataListType'){
-            $Quotations = $Quotations->orderBy($column, $dir)->get();
-        }else{
-
-            $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+        if($request->isExport != 'yes'){
+            if($request->listType=='dataListType'){
+                $Quotations = $Quotations->orderBy($column, $dir)->get();
+            }else{
+                $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+            }
         }
 
         // ->where($AndWhereCondition)
@@ -5134,7 +5138,11 @@ class DoorScheduleController extends Controller
 
 
   //dd($htmlData);
-            if (!empty($Quotations)) {
+            if($request->isExport == 'yes'){
+                $user = Auth::user();
+                return Excel::download(new ExportReport($Quotations, $user), 'Reports.xlsx');
+            } else {
+                if (!empty($Quotations)) {
 
                 // $htmlData = View::make('DoorSchedule.Ajax.AjaxQuotationList',compact('Quotations'))->render();
 
@@ -5144,13 +5152,14 @@ class DoorScheduleController extends Controller
                     'total' => $QuotationsCount,
                     'html' => $htmlData,
                 ]);
-            } else {
-                ms([
-                    'st' => "error",
-                    'txt' => 'Data not found.',
-                    'total' => 0,
-                    'html' => "",
-                ]);
+                } else {
+                    ms([
+                        'st' => "error",
+                        'txt' => 'Data not found.',
+                        'total' => 0,
+                        'html' => "",
+                    ]);
+                }
             }
         } else {
             ms([
