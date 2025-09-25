@@ -1249,7 +1249,7 @@ class PrintInvoiceController extends Controller
                 case "SD":
                     // $DoorFrameImage = Base64Image('FD30SingleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 200px;">
+                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 100px;">
                                 <div style="position: relative;top: 12px;">';
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
@@ -4974,7 +4974,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 case "SD":
                     // $DoorFrameImage = Base64Image('FD30SingleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 200px;">
+                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 100px;">
                                 <div style="position: relative;top: 12px;">';
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
