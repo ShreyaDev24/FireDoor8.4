@@ -1256,6 +1256,8 @@ function BOMUpdate($data, $configurableitems): void{
     // $item->standardHeight = $data->QuotationId;
     $item->frameWidth = $data->FrameWidth;
     $item->frameHeight = $data->FrameHeight;
+    $item->headframeThickness = $data->HeadFrameThickness;
+    $item->bottomframeThickness = $data->BottomFrameThickness;
     $item->frameDepth = $data->FrameDepth;
     $item->frameFinish = $data->FrameFinish;
     $item->framefinishColor = $data->FrameFinishColor;
