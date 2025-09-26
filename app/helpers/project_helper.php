@@ -516,7 +516,7 @@ function glazingBeadExport($request,$userIds): void{
         }
     }
 
-    if ($request->sideLight1 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
+    if ($request->sideLight1 == 'Yes' && (!empty($request->SlBeadThickness) && !empty($request->SideLight1GlazingBeadSpecies))) {
         $selected_lipping_species = LippingSpecies::where('id', $request->SideLight1GlazingBeadSpecies)->get()->first();
         $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL1Width.'mm x '.$request->SL1Height.'mm';
         $category = 'GlazingBeads';
@@ -544,7 +544,7 @@ function glazingBeadExport($request,$userIds): void{
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
     }
 
-    if ($request->sideLight2 == 'Yes' && (!empty($request->lippingSpecies) && !empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
+    if ($request->sideLight2 == 'Yes' && (!empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
         $selected_lipping_species = LippingSpecies::where('id', $request->SideLight2GlazingBeadSpecies)->get()->first();
         $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
         $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$request->SL2Width.'mm x '.$request->SL2Height.'mm';
