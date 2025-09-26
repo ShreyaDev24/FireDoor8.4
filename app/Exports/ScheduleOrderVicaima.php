@@ -216,8 +216,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $ScallopedHeight = $item[$i]->ScallopedHeight;
             $FrameWidth = $item[$i]->FrameWidth;
             $FrameHeight = $item[$i]->FrameHeight;
-            $HeadFrameThickness = $item[$i]->HeadFrameThickness;
-            $BottomFrameThickness  = $item[$i]->BottomFrameThickness;
+            $HeadFrameThickness = $item[$i]->HeadFrameThickness ?? $item[$i]->FrameThickness;
+            $BottomFrameThickness  = $item[$i]->BottomFrameThickness ?? $item[$i]->FrameThickness;
             $FrameDepth = $item[$i]->FrameDepth;
             $FrameFinish = $item[$i]->FrameFinish;
             $FrameFinishColor = $item[$i]->FrameFinishColor;

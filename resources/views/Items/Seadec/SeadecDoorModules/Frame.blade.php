@@ -184,7 +184,7 @@
                                                         </script>
                                                         @endif
                                                     </label>
-                                                    <input type="number" id="headframeThickness" name="headframeThickness" value="@if(isset($Item["HeadFrameThickness"])){{$Item["HeadFrameThickness"]}}@else{{''}}@endif"
+                                                    <input type="number" id="headframeThickness" name="headframeThickness" value="@if(isset($Item["HeadFrameThickness"])){{$Item["HeadFrameThickness"]}}@else{{$Item["FrameThickness"]}}@endif"
                                                         class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                                                 </div>
                                             </div>
@@ -197,7 +197,7 @@
                                                         </script>
                                                         @endif
                                                     </label>
-                                                    <input type="number" id="bottomframeThickness" name="bottomframeThickness" value="@if(isset($Item["BottomFrameThickness"])){{$Item["BottomFrameThickness"]}}@else{{''}}@endif"
+                                                    <input type="number" id="bottomframeThickness" name="bottomframeThickness" value="@if(isset($Item["BottomFrameThickness"])){{$Item["BottomFrameThickness"]}}@else{{$Item["FrameThickness"]}}@endif"
                                                         class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                                                 </div>
                                             </div>
