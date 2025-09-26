@@ -2296,6 +2296,8 @@ class DoorScheduleController extends Controller
                     $RebatedHeight = trim((string) $row[$j++]);
                     $FrameWidth = trim((string) $row[$j++]);
                     $FrameHeight = trim((string) $row[$j++]);
+                    $HeadFrameThickness = trim((string) $row[$j++]);
+                    $BottomFrameThickness = trim((string) $row[$j++]);
                     $FrameDepth = trim((string) $row[$j++]);
                     $FrameFinish = trim((string) $row[$j++]);
                     $FrameFinishColor = trim((string) $row[$j++]);
@@ -2555,6 +2557,8 @@ class DoorScheduleController extends Controller
                                 $aa->ScallopedHeight = floatval($ScallopedHeight);
                                 $aa->FrameWidth = floatval($FrameWidth);
                                 $aa->FrameHeight = floatval($FrameHeight);
+                                $aa->HeadFrameThickness = floatval($HeadFrameThickness);
+                                $aa->BottomFrameThickness = floatval($BottomFrameThickness);
                                 $aa->FrameDepth = floatval($FrameDepth);
                                 $aa->FrameFinish = $FrameFinish;
                                 $aa->FrameFinishColor = $FrameFinishColor;
@@ -2777,6 +2781,8 @@ class DoorScheduleController extends Controller
                             // $item->standardHeight = $aa->QuotationId;
                             $item->frameWidth = $aa->FrameWidth;
                             $item->frameHeight = $aa->FrameHeight;
+                            $item->headframeThickness = $aa->HeadFrameThickness;
+                            $item->bottomframeThickness = $aa->BottomFrameThickness;
                             $item->frameDepth = $aa->FrameDepth;
                             $item->frameFinish = $aa->FrameFinish;
                             $item->framefinishColor = $aa->FrameFinishColor;
@@ -3133,6 +3139,8 @@ class DoorScheduleController extends Controller
                     $ScallopedHeight = trim((string) $row[$j++]);
                     $FrameWidth = trim((string) $row[$j++]);
                     $FrameHeight = trim((string) $row[$j++]);
+                    $HeadFrameThickness = trim((string) $row[$j++]);
+                    $BottomFrameThickness = trim((string) $row[$j++]);
                     $FrameDepth = trim((string) $row[$j++]);
                     $FrameFinish = trim((string) $row[$j++]);
                     $FrameFinishColor = trim((string) $row[$j++]);
@@ -3423,6 +3431,8 @@ class DoorScheduleController extends Controller
                                 $aa->ScallopedHeight = floatval($ScallopedHeight);
                                 $aa->FrameWidth = floatval($FrameWidth);
                                 $aa->FrameHeight = floatval($FrameHeight);
+                                $aa->HeadFrameThickness = floatval($HeadFrameThickness);
+                                $aa->BottomFrameThickness = floatval($BottomFrameThickness);
                                 $aa->FrameDepth = floatval($FrameDepth);
                                 $aa->FrameFinish = $FrameFinish;
                                 $aa->FrameFinishColor = $FrameFinishColor;
@@ -3655,6 +3665,8 @@ class DoorScheduleController extends Controller
                             // $item->standardHeight = $aa->QuotationId;
                             $item->frameWidth = $aa->FrameWidth;
                             $item->frameHeight = $aa->FrameHeight;
+                            $item->headframeThickness = $aa->HeadFrameThickness;
+                            $item->bottomframeThickness = $aa->BottomFrameThickness;
                             $item->frameDepth = $aa->FrameDepth;
                             $item->frameFinish = $aa->FrameFinish;
                             $item->framefinishColor = $aa->FrameFinishColor;
