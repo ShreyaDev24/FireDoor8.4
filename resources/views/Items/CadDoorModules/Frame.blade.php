@@ -193,7 +193,7 @@
                                             </div>
                                             <div class="col-md-6 framehideshow">
                                                 <div class="position-relative form-group">
-                                                    <label for="bottomframeThickness">bottom Frame Thickness
+                                                    <label for="bottomframeThickness">Bottom Frame Thickness
                                                         @if(!empty($tooltip->bottomframeThickness))
                                                         <script type="text/javascript">
                                                         document.write(Tooltip('{{$tooltip->bottomframeThickness}}'));

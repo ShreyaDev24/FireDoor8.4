@@ -216,6 +216,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $ScallopedHeight = $item[$i]->ScallopedHeight;
             $FrameWidth = $item[$i]->FrameWidth;
             $FrameHeight = $item[$i]->FrameHeight;
+            $HeadFrameThickness = $item[$i]->HeadFrameThickness;
+            $BottomFrameThickness  = $item[$i]->BottomFrameThickness;
             $FrameDepth = $item[$i]->FrameDepth;
             $FrameFinish = $item[$i]->FrameFinish;
             $FrameFinishColor = $item[$i]->FrameFinishColor;
@@ -433,6 +435,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $ScallopedHeight,
                 $FrameWidth,
                 $FrameHeight,
+                $HeadFrameThickness,
+                $BottomFrameThickness,
                 $FrameDepth,
                 $FrameFinish,
                 $FrameFinishColor,
@@ -543,7 +547,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -664,6 +668,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Scalloped Depth ',
             'Frame Width ',
             'Frame Height ',
+            'Head Frame Thickness ',
+            'Bottom Frame Thickness ',
             'Frame Depth ',
             'Frame Finish ',
             'Frame Finish Color ',
@@ -788,7 +794,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GP1'; // All headers
+                $cellRange = 'A1:GR1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -810,7 +816,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GP1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GR1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
