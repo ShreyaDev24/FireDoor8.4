@@ -3281,7 +3281,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <div class="fr_d_tbl" style=" margin: 0 auto;">
 
                     <div style="text-align:center; margin-bottom: 20px;">
-                        <table style="width: 300px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
+                        <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>
                                 <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
                                 <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
