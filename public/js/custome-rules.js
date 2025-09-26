@@ -6387,3 +6387,14 @@ $(document).ready(function () {
     }
 });
 
+$("#sideLight2").change(function(){
+    let side2 = $(this).val();
+        if(side2 == 'No'){
+            setTimeout(function(){
+             $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
+             $("#sideLight2FrameThickness").attr({'readonly': true, "required": false });
+        }, 3000);
+        }
+});
+
+
