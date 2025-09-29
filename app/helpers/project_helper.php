@@ -1742,7 +1742,7 @@ function sideScreenBOM($request): void{
 
             $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->FrameMaterial)->get()->first();
 
-            $unit_cost = ($request->FrameThickness * $request->FrameDepth * $unitcost->selected_price) / 1000000;
+            $unit_cost = ($request->FrameThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
@@ -1764,7 +1764,7 @@ function sideScreenBOM($request): void{
 
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->TransomMaterial)->get()->first();
 
-                $unit_cost = ($request->$TransomThickness * $request->TransomDepth * $unitcost->selected_price) / 1000000;
+                $unit_cost = ($request->$TransomThickness * $request->TransomDepth * ($unitcost->selected_price ?? 0)) / 1000000;
                 $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
                 saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
@@ -1785,7 +1785,7 @@ function sideScreenBOM($request): void{
 
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->MullionMaterial)->get()->first();
 
-                $unit_cost = ($request->$MullionThickness * $request->FrameDepth * $unitcost->selected_price) / 1000000;
+                $unit_cost = ($request->$MullionThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
                 $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
                 saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
@@ -1804,7 +1804,7 @@ function sideScreenBOM($request): void{
 
             $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SubFrameMaterial)->get()->first();
 
-            $unit_cost = ($request->FrameThickness * $request->FrameDepth * $unitcost->selected_price) / 1000000;
+            $unit_cost = ($request->FrameThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
             saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
