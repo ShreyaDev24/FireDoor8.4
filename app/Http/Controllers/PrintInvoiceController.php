@@ -2783,7 +2783,51 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
                 $gap = is_numeric($tt->GAP) ? $tt->GAP : 0;
 
-                $OPFLHeight = $opHeight - $beadThickness - $beadThickness - $gap;
+                $OPFLHeight = $opHeight - $beadThickness - $beadThickness;
+            }
+
+            $OPFLWeidth = 'N/A';
+            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
+                $frameWidth = is_numeric($tt->FrameWidth) ? $tt->FrameWidth : 0;
+                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                // old formula before 15-09-2025
+                // $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+                //new formula after 15-09-2025
+                //$OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width - $beadThickness - $beadThickness;
+                // NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+            }
+
+            $ElevSL1Width = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Width= is_numeric($tt->SL1Width) ? $tt->SL1Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Width = $SLight1Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL1Height = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Height = is_numeric($tt->SL1Height) ? $tt->SL1Height : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Height = $SLight1Height - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Width = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL2Width = $SLight2Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Height = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
+                $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
+                $ElevSL2Height = $SLight2Height - $SideLight2FrameThickness - $SideLight2FrameThickness;
             }
 
             $elevTbl .= '</table>
@@ -3028,7 +3072,19 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">Overpanel/Fanlight Section</th>
+                                </tr>';
+                                if($tt->Overpanel == 'Overpanel'){
+                                $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">OP Panel Width</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP Panel Height</td>
+                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
+                                </tr>';
+                                } else if($tt->Overpanel == 'Fan_Light'){
+                                $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">OP/FL Glass Type</td>
                                     <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
@@ -3040,22 +3096,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <tr>
                                     <td class="dicription_grey">OP/FL Glazing Bead Species</td>
                                     <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
-                                </tr>';
-                                if($tt->Overpanel == 'Overpanel'){
-                                $elevTbl .= '
-                                <tr>
-                                    <td class="dicription_grey">OP Panel Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">OP Panel Height</td>
-                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
-                                </tr>';
-                                } else if($tt->Overpanel == 'Fan_Light'){
-                                $elevTbl .= '
-                                <tr>
                                     <td class="dicription_grey">FL Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Height</td>
@@ -3086,11 +3130,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     $elevTbl .= '
                                     <tr>
                                         <td class="dicription_grey">SL1 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL1Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Width . '</td>
                                     </tr>
                                      <tr>
                                         <td class="dicription_grey">SL1 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL1Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Height . '</td>
                                     </tr>
                                     ';
                                     }
@@ -3098,11 +3142,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     $elevTbl .= '
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL2Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Width . '</td>
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">SL2 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL2Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Height . '</td>
                                     </tr>
                                     ';
                                     }

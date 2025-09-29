@@ -160,7 +160,7 @@
                                                     @endif
                                                     </label>
                                                     <input type="text" name="frameWidth" id="frameWidth"
-                                                        placeholder="Frame Width" class="form-control"
+                                                        placeholder="Frame Width" class="form-control change-event-calulation"
                                                         value="@if(isset($Item['FrameWidth'])){{$Item['FrameWidth']}}@endif" readonly>
                                                 </div>
                                             </div>

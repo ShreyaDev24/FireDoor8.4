@@ -290,6 +290,24 @@ $(".change-event-calulation").change(function(){
             }
         }
         // GET ALL HINGE LOCATION END
+        //get value of frame Width from field
+        if(thisvalue[i].name=='frameWidth'){
+            if(thisvalue[i].value==''){
+                FrameWidth = 0;
+            }
+            else{
+                FrameWidth = thisvalue[i].value;
+            }
+        }
+        //get value of framethickness from field
+        if(thisvalue[i].name=='OpBeadThickness'){
+            if(thisvalue[i].value==''){
+                OpBeadThickness = 0;
+            }
+            else{
+                OpBeadThickness = thisvalue[i].value;
+            }
+        }
 
     }
 
@@ -346,8 +364,22 @@ $(".change-event-calulation").change(function(){
             }
         }
     }
-    var calculateOfOpWidth = soWidth-(tollerance*TolleranceAdditionalNumberForOPWidth)-(framethikness*FrameThicknessAdditionalNumberForOPWidth)-(GapAdditionalNumberForOPWidth*gap);
-    $("#oPWidth").val(calculateOfOpWidth);
+    // old calculation
+    // var calculateOfOpWidth = soWidth-(tollerance*TolleranceAdditionalNumberForOPWidth)-(framethikness*FrameThicknessAdditionalNumberForOPWidth)-(GapAdditionalNumberForOPWidth*gap);
+    // new calculation according to 1059 => OP/FL width = Frame width - OP/Fl frame thickness X2.
+    var calculateOfOpWidth = FrameWidth - (OpBeadThickness * 2);
+    if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+        if($("#overpanel").val() != 'No'){
+           let sidelight1width = Number($("#SL1Width").val()) || 0;
+           let sidelight2width = Number($("#SL2Width").val()) || 0;
+           let TotalWidth = sidelight1width + sidelight2width + Number(FrameWidth || 0);
+
+            console.log(TotalWidth);
+            $("#oPWidth").val(TotalWidth);
+        }
+    } else{
+        $("#oPWidth").val(calculateOfOpWidth);
+    }
 
     // Leaf width 1 and leaf width 2 calculation according to doorsetType
 

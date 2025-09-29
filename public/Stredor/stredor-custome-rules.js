@@ -257,7 +257,7 @@ function pageIdentity(){
         var calculateCoreWidth2 = leafWidth2-(LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
         var calculateCoreHeight = leafHeight-(LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
         var opCoreWidthcalculate =  oPWidth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
-        var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
+        var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (lipping_thickness * 2);
         // var calculate = leafWidth1-(randomkey*lipping_thickness);
         // OP Width -OP frame thicknessX2-GapX2-Lipping ticknessX2
         // OP height-OP framethicknessX2-GapX2- lipping thicknessx2
@@ -282,6 +282,16 @@ function pageIdentity(){
         $("#coreWidth1").val(calculate);
         $("#coreHeight").val(calculateCoreHeight);
         console.log(opCoreWidthcalculate,opCoreHeightcalculate)
+        if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
+            if($("#overpanel").val() != 'Yes'){
+                let slHeight = $("#frameHeight").val();
+                 setTimeout(function(){
+                    $("#SL1Height").val(slHeight);
+                },1000);
+
+                console.log($("#SL1Height").val(slHeight))
+            }
+        }
 
     }
     // $(document).on('change','#leafHeightNoOP',function(e){
@@ -6161,7 +6171,7 @@ function SideLightHeight(type){
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
         console.log(oPHeigth)
-        let slHeight = frameHeight + oPHeigth;
+        let slHeight = frameHeight;
         setTimeout(function(){
             $("#SL1Height").val(slHeight);
         },1000);
@@ -6171,7 +6181,7 @@ function SideLightHeight(type){
       $("#SL2Height").val(frameHeight);
       if($("#overpanel").val() != 'No'){
         let oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0;
-        let s2Height = frameHeight + oPHeigth;
+        let s2Height = frameHeight;
          setTimeout(function(){
             $("#SL2Height").val(s2Height);
         },1000);

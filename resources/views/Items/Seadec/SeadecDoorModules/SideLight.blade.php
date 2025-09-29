@@ -210,7 +210,7 @@
                                                     @endif
 
                                                     </label>
-                                                    <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control SL1 door-configuration"
+                                                    <input name="SL1Width" max="600" @if(empty($Item['SL1Width'])){{'readonly'}}@endif id="SL1Width" class="form-control SL1 door-configuration change-event-calulation"
                                                         type="text" value="@if(isset($Item['SL1Width'])){{$Item['SL1Width']}}@endif">
                                                 </div>
                                             </div>
@@ -306,7 +306,7 @@
                                                     @endif
 
                                                     </label>
-                                                    <select name="sideLight2" id="sideLight2" class="form-control door-configuration">
+                                                    <select name="sideLight2" id="sideLight2" class="form-control door-configuration change-event-calulation">
                                                         <option value=""> Is side light 2 is active?</option>
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='SideLight2')
@@ -333,7 +333,7 @@
                                                     </script>
                                                     @endif
                                                         </label>
-                                                    <select name="copyOfSideLite1" id="copyOfSideLite1" class="form-control door-configuration"
+                                                    <select name="copyOfSideLite1" id="copyOfSideLite1" class="form-control door-configuration change-event-calulation"
                                                     @if(empty($Item['DoYouWantToCopySameAsSL1'])){{'disabled'}}@endif>
                                                         <option value=""> Do you want to copy Same as SL1?</option>
                                                         @foreach($option_data as $row)
@@ -546,7 +546,7 @@
                                                         @else
                                                             {{'readonly'}}
                                                         @endif
-                                                    id="SL2Width" class="form-control door-configuration"
+                                                    id="SL2Width" class="form-control door-configuration change-event-calulation"
                                                         type="text" value="@if(isset($Item['SL2Width'])){{$Item['SL2Width']}}@endif">
                                                 </div>
                                             </div>
