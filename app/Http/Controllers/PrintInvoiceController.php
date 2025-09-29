@@ -351,6 +351,17 @@ class PrintInvoiceController extends Controller
         // Details Door List PDF
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
+
+        if($project->QualificationsStatus == 1){
+            $MoreInformation = $project->MoreInformation;
+            $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'version' => $version,'project' => $project,'MoreInformation' => $MoreInformation,'quotaion' => $quotaion]);
+
+            // return $pdf2->download('file2.pdf');
+            $path2_2 = public_path() . '/allpdfFile';
+            $fileName2_2 = $id . '2_2' . '.' . 'pdf';
+            $pdf2_2->save($path2_2 . '/' . $fileName2_2);
+        }
+
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
@@ -7452,44 +7463,51 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
-        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-            $pdfFiles = [
-                public_path() . '/allpdfFile' . '/' . $fileName1,
-                public_path() . '/allpdfFile' . '/' . $fileName2,
-                public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                public_path() . '/allpdfFile' . '/' . $fileName3,
-                public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                public_path() . '/allpdfFile' . '/' . $fileName4,
-                public_path() . '/allpdfFile' . '/' . $fileName9,
-                public_path() . '/allpdfFile' . '/' . $fileName6,
-                public_path() . '/allpdfFile' . '/' . $fileName8,
-                public_path() . '/allpdfFile' . '/' . $fileName7,
-                public_path() . '/allpdfFile' . '/' . $fileName5,
-            ];
-        }else{
-            $pdfFiles = [
-                public_path() . '/allpdfFile' . '/' . $fileName1,
-                public_path() . '/allpdfFile' . '/' . $fileName2,
-                public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                public_path() . '/allpdfFile' . '/' . $fileName3,
-                public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                public_path() . '/allpdfFile' . '/' . $fileName4,
-                public_path() . '/allpdfFile' . '/' . $fileName9,
-                public_path() . '/allpdfFile' . '/' . $fileName6,
-                public_path() . '/allpdfFile' . '/' . $fileName8,
-                public_path() . '/allpdfFile' . '/' . $fileName5,
-            ];
+        $pdfFiles = [];
+
+        // Common files always included
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName1);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName3);
+
+        // Add fileName2_2 only if it's set and not empty
+        if (!empty($fileName2_2)) {
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
         }
 
-        if(count($ed) == 0){
-            $pdfFiles = [
-                public_path() . '/allpdfFile' . '/' . $fileName1,
-                public_path() . '/allpdfFile' . '/' . $fileName2,
-                public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                public_path() . '/allpdfFile' . '/' . $fileName9,
-                public_path() . '/allpdfFile' . '/' . $fileName8,
-                public_path() . '/allpdfFile' . '/' . $fileName5,
-            ];
+        // Conditional blocks
+        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName7);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
+        } else {
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
+        }
+
+        // If $ed count is 0, override with a smaller set
+        if (count($ed) == 0) {
+            $pdfFiles = [];
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName1);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
+
+            if (!empty($fileName2_2)) {
+                $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
+            }
+
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
         }
 
             // Merge the PDF files using PDFMerger
