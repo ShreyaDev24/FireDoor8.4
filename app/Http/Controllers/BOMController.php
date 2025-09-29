@@ -1304,7 +1304,19 @@ class BOMController extends Controller
 
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
 
-        $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.LippingSpecies')->where('QuotationId',$id)->where('VersionId',$version)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderByRaw("FIELD(items.DoorsetType, 'SD', 'DD', 'leaf_and_a_half')")->get();
+        $item = Item::join('item_master','items.itemId','=','item_master.itemID')
+            ->leftJoin('lipping_species','lipping_species.id','=','items.LippingSpecies')
+            ->where('QuotationId',$id)
+            ->where('VersionId',$version)
+            ->select(
+                'item_master.*',
+                'items.*',
+                'lipping_species.SpeciesName',
+                DB::raw('COUNT(items.itemId) as item_count')
+            )
+            ->groupBy('items.itemId')
+            ->orderByRaw("FIELD(items.DoorsetType, 'SD', 'DD', 'leaf_and_a_half')")
+            ->get();
 
         $currency = QuotationCurrency($quotation->Currency);
         $today = Carbon::now()->format('d-m-Y');
@@ -1395,6 +1407,7 @@ class BOMController extends Controller
                 . '<td>' . $value->certification_no . '</td>'
                 . '<td>' . $value->doorNumber . '</td>'
                 . '<td>' . $value->DoorType . '</td>'
+                . '<td>' . $value->item_count . '</td>'
                 . '<td>' . $value->LeafThickness . '</td>'
                 . '<td>' . $configurableitems . '</td>'
                 . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
@@ -1429,6 +1442,7 @@ class BOMController extends Controller
                     . '<td>' . $value->certification_no . '</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->DoorType . ' OP LEAF SIZE' . '</td>'
+                    . '<td>' . $value->item_count .'</td>'
                     . '<td>' . $value->LeafThickness . '</td>'
                     . '<td>' . $configurableitems . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
