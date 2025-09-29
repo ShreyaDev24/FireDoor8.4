@@ -955,7 +955,7 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
         if ($IsCounterExist==false) {
             $quotation_prefix = empty($QuotationCounter->quotation_prefix) ? "QTR" : $QuotationCounter->quotation_prefix;
             $CompanyQuotationCounter = new CompanyQuotationCounter();
-            $CompanyQuotationCounter->UserId = $userId;
+            $CompanyQuotationCounter->UserId = Auth::user()->main_id ?? Auth::user()->id;
             $CompanyQuotationCounter->quotation_prefix = $quotation_prefix;
             $CompanyQuotationCounter->quotation_counter = 100001;
             $CompanyQuotationCounter->save();
@@ -1008,7 +1008,7 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
     $Quotation->ArchitectId = $architect_profile_id;
     }
 
-    $Quotation->UserId = Auth::user()->id;
+    $Quotation->UserId = Auth::user()->main_id ?? Auth::user()->id;
 
 
     //when we have projectid and usertype company then it will fetch the customer id

@@ -70,7 +70,7 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
             $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
 
             // User name
-            $getUser = User::where('id',$value->UserId)->first();
+            $getUser = User::where('id',$value->CompanyUserId)->first();
             $fullname = '';
             if($getUser){
                 $fullname = $getUser->FirstName . ' ' . $getUser->LastName;
