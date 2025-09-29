@@ -1410,6 +1410,7 @@ class BOMController extends Controller
                 . '<td>' . $LFH . '</td>'
                 . '<td>' . $value->SpeciesName . '</td>'
                 . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                 . '<td></td>'
                 . '</tr>';
 
@@ -1442,6 +1443,7 @@ class BOMController extends Controller
                     . '<td>' . $LFH . '</td>'
                     . '<td>' . $value->SpeciesName . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                    . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                     . '<td></td>'
                     . '</tr>';
             }
