@@ -1628,6 +1628,12 @@ function QuotationCurrency($cur=''): string{
     return $currency;
 }
 
+function formatPrice($price, $cur = ''): string {
+    $currency = QuotationCurrency($cur);
+    return $price > 0
+        ? $currency . number_format($price, 2)
+        : "";
+}
 
 function IntumescentSealType($configurableitems,$key){
     $opt = Option::where([ "configurableitems" => $configurableitems , 'OptionSlug' => 'intumescent_seal_type' , 'OptionKey' => $key ])->first();

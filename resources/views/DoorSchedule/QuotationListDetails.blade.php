@@ -214,7 +214,7 @@ $loginUser = Auth::user();
                     <div class="overview_status">
                         <div class="row mb-3" onclick="listType('dataBoxType','sendtoclient')">
                             <div class="col-6 status_value">
-                                <p style="width: 160px !important;">Quote Returned</p>
+                                <p style="width: 160px !important;">Quote Send to Client</p>
                                 <h6>{!! $QuoteReturnedCount!!}</h6>
                             </div>
                             <div class="col-6">

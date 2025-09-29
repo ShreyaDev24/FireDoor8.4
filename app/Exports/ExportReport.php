@@ -62,7 +62,12 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
             // Non-configurable items
 
-            $currency = $value->Currency ?? '€';
+            $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
+            $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
+            $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
+            $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
+            $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
+
             // Build data row
             $data[] = [
                 $value->QuotationGenerationId,
@@ -72,15 +77,15 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->created_at,
                 $value->ExpiryDate,
                 $value->FollowUpDate,
-                $currency.''.$total_price,
+                $formattedTotalPrice,
                 $value->version ?? 1,
                 $value->QuotationStatus,
                 $this->user->FirstName . ' ' . $this->user->LastName,
                 $value->PONumber,
-                $currency.''.$TotalDoorSetPrice,
-                $currency.''.$screenDataprice,
-                $currency.''.$TotalIronmongeryPrice,
-                $currency.''.$nonConfigDataPrice,
+                $formattedTotalDoorSetPrice,
+                $formattedScreenDataPrice,
+                $formattedIronmongeryPrice,
+                $formattedNonConfigDataPrice,
             ];
         }
 
