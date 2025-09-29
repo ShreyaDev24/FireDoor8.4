@@ -33,7 +33,6 @@
                                 <div class="dropdown">
                                     <a class="btn btn-light dropdown-toggle" data-toggle="dropdown">MORE</a>
                                     <ul class="dropdown-menu drop_style">
-
                                         <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
                                         <li><a href="javascript:void(0);" onClick="LabelsOMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Labels</a></li>
                                         <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
@@ -47,9 +46,26 @@
                                               Side Screen Assign Plot Ref/ Certification No
                                             </a>
                                         </li>
-                                        {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
+                                        <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
+                                                    id="">Generate Elevation Drawing</a></li>
+                                            <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
+                                                    Calculation</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom
+                                                Calculation</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                            <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
+                                            <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
+                                            <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
+                                            <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
+                                            <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
+                                            <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
-                                        {{--  <li><a href="javascript:void(0);" onClick="SendToClient();">Send To Client</a></li>  --}}
                                     </ul>
                                 </div>
                             </li>
@@ -458,6 +474,44 @@
     <input type="hidden" name="generateBOM" id="generateBOM" value="{{ route('generateBOM') }}" />
     <input type="hidden" id="ommanual" value="{{url('order/ommanual')}}" />
     <input type="hidden" id="Labels" value="{{url('order/Labels')}}" />
+    <input type="hidden" name="BomCalculationUrl" id="BomCalculationUrl"
+        value="{{ url('quotation/generateBOMPrint') }}" />
+    <input type="hidden" name="QualityControlUrl" id="QualityControlUrl"
+        value="{{ url('quotation/QualityControlPrint') }}/{{ $quotation->id }}/{{ $VersionId !== null ?     1 : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+    <input type="hidden" name="ScreenBomCalculationUrl" id="ScreenBomCalculationUrl"
+        value="{{ url('quotation/ScreengenerateBOMPrint') }}" />
+    <input type="hidden" name="DoorOrderSheetUrl" id="DoorOrderSheetUrl"
+        value="{{ url('quotation/DoorOrderSheetUrl') }}" />
+    <input type="hidden" name="FrameTransomsUrl" id="FrameTransomsUrl"
+        value="{{ url('quotation/FrameTransomsUrl') }}" />
+    <input type="hidden" name="BomCalculationUrlGet" id="BomCalculationUrlGet"
+        value="{{ url('quotation/generateBOM') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+     <input type="hidden" name="ScreenBomCalculationUrlGet" id="ScreenBomCalculationUrlGet"
+        value="{{ url('quotation/ScreengenerateBOM') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+    <input type="hidden" name="DoorOrderSheet" id="DoorOrderSheet"
+        value="{{ url('quotation/DoorOrderSheet') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+    <input type="hidden" name="FrameTransoms" id="FrameTransoms"
+        value="{{ url('quotation/FrameTransoms') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+    <input type="hidden" name="GlassOrderSheet" id="GlassOrderSheet"
+        value="{{ url('quotation/GlassOrderSheet') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+    <input type="hidden" name="GlazingBeadsDoors" id="GlazingBeadsDoors"
+        value="{{ url('quotation/GlazingBeadsDoors') }}/{{ $quotation->id }}/{{ $VersionId !== null ? $VersionId : 0 }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}" />
+         <input type="hidden" name="ExcelExportNonConfigUrl" id="ExcelExportNonConfigUrl"
+        value="{{ url('/quotation/ExcelExportNonConfig') }}" />
+    <input type="hidden" name="ExportBomCalculationUrl" id="ExportBomCalculationUrl"
+        value="{{ url('/quotation/ExportBomCalculation') }}" />
+    <input type="hidden" name="ExportDoorTypeBomUrl" id="ExportDoorTypeBomUrl"
+        value="{{ url('/quotation/ExportDoorTypeBom') }}" />
+    <input type="hidden" name="ExportSideScreenUrl" id="ExportSideScreenUrl"
+        value="{{ url('/quotation/ExportSideScreen') }}" />
+    <input type="hidden" name="ExportScreenBomCalculationUrl" id="ExportScreenBomCalculationUrl"
+        value="{{ url('/quotation/ExportScreenBomCalculation') }}" />
+    <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
+        value="{{ url('/quotation/cuttingList') }}" />
+    <input type="hidden" name="allGlazingBeadsUrl" id="allGlazingBeadsUrl"
+        value="{{ url('/quotation/allGlazingBeadsExport') }}" />
+    <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
+        value="{{ url('/quotation/ExportIronmongery') }}" />
     @endsection
     @section('js')
     <script>
@@ -475,6 +529,113 @@
 
     let UniversalToken = $("#_token").val();
 
+    ExportBomCalculation = function() {
+        var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+
+    ExportDoorTypeBom = function() {
+        var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4){
+                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportSideScreen = function() {
+        var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportScreenBomCalculation = function() {
+        var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }else{
+                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
+            }
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    ExportIronmongery = function(){
+        var ExportIronmongeryUrl = $("#ExportIronmongeryUrl").val();
+        var quotationId = $("#quotationId").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+                window.location.href = ExportIronmongeryUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    }
+
+    ExcelExportNonConfig = function() {
+        var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+
+    cuttingList = function() {
+        var cuttingListUrl = $("#cuttingListUrl").val();
+        var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
+    allGlazingBeadsExport = function() {
+        var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
+        var quotationId = $("#quotationId").val();
+        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+        var currentVersion = $("#currentVersion").val();
+        if (currentVersion != 0) {
+            window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
+        } else {
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    };
 
     function configurableNon(id) {
         $('#add-item-section').hide();
