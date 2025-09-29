@@ -218,7 +218,7 @@ $loginUser = Auth::user();
                                 <h6>{!! $QuoteReturnedCount!!}</h6>
                             </div>
                             <div class="col-6">
-                                <div class="status_icon pull-right status-info"><i class="fa fa-bar-chart"></i></div>
+                                <div class="status_icon pull-right status-info"><i class="fa fa-paper-plane" aria-hidden="true"></i> </div>
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -240,7 +240,7 @@ $loginUser = Auth::user();
                                 <h6>{!! $OrderValueCount!!}</h6>
                             </div>
                             <div class="col-6">
-                                <div class="status_icon pull-right status-purple"><i class="fa fa-gbp"></i></div>
+                                <div class="status_icon pull-right status-purple"><i class="fa fa-file-text" aria-hidden="true"></i></div>
                             </div>
                         </div>
                         <!-- <div class="row">
