@@ -9,6 +9,7 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use App\Models\Item;
 use App\Models\SideScreenItem;
+use App\Models\User;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 
@@ -68,6 +69,12 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
             $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
             $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
 
+            // User name
+            $getUser = User::where('id',$value->UserId)->first();
+            $fullname = '';
+            if($getUser){
+                $fullname = $getUser->FirstName . ' ' . $getUser->LastName;
+            }
             // Build data row
             $data[] = [
                 $value->QuotationGenerationId,
@@ -80,7 +87,7 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $formattedTotalPrice,
                 $value->version ?? 1,
                 $value->QuotationStatus,
-                $this->user->FirstName . ' ' . $this->user->LastName,
+                $fullname,
                 $value->PONumber,
                 $formattedTotalDoorSetPrice,
                 $formattedScreenDataPrice,
