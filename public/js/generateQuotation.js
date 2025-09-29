@@ -502,6 +502,14 @@ $(function(){
         // $('.loader').css({'display':'none'});
     };
 
+    LabelsOMmanualQuotation = function($QuotationId , $QVID , $projectId=null){
+        $('.loader').css({'display':'block'});
+        let Labels = $('#Labels').val();
+        let url = Labels + '/' + $QuotationId + '/' + $QVID;
+        let filename = "Labels.pdf";
+        convertToAudio(url , filename);
+    };
+
     function convertToAudio(url,filename) {
         var request = new XMLHttpRequest();
         request.onreadystatechange = function() {

@@ -35,6 +35,7 @@
                                     <ul class="dropdown-menu drop_style">
 
                                         <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
+                                        <li><a href="javascript:void(0);" onClick="LabelsOMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Labels</a></li>
                                         <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
                                         <li>
                                             <a href="{{ url('quotation/assign-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
@@ -456,6 +457,7 @@
     <input type="hidden" name="mainformimportUrl" id="mainformimportUrl" value="{{url('quotation/excel-upload/')}}" />
     <input type="hidden" name="generateBOM" id="generateBOM" value="{{ route('generateBOM') }}" />
     <input type="hidden" id="ommanual" value="{{url('order/ommanual')}}" />
+    <input type="hidden" id="Labels" value="{{url('order/Labels')}}" />
     @endsection
     @section('js')
     <script>

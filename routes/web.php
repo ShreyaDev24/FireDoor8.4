@@ -672,6 +672,7 @@ Route::prefix('order')->group(function (): void{
     Route::get('/orderlist', [App\Http\Controllers\order\OrderController::class,'orderlist'])->name('orderlist');
     Route::match(['get','post'],'/suborderlist', [App\Http\Controllers\order\OrderController::class,'suborderlist'])->name('suborderlist');
     Route::get('/ommanual/{id}/{vid}', [App\Http\Controllers\order\OMMAnualController::class,'ommanual'])->name('ommanual');
+    Route::get('/Labels/{id}/{vid}', [App\Http\Controllers\order\OMMAnualController::class,'Labels'])->name('Labels');
     Route::get('/generate/{id}', [App\Http\Controllers\order\OrderController::class,'OrderDetails'])->name('order/generate/');
     Route::get('/pdf-test', [App\Http\Controllers\order\OrderController::class,'pdf_test'])->name('order/pdf-test');
     Route::post('/save-certification', [App\Http\Controllers\order\OrderController::class, 'assignStore'])->name('certification.store');
