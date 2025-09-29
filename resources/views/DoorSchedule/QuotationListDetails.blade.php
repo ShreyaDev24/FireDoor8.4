@@ -133,7 +133,7 @@ $loginUser = Auth::user();
     <div class="app-main__inner">
         <div class="tab-content">
             <div class="row">
-                <div class="col-sm-10 row_heading">
+                <div class="col-sm-9 row_heading">
                     <h4>Overview</h4>
                 </div>
 
@@ -162,6 +162,9 @@ $loginUser = Auth::user();
                 </div>
                 <div class="col-sm-1">
                     <a href="{{url('/quotation/exportAllQuotationsurl')}}" class="btn btn-primary float-right">Export</a>
+                </div>
+                <div class="col-sm-1">
+                    <a href="javascript:void(0);" onclick="reportWithCurrentFilters()" class="btn btn-primary float-right">Report</a>
                 </div>
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="overview_status">
@@ -209,13 +212,13 @@ $loginUser = Auth::user();
 
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="overview_status">
-                        <div class="row mb-3">
+                        <div class="row mb-3" onclick="listType('dataBoxType','sendtoclient')">
                             <div class="col-6 status_value">
-                                <p style="width: 160px !important;">Quote Returned</p>
+                                <p style="width: 160px !important;">Quote Send to Client</p>
                                 <h6>{!! $QuoteReturnedCount!!}</h6>
                             </div>
                             <div class="col-6">
-                                <div class="status_icon pull-right status-info"><i class="fa fa-bar-chart"></i></div>
+                                <div class="status_icon pull-right status-info"><i class="fa fa-paper-plane" aria-hidden="true"></i> </div>
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -231,13 +234,13 @@ $loginUser = Auth::user();
 
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="overview_status">
-                        <div class="row mb-3">
+                        <div class="row mb-3" onclick="listType('dataBoxType')">
                             <div class="col-6 status_value">
-                                <p>Order Value</p>
+                                <p>Total Quotation</p>
                                 <h6>{!! $OrderValueCount!!}</h6>
                             </div>
                             <div class="col-6">
-                                <div class="status_icon pull-right status-purple"><i class="fa fa-gbp"></i></div>
+                                <div class="status_icon pull-right status-purple"><i class="fa fa-file-text" aria-hidden="true"></i></div>
                             </div>
                         </div>
                         <!-- <div class="row">
@@ -344,6 +347,8 @@ $loginUser = Auth::user();
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
     <input type="hidden" name="directory_ajax" id="directory_ajax" value="{{route('quotation/records')}}" />
     <input type="hidden" name="excelexportNewUrl" id="excelexportNewUrl" value="{{url('/quotation/excelexportNew')}}" />
+    <input type="hidden" id="appliedFilters" name="filters" value="">
+
 </div>
 @endsection
 @section('js')
@@ -353,7 +358,8 @@ $loginUser = Auth::user();
         $('.BoxActive').addClass('btnActive');
     })
 
-    function listType(type = 'box', from = 0, limitTo = 20, filters = [], order = [], doEmpty = false, setPage = false) {
+    function listType(type = 'box',isbox = null, isExport = null,from = 0, limitTo = 20, filters = [], order = [], doEmpty = false, setPage = false) {
+        // alert()
         if (type == '') {
             alert('please select list type')
             return false;
@@ -388,6 +394,8 @@ $loginUser = Auth::user();
                 _token: "{{ csrf_token() }}",
                 listType: type,
                 isStatus: 11,
+                isbox:isbox,
+                isExport:isExport,
             },
 
             success: function(data) {
@@ -532,12 +540,87 @@ $loginUser = Auth::user();
                 dir: dir
             }], true);
         }
+        $("#appliedFilters").val(JSON.stringify(filters));
 
         //$(".popup-parent").modal("toggle");
         $(".close").trigger("click");
         $('#popover').removeClass('active')
 
     }
+
+    function reportWithCurrentFilters() {
+        let dir = 'desc';
+        let fromData = 0;
+        let limit = 50;
+        let column = "quotation.created_at";
+
+        let rawFilters = JSON.parse($('#appliedFilters').val());
+        $('.loader').empty().css({
+                'display': 'block'
+            });
+
+        // Build data object
+        let payload = {
+            ajaxCall: 1,
+            from: fromData,
+            limit: limit,
+            orders: JSON.stringify([{ column: column, dir: dir }]),
+            _token: "{{ csrf_token() }}",
+            listType: 'dataListType',
+            isStatus: 11,
+            isExport: 'yes'
+        };
+
+        // Add filters in PHP-style repeated keys
+        rawFilters.forEach((f, index) => {
+            f.forEach((v) => {
+                // Append each value individually
+                if (!payload[`filters[${index}][]`]) {
+                    payload[`filters[${index}][]`] = [];
+                }
+                payload[`filters[${index}][]`].push(v);
+            });
+        });
+
+        console.log(payload); // This will show filters[0][] etc.
+
+        // Send via AJAX
+            $.ajax({
+            url: '{{ route("quotation/records") }}',
+            method: 'POST',
+            data: payload,
+            xhrFields: {
+                responseType: 'blob' // important: get binary file
+            },
+            headers: {
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            success: function(blob, status, xhr) {
+                // Get filename from headers if needed
+                let filename = "Reports.xlsx";
+
+                // Create download link
+                $('.loader').empty().css({
+                            'display': 'none'
+                        });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = filename;
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+
+            },
+            error: function() {
+                swal("Oops!", "Something went wrong. Please try again.", "error");
+            }
+
+        });
+
+    }
+
 
     $(document).on('keyup', '#QuotationSearch', function(e) {
 

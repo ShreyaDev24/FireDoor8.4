@@ -94,6 +94,7 @@ use App\Exports\cuttingListExport;
 use App\Exports\AllGlazingBeadsExport;
 use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
+use App\Exports\ExportReport;
 
 class DoorScheduleController extends Controller
 {
@@ -342,8 +343,9 @@ class DoorScheduleController extends Controller
             case 1:
                 $OpenCount = Quotation::where(['QuotationStatus' => 'Open'])->count();
                 $OrderedCount = Quotation::where(['QuotationStatus' => 'Ordered'])->count();
-                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Quote Returned'])->count();
-                $OrderValueCount = Quotation::where(['QuotationStatus' => 'Order Value'])->count();
+                // $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Quote Returned'])->count();
+                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Send To Client'])->count();
+                $OrderValueCount = Quotation::count();
                 $assigned_project = '';
                 if (empty($Request->id)) {
                     $data = Quotation::leftjoin("project", "project.id", "quotation.ProjectId")
@@ -369,8 +371,8 @@ class DoorScheduleController extends Controller
                 $login_company_id = get_company_id(Auth::user()->id)->id ?? Auth::user()->id;
                 $OpenCount = Quotation::where(['QuotationStatus' => 'Open', 'CompanyId' => $login_company_id])->count();
                 $OrderedCount = Quotation::where(['QuotationStatus' => 'Ordered', 'CompanyId' => $login_company_id])->count();
-                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Quote Returned', 'CompanyId' => $login_company_id])->count();
-                $OrderValueCount = Quotation::where(['QuotationStatus' => 'Order Value', 'CompanyId' => $login_company_id])->count();
+                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Send To Client', 'CompanyId' => $login_company_id])->count();
+                $OrderValueCount = Quotation::where(['CompanyId' => $login_company_id])->count();
                 $assigned_project = '';
                 if (empty($Request->id)) {
                     $data = Quotation::leftjoin("project", "project.id", "quotation.ProjectId")
@@ -421,8 +423,8 @@ class DoorScheduleController extends Controller
                 $login_architect_id = get_architect_id(Auth::user()->id)->id;
                 $OpenCount = Quotation::where(['QuotationStatus' => 'Open', 'CompanyId' => $login_architect_id])->count();
                 $OrderedCount = Quotation::where(['QuotationStatus' => 'Ordered', 'CompanyId' => $login_architect_id])->count();
-                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Quote Returned', 'CompanyId' => $login_architect_id])->count();
-                $OrderValueCount = Quotation::where(['QuotationStatus' => 'Order Value', 'CompanyId' => $login_architect_id])->count();
+                $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Send To Client', 'CompanyId' => $login_architect_id])->count();
+                $OrderValueCount = Quotation::where(['CompanyId' => $login_architect_id])->count();
                 $assigned_project = '';
                 break;
 
@@ -431,8 +433,8 @@ class DoorScheduleController extends Controller
                     $login_customer_id = get_customer_id(Auth::user()->id)->id;
                     $OpenCount = Quotation::where(['QuotationStatus' => 'Open', 'CompanyId' => $login_customer_id])->count();
                     $OrderedCount = Quotation::where(['QuotationStatus' => 'Ordered', 'CompanyId' => $login_customer_id])->count();
-                    $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Quote Returned', 'CompanyId' => $login_customer_id])->count();
-                    $OrderValueCount = Quotation::where(['QuotationStatus' => 'Order Value', 'CompanyId' => $login_customer_id])->count();
+                    $QuoteReturnedCount = Quotation::where(['QuotationStatus' => 'Send To Client', 'CompanyId' => $login_customer_id])->count();
+                    $OrderValueCount = Quotation::where(['CompanyId' => $login_customer_id])->count();
 
                     $assigned_project = Project::join('quotation', 'quotation.ProjectId', 'project.id')->select('QuotationGenerationId')
                         ->where('project.MainContractorId', $login_customer_id)
@@ -4638,7 +4640,7 @@ class DoorScheduleController extends Controller
         return null;
     }
 
-    public function records(request $request): void
+    public function records(request $request)
     {
         //dd($request->all());
         ini_set('memory_limit', '-1');
@@ -4852,13 +4854,22 @@ class DoorScheduleController extends Controller
 
         // ----------CODE TO SHOW DATA IN LIST AND IN GRID-------------------------------
         // dd($filters,$from,$limit,$column,$dir,$request->listType);
-        $Quotations = $Quotations->where($filters);
-        $QuotationsCount = $Quotations->count();
-        if($request->listType=='dataListType'){
-            $Quotations = $Quotations->orderBy($column, $dir)->get();
-        }else{
-
-            $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+        if($request->isbox == 'sendtoclient'){
+            $Quotations = $Quotations->where($filters);
+            $Quotations = $Quotations->where('quotation.QuotationStatus','Send To Client');
+            $QuotationsCount = $Quotations->count();
+        } else if($request->isExport == 'yes'){
+             $Quotations = $Quotations->where($filters)->orderBy($column, $dir)->get();
+        } else {
+            $Quotations = $Quotations->where($filters);
+            $QuotationsCount = $Quotations->count();
+        }
+        if($request->isExport != 'yes'){
+            if($request->listType=='dataListType'){
+                $Quotations = $Quotations->orderBy($column, $dir)->get();
+            }else{
+                $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+            }
         }
 
         // ->where($AndWhereCondition)
@@ -5139,7 +5150,11 @@ class DoorScheduleController extends Controller
 
 
   //dd($htmlData);
-            if (!empty($Quotations)) {
+            if($request->isExport == 'yes'){
+                $user = Auth::user();
+                return Excel::download(new ExportReport($Quotations, $user), 'Reports.xlsx');
+            } else {
+                if (!empty($Quotations)) {
 
                 // $htmlData = View::make('DoorSchedule.Ajax.AjaxQuotationList',compact('Quotations'))->render();
 
@@ -5149,13 +5164,14 @@ class DoorScheduleController extends Controller
                     'total' => $QuotationsCount,
                     'html' => $htmlData,
                 ]);
-            } else {
-                ms([
-                    'st' => "error",
-                    'txt' => 'Data not found.',
-                    'total' => 0,
-                    'html' => "",
-                ]);
+                } else {
+                    ms([
+                        'st' => "error",
+                        'txt' => 'Data not found.',
+                        'total' => 0,
+                        'html' => "",
+                    ]);
+                }
             }
         } else {
             ms([
