@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Of Material</title>
+    <title>Door Pick List</title>
     <style>
         @page {
             size: 1260pt 660pt;
@@ -48,18 +48,18 @@
     <table>
         <thead>
             <tr class="title-row">
-                <th colspan="20">Door Pick List</th>
+                <th colspan="21">Door Pick List</th>
             </tr>
             <tr>
                 <th>Ref</th>
-                <td colspan="6">{{ $quotation->QuotationGenerationId }}</td>
+                <td colspan="7">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
                 <th colspan="4">Prepared By</th>
                 <td colspan="4">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="3">Revision</th>
+                <th colspan="4">Revision</th>
                 <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="2">{{ $today }}</td>
@@ -69,7 +69,7 @@
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="20">Items</th>
+                <th colspan="21">Items</th>
             </tr>
             <tr>
                 <th>Total Doors</th>
@@ -78,6 +78,7 @@
                 <th>IFC/Certifire No/Q mark Plug</th>
                 <th>Door Number</th>
                 <th>Door Type</th>
+                <th>Door Quantity</th>
                 <th>Door Thickness</th>
                 <th>Door Mat</th>
                 <th>Door Finish</th>
@@ -94,7 +95,7 @@
                 <th>Notes</th>
             </tr>
             <tr class="blue-row">
-                <td colspan="20"></td>
+                <td colspan="21"></td>
             </tr>
         </thead>
         <tbody>
