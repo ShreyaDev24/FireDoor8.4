@@ -48,54 +48,42 @@
     <table>
         <thead>
             <tr class="title-row">
-                <th colspan="21">Door Pick List</th>
+                <th colspan="15">Door Pick List</th>
             </tr>
             <tr>
                 <th>Ref</th>
-                <td colspan="7">{{ $quotation->QuotationGenerationId }}</td>
+                <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
-                <th colspan="4">Prepared By</th>
+                <th>Prepared By</th>
                 <td colspan="4">{{ $userName }}</td>
             </tr>
             <tr>
                 <th colspan="4">Revision</th>
-                <td>{{ $item[0]->VersionId }}</td>
+                <td>{{ $QuotationVersion }}</td>
                 <th colspan="2">Date</th>
-                <td colspan="2">{{ $today }}</td>
+                <td>{{ $today }}</td>
                 <th colspan="2">Main Contractor</th>
-                <td colspan="3">{{ $quotation->CstCompanyName }}</td>
-                <th colspan="3">Sales Contact</th>
-                <td colspan="4">{{ $quotation->SalesContact }}</td>
+                <td>{{ $quotation->CstCompanyName }}</td>
+                <th colspan="2">Sales Contact</th>
+                <td colspan="2">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="21">Items</th>
+                <th colspan="15">Items</th>
             </tr>
             <tr>
-                <th>Total Doors</th>
-                <th>DoorSet Type</th>
-                <th>Plot Number/Ref</th>
-                <th>IFC/Certifire No/Q mark Plug</th>
-                <th>Door Number</th>
-                <th>Door Type</th>
                 <th>Door Quantity</th>
                 <th>Door Thickness</th>
                 <th>Door Mat</th>
                 <th>Door Finish</th>
-                <th>PRODUCT CODE LEAF 1</th>
-                <th>PRODUCT CODE LEAF 2</th>
+                <th>PRODUCT CODE LEAF</th>
                 <th>Cut Size H</th>
                 <th>Cut Size W</th>
                 <th>Cut Size W2</th>
-                <th>Lipping Thickness</th>
-                <th>Lipping Finish W</th>
-                <th>Lipping Finish H</th>
-                <th>Lipping Mat</th>
-                <th>Exposed or Concealed</th>
-                <th>Notes</th>
+                <th colspan="7">Notes</th>
             </tr>
             <tr class="blue-row">
-                <td colspan="21"></td>
+                <td colspan="15"></td>
             </tr>
         </thead>
         <tbody>
