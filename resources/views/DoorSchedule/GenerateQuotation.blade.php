@@ -1903,6 +1903,7 @@
                 const path = window.location.pathname;
                 const segments = path.split('/');
                 const id = segments[3];
+                const versionid = segments[4];
 
                 $('.loader').empty().css({ 'display': 'block' });
 
@@ -1911,7 +1912,8 @@
                     method: "POST",
                     data: {
                         _token: $("#_token").val(),
-                        quotationId: id
+                        quotationId: id,
+                        versionid: versionid
                     },
                     dataType: "json",
                     success: function(data) {

@@ -9613,7 +9613,7 @@ class DoorScheduleController extends Controller
     public function validateAlls(Request $request)
     {
         $quotation = Quotation::find($request->quotationId);
-        $items = Item::where('QuotationId', $request->quotationId)->get();
+        $items = Item::where('QuotationId', $request->quotationId)->where('VersionId',$request->versionid)->get();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
         $errors = [];
 
