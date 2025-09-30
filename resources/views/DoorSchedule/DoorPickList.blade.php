@@ -77,10 +77,8 @@
                 <th>Door Mat</th>
                 <th>Door Finish</th>
                 <th>PRODUCT CODE LEAF</th>
-                <th>Cut Size H</th>
-                <th>Cut Size W</th>
-                <th>Cut Size W2</th>
-                <th colspan="7">Notes</th>
+                <th>mmm Width x Height </th>
+                <th colspan="9">Notes</th>
             </tr>
             <tr class="blue-row">
                 <td colspan="15"></td>

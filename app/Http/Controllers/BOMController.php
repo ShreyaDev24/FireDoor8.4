@@ -1315,10 +1315,18 @@ class BOMController extends Controller
             ->first();
 
         $items = Item::join('item_master', 'items.itemId', '=', 'item_master.itemID')
-        ->leftJoin('lipping_species', 'lipping_species.id', '=', 'items.LippingSpecies')
         ->where('QuotationId', $id)
         ->where('VersionId', $version)
-        ->select('item_master.*','items.*','lipping_species.SpeciesName')
+        ->select([
+            'items.DoorDimensionsCode',
+            'items.DoorDimensionsCode2',
+            'items.LeafWidth1',
+            'items.LeafWidth2',
+            'items.LeafHeight',
+            'items.LeafThickness',
+            'items.DoorsetType',
+            'items.DoorLeafFacing'
+        ])
         ->orderByRaw("FIELD(items.DoorsetType, 'SD', 'DD', 'leaf_and_a_half')")
         ->get();
 
@@ -1345,8 +1353,6 @@ class BOMController extends Controller
 
             // --- CUT SIZE CALCULATION (simplified for grouping) ---
             $cutSizeH  = $value->LeafHeight;
-            $cutSizeW  = $value->LeafWidth1;
-            $cutSizeW2 = $value->LeafWidth2 ?? '';
 
             // --- CONFIGURABLE ITEM ---
             $configurableitems = match($quotation->configurableitems) {
@@ -1362,16 +1368,24 @@ class BOMController extends Controller
                 default => '',
             };
 
-            // --- LOOP VALIDATION FOR BOTH PRODUCT CODES ---
             $productCodes = [];
             if(!empty($value->DoorDimensionsCode)){
-                $productCodes[] = $value->DoorDimensionsCode;
+                $productCodes[] = [
+                    'code' => $value->DoorDimensionsCode,
+                    'cutSizeW' => $value->LeafWidth1
+                ];
             }
             if(!empty($value->DoorDimensionsCode2)){
-                $productCodes[] = $value->DoorDimensionsCode2;
+                $productCodes[] = [
+                    'code' => $value->DoorDimensionsCode2,
+                    'cutSizeW' => $value->LeafWidth2 ?? ''
+                ];
             }
 
-            foreach ($productCodes as $pcode) {
+            foreach ($productCodes as $p) {
+                $pcode = $p['code'];
+                $cutSizeW = $p['cutSizeW'];
+
                 $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
 
                 if (!isset($grouped[$key])) {
@@ -1381,14 +1395,13 @@ class BOMController extends Controller
                         'configurableitems' => $configurableitems,
                         'DoorLeafFacing' => str_replace('_', ' ', $value->DoorLeafFacing),
                         'ProductCode' => $pcode,
-                        'cutSizeH' => $cutSizeH,
-                        'cutSizeW' => $cutSizeW,
-                        'cutSizeW2' => $cutSizeW2,
+                        'cutSizeH' => $cutSizeW . 'x' . $cutSizeH, // if you also have cutSizeH
                     ];
                 }
 
                 $grouped[$key]['qty'] += $item_count;
             }
+
         }
 
         // --------- BUILD TABLE DATA ----------
@@ -1401,9 +1414,7 @@ class BOMController extends Controller
                 . '<td>' . $row['DoorLeafFacing'] . '</td>'
                 . '<td>' . $row['ProductCode'] . '</td>'
                 . '<td>' . $row['cutSizeH'] . '</td>'
-                . '<td>' . $row['cutSizeW'] . '</td>'
-                . '<td>' . $row['cutSizeW2'] . '</td>'
-                . '<td colspan="7"></td>'
+                . '<td colspan="9"></td>'
                 . '</tr>';
         }
 
@@ -1420,7 +1431,7 @@ class BOMController extends Controller
             'totIronmongerySet' => $totIronmongerySet
         ]);
 
-        return $pdf->stream("DoorPickList ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
+        return $pdf->download("DoorPickList ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
     }
 
     public function DoorOrderSheet($id,string $vid,$version){
