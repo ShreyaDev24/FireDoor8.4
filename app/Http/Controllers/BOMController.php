@@ -1318,6 +1318,8 @@ class BOMController extends Controller
         ->where('QuotationId', $id)
         ->where('VersionId', $version)
         ->select([
+            'items.DoorDimensions',
+            'items.DoorDimensions2',
             'items.DoorDimensionsCode',
             'items.DoorDimensionsCode2',
             'items.LeafWidth1',
@@ -1369,15 +1371,15 @@ class BOMController extends Controller
             };
 
             $productCodes = [];
-            if(!empty($value->DoorDimensionsCode)){
+            if(!empty($value->DoorDimensions)){
                 $productCodes[] = [
-                    'code' => $value->DoorDimensionsCode,
+                    'code' => $value->DoorDimensionsCode ?? $value->LeafWidth1 .'x'.$cutSizeH,
                     'cutSizeW' => $value->LeafWidth1
                 ];
             }
-            if(!empty($value->DoorDimensionsCode2)){
+            if(!empty($value->DoorDimensions2)){
                 $productCodes[] = [
-                    'code' => $value->DoorDimensionsCode2,
+                    'code' => $value->DoorDimensionsCode2 ?? $value->LeafWidth2 .'x'.$cutSizeH,
                     'cutSizeW' => $value->LeafWidth2 ?? ''
                 ];
             }
