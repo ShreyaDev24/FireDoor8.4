@@ -13,6 +13,7 @@ use App\Models\User;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Carbon\Carbon;
+use App\Models\{NonConfigurableItems,NonConfigurableItemStore};
 
 class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
@@ -109,51 +110,61 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
     //     return collect($data);
     // }
 
-        public function collection()
+    public function collection()
     {
         $data = [];
 
-        // Eager load users to avoid per-row query
+        // Eager load users
         $userIds = $this->result->pluck('CompanyUserId')->unique()->filter();
         $users = User::whereIn('id', $userIds)->get()->keyBy('id');
 
-        // Get all Items for all quotations in one query
+        // Get all quotation IDs and version IDs
         $quotationIds = $this->result->pluck('QuotationId')->unique();
-        $items = Item::whereIn('QuotationId', $quotationIds)->get()->groupBy('QuotationId');
-        $quotationVersionItems = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-            ->whereIn('quotation_version_items.version_id', $this->result->pluck('QVID')->filter())
+        $versionIds = $this->result->pluck('QVID')->filter();
+
+        // Bulk fetch items
+        $allItems = Item::whereIn('QuotationId', $quotationIds)->get()->groupBy('QuotationId');
+        $allVersionItems = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->whereIn('quotation_version_items.version_id', $versionIds)
             ->get()
             ->groupBy('QuotationId');
 
-        // Get SideScreenData in one query
+        // Bulk fetch side screens
         $sideScreens = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')
             ->whereIn('side_screen_items.QuotationId', $quotationIds)
             ->select('side_screen_items.*', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid')
             ->get()
             ->groupBy('QuotationId');
 
+        // Bulk fetch non-configurable items
+        $allNonConfigItems = NonConfigurableItemStore::whereIn('quotationId', $quotationIds)->get()->groupBy('quotationId');
+
         foreach ($this->result as $value) {
             $quid = $value->QVID ?? 0;
 
             // Door & Ironmongery prices
-            if ($quid > 0 && isset($quotationVersionItems[$value->QuotationId])) {
-                $TotalExactDoorPrice = $quotationVersionItems[$value->QuotationId]->sum('DoorsetPrice');
-                $TotalIronmongeryPrice = $quotationVersionItems[$value->QuotationId]->sum('IronmongaryPrice');
-            } elseif (isset($items[$value->QuotationId])) {
-                $TotalExactDoorPrice = $items[$value->QuotationId]->sum('DoorsetPrice');
-                $TotalIronmongeryPrice = $items[$value->QuotationId]->sum('IronmongaryPrice');
+            if ($quid > 0 && isset($allVersionItems[$value->QuotationId])) {
+                $TotalDoorSetPrice = $allVersionItems[$value->QuotationId]->sum(function($item) {
+                    return $item->AdjustPrice ? floatval($item->AdjustPrice) : floatval($item->DoorsetPrice);
+                });
+                $TotalIronmongeryPrice = $allVersionItems[$value->QuotationId]->sum('IronmongaryPrice');
+            } elseif (isset($allItems[$value->QuotationId])) {
+                $TotalDoorSetPrice = $allItems[$value->QuotationId]->sum(function($item) {
+                    return $item->AdjustPrice ? floatval($item->AdjustPrice) : floatval($item->DoorsetPrice);
+                });
+                $TotalIronmongeryPrice = $allItems[$value->QuotationId]->sum('IronmongaryPrice');
             } else {
-                $TotalExactDoorPrice = 0;
+                $TotalDoorSetPrice = 0;
                 $TotalIronmongeryPrice = 0;
             }
 
-            // Side Screen prices
+            // Side screen prices
             $screenDataprice = isset($sideScreens[$value->QuotationId]) ? $sideScreens[$value->QuotationId]->sum('ScreenPrice') : 0;
 
-            // Non-configurable items & total door set price
-            $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid); // can't optimize if inside function
-            $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
+            // Non-configurable items
+            $nonConfigDataPrice = isset($allNonConfigItems[$value->QuotationId]) ? $allNonConfigItems[$value->QuotationId]->sum('total_price') : 0;
 
+            // Total price
             $total_price = $TotalDoorSetPrice + $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
 
             // Format prices
@@ -192,11 +203,11 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         // Footer row
-        $footData = array_fill(0, 18, '');
-        $data[] = $footData;
+        $data[] = array_fill(0, 18, '');
 
         return collect($data);
     }
+
 
 
 
