@@ -1591,6 +1591,13 @@ dd(1);
                                 </div>
                             </div>
 
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label for="Code">Product Code<span class="text-danger">*</span></label>
+                                    <input name="code" id="code" type="text" class="form-control" placeholder="code" required>
+                                </div>
+                            </div>
+
                             @if(Auth::user()->UserType != 1)
                             <div class="col-md-12 sterboard-fields" style="display: none">
                                 <div class="position-relative form-group options">
@@ -3393,6 +3400,7 @@ dd(1);
     $("input[name^='prices']").val(''); // Clear previous values
     $("input[name=mm_height]").attr('required', true);
     $("input[name=mm_width]").attr('required', true);
+    $("input[name=code]").val(code);
 
 
 
