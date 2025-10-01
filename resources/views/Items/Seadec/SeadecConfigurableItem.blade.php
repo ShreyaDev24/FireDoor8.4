@@ -518,7 +518,7 @@
             $("#undercut").val('').attr({'required':false});
             $("#floorFinish").val('').attr({'required':false});
             $("#gap").val('').attr({'required':false});
-            $("#frameThickness").val('').attr({'required':false});
+            $("#frameThickness,#headframeThickness,#bottomframeThickness").val('').attr({'required':false});
             $("#sOWidth").attr({'required':false});
             $("#sOHeight").attr({'required':false});
             $("#sODepth").val('').attr({'required':false});
@@ -614,7 +614,7 @@
             $("#undercut").attr({'required':true});
             $("#floorFinish").attr({'required':true});
             $("#gap").attr({'required':true});
-            $("#frameThickness").attr({'required':true});
+            $("#frameThickness,#headframeThickness,#bottomframeThickness").attr({'required':true});
             $("#sOWidth").attr({'required':true});
             $("#sOHeight").attr({'required':true});
             $("#frameMaterial").attr({'required':true});
