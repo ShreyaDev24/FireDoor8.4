@@ -1346,15 +1346,8 @@ class BOMController extends Controller
 
         // --------- GROUPED COLLECTION ----------
         $grouped = [];
-
+        $productCodes = [];
         foreach ($items as $value) {
-
-            // --- COUNT LOGIC ---
-            $item_count = 1;
-            if($value->DoorsetType == 'DD'){
-                $item_count = 2;
-            }
-
             // --- CUT SIZE CALCULATION (simplified for grouping) ---
             $cutSizeH  = $value->LeafHeight;
 
@@ -1372,7 +1365,7 @@ class BOMController extends Controller
                 default => '',
             };
 
-             if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
+            if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
                 $fireRatingVal = 'FD30';
             } elseif ($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') {
                 $fireRatingVal = 'FD60';
@@ -1380,73 +1373,114 @@ class BOMController extends Controller
                 $fireRatingVal = 'NFR';
             }
 
-            if(in_array($quotation->configurableitems, [1,2,7,8])){
+            if (in_array($quotation->configurableitems, [1, 2, 7, 8])) {
                 $userIds = CompanyUsers();
-                $door_core_size = getDoorDimensionData($userIds,$quotation->configurableitems,$fireRatingVal);
+                $door_core_size = getDoorDimensionData($userIds, $quotation->configurableitems, $fireRatingVal);
 
-                $minCost = null;
-                $minCostLeafAndAHalf = null;
+                $code1 = $value->LeafWidth1 .'x'. $cutSizeH;
+                $code2 = $value->LeafWidth2 .'x'. $cutSizeH; // for leaf and a half
 
-                // Initialize variables to track minimum width and height
-                $minWidth1 = PHP_INT_MAX;
-                $minHeight1 = PHP_INT_MAX;
-                $minWidth2 = PHP_INT_MAX;
-                $minHeight2 = PHP_INT_MAX;
                 if (!empty($door_core_size)) {
+                    // Track best matches separately
+                    $minWidth1 = PHP_INT_MAX;
+                    $minHeight1 = PHP_INT_MAX;
+                    $minWidth2 = PHP_INT_MAX;
+                    $minHeight2 = PHP_INT_MAX;
+
                     foreach ($door_core_size as $door_core) {
-                        $code = $value->LeafWidth1 .'x'.$cutSizeH;
-                        // For leafWidth1 and leafHeightNoOP
-                        if ($door_core->selected_mm_width >= $value->LeafWidth1 && $door_core->selected_mm_height >= $cutSizeH) {
-                            if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
+                        // For LeafWidth1
+                        if ($door_core->selected_mm_width >= $value->LeafWidth1 &&
+                            $door_core->selected_mm_height >= $cutSizeH) {
+                            if ($door_core->selected_mm_width <= $minWidth1 &&
+                                $door_core->selected_mm_height <= $minHeight1) {
                                 $minWidth1 = $door_core->selected_mm_width;
                                 $minHeight1 = $door_core->selected_mm_height;
-                                $code = $door_core->selected_code;
+                                $code1 = $door_core->code;
                             }
                         }
 
-                        // For leafWidth2 and leafHeightNoOP (Leaf and a half)
-                        if ($door_core->selected_mm_width >= $value->LeafWidth2 && $door_core->selected_mm_height >= $cutSizeH && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
-                            $minWidth2 = $door_core->selected_mm_width;
-                            $minHeight2 = $door_core->selected_mm_height;
-                            $code = $door_core->selected_code;
+                        // For LeafWidth2 (only if leaf_and_a_half)
+                        if ($value->DoorsetType == 'leaf_and_a_half') {
+                            if ($door_core->selected_mm_width >= $value->LeafWidth2 &&
+                                $door_core->selected_mm_height >= $cutSizeH) {
+                                if ($door_core->selected_mm_width <= $minWidth2 &&
+                                    $door_core->selected_mm_height <= $minHeight2) {
+                                    $minWidth2 = $door_core->selected_mm_width;
+                                    $minHeight2 = $door_core->selected_mm_height;
+                                    $code2 = $door_core->code;
+                                }
+                            }
                         }
                     }
+                }
+
+                // Add product codes
+                $productCodes[] = [
+                    'code'     => $code1,
+                    'cutSizeW' => $value->LeafWidth1,
+                    'LeafThickness' => $value->LeafThickness ?? '',
+                    'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
+                    'DoorsetType' => $value->DoorsetType,
+                ];
+
+                if ($value->DoorsetType == 'leaf_and_a_half') {
+                    $productCodes[] = [
+                        'code'     => $code2,
+                        'cutSizeW' => $value->LeafWidth2,
+                        'LeafThickness' => $value->LeafThickness ?? '',
+                        'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
+                        'DoorsetType' => $value->DoorsetType,
+                    ];
                 }
             }else{
                 $productCodes = [];
                 if(!empty($value->DoorDimensions)){
                     $productCodes[] = [
                         'code' => $value->DoorDimensionsCode ?? $value->LeafWidth1 .'x'.$cutSizeH,
-                        'cutSizeW' => $value->LeafWidth1
+                        'cutSizeW' => $value->LeafWidth1,
+                        'LeafThickness' => $value->LeafThickness ?? '',
+                        'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
+                        'DoorsetType' => $value->DoorsetType
                     ];
                 }
                 if(!empty($value->DoorDimensions2)){
                     $productCodes[] = [
                         'code' => $value->DoorDimensionsCode2 ?? $value->LeafWidth2 .'x'.$cutSizeH,
-                        'cutSizeW' => $value->LeafWidth2 ?? ''
+                        'cutSizeW' => $value->LeafWidth2 ?? '',
+                        'LeafThickness' => $value->LeafThickness ?? '',
+                        'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
+                        'DoorsetType' => $value->DoorsetType ?? ''
                     ];
                 }
 
-                foreach ($productCodes as $p) {
-                    $pcode = $p['code'];
-                    $cutSizeW = $p['cutSizeW'];
-
-                    $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
-
-                    if (!isset($grouped[$key])) {
-                        $grouped[$key] = [
-                            'qty' => 0,
-                            'LeafThickness' => $value->LeafThickness,
-                            'configurableitems' => $configurableitems,
-                            'DoorLeafFacing' => str_replace('_', ' ', $value->DoorLeafFacing),
-                            'ProductCode' => $pcode,
-                            'cutSizeH' => $cutSizeW . 'x' . $cutSizeH, // if you also have cutSizeH
-                        ];
-                    }
-
-                    $grouped[$key]['qty'] += $item_count;
-                }
             }
+        }
+
+
+        foreach ($productCodes as $p) {
+            // --- COUNT LOGIC ---
+            $item_count = 1;
+            if($p['DoorsetType'] == 'DD'){
+                $item_count = 2;
+            }
+
+            $pcode = $p['code'];
+            $cutSizeW = $p['cutSizeW'];
+
+            $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
+
+            if (!isset($grouped[$key])) {
+                $grouped[$key] = [
+                    'qty' => 0,
+                    'LeafThickness' => $p['LeafThickness'],
+                    'configurableitems' => $configurableitems,
+                    'DoorLeafFacing' => str_replace('_', ' ', $p['DoorLeafFacing']),
+                    'ProductCode' => $pcode,
+                    'cutSizeH' => $cutSizeW . 'x' . $cutSizeH, // if you also have cutSizeH
+                ];
+            }
+
+            $grouped[$key]['qty'] += $item_count;
         }
 
         // --------- BUILD TABLE DATA ----------
