@@ -109,106 +109,96 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
     //     return collect($data);
     // }
 
-    public function collection()
-{
-    $data = [];
+        public function collection()
+    {
+        $data = [];
 
-    $quotationIds = $this->result->pluck('QuotationId')->toArray();
-    $versionIds = $this->result->pluck('QVID')->toArray();
-    $companyUserIds = $this->result->pluck('CompanyUserId')->unique()->toArray();
+        // Eager load users to avoid per-row query
+        $userIds = $this->result->pluck('CompanyUserId')->unique()->filter();
+        $users = User::whereIn('id', $userIds)->get()->keyBy('id');
 
-    // Preload items for all quotations at once
-    $items = Item::whereIn('QuotationId', $quotationIds)
-        ->get()
-        ->groupBy('QuotationId');
+        // Get all Items for all quotations in one query
+        $quotationIds = $this->result->pluck('QuotationId')->unique();
+        $items = Item::whereIn('QuotationId', $quotationIds)->get()->groupBy('QuotationId');
+        $quotationVersionItems = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->whereIn('quotation_version_items.version_id', $this->result->pluck('QVID')->filter())
+            ->get()
+            ->groupBy('QuotationId');
 
-    // Preload quotation_version_items for all versioned quotations
-    $versionItems = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-        ->whereIn('quotation_version_items.version_id', $versionIds)
-        ->get()
-        ->groupBy('QuotationId');
+        // Get SideScreenData in one query
+        $sideScreens = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')
+            ->whereIn('side_screen_items.QuotationId', $quotationIds)
+            ->select('side_screen_items.*', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid')
+            ->get()
+            ->groupBy('QuotationId');
 
-    // Preload side screen items
-    $sideScreens = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', '=', 'side_screen_item_master.ScreenId')
-        ->whereIn('side_screen_items.QuotationId', $quotationIds)
-        ->get()
-        ->groupBy('QuotationId');
+        foreach ($this->result as $value) {
+            $quid = $value->QVID ?? 0;
 
-    // Preload users
-    $users = User::whereIn('id', $companyUserIds)
-        ->get()
-        ->keyBy('id');
+            // Door & Ironmongery prices
+            if ($quid > 0 && isset($quotationVersionItems[$value->QuotationId])) {
+                $TotalExactDoorPrice = $quotationVersionItems[$value->QuotationId]->sum('DoorsetPrice');
+                $TotalIronmongeryPrice = $quotationVersionItems[$value->QuotationId]->sum('IronmongaryPrice');
+            } elseif (isset($items[$value->QuotationId])) {
+                $TotalExactDoorPrice = $items[$value->QuotationId]->sum('DoorsetPrice');
+                $TotalIronmongeryPrice = $items[$value->QuotationId]->sum('IronmongaryPrice');
+            } else {
+                $TotalExactDoorPrice = 0;
+                $TotalIronmongeryPrice = 0;
+            }
 
-    foreach ($this->result as $value) {
-        $quid = $value->QVID ?? 0;
+            // Side Screen prices
+            $screenDataprice = isset($sideScreens[$value->QuotationId]) ? $sideScreens[$value->QuotationId]->sum('ScreenPrice') : 0;
 
-        // Safe: default to empty collection if key not found
-        $quotationItems = $items[$value->QuotationId] ?? collect([]);
-        $quotationVersionItems = $versionItems[$value->QuotationId] ?? collect([]);
-        $quotationScreens = $sideScreens[$value->QuotationId] ?? collect([]);
+            // Non-configurable items & total door set price
+            $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid); // can't optimize if inside function
+            $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
 
-        // Door & ironmongery prices
-        if ($quid > 0 && $quotationVersionItems->isNotEmpty()) {
-            $TotalExactDoorPrice   = $quotationVersionItems->sum('DoorsetPrice');
-            $TotalIronmongeryPrice = $quotationVersionItems->sum('IronmongaryPrice');
-        } else {
-            $TotalExactDoorPrice   = $quotationItems->sum('DoorsetPrice');
-            $TotalIronmongeryPrice = $quotationItems->sum('IronmongaryPrice');
+            $total_price = $TotalDoorSetPrice + $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
+
+            // Format prices
+            $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
+            $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
+            $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
+            $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
+            $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
+
+            // User full name
+            $fullname = isset($users[$value->CompanyUserId]) ? $users[$value->CompanyUserId]->FirstName . ' ' . $users[$value->CompanyUserId]->LastName : '';
+
+            // Readable date
+            $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
+                ->timezone('Asia/Kolkata')
+                ->format('d M Y');
+
+            $data[] = [
+                $value->QuotationGenerationId,
+                $value->FirstName,
+                $value->ProjectName,
+                $value->QuotationName ?? $value->ProjectName,
+                $readableDate,
+                $value->ExpiryDate,
+                $value->FollowUpDate,
+                $formattedTotalPrice,
+                $value->version ?? 1,
+                $value->QuotationStatus,
+                $fullname,
+                $value->PONumber,
+                $formattedTotalDoorSetPrice,
+                $formattedScreenDataPrice,
+                $formattedIronmongeryPrice,
+                $formattedNonConfigDataPrice,
+            ];
         }
 
-        // Side screen prices
-        $screenDataprice = $quotationScreens->sum('ScreenPrice');
+        // Footer row
+        $footData = array_fill(0, 18, '');
+        $data[] = $footData;
 
-        // Non-configurable items (still per quotation)
-        $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
-
-        $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid);
-        $total_price = $TotalDoorSetPrice + $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
-
-        // Format prices
-        $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
-        $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
-        $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
-        $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
-        $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
-
-        // User name
-        $fullname = '';
-        if (isset($users[$value->CompanyUserId])) {
-            $fullname = $users[$value->CompanyUserId]->FirstName . ' ' . $users[$value->CompanyUserId]->LastName;
-        }
-
-        // Date formatting
-        $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
-            ->timezone('Asia/Kolkata')
-            ->format('d M Y');
-
-        // Build row
-        $data[] = [
-            $value->QuotationGenerationId,
-            $value->FirstName,
-            $value->ProjectName,
-            $value->QuotationName ?? $value->ProjectName,
-            $readableDate,
-            $value->ExpiryDate,
-            $value->FollowUpDate,
-            $formattedTotalPrice,
-            $value->version ?? 1,
-            $value->QuotationStatus,
-            $fullname,
-            $value->PONumber,
-            $formattedTotalDoorSetPrice,
-            $formattedScreenDataPrice,
-            $formattedIronmongeryPrice,
-            $formattedNonConfigDataPrice,
-        ];
+        return collect($data);
     }
 
-    // Footer row
-    $data[] = array_fill(0, 18, '');
 
-    return collect($data);
-}
 
 
     public function headings(): array
