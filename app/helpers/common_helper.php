@@ -2403,7 +2403,7 @@ function BOMQuatityOfDoorUpdate($itemid,$QuotationId): void{
 }
 
 function getDoorDimensionData($userIds,$issingleconfiguration,$fireRatingVal){
-    $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('door_dimension.fire_rating', $fireRatingVal)->get();
+    $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*','door_dimension.code')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('door_dimension.fire_rating', $fireRatingVal)->get();
 
     return $doordimension;
 }
