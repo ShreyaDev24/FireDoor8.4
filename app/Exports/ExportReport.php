@@ -28,86 +28,188 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
         $this->user = $user;
     }
 
+    // public function collection()
+    // {
+    //     $data = [];
+
+    //     foreach ($this->result as $value) {
+    //         // dd($value->currency);
+    //         $quid = $value->QVID ?? 0;
+    //         if($quid > 0){
+    //             $TotalDoorPriceQuery = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+    //             ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+    //             ->where('quotation_version_items.version_id', $quid)
+    //             ->where('items.QuotationId', $value->QuotationId);
+    //             $TotalExactDoorPrice   = (float) $TotalDoorPriceQuery->sum('items.DoorsetPrice');
+    //             $TotalIronmongeryPrice = (float) $TotalDoorPriceQuery->sum('items.IronmongaryPrice'); // ✅ corrected spelling
+    //             // Side screen prices
+    //             $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $value->QuotationId,'side_screen_items.VersionId' => $quid])
+    //                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+    //         } else {
+    //             $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
+    //                 ->where(['items.QuotationId' => $value->QuotationId]);
+    //                 // dd( $TotalDoorPrice->get());
+    //             $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
+    //             // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
+    //             $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+
+    //             $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $value->QuotationId])
+    //             ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+    //         }
+
+    //         // Door price & ironmongery price
+    //         $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid);
+    //         $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
+    //         $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
+    //         $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
+    //         // Non-configurable items
+
+    //         $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
+    //         $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
+    //         $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
+    //         $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
+    //         $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
+
+    //         // User name
+    //         $getUser = User::where('id',$value->CompanyUserId)->first();
+    //         $fullname = '';
+    //         if($getUser){
+    //             $fullname = $getUser->FirstName . ' ' . $getUser->LastName;
+    //         }
+    //         $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
+    //                         ->timezone('Asia/Kolkata')
+    //                         ->format('d M Y');        // e.g., 04 Aug 2025
+
+    //         // Build data row
+    //         $data[] = [
+    //             $value->QuotationGenerationId,
+    //             $value->FirstName,
+    //             $value->ProjectName,
+    //             $value->QuotationName ?? $value->ProjectName,
+    //             $readableDate,
+    //             $value->ExpiryDate,
+    //             $value->FollowUpDate,
+    //             $formattedTotalPrice,
+    //             $value->version ?? 1,
+    //             $value->QuotationStatus,
+    //             $fullname,
+    //             $value->PONumber,
+    //             $formattedTotalDoorSetPrice,
+    //             $formattedScreenDataPrice,
+    //             $formattedIronmongeryPrice,
+    //             $formattedNonConfigDataPrice,
+    //         ];
+    //     }
+
+
+    //     // Footer row
+    //     $footData = array_fill(0, 18, '');
+    //     $data[] = $footData;
+
+    //     return collect($data);
+    // }
+
     public function collection()
-    {
-        $data = [];
+{
+    $data = [];
 
-        foreach ($this->result as $value) {
-            // dd($value->currency);
-            $quid = $value->QVID ?? 0;
-            if($quid > 0){
-                $TotalDoorPriceQuery = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-                ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
-                ->where('quotation_version_items.version_id', $quid)
-                ->where('items.QuotationId', $value->QuotationId);
-                $TotalExactDoorPrice   = (float) $TotalDoorPriceQuery->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = (float) $TotalDoorPriceQuery->sum('items.IronmongaryPrice'); // ✅ corrected spelling
-                // Side screen prices
-                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $value->QuotationId,'side_screen_items.VersionId' => $quid])
-                    ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
-            } else {
-                $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->where(['items.QuotationId' => $value->QuotationId]);
-                    // dd( $TotalDoorPrice->get());
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+    $quotationIds = $this->result->pluck('QuotationId')->toArray();
+    $versionIds = $this->result->pluck('QVID')->toArray();
+    $companyUserIds = $this->result->pluck('CompanyUserId')->unique()->toArray();
 
-                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $value->QuotationId])
-                ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
-            }
+    // Preload items for all quotations at once
+    $items = Item::whereIn('QuotationId', $quotationIds)
+        ->get()
+        ->groupBy('QuotationId');
 
-            // Door price & ironmongery price
-            $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid);
-            $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
-            $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
-            $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
-            // Non-configurable items
+    // Preload quotation_version_items for all versioned quotations
+    $versionItems = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+        ->whereIn('quotation_version_items.version_id', $versionIds)
+        ->get()
+        ->groupBy('QuotationId');
 
-            $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
-            $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
-            $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
-            $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
-            $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
+    // Preload side screen items
+    $sideScreens = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', '=', 'side_screen_item_master.ScreenId')
+        ->whereIn('side_screen_items.QuotationId', $quotationIds)
+        ->get()
+        ->groupBy('QuotationId');
 
-            // User name
-            $getUser = User::where('id',$value->CompanyUserId)->first();
-            $fullname = '';
-            if($getUser){
-                $fullname = $getUser->FirstName . ' ' . $getUser->LastName;
-            }
-            $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
-                            ->timezone('Asia/Kolkata')
-                            ->format('d M Y');        // e.g., 04 Aug 2025
+    // Preload users
+    $users = User::whereIn('id', $companyUserIds)
+        ->get()
+        ->keyBy('id');
 
-            // Build data row
-            $data[] = [
-                $value->QuotationGenerationId,
-                $value->FirstName,
-                $value->ProjectName,
-                $value->QuotationName ?? $value->ProjectName,
-                $readableDate,
-                $value->ExpiryDate,
-                $value->FollowUpDate,
-                $formattedTotalPrice,
-                $value->version ?? 1,
-                $value->QuotationStatus,
-                $fullname,
-                $value->PONumber,
-                $formattedTotalDoorSetPrice,
-                $formattedScreenDataPrice,
-                $formattedIronmongeryPrice,
-                $formattedNonConfigDataPrice,
-            ];
+    foreach ($this->result as $value) {
+        $quid = $value->QVID ?? 0;
+
+        // Safe: default to empty collection if key not found
+        $quotationItems = $items[$value->QuotationId] ?? collect([]);
+        $quotationVersionItems = $versionItems[$value->QuotationId] ?? collect([]);
+        $quotationScreens = $sideScreens[$value->QuotationId] ?? collect([]);
+
+        // Door & ironmongery prices
+        if ($quid > 0 && $quotationVersionItems->isNotEmpty()) {
+            $TotalExactDoorPrice   = $quotationVersionItems->sum('DoorsetPrice');
+            $TotalIronmongeryPrice = $quotationVersionItems->sum('IronmongaryPrice');
+        } else {
+            $TotalExactDoorPrice   = $quotationItems->sum('DoorsetPrice');
+            $TotalIronmongeryPrice = $quotationItems->sum('IronmongaryPrice');
         }
 
+        // Side screen prices
+        $screenDataprice = $quotationScreens->sum('ScreenPrice');
 
-        // Footer row
-        $footData = array_fill(0, 18, '');
-        $data[] = $footData;
+        // Non-configurable items (still per quotation)
+        $nonConfigDataPrice = nonConfigurableItem($value->QuotationId, $quid, CompanyUsers(), '', true);
 
-        return collect($data);
+        $TotalDoorSetPrice = itemAdjustCount($value->QuotationId, $quid);
+        $total_price = $TotalDoorSetPrice + $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
+
+        // Format prices
+        $formattedTotalDoorSetPrice   = formatPrice($TotalDoorSetPrice, $value->Currency);
+        $formattedScreenDataPrice     = formatPrice($screenDataprice, $value->Currency);
+        $formattedIronmongeryPrice    = formatPrice($TotalIronmongeryPrice, $value->Currency);
+        $formattedNonConfigDataPrice  = formatPrice($nonConfigDataPrice, $value->Currency);
+        $formattedTotalPrice          = formatPrice($total_price, $value->Currency);
+
+        // User name
+        $fullname = '';
+        if (isset($users[$value->CompanyUserId])) {
+            $fullname = $users[$value->CompanyUserId]->FirstName . ' ' . $users[$value->CompanyUserId]->LastName;
+        }
+
+        // Date formatting
+        $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
+            ->timezone('Asia/Kolkata')
+            ->format('d M Y');
+
+        // Build row
+        $data[] = [
+            $value->QuotationGenerationId,
+            $value->FirstName,
+            $value->ProjectName,
+            $value->QuotationName ?? $value->ProjectName,
+            $readableDate,
+            $value->ExpiryDate,
+            $value->FollowUpDate,
+            $formattedTotalPrice,
+            $value->version ?? 1,
+            $value->QuotationStatus,
+            $fullname,
+            $value->PONumber,
+            $formattedTotalDoorSetPrice,
+            $formattedScreenDataPrice,
+            $formattedIronmongeryPrice,
+            $formattedNonConfigDataPrice,
+        ];
     }
+
+    // Footer row
+    $data[] = array_fill(0, 18, '');
+
+    return collect($data);
+}
+
 
     public function headings(): array
     {
