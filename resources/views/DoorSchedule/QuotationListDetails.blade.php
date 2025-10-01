@@ -116,9 +116,32 @@ $loginUser = Auth::user();
                                 <input autocomplete="off" type="radio" class="radio-custom" id="radio-cust-12" value="ThisMonth" name="created_at">
                                 <label for="radio-cust-12" class="radio-custom-label">This Month</label>
                             </div>
-                            <div class="custom-radio">
+                            {{-- <div class="custom-radio">
                                 <input autocomplete="off" type="radio" class="radio-custom" id="radio-cust-13" value="ThisYear" name="created_at">
                                 <label for="radio-cust-13" class="radio-custom-label">This Year</label>
+                            </div> --}}
+                            <div class="custom-radio">
+                                <input autocomplete="off" type="radio" class="radio-custom" id="radio-cust-14" value="CustomMonths" name="created_at">
+                                <label for="radio-cust-14" class="radio-custom-label">Custom Months</label>
+                            </div>
+
+                            <!-- Month selector (only shows if "Custom Months" selected) -->
+                            <div id="custom-months" style="display:none; margin-top:10px;" class="form-group">
+                                <label>Select Months:</label>
+                                <select id="monthSelect" name="months[]" multiple class="form-control selectpicker">
+                                    <option value="01">January</option>
+                                    <option value="02">February</option>
+                                    <option value="03">March</option>
+                                    <option value="04">April</option>
+                                    <option value="05">May</option>
+                                    <option value="06">June</option>
+                                    <option value="07">July</option>
+                                    <option value="08">August</option>
+                                    <option value="09">September</option>
+                                    <option value="10">October</option>
+                                    <option value="11">November</option>
+                                    <option value="12">December</option>
+                                </select>
                             </div>
                         </form>
                         <div class="filter_footer">
@@ -523,6 +546,24 @@ $loginUser = Auth::user();
                 var yyyy = date.getFullYear();
                 var ThisYear = yyyy + '-' + mm + '-' + dd;
                 filters.push(["quotation.created_at", ">", ThisYear]);
+            } else if (created_at == "CustomMonths") {
+                var months = $('#monthSelect').val(); // e.g. ["08","09"]
+                if (months && months.length > 0) {
+                    let year = new Date().getFullYear(); // or pick year dynamically
+
+                    // Sort months just in case
+                    months.sort();
+
+                    let startDate = `${year}-${months[0]}-01`;
+                    let lastMonth = months[months.length - 1];
+
+                    // Get last day of the last month
+                    let endDay = new Date(year, parseInt(lastMonth), 0).getDate();
+                    let endDate = `${year}-${lastMonth}-${endDay}`;
+
+                    // Push single BETWEEN filter
+                    filters.push(["quotation.created_at", "BETWEEN", startDate + "," + endDate]);
+                }
             }
         }
 
@@ -821,6 +862,16 @@ $loginUser = Auth::user();
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
     };
+
+    $(document).ready(function () {
+        $('input[name="created_at"]').on('change', function () {
+            if ($(this).val() === "CustomMonths") {
+                $('#custom-months').show();
+            } else {
+                $('#custom-months').hide();
+            }
+        });
+    });
 </script>
 
 @endsection
