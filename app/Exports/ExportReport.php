@@ -12,6 +12,7 @@ use App\Models\SideScreenItem;
 use App\Models\User;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
+use Carbon\Carbon;
 
 class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
 {
@@ -75,13 +76,17 @@ class ExportReport implements FromCollection,WithHeadings,WithEvents,WithTitle
             if($getUser){
                 $fullname = $getUser->FirstName . ' ' . $getUser->LastName;
             }
+            $readableDate = \Carbon\Carbon::parse($value->quotecreatedate)
+                            ->timezone('Asia/Kolkata')
+                            ->format('d M Y');        // e.g., 04 Aug 2025
+
             // Build data row
             $data[] = [
                 $value->QuotationGenerationId,
                 $value->FirstName,
                 $value->ProjectName,
                 $value->QuotationName ?? $value->ProjectName,
-                $value->created_at,
+                $readableDate,
                 $value->ExpiryDate,
                 $value->FollowUpDate,
                 $formattedTotalPrice,

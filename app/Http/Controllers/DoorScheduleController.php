@@ -4628,6 +4628,30 @@ class DoorScheduleController extends Controller
         return null;
     }
 
+    function applyCustomFilters($Quotations, $filters) {
+        foreach ($filters as $filter) {
+            $column = $filter[0];
+            $operator = strtoupper($filter[1]);
+            $value = $filter[2];
+
+            if ($operator === 'BETWEEN') {
+                $dates = explode(',', $value); // e.g. "2025-08-01,2025-09-30"
+                $Quotations = $Quotations->whereBetween($column, [$dates[0], $dates[1]]);
+            } elseif ($operator === 'IN') {
+                $values = explode(',', $value); // e.g. ["08","09"]
+                $Quotations = $Quotations->where(function($q) use ($column, $values) {
+                    foreach ($values as $val) {
+                        $q->orWhereMonth($column, $val);
+                    }
+                });
+            } else {
+                $Quotations = $Quotations->where($column, $operator, $value);
+            }
+        }
+        return $Quotations;
+    }
+
+
     public function records(request $request)
     {
         //dd($request->all());
@@ -4779,7 +4803,7 @@ class DoorScheduleController extends Controller
             ->leftJoin('companies', 'companies.id', 'quotation.CompanyId')
             ->leftJoin('customers', 'customers.id', 'quotation.MainContractorId')
             ->leftJoin('users', 'users.id', 'quotation.MainContractorId')
-            ->select('quotation.*', 'quotation.editBy as QuotEditBy', 'quotation.updated_at as QuotUpdatedAt', 'quotation.id as QuotationId', 'quotation_versions.version', 'companies.CompanyName', 'project.*', 'quotation_versions.id as QVID', 'customers.CstCompanyName', 'quotation.MainContractorId as MainId', 'users.FirstName', 'quotation.VersionId as verId')
+            ->select('quotation.*', 'quotation.editBy as QuotEditBy', 'quotation.updated_at as QuotUpdatedAt', 'quotation.id as QuotationId','quotation.created_at as quotecreatedate', 'quotation_versions.version', 'companies.CompanyName', 'project.*', 'quotation_versions.id as QVID', 'customers.CstCompanyName', 'quotation.MainContractorId as MainId', 'users.FirstName', 'quotation.VersionId as verId')
             // ->where('quotation.QuotationStatus','!=','Ordered')
             // ->where($filters)
             ->where('quotation.QuotationGenerationId', '!=', null);
@@ -4842,23 +4866,29 @@ class DoorScheduleController extends Controller
 
         // ----------CODE TO SHOW DATA IN LIST AND IN GRID-------------------------------
         // dd($filters,$from,$limit,$column,$dir,$request->listType);
-        if($request->isbox == 'sendtoclient'){
-            $Quotations = $Quotations->where($filters);
-            $Quotations = $Quotations->where('quotation.QuotationStatus','Send To Client');
-            $QuotationsCount = $Quotations->count();
-        } else if($request->isExport == 'yes'){
-             $Quotations = $Quotations->where($filters)->orderBy($column, $dir)->get();
-        } else {
-            $Quotations = $Quotations->where($filters);
-            $QuotationsCount = $Quotations->count();
-        }
-        if($request->isExport != 'yes'){
-            if($request->listType=='dataListType'){
-                $Quotations = $Quotations->orderBy($column, $dir)->get();
-            }else{
-                $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+        // Apply filters and other conditions
+            if($request->isbox == 'sendtoclient'){
+                $Quotations = $this->applyCustomFilters($Quotations, $filters);
+                $Quotations = $Quotations->where('quotation.QuotationStatus','Send To Client');
+                $QuotationsCount = $Quotations->count();
+
+            } elseif($request->isExport == 'yes'){
+                $Quotations = $this->applyCustomFilters($Quotations, $filters)
+                            ->orderBy($column, $dir)
+                            ->get();
+
+            } else {
+                $Quotations = $this->applyCustomFilters($Quotations, $filters);
+                $QuotationsCount = $Quotations->count();
             }
-        }
+
+            if($request->isExport != 'yes'){
+                if($request->listType=='dataListType'){
+                    $Quotations = $Quotations->orderBy($column, $dir)->get();
+                }else{
+                    $Quotations = $Quotations->skip($from)->take($limit)->orderBy($column, $dir)->get();
+                }
+            }
 
         // ->where($AndWhereCondition)
         // ->orWhere($OrWhereCondition)
