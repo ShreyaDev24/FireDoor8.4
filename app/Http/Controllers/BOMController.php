@@ -1353,17 +1353,16 @@ class BOMController extends Controller
                 // --- CUT SIZE CALCULATION (simplified for grouping) ---
                 $cutSizeH  = $value->LeafHeight;
 
-                // --- CONFIGURABLE ITEM ---
-                $configurableitems = match($quotation->configurableitems) {
-                    '1' => 'Streboard',
-                    '2' => 'Halspan',
-                    '3' => 'Norma',
-                    '4' => 'Vicaima',
-                    '5' => 'Seadec',
-                    '6' => 'Deanta',
-                    '7' => 'Flamebreak',
-                    '8' => 'StreDoor',
-                    '9' => 'MMM',
+                $configurableitems = match((int) $quotation->configurableitems) {
+                    1 => 'Streboard',
+                    2 => 'Halspan',
+                    3 => 'Norma',
+                    4 => 'Vicaima',
+                    5 => 'Seadec',
+                    6 => 'Deanta',
+                    7 => 'Flamebreak',
+                    8 => 'StreDoor',
+                    9 => 'MMM',
                     default => '',
                 };
 
@@ -1389,25 +1388,21 @@ class BOMController extends Controller
 
                     foreach ($door_core_size as $door_core) {
                         // For LeafWidth1
-                        if ($door_core->selected_mm_width >= $value->LeafWidth1 &&
-                            $door_core->selected_mm_height >= $cutSizeH) {
-                            if ($door_core->selected_mm_width <= $minWidth1 &&
-                                $door_core->selected_mm_height <= $minHeight1) {
+                        if ($door_core->selected_mm_width >= $value->LeafWidth1 && $door_core->selected_mm_height >= $cutSizeH) {
+                            if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                                 $minWidth1 = $door_core->selected_mm_width;
                                 $minHeight1 = $door_core->selected_mm_height;
-                                $code1 = $door_core->code;
+                                $code1 = $door_core->code ?? $minWidth1 .'x'. $minHeight1;
                             }
                         }
 
                         // For LeafWidth2 (only if leaf_and_a_half)
                         if ($value->DoorsetType == 'leaf_and_a_half') {
-                            if ($door_core->selected_mm_width >= $value->LeafWidth2 &&
-                                $door_core->selected_mm_height >= $cutSizeH) {
-                                if ($door_core->selected_mm_width <= $minWidth2 &&
-                                    $door_core->selected_mm_height <= $minHeight2) {
+                            if ($door_core->selected_mm_width >= $value->LeafWidth2 && $door_core->selected_mm_height >= $cutSizeH) {
+                                if ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2) {
                                     $minWidth2 = $door_core->selected_mm_width;
                                     $minHeight2 = $door_core->selected_mm_height;
-                                    $code2 = $door_core->code;
+                                    $code2 = $door_core->code ?? $minWidth2 .'x'. $minHeight2;
                                 }
                             }
                         }
