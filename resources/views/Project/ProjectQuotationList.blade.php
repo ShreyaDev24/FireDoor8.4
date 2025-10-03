@@ -180,8 +180,15 @@
                                     <a href="{{url('project/quotation/'.Request::segment(3))}}" class="project_edit project_edit1">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Add Quotation
                                     </a>
-                                    <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
+                                    {{-- <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
                                         <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
+                                    </a> --}}
+                                    <a href="javascript:void(0);"
+                                        class="project_edit newQuotationBtn"
+                                        data-project="{{ $projectId }}"
+                                        data-customer="{{ $data[0]->customerId }}"
+                                        style="right: 264px;">
+                                            <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
                                     </a>
                                     <a href="{{url('project/update/'.$data[0]->GeneratedKey)}}" class="project_edit">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
@@ -201,9 +208,18 @@
                                     <a href="{{url('project/quotation/'.Request::segment(3))}}" class="project_edit project_edit1">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Add Quotation
                                     </a>
-                                    <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
+                                    {{-- <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
                                         <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
+                                    </a> --}}
+
+                                    <a href="javascript:void(0);"
+                                        class="project_edit newQuotationBtn"
+                                        data-project="{{ $projectId }}"
+                                        data-customer="{{ $data[0]->customerId }}"
+                                        style="right: 264px;">
+                                            <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
                                     </a>
+
                                     <a href="{{url('project/update/'.$data[0]->GeneratedKey)}}" class="project_edit">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
                                     </a>
@@ -221,8 +237,15 @@
                                     <a href="{{url('project/quotation/'.Request::segment(3))}}" class="project_edit project_edit1">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Add Quotation
                                     </a>
-                                    <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
+                                    {{-- <a href="{{route('projectNewQuotation', [ $projectId ] )}}/{{$data[0]->customerId}}" class="project_edit " style="right: 264px;">
                                         <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
+                                    </a> --}}
+                                    <a href="javascript:void(0);"
+                                        class="project_edit newQuotationBtn"
+                                        data-project="{{ $projectId }}"
+                                        data-customer="{{ $data[0]->customerId }}"
+                                        style="right: 264px;">
+                                            <i class="fa fa-edit" aria-hidden="true"></i> New Quotation
                                     </a>
                                     <a href="{{url('project/update/'.$data[0]->GeneratedKey)}}" class="project_edit">
                                         <i class="fa fa-edit" aria-hidden="true"></i> Edit
@@ -525,6 +548,35 @@ tabs.forEach(tab => {
 @section('js')
 
 <script>
+    $(document).on('click', '.newQuotationBtn', function () {
+    $('.loader').css({'display':'block'});
+    let projectId = $(this).data('project');
+    let customerId = $(this).data('customer');
+
+    $.ajax({
+        url: "{{ route('projectNewQuotation', ['projectId' => 'PROJECT_ID', 'customerId' => 'CUSTOMER_ID']) }}"
+                .replace('PROJECT_ID', projectId)
+                .replace('CUSTOMER_ID', customerId),
+        type: "GET",
+        dataType: "json",
+        success: function (response) {
+        console.log(response)
+            if (response.status === 'error') {
+                 $('.loader').css({'display':'none'});
+                swal("Oops!", response.message, "error");
+            } else if (response.status === 'success') {
+                // redirect to generate page
+                $('.loader').css({'display':'none'});
+                window.location.href = response.redirect_url;
+            }
+        },
+        error: function (xhr) {
+            $('.loader').css({'display':'none'});
+            swal("Oops!", response.message, "error");
+        }
+    });
+});
+
 $(".quote_filter").click(function() {
 
     if ($(this).next("ul").css("visibility") == "hidden") {

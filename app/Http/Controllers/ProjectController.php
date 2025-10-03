@@ -645,9 +645,38 @@ class ProjectController extends Controller
     }
 
 
-    public function projectNewQuotation($projectId, $customerId = null)
-    {
+    // public function projectNewQuotation($projectId, $customerId = null)
+    // {
 
+    //     $qidFromhelper = GenerateQuotationFirstTime($projectId, $customerId);
+    //     if (Auth::user()->UserType != 4) {
+    //         $quotaionUpdate = Quotation::where('ProjectId', $projectId)->orderBy('id', 'desc')->first();
+    //         $quotaionUpdate->MainContractorId = $customerId;
+    //         $quotaionUpdate->editBy = Auth::user()->id;
+    //         $quotaionUpdate->CompanyUserId = (empty(Auth::user()->main_id))?Auth::user()->id:Auth::user()->main_id;
+    //         $quotaionUpdate->updated_at = date('Y-m-d H:i:s');
+    //         $quotaionUpdate->save();
+    //     }
+
+    //     return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
+    // }
+
+    public function projectNewQuotation(Request $request,$projectId)
+    {
+        $customerId = $request->customerId ?? null;
+        // check if quotation already exists
+        $existingQuotation = Quotation::where('ProjectId', $projectId)->first();
+        if ($existingQuotation && $existingQuotation->ProjectId != null) {
+            $projectDetails = Project::find($existingQuotation->ProjectId);
+            if ($projectDetails && $projectDetails->quotationId != null && $projectDetails->versionId != null) {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Quotation is already selected on this project.'
+                ]);
+            }
+        }
+
+        // normal logic
         $qidFromhelper = GenerateQuotationFirstTime($projectId, $customerId);
         if (Auth::user()->UserType != 4) {
             $quotaionUpdate = Quotation::where('ProjectId', $projectId)->orderBy('id', 'desc')->first();
@@ -658,7 +687,10 @@ class ProjectController extends Controller
             $quotaionUpdate->save();
         }
 
-        return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
+        return response()->json([
+            'status' => 'success',
+            'redirect_url' => route('quotation/generate/', [$qidFromhelper, 0])
+        ]);
     }
 
     public function deleteProjectFile(Request $request): int

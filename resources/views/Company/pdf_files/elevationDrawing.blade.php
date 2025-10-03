@@ -61,7 +61,7 @@
         .doorImg {
             width: 70% !important;
 
-            max-width: 600px;
+            max-width: 530px;
         }
 
         .doorImgBox {
