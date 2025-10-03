@@ -133,6 +133,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $LFH,
                 $value->SpeciesName,
                 str_replace('_', ' ', $value->LippingType),
+                $value->IntumescentLeapingSealType,
                 ''
             );
 
@@ -167,6 +168,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $LFH,
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->LippingType),
+                    $value->IntumescentLeapingSealType,
                     ''
                 );
 
@@ -176,7 +178,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         $footData = [
-            '','','','','','','','','','','','','','','','','','',''
+            '','','','','','','','','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -205,6 +207,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             'Lipping Finish H',
             'Lipping Mat',
             'Exposed or Concealed',
+            'Intumescent Seal Type',
             'Notes'
         ];
 
@@ -217,8 +220,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:S1';
-                $cellRange = 'A2:S2';
+                $cellRange1 = 'A1:T1';
+                $cellRange = 'A2:T2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
