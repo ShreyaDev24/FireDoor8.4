@@ -3438,7 +3438,8 @@ class OptionController extends Controller
                     (!empty($request->vicaimaDoorCore) ||
                     !empty($request->normaDoorCore) ||
                     !empty($request->seadecDoorCore) ||
-                    !empty($request->deantaDoorCore)) &&
+                    !empty($request->deantaDoorCore) ||
+                    !empty($request->MMM)) &&
                     !empty($leafType)
                 ) {
                     // Retrieve or initialize models
