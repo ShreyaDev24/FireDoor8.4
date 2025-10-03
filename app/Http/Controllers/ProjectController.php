@@ -671,7 +671,7 @@ class ProjectController extends Controller
             if ($projectDetails && $projectDetails->quotationId != null && $projectDetails->versionId != null) {
                 return response()->json([
                     'status' => 'error',
-                    'message' => 'Quotation is already selected on this project.'
+                    'message' => 'A quotation has already been selected on this project, and accepted by client.'
                 ]);
             }
         }
