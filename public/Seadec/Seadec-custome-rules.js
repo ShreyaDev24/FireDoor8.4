@@ -1795,7 +1795,11 @@ function FireRatingChange() {
             $('label[for="gap"]').hide();
             $('label[for="gap_NFR"]').css({ 'display': 'block' });
             $("#doorThickness").hide()
-            $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
+           if (selectedValue) {
+                $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
+            }else{
+                $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44' selected>44</option><option value='54'>54</option></select>")
+            }
             $("#lazingIntegrityOrInsulationIntegrity").prop('required', false);
             $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
             $("#SL1Width").removeAttr('max');
