@@ -6214,7 +6214,7 @@ $(document).ready(function(){
         $("#OpBeadThickness").attr('min',44);
         $("#OpBeadThickness").attr({ 'readonly': false, required: true });
         $("#OpBeadHeight").attr('min',95);
-    } else if($(this).val() == 'Fan_Light'){  // JFDS 896
+    } else if(overpanelVal == 'Fan_Light'){  // JFDS 896
         $("#OpBeadThickness").attr('min',44);
         $("#OpBeadHeight").attr('min',95);
         $("#OpBeadHeight").attr({ 'readonly': false, required: true });

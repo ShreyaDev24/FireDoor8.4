@@ -3245,8 +3245,8 @@ class DoorScheduleController extends Controller
                     $rWdBRating = trim((string) $row[$j++]);
                     $perimeterSeal1 = trim((string) $row[$j++]);
                     $perimeterSeal2 = trim((string) $row[$j++]);
-                    $thresholdSeal1 = trim((string) $row[$j++]);
-                    $thresholdSeal2 = trim((string) $row[$j++]);
+                    // $thresholdSeal1 = trim((string) $row[$j++]);
+                    // $thresholdSeal2 = trim((string) $row[$j++]);
                     $AccousticsMeetingStiles = trim((string) $row[$j++]);
                     $Architrave = trim((string) $row[$j++]);
                     $ArchitraveMaterial = trim((string) $row[$j++]);
