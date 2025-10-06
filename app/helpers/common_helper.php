@@ -2396,7 +2396,7 @@ function getDoorDimensionData($userIds,$issingleconfiguration,$fireRatingVal){
     return $doordimension;
 }
 
-function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireRatingVal,$DoorDimensions,$doorthickness){
+function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireRatingVal,$DoorDimensions,$doorthickness = null){
     if($fireRatingVal == "NFR"){
         $doordimension = DB::table('selected_doordimension')->join('door_dimension','door_dimension.id','selected_doordimension.doordimension_id')->select('selected_doordimension.*')->wherein('selected_doordimension.doordimension_user_id',$userIds)->where('door_dimension.configurableitems', $issingleconfiguration)->where('selected_doordimension.doordimension_id',$DoorDimensions)->first();
     }else{
