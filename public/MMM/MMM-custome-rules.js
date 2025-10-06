@@ -1838,6 +1838,7 @@ $(function () {
 // function
 function FireRatingChange() {
     if ($("#fireRating").val() != '') {
+        let selectedValue = $("#doorthickness").val();
         if ($("#fireRating").val() == "NFR") {
             $("#glazingBeadsThickness").attr('min',19);
             $("#grooveDepth").attr("max", "");

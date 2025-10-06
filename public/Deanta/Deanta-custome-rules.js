@@ -1761,6 +1761,7 @@ $(function () {
 // function
 function FireRatingChange() {
     if ($("#fireRating").val() != '') {
+        let selectedValue = $("#doorthickness").val();
         if ($("#fireRating").val() == "NFR") {
             $("#grooveDepth").attr("max", "");
             $("#gap").removeAttr("min");
