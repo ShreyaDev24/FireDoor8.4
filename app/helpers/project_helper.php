@@ -501,13 +501,13 @@ function glazingBeadExport($request,$userIds): void{
 
             $unit_cost = $pricePerLM*$LMOfGlazingSystem;
 
-            if($request->doorsetType == 'DD'){
+            // if($request->doorsetType == 'DD'){
                 $quantity_of_door_type = 2;
-            }elseif($request->doorsetType == 'SD'){
-                $quantity_of_door_type = 1;
-            }else{
-                $quantity_of_door_type = 1;
-            }
+            // }elseif($request->doorsetType == 'SD'){
+            //     $quantity_of_door_type = 1;
+            // }else{
+            //     $quantity_of_door_type = 1;
+            // }
 
             $total_cost = $unit_cost*$quantity_of_door_type;
 
@@ -533,12 +533,13 @@ function glazingBeadExport($request,$userIds): void{
         $LMOfGlazing = $request->SL1Width + $request->SL1Width + $request->SL1Height + $request->SL1Height;
         $LMOfGlazingSystem = $LMOfGlazing/1000;
         $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-        if($request->sideLight2=='Yes'){
-            $unit_cost *= 2;
-            $quantity_of_door_type = 2;
-        }else{
-            $quantity_of_door_type = 1;
-        }
+        // if($request->sideLight2=='Yes'){
+        //     $unit_cost *= 2;
+        //     $quantity_of_door_type = 2;
+        // }else{
+        //     $quantity_of_door_type = 1;
+        // }
+        $quantity_of_door_type = 2;
 
         $total_cost = $unit_cost*$quantity_of_door_type;
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
@@ -557,12 +558,13 @@ function glazingBeadExport($request,$userIds): void{
         $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
         $LMOfGlazingSystem = $LMOfGlazing/1000;
         $unit_cost = $pricePerLM*$LMOfGlazingSystem;
-        if($request->sideLight1=='Yes'){
-            $unit_cost *= 2;
-            $quantity_of_door_type = 2;
-        }else{
-            $quantity_of_door_type = 1;
-        }
+        // if($request->sideLight1=='Yes'){
+        //     $unit_cost *= 2;
+        //     $quantity_of_door_type = 2;
+        // }else{
+        //     $quantity_of_door_type = 1;
+        // }
+        $quantity_of_door_type = 2;
 
         $total_cost = $unit_cost*$quantity_of_door_type;
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
