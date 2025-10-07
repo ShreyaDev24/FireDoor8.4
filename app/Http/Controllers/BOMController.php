@@ -1388,7 +1388,7 @@ class BOMController extends Controller
 
                     foreach ($door_core_size as $door_core) {
                         // For LeafWidth1
-                        if ($door_core->selected_mm_width >= $value->LeafWidth1 && $door_core->selected_mm_height >= $cutSizeH) {
+                        if ($door_core->selected_mm_width + 20 >= $value->LeafWidth1 && $door_core->selected_mm_height + 20 >= $cutSizeH) {
                             if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                                 $minWidth1 = $door_core->selected_mm_width;
                                 $minHeight1 = $door_core->selected_mm_height;
@@ -1398,7 +1398,7 @@ class BOMController extends Controller
 
                         // For LeafWidth2 (only if leaf_and_a_half)
                         if ($value->DoorsetType == 'leaf_and_a_half') {
-                            if ($door_core->selected_mm_width >= $value->LeafWidth2 && $door_core->selected_mm_height >= $cutSizeH) {
+                            if ($door_core->selected_mm_width + 20 >= $value->LeafWidth2 && $door_core->selected_mm_height + 20 >= $cutSizeH) {
                                 if ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2) {
                                     $minWidth2 = $door_core->selected_mm_width;
                                     $minHeight2 = $door_core->selected_mm_height;
@@ -1412,7 +1412,8 @@ class BOMController extends Controller
                 // Add product codes
                 $productCodes[] = [
                     'code'     => $code1,
-                    'cutSizeW' => $value->LeafWidth1,
+                    'cutSizeW' => $minWidth1,
+                    'cutSizeH' => $minHeight1,
                     'LeafThickness' => $value->LeafThickness ?? '',
                     'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
                     'DoorsetType' => $value->DoorsetType,
@@ -1421,7 +1422,8 @@ class BOMController extends Controller
                 if ($value->DoorsetType == 'leaf_and_a_half') {
                     $productCodes[] = [
                         'code'     => $code2,
-                        'cutSizeW' => $value->LeafWidth2,
+                        'cutSizeW' => $minWidth2,
+                        'cutSizeH' => $minHeight2,
                         'LeafThickness' => $value->LeafThickness ?? '',
                         'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
                         'DoorsetType' => $value->DoorsetType,
@@ -1438,6 +1440,7 @@ class BOMController extends Controller
 
                 $pcode = $p['code'];
                 $cutSizeW = $p['cutSizeW'];
+                $cutSizeH = $p['cutSizeH'];
 
                 $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
 
