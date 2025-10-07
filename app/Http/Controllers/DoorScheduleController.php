@@ -9103,6 +9103,11 @@ class DoorScheduleController extends Controller
                 }
                 $rules['FrameDepth'] = 'required|numeric';
                 $rules['DoorFrameConstruction'] = 'required';
+                $rules['FrameFinish'] = 'required';
+                if (empty($rules['FrameThickness'])) {
+                    $rules['HeadFrameThickness'] = 'required';
+                    $rules['BottomFrameThickness'] = 'required';
+                }
             }
 
             // Optional Section: Overpanel
@@ -9125,6 +9130,53 @@ class DoorScheduleController extends Controller
                 $rules['OPGlazingBeadsHeight'] = 'required';
                 $rules['OPGlazingBeadsFixingDetail'] = 'required';
             }
+
+            // Optional Section: Sidelight1
+            if ($door['SideLight1'] == 'Yes') {
+                $rules['SL1Height'] = 'required';
+                $rules['SL1GlassIntegrity'] = 'required';
+                $rules['SideLight1GlassType'] = 'required';
+                $rules['SideLight1GlassThickness'] = 'required';
+                $rules['SL1Width'] = 'required';
+                $rules['SideLight1GlazingSystems'] = 'required';
+                $rules['SideLight1GlazingSystemsThickness'] = 'required';
+                $rules['BeadingType'] = 'required';
+                $rules['SideLight1FrameThickness'] = 'required';
+                $rules['SideLight1GlazingBeadsFixingDetail'] = 'required';
+                $rules['SL1GlazingBeadSpecies'] = 'required';
+                $rules['SlBeadThickness'] = 'required';
+                $rules['SlBeadHeight'] = 'required';
+                $rules['SL1Depth'] = 'required';
+                $rules['SL1Transom'] = 'required';
+                if($door['SL1Transom'] != 'No'){
+                    $rules['SL1TransomDepth'] = 'required';
+                    $rules['SL1transomThickness'] = 'required';
+                }
+            }
+
+            // Optional Section: Sidelight2
+            if ($door['SideLight2'] == 'Yes') {
+                $rules['DoYouWantToCopySameAsSL1'] = 'required';
+                $rules['SL2Height'] = 'required';
+                $rules['SL2GlassIntegrity'] = 'required';
+                $rules['SideLight2GlassType'] = 'required';
+                $rules['SideLight2GlassThickness'] = 'required';
+                $rules['SL2Width'] = 'required';
+                $rules['SideLight2GlazingSystems'] = 'required';
+                $rules['SideLight2GlazingSystemsThickness'] = 'required';
+                $rules['SideLight2BeadingType'] = 'required';
+                $rules['SideLight2FrameThickness'] = 'required';
+                $rules['SideLight2GlazingBeadsFixingDetail'] = 'required';
+                $rules['SL2GlazingBeadSpecies'] = 'required';
+                $rules['SL2Depth'] = 'required';
+                $rules['SL2Transom'] = 'required';
+                if($door['SL2Transom'] != 'No'){
+                    $rules['SL2TransomDepth'] = 'required';
+                    $rules['SL2transomThickness'] = 'required';
+                }
+            }
+
+
 
             // Optional Section: Lipping
             if (!empty($door['FireRating'])) {
@@ -9164,7 +9216,8 @@ class DoorScheduleController extends Controller
                     'SOWallThick',
                     'GAP',
                     'FrameType',
-                    'FrameDepth'
+                    'FrameDepth',
+                    'FrameFinish'
                 ];
 
                 foreach ($skip as $k) {
