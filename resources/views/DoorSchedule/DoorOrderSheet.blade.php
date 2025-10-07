@@ -14,12 +14,13 @@
     table {
         border: 1px solid black;
         border-collapse: collapse;
-        width: 100%;
+        width: 100vh;
     }
 
     th, td {
         border: 1px solid black;
-        padding: 5px 10px;
+        /* padding: 5px 10px; */
+        padding: 0px;
         text-align: center;
     }
 
@@ -35,7 +36,7 @@
 </head>
 
 <body>
-    <table>
+    <table style="max-width: 100vw; width: 100%;">
         <tbody>
             <tr>
                 <th colspan="20">Door Order Sheet BOM</th>
@@ -79,8 +80,8 @@
                         <th>Door Thickness</th>
                         <th>Door Mat</th>
                         <th>Door Finish</th>
-                        <th>PRODUCT CODE LEAF 1</th>
-                        <th>PRODUCT CODE LEAF 2</th>
+                        <th>Product code leaf 1</th>
+                        <th>Product code leaf 2</th>
                         <th>Cut Size H</th>
                         <th>Cut Size W</th>
                         <th>Cut Size W2</th>
@@ -94,7 +95,7 @@
                     </tr>
 
                     <tr style="background:#00B0F0">
-                        <td><b></b></td>
+                        <td style="padding:5px 0px;"><b></b></td>
                         <td></td>
                         <td></td>
                         <td></td>
