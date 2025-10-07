@@ -31,13 +31,16 @@
     thead {
         display: table-header-group;
     }
+    tfoot {
+        display: table-footer-group;
+    }
 </style>
 
 </head>
 
 <body>
-    <table style="max-width: 100vw; width: 100%;">
-        <tbody>
+    <table style="max-width: 100vw; width: 100%; border-collapse: collapse;">
+        <thead>
             <tr>
                 <th colspan="20">Door Order Sheet BOM</th>
             </tr>
@@ -54,7 +57,7 @@
                 <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="2">{{ $today }}</td>
-                <th  colspan="2">Main Contractor</th>
+                <th colspan="2">Main Contractor</th>
                 <td colspan="3">{{ $quotation->CstCompanyName }}</td>
                 <th colspan="3">Sales Contact</th>
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
@@ -65,60 +68,54 @@
             <tr>
                 <th colspan="20">Items</th>
             </tr>
-            @php
-                $i = 0;
-            @endphp
+            <tr>
+                <th>Total Doors</th>
+                <th>Plot Number/Ref</th>
+                <th>IFC/Certifire No/Q mark Plug</th>
+                <th>Door Number</th>
+                <th>Door Type</th>
+                <th>Door Thickness</th>
+                <th>Door Mat</th>
+                <th>Door Finish</th>
+                <th>Product code leaf 1</th>
+                <th>Product code leaf 2</th>
+                <th>Cut Size H</th>
+                <th>Cut Size W</th>
+                <th>Cut Size W2</th>
+                <th>Lipping Thickness</th>
+                <th>Lipping Finish W</th>
+                <th>Lipping Finish H</th>
+                <th>Lipping Mat</th>
+                <th>Exposed or Concealed</th>
+                <th>Intumescent Seal Type</th>
+                <th>Notes</th>
+            </tr>
+            <tr style="background:#00B0F0">
+                <td style="padding:5px 0px;"><b></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
 
-            @foreach ($item as $value)
-                @if ($i++ == 0)
-                    <tr>
-                        <th>Total Doors</th>
-                        <th>Plot Number/Ref</th>
-                        <th>IFC/Certifire No/Q mark Plug</th>
-                        <th>Door Number</th>
-                        <th>Door Type</th>
-                        <th>Door Thickness</th>
-                        <th>Door Mat</th>
-                        <th>Door Finish</th>
-                        <th>Product code leaf 1</th>
-                        <th>Product code leaf 2</th>
-                        <th>Cut Size H</th>
-                        <th>Cut Size W</th>
-                        <th>Cut Size W2</th>
-                        <th>Lipping Thickness</th>
-                        <th>Lipping Finish W</th>
-                        <th>Lipping Finish H</th>
-                        <th>Lipping Mat</th>
-                        <th>Exposed or Concealed</th>
-                        <th>Intumescent Seal Type</th>
-                        <th>Notes</th>
-                    </tr>
-
-                    <tr style="background:#00B0F0">
-                        <td style="padding:5px 0px;"><b></b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                @endif
-                @endforeach
-                {!! implode('', $data) !!}
+        <tbody>
+            {!! implode('', $data) !!}
         </tbody>
     </table>
 </body>
