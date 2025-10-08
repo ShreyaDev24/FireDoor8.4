@@ -2255,15 +2255,24 @@ class BOMController extends Controller
                         ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
                         ? ($value->OPWidth + $VisionPanelWidthNFR)
                         : ($value->OPWidth + $VisionPanelWidthFD60)
-                    ) . '</td>'
-                    . '<td></td>'
-                    . '<td>' . (
-                        ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                        ? ($value->OPHeight + $VisionPanelHeightFD60)
-                        : ($value->OPHeight + $VisionPanelHeightNFR)
-                    ) . '</td>'
-                    . '<td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>'
-                    . '</tr>';
+                ) . '</td>'
+                . '<td>4</td>'
+                . '<td>' . (
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                        ? ($value->OPHeigth + $VisionPanelHeightFD60)
+                        : ($value->OPHeigth + $VisionPanelHeightNFR)
+                ) . '</td>'
+                . '<td>4</td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '<td></td>'
+                . '</tr>';
+
             }
 
             if($value->SideLight1 == 'Yes'){
