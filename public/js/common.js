@@ -347,15 +347,19 @@ $(document).on('change','#NumberOfGrooveLeaf2',function(e){
 })
 
 function validateFrameDepth() {
-        const doorThickness = parseFloat(document.getElementById("doorThickness").value) || 0;
-        const plantonStopWidth = parseFloat(document.getElementById("plantonStopWidth").value) || 0;
-        const frameDepth = parseFloat(document.getElementById("frameDepth").value) || 0;
-        let frameonoff = $("#frameonoff").prop('checked');
-        if(frameonoff != true){
+    const doorThickness = parseFloat(document.getElementById("doorThickness").value);
+    const plantonStopWidth = parseFloat(document.getElementById("plantonStopWidth").value);
+    const frameDepth = parseFloat(document.getElementById("frameDepth").value);
+    const frameonoff = $("#frameonoff").prop('checked');
+
+    // Run validation only if all values are valid numbers (not NaN and greater than 0)
+    if (!isNaN(doorThickness) && !isNaN(plantonStopWidth) && !isNaN(frameDepth)) {
+        if (frameonoff !== true) {
             if (frameDepth < (doorThickness + plantonStopWidth)) {
                 swal("error", "Door Leaf Thickness and Plant on Stop exceeds Frame Depth!!!");
             }
         }
+    }
 }
 
 // Trigger validation only after leaving the field
