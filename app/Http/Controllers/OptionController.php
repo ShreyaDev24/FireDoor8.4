@@ -4173,7 +4173,7 @@ class OptionController extends Controller
                         $selectedOption = new SelectedOverpanelGlassGlazing();
                     }
 
-                    $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;
+                    $data->Streboard = NULL;$data->Halspan = NULL;$data->Flamebreak = NULL;$data->Stredor = NULL;$data->VicaimaDoorCore = NULL;$data->MMM = NULL;$data->Seadec = NULL;$data->Deanta = NULL;
                     $counter = count($config);
                     for($m = 0; $m < $counter; $m++){
                         if($config[$m] == '1'){
@@ -4190,6 +4190,22 @@ class OptionController extends Controller
 
                         if($config[$m] == '8'){
                             $data->Stredor = 8;
+                        }
+
+                        if($config[$m] == '4'){
+                            $data->VicaimaDoorCore = 4;
+                        }
+
+                        if($config[$m] == '9'){
+                            $data->MMM = 9;
+                        }
+
+                        if($config[$m] == '5'){
+                            $data->Seadec = 5;
+                        }
+
+                        if($config[$m] == '6'){
+                            $data->Deanta = 6;
                         }
                     }
 

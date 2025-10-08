@@ -1660,6 +1660,14 @@ dd(1);
                                         value="7">Flamebreak
                                     <input type="radio" name="config[]" class="form-group  ml-3 option-style"
                                         value="8">Stredor
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="4">Vicaima Door Core
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                    value="5">Seadec
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                    value="6">Deanta
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                    value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
