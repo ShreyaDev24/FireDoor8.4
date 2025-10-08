@@ -9376,8 +9376,8 @@ if (bottomClearance < 200) {
     });
 });
                             if(first){
-                            $('input[name="newVP1Height"]').val(newVP1Height).trigger('change');
-                             $('input[name="newVP2Height"]').val(newVP2Height).trigger('change');
+                            $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
+                             $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                              console.log('updateeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                             first=false
                            }
@@ -9658,7 +9658,7 @@ let bottomClearance = LeafHeightNoOP
                       - DistanceFromTopOfDoorValue 
                       - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) 
                       - (Leaf1VisionPanel1Height * 5) 
-                      - (Leaf1VisionPanel2Height * 5);
+                      - (Leaf1VisionPanel2Height * 5)
                       - (Leaf1VisionPanel3Height * 5)
 if (bottomClearance < 200) {
     // How much we are short
@@ -9695,7 +9695,9 @@ let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -9851,7 +9853,9 @@ console.log(newVP1Height,newVP2Height,newVP3Height)
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                 $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10054,7 +10058,9 @@ let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10216,7 +10222,9 @@ let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10422,7 +10430,9 @@ let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10590,7 +10600,9 @@ let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
 
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
