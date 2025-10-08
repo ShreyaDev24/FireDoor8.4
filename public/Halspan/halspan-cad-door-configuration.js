@@ -9400,8 +9400,8 @@ if (bottomClearance < 200) {
     });
 });
                             if(first){
-                            $('input[name="newVP1Height"]').val(newVP1Height).trigger('change');
-                             $('input[name="newVP2Height"]').val(newVP2Height).trigger('change');
+                            $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
+                             $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                              console.log('updateeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
                             first=false
                            }
@@ -9682,7 +9682,7 @@ let bottomClearance = LeafHeightNoOP
                       - DistanceFromTopOfDoorValue 
                       - ((VisionPanelQuantityForLeaf1 - 1) * (+distanceBetweenVP)) 
                       - (Leaf1VisionPanel1Height * 5) 
-                      - (Leaf1VisionPanel2Height * 5);
+                      - (Leaf1VisionPanel2Height * 5)
                       - (Leaf1VisionPanel3Height * 5)
 if (bottomClearance < 200) {
     // How much we are short
@@ -9719,7 +9719,9 @@ let newVP3Height = Math.floor((Leaf1VisionPanel3Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -9875,7 +9877,9 @@ console.log(newVP1Height,newVP2Height,newVP3Height)
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                 $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10078,7 +10082,9 @@ let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10240,7 +10246,9 @@ let newVP4Height = Math.floor((Leaf1VisionPanel4Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10446,7 +10454,9 @@ let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
     });
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -10614,7 +10624,9 @@ let newVP5Height = Math.floor((Leaf1VisionPanel5Height * 5) - adjust);
 
 });
                             if(first){
+                                if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
                                     $('input[name="vP1Width"]').val(newVP1Height).trigger('change');
+                                }
                               $('input[name="vP1Height1"]').val(newVP1Height).trigger('change');
                               $('input[name="vP1Height2"]').val(newVP2Height).trigger('change');
                               $('input[name="vP1Height3"]').val(newVP3Height).trigger('change');
@@ -11326,7 +11338,7 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                 const totalTopDistance = (totalShapeHeight + spaceBetweenShapes + iy + UpperAndLowerGap)
                 // // console.log(SOHeightForMap,totalTopDistance,iy + SOHeightForMap);
 
-                if (VisionPanelQuantityForLeaf1 == 1) {
+                if (VisionPanelQuantityForLeaf2 == 1) {
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
@@ -11469,7 +11481,10 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                             .attr("font-size", 10)
                             .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel2Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
                             .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5));
-                               if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5))<200){
+                            console.log(AreVPsEqualSizesForLeaf2,'AreVPsEqualSizesForLeaf2')
+                            if(AreVPsEqualSizesForLeaf2 == 'No'){  
+                            if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5))<200){
+                                
                            var newHeight = (Leaf2VisionPanel2Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-(Leaf2VisionPanel2Height*5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
                            
@@ -11490,9 +11505,53 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                             first=false
                            }
                         }
-                    }
-                
+                        }else if(AreVPsEqualSizesForLeaf2 == 'Yes'){
+                             console.log('hitt',LeafHeightNoOP,DistanceFromTopOfDoorForLeaf2,VisionPanelQuantityForLeaf2,DistanceBetweenVPsForLeaf2ToShow,Leaf2VisionPanel1Height,Leaf2VisionPanel2Height)   
+let bottomClearance = LeafHeightNoOP 
+                      - (DistanceFromTopOfDoorForLeaf2*5 )
+                      - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) 
+                      - (Leaf2VisionPanel1Height * 5) 
+                      - (Leaf2VisionPanel2Height * 5);
+  console.log('hitt',bottomClearance,)   
+if (bottomClearance < 200) {
+    // How much we are short
+    let shortage = 200 - bottomClearance;
 
+    // Distribute shortage equally between both panels
+    let adjust = shortage / 2;
+
+    // Adjust both VP1 and VP2 heights
+    let newVP1Height = (Leaf2VisionPanel1Height * 5) - adjust;
+    let newVP2Height = (Leaf2VisionPanel2Height * 5) - adjust;
+  console.log('hitt',newVP1Height,newVP2Height)   
+    swal('Warning!', "Distance from bottom cannot be less than 200.");
+          $(document).ready(function () {
+    $('#vP2Height2').on('input', function () {
+        first=true
+
+    });
+     $('#vP2Height1').on('input', function () {
+        first=true
+        console.log('vP1Height1','kjhjkhjhjkhkjhkj')
+     });
+     $('#DistanceFromTopOfDoorForLeaf2').on('input', function () {
+        first=true
+
+    });
+     $('#distanceBetweenVPsforLeaf2').on('input', function () {
+        first=true
+
+    });
+});
+                            if(first){
+                            $('input[name="vP2Height1"]').val(newVP1Height).trigger('change');
+                             $('input[name="vP2Height2"]').val(newVP2Height).trigger('change');
+                             console.log('updateeeeeeeeeeeeeeeeeeeeeeeeeeeeee')
+                            first=false
+                           }
+                        }
+                    }
+                }
             }
                 }
     if (VisionPanelQuantityForLeaf2 > 2) {
@@ -11588,8 +11647,10 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                             .attr("x", DistanceXForLeaf2VPShape + (Leaf2VisionPanelWidth / 2) + 5)         // set x position of left side of text
                             .attr("font-size", 10)
                             .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel3Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
-                                                      .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5)  );
-                           if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5))<200){
+                            .text(Math.ceil(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5) ) );
+                            console.log(AreVPsEqualSizesForLeaf2,'AreVPsEqualSizesForLeaf2')
+                            if(AreVPsEqualSizesForLeaf2 == 'No'){
+                                                      if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5))<200){
                            var newHeight = (Leaf2VisionPanel3Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5) - (Leaf2VisionPanel2Height * 5)-(Leaf2VisionPanel3Height * 5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
                                  $(document).ready(function () {
@@ -11613,6 +11674,85 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                            
 
                         }
+                    }else if (AreVPsEqualSizesForLeaf2 == 'Yes') {
+  console.log("=== Equal Sizes Branch Triggered ===");
+  console.log({
+    LeafHeightNoOP,
+    DistanceFromTopOfDoorForLeaf2,
+    VisionPanelQuantityForLeaf2,
+    DistanceBetweenVPsForLeaf2ToShow,
+    Leaf2VisionPanel1Height,
+    Leaf2VisionPanel2Height,
+    Leaf2VisionPanel3Height
+  });
+
+  let bottomClearance = LeafHeightNoOP
+    - (DistanceFromTopOfDoorForLeaf2 * 5)
+    - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow))
+    - (Leaf2VisionPanel1Height * 5)
+    - (Leaf2VisionPanel2Height * 5)
+    - (Leaf2VisionPanel3Height * 5);
+
+  console.log(
+    "bottomClearance check =>",
+    bottomClearance,
+    {
+      top: DistanceFromTopOfDoorForLeaf2 * 5,
+      gapBetween: (VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow),
+      vp1: Leaf2VisionPanel1Height * 5,
+      vp2: Leaf2VisionPanel2Height * 5,
+      vp3: Leaf2VisionPanel3Height * 5
+    }
+  );
+
+  if (bottomClearance < 200) {
+    console.warn("⚠ bottomClearance < 200 => adjusting heights");
+
+    let shortage = 200 - bottomClearance;
+    let adjust = shortage / 3;
+
+    console.log("shortage:", shortage, "adjust per panel:", adjust);
+
+    let newVP1Height = Math.floor((Leaf2VisionPanel1Height * 5) - adjust);
+    let newVP2Height = Math.floor((Leaf2VisionPanel2Height * 5) - adjust);
+    let newVP3Height = Math.floor((Leaf2VisionPanel3Height * 5) - adjust);
+
+    console.log("new heights:", { newVP1Height, newVP2Height, newVP3Height });
+
+    swal('Warning!', "Distance from bottom cannot be less than 200.");
+
+    $(document).ready(function () {
+      console.log("jQuery ready: attaching input listeners");
+      $('#vP2Height2, #vP2Height3, #vP2Height1, #vP2Width, #distanceFromTopOfDoorforLeaf2, #distanceBetweenVPsforLeaf2')
+        .off('input.debug') // remove old ones first to prevent stacking
+        .on('input.debug', function () {
+          console.log("input triggered on:", this.id);
+          first = true;
+        });
+    });
+
+    console.log("first flag before update:", first);
+
+    if (first) {
+      console.log("first = true => updating input values");
+      first = false; // reset BEFORE updating values to prevent loops
+if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
+$('input[name="vP2Width"]').val(newVP1Height).trigger('change');
+}
+      
+      $('input[name="vP2Height1"]').val(newVP1Height).trigger('change');
+      $('input[name="vP2Height2"]').val(newVP2Height).trigger('change');
+      $('input[name="vP2Height3"]').val(newVP3Height).trigger('change');
+
+      console.log("inputs updated, first reset to false");
+    } else {
+      console.log("first = false => no updates this cycle");
+    }
+  } else {
+    console.log("✅ bottomClearance OK:", bottomClearance);
+  }
+}
+
                     }
                 /* Vertical Line for vision panel */
             }
@@ -11714,7 +11854,7 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                             .attr("font-size", 10)
                             .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel4Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
                             .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5));
-                            
+                             if(AreVPsEqualSizesForLeaf2 == 'No'){
                              if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5))<200){
                            var newHeight = (Leaf2VisionPanel4Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5) -  (Leaf2VisionPanel4Height * 5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
@@ -11745,7 +11885,89 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                             first=false
                            }
    
-                        }
+                        }}else if(AreVPsEqualSizesForLeaf2 == 'Yes'){
+  console.log("=== Equal Sizes Branch Triggered ===");
+  console.log({
+    LeafHeightNoOP,
+    DistanceFromTopOfDoorForLeaf2,
+    VisionPanelQuantityForLeaf2,
+    DistanceBetweenVPsForLeaf2ToShow,
+    Leaf2VisionPanel1Height,
+    Leaf2VisionPanel2Height,
+    Leaf2VisionPanel3Height,
+    Leaf2VisionPanel4Height
+  });
+
+  let bottomClearance = LeafHeightNoOP
+    - (DistanceFromTopOfDoorForLeaf2 * 5)
+    - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow))
+    - (Leaf2VisionPanel1Height * 5)
+    - (Leaf2VisionPanel2Height * 5)
+    - (Leaf2VisionPanel3Height * 5)
+    - (Leaf2VisionPanel4Height * 5);
+
+  console.log(
+    "bottomClearance check =>",
+    bottomClearance,
+    {
+      top: DistanceFromTopOfDoorForLeaf2 * 5,
+      gapBetween: (VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow),
+      vp1: Leaf2VisionPanel1Height * 5,
+      vp2: Leaf2VisionPanel2Height * 5,
+      vp3: Leaf2VisionPanel3Height * 5,
+      vp4: Leaf2VisionPanel4Height * 5,
+    }
+  );
+
+  if (bottomClearance < 200) {
+    console.warn("⚠ bottomClearance < 200 => adjusting heights");
+
+    let shortage = 200 - bottomClearance;
+    let adjust = shortage / 4;
+
+    console.log("shortage:", shortage, "adjust per panel:", adjust);
+
+    let newVP1Height = Math.floor((Leaf2VisionPanel1Height * 5) - adjust);
+    let newVP2Height = Math.floor((Leaf2VisionPanel2Height * 5) - adjust);
+    let newVP3Height = Math.floor((Leaf2VisionPanel3Height * 5) - adjust);
+     let newVP4Height = Math.floor((Leaf2VisionPanel4Height * 5) - adjust);
+
+    console.log("new heights:", { newVP1Height, newVP2Height, newVP3Height, newVP4Height });
+
+    swal('Warning!', "Distance from bottom cannot be less than 200.");
+
+    $(document).ready(function () {
+      console.log("jQuery ready: attaching input listeners");
+      $('#vP2Height2, #vP2Height3, #vP2Height1,#vP2Height1, #vP2Width, #distanceFromTopOfDoorforLeaf2, #distanceBetweenVPsforLeaf2')
+        .off('input.debug') // remove old ones first to prevent stacking
+        .on('input.debug', function () {
+          console.log("input triggered on:", this.id);
+          first = true;
+        });
+    });
+
+    console.log("first flag before update:", first);
+
+    if (first) {
+      console.log("first = true => updating input values");
+      first = false; // reset BEFORE updating values to prevent loops
+if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
+$('input[name="vP2Width"]').val(newVP1Height).trigger('change');
+}
+      
+      $('input[name="vP2Height1"]').val(newVP1Height).trigger('change');
+      $('input[name="vP2Height2"]').val(newVP2Height).trigger('change');
+      $('input[name="vP2Height3"]').val(newVP3Height).trigger('change');
+      $('input[name="vP2Height4"]').val(newVP4Height).trigger('change');
+
+      console.log("inputs updated, first reset to false");
+    } else {
+      console.log("first = false => no updates this cycle");
+    }
+  } else {
+    console.log("✅ bottomClearance OK:", bottomClearance);
+  }
+}
 
                     }
 
@@ -11849,7 +12071,7 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                     .attr("font-size", 10)
                     .attr("y", (   DistanceYForLeaf2VPShape + parseFloat(Leaf2VisionPanel5Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
                             .text(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5));
-                   
+        if(AreVPsEqualSizesForLeaf2 == 'No'){            
   if((LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5))<200){
                            var newHeight = (Leaf2VisionPanel5Height * 5)-(200 -(LeafHeightNoOP - (DistanceFromTopOfDoorForLeaf2*5) - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow)) -  (Leaf2VisionPanel1Height * 5)-  (Leaf2VisionPanel2Height * 5)-  (Leaf2VisionPanel3Height * 5)-  (Leaf2VisionPanel4Height * 5)-  (Leaf2VisionPanel5Height * 5)))
                            swal('Warning!', "Distance from bottom cannot be less than 200");
@@ -11884,6 +12106,94 @@ var RemainedSpaceInLeaf2 = DistanceFromTheEdgeOfDoorForLeaf2ToShow;
                            }
    
                         }
+                    }else if(AreVPsEqualSizesForLeaf2 == 'Yes'){
+  console.log("=== Equal Sizes Branch Triggered ===");
+  console.log({
+    LeafHeightNoOP,
+    DistanceFromTopOfDoorForLeaf2,
+    VisionPanelQuantityForLeaf2,
+    DistanceBetweenVPsForLeaf2ToShow,
+    Leaf2VisionPanel1Height,
+    Leaf2VisionPanel2Height,
+    Leaf2VisionPanel3Height,
+    Leaf2VisionPanel4Height,
+    Leaf2VisionPanel5Height
+  });
+
+  let bottomClearance = LeafHeightNoOP
+    - (DistanceFromTopOfDoorForLeaf2 * 5)
+    - ((VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow))
+    - (Leaf2VisionPanel1Height * 5)
+    - (Leaf2VisionPanel2Height * 5)
+    - (Leaf2VisionPanel3Height * 5)
+    - (Leaf2VisionPanel4Height * 5)
+    - (Leaf2VisionPanel5Height * 5);
+
+  console.log(
+    "bottomClearance check =>",
+    bottomClearance,
+    {
+      top: DistanceFromTopOfDoorForLeaf2 * 5,
+      gapBetween: (VisionPanelQuantityForLeaf2 - 1) * (+DistanceBetweenVPsForLeaf2ToShow),
+      vp1: Leaf2VisionPanel1Height * 5,
+      vp2: Leaf2VisionPanel2Height * 5,
+      vp3: Leaf2VisionPanel3Height * 5,
+      vp4: Leaf2VisionPanel4Height * 5,
+      vp5: Leaf2VisionPanel5Height * 5,
+    }
+  );
+
+  if (bottomClearance < 200) {
+    console.warn("⚠ bottomClearance < 200 => adjusting heights");
+
+    let shortage = 200 - bottomClearance;
+    let adjust = shortage / 5;
+
+    console.log("shortage:", shortage, "adjust per panel:", adjust);
+
+    let newVP1Height = Math.floor((Leaf2VisionPanel1Height * 5) - adjust);
+    let newVP2Height = Math.floor((Leaf2VisionPanel2Height * 5) - adjust);
+    let newVP3Height = Math.floor((Leaf2VisionPanel3Height * 5) - adjust);
+     let newVP4Height = Math.floor((Leaf2VisionPanel4Height * 5) - adjust);
+      let newVP5Height = Math.floor((Leaf2VisionPanel5Height * 5) - adjust);
+
+    console.log("new heights:", { newVP1Height, newVP2Height, newVP3Height, newVP4Height,newVP5Height });
+
+    swal('Warning!', "Distance from bottom cannot be less than 200.");
+
+    $(document).ready(function () {
+      console.log("jQuery ready: attaching input listeners");
+      $('#vP2Height2, #vP2Height3, #vP2Height1,#vP2Height4,#vP2Height5, #vP2Width, #distanceFromTopOfDoorforLeaf2, #distanceBetweenVPsforLeaf2')
+        .off('input.debug') // remove old ones first to prevent stacking
+        .on('input.debug', function () {
+          console.log("input triggered on:", this.id);
+          first = true;
+        });
+    });
+
+    console.log("first flag before update:", first);
+
+    if (first) {
+      console.log("first = true => updating input values");
+      first = false; // reset BEFORE updating values to prevent loops
+if(VisionPanelShape == "Circle" || VisionPanelShape == "Diamond" || VisionPanelShape == "Square" ){
+$('input[name="vP2Width"]').val(newVP1Height).trigger('change');
+}
+      $('input[name="vP2Height1"]').val(newVP1Height).trigger('change');
+      $('input[name="vP2Height2"]').val(newVP2Height).trigger('change');
+      $('input[name="vP2Height3"]').val(newVP3Height).trigger('change');
+      $('input[name="vP2Height4"]').val(newVP4Height).trigger('change');
+      $('input[name="vP2Height5"]').val(newVP5Height).trigger('change');
+
+      console.log("inputs updated, first reset to false");
+    } else {
+      console.log("first = false => no updates this cycle");
+    }
+  } else {
+    console.log("✅ bottomClearance OK:", bottomClearance);
+  }
+}
+
                     }
 
                 
