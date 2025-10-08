@@ -2139,13 +2139,13 @@ class BOMController extends Controller
                         ? ($value->OPWidth + $VisionPanelWidthNFR)
                         : ($value->OPWidth + $VisionPanelWidthFD60)
                 ) . '</td>'
-                . '<td></td>'
+                . '<td>4</td>'
                 . '<td>' . (
                     ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                        ? ($value->OPHeight + $VisionPanelHeightFD60)
-                        : ($value->OPHeight + $VisionPanelHeightNFR)
+                        ? ($value->OPHeigth + $VisionPanelHeightFD60)
+                        : ($value->OPHeigth + $VisionPanelHeightNFR)
                 ) . '</td>'
-                . '<td></td>'
+                . '<td>4</td>'
                 . '<td></td>'
                 . '<td></td>'
                 . '<td></td>'
