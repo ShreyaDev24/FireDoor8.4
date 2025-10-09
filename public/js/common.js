@@ -356,7 +356,7 @@ function validateFrameDepth() {
     if (!isNaN(doorThickness) && !isNaN(plantonStopWidth) && !isNaN(frameDepth)) {
         if (frameonoff !== true) {
             if (frameDepth < (doorThickness + plantonStopWidth)) {
-                swal("error", "Door Leaf Thickness and Plant on Stop exceeds Frame Depth!!!");
+                swal("", "Door Leaf Thickness and Plant on Stop exceeds Frame Depth!!!");
             }
         }
     }
