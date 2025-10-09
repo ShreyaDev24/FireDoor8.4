@@ -498,25 +498,25 @@ function glazingBeadExport($request,$userIds): void{
 
     }
 
-    if ($request->overpanel == 'Fan_Light' && ( !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
+    if ($request->overpanel == 'Fan_Light' && ( !empty($request->opglazingBeadsThickness) && !empty($request->opGlazingBeadSpecies))) {
         $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
         // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->opglazingBeadsThickness.' x '.$request->opglazingBeadsHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
         $category = 'GlazingBeads';
         $frame_unit = 'Each';
-        $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
+        $opglazingBeadsThickness = getLippingSpeciesNearTheeknessValue($request->opglazingBeadsThickness);
         if(in_array(Auth::user()->UserType, [1,4])){
 
-            $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->opGlazingBeadSpecies)->where('thickness','>=',$OpBeadThickness)->get()->first();
+            $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->opGlazingBeadSpecies)->where('thickness','>=',$opglazingBeadsThickness)->get()->first();
         }else{
-            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->opGlazingBeadSpecies)->where('selected_thickness','>=',$OpBeadThickness)->get()->first();
+            $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->opGlazingBeadSpecies)->where('selected_thickness','>=',$opglazingBeadsThickness)->get()->first();
 
         }
 
         if(isset($unitcost->id)){
 
             $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
-            $pricePerLM = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
+            $pricePerLM = ($request->opglazingBeadsThickness * $request->opglazingBeadsHeight * $unitcost_selected_price)/1000000;
             $LMOfGlazing = $request->oPWidth + $request->oPWidth + $request->oPHeigth + $request->oPHeigth;
             $LMOfGlazingSystem = $LMOfGlazing/1000;
 
