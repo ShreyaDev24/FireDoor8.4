@@ -7414,6 +7414,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                          <th>Halspan</th>
                          <th>Flamebreak</th>
                          <th>Stredor</th>
+                         <th>Vicaima</th>
+                         <th>Seadec</th>
+                         <th>Deanta</th>
+                         <th>MMM</th>
                          <th>NFR</th>
                          <th>FD30</th>
                          <th>FD60</th>
@@ -7439,6 +7443,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                      $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                      $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                      $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                     $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                     $Seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                     $Deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                     $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                      $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                      $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                      $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
@@ -7459,6 +7467,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                                                                 \''.$value->Halspan.'\',
                                                                 \''.$value->Flamebreak.'\',
                                                                 \''.$value->Stredor.'\',
+                                                                \''.$value->VicaimaDoorCore.'\',
+                                                                \''.$value->Seadec.'\',
+                                                                \''.$value->Deanta.'\',
+                                                                \''.$value->MMM.'\',
                                                                 \''.$value->NFR.'\',
                                                                 \''.$value->FD30.'\',
                                                                 \''.$value->FD60.'\',
@@ -7499,6 +7511,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                          <td class="text-center">'.$Halspan.'</td>
                          <td class="text-center">'.$Flamebreak.'</td>
                          <td class="text-center">'.$Stredor.'</td>
+                         <td class="text-center">'.$VicaimaDoorCore.'</td>
+                         <td class="text-center">'.$Seadec.'</td>
+                         <td class="text-center">'.$Deanta.'</td>
+                         <td class="text-center">'.$MMM.'</td>
                          <td class="text-center">'.$NFR.'</td>
                          <td class="text-center">'.$FD30.'</td>
                          <td class="text-center">'.$FD60.'</td>
@@ -7568,6 +7584,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
+                        <th>Vicaima</th>
+                        <th>Seadec</th>
+                        <th>Deanta</th>
+                        <th>MMM</th>
                         <th>NFR</th>
                         <th>FD30</th>
                         <th>FD60</th>
@@ -7598,6 +7618,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                     $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $Seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $Deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
                     $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
@@ -7612,7 +7636,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editSLAndFLGlazingSystem('.$value->id.",'".$value->Streboard."','".$value->Halspan."','".$value->Flamebreak."','".$value->Stredor."','".$value->NFR."','".$value->FD30."','".$value->FD60."','".$value->GlazingSystem."','".$value->FixingDetails."',".$value->Beading.','.$value->BeadingHeight.','.$value->BeadingWidth.','.$value->glazingSelectedPrice.",'".$value->selectedId."','".$value->GlazingThickness."','".$value->GlassType.'\')">
+                                <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editSLAndFLGlazingSystem('.$value->id.",'".$value->Streboard."','".$value->Halspan."','".$value->Flamebreak."','".$value->Stredor."','".$value->VicaimaDoorCore."','".$value->Seadec."','".$value->Deanta."','".$value->MMM."','".$value->NFR."','".$value->FD30."','".$value->FD60."','".$value->GlazingSystem."','".$value->FixingDetails."',".$value->Beading.','.$value->BeadingHeight.','.$value->BeadingWidth.','.$value->glazingSelectedPrice.",'".$value->selectedId."','".$value->GlazingThickness."','".$value->GlassType.'\')">
                             <i class="fa fa-edit text-white text-center"></i>
                         </button>
 
@@ -7639,6 +7663,10 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                         <td class="text-center">'.$Halspan.'</td>
                         <td class="text-center">'.$Flamebreak.'</td>
                         <td class="text-center">'.$Stredor.'</td>
+                        <td class="text-center">'.$VicaimaDoorCore.'</td>
+                        <td class="text-center">'.$Seadec.'</td>
+                        <td class="text-center">'.$Deanta.'</td>
+                        <td class="text-center">'.$MMM.'</td>
                         <td class="text-center">'.$NFR.'</td>
                         <td class="text-center">'.$FD30.'</td>
                         <td class="text-center">'.$FD60.'</td>

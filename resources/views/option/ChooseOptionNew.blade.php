@@ -1690,6 +1690,14 @@ dd(1);
                                         value="7">Flamebreak
                                     <input type="radio" name="config[]" class="form-group  ml-3 option-style"
                                         value="8">Stredor
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="4">Vicaima Door Core
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="5">Seadec
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="6">Deanta
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -1816,6 +1824,14 @@ dd(1);
                                         value="7">Flamebreak
                                     <input type="radio" name="config[]" class="form-group  ml-3 option-style"
                                         value="8">Stredor
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="4">Vicaima Door Core
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="5">Seadec
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="6">Deanta
+                                    <input type="radio" name="config[]" class="form-group  ml-3 option-style"
+                                        value="9">MMM
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -3172,7 +3188,7 @@ dd(1);
         handleDoorTypeChange(configurableitems,customeLeafId)
     }
 
-    function editSLAndFLGlassType(id,Streboard,Halspan,Flamebreak,Stredor,NFR,FD30,FD60,GlassIntegrity,GlassType,WidthFanlight,HeightFanlight,SideScreenWidth,SideScreenHeight,TransomThickness,TransomDepth,GlassThickness,selectedPrice,selectedId){
+    function editSLAndFLGlassType(id,Streboard,Halspan,Flamebreak,Stredor,VicaimaDoorCore,Seadec,Deanta,MMM,NFR,FD30,FD60,GlassIntegrity,GlassType,WidthFanlight,HeightFanlight,SideScreenWidth,SideScreenHeight,TransomThickness,TransomDepth,GlassThickness,selectedPrice,selectedId){
         $("#slAndFlGlassTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
@@ -3190,18 +3206,23 @@ dd(1);
         $('input:radio[name="config[]"][value="'+Halspan+'"]').prop('checked',true);
         $('input:radio[name="config[]"][value="'+Flamebreak+'"]').prop('checked',true);
         $('input:radio[name="config[]"][value="'+Stredor+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+MMM+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+NFR+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+FD30+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+FD60+'"]').prop('checked',true);
     }
 
-    function editSLAndFLGlazingSystem(id,Streboard,Halspan,Flamebreak,Stredor,NFR,FD30,FD60,GlazingSystem,GlazingBeadFixingDetail,MinBeading,MinBeadingHeight,MinBeadingWidth,selectedPrice,selectedId,GlassThickness,GlassId){
+    function editSLAndFLGlazingSystem(id,Streboard,Halspan,Flamebreak,Stredor,VicaimaDoorCore,Seadec,Deanta,MMM,NFR,FD30,FD60,GlazingSystem,GlazingBeadFixingDetail,MinBeading,MinBeadingHeight,MinBeadingWidth,selectedPrice,selectedId,GlazingThickness,GlassId){
         $("#SlandFlglazingTypeAddForm").modal('show');
         $("input[name=id]").val(id);
         $("input[name=selectId]").val(selectedId);
         $("input[name=GlazingSystem]").val(GlazingSystem);
         $("input[name=FixingDetails]").val(GlazingBeadFixingDetail);
         $("input[name=Beading]").val(MinBeading);
+        $("input[name=GlazingThickness]").val(GlazingThickness);
         $("input[name=BeadingHeight]").val(MinBeadingHeight);
         $("input[name=BeadingWidth]").val(MinBeadingWidth);
         $("input[name=glazingPrice]").val(selectedPrice);
@@ -3209,6 +3230,10 @@ dd(1);
         $('input:radio[name="config[]"][value="'+Halspan+'"]').prop('checked',true);
         $('input:radio[name="config[]"][value="'+Flamebreak+'"]').prop('checked',true);
         $('input:radio[name="config[]"][value="'+Stredor+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+MMM+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+VicaimaDoorCore+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+Seadec+'"]').prop('checked',true);
+        $('input:radio[name="config[]"][value="'+Deanta+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+NFR+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+FD30+'"]').prop('checked',true);
         $('input:radio[name="firerating[]"][value="'+FD60+'"]').prop('checked',true);
