@@ -503,9 +503,9 @@ function glazingBeadExport($request,$userIds): void{
             $VisionPanelHeightFD60 = $allSettings['FanlightBead.FD60']->Height;
         }
 
-        $oPWidth = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->oPWidth + $VisionPanelWidthNFR) : ($request->oPWidth + $VisionPanelWidthFD60);
+        $oPWidth = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->oPWidth - ($request->OpBeadThickness * 2) + $VisionPanelWidthNFR) : ($request->oPWidth - ($request->OpBeadThickness * 2) + $VisionPanelWidthFD60);
 
-        $oPHeigth = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->oPHeigth + $VisionPanelHeightFD60 : $request->oPHeigth + $VisionPanelHeightNFR;
+        $oPHeigth = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->oPHeigth - ($request->OpBeadThickness * 2) + $VisionPanelHeightFD60 : $request->oPHeigth - ($request->OpBeadThickness * 2) + $VisionPanelHeightNFR;
 
         $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$acronym.'_'.$request->opglazingBeadsThickness.' x '.$request->opglazingBeadsHeight.'|'.$oPWidth.'mm x '.$oPHeigth.'mm';
         $category = 'GlazingBeads';
@@ -561,9 +561,9 @@ function glazingBeadExport($request,$userIds): void{
             $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
         }
 
-        $SL1Width = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->SL1Width + $VisionPanelWidthNFR) : ($request->SL1Width + $VisionPanelWidthFD60);
+        $SL1Width = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->SL1Width - ($request->sideLight1FrameThickness * 2) + $VisionPanelWidthNFR) : ($request->SL1Width - ($request->sideLight1FrameThickness * 2) + $VisionPanelWidthFD60);
 
-        $SL1Height = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->SL1Height + $VisionPanelHeightFD60 : $request->SL1Height + $VisionPanelHeightNFR;
+        $SL1Height = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->SL1Height - ($request->sideLight1FrameThickness * 2) + $VisionPanelHeightFD60 : $request->SL1Height - ($request->sideLight1FrameThickness * 2) + $VisionPanelHeightNFR;
 
         $description = '[Side Screen Bead] '.str_replace('_', ' ',  $request->SideLight1BeadingType).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$acronym.'_'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$SL1Width.'mm x '.$SL1Height.'mm';
         $category = 'GlazingBeads';
@@ -597,6 +597,8 @@ function glazingBeadExport($request,$userIds): void{
 
         $SideLight2GlazingBeadSpecies = ($request->copyOfSideLite1 == "Yes")?$request->SideLight1BeadingType:$request->SideLight2BeadingType;
 
+        $sideLight2FrameThickness = ($request->copyOfSideLite1 == "Yes")?$request->sideLight1FrameThickness:$request->sideLight2FrameThickness;
+
         $word = str_replace('_', ' ',  $SideLight2GlazingBeadSpecies);
         $words = explode(" ", $word);
         $acronym = "";
@@ -614,9 +616,9 @@ function glazingBeadExport($request,$userIds): void{
             $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
         }
 
-        $SL2Width = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->SL2Width + $VisionPanelWidthNFR) : ($request->SL2Width + $VisionPanelWidthFD60);
+        $SL2Width = ($request->fireRating == 'NFR' || $request->fireRating == 'FD30s' || $request->fireRating == 'FD30') ? ($request->SL2Width - ($sideLight2FrameThickness * 2) + $VisionPanelWidthNFR) : ($request->SL2Width - ($sideLight2FrameThickness * 2) + $VisionPanelWidthFD60);
 
-        $SL2Height = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->SL2Height + $VisionPanelHeightFD60 : $request->SL2Height + $VisionPanelHeightNFR;
+        $SL2Height = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->SL2Height - ($sideLight2FrameThickness * 2) + $VisionPanelHeightFD60 : $request->SL2Height - ($sideLight2FrameThickness * 2) + $VisionPanelHeightNFR;
 
         $description = '[Side Screen Bead2] '.str_replace('_', ' ',  $SideLight2GlazingBeadSpecies).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$acronym.'_'.$request->SlBeadThickness.' x '.$request->SlBeadHeight.'|'.$SL2Width.'mm x '.$SL2Height.'mm';
         $category = 'GlazingBeads';
