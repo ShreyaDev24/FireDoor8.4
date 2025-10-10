@@ -6065,7 +6065,7 @@ $(document).ready(function() {
             $("#OpBeadHeight").attr('min', 95);
             $("#OpBeadHeight").attr({ 'disabled': false, required: true, 'readonly': false});
             $("#OpBeadThickness").attr({ 'disabled': false, required: true,'readonly': false });
-            let opGlazingBeadSpecies = $("#opGlazingBeadSpecies").val();
+            let opGlazingBeadSpecies = $("#opGlazingBeadSpeciesïd").val();
             if (!opGlazingBeadSpecies) {
                 // runs if the value is empty, null, or undefined
                 $("#opGlazingBeadSpecies").attr({
