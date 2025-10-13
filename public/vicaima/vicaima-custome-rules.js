@@ -837,17 +837,15 @@ $("#glassType").change(function () {
 });
 
 $("#opGlassType").change(function(){
-    GlassTypeChange(null,'opGlassType');
+    OverpanelGlassTypeChange(null,'opGlassType',false);
 });
 
 $("#sideLight1GlassType").change(function(){
-    GlassTypeChange(null,'sideLight1GlassType');
-    // updateformulaS1($(this).val())
+    OverpanelGlassTypeChange($("#sideLight1GlassType").val(),'sideLight1GlassType',false);
 });
 
 $("#sideLight2GlassType").change(function(){
-    GlassTypeChange(null,'sideLight2GlassType');
-    // updateformulaS2($(this).val())
+    OverpanelGlassTypeChange($("#sideLight2GlassType").val(),'sideLight2GlassType',false);
 });
 
 //getting glazing thikness filter using glazing systems
@@ -1053,120 +1051,155 @@ function ironmongerySetchange(){
 
 // Over Panel Section
 
-$(document).on('change', '#overpanel', function (e) {
-    e.preventDefault();
-    AdjustmentLipping();
-    if($("#overpanel").val()=="Fan_Light"){
-        $("#OpBeadThickness").attr('readonly',false);
-        $("#OpBeadHeight").attr('readonly',false);
-        $("#opglazingSystems").attr({ 'disabled': false, "required": true });
-        $("#opglazingBeadsThickness").attr({ 'disabled': false, "required": true });
-        $("#opglazingBeadsHeight").attr({ 'disabled': false, "required": true });
-        $("#opglazingBeadsFixingDetail").attr({ 'disabled': false, "required": true });
-        $("#OpBeadThickness").attr('required',true);
-        $("#OpBeadHeight").attr('required',true);
-        $("#opglassThickness").attr('required',true);
-        $("#OpBeadHeight").attr('min',95);
-        $("#OpBeadThickness").attr('min',44);
-        $("#opglazingSystemsThickness").attr('required',true);
-        doorLeafFacingPrice('overpanel',"Fan_Light");
-        doorLeafFacingPrice('overpanel1',"Fan_Light");
-        doorLeafFacingPrice('overpanel2',"Fan_Light");
-        FramePrice('overpanel3');
-        opFlWidthAndHeight("Fan_Light")
-    }else{
+$(document).on('change','#overpanel',function(e){
+        e.preventDefault();
+        if($("#overpanel").val()=="Fan_Light"){
+            $("#OpBeadThickness").val(0).attr('readonly',false);
+            $("#OpBeadHeight,#transomThickness").val(0).attr('readonly',false);
+            $("#opTransom").attr({ 'disabled': false, "required": true });
+            $("#opglazingBeadsThickness").attr({ 'disabled': false, "required": true });
+            $("#opglazingBeadsHeight").attr({ 'disabled': false, "required": true });
+            $("#opglazingBeadsFixingDetail").attr({ 'disabled': false, "required": true });
+            $("#OpBeadThickness").val(0).attr('required',true);
+            $("#OpBeadHeight,#transomThickness").val(0).attr('required',true);
+            $("#opglassThickness").attr('required',true);
+            $("#opglazingSystemsThickness").attr('required',true);
+            $("#oPHeigth").removeAttr("max");
+            $("#OpBeadHeight").attr('min',95);
+            $("#OpBeadThickness").attr('min',44);
+            overpanelGlassType();
+            doorLeafFacingPrice('overpanel',"Fan_Light");
+            doorLeafFacingPrice('overpanel1',"Fan_Light");
+            doorLeafFacingPrice('overpanel2',"Fan_Light");
+            // frameprice('overpanel3');
+        }else{
+            overpanelOPHeight();
+            $("#transomThickness").val(0).attr('readonly',true);
+            $("#transomThickness").val(0).attr('required',false);
+            $("#opTransom").attr({ 'disabled': true, "required": false });
+            $("#opglazingBeadsThickness").attr({ 'disabled': true, "required": false });
+            $("#opglazingBeadsHeight").attr({ 'disabled': true, "required": false });
+            $("#opglazingBeadsFixingDetail").attr({ 'disabled': true, "required": false });
+            $("#opglassThickness").attr({ 'disabled': true, "required": false });
+            $("#opglazingSystemsThickness").attr({ 'disabled': true, "required": false });
+            //JFDS 896
+            $("#OpBeadThickness").val(0).attr('readonly',false);
+            $("#OpBeadHeight").val(0).attr('readonly',false);
+            $("#OpBeadThickness").val(0).attr('required',true);
+            $("#OpBeadHeight").val(0).attr('required',true);
+            $("#OpBeadHeight").attr('min',95);
+            $("#OpBeadThickness").attr('min',44);
+             //end JFDS 896
+            $("#overpanel2-section1").removeClass("table_row_show");
+            $("#overpanel2-section1").addClass("table_row_hide");
+            $(".overpanel3_section").removeClass("table_row_show");
+            $(".overpanel3_section").addClass("table_row_hide");
+        }
+        addValidation($(this).val())
+        IntumescentSeals();
+        setTimeout(function(){
+            if($("#sideLight1").val() == 'Yes'){
+                SideLightHeight('sideLight1');
+            }
+            if($("#sideLight2").val() == 'Yes'){
+                SideLightHeight('sideLight2');
+            }
+        }, 1000)
+    });
 
-        $("#OpBeadThickness").attr('readonly',false);
-        $("#OpBeadHeight").attr('readonly',false);
-        $("#OpBeadThickness").attr('required',true);
-        $("#OpBeadHeight").attr('required',true);
-        $("#OpBeadHeight").attr('min',95);
-        $("#OpBeadThickness").attr('min',44);
-        $("#opglazingSystems").attr({ 'disabled': true, "required": false });
-        $("#opglazingBeadsThickness").attr({ 'disabled': true, "required": false });
-        $("#opglazingBeadsHeight").attr({ 'disabled': true, "required": false });
-        $("#opglazingBeadsFixingDetail").attr({ 'disabled': true, "required": false });
-        $("#opglassThickness").attr({ 'disabled': true, "required": false });
-        $("#opglazingSystemsThickness").attr({ 'disabled': true, "required": false });
-        $("#overpanel2-section1").removeClass("table_row_show");
-        $("#overpanel2-section1").addClass("table_row_hide");
-        $(".overpanel3_section").removeClass("table_row_show");
-        $(".overpanel3_section").addClass("table_row_hide");
-        opFlWidthAndHeight("Overpanel")
-
+    function addValidation(value){
+        if(value == 'Overpanel'){
+            $("#OpBeadThickness").attr({'readonly':false,'required':true});
+            $("#OpBeadHeight").attr({'readonly':false,'required':true});
+        }
     }
-    // UpdateformulaSoHeightAndWidth($(this).val()) reverted code
-    IntumescentSeals();
-});
+    $(document).ready(function () {
+        addValidation($("#overpanel").val());
+    });
 
-// we add the field ‘Glass Integrity’ before ‘Glass Type’ in the over panel section.
-$("#opGlassIntegrity").change(function () {
-    $("#opGlassType").attr('disabled', false);
-    opGlassTypeFilter();
-    // glazingSystemFIlter($("#fireRating").val());
-});
+    function overpanelOPHeight(){
+        const fireRating = $("#fireRating").val();
+        const doorsetType = $("#doorsetType").val();
+        let maxHeight = 0;
+        if($('#overpanel').val() == 'Overpanel'){
+            if (fireRating === 'FD30' || fireRating === 'FD30s') {
+                maxHeight = doorsetType === 'SD' ? 2000 : 1500;
+            } else if (fireRating === 'FD60' || fireRating === 'FD60s') {
+                maxHeight = doorsetType === 'SD' ? 2000 : 1200;
+            }else if(fireRating === 'NFR'){
+                let frameHeight = $('#frameHeight').val();
+                if(frameHeight){
+                    maxHeight = 2950 - frameHeight;
+                }
+                else{
+                    maxHeight = 2950;
+                }
+            }
 
-$("#opGlassType").change(function () {
-    if ($("#sideLight1").val() == "Yes") {
-        $("#sideLight1GlassType").val($(this).val());
+            $("#oPHeigth").attr('max', maxHeight);
+        }
     }
-});
 
-$("#sideLight1GlassType").change(function () {
-    var val = $('#sideLight1GlassType').val();
-    $("#sidelight1-selected1").empty().text(val);
-});
+    // we add the field ‘Glass Integrity’ before ‘Glass Type’ in the over panel section.
+    $("#opGlassIntegrity").change(function(){
+        $("#opGlassType").attr('disabled',false);
+        overpanelGlassType();
+        // opGlassTypeFilter();
+        // glazingSystemFIlter($("#fireRating").val());
+    });
+    $("#SL1GlassIntegrity").change(function(){
+        $("#sideLight1GlassType").attr('disabled',false);
+        sideLightGlassType();
+    });
+    $("#SL2GlassIntegrity").change(function(){
+        $("#sideLight2GlassType").attr('disabled',false);
+        sideLight2GlassType();
+    });
 
-$("#sideLight2GlassType").change(function () {
-    $("#sidelight2-selected1").empty().text($('#sideLight2GlassType').val());
-});
+    $("#opGlassType").change(function(){
+        if($("#sideLight1").val()=="Yes"){
+            $("#sideLight1GlassType").val($(this).val());
+        }
+    });
+
+    $("#sideLight1GlassType").change(function(){
+        var val = $('#sideLight1GlassType').val();
+        $("#sidelight1-selected1").empty().text(val);
+    });
+
+    $("#sideLight2GlassType").change(function(){
+        $("#sidelight2-selected1").empty().text($('#sideLight2GlassType').val());
+    });
 
 
-$("#opGlazingBeads").change(function () {
-    if ($("#sideLight1").val() == "Yes") {
-        $("#SideLight1BeadingType").val($(this).val());
-    }
-});
+    $("#opGlazingBeads").change(function(){
+        if($("#sideLight1").val()=="Yes"){
+            $("#SideLight1BeadingType").val($(this).val());
+        }
+    });
 
-$("#opGlazingBeadSpecies").change(function () {
-    if ($("#sideLight1").val() == "Yes") {
-        $("#SideLight1GlazingBeadSpecies").val($(this).val());
-    }
-});
+    $("#opGlazingBeadSpecies").change(function(){
+        if($("#sideLight1").val()=="Yes"){
+            $("#SideLight1GlazingBeadSpecies").val($(this).val());
+        }
+    });
 
 // Side Light
 
 $("#sideLight1").change(function(){
     sideLight1Change();
-    if($(this).val() == 'Yes'){
-        getSideLightGlass($(this).val() , 'SideLight1')
-    }
-});
-$("#sideLight2").change(function(){
-    sideLight2Change();
-    if($(this).val() == 'Yes'){
-        getSideLightGlass($(this).val() , 'SideLight2')
-    }
-});
-$("#copyOfSideLite1").change(function(){
-    copyOfSideLite1Change();
-});
-$(".SL1").on("change keyup", function() {
-    copyOfSideLite1Change();
 });
 
-function sideLight1Change(){
-    if($('#sideLight1').val()=="Yes"){
+function sideLight1Change(isstatus = false){
+    if($("#sideLight1").val()=="Yes"){
 
-
+        sideLightGlassType(isstatus);
         $("#SlBeadThickness").attr('readonly',false);
         $("#SlBeadHeight").attr('readonly',false);
-          $("#SlBeadThickness").attr('required',true);
+        $("#SL1Transom").attr('readonly',false);
+         $("#SlBeadThickness").attr({required: true,min: 20});
          $("#SlBeadHeight").attr('required',true);
-
-        $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
-        $("#sideLight1GlazingSystems").attr({ 'readonly': false });
-        $("#sideLight1FrameThickness").attr({ 'disabled': false, "required": true });
+            $("#SL1Depth").attr('min', 95);
 
 
 
@@ -1176,14 +1209,18 @@ function sideLight1Change(){
         }
 
         if($("#overpanel").val()=="Yes"){
-            $("#sideLight1GlassType").attr({ 'disabled': false, "required": true }).val($("#opGlassType").val());
-            $("#SideLight1BeadingType").attr({ 'disabled': false, "required": true }).val($("#opGlazingBeads").val());
-            $("#SideLight1GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val($("#opGlazingBeadSpecies").val());
-
-        } else {
-            $("#sideLight1GlassType").attr({ 'disabled': false, "required": true });
+            $("#SL1GlassIntegrity").attr({ 'disabled': false, "required": true });
+            $("#sideLight1GlassType,#SL1Transom").attr({ 'disabled': false, "required": true });
             $("#SideLight1BeadingType").attr({ 'disabled': false, "required": true });
             $("#SideLight1GlazingBeadSpecies").attr({ 'disabled': false, "required": true });
+            $("#sideLight1GlazingBeadsThickness,#sideLight1GlazingBeadsWidth,#SL1TransomDepth,#SL1transomThickness").attr({ 'readonly': false, "required": true });
+
+        } else {
+            $("#SL1GlassIntegrity").attr({ 'disabled': false, "required": true });
+            $("#sideLight1GlassType,#SL1Transom").attr({ 'disabled': false, "required": true });
+            $("#SideLight1BeadingType").attr({ 'disabled': false, "required": true });
+            $("#SideLight1GlazingBeadSpecies").attr({ 'disabled': false, "required": true });
+            $("#sideLight1GlazingBeadsThickness,#sideLight1GlazingBeadsWidth,#SL1TransomDepth,#SL1transomThickness").attr({ 'readonly': false, "required": true });
 
             // 12-07-2024
             $("#sideLight1GlazingSystems").attr({ 'disabled': false, "required": true });
@@ -1200,23 +1237,25 @@ function sideLight1Change(){
         if($("#overpanel").val() != 'No'){
             let frameHeight =  $("#frameHeight").val();
             $("#SL1Height").attr({ 'readonly': true, "required": true }).val(frameHeight);
-            } else {
+        } else {
             $("#SL1Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
         }
-        $("#SL1Depth").attr({ 'readonly': false, "required": true });
-        $("#SL1Depth").attr('min',95);
+        $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
         $("#SL1Transom").attr({ 'disabled': false, "required": true });
         doorLeafFacingPrice('sideLight1',"Yes");
         doorLeafFacingPrice('sideLight11',"Yes");
         doorLeafFacingPrice('sideLight2',"Yes");
-        FramePrice('sideLight3');
-        SideLightHeight('sideLight1');
+        // FramePrice('sideLight3');
+        // updateTransomFields();
+
     } else {
 
-        $("#SlBeadThickness").attr('readonly',true);
-        $("#SlBeadHeight").attr('readonly',true);
-        $("#SlBeadThickness").attr('required',false);
-        $("#SlBeadHeight").attr('required',false);
+        $("#SlBeadThickness").val(0).attr('readonly',true);
+        $("#SlBeadHeight").val(0).attr('readonly',true);
+        $("#SlBeadThickness").val(0).attr('required',false);
+        $("#SlBeadHeight").val(0).attr('required',false);
+        $("#SL1GlassIntegrity").attr({ 'readonly': true, "required": false }).val('');
+        $("#sideLight1FrameThickness").attr({ 'readonly': true, "required": false }).val('');
 
 
         if($("#sideLight2").val()=="Yes"){
@@ -1226,82 +1265,104 @@ function sideLight1Change(){
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val('');
             $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
-            $("#SL2Depth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
-            $("#SL2Depth").attr('min',95);
+            $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
 
             // new changes 12-07-2024
-            $("#sideLight2GlassThickness").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystemsThickness").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlassThickness").attr({ 'disabled': true, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'disabled': true, "required": true }).val('');
+            $("#sideLight2GlazingSystemsThickness").attr({ 'disabled': true, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val('');
             // end
 
 
         }
 
-        $("#sideLight1GlazingSystems").attr({ 'readonly': true, "required": false }).val('');
+        $("#sideLight1GlazingSystems").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlassThickness").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingSystemsThickness").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingBeadsThickness").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingBeadsWidth").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": false }).val('');
+        $("#SL1GlassIntegrity").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight1GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight1BeadingType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight1GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
         $("#SL1Width").attr({ 'readonly': true, "required": false }).val('');
         $("#SL1Height").attr({ 'readonly': true, "required": false }).val("");
-        $("#SL1Depth").attr({ 'readonly': true, "required": false }).val('');
+        $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth").attr({ 'readonly': true, "required": false }).val('');
+        $("#sideLight1GlazingBeadsThickness,#sideLight1GlazingBeadsWidth").attr({ 'readonly': true, "required": false });
         $("#SL1Transom").attr({ 'disabled': true, "required": false }).val('');
-        $("#sideLight1FrameThickness").attr({ 'disabled': true, "required": false }).val('');
 
         $("#sideLight2-section1").removeClass("table_row_show");
         $("#sideLight2-section1").addClass("table_row_hide");
         $(".sideLight3_section").removeClass("table_row_show");
         $(".sideLight3_section").addClass("table_row_hide");
     }
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
+$("#sideLight2").change(function(){
+    sideLight2Change();
+});
 
-function sideLight2Change(){
-    if($('#sideLight2').val()=="Yes"){
+function sideLight2Change(isstatus = false){
+    if($("#sideLight2").val()=="Yes"){
+        sideLight2GlassType(isstatus);
         if($("#sideLight1").val()=="Yes"){
             $("#copyOfSideLite1").attr({ 'disabled': false, "required": true });
         }else{
-            $("#copyOfSideLite1").attr({'disabled': true,"readonly":true }).val("No");
 
-            $("#sideLight2GlassType").attr({ 'disabled': false, "required": true }).val('');
-            $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true }).val('');
-            $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val('');
-            $(".sidelight2section").attr({ 'disabled': false, "required": true }).val('');
-            $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
+            $("#copyOfSideLite1").attr({'disabled': true,"readonly":true }).val("No");
+            $("#sideLight2GlassType,#SL2GlassIntegrity").attr({ 'disabled': false, "required": true });
+            $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true });
+            $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true });
+            $(".sidelight2section").attr({ 'disabled': false, "required": true });
+            $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true });
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
-            $("#SL2Depth").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
-            $("#SL2Depth").attr('min',95);
-            $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
+            $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'disabled': false, 'readonly': false, "required": true });
+            $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
+            // $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+            $("#sideLight2FrameThickness").attr({'readonly': true, "required": false });
+            // $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
+            $("#SL2Transom").attr({ 'disabled': false, "required": true });
         }
         doorLeafFacingPrice('sideLight12',"Yes");
-        SideLightHeight('sideLight2');
+        // updateTransomFields();
+
     } else {
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
+        $("#SL2GlassIntegrity").attr({'readonly': false, "required": true });
+        $("#SL2GlassIntegrity").attr({'disabled': false, "required": true });
+        $("#sideLight2FrameThickness").attr({'readonly': false, "required": true });
+        $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
         $(".sidelight2section").attr({ 'disabled': true, "required": false }).val('');
         $("#copyOfSideLite1").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2Width").attr({ 'readonly': true, "required": false }).val('');
         $("#SL2Height").attr({ 'readonly': true, "required": false }).val("");
-        $("#SL2Depth").attr({ 'readonly': true, "required": false }).val('');
+        $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': true, "required": false }).val('');
         $("#SL2Transom").attr({ 'disabled': true, "required": false }).val('');
         $("#sideLight12-section1").removeClass("table_row_show");
         $("#sideLight12-section1").addClass("table_row_hide");
+        $("#sideLight2FrameThickness").attr({'disabled': false, "required": true });
     }
+    $("#SL2Depth").attr('min', 95);
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
-
-function copyOfSideLite1Change(){
+$("#copyOfSideLite1").change(function(){
+    copyOfSideLite1Change();
+});
+$(".SL1").on("change keyup", function() {
+    copyOfSideLite1Change();
+});
+function copyOfSideLite1Change(isstatus = false){
     if($("#copyOfSideLite1").val()=="Yes"){
+        $("#SL2GlassIntegrity").attr({ 'disabled': true, "required": true }).val($("#SL1GlassIntegrity").val());
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassType").val());
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": true }).val($("#SideLight1BeadingType").val());
         $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": true }).val($("#SideLight1GlazingBeadSpecies").val());
@@ -1309,9 +1370,9 @@ function copyOfSideLite1Change(){
         $("#SL2Width").attr({ 'readonly': true, "required": true }).val($("#SL1Width").val());
         // $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
-        $("#SL2Depth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
-        $("#SL2Depth").attr('min',95);
+        $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': true, "required": true }).val($("#SL1Depth").val());
         $("#SL2Transom").attr({ 'disabled': true, "required": true }).val($("#SL1Transom").val());
+        $("#SL2TransomDepth").attr({ 'disabled': true, "required": true }).val($("#SL1TransomDepth").val());
         $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": true }).val($("#sideLight1FrameThickness").val());
 
         //new 12-07-2024
@@ -1323,55 +1384,48 @@ function copyOfSideLite1Change(){
         $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlazingBeadsFixingDetail").val());
 
         //end
+        updateGlassType(isstatus, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value","copy")
 
         var val = $('#sideLight1GlassType').val();
         $("#sidelight1-selected1").empty().text(val);
         $("#sidelight2-selected1").empty().text(val);
     } else {
         if($("#sideLight2").val()=="Yes"){
-            $("#sideLight2GlassType").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlassType,#SL2GlassIntegrity").attr({ 'disabled': false, "required": true }).val('');
             $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val('');
             $("input[name='SideLight2GlazingBeadSpecies']").val('');
             $("#SL2Width").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
-            $("#SL2Depth").attr({ 'readonly': false, "required": true }).val('');
-            $("#SL2Depth").attr('min',95);
+            $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Transom").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlassThickness").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'readonly': false }).val('');
-            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingSystems").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": true }).val('');
+            $("#sideLight2GlassThickness").attr({ 'readonly': true, "required": true }).val('');
+            $("#sideLight2GlazingSystems").attr({ 'readonly': true, "required": true }).val('');
+            $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': true, "required": true }).val('');
             $("#sideLight2GlazingBeadsThickness").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false}).val('');
-            $("#sideLight2FrameThickness").attr({ 'disabled': false, "required": true }).val('');
             $("#sideLight2GlazingBeadsWidth").attr({ 'disabled': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': false, "required": true }).val('');
-            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'disabled': false, "required": true }).val('');
+            $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': true, "required": true }).val('');
         }else{
-            $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
+            $("#sideLight2GlassType,#SL2GlassIntegrity").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
             $("input[name='SideLight2GlazingBeadSpecies']").val('');
             $("#SL2Width").attr({ 'readonly': true, "required": false }).val('');
             $("#SL2Height").attr({ 'readonly': true, "required": false }).val('');
-            $("#SL2Depth").attr({ 'readonly': true, "required": false }).val('');
+            $("#SL2Depth,#SL2transomThickness,#SL2TransomDepth").attr({ 'readonly': true, "required": false }).val('');
             $("#SL2Transom").attr({ 'disabled': true, "required": false }).val('');
-            $("#sideLight2FrameThickness").attr({ 'disabled': true, "required": false }).val('');
 
             $("#sideLight2GlassThickness").attr({ 'readonly': true, "required": false }).val('');
             $("#sideLight2GlazingSystems").attr({ 'readonly': true, "required": false }).val('');
             $("#sideLight2GlazingSystemsThickness").attr({ 'readonly': true, "required": false }).val('');
-            $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': true, "required": false }).val('');
-            $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': true, "required": false }).val('');
+            $("#sideLight2GlazingBeadsThickness").attr({ 'readonly': false, "required": false }).val('');
+            $("#sideLight2GlazingBeadsWidth").attr({ 'readonly': false, "required": false }).val('');
             $("#sideLight2GlazingBeadsFixingDetail").attr({ 'readonly': true, "required": false }).val('');
         }
     }
+    // updateTransomFields();
+    SideLightHeight('sideLight1');
+    SideLightHeight('sideLight2');
 }
 
 // Lipping And Intumescent
@@ -1951,7 +2005,7 @@ function FireRatingChange() {
         $('#opGlassType').val('');
         floor_finish_change();
         MeetingStyle();
-        doorThicknessFilter($("#fireRating").val());
+        // doorThicknessFilter($("#fireRating").val());
         glazingSystemFIlter($("#fireRating").val());
         onlyLipingSpecies($("#fireRating").val());
         glassTypeFilter(false);
@@ -1997,30 +2051,34 @@ function doorThicknessSelect(value) {
     $('#doorThickness option[value=' + value + ']').attr('selected', 'selected');
 }
 
-function doorThicknessFilter(fireRating, opGlassIntegrityVal = "") {
-    if (fireRating == 'FD30' || fireRating == 'FD30s') {
+function doorThicknessFilter(fireRating,opGlassIntegrityVal="",SL1GlassIntegrityVal="",SL2GlassIntegrityVal=""){
+    if(fireRating == 'FD30' || fireRating == 'FD30s'){
         fireRating = 'FD30';
-    } else if (fireRating == 'FD60' || fireRating == 'FD60s') {
+    }else if(fireRating == 'FD60' || fireRating == 'FD60s'){
         fireRating = 'FD60';
     }
     let pageId = pageIdentity();
     $.ajax({
         url: $("#door-thickness-filter").html(),
-        method: "POST",
-        data: { pageId: pageId, fireRating: fireRating, _token: $("#_token").val() },
-        dataType: "Json",
-        success: function (result) {
-            var innerHtml = '';
-            var innerHtml1 = '';
-            if (result.status == "ok") {
+        method:"POST",
+        data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val()},
+        dataType:"Json",
+        success: function(result){
+            var innerHtml ='';
+            var innerHtml1='';
+            var innerHtml2='';
+            var innerHtml3='';
+            if(result.status=="ok"){
                 var data = result.data;
                 // console.log(data);
                 var datalength = result.data.length;
                 var GlassIntegrityValue = document.getElementById('GlassIntegrity-value');
                 var opGlassIntegrityValue = document.getElementById('opGlassIntegrity-value');
+                var SL1GlassIntegrityValue = document.getElementById('SL1GlassIntegrity-value');
+                var SL2GlassIntegrityValue = document.getElementById('SL2GlassIntegrity-value');
                 // innerHtml+='<option value="">Select Door Thickness</option>';
-                for (var index = 0; index < datalength; index++) {
-                    if (data[index].OptionSlug == "Door_Thickness" && data[index].UnderAttribute == fireRating) {
+                for(var index =0; index<datalength;index++){
+                    if(data[index].OptionSlug=="Door_Thickness" &&  data[index].UnderAttribute == fireRating){
                         // $("#doorThickness").val(data[index].OptionKey);
                     }
 
@@ -2032,89 +2090,144 @@ function doorThicknessFilter(fireRating, opGlassIntegrityVal = "") {
                     //     innerHtml1+='<option value="'+data[index].OptionKey+'">'+data[index].OptionValue+'</option>';
                     // }
 
-                    if (data[index].OptionSlug == "Glass_Integrity" && data[index].UnderAttribute == fireRating) {
+                    if(data[index].OptionSlug=="Glass_Integrity" &&  data[index].UnderAttribute == fireRating){
                         if (GlassIntegrityValue != null) {
                             GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
                             var GlassIntegritySelected = "";
-                            if (GlassIntegrityValue == data[index].OptionKey) {
+                            if(GlassIntegrityValue == data[index].OptionKey){
                                 GlassIntegritySelected = "selected";
                             }
-                            innerHtml += '<option value="' + data[index].OptionKey + '" ' + GlassIntegritySelected + '>' + data[index].OptionValue + '</option>';
-                        } else {
-                            innerHtml += '<option value="' + data[index].OptionKey + '">' + data[index].OptionValue + '</option>';
+                            innerHtml +='<option value="'+data[index].OptionKey+'" '+ GlassIntegritySelected +'>'+data[index].OptionValue+'</option>';
+                        }else{
+                            innerHtml +='<option value="'+data[index].OptionKey+'">'+data[index].OptionValue+'</option>';
                         }
                     }
 
-                    if (data[index].OptionSlug == "Glass_Integrity" && data[index].UnderAttribute == fireRating) {
+                    if(data[index].OptionSlug=="Glass_Integrity" &&  data[index].UnderAttribute == fireRating){
                         if (opGlassIntegrityValue != null) {
                             opGlassIntegrityValue = $("#opGlassIntegrity-value").data("value");
                             var OPGlassIntegritySelected = "";
-                            if (opGlassIntegrityVal == true) {
-                                if (opGlassIntegrityValue == data[index].OptionKey) {
+                            if(opGlassIntegrityVal){
+                                if(opGlassIntegrityValue == data[index].OptionKey){
                                     OPGlassIntegritySelected = "selected";
                                 }
-                            } else {
+                            }else{
                                 $('#opGlassType').empty();
                             }
-                            innerHtml1 += '<option value="' + data[index].OptionKey + '" ' + OPGlassIntegritySelected + '>' + data[index].OptionValue + '</option>';
-                        } else {
-                            innerHtml1 += '<option value="' + data[index].OptionKey + '">' + data[index].OptionValue + '</option>';
+                            innerHtml1+='<option value="'+data[index].OptionKey+'" '+ OPGlassIntegritySelected +'>'+data[index].OptionValue+'</option>';
+                        }else{
+                            innerHtml1+='<option value="'+data[index].OptionKey+'">'+data[index].OptionValue+'</option>';
+                        }
+                    }
+
+                    if(data[index].OptionSlug=="Glass_Integrity" &&  data[index].UnderAttribute == fireRating){
+                        if (SL1GlassIntegrityValue != null) {
+                            SL1GlassIntegrityValue = $("#SL1GlassIntegrity-value").data("value");
+                            var SL1GlassIntegritySelected = "";
+                            if(SL1GlassIntegrityValue){
+                                if(SL1GlassIntegrityValue == data[index].OptionKey){
+                                    SL1GlassIntegritySelected = "selected";
+                                }
+                            }else{
+                                $('#SL1GlassType').empty();
+                            }
+                            innerHtml2+='<option value="'+data[index].OptionKey+'" '+ SL1GlassIntegritySelected +'>'+data[index].OptionValue+'</option>';
+                        }else{
+                            innerHtml2+='<option value="'+data[index].OptionKey+'">'+data[index].OptionValue+'</option>';
+                        }
+                    }
+
+                    if(data[index].OptionSlug=="Glass_Integrity" &&  data[index].UnderAttribute == fireRating){
+                        if (SL2GlassIntegrityValue != null) {
+                            SL2GlassIntegrityValue = $("#SL2GlassIntegrity-value").data("value");
+                            var SL2GlassIntegritySelected = "";
+                            if(SL2GlassIntegrityValue){
+                                if(SL2GlassIntegrityValue == data[index].OptionKey){
+                                    SL2GlassIntegritySelected = "selected";
+                                }
+                            }else{
+                                $('#SL2GlassType').empty();
+                            }
+                            innerHtml3+='<option value="'+data[index].OptionKey+'" '+ SL2GlassIntegritySelected +'>'+data[index].OptionValue+'</option>';
+                        }else{
+                            innerHtml3+='<option value="'+data[index].OptionKey+'">'+data[index].OptionValue+'</option>';
                         }
                     }
 
                 }
                 // console.log(GlassIntegrityValue)
-                if (innerHtml != '') {
-                    var intigrity = '<option value="">Select Glass Intrigrity</option>';
-                    if ($('#leaf1VisionPanel').val() == 'Yes') {
-                        if ($('#fireRating').val() != 'NFR') {
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', false);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required', true);
-                        } else {
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required', false);
+                if(innerHtml !=''){
+                    var intigrity ='<option value="">Select Glass Intrigrity</option>';
+                    if($('#leaf1VisionPanel').val() == 'Yes'){
+                        if($('#fireRating').val() != 'NFR'){
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',false);
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
+                        }else{
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
                         }
                     }
                     //$("#lazingIntegrityOrInsulationIntegrity").attr('disabled',false).val();
-                } else {
-                    var intigrity = '';
-                    innerHtml1 += '<option value="">No Glass Intrigrity Found</option>';
-                    if ($('#leaf1VisionPanel').val() == 'Yes') {
-                        if ($('#fireRating').val() != 'NFR') {
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', false);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required', true);
-                        } else {
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required', false);
+                }else{
+                    var intigrity='';
+                    innerHtml1+='<option value="">No Glass Intrigrity Found</option>';
+                    if($('#leaf1VisionPanel').val() == 'Yes'){
+                        if($('#fireRating').val() != 'NFR'){
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',false);
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
+                        }else{
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
+                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
                         }
                     }
                 }
 
-                if (innerHtml1 != '') {
-                    var intigrity1 = '<option value="">Select Glass Intrigrity</option>';
-                    $("#opGlassIntegrity").attr('disabled', false).val();
-                } else {
-                    var intigrity1 = '';
-                    innerHtml1 += '<option value="">No Glass Intrigrity Found</option>';
-                    $("#opGlassIntegrity").attr('disabled', true).val('');
+                if(innerHtml1 != ''){
+                    var intigrity1 ='<option value="">Select Glass Intrigrity</option>';
+                    $("#opGlassIntegrity").attr('disabled',false).val();
+                }else{
+                    var intigrity1='';
+                    innerHtml1+='<option value="">No Glass Intrigrity Found</option>';
+                    $("#opGlassIntegrity").attr('disabled',true).val('');
+                }
+                if(innerHtml2 != ''){
+                    var intigrity2 ='<option value="">Select Glass Intrigrity</option>';
+                    $("#SL1GlassIntegrity").attr('disabled',false).val();
+                }else{
+                    var intigrity2 ='';
+                    innerHtml2+='<option value="">No Glass Intrigrity Found</option>';
+                    $("#SL1GlassIntegrity").attr('disabled',true).val('');
+                }
+                if(innerHtml3 != ''){
+                    var intigrity3 ='<option value="">Select Glass Intrigrity</option>';
+                    $("#SL2GlassIntegrity").attr('disabled',false).val();
+                }else{
+                    var intigrity3='';
+                    innerHtml3+='<option value="">No Glass Intrigrity Found</option>';
+                    $("#SL2GlassIntegrity").attr('disabled',true).val('');
                 }
 
                 // $("#doorThickness").empty().append(innerHtml);
                 $("#lazingIntegrityOrInsulationIntegrity").empty().append(intigrity).append(innerHtml);
                 $("#opGlassIntegrity").empty().append(intigrity1).append(innerHtml1);
+                $("#SL1GlassIntegrity").empty().append(intigrity2).append(innerHtml2);
+                $("#SL2GlassIntegrity").empty().append(intigrity3).append(innerHtml3);
 
-            } else {
-                innerHtml += '<option value="">No Door Thickness</option>';
+            }else{
+                innerHtml+='<option value="">No Door Thickness</option>';
                 // $("#doorThickness").empty().append(innerHtml);
                 $("#doorThickness").val(0);
 
-                innerHtml1 += '<option value="">No Glass Intrigrity Found</option>';
+                innerHtml1+='<option value="">No Glass Intrigrity Found</option>';
                 $("#lazingIntegrityOrInsulationIntegrity").empty().append(innerHtml1);
                 $("#opGlassIntegrity").empty().append(innerHtml1);
+                $("#SL1GlassIntegrity").empty().append(innerHtml1);
+                $("#SL2GlassIntegrity").empty().append(innerHtml1);
             }
         }
     });
 }
+
 function glazingSystemFIlter(fireRating) {
     let pageId = pageIdentity();
     var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
@@ -2893,8 +3006,8 @@ $(document).ready(function(){
             visionPanel2Off(doorsetType);
         }
     }, 3000)
-    sideLight1Change()
-    sideLight2Change()
+    // sideLight1Change()
+    // sideLight2Change()
 
     setTimeout(function(){
             if($("#sideLight1").val() == 'Yes'){
@@ -6759,5 +6872,334 @@ $(document).ready(function () {
         populateIronmongeryDropdown(existingFolderId, existingIronmongeryId);
     } else if (!existingFolderId) {
         $('#ironmongeryWrapper').hide();
+    }
+});
+
+function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
+    if(type == "opGlassType"){
+        glassType = (id == null)?$("#opGlassType").val():id;
+    }
+    if(type == "sideLight1GlassType"){
+        glassType = (id == null)?$("#SideLight1GlassType-value").data("value"):id;
+    }
+    if(type == "sideLight2GlassType"){
+        glassType = (id == null)?$("#SideLight2GlassType-value").data("value"):id;
+    }
+    var glassTypeValue = document.getElementById('OPGlassType-value');
+    if(glassTypeValue != null  && isstatus == true){
+        glassTypeValue = $("#OPGlassType-value").data("value");
+        if(glassTypeValue != ""){
+            glassType = glassTypeValue;
+        }
+    }
+    if(glassType != ''){
+        let pageId = pageIdentity();
+        let fireRating =$("#fireRating").val();
+        var fireRatingValue = document.getElementById('FireRating-value');
+        if(fireRatingValue != null && isstatus){
+            fireRatingValue = $("#FireRating-value").data("value");
+            if(fireRatingValue != ""){
+                fireRating = fireRatingValue;
+            }
+        }
+
+        $.ajax({
+            url:  $("#overpanel-glass-type-filter").html(),
+            method:"POST",
+            dataType:"Json",
+            data:{pageId:pageId,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
+            success: function(result){
+                var innerHtml1='';
+                if(result.status=="ok"){
+                    var innerHtml ='';
+                    var data = result.data;
+                    var length = result.data.length;
+                    var lippingSpecies = result.lippingSpecies;
+                    var lippingSpeciesLength =result.lippingSpecies.length;
+                    // innerHtml+='<option value="">Select Glass thikness</option>';
+
+                    var GlassThicknessValue = document.getElementById('GlassThickness-value');
+                    if(type == "opGlassType"){
+                        $("#opglassThickness").val(data.GlassThickness);
+                        $("#oPHeigth").attr('max',data.FanLightHeight);
+                        $("#OpBeadThickness").attr('min',data.TransomThickness);
+                        $("#OpBeadHeight").attr('min',data.TransomDepth);
+                        $("#opglazingSystems").val(data.GlazingSystem);
+                        $("#opglazingSystemsThickness").val(data.GlazingThickness);
+                        $("#opglazingBeadsThickness").attr('min',data.BeadingHeight);
+                        $("#opglazingBeadsHeight").attr('min',data.BeadingWidth);
+                        $("#opglazingBeadsFixingDetail").val(data.FixingDetails);
+
+                        var identifier = $("#oPHeigth"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#OpBeadThickness"); // Or specify a specific selector if needed
+                        if(identifier){
+                            SetBuildOfMaterial(identifier);
+                        }
+                        identifier = $("#OpBeadHeight"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#opglazingBeadsThickness"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#opglazingBeadsHeight"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+
+                        if(lippingSpecies!='' && lippingSpeciesLength>0){
+                            innerHtml1 += '<div class="container"><div class="row">';
+                            var OPGlazingBeadSpeciesValue = document.getElementById('OPGlazingBeadSpecies-value');
+                            for(var leep =0; leep<lippingSpeciesLength;leep++){
+
+                                if(OPGlazingBeadSpeciesValue != null){
+                                    OPGlazingBeadSpeciesValue = $("#OPGlazingBeadSpecies-value").data("value");
+                                    if(OPGlazingBeadSpeciesValue != "" && OPGlazingBeadSpeciesValue == lippingSpecies[leep].id){
+                                        $("#opGlazingBeadSpecies").val(lippingSpecies[leep].SpeciesName);
+                                    }
+                                }
+
+                                var filepath = $("input[name='base_url']").val()+"/uploads/Options/"+lippingSpecies[leep].file;
+
+                                var possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+
+                                if (possibleSelectedOptionsArray.hasOwnProperty("lippingSpecies")) {
+
+                                    if (lippingSpecies[leep].hasOwnProperty("SelectedLippingSpeciesCost")) {
+                                        var costToShow =  lippingSpecies[leep].SelectedLippingSpeciesCost;
+
+                                    } else {
+                                        var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                    }
+                                }else{
+                                    var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                }
+
+                                innerHtml1 += '<div class="col-md-2 col-sm-4 col-6 cursor-pointer" onClick="GlazingValueFill('+lippingSpecies[leep].id+',\''+lippingSpecies[leep].SpeciesName+'\',\'#OPglazingModal\','+costToShow+')">'
+                                + '<div class="color_box">'
+                                + '<div class="frameMaterialImage"><img width="100%" height="100" src="'+ filepath +'"></div>'
+                                + '<h4>'+lippingSpecies[leep].SpeciesName+'</h4>'
+                                + '</div></div>';
+                            }
+                            $("#OPglazingModalBody").empty().append(innerHtml1);
+                        }
+                    }else if(type == "sideLight1GlassType"){
+                        $("#sideLight1GlassThickness").val(data.GlassThickness);
+                        if(fireRating == "NFR"){
+                            $("#SL1Width").removeAttr('max');
+                        }else{
+                            $("#SL1Width").attr('max',data.SideScreenWidth);
+                        }
+
+                        $("#SL1transomThickness").val(data.TransomThickness);
+                        $("#SL1TransomDepth").attr('min',data.TransomDepth);
+                        $("#sideLight1GlazingSystems").val(data.GlazingSystem);
+                        $("#sideLight1GlazingSystemsThickness").val(data.GlazingThickness);
+                        $("#sideLight1GlazingBeadsThickness").attr('min',data.BeadingHeight);
+                        $("#sideLight1GlazingBeadsWidth").attr('min',data.BeadingWidth);
+                        $("#sideLight1GlazingBeadsFixingDetail").val(data.FixingDetails);
+
+                        var identifier = $("#SL1Width"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#SL1transomThickness"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#SL1TransomDepth"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#sideLight1GlazingBeadsThickness"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#sideLight1GlazingBeadsWidth"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+
+                        if(lippingSpecies!='' && lippingSpeciesLength>0){
+                            innerHtml1 += '<div class="container"><div class="row">';
+                            var SL1GlazingBeadSpeciesValue = document.getElementById('SL1GlazingBeadSpecies-value');
+                            for(var leep =0; leep<lippingSpeciesLength;leep++){
+
+                                if(SL1GlazingBeadSpeciesValue != null){
+                                    SL1GlazingBeadSpeciesValue = $("#SL1GlazingBeadSpecies-value").data("value");
+                                    if(SL1GlazingBeadSpeciesValue != "" && SL1GlazingBeadSpeciesValue == lippingSpecies[leep].id){
+                                        $("#SL1GlazingBeadSpecies").val(lippingSpecies[leep].SpeciesName);
+                                    }
+                                }
+
+                                var filepath = $("input[name='base_url']").val()+"/uploads/Options/"+lippingSpecies[leep].file;
+
+                                var possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+
+                                if (possibleSelectedOptionsArray.hasOwnProperty("lippingSpecies")) {
+
+                                    if (lippingSpecies[leep].hasOwnProperty("SelectedLippingSpeciesCost")) {
+                                        var costToShow =  lippingSpecies[leep].SelectedLippingSpeciesCost;
+
+                                    } else {
+                                        var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                    }
+                                }else{
+                                    var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                }
+
+                                innerHtml1 += '<div class="col-md-2 col-sm-4 col-6 cursor-pointer" onClick="GlazingValueFill('+lippingSpecies[leep].id+',\''+lippingSpecies[leep].SpeciesName+'\',\'#SL1glazingModal\','+costToShow+')">'
+                                + '<div class="color_box">'
+                                + '<div class="frameMaterialImage"><img width="100%" height="100" src="'+ filepath +'"></div>'
+                                + '<h4>'+lippingSpecies[leep].SpeciesName+'</h4>'
+                                + '</div></div>';
+                            }
+                            $("#SL1glazingModalBody").empty().append(innerHtml1);
+                        }
+
+                    }else if(type == "sideLight2GlassType"){
+                         $("#sideLight2GlassThickness").val(data.GlassThickness);
+                        if(fireRating == "NFR"){
+                            $("#SL2Width").removeAttr('max');
+                        }else{
+                            $("#SL2Width").attr('max',data.SideScreenWidth);
+                        }
+                        $("#SL2transomThickness").val(data.TransomThickness);
+                        $("#SL2TransomDepth").attr('min',data.TransomDepth);
+                        $("#sideLight2GlazingSystems").val(data.GlazingSystem);
+                        $("#sideLight2GlazingSystemsThickness").val(data.GlazingThickness);
+                        $("#sideLight2GlazingBeadsThickness").attr('min',data.BeadingHeight);
+                        $("#sideLight2GlazingBeadsWidth").attr('min',data.BeadingWidth);
+                        $("#sideLight2GlazingBeadsFixingDetail").val(data.FixingDetails);
+
+                        var identifier = $("#SL2Width"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#SL2transomThickness"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#SL2TransomDepth"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#sideLight2GlazingBeadsThickness"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+                        identifier = $("#sideLight2GlazingBeadsWidth"); // Or specify a specific selector if needed
+                        SetBuildOfMaterial(identifier);
+
+                        if(lippingSpecies!='' && lippingSpeciesLength>0){
+                            innerHtml1 += '<div class="container"><div class="row">';
+                            var SL2GlazingBeadSpeciesValue = document.getElementById('SL2GlazingBeadSpecies-value');
+                            for(var leep =0; leep<lippingSpeciesLength;leep++){
+
+                                if(SL2GlazingBeadSpeciesValue != null){
+                                    SL2GlazingBeadSpeciesValue = $("#SL2GlazingBeadSpecies-value").data("value");
+                                    if(SL2GlazingBeadSpeciesValue != "" && SL2GlazingBeadSpeciesValue == lippingSpecies[leep].id){
+                                        $("#SL2GlazingBeadSpecies").val(lippingSpecies[leep].SpeciesName);
+                                    }
+                                }
+
+                                var filepath = $("input[name='base_url']").val()+"/uploads/Options/"+lippingSpecies[leep].file;
+
+                                var possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+
+                                if (possibleSelectedOptionsArray.hasOwnProperty("lippingSpecies")) {
+
+                                    if (lippingSpecies[leep].hasOwnProperty("SelectedLippingSpeciesCost")) {
+                                        var costToShow =  lippingSpecies[leep].SelectedLippingSpeciesCost;
+
+                                    } else {
+                                        var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                    }
+                                }else{
+                                    var costToShow =  lippingSpecies[leep].LippingSpeciesCost;
+                                }
+
+                                innerHtml1 += '<div class="col-md-2 col-sm-4 col-6 cursor-pointer" onClick="GlazingValueFill('+lippingSpecies[leep].id+',\''+lippingSpecies[leep].SpeciesName+'\',\'#SL2glazingModal\','+costToShow+')">'
+                                + '<div class="color_box">'
+                                + '<div class="frameMaterialImage"><img width="100%" height="100" src="'+ filepath +'"></div>'
+                                + '<h4>'+lippingSpecies[leep].SpeciesName+'</h4>'
+                                + '</div></div>';
+                            }
+                            $("#SL2glazingModalBody").empty().append(innerHtml1);
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+function updateGlassType(isStatus = false, type, heightSelector, integritySelector, glassTypeSelector, glassTypeValueSelector,copy="no") {
+    let pageId = pageIdentity();
+    let fireRating = $("#fireRating").val();
+    var fireRatingValue = document.getElementById('FireRating-value');
+    if(fireRatingValue != null){
+        fireRatingValue = $("#FireRating-value").data("value");
+        if(fireRatingValue != ""){
+            fireRating = fireRatingValue;
+        }
+    }
+    let height = $(heightSelector).val() ?? $("#SL1Height").val();
+    if(copy == "copy"){
+         integrity = $("#SL1GlassIntegrity").val();
+         height = $("#SL1Height").val();
+    }
+    else{
+         integrity = $(integritySelector).val();
+    }
+    let glassIntegrityValue = document.getElementById(integritySelector.replace("#", ""));
+
+    if (glassIntegrityValue !== null && isStatus) {
+        glassIntegrityValue = $(integritySelector + "-value").data("value");
+        if (glassIntegrityValue !== "") {
+            integrity = glassIntegrityValue;
+        }
+    }
+    if(integrity == undefined && copy == "copy"){
+        integrity = $("#SL1GlassIntegrity").val();
+    }
+
+    $.ajax({
+        url: $("#overpanel-glass-filter").html(),
+        method: "POST",
+        dataType: "Json",
+        data: {
+            pageId: pageId,
+            fireRating: fireRating,
+            integrity: integrity,
+            _token: $("#_token").val(),
+            [heightSelector.replace("#", "")]: height,
+            type: type,
+        },
+        success: function (result) {
+            let glassTypeInnerHtml = "";
+            if (result.status === "ok") {
+                let data = result.data;
+                let glassTypeValue = $(glassTypeValueSelector).data("value");
+                glassTypeInnerHtml += '<option value="">Select Glass Type</option>';
+
+                data.forEach((item) => {
+                    let selected = glassTypeValue !== null && isStatus && glassTypeValue === item.Key ? "selected" : "";
+                    glassTypeInnerHtml += `<option value="${item.Key}" ${selected}>${item.GlassType}</option>`;
+                });
+            } else {
+                glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
+            }
+            $(glassTypeSelector).empty().append(glassTypeInnerHtml);
+            if(copy == "copy"){
+                $("#sideLight2GlassType").attr({ 'disabled': true, "required": true }).val($("#sideLight1GlassType").val());
+            }
+        },
+    });
+}
+
+// Wrapper Functions for Specific Use Cases
+function overpanelGlassType(isStatus = false) {
+    updateGlassType(isStatus, "overpanel", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
+}
+
+function sideLightGlassType(isStatus = false) {
+    updateGlassType(isStatus, "SL1", "#SL1Height", "#SL1GlassIntegrity", "#sideLight1GlassType", "#SideLight1GlassType-value");
+}
+
+function sideLight2GlassType(isStatus = false) {
+    updateGlassType(isStatus, "SL2", "#SL2Height", "#SL2GlassIntegrity", "#sideLight2GlassType", "#SideLight2GlassType-value");
+}
+
+// on edit and overpanel selected so only overpanel field show
+$(document).ready(function() {
+    let overpanelE = $('#overpanel').val();
+    if(overpanelE && overpanelE == 'Overpanel'){
+        $("#opGlassIntegrity").attr({'disabled':true,readonly:true,required:false});
+        $("#opGlassType").attr({'disabled':true, 'required':false});
+        $("#opTransom").attr('disabled',true);
+        $("#opTransomDepth").attr('disabled',true);
+        $("#transomThickness").attr({'disabled':true,'required':false});
+        $("#opGlazingBeads").attr({'disabled':true,'required':false}).val('');
+        $("#opglazingBeadsThickness").attr('disabled',true);
+        $("#opGlazingBeadSpecies").attr('disabled',true);
+        $("#opglazingBeadsHeight").attr('disabled',true);
     }
 });
