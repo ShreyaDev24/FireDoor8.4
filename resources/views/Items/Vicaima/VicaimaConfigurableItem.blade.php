@@ -1191,16 +1191,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     GlazingSystemsChange("{{$Item['GlazingSystems']}}");
     @endif
 
-    @if(isset($Item["opGlazingSystems"]))
-    GlazingSystemsChange("{{$Item['opGlazingSystems']}}",'opglazingSystems');
-    @endif
-    @if(isset($Item["SideLight1GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight1GlazingSystems']}}",'sideLight1GlazingSystems');
-    @endif
-    @if(isset($Item["SideLight2GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight2GlazingSystems']}}",'sideLight2GlazingSystems');
-    @endif
-
     @if(isset($Item["FrameFinish"]) && $Item["FrameFinish"] == "Painted_Finish")
     FrameFinishChange(false ,  'framefinish');
     @endif
@@ -1292,10 +1282,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item["OPGlassType"]))
     OverpanelGlassTypeChange(null,'opGlassType',true);
-    @endif
-
-    @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
-    copyOfSideLite1Change();
     @endif
 
     @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
