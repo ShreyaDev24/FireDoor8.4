@@ -6342,3 +6342,82 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+
+$(document).ready(function() {
+    const saved = JSON.parse($('#savedItemData').val() || '{}');
+
+    // Show loader
+    $('.loader').css({'display':'block'});
+
+    // Run only for Over Panel section
+    restoreOverpanelValues(saved).then(() => {
+        $('.loader').css({'display':'none'});
+        console.log('✅ Overpanel data restoration complete.');
+    });
+});
+
+/**
+ * Restore Overpanel section fields
+ */
+function restoreOverpanelValues(saved) {
+    return new Promise((resolve) => {
+        const selectors = [
+            ['#overpanel', saved.Overpanel],
+            ['#opGlassIntegrity', saved.opGlassIntegrity],
+            ['#opGlassType', saved.OPGlassType],
+            ['#opGlazingBeads', saved.OPGlazingBeads],
+            ['#opGlazingBeadSpecies', saved.OPGlazingBeadSpecies],
+            ['#opglazingSystems', saved.OPGlazingSystems],
+            ['#oPWidth', saved.OPWidth],
+            ['#oPHeigth', saved.OPHeigth],
+            ['#OpBeadThickness', saved.OpBeadThickness],
+            ['#OpBeadHeight', saved.OpBeadHeight],
+        ];
+
+        let done = 0;
+        selectors.forEach(([selector, value]) => {
+            autoRestore(selector, value, () => {
+                done++;
+                if (done === selectors.length) resolve();
+            });
+        });
+
+        // Safety timeout — hide loader after 20 seconds max
+        setTimeout(() => resolve(), 20000);
+    });
+}
+
+/**
+ * Restore individual field (works for inputs + dropdowns)
+ */
+function autoRestore(selector, value, callback) {
+    const el = $(selector);
+    if (!el.length || value == null || value === '') return callback();
+
+    if (!el.val() || el.val() === '') {
+        if (el.is('select')) {
+            const interval = setInterval(() => {
+                if (el.find(`option[value="${value}"]`).length) {
+                    el.val(value).trigger('change');
+                    // el.css('border', '2px solid orange');
+                    clearInterval(interval);
+                    console.log(`Restored ${selector} = ${value}`);
+                    callback();
+                }
+            }, 500);
+
+            setTimeout(() => {
+                clearInterval(interval);
+                callback();
+            }, 5000);
+        } else {
+            el.val(value);
+            // el.css('border', '2px solid orange');
+            console.log(`Restored ${selector} = ${value}`);
+            callback();
+        }
+    } else {
+        callback();
+    }
+}
+
