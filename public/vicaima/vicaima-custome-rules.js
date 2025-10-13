@@ -1986,7 +1986,7 @@ function FireRatingChange() {
         $('#opGlassType').val('');
         floor_finish_change();
         MeetingStyle();
-        doorThicknessFilter($("#fireRating").val());
+        // doorThicknessFilter($("#fireRating").val());
         glazingSystemFIlter($("#fireRating").val());
         onlyLipingSpecies($("#fireRating").val());
         glassTypeFilter(false);
@@ -2987,8 +2987,8 @@ $(document).ready(function(){
             visionPanel2Off(doorsetType);
         }
     }, 3000)
-    sideLight1Change()
-    sideLight2Change()
+    // sideLight1Change()
+    // sideLight2Change()
 
     setTimeout(function(){
             if($("#sideLight1").val() == 'Yes'){
