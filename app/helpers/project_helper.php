@@ -552,7 +552,7 @@ function glazingBeadExport($request,$userIds): void{
         $frame_unit = 'Each';
         $SlBeadThickness = getLippingSpeciesNearTheeknessValue($request->SlBeadThickness);
         $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->SideLight2GlazingBeadSpecies)->where('selected_thickness','>=',$SlBeadThickness)->get()->first();
-        $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+        $unitcost_selected_price = $unitcost?->selected_price ?? $unitcost?->price ?? 0;
         $pricePerLM = ($request->SlBeadThickness * $request->SlBeadHeight * $unitcost_selected_price)/1000000;
         $LMOfGlazing = $request->SL2Width + $request->SL2Width + $request->SL2Height + $request->SL2Height;
         $LMOfGlazingSystem = $LMOfGlazing/1000;

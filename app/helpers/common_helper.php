@@ -3906,14 +3906,14 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $description = '[Fan Light Glass] '.str_replace('_', ' ', $request->opGlassType).'| '. $request->oPWidth.'mm x '. $request->oPHeigth.'mm';
         $category = 'Glass';
         $frame_unit = 'Area M2';
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-            $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->opGlassType)->first();
-            $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
-        }
-        else{
+        // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+        //     $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->opGlassType)->first();
+        //     $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
+        // }
+        // else{
             $frame_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.Key',$request->opGlassType)->first();
             $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->glassSelectedPrice;
-        }
+        // }
 
         $QtyPerDoorType = (($request->oPWidth - (2 * $request->frameThickness))/1000) * (($request->oPHeigth - (2 * $request->frameThickness))/1000);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
@@ -3926,15 +3926,15 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $category = 'Glass';
         $frame_unit = 'Area M2';
         //   dd($configurationDoor);
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-          $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->sideLight1GlassType)->first();
-          $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
-        }
-        else{
+        // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+        //   $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$request->sideLight1GlassType)->first();
+        //   $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
+        // }
+        // else{
           $frame_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.Key',$request->sideLight1GlassType)->first();
 
           $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->glassSelectedPrice;
-        }
+        // }
 
         $QtyPerDoorType = (($request->SL1Width - (2 * $request->frameThickness))/1000) * (($request->SL1Height - (2 * $request->frameThickness))/1000);
         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
@@ -3952,14 +3952,14 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
             $category = 'Glass';
             $frame_unit = 'Area M2';
 
-            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-                $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$sideLight2GlassType)->first();
-                $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
-            }
-            else{
+            // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+            //     $frame_unit_cost = GlassType::join('selected_glass_type','glass_type.id','selected_glass_type.glass_id')->wherein('selected_glass_type.editBy', $userIds)->where('glass_type.'.$configurationDoor,$request->issingleconfiguration)->where('glass_type.Key',$sideLight2GlassType)->first();
+            //     $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
+            // }
+            // else{
                 $frame_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.Key',$sideLight2GlassType)->first();
                 $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->glassSelectedPrice;
-            }
+            // }
 
             $QtyPerDoorType = (($request->SL2Width - (2 * $request->frameThickness))/1000) * (($request->SL2Height - (2 * $request->frameThickness))/1000);
 
@@ -4037,14 +4037,14 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
     }
 
     if ($request->overpanel == 'Fan_Light' && (!empty($request->issingleconfiguration) && !empty($request->opglazingSystems))) {
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-            $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->opglazingSystems)->first();
-            $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
-        }
-        else{
+        // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+        //     $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->opglazingSystems)->first();
+        //     $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
+        // }
+        // else{
             $glazing_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.GlazingSystem',$request->opglazingSystems)->first();
             $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->glazingSelectedPrice;
-        }
+        // }
 
         $description = '[Fan Light Glazing] '.$request->opglazingSystems.'|10mm x 5mm|Black Glazing Gasket';
         $category = 'GlazingSystem';
@@ -4058,16 +4058,16 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
     }
 
     if ($request->sideLight1 == 'Yes' && (!empty($request->issingleconfiguration) && !empty($request->sideLight1GlazingSystems))) {
-        if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-            $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->sideLight1GlazingSystems)->first();
-            // dd($request->sideLight1GlazingSystems);
-            $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
-        }
-        else{
+        // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+        //     $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->sideLight1GlazingSystems)->first();
+        //     // dd($request->sideLight1GlazingSystems);
+        //     $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
+        // }
+        // else{
             $glazing_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.GlazingSystem',$request->sideLight1GlazingSystems)->first();
             // $unit_cost = $glazing_unit_cost->glazingSelectedPrice;
             $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->glazingSelectedPrice;
-        }
+        // }
 
         $description = '[Side Light 1 Glazing System] '.$request->sideLight1GlazingSystems.'|10mm x 5mm|Black Glazing Gasket';
         $category = 'GlazingSystem';
@@ -4084,14 +4084,14 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
         $sideLight2GlazingSystems = ($request->copyOfSideLite1 == "Yes")?$request->sideLight1GlazingSystems : $request->sideLight2GlazingSystems;
         if(!empty($request->issingleconfiguration) && !empty($sideLight2GlazingSystems)){
 
-            if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
-                $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$sideLight2GlazingSystems)->first();
-                $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
-            }
-            else{
+            // if($configurationDoor === 'VicaimaDoorCore' ||  $configurationDoor === 'Seadec' || $configurationDoor === 'Deanta' || $configurationDoor === 'MMM'){
+            //     $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$sideLight2GlazingSystems)->first();
+            //     $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
+            // }
+            // else{
                 $glazing_unit_cost = OverpanelGlassGlazing::join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)->where('overpanel_glass_glazing.'.$configurationDoor,$request->issingleconfiguration)->where('overpanel_glass_glazing.GlazingSystem',$sideLight2GlazingSystems)->first();
                 $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->glazingSelectedPrice;
-            }
+            // }
 
 
             $description = '[Side Light 2 Glazing System] '.$sideLight2GlazingSystems.'|10mm x 5mm|Black Glazing Gasket';
