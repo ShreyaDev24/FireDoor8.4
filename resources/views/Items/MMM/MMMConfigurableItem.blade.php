@@ -147,7 +147,8 @@
 
 
 
-
+                    <div hidden id="overpanel-glass-filter">{{route('items/overpanel-glass-filter')}}</div>
+                    <div hidden id="overpanel-glass-type-filter">{{route('items/overpanel-glass-type-filter')}}</div>
                     <div hidden id="glazing-system-filter">{{route('items/glazing-system-filter')}}</div>
                     <div hidden id="architrave-system-filter">{{route('items/architrave-system-filter')}}</div>
                     <div hidden id="fire-rating-filter">{{route('items/fire-rating-filter')}}</div>
@@ -1132,14 +1133,22 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     doorThicknessSelect("{{ $Item['LeafThickness'] }}");
     @endif
 
-    @if(isset($Item['GlassIntegrity']))
-    glassTypeFilter(true);
+    @if(isset($Item['GlassIntegrity']) && !empty($Item['GlassIntegrity']))
+    glassTypeFilter("{{$Item['FireRating']}}");
     doorThicknessFilter("{{$Item['FireRating']}}");
     glazingSystemFIlter("{{$Item['FireRating']}}");
     @endif
 
-    @if(isset($Item['opGlassIntegrity']))
+    @if(isset($Item['SL2GlassIntegrity']) && isset($Item['SL1GlassIntegrity']) && isset($Item['opGlassIntegrity']) && isset($Item['FireRating']))
+    doorThicknessFilter("{{$Item['FireRating']}}",true,true,true);
+    @elseif(isset($Item['SL1GlassIntegrity']) && isset($Item['opGlassIntegrity']) && isset($Item['FireRating']))
+    doorThicknessFilter("{{$Item['FireRating']}}",true,true);
+    @elseif(isset($Item['opGlassIntegrity']) && isset($Item['FireRating']))
     doorThicknessFilter("{{$Item['FireRating']}}",true);
+    @elseif(isset($Item['FireRating']))
+    doorThicknessFilter("{{$Item['FireRating']}}");
+    @else
+    doorThicknessFilter("FD30");
     @endif
 
     @if(isset($Item['DoorsetType']) && isset($Item['SwingType']))
@@ -1162,16 +1171,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item["GlassType"]))
     GlassTypeChange("{{$Item['GlassType']}}");
-    @endif
-
-    @if(isset($Item["opGlazingSystems"]))
-    GlazingSystemsChange("{{$Item['opGlazingSystems']}}",'opglazingSystems');
-    @endif
-    @if(isset($Item["SideLight1GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight1GlazingSystems']}}",'sideLight1GlazingSystems');
-    @endif
-    @if(isset($Item["SideLight2GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight2GlazingSystems']}}",'sideLight2GlazingSystems');
     @endif
 
     @if(isset($Item["opGlassIntegrity"]))
@@ -1261,20 +1260,30 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
-    sideLight1Change();
-    doorLeafFacingPrice('sideLight1',"{{$Item['SideLight1']}}");
-    doorLeafFacingPrice('sideLight11',"{{$Item['SideLight1']}}");
-    doorLeafFacingPrice('sideLight2',"{{$Item['SideLight1']}}");
-    FramePrice('sideLight3');
+    sideLight1Change(true);
     @endif
 
     @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-    sideLight2Change();
-    doorLeafFacingPrice('sideLight12',"{{$Item['SideLight2']}}");
+    sideLight2Change(true);
     @endif
 
     @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
-    copyOfSideLite1Change();
+    copyOfSideLite1Change(true);
+    @endif
+
+    @if(isset($Item['Overpanel']) && $Item['Overpanel'] == "Fan_Light")
+    overpanelGlassType(true);
+    @endif
+
+    @if(isset($Item["SideLight1GlassType"]))
+    OverpanelGlassTypeChange(null,'sideLight1GlassType',true);
+    @endif
+    @if(isset($Item["SideLight2GlassType"]))
+    OverpanelGlassTypeChange(null,'sideLight2GlassType',true);
+    @endif
+
+    @if(isset($Item["OPGlassType"]))
+    OverpanelGlassTypeChange(null,'opGlassType',true);
     @endif
 
     @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
