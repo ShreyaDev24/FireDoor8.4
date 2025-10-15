@@ -203,25 +203,27 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $OPHeigth = $item[$i]->OPHeigth;
             $OpBeadThickness = $item[$i]->OpBeadThickness;
             $OpBeadHeight = $item[$i]->OpBeadHeight;
-            $OPTransom = $item[$i]->OPTransom;
-            $TransomThickness = $item[$i]->TransomThickness;
             $opGlassIntegrity = $item[$i]->opGlassIntegrity;
             $OPGlassType = $item[$i]->OPGlassType;
-            // new changes 15-07-2024
             $OPGlassThickness = $item[$i]->OPGlassThickness;
             $opglazingSystemsvalue = $item[$i]->OPGlazingSystems;
             $OPGlazingSystemsThickness = $item[$i]->OPGlazingSystemsThickness;
+            $OPGlazingBeads = $item[$i]->OPGlazingBeads;
             $OPGlazingBeadsThickness = $item[$i]->OPGlazingBeadsThickness;
             $OPGlazingBeadsHeight = $item[$i]->OPGlazingBeadsHeight; // confusion
             $OPGlazingBeadsFixingDetail = $item[$i]->OPGlazingBeadsFixingDetail;
-            //end
-            $OPGlazingBeads = $item[$i]->OPGlazingBeads;
             $OPGlazingBeadSpecies = lippingSpeciesName($item[$i]->OPGlazingBeadSpecies);
 
             //Side Light
             $SideLight1 = $item[$i]->SideLight1;
+            $SL1GlassIntegrity = $item[$i]->SL1GlassIntegrity;
             $SideLight1GlassType = $item[$i]->SideLight1GlassType;
+            $SL1GlassThickness = $item[$i]->SideLight1GlassThickness;
+            $SL1GlazingSystems = $item[$i]->SideLight1GlazingSystems;
+            $SL1GlazingSystemsThickness = $item[$i]->SideLight1GlazingSystemsThickness;
             $BeadingType = $item[$i]->BeadingType;
+            $SideLight1FrameThickness = $item[$i]->SideLight1FrameThickness;
+            $SL1GlazingBeadsFixingDetail = $item[$i]->SideLight1GlazingBeadsFixingDetail;
             $SL1GlazingBeadSpecies = lippingSpeciesName($item[$i]->SL1GlazingBeadSpecies);
             $SL1Width = $item[$i]->SL1Width;
             $SL1Height = $item[$i]->SL1Height;
@@ -229,35 +231,27 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $SlBeadHeight = $item[$i]->SlBeadHeight;
             $SL1Depth = $item[$i]->SL1Depth;
             $SL1Transom = $item[$i]->SL1Transom;
-            // new changes 15-07-2024
-            $SL1GlassThickness = $item[$i]->SideLight1GlassThickness;
-            $SL1GlazingSystems = $item[$i]->SideLight1GlazingSystems;
-            $SL1GlazingSystemsThickness = $item[$i]->SideLight1GlazingSystemsThickness;
-            $SL1GlazingBeadsThickness = $item[$i]->SideLight1GlazingBeadsThickness;
-            $SL1GlazingBeadsWidth = $item[$i]->SideLight1GlazingBeadsWidth;
-            $SL1GlazingBeadsFixingDetail = $item[$i]->SideLight1GlazingBeadsFixingDetail;
-            $SideLight1FrameThickness = $item[$i]->SideLight1FrameThickness;
-            //end
+            $SL1TransomDepth = $item[$i]->SL1TransomDepth;
+            $SL1transomThickness = $item[$i]->SL1transomThickness;
+
             $SideLight2 = $item[$i]->SideLight2;
             $DoYouWantToCopySameAsSL1 = $item[$i]->DoYouWantToCopySameAsSL1;
+            $SL2GlassIntegrity = $item[$i]->SL2GlassIntegrity;
             $SideLight2GlassType = $item[$i]->SideLight2GlassType;
+            $SL2GlassThickness = $item[$i]->SideLight2GlassThickness;
+            $SL2GlazingSystems = $item[$i]->SideLight2GlazingSystems;
+            $SL2GlazingSystemsThickness = $item[$i]->SideLight2GlazingSystemsThickness;
             $SideLight2BeadingType = $item[$i]->SideLight2BeadingType;
+            $SideLight2FrameThickness = $item[$i]->SideLight2FrameThickness;
+            $SL2GlazingBeadsFixingDetail = $item[$i]->SideLight2GlazingBeadsFixingDetail;
             $SideLight2GlazingBeadSpecies = lippingSpeciesName($item[$i]->SideLight2GlazingBeadSpecies);
             $SL2Width = $item[$i]->SL2Width;
             $SL2Height = $item[$i]->SL2Height;
             $SL2Depth = $item[$i]->SL2Depth;
             $SL2Transom = $item[$i]->SL2Transom;
+            $SL2transomThickness = $item[$i]->SL2transomThickness;
+            $SL2TransomDepth = $item[$i]->SL2TransomDepth;
             $SLtransomHeightFromTop = $item[$i]->SLtransomHeightFromTop;
-            $SLtransomThickness = $item[$i]->SLtransomThickness;
-            // new changes 15-07-2024
-            $SL2GlassThickness = $item[$i]->SideLight2GlassThickness;
-            $SL2GlazingSystems = $item[$i]->SideLight2GlazingSystems;
-            $SL2GlazingSystemsThickness = $item[$i]->SideLight2GlazingSystemsThickness;
-            $SL2GlazingBeadsThickness = $item[$i]->SideLight2GlazingBeadsThickness;
-            $SL2GlazingBeadsWidth = $item[$i]->SideLight2GlazingBeadsWidth;
-            $SL2GlazingBeadsFixingDetail = $item[$i]->SideLight2GlazingBeadsFixingDetail;
-            $SideLight2FrameThickness = $item[$i]->SideLight2FrameThickness;
-            //end
 
             //Lipping & Intumescent
             $LippingType = $item[$i]->LippingType;
@@ -418,30 +412,25 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $OPHeigth,
                 $OpBeadThickness,
                 $OpBeadHeight,
-                $OPTransom,
-                $TransomThickness,
                 $opGlassIntegrity,
                 $OPGlassType,
-                //
                 $OPGlassThickness,
                 $opglazingSystemsvalue,
                 $OPGlazingSystemsThickness,
-                //
                 $OPGlazingBeads,
-                //
                 $OPGlazingBeadsThickness,
                 $OPGlazingBeadsHeight, // confusion
                 $OPGlazingBeadsFixingDetail,
-                //
                 $OPGlazingBeadSpecies,
+
                 $SideLight1,
+                $SL1GlassIntegrity,
                 $SideLight1GlassType,
                 $SL1GlassThickness,
                 $SL1GlazingSystems,
                 $SL1GlazingSystemsThickness,
                 $BeadingType,
-                $SL1GlazingBeadsThickness,
-                $SL1GlazingBeadsWidth,
+                $SideLight1FrameThickness,
                 $SL1GlazingBeadsFixingDetail,
                 $SL1GlazingBeadSpecies,
                 $SL1Width,
@@ -450,25 +439,27 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $SlBeadHeight,
                 $SL1Depth,
                 $SL1Transom,
-                $SideLight1FrameThickness,
+                $SL1TransomDepth,
+                $SL1transomThickness,
+
                 $SideLight2,
                 $DoYouWantToCopySameAsSL1,
+                $SL2GlassIntegrity,
                 $SideLight2GlassType,
                 $SL2GlassThickness,
                 $SL2GlazingSystems,
                 $SL2GlazingSystemsThickness,
                 $SideLight2BeadingType,
-                $SL2GlazingBeadsThickness,
-                $SL2GlazingBeadsWidth,
+                $SideLight2FrameThickness,
                 $SL2GlazingBeadsFixingDetail,
                 $SideLight2GlazingBeadSpecies,
                 $SL2Width,
                 $SL2Height,
                 $SL2Depth,
                 $SL2Transom,
+                $SL2TransomDepth,
+                $SL2transomThickness,
                 $SLtransomHeightFromTop,
-                $SLtransomThickness,
-                $SideLight2FrameThickness,
                 $LippingType,
                 $LippingThickness,
                 $LippingSpecies,
@@ -488,8 +479,6 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $rWdBRating,
                 $perimeterSeal1,
                 $perimeterSeal2,
-                // $thresholdSeal1,
-                // $thresholdSeal2,
                 $AccousticsMeetingStiles,
                 $Architrave,
                 $ArchitraveMaterial,
@@ -517,7 +506,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -651,8 +640,6 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'OPHeigth ',
             'OpBead Thickness ',
             'OpBead Height ',
-            'OP Transom ',
-            'Transom Thickness ',
             'opGlass Integrity ',
             'OPGlass Type ',
             'OPGlass Thickness',
@@ -664,13 +651,14 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'OPGlazing Glazing Bead Fixing Detail',
             'OPGlazing Bead Species ',
             'SideLight1 ',
+            'SideLight1 Glass Integrity ',
             'SideLight1 Glass Type ',
             'Side Light 1 Glass Thickness',
             'Side Light 1 Glazing Systems',
             'Side Light 1 Glazing System Thickness',
             'Beading Type ',
-            'Side Light 1 Glazing Beads Thickness',
-            'Side Light 1 Glazing Beads Width',
+            'Side Light 1 Frame Thickness',
+            // 'Side Light 1 Glazing Beads Width',
             'Side Light 1 Glazing Bead Fixing Detail',
             'SL1 Glazing Bead Species ',
             'SL1Width ',
@@ -679,25 +667,26 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'SlBead Height ',
             'SL1 Frame Depth ',
             'SL1Transom ',
-            'SL1 Frame Thickness',
+            'SL1 Transom Depth ',
+            'SL1 Transom Thickness ',
             'SideLight2 ',
             'Do You Want To Copy Same As SL1 ',
+            'Side Light 2 Glass Integrity ',
             'SideLight2 Glass Type ',
             'Side Light 2 Glass Thickness',
             'Side Light 2 Glazing Systems',
             'Side Light 2 Glazing System Thickness',
             'SideLight2 Beading Type ',
-            'Side Light 2 Glazing Beads Thickness',
-            'Side Light 2 Glazing Beads Width',
+            'Side Light 2 Frame Thickness',
             'Side Light 2 Glazing Bead Fixing Detail',
             'SideLight2 Glazing Bead Species ',
             'SL2Width ',
             'SL2Height ',
             'SL2 Frame Depth ',
             'SL2Transom ',
-            'SL2 Frame Thickness',
+            'SL2 Transom Depth ',
+            'SL2 Transom Thickness ',
             'SLtransom Heigh From Top ',
-            'SLtransom Thickness ',
             'Lipping Type ',
             'Lipping Thickness ',
             'Lipping Species ',
@@ -717,8 +706,6 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'rWdBRating ',
             'perimeter Seal1 ',
             'perimeter Seal2 ',
-            // 'threshold Seal1 ',
-            // 'threshold Seal2 ',
             'Accoustics Meeting Stiles ',
             'Architrave ',
             'Architrave Material ',
@@ -763,7 +750,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GM1'; // All headers
+                $cellRange = 'A1:GL1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -785,7 +772,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GM1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GL1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },

@@ -169,6 +169,7 @@
                         <input type="hidden" name="pageIdentity" id="pageIdentity" value="2">
                         <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
                         <input type="hidden" name="SvgImage" value="" />
+                        <input type="hidden" id="savedItemData" value='@json($Item)' />
                         @if(in_array(Auth::user()->UserType, ['1', '2', '3']) && isset($quotation->QuotationStatus) && $quotation->QuotationStatus != 'Ordered' && empty($Item["itemId"]))
                             <div class="float-right">
                                 <button type="button" id="default" onclick="default()" class="btn btn-primary">

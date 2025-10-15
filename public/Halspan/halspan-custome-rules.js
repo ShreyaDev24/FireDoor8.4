@@ -5436,7 +5436,7 @@ function glazing_system(isIntegrity,isstatus = false){
 
 function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
     if(type == "opGlassType"){
-        glassType = (id == null)?$("#opGlassType").val():id;
+        glassType = (id == null)?$("#OPGlassType-value").data("value"):id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
@@ -5786,6 +5786,11 @@ function updateGlassType(isStatus = false, type, heightSelector, integritySelect
 // Wrapper Functions for Specific Use Cases
 function overpanelGlassType(isStatus = false) {
     updateGlassType(isStatus, "overpanel", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
+}
+
+// Wrapper Functions for Specific Use Cases
+function overpanelGlassType(isStatus = false) {
+    updateGlassType(isStatus, "fanlight", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
 }
 
 function sideLightGlassType(isStatus = false) {
@@ -6283,6 +6288,7 @@ $(document).ready(function(){
         $("#OpBeadThickness").attr({ 'disabled': true, required: false });
     }
 });
+
 
 function framewidth(){
     var Gap = parseInt($('input[name="gap"]').val(), 10);  // Ensure Gap is a number

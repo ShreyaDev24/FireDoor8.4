@@ -823,7 +823,8 @@ class DoorScheduleController extends Controller
         }
 
 
-        return redirect()->back()->with('success', 'Door Created Successfully!');
+        // return redirect()->back()->with('success', 'Door Created Successfully!');
+        return redirect()->to("quotation/generate/$QuotationId/$versionID")->with('success', 'Door Created Successfully!');
     }
 
     public function newScreenStore(request $request)
@@ -2314,70 +2315,55 @@ class DoorScheduleController extends Controller
                     $OPHeigth = trim((string) $row[$j++]);
                     $OpBeadThickness = trim((string) $row[$j++]);
                     $OpBeadHeight = trim((string) $row[$j++]);
-                    $OPTransom = trim((string) $row[$j++]);
-                    $TransomThickness = trim((string) $row[$j++]);
                     $opGlassIntegrity = trim((string) $row[$j++]);
                     $OPGlassType = trim((string) $row[$j++]);
-                    //
                     $OPGlassThickness = trim((string) $row[$j++]);
                     $opglazingSystemsvalue = trim((string) $row[$j++]);
                     $OPGlazingSystemsThickness = trim((string) $row[$j++]);
-                    //
                     $OPGlazingBeads = trim((string) $row[$j++]);
-                    //
                     $OPGlazingBeadsThickness = trim((string) $row[$j++]);
                     $OPGlazingBeadsHeight = trim((string) $row[$j++]);     // confusion
                     $OPGlazingBeadsFixingDetail = trim((string) $row[$j++]);
-                    //
                     $OPGlazingBeadSpecies = trim((string) $row[$j++]);
+
                     $SideLight1 = trim((string) $row[$j++]);
+                    $SL1GlassIntegrity = trim((string) $row[$j++]);
                     $SideLight1GlassType = trim((string) $row[$j++]);
-                    //
                     $SL1GlassThickness = trim((string) $row[$j++]);
                     $SL1GlazingSystems = trim((string) $row[$j++]);
                     $SL1GlazingSystemsThickness = trim((string) $row[$j++]);
-                    //
                     $BeadingType = trim((string) $row[$j++]);
-                    //
-                    $SL1GlazingBeadsThickness = trim((string) $row[$j++]);
-                    $SL1GlazingBeadsWidth = trim((string) $row[$j++]);
+                    $SideLight1FrameThickness = trim((string) $row[$j++]);
                     $SL1GlazingBeadsFixingDetail = trim((string) $row[$j++]);
-                    //
                     $SL1GlazingBeadSpecies = trim((string) $row[$j++]);
                     $SL1Width = trim((string) $row[$j++]); //500
                     $SL1Height = trim((string) $row[$j++]); // 2345
-                    $SlBeadThickness = trim((string) $row[$j++]); // 250
-                    $SlBeadHeight = trim((string) $row[$j++]); // 250
-                    $SL1Depth = trim((string) $row[$j++]); // 250
-                    $SL1Transom = trim((string) $row[$j++]); // no
-                    if($SideLight1 == 'No'){
-                        $test = trim((string) $row[$j++]);
-                    }
-                    // $test2 = trim((string) $row[$j++]);
-                    $SideLight2 = trim((string) $row[$j++]); // yes
-                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]); // yes
-                    $SideLight2GlassType = trim((string) $row[$j++]); // 15mm_Pyrostop_30-10
-                    //
-                    $SL2GlassThickness = trim((string) $row[$j++]); // 15
-                    $SL2GlazingSystems = trim((string) $row[$j++]); // 12x3mm Hodgsons Firestrip 30 & 5mm high x 15mm wide x 80mm long Hardwood or Non Combustable setting Blocks
-                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]); // 3
-                    //
-                    $SideLight2BeadingType = trim((string) $row[$j++]); // Chamfer_Boleaction
-                    //
-                    $SL2GlazingBeadsThickness = trim((string) $row[$j++]); // null
-                    $SL2GlazingBeadsWidth = trim((string) $row[$j++]); // null
-                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]); // 50mm screws at 150mm centers and 50mm from the corners
-                    //
-                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]); // birch
-                    $SL2Width = trim((string) $row[$j++]); // 500
-                    $SL2Height = trim((string) $row[$j++]); // 2345
-                    $SL2Depth = trim((string) $row[$j++]); // 250
-                    $SL2Transom = trim((string) $row[$j++]); // no
-                    $SLtransomHeightFromTop = trim((string) $row[$j++]); // null
-                    $SLtransomThickness = trim((string) $row[$j++]); // null
-                    if($SideLight2 == 'No'){
-                        $test1 = trim((string) $row[$j++]);
-                    }
+                    $SlBeadThickness = trim((string) $row[$j++]);;
+                    $SlBeadHeight = trim((string) $row[$j++]);;
+                    $SL1Depth = trim((string) $row[$j++]);;
+                    $SL1Transom = trim((string) $row[$j++]);;
+                    $SL1TransomDepth = trim((string) $row[$j++]);
+                    $SL1transomThickness = trim((string) $row[$j++]);
+
+                    $SideLight2 = trim((string) $row[$j++]);
+                    $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
+                    $SL2GlassIntegrity = trim((string) $row[$j++]);
+                    $SideLight2GlassType = trim((string) $row[$j++]);
+                    $SL2GlassThickness = trim((string) $row[$j++]);
+                    $SL2GlazingSystems = trim((string) $row[$j++]);
+                    $SL2GlazingSystemsThickness = trim((string) $row[$j++]);
+                    $SideLight2BeadingType = trim((string) $row[$j++]);
+                    $SideLight2FrameThickness = trim((string) $row[$j++]);
+                    $SL2GlazingBeadsFixingDetail = trim((string) $row[$j++]);
+                    $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $SL2Width = trim((string) $row[$j++]);
+                    $SL2Height = trim((string) $row[$j++]);
+                    $SL2Depth = trim((string) $row[$j++]);
+                    $SL2Transom = trim((string) $row[$j++]);
+                    $SL2transomThickness = trim((string) $row[$j++]);
+                    $SL2TransomDepth = trim((string) $row[$j++]);
+                    $SLtransomHeightFromTop = trim((string) $row[$j++]);
+
                     $LippingType = trim((string) $row[$j++]);
                     // dd($LippingType);
                     $LippingThickness = trim((string) $row[$j++]);
@@ -2398,8 +2384,6 @@ class DoorScheduleController extends Controller
                     $rWdBRating = trim((string) $row[$j++]);
                     $perimeterSeal1 = trim((string) $row[$j++]);
                     $perimeterSeal2 = trim((string) $row[$j++]);
-                    // $thresholdSeal1 = trim($row[$j++]);
-                    // $thresholdSeal2 = trim($row[$j++]);
                     $AccousticsMeetingStiles = trim((string) $row[$j++]);
                     $Architrave = trim((string) $row[$j++]);
                     $ArchitraveMaterial = trim((string) $row[$j++]);
@@ -2578,40 +2562,32 @@ class DoorScheduleController extends Controller
                                 $aa->extLinerSize = floatval($extLinerSize);
                                 $aa->ExtLinerThickness = floatval($ExtLinerThickness);
                                 $aa->SpecialFeatureRefs = $SpecialFeatureRefs;
+
                                 $aa->Overpanel = $Overpanel;
                                 $aa->OPWidth = floatval($OPWidth);
                                 $aa->OPHeigth = floatval($OPHeigth);
                                 $aa->OpBeadThickness = floatval($OpBeadThickness);
                                 $aa->OpBeadHeight = floatval($OpBeadHeight);
-                                $aa->OPTransom = floatval($OPTransom);
-                                $aa->TransomThickness = $TransomThickness;
                                 $aa->opGlassIntegrity = $opGlassIntegrity;
                                 $aa->OPGlassType = $OPGlassType;
-                                //
                                 $aa->OPGlassThickness = floatval($OPGlassThickness);
                                 $aa->OPGlazingSystems = $opglazingSystemsvalue;
                                 $aa->OPGlazingSystemsThickness = floatval($OPGlazingSystemsThickness);
-                                //
                                 $aa->OPGlazingBeads = $OPGlazingBeads;
-                                //
                                 $aa->OPGlazingBeadsThickness = floatval($OPGlazingBeadsThickness);
                                 $aa->OPGlazingBeadsHeight = floatval($OPGlazingBeadsHeight);     // confusion
                                 $aa->OPGlazingBeadsFixingDetail = $OPGlazingBeadsFixingDetail;
-                                //
                                 $aa->OPGlazingBeadSpecies = lippingSpeciesId($OPGlazingBeadSpecies);
+
                                 $aa->SideLight1 = $SideLight1;
+                                $aa->SL1GlassIntegrity = $SL1GlassIntegrity;
                                 $aa->SideLight1GlassType = $SideLight1GlassType;
-                                //
                                 $aa->SideLight1GlassThickness = floatval($SL1GlassThickness);
                                 $aa->SideLight1GlazingSystems = $SL1GlazingSystems;
                                 $aa->SideLight1GlazingSystemsThickness = floatval($SL1GlazingSystemsThickness);
-                                //
                                 $aa->BeadingType = $BeadingType;
-                                //
-                                $aa->SideLight1GlazingBeadsThickness = floatval($SL1GlazingBeadsThickness);
-                                $aa->SideLight1GlazingBeadsWidth = floatval($SL1GlazingBeadsWidth);
+                                $aa->SideLight1FrameThickness = $SideLight1FrameThickness;
                                 $aa->SideLight1GlazingBeadsFixingDetail = $SL1GlazingBeadsFixingDetail;
-                                //
                                 $aa->SL1GlazingBeadSpecies = lippingSpeciesId($SL1GlazingBeadSpecies);
                                 $aa->SL1Width = floatval($SL1Width);
                                 $aa->SL1Height = floatval($SL1Height);
@@ -2619,27 +2595,28 @@ class DoorScheduleController extends Controller
                                 $aa->SlBeadHeight = floatval($SlBeadHeight);
                                 $aa->SL1Depth = floatval($SL1Depth);
                                 $aa->SL1Transom = floatval($SL1Transom);
+                                $aa->SL1TransomDepth = floatval($SL1TransomDepth);
+                                $aa->SL1transomThickness = floatval($SL1transomThickness);
+
                                 $aa->SideLight2 = $SideLight2;
                                 $aa->DoYouWantToCopySameAsSL1 = $DoYouWantToCopySameAsSL1;
+                                $aa->SL2GlassIntegrity = $SL2GlassIntegrity;
                                 $aa->SideLight2GlassType = $SideLight2GlassType;
-                                //
                                 $aa->SideLight2GlassThickness = floatval($SL2GlassThickness);
                                 $aa->SideLight2GlazingSystems = $SL2GlazingSystems;
                                 $aa->SideLight2GlazingSystemsThickness = floatval($SL2GlazingSystemsThickness);
-                                //
                                 $aa->SideLight2BeadingType = $SideLight2BeadingType;
-                                //
-                                $aa->SideLight2GlazingBeadsThickness = floatval($SL2GlazingBeadsThickness);
-                                $aa->SideLight2GlazingBeadsWidth = floatval($SL2GlazingBeadsWidth);
+                                $aa->SideLight2FrameThickness = $SideLight2FrameThickness;
                                 $aa->SideLight2GlazingBeadsFixingDetail = $SL2GlazingBeadsFixingDetail;
-                                //
                                 $aa->SideLight2GlazingBeadSpecies = lippingSpeciesId($SideLight2GlazingBeadSpecies);
                                 $aa->SL2Width = floatval($SL2Width);
                                 $aa->SL2Height = floatval($SL2Height);
                                 $aa->SL2Depth = floatval($SL2Depth);
                                 $aa->SL2Transom = floatval($SL2Transom);
+                                $aa->SL2TransomDepth = floatval($SL2TransomDepth);
+                                $aa->SL2transomThickness = floatval($SL2transomThickness);
                                 $aa->SLtransomHeightFromTop = floatval($SLtransomHeightFromTop);
-                                $aa->SLtransomThickness = floatval($SLtransomThickness);
+
                                 $aa->Architrave = $Architrave;
                                 $aa->ArchitraveMaterial = lippingSpeciesId($ArchitraveMaterial);
                                 $aa->ArchitraveType = $ArchitraveType;
@@ -2810,67 +2787,56 @@ class DoorScheduleController extends Controller
                             $item->overpanel = $aa->Overpanel;
                             $item->oPWidth = $aa->OPWidth;
                             $item->oPHeigth = $aa->OPHeigth;
-                            $item->opTransom = $aa->OPTransom;
-                            $item->transomThickness = $aa->TransomThickness;
+                            $item->OpBeadThickness = $aa->OpBeadThickness;
+                            $item->OpBeadHeight = $aa->OpBeadHeight;
                             $item->opGlassIntegrity = $aa->opGlassIntegrity;
                             $item->opGlassType = $aa->OPGlassType;
-                            //
                             $item->opglassThickness = $aa->OPGlassThickness;
                             $item->opglazingSystems = $aa->OPGlazingSystems;
                             $item->opglazingSystemsThickness =$aa->OPGlazingSystemsThickness;
-                            //
                             $item->opGlazingBeads = $aa->OPGlazingBeads;
-                            //
                             $item->opglazingBeadsThickness = $aa->OPGlazingBeadsThickness;
                             $item->opglazingBeadsHeight = $aa->OPGlazingBeadsHeight;     // confusion
                             $item->opglazingBeadsFixingDetail = $aa->OPGlazingBeadsFixingDetail;
-                            //
                             $item->opGlazingBeadSpecies = $aa->OPGlazingBeadSpecies;
-                            $item->OpBeadThickness = $aa->OpBeadThickness;
-                            $item->OpBeadHeight = $aa->OpBeadHeight;
+
 
                             //Side Light
                             $item->sideLight1 = $aa->SideLight1;
+                            $item->SL1GlassIntegrity = $aa->SL1GlassIntegrity;
                             $item->sideLight1GlassType = $aa->SideLight1GlassType;
-                            //
                             $item->sideLight1GlassThickness = $aa->SideLight1GlassThickness;
                             $item->sideLight1GlazingSystems = $aa->SideLight1GlazingSystems;
                             $item->sideLight1GlazingSystemsThickness = $aa->SideLight1GlazingSystemsThickness;
-                            //
                             $item->SideLight1BeadingType = $aa->BeadingType;
-                            //
-                            $item->sideLight1GlazingBeadsThickness = $aa->SideLight1GlazingBeadsThickness;
-                            $item->sideLight1GlazingBeadsWidth = $aa->SideLight1GlazingBeadsWidth;
+                            $item->sideLight1FrameThickness = $aa->SideLight1FrameThickness;
                             $item->sideLight1GlazingBeadsFixingDetail = $aa->SideLight1GlazingBeadsFixingDetail;
-                            //
                             $item->SideLight1GlazingBeadSpecies = $aa->SL1GlazingBeadSpecies;
                             $item->SL1Width = $aa->SL1Width;
                             $item->SL1Height = $aa->SL1Height;
                             $item->SL1Depth = $aa->SL1Depth;
                             $item->SL1Transom = $aa->SL1Transom;
+                            $item->SL1TransomDepth = $aa->SL1TransomDepth;
+                            $item->SL1transomThickness = $aa->SL1transomThickness;
+
                             $item->sideLight2 = $aa->SideLight2;
                             $item->copyOfSideLite1 = $aa->DoYouWantToCopySameAsSL1;
+                            $item->SL2GlassIntegrity = $aa->SL2GlassIntegrity;
                             $item->SideLight2GlassType = $aa->SideLight2GlassType;
-                            //
                             $item->sideLight2GlassThickness = $aa->SideLight2GlassThickness;
                             $item->sideLight2GlazingSystems = $aa->SideLight2GlazingSystems;
                             $item->sideLight2GlazingSystemsThickness = $aa->SideLight2GlazingSystemsThickness;
-                            //
                             $item->SideLight2BeadingType = $aa->SideLight2BeadingType;
-                            //
-                            $item->sideLight2GlazingBeadsThickness = $aa->SideLight2GlazingBeadsThickness;
-                            $item->sideLight2GlazingBeadsWidth = $aa->SideLight2GlazingBeadsWidth;
+                            $item->sideLight2FrameThickness = $aa->SideLight2FrameThickness;
                             $item->sideLight2GlazingBeadsFixingDetail = $aa->SideLight2GlazingBeadsFixingDetail;
-                            //
                             $item->SideLight2GlazingBeadSpecies = $aa->SideLight2GlazingBeadSpecies;
                             $item->SL2Width = $aa->SL2Width;
                             $item->SL2Height = $aa->SL2Height;
                             $item->SL2Depth = $aa->SL2Depth;
                             $item->SL2Transom = $aa->SL2Transom;
+                            $item->SL2TransomDepth = $aa->SL2TransomDepth;
+                            $item->SL2transomThickness = $aa->SL2transomThickness;
                             $item->SLtransomHeightFromTop = $aa->SLtransomHeightFromTop;
-                            $item->SLtransomThickness = $aa->SLtransomThickness;
-                            $item->SlBeadThickness = $aa->SlBeadThickness;
-                            $item->SlBeadHeight = $aa->SlBeadHeight;
 
                             //Lipping And Intumescent
                             $item->lippingType = $aa->LippingType;
