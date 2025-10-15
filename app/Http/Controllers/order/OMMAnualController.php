@@ -31,6 +31,7 @@ use App\Models\IronmongeryID;
 use App\Models\GlassType;
 use App\Models\GlazingSystem;
 use App\Models\User;
+use App\Models\SettingCurrency;
 
 class OMMAnualController extends Controller
 {
@@ -39,6 +40,9 @@ class OMMAnualController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
         $id = Auth::user()->id;
+
+        $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
+
         // $pdf1 = SettingOMmanualIntro::where('UserId',$id)->first();
         // $pdf2 = SettingOMmanualArchIron::where('UserId',$id)->first();
         // $pdf3 = SettingOMmanualDoorFurniture::where('UserId',$id)->first();
@@ -623,7 +627,7 @@ class OMMAnualController extends Controller
                     </tr>
                 ';
 
-            $pdf5 = PDF::loadView('Company.pdf_files.pdf2',['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
+            $pdf5 = PDF::loadView('Company.pdf_files.pdf2',['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
             // return $pdf4->download('file4.pdf');
             $path5 = public_path().'/allpdfFile';
             $fileName5 = $id.'5' . '.' . 'pdf' ;
