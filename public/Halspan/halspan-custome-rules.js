@@ -5436,7 +5436,7 @@ function glazing_system(isIntegrity,isstatus = false){
 
 function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
     if(type == "opGlassType"){
-        glassType = (id == null)?$("#OPGlassType-value").data("value"):id;
+        glassType = (id == null)?$("#opGlassType").val():id;
     }
     var glassTypeValue = document.getElementById('OPGlassType-value');
     if(glassTypeValue != null  && isstatus == true){
@@ -5788,10 +5788,10 @@ function overpanelGlassType(isStatus = false) {
     updateGlassType(isStatus, "overpanel", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
 }
 
-// Wrapper Functions for Specific Use Cases
-function overpanelGlassType(isStatus = false) {
-    updateGlassType(isStatus, "fanlight", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
-}
+// // Wrapper Functions for Specific Use Cases
+// function overpanelGlassType(isStatus = false) {
+//     updateGlassType(isStatus, "fanlight", "#oPWidth", "#opGlassIntegrity", "#opGlassType", "#OPGlassType-value");
+// }
 
 function sideLightGlassType(isStatus = false) {
     updateGlassType(isStatus, "SL1", "#SL1Height", "#SL1GlassIntegrity", "#sideLight1GlassType", "#SideLight1GlassType-value");

@@ -1303,7 +1303,8 @@ function IronmongerySetData($IronmongeryID,$pdfSpecification=false){
         'Thumbturn',
         'KeyholeEscutchen',
         'DoorStops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous'
     ];
     $IronmongeryInfoName = [
         'Hinges',
@@ -1330,7 +1331,8 @@ function IronmongerySetData($IronmongeryID,$pdfSpecification=false){
         'Thumbturn',
         'Keyhole Escutchen',
         'Door Stops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous'
     ];
 
     $IronmongeryInfoSetQut = [
@@ -1359,6 +1361,7 @@ function IronmongerySetData($IronmongeryID,$pdfSpecification=false){
         'keyholeEscutcheonQty',
         'DoorStopsQty',
         'CylindersQty',
+        'MiscellaneousQty',
 
     ];
 
@@ -1376,7 +1379,7 @@ function IronmongerySetData($IronmongeryID,$pdfSpecification=false){
             </tr>';
     $Counter = 1;
     $pdfUrl = [];
-    for($i = 0; $i <= 24; $i++){
+    for($i = 0; $i <= 25; $i++){
 
         $valIronmongey = $IronmongeryInfoSet[$i];
         $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
@@ -1470,7 +1473,8 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'Thumbturn',
         'KeyholeEscutchen',
         'DoorStops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous',
     ];
     $IronmongeryInfoName = [
         'Hinges',
@@ -1497,7 +1501,8 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'Thumbturn',
         'Keyhole Escutchen',
         'Door Stops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous',
     ];
 
     $IronmongeryInfoSetQut = [
@@ -1526,6 +1531,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'keyholeEscutcheonQty',
         'DoorStopsQty',
         'CylindersQty',
+        'MiscellaneousQty',
 
     ];
 
@@ -1542,7 +1548,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
                 <td style="text-align:center; width:5%"><b>Qty</b></td>
             </tr>';
     $Counter = 1;
-    for($i = 0; $i <= 24; $i++){
+    for($i = 0; $i <= 25; $i++){
 
         $valIronmongey = $IronmongeryInfoSet[$i];
         $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
