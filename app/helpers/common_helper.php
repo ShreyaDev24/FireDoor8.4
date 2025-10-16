@@ -1302,7 +1302,8 @@ function IronmongerySetData($IronmongeryID): string{
         'Thumbturn',
         'KeyholeEscutchen',
         'DoorStops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous'
     ];
     $IronmongeryInfoName = [
         'Hinges',
@@ -1329,7 +1330,8 @@ function IronmongerySetData($IronmongeryID): string{
         'Thumbturn',
         'Keyhole Escutchen',
         'Door Stops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous'
     ];
 
     $IronmongeryInfoSetQut = [
@@ -1358,6 +1360,7 @@ function IronmongerySetData($IronmongeryID): string{
         'keyholeEscutcheonQty',
         'DoorStopsQty',
         'CylindersQty',
+        'MiscellaneousQty',
 
     ];
 
@@ -1458,7 +1461,8 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'Thumbturn',
         'KeyholeEscutchen',
         'DoorStops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous',
     ];
     $IronmongeryInfoName = [
         'Hinges',
@@ -1485,7 +1489,8 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'Thumbturn',
         'Keyhole Escutchen',
         'Door Stops',
-        'Cylinders'
+        'Cylinders',
+        'Miscellaneous',
     ];
 
     $IronmongeryInfoSetQut = [
@@ -1514,6 +1519,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
         'keyholeEscutcheonQty',
         'DoorStopsQty',
         'CylindersQty',
+        'MiscellaneousQty',
 
     ];
 
