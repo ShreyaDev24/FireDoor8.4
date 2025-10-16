@@ -1377,7 +1377,7 @@ function IronmongerySetData($IronmongeryID): string{
                 <td style="text-align:center; width:5%"><b>Qty</b></td>
             </tr>';
     $Counter = 1;
-    for($i = 0; $i <= 24; $i++){
+    for($i = 0; $i <= 25; $i++){
 
         $valIronmongey = $IronmongeryInfoSet[$i];
         $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
@@ -1536,7 +1536,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
                 <td style="text-align:center; width:5%"><b>Qty</b></td>
             </tr>';
     $Counter = 1;
-    for($i = 0; $i <= 24; $i++){
+    for($i = 0; $i <= 25; $i++){
 
         $valIronmongey = $IronmongeryInfoSet[$i];
         $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
