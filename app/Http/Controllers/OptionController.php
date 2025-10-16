@@ -1806,7 +1806,7 @@ class OptionController extends Controller
                 case 'intumescentSealArrangement':
 
                     // $delete_id = array();
-                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [3,4,5,6,9])->whereNotIn('intumescentseals2_id', $keys)->delete();
+                    SelectedIntumescentSeals2::where(['selected_intumescentseals2_user_id' => $UserId])->whereNotIn('selected_configurableitems', [1,2,7,8])->whereNotIn('intumescentseals2_id', $keys)->delete();
                     // foreach ($keys as $key) {
                     //     $electedOption = array();
                     //     $electedOption = SettingIntumescentSeals2::Where('id', $key)->select('*')->first();
