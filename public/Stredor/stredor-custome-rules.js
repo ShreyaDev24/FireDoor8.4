@@ -5763,8 +5763,13 @@ function updateGlassType(isStatus = false, type, heightSelector, integritySelect
                     let selected = glassTypeValue !== null && isStatus && glassTypeValue === item.Key ? "selected" : "";
                     glassTypeInnerHtml += `<option value="${item.Key}" ${selected}>${item.GlassType}</option>`;
                 });
+                $('#sideLight1GlassType').css({'border':'1px solid #ced4da'});
             } else {
                 glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
+                if (integrity !== '' && fireRating !== '' && height !== '') {
+                    swal('No Glass Type Found', result.message);
+                    $('#sideLight1GlassType').css({'border':'1px solid red'});
+                }
             }
             $(glassTypeSelector).empty().append(glassTypeInnerHtml);
             if(copy == "copy"){
