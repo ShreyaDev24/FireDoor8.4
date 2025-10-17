@@ -131,7 +131,7 @@ class SendToClientController extends Controller
 
             echo json_encode([
                 'status'=>'success',
-                'message'=>'Quotation send to these '.$to.' mail id successfully.'
+                'message'=>'Quotation sent to '.$to.' id successfully.'
             ]);
             exit;
         }
