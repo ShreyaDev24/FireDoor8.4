@@ -9393,26 +9393,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
 
         let adjust = shortage / 2;
         console.log("Adjustment to distribute between VP1 and VP2:", adjust);
-        let adjust = shortage / 2;
-        console.log("Adjustment to distribute between VP1 and VP2:", adjust);
 
-        let newVP1Height = (Leaf1VisionPanel1Height * 5) - adjust;
-        let newVP2Height = (Leaf1VisionPanel2Height * 5) - adjust;
-
-        console.log("New VP Heights:", "VP1 =", newVP1Height, ", VP2 =", newVP2Height);
-
-        swal('Warning!', "Distance from bottom cannot be less than 200.");
-
-        $(document).ready(function () {
-            $('#vP1Height2').on('input', function () {
-                console.log("#vP1Height2 input changed, setting first=true");
-                first = true;
-            });
-
-            $('#vP1Height1').on('input', function () {
-                console.log("#vP1Height1 input changed, setting first=true");
-                first = true;
-            });
         let newVP1Height = (Leaf1VisionPanel1Height * 5) - adjust;
         let newVP2Height = (Leaf1VisionPanel2Height * 5) - adjust;
 
@@ -9570,34 +9551,10 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
     if (bottomClearance < 200) {
         let shortage = 200 - bottomClearance;
         console.log("Shortage detected:", shortage);
-    console.log("Calculated bottomClearance:", bottomClearance);
-
-    if (bottomClearance < 200) {
-        let shortage = 200 - bottomClearance;
-        console.log("Shortage detected:", shortage);
 
         let adjust = shortage / 2;
         console.log("Adjustment to distribute between VP1 and VP2:", adjust);
-        let adjust = shortage / 2;
-        console.log("Adjustment to distribute between VP1 and VP2:", adjust);
 
-        let newVP1Height = (Leaf1VisionPanel1Height * 5) - adjust;
-        let newVP2Height = (Leaf1VisionPanel2Height * 5) - adjust;
-
-        console.log("New VP Heights:", "VP1 =", newVP1Height, ", VP2 =", newVP2Height);
-
-        swal('Warning!', "Distance from bottom cannot be less than 200.");
-
-        $(document).ready(function () {
-            $('#vP1Height2').on('input', function () {
-                console.log("#vP1Height2 input changed, setting first=true");
-                first = true;
-            });
-
-            $('#vP1Height1').on('input', function () {
-                console.log("#vP1Height1 input changed, setting first=true");
-                first = true;
-            });
         let newVP1Height = (Leaf1VisionPanel1Height * 5) - adjust;
         let newVP2Height = (Leaf1VisionPanel2Height * 5) - adjust;
 
