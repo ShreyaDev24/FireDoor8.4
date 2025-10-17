@@ -1996,22 +1996,81 @@ class ItemListController extends Controller
         }
     }
 
-    public function filterOverpanelGlass(Request $request): void{
+    // public function filterOverpanelGlass(Request $request): void{
+    //     $pageId = $request->pageId;
+    //     $fireRating = $request->fireRating;
+    //     $type = $request->type;
+
+    //     $data = OverpanelGlassGlazing::select('overpanel_glass_glazing.*');
+
+    //     if($type == "overpanel"){
+    //         $oPWidth = $request->oPWidth;
+    //         $data = $data->where('overpanel_glass_glazing.FanLightWidth', '>=', $oPWidth);
+    //     }elseif($type == "SL1"){
+    //         $SL1Height = $request->SL1Height;
+    //         $data = $data->where('overpanel_glass_glazing.SideScreenHeight', '>=', $SL1Height);
+    //     }elseif($type == "SL2"){
+    //         $SL2Height = $request->SL2Height;
+    //         $data = $data->where('overpanel_glass_glazing.SideScreenHeight', '>=', $SL2Height);
+    //     }
+
+    //     $integrity = $request->integrity;
+    //     $userIds = CompanyUsers();
+
+    //     if($fireRating == 'FD30' || $fireRating == 'FD30s'){
+    //         $fireRating = 'FD30';
+    //     }elseif($fireRating == 'FD60' || $fireRating == 'FD60s'){
+    //         $fireRating = 'FD60';
+    //     }
+
+    //     $configurationDoor = configurationDoor($pageId);
+    //     $fireRatingDoor = fireRatingDoor($fireRating);
+    //     $userType = Auth::user()->UserType;
+
+    //     if($fireRating != 'NFR'){
+    //         $data = $data->where('overpanel_glass_glazing.GlassIntegrity', $integrity)
+    //         ->where('overpanel_glass_glazing.'.$fireRatingDoor, $fireRating);
+    //     }
+
+    //     // ->join('glass_type','glass_type.id','glass_glazing_system.glass_id')
+    //     $data = $data->join('selected_overpanel_glass_glazing','selected_overpanel_glass_glazing.glass_glazing_id','overpanel_glass_glazing.id')
+    //     ->where('overpanel_glass_glazing.'.$configurationDoor, $pageId)
+    //     ->where('selected_overpanel_glass_glazing.editBy', Auth::user()->id)
+    //     ->groupBy('overpanel_glass_glazing.GlassType')
+    //     ->orderBy('overpanel_glass_glazing.Key','ASC')
+    //     ->get();
+
+    //     if(!empty($data) && count( $data)){
+    //         echo json_encode(['status'=>'ok','data'=> $data]);
+    //     }else{
+    //         echo json_encode(['status'=>'error','data'=> '']);
+    //     }
+
+    // }
+
+    public function filterOverpanelGlass(Request $request): void
+    {
         $pageId = $request->pageId;
         $fireRating = $request->fireRating;
         $type = $request->type;
 
         $data = OverpanelGlassGlazing::select('overpanel_glass_glazing.*');
+        $dimensionReason = ''; // For width/height reason
+        $fireReason = '';      // For fire rating / integrity reason
 
+        // --- Step 1: Dimension-based filtering ---
         if($type == "overpanel"){
             $oPWidth = $request->oPWidth;
             $data = $data->where('overpanel_glass_glazing.FanLightWidth', '>=', $oPWidth);
-        }elseif($type == "SL1"){
+            $dimensionReason = "Fanlight Width is less than required Overpanel Width ({$oPWidth} mm)";
+        }elseif ($type == "SL1"){
             $SL1Height = $request->SL1Height;
             $data = $data->where('overpanel_glass_glazing.SideScreenHeight', '>=', $SL1Height);
-        }elseif($type == "SL2"){
+            $dimensionReason = "Side Screen Height is less than required SL1 Height ({$SL1Height} mm)";
+        }elseif ($type == "SL2"){
             $SL2Height = $request->SL2Height;
             $data = $data->where('overpanel_glass_glazing.SideScreenHeight', '>=', $SL2Height);
+            $dimensionReason = "Side Screen Height is less than required SL2 Height ({$SL2Height} mm)";
         }
 
         $integrity = $request->integrity;
@@ -2027,9 +2086,11 @@ class ItemListController extends Controller
         $fireRatingDoor = fireRatingDoor($fireRating);
         $userType = Auth::user()->UserType;
 
-        if($fireRating != 'NFR'){
+        // --- Step 2: Fire rating & integrity check ---
+        if ($fireRating != 'NFR') {
             $data = $data->where('overpanel_glass_glazing.GlassIntegrity', $integrity)
             ->where('overpanel_glass_glazing.'.$fireRatingDoor, $fireRating);
+            $fireReason = "no glass matches Fire Rating ({$fireRating}) and Integrity ({$integrity})";
         }
 
         // ->join('glass_type','glass_type.id','glass_glazing_system.glass_id')
@@ -2040,12 +2101,24 @@ class ItemListController extends Controller
         ->orderBy('overpanel_glass_glazing.Key','ASC')
         ->get();
 
-        if(!empty($data) && count( $data)){
-            echo json_encode(['status'=>'ok','data'=> $data]);
-        }else{
-            echo json_encode(['status'=>'error','data'=> '']);
-        }
+        if ($data->isNotEmpty()) {
+            echo json_encode(['status' => 'ok', 'data' => $data]);
+        } else {
+            // Combine reasons if both exist
+            $message = "No glass type found because inside the selected option Overpanel_Glass_Type, ";
 
+            if ($dimensionReason && $fireReason) {
+                $message .= "{$dimensionReason} with Fire Rating ({$fireRating}) and Integrity ({$integrity}).";
+            } elseif ($dimensionReason) {
+                $message .= "{$dimensionReason}."; // Only dimension failed
+            } elseif ($fireReason) {
+                $message .= "no glass matches Fire Rating ({$fireRating}) and Integrity ({$integrity}).";
+            } else {
+                $message .= "no matching data found for the given filters.";
+            }
+
+            echo json_encode(['status' => 'error', 'message' => $message]);
+        }
     }
 
     public function overpanelglassTypeFilter(Request $request): void{
