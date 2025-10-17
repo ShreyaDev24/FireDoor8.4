@@ -1900,6 +1900,7 @@ function copyOfSideLite1Change(isstatus = false){
     // function
     function FireRatingChange(){
         if($("#fireRating").val()!=''){
+            let selectedValue = $("#doorthickness").val();
             if($("#fireRating").val()=="NFR"){
                 $("#grooveDepth").attr("max","");
                 $("#gap").removeAttr("min");
@@ -1912,7 +1913,11 @@ function copyOfSideLite1Change(isstatus = false){
                 $('#intumescentSealColor').removeAttr('required')
                 $("#SlBeadHeight").attr({min: 20});
                 // $("#doorThickness").hide()
-                $("#door_thickness_div").empty().append( `<input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="44">`)
+                if (selectedValue) {
+                    $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44'>44</option><option value='54'>54</option></select>")
+                }else{
+                    $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44' selected>44</option><option value='54'>54</option></select>")
+                }
                 $("#glazingBeadsThickness").attr('min',19);
                 $('#intumescentSealType').removeAttr('required')
                 $('#intumescentSealLocation').removeAttr('required')
@@ -1966,6 +1971,9 @@ function copyOfSideLite1Change(isstatus = false){
                         $("#glazingBeadsThickness").val('');
                     }
                     $("#glazingBeadsThickness").attr('min',30);
+                }
+                if (selectedValue) {
+                    $("#doorThickness").val(selectedValue);
                 }
             }
             var identifier = $("#SlBeadHeight");
