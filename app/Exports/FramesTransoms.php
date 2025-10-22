@@ -170,6 +170,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
             }
 
+            if ($value->FrameType == 'Rebated_Frame') {
+                $leg = $value->FrameHeight + $value->Undercut + $value->GAP + $Height;
+            }
+
             $data[] = [
                 $value->doorNumber,
                 $value->plot_ref_no,
@@ -190,8 +194,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->FrameDepth,
                 $leg,
                 $head,
-                $stopleg2,
-                $stophead,
+                // $stopleg2,
+                // $stophead,
+                '', // Empty column
+                '', // Empty column
                 $stopbottom, // Empty column
                 $foursidedFrame, // Empty column
                 $value->Handing,
