@@ -1783,6 +1783,10 @@ class BOMController extends Controller
                 $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
             }
 
+            if ($value->FrameType == 'Rebated_Frame') {
+                $leg = $value->FrameHeight + $value->Undercut + $value->GAP + $Height;
+            }
+
             // --------- Main Row ---------
             $data[] = '<tr>'
                 . '<td>' . $value->doorNumber . '</td>'
@@ -1804,8 +1808,9 @@ class BOMController extends Controller
                 . '<td>' . $value->FrameDepth . '</td>'
                 . '<td>' . $leg . '</td>'
                 . '<td>' . $head . '</td>'
-                . '<td>' . $stopleg2 . '</td>'
-                . '<td>' . $stophead . '</td>'
+                . '<td></td><td></td>'
+                // . '<td>' . $stopleg2 . '</td>'
+                // . '<td>' . $stophead . '</td>'
                 . '<td>' . $stopbottom . '</td>'
                 . '<td>' . $foursidedFrame . '</td>'
                 . '<td>' . $value->Handing . '</td>'
