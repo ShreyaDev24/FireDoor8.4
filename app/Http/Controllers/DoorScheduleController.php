@@ -4132,7 +4132,7 @@ class DoorScheduleController extends Controller
     public function generateQuotation(string $Id, string $vId, $pId = null, $cId = null)
     {
         markAsRead($Id, 'quote');
-
+        DB::enableQueryLog();
         if ($Id == 0 && $vId == 0) {
             $qidFromhelper = GenerateQuotationFirstTime($pId, $cId);
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
@@ -4236,8 +4236,15 @@ class DoorScheduleController extends Controller
             }
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
+            $start = microtime(true);
             $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
+            $queries = DB::getQueryLog();
+            $duration = microtime(true) - $start;
+
+            // print for debugging (or use dd)
+            echo "Total PHP runtime for this call: " . round($duration, 3) . " sec\n";
+            dd($queries);
             $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
             $Version = QuotationVersion::where('quotation_id', $Id)->get()->toArray();
