@@ -55,61 +55,28 @@ use App\Models\ScreenGlazingType;
 use Carbon\Carbon;
 use App\Models\{NonConfigurableItems,NonConfigurableItemStore};
 
-// function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'){
-//     $NonConfigurableItems = NonConfigurableItemStore::join('non_configurable_items','non_configurable_item_store.nonConfigurableId','non_configurable_items.id')->join('quotation','non_configurable_item_store.quotationId','quotation.id')->leftJoin("quotation_versions",function($join) use ($vId): void{
-//         $join->on("quotation.id","quotation_versions.quotation_id")
-//             ->On("quotation_versions.id","=","quotation.VersionId")
-//             ->where("quotation_versions.id","=",$vId);
-//     });
-//     $NonConfigurableItems = $NonConfigurableItems->where(['non_configurable_item_store.quotationId'=>$Id, 'quotation.id'=>$Id,'non_configurable_item_store.versionId'=>$vId])->wherein('non_configurable_item_store.userId',$userId);
+function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'){
+    $NonConfigurableItems = NonConfigurableItemStore::join('non_configurable_items','non_configurable_item_store.nonConfigurableId','non_configurable_items.id')->join('quotation','non_configurable_item_store.quotationId','quotation.id')->leftJoin("quotation_versions",function($join) use ($vId): void{
+        $join->on("quotation.id","quotation_versions.quotation_id")
+            ->On("quotation_versions.id","=","quotation.VersionId")
+            ->where("quotation_versions.id","=",$vId);
+    });
+    $NonConfigurableItems = $NonConfigurableItems->where(['non_configurable_item_store.quotationId'=>$Id, 'quotation.id'=>$Id,'non_configurable_item_store.versionId'=>$vId])->wherein('non_configurable_item_store.userId',$userId);
 
-//     if(!empty($select)){
-//         $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_item_store.*');
-//     }else{
-//         $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_items.*','non_configurable_item_store.id as NonConfigId','non_configurable_item_store.quantity','non_configurable_item_store.total_price','non_configurable_item_store.price as storePrice');
-//     }
+    if(!empty($select)){
+        $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_item_store.*');
+    }else{
+        $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_items.*','non_configurable_item_store.id as NonConfigId','non_configurable_item_store.quantity','non_configurable_item_store.total_price','non_configurable_item_store.price as storePrice');
+    }
 
-//     if($sum == true){
-//         $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->sum('non_configurable_item_store.total_price');
-//     }else{
-//         $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->$query();
-//     }
+    if($sum == true){
+        $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->sum('non_configurable_item_store.total_price');
+    }else{
+        $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->$query();
+    }
 
 
-//     return $NonConfigurableItems;
-// }
-
-function nonConfigurableItem($Id, $vId, $userId, $select = '', $sum = false)
-{
-    $NonConfigurableItems = NonConfigurableItemStore::join(
-        'non_configurable_items',
-        'non_configurable_item_store.nonConfigurableId',
-        '=',
-        'non_configurable_items.id'
-    )
-    ->join('quotation', 'non_configurable_item_store.quotationId', '=', 'quotation.id')
-    ->leftJoin('quotation_versions', function($join) use ($vId) {
-        $join->on('quotation.id', '=', 'quotation_versions.quotation_id')
-             ->where('quotation_versions.id', '=', $vId);
-    })
-    ->where('non_configurable_item_store.quotationId', $Id)
-    ->where('non_configurable_item_store.versionId', $vId)
-    ->whereIn('non_configurable_item_store.userId', $userId);
-
-    $NonConfigurableItems->select(!empty($select)
-        ? 'non_configurable_item_store.*'
-        : [
-            'non_configurable_items.*',
-            'non_configurable_item_store.id as NonConfigId',
-            'non_configurable_item_store.quantity',
-            'non_configurable_item_store.total_price',
-            'non_configurable_item_store.price as storePrice',
-        ]
-    );
-
-    return $sum
-        ? $NonConfigurableItems->sum('non_configurable_item_store.total_price')
-        : $NonConfigurableItems->orderByDesc('non_configurable_item_store.id')->get();
+    return $NonConfigurableItems;
 }
 
 
