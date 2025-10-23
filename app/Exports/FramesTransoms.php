@@ -105,6 +105,17 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             $leg = $value->FrameHeight + $value->Height;
             $head = $value->FrameWidth + $value->Width;
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
+            $cutSizeH = 0;
+            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
+            }else{
+                $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
+                if($AdjustmentLeafHeightNoOP == 0){
+                    $cutSizeH = $value->LeafHeight;
+                }else{
+                    $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
+                }
+            }
 
             $FrameType = '';
             if ($value->FrameType == 'Plant_on_Stop') {
@@ -171,7 +182,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             }
 
             if ($value->FrameType == 'Rebated_Frame') {
-                $leg = $value->FrameHeight + $value->Undercut + $value->GAP + $Height;
+                $leg = $cutSizeH + $value->Undercut + $value->GAP + $Height;
             }
 
             $data[] = [
