@@ -4199,93 +4199,41 @@ class DoorScheduleController extends Controller
 
         if (!empty($Quotation)) {
 
-            // if ($vId > 0) {
-            //     $userIds = CompanyUsers();
-            //     $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-            //     $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-            //         ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-            //         ->where('quotation_version_items.version_id', $vId)
-            //         ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
-            //         ->get();
-
-            //     // Total Door Price
-            //     $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-            //         ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-            //         ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
-
-            //     $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-            //     $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
-
-            //     $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
-            //         ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
-            // } else {
-            //     $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-            //         ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
-            //         ->where(['items.QuotationId' => $Id])->get();
-
-            //     // Total Door Price
-            //     $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-            //         ->where(['items.QuotationId' => $Id]);
-            //         // dd( $TotalDoorPrice->get());
-            //     $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-            //     // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-            //     $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
-
-            //     $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
-            //     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
-            // }
-
-            $userIds = ($vId > 0) ? CompanyUsers() : [];
-            $margin = ($vId > 0) ? BOMSetting::whereIn('UserId', $userIds)->value('margin_for_material') : null;
-
-            // Base Schedule query
-            $ScheduleQuery = Item::join('item_master', 'items.itemId', '=', 'item_master.itemID')
-                ->select(
-                    'items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity',
-                    'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick',
-                    'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice',
-                    'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor'
-                );
-
             if ($vId > 0) {
-                $ScheduleQuery->join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-                    ->addSelect('quotation_version_items.version_id');
-                $ScheduleQuery->where('quotation_version_items.version_id', $vId);
+                $userIds = CompanyUsers();
+                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+                $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
+                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
+                    ->where('quotation_version_items.version_id', $vId)
+                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
+                    ->get();
+
+                // Total Door Price
+                $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
+                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
+                    ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
+
+                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
+                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+
+                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
+                    ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+            } else {
+                $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
+                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
+                    ->where(['items.QuotationId' => $Id])->get();
+
+                // Total Door Price
+                $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
+                    ->where(['items.QuotationId' => $Id]);
+                    // dd( $TotalDoorPrice->get());
+                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
+                // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
+                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+
+                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
+                ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             }
-
-            $Schedule = $ScheduleQuery->get();
-
-            // Total Door Price query
-            $TotalDoorPriceQuery = Item::join('item_master', 'items.itemId', '=', 'item_master.itemID')
-                ->where('items.QuotationId', $Id);
-
-            if ($vId > 0) {
-                $TotalDoorPriceQuery->where([
-                    'items.VersionId' => $vId,
-                ])->join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-                ->where('quotation_version_items.version_id', $vId);
-            }
-
-            $TotalExactDoorPrice = $TotalDoorPriceQuery->sum('items.DoorsetPrice');
-            $TotalIronmongeryPrice = $TotalDoorPriceQuery->sum('items.IronmongaryPrice');
-
-            // Side Screen Data
-            $SideScreenQuery = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', '=', 'side_screen_item_master.ScreenId')
-                ->select(
-                    'side_screen_items.FireRating','side_screen_items.VersionId','side_screen_items.ScreenType',
-                    'side_screen_items.SOWidth','side_screen_items.SOHeight','side_screen_items.SODepth',
-                    'side_screen_items.GlazingType','side_screen_items.ScreenPrice','side_screen_items.id',
-                    'side_screen_item_master.screenNumber','side_screen_item_master.floor',
-                    'side_screen_item_master.id as screenMasterid'
-                )
-                ->where('side_screen_items.QuotationId', $Id);
-
-            if ($vId > 0) {
-                $SideScreenQuery->where('side_screen_items.VersionId', $vId);
-            }
-
-            $SideScreenData = $SideScreenQuery;
-
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
             $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
