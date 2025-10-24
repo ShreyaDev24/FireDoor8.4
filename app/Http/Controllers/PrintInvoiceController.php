@@ -983,29 +983,37 @@ class PrintInvoiceController extends Controller
 
            $certMap = [
                 4 => [
+                    'NFR' => 'FEA/F99112 Revision L',
                     'FD30' => 'FEA/F99112 Revision L',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 8 => [
+                    'NFR' => 'BMT/CNA/F15159 Revision F',
                     'FD30' => 'BMT/CNA/F15159 Revision F',
                     'FD60' => 'WF377027 Revision A',
                 ],
                 1 => [
+                    'NFR' => 'Chilt/A02066 Revision P',
                     'FD30' => 'Chilt/A02066 Revision P',
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
+                    'NFR' => 'Chilt/A01204 Revision H',
                     'FD30' => 'Chilt/A01204 Revision H',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 7 => [
+                    'NFR' => 'FEA98164 Revision P',
                     'FD30' => 'FEA98164 Revision P',
                     'FD60' => 'FEA/F02141 Revision M',
                 ],
                 6 => [
+                    'NFR' => 'WF399992 Revision E',
                     'FD30' => 'WF399992 Revision E',
+                    'FD60' => 'WF399992 Revision E',
                 ],
                 5 => [
+                    'NFR' => '10133/22-2.R1',
                     'FD30' => '10133/22-2.R1',
                     'FD60' => '10133/22-2.R1',
                 ],

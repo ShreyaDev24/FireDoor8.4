@@ -4149,8 +4149,8 @@ class DoorScheduleController extends Controller
 
     public function generateQuotation(string $Id, string $vId, $pId = null, $cId = null)
     {
+        \DB::enableQueryLog();
         markAsRead($Id, 'quote');
-
         if ($Id == 0 && $vId == 0) {
             $qidFromhelper = GenerateQuotationFirstTime($pId, $cId);
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
@@ -4539,6 +4539,7 @@ class DoorScheduleController extends Controller
             }
 
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
+            \Log::info('Quotation Queries', \DB::getQueryLog());
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,

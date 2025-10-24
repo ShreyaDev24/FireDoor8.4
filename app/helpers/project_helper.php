@@ -80,6 +80,7 @@ function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'
     return $NonConfigurableItems;
 }
 
+
 function itemAdjustCount($Id,$vId): float|int{
     if($vId > 0){
         $Schedule = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')

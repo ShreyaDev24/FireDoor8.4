@@ -1783,8 +1783,20 @@ class BOMController extends Controller
                 $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
             }
 
+            $cutSizeH = 0;
+            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
+            }else{
+                $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
+                if($AdjustmentLeafHeightNoOP == 0){
+                    $cutSizeH = $value->LeafHeight;
+                }else{
+                    $cutSizeH = (floatval($value->LeafHeight ?? 0) + floatval($AdjustmentLeafHeightNoOP ?? 0)) - floatval($AdjustmentLeafHeightNoOP ?? 0) - floatval($value->LippingThickness ?? 0);
+                }
+            }
             if ($value->FrameType == 'Rebated_Frame') {
-                $leg = $value->FrameHeight + $value->Undercut + $value->GAP + $Height;
+                // $leg = $value->FrameHeight + $value->Undercut + $value->GAP + $Height;
+                $leg = $cutSizeH + $value->Undercut + $value->GAP + $Height;
             }
 
             // --------- Main Row ---------
