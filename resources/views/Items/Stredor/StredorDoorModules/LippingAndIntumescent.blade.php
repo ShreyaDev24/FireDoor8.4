@@ -308,6 +308,21 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="specialFeatureRefs">Special Feature Refs
+                                @if(!empty($tooltip->specialFeatureRefs))
+                                <script type="text/javascript">
+                                    document.write(Tooltip('{{$tooltip->specialFeatureRefs}}'));
+                                </script>
+                                @endif
+                            </label>
+                            <input name="specialFeatureRefs" id="specialFeatureRefs" placeholder="Special Feature Refs"
+                                class="form-control" type="text"
+                                value="@if(isset($Item['SpecialFeatureRefs'])){{$Item['SpecialFeatureRefs']}}@endif">
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

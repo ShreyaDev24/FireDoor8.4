@@ -783,7 +783,9 @@
                                             <p>Discount(% Off List) <span id="QSdiscountValue">0.00</span></p>
 
                                             <input type="number" class="dis" id="QuoteSummaryDiscount" name="QuoteSummaryDiscount" placeholder="0.00" value="">
-                                            <button type="button" class="btn btn-primary mt-3" style="color: #fff; font-size:15px" onclick="adjustPriceDiscountBtn()">
+                                            <button type="button" class="btn btn-primary mt-3"
+                                                    style="color:#fff; font-size:15px; margin-left:26px;margin-top:-5px;margin-top: 0px !important;float: right;"
+                                                    onclick="adjustPriceDiscountBtn()">
                                                 Adjust Price
                                             </button>
 

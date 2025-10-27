@@ -5380,7 +5380,11 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
                     if(type == "opGlassType"){
                         $("#opglassThickness").val(data.GlassThickness);
                         $("#oPHeigth").attr('max',data.FanLightHeight);
-                        $("#OpBeadThickness").attr('min',data.TransomThickness);
+                        if(fireRating == 'FD60' || fireRating == 'FD60s'){
+                            $("#OpBeadThickness").attr('min',44);
+                        }else{
+                            $("#OpBeadThickness").attr('min',data.TransomThickness);
+                        }
                         $("#OpBeadHeight").attr('min',data.TransomDepth);
                         $("#opglazingSystems").val(data.GlazingSystem);
                         $("#opglazingSystemsThickness").val(data.GlazingThickness);

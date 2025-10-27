@@ -983,29 +983,37 @@ class PrintInvoiceController extends Controller
 
            $certMap = [
                 4 => [
+                    'NFR' => 'FEA/F99112 Revision L',
                     'FD30' => 'FEA/F99112 Revision L',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 8 => [
+                    'NFR' => 'BMT/CNA/F15159 Revision F',
                     'FD30' => 'BMT/CNA/F15159 Revision F',
                     'FD60' => 'WF377027 Revision A',
                 ],
                 1 => [
+                    'NFR' => 'Chilt/A02066 Revision P',
                     'FD30' => 'Chilt/A02066 Revision P',
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
+                    'NFR' => 'Chilt/A01204 Revision H',
                     'FD30' => 'Chilt/A01204 Revision H',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 7 => [
+                    'NFR' => 'FEA98164 Revision P',
                     'FD30' => 'FEA98164 Revision P',
                     'FD60' => 'FEA/F02141 Revision M',
                 ],
                 6 => [
+                    'NFR' => 'WF399992 Revision E',
                     'FD30' => 'WF399992 Revision E',
+                    'FD60' => 'WF399992 Revision E',
                 ],
                 5 => [
+                    'NFR' => '10133/22-2.R1',
                     'FD30' => '10133/22-2.R1',
                     'FD60' => '10133/22-2.R1',
                 ],
@@ -2001,7 +2009,7 @@ class PrintInvoiceController extends Controller
 
                                         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385
                                     }
-                    } 
+                    }
 
                     $DoorFrameImage .= '
                                     <div style="position: relative;  position: absolute; top: 8px; left: 722px;">';
