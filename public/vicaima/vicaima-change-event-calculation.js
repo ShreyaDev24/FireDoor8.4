@@ -621,9 +621,9 @@ $(".change-event-calulation").change(function(){
         var ElementId = $(this).attr("id");
 
         // if($.inArray( ElementId, ["vP1Width","vP1Height1","vP1Height2","vP1Height3","vP1Height4","vP1Height5","lazingIntegrityOrInsulationIntegrity"] ) !== -1){
-
+        let leaf1VisionPanel = $("#leaf1VisionPanel").val();
         if($("#glassType").val() == "" && $("#glassThickness").val() == "" && $("#glazingSystems").val() == ""){
-
+            if (leaf1VisionPanel == 'No') return;
             if($("#lazingIntegrityOrInsulationIntegrity").val() != "" && $("#fireRating").val() != 'NFR'){
                 glassTypeFilter(true);
             }else{

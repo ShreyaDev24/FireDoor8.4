@@ -495,7 +495,7 @@ function pageIdentity(){
                 $('#glassThickness').attr('required',true);
                 $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
             }else{
-                $('#glazingSystems').attr('required',false);
+                $('#glazingSystems').val('').attr('required',false);
                 $('#glassType').val('').attr('required',false);
                 $('#glazingBeads').val('').attr('required',false);
                 $('#glazingBeadsThickness').val('').attr('required',false);
@@ -503,7 +503,10 @@ function pageIdentity(){
                 $('#glazingBeadsHeight').val('').attr('required',false);
                 $('#glazingBeadsFixingDetail').val('').attr('required',false);
                 $('#glazingBeadSpecies').val('').attr('required',false);
+                $('#glazingBeadSpeciesid').val('');
+                $('#GlazingBeadSpecies-value').attr('data-value', '');
                 $('#glassThickness').val('').attr('required',false);
+                $('#glazingSystemsThickness').val('').attr('required',false);
                 $('#lazingIntegrityOrInsulationIntegrity').val('').attr('required',false);
             }
         }
