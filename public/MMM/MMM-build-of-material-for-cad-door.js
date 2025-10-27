@@ -130,11 +130,11 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     if (id == 'gap') {
                         getmsginput = 'Gap should be between 2 - 4mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
+                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 250mm ';
+                        getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm ';
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if(id == 'ScallopedHeight'){
@@ -172,7 +172,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'rebatedHeight'){
                         getmsginput = 'Rebated Depth should be a minimum of 12mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
+                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
