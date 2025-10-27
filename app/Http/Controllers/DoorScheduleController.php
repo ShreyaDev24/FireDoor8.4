@@ -823,7 +823,8 @@ class DoorScheduleController extends Controller
         }
 
 
-        return redirect()->back()->with('success', 'Door Created Successfully!');
+        // return redirect()->back()->with('success', 'Door Created Successfully!');
+        return redirect()->to("quotation/generate/$QuotationId/$versionID")->with('success', 'Door Created Successfully!');
     }
 
     public function newScreenStore(request $request)
