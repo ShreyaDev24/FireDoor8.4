@@ -14,12 +14,13 @@
     table {
         border: 1px solid black;
         border-collapse: collapse;
-        width: 100%;
+        width: 100vh;
     }
 
     th, td {
         border: 1px solid black;
-        padding: 5px 10px;
+        /* padding: 5px 10px; */
+        padding: 0px;
         text-align: center;
     }
 
@@ -30,92 +31,91 @@
     thead {
         display: table-header-group;
     }
+    tfoot {
+        display: table-footer-group;
+    }
 </style>
 
 </head>
 
 <body>
-    <table>
-        <tbody>
+    <table style="max-width: 100vw; width: 100%; border-collapse: collapse;">
+        <thead>
             <tr>
-                <th colspan="19">Door Order Sheet BOM</th>
+                <th colspan="20">Door Order Sheet BOM</th>
             </tr>
             <tr>
                 <th>Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
-                <th colspan="4">Prepared By</th>
-                <td colspan="4">{{ $userName }}</td>
+                <th colspan="3">Prepared By</th>
+                <td colspan="6">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="2">Revision</th>
+                <th colspan="3">Revision</th>
                 <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="2">{{ $today }}</td>
-                <th  colspan="2">Main Contractor</th>
+                <th colspan="2">Main Contractor</th>
                 <td colspan="3">{{ $quotation->CstCompanyName }}</td>
                 <th colspan="3">Sales Contact</th>
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="19">Text</th>
+                <th colspan="20">Text</th>
             </tr>
             <tr>
-                <th colspan="19">Items</th>
+                <th colspan="20">Items</th>
             </tr>
-            @php
-                $i = 0;
-            @endphp
+            <tr>
+                <th>Total Doors</th>
+                <th>Plot Number/Ref</th>
+                <th>IFC/Certifire No/Q mark Plug</th>
+                <th>Door Number</th>
+                <th>Door Type</th>
+                <th>Door Thickness</th>
+                <th>Door Mat</th>
+                <th>Door Finish</th>
+                <th>Product code leaf 1</th>
+                <th>Product code leaf 2</th>
+                <th>Cut Size H</th>
+                <th>Cut Size W</th>
+                <th>Cut Size W2</th>
+                <th>Lipping Thickness</th>
+                <th>Lipping Finish W</th>
+                <th>Lipping Finish H</th>
+                <th>Lipping Mat</th>
+                <th>Exposed or Concealed</th>
+                <th>Intumescent Seal Type</th>
+                <th>Notes</th>
+            </tr>
+            <tr style="background:#00B0F0">
+                <td style="padding:5px 0px;"><b></b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </thead>
 
-            @foreach ($item as $value)
-                @if ($i++ == 0)
-                    <tr>
-                        <th>Total Doors</th>
-                        <th>Plot Number/Ref</th>
-                        <th>IFC/Certifire No/Q mark Plug</th>
-                        <th>Door Number</th>
-                        <th>Door Type</th>
-                        <th>Door Thickness</th>
-                        <th>Door Mat</th>
-                        <th>Door Finish</th>
-                        <th>PRODUCT CODE LEAF 1</th>
-                        <th>PRODUCT CODE LEAF 2</th>
-                        <th>Cut Size H</th>
-                        <th>Cut Size W</th>
-                        <th>Cut Size W2</th>
-                        <th>Lipping Thickness</th>
-                        <th>Lipping Finish W</th>
-                        <th>Lipping Finish H</th>
-                        <th>Lipping Mat</th>
-                        <th>Exposed or Concealed</th>
-                        <th>Notes</th>
-                    </tr>
-
-                    <tr style="background:#00B0F0">
-                        <td><b></b></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                    </tr>
-                @endif
-                @endforeach
-                {!! implode('', $data) !!}
+        <tbody>
+            {!! implode('', $data) !!}
         </tbody>
     </table>
 </body>

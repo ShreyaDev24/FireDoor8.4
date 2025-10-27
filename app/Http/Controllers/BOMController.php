@@ -1634,11 +1634,11 @@ class BOMController extends Controller
 
 
             if ($quotation->configurableitems == '4') {
-                $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
+                $DoorDimensionsCode = $value->DoorDimensionsCode;
                 if ($value->DoorsetType == 'leaf_and_a_half') {
-                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2 . 'x' . $value->LeafWidth2 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness;
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2;
                 } elseif ($value->DoorsetType == 'DD') {
-                    $DoorDimensionsCode2 = $value->DoorDimensionsCode . 'x' . $value->LeafWidth2 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness;
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode;
                 }
             }
 
@@ -1652,7 +1652,7 @@ class BOMController extends Controller
                 . '<td>' . $value->LeafThickness . '</td>'
                 . '<td>' . $configurableitems . '</td>'
                 . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
-                . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                . '<td>' . $DoorDimensionsCode . '</td>'
                 . '<td>' . $DoorDimensionsCode2 . '</td>'
                 . '<td>' . $cutSizeH . '</td>'
                 . '<td>' . $cutSizeW . '</td>'
@@ -1662,6 +1662,7 @@ class BOMController extends Controller
                 . '<td>' . $LFH . '</td>'
                 . '<td>' . $value->SpeciesName . '</td>'
                 . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                 . '<td></td>'
                 . '</tr>';
 
@@ -1684,7 +1685,7 @@ class BOMController extends Controller
                     . '<td>' . $value->LeafThickness . '</td>'
                     . '<td>' . $configurableitems . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFacing) . '</td>'
-                    . '<td>' . $DoorDimensionsCode . $value->LeafWidth1 . 'x' . $value->LeafHeight . 'x' . $value->LeafThickness . '</td>'
+                    . '<td>' . $DoorDimensionsCode . '</td>'
                     . '<td>' . $DoorDimensionsCode2 . '</td>'
                     . '<td>' . $cutSizeH . '</td>'
                     . '<td>' . $cutSizeW . '</td>'
@@ -1694,6 +1695,7 @@ class BOMController extends Controller
                     . '<td>' . $LFH . '</td>'
                     . '<td>' . $value->SpeciesName . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
+                    . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                     . '<td></td>'
                     . '</tr>';
             }
