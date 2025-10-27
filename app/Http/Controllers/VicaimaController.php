@@ -250,8 +250,16 @@ class VicaimaController extends Controller
 
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
+        // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        $species = DB::table('leaf_type as lt')
+            ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
+            ->where('lt.VicaimaDoorCore', 4)
+            // ->where('lt.Status', 1)
+            ->whereIn('slt.editBy', $userId)
+            // ->groupBy('LeafType')
+            ->select('lt.*', 'slt.id as selected_leaf_type_id')
+            ->get();
 
-        $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
 
@@ -725,7 +733,14 @@ class VicaimaController extends Controller
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
 
-        $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
+
+        $species = DB::table('leaf_type as lt')
+            ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
+            ->where('lt.VicaimaDoorCore', 4)
+            ->whereIn('slt.editBy', $userId)
+            ->select('lt.*', 'slt.id as selected_leaf_type_id')
+            ->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
         return view('Items/Vicaima/VicaimaConfigurableItem',[
