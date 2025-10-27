@@ -618,7 +618,7 @@ input[type=number]::-webkit-outer-spin-button {
         // $('input[name=discountprice]').empty().val(totPrice);
 
         $('#totalprice').empty().val(parseFloat(totPrice).toFixed(2));
-$('input[name=discountprice]').empty().val(parseFloat(totPrice).toFixed(2));
+// $('input[name=discountprice]').empty().val(parseFloat(totPrice).toFixed(2));
 
     }
 
