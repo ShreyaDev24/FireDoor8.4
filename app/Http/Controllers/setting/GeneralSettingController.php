@@ -37,8 +37,9 @@ class GeneralSettingController extends Controller
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $hinge_location = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Hinge_Location')->first();
+        $Hinge_Frame_Location = DoorFrameConstruction::where('UserId',$users)->where('DoorFrameConstruction', 'Hinge_Frame_Location')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $users)->get()->keyBy('DoorFrameConstruction');
-        return view('Setting.DoorFramConstruction', ['users' => $users, 'half_lap_joint' => $half_lap_joint, 'mitre_joint' => $mitre_joint, 'mortice_tenon_joint' => $mortice_tenon_joint, 'butt_joint' => $butt_joint, 'hinge_location' => $hinge_location,'allSettings' => $allSettings]);
+        return view('Setting.DoorFramConstruction', ['users' => $users, 'half_lap_joint' => $half_lap_joint, 'mitre_joint' => $mitre_joint, 'mortice_tenon_joint' => $mortice_tenon_joint, 'butt_joint' => $butt_joint, 'hinge_location' => $hinge_location,'allSettings' => $allSettings,'Hinge_Frame_Location' => $Hinge_Frame_Location]);
     }
 
     public function storeDoorFrameConstruction(Request $request)
@@ -70,6 +71,14 @@ class GeneralSettingController extends Controller
                 'hinge2Location' => $request->input('hinge2Location'),
                 'hinge3Location' => $request->input('hinge3Location'),
                 'hingeCenterCheck' => $request->input('hingeCenterCheck'),
+            ],
+
+             // Hinge Configuration
+            'Hinge_Frame_Location' => [
+                'hingeFrameLocation1' => $request->input('hingeFrameLocation1'),
+                'hingeFrameLocation2' => $request->input('hingeFrameLocation2'),
+                'hingeFrameLocation3' => $request->input('hingeFrameLocation3'),
+                'hingeFrameLocation4' => $request->input('hingeFrameLocation4'),
             ],
 
             // Plant-On Stop Settings
@@ -244,7 +253,7 @@ class GeneralSettingController extends Controller
         // Loop through and flatten if needed
         foreach ($doorFrames as $mainKey => $values) {
             // Handle nested subtypes like DoorFrame.Mitre
-            if (is_array($values) && isset($values['width']) === false && $mainKey !== 'Hinge_Location') {
+            if (is_array($values) && !isset($values['width']) && $mainKey !== 'Hinge_Location' && $mainKey !== 'Hinge_Frame_Location') {
                 foreach ($values as $subKey => $dimensions) {
                     $key = "{$mainKey}.{$subKey}";
 
@@ -287,6 +296,29 @@ class GeneralSettingController extends Controller
                         $doorFrame->hinge2Location = $values['hinge2Location'];
                         $doorFrame->hinge3Location = $values['hinge3Location'];
                         $doorFrame->hingeCenterCheck = $values['hingeCenterCheck'];
+                    }
+                    $doorFrame->UserId = $userId;
+                    $doorFrame->save();
+                }
+            }
+            elseif ($mainKey === 'Hinge_Frame_Location') {
+                $doorFrameConst = DoorFrameConstruction::where('UserId', $userId)
+                    ->where('DoorFrameConstruction', $mainKey)
+                    ->first();
+                if ($doorFrameConst) {
+                    $doorFrameConst->hinge1Location = $values['hingeFrameLocation1'];
+                    $doorFrameConst->hinge2Location = $values['hingeFrameLocation2'];
+                    $doorFrameConst->hinge3Location = $values['hingeFrameLocation3'];
+                    $doorFrameConst->hingeCenterCheck = $values['hingeFrameLocation4'];
+                    $doorFrameConst->save();
+                } else {
+                    $doorFrame = new DoorFrameConstruction;
+                    $doorFrame->DoorFrameConstruction = $mainKey;
+                    if($mainKey === 'Hinge_Frame_Location'){
+                        $doorFrame->hinge1Location = $values['hingeFrameLocation1'];
+                        $doorFrame->hinge2Location = $values['hingeFrameLocation2'];
+                        $doorFrame->hinge3Location = $values['hingeFrameLocation3'];
+                        $doorFrame->hingeCenterCheck = $values['hingeFrameLocation4'];
                     }
                     $doorFrame->UserId = $userId;
                     $doorFrame->save();

@@ -133,6 +133,48 @@
                                 </div>
                             </div>
 
+                            <div class="row mt-3">
+                                <div class="h6 col-12 font-weight-bold">
+                                    Hinge Frame Location Adjustments
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="hingeFrameLocation1">Hinge Frame Location 1 (+/- mm)</label>
+                                        <input type="number" name="hingeFrameLocation1" id="hingeFrameLocation1" class="form-control"
+                                            placeholder="Enter Adjustment"
+                                            value="@if(!empty($Hinge_Frame_Location)){{$Hinge_Frame_Location->hinge1Location}}@endif">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="hingeFrameLocation2">Hinge Frame Location 2 (+/- mm)</label>
+                                        <input type="number" name="hingeFrameLocation2" id="hingeFrameLocation2" class="form-control"
+                                            placeholder="Enter Adjustment"
+                                            value="@if(!empty($Hinge_Frame_Location)){{$Hinge_Frame_Location->hinge2Location}}@endif">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="hingeFrameLocation3">Hinge Frame Location 3 (+/- mm)</label>
+                                        <input type="number" name="hingeFrameLocation3" id="hingeFrameLocation3" class="form-control"
+                                            placeholder="Enter Adjustment"
+                                            value="@if(!empty($Hinge_Frame_Location)){{$Hinge_Frame_Location->hinge3Location}}@endif">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="hingeFrameLocation4">Hinge Frame Location 4 (+/- mm)</label>
+                                        <input type="number" name="hingeFrameLocation4" id="hingeFrameLocation4" class="form-control"
+                                            placeholder="Enter Adjustment"
+                                            value="@if(!empty($Hinge_Frame_Location)){{$Hinge_Frame_Location->hingeCenterCheck}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="row">
                                 <div class="h6 col-12 font-weight-bold">DOOR FRAME PLANT ON STOP CONSTRUCTION SETTINGS</div>
 
