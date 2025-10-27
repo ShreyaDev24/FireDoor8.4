@@ -256,7 +256,7 @@
                     {{-- ADD HINGE LOCATION (15-12-2023) --}}
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
-                            <label for="hinge1Location">Hinge 1 Location (Min 100 mm, Max 180 mm)
+                            <label for="hinge1Location">Hinge 1 Location (Min 120 mm, Max 200 mm)
                                 @if(!empty($tooltip->hing1))
                                    <script type="text/javascript">
                                    document.write(Tooltip('{{$tooltip->gap}}'));
@@ -265,9 +265,9 @@
                             </label>
                             <div id="hinge_location_div">
                             @if(!empty($Item['hinge1Location']))
-                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge1Location'])){{$Item['hinge1Location']}}@endif" min="100" max="180">
+                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge1Location'])){{$Item['hinge1Location']}}@endif" min="120" max="200">
                             @else
-                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif" min="100" max="180">
+                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif" min="120" max="200">
                             @endif
                             </div>
                         </div>
@@ -292,7 +292,7 @@
                     </div>
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
-                            <label for="hinge3Location" id="hinge3LocationLabel">Hinge 3 Location  (Min 150 mm, Max 250 mm)
+                            <label for="hinge3Location" id="hinge3LocationLabel">Hinge 3 Location  (Min 150 mm, Max 300 mm)
                                 @if(!empty($tooltip->hing3))
                                    <script type="text/javascript">
                                    document.write(Tooltip('{{$tooltip->gap}}'));
@@ -301,9 +301,9 @@
                             </label>
                             <div id="hinge_location_div">
                             @if(!empty($Item['hinge3Location']))
-                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge3Location'])){{$Item['hinge3Location']}}@endif" min="150" max="250">
+                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge3Location'])){{$Item['hinge3Location']}}@endif" min="150" max="300">
                             @else
-                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif" min="150" max="250">
+                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif" min="150" max="300">
                             @endif
 
                             </div>
