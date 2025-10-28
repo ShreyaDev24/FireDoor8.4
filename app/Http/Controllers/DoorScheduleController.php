@@ -16,6 +16,7 @@ use App\Exports\ScheduleOrder;
 use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
+use App\Exports\ExportFrameExcel;
 use App\Exports\ScheduleOrderNew;
 use App\Exports\ExportNonConfig;
 use App\Exports\NonConfig;
@@ -5418,6 +5419,21 @@ class DoorScheduleController extends Controller
         }
 
         return Excel::download(new IronmongeryExport($quotationId,$versionID), "Ironmongery ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+    }
+
+    public function ExportFrameExcel($quotationId,$versionID)
+    {
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',$versionID)->first();
+            $vid = $QV->version;
+        }
+
+        return Excel::download(new ExportFrameExcel($quotationId,$versionID), "FrameExcel ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]);
