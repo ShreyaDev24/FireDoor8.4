@@ -3071,7 +3071,7 @@ const render = (CustomElement = null) => {
             ParsedIronmongerySet.forEach(function (elem, index) {
                 if (elem.id == IronmongeryID) {
 
-                    // console.log(elem);
+                    console.log(elem);
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
@@ -3080,12 +3080,13 @@ const render = (CustomElement = null) => {
                     }
 
                    if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
-                    IsDoorSinageEnable = true;
-                    IsDoorSinageEnable2 = true;
+
+
 
                     const doorSignages = elem.additional_info.filter(item => item.Category === "DoorSignage");
 
                     if (doorSignages.length > 0) {
+                         IsDoorSinageEnable = true;
                         const DoorSignageData1 = doorSignages[0];
                         DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData1.distanceFromLeadingEdgeOfDoor;
                         DoorSignageCentered = DoorSignageData1.centered;
@@ -3093,6 +3094,7 @@ const render = (CustomElement = null) => {
                     }
 
                     if (doorSignages.length > 1) {
+                        IsDoorSinageEnable2 = true;
                         const DoorSignageData2 = doorSignages[1];
                         DoorSignagedistanceFromLeadingEdgeOfDoor2 = DoorSignageData2.distanceFromLeadingEdgeOfDoor;
                         DoorSignageCentered2 = DoorSignageData2.centered;
@@ -5858,7 +5860,7 @@ svg.append("circle")
     drawDoorSignage(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,245,205,245);
     }
     function drawDoorSignageDD(distanceFromEdge, isCentered, distanceFromBottom,rightDistance,leftdistance){
-
+console.log("called 11111111")
             if (isCentered == 1) {
                 svg.append("circle")
                     .style("stroke", "black")

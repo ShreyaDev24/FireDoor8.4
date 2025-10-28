@@ -3080,12 +3080,13 @@ const render = (CustomElement = null) => {
                     }
 
                    if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
-                    IsDoorSinageEnable = true;
-                    IsDoorSinageEnable2 = true;
+
+
 
                     const doorSignages = elem.additional_info.filter(item => item.Category === "DoorSignage");
 
                     if (doorSignages.length > 0) {
+                         IsDoorSinageEnable = true;
                         const DoorSignageData1 = doorSignages[0];
                         DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData1.distanceFromLeadingEdgeOfDoor;
                         DoorSignageCentered = DoorSignageData1.centered;
@@ -3093,6 +3094,7 @@ const render = (CustomElement = null) => {
                     }
 
                     if (doorSignages.length > 1) {
+                        IsDoorSinageEnable2 = true;
                         const DoorSignageData2 = doorSignages[1];
                         DoorSignagedistanceFromLeadingEdgeOfDoor2 = DoorSignageData2.distanceFromLeadingEdgeOfDoor;
                         DoorSignageCentered2 = DoorSignageData2.centered;
