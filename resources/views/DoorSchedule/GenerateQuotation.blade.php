@@ -117,6 +117,7 @@
                                             <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
                                             <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExportFrameExcel();">Frame Excel</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
                                             <li><a
                                                     href="{{ url('quotation/door-list-show') }}/{{ $quotation->id }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}">Door
@@ -929,6 +930,8 @@
         value="{{ url('/quotation/allGlazingBeadsExport') }}" />
     <input type="hidden" name="ExportIronmongeryUrl" id="ExportIronmongeryUrl"
         value="{{ url('/quotation/ExportIronmongery') }}" />
+    <input type="hidden" name="ExportFrameExcelUrl" id="ExportFrameExcelUrl"
+        value="{{ url('/quotation/ExportFrameExcel') }}" />
     <input type="hidden" name="excelexportVicaimaUrl" id="excelexportVicaimaUrl"
         value="{{ url('/quotation/excelexportVicaimaUrl') }}" />
     <input type="hidden" name="mainformimportUrl" id="mainformimportUrl"
@@ -2912,6 +2915,16 @@
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                         window.location.href = ExportIronmongeryUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            }
+            ExportFrameExcel = function(){
+                var ExportFrameExcelUrl = $("#ExportFrameExcelUrl").val();
+                var quotationId = $("#quotationId").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                        window.location.href = ExportFrameExcelUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
