@@ -134,6 +134,34 @@
                                             </div>
                                             <input type="hidden" id="rebatedwidthnew" name="rebatedwidthnew" value="@if(isset($Item['RebatedWidth'])){{$Item['RebatedWidth']}}@endif" >
                                             <input type="hidden" id="rebatedHeightnew" name="rebatedHeightnew" value="@if(isset($Item['RebatedHeight'])){{$Item['RebatedHeight']}}@endif" >
+
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="rebatedWidth" id="rebatedWidthLabel">Rebated Head Depth(min 12)<span id="rebatedWidthText"></span>
+
+                                                    @if(!empty($tooltip->rebatedWidth))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->rebatedWidth}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <label for="Rebated_Width" style="display: none;">Rebated Width</label>
+                                                    <input type="number" name="RebatedHeadDepth" min="12" value="@if(isset($Item['RebatedHeadDepth'])){{$Item['RebatedHeadDepth']}}@else{{'0'}}@endif" id="RebatedHeadDepth" class="form-control" >
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="rebatedHeight">Rebated Bottom Depth (min 12)
+                                                    @if(!empty($tooltip->rebatedHeight))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->rebatedHeight}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <label for="Rebated_Height" style="display: none;">Rebated Depth</label>
+                                                    <input type="number" min="12" name="RebatedBottomDepth" id="RebatedBottomDepth" class="form-control change-event-calulation" value="@if(isset($Item['RebatedBottomDepth'])){{$Item['RebatedBottomDepth']}}@else{{'0'}}@endif">
+                                                </div>
+                                            </div>
                                             <div class="col-md-6" hidden>
                                                 <div class="position-relative form-group">
                                                     <label for="frameTypeDimensions">Dimensions
@@ -365,65 +393,42 @@
                                                 </div>
                                             </div>
 
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="accoustics">Saddle Required</label>
+                                                    <select name="Saddle" id="Saddle" class="form-control">
+                                                        <option value="">Select Saddle</option>
+                                                        <option value="Yes" @if (isset($Item['Saddle']))
+                                                            @if ($Item['Saddle'] == 'Yes')
+                                                                {{ 'selected' }}
+                                                            @endif
+                                                            @endif>Yes
+                                                        </option>
+                                                        <option value="No" @if (isset($Item['Saddle']))
+                                                            @if ($Item['Saddle'] == 'No')
+                                                                {{ 'selected' }}
+                                                            @endif
+                                                        @else
+                                                            {{ 'selected' }}
+                                                            @endif>No
+                                                        </option>
 
-                                            <!-- <div class="col-md-6">
-                              <div class="position-relative form-group">
-                                <label for="intumescentSealType">Intumescent Seal Type</label>
-                               <select name="intumescentSealType" id="intumescentSealType" class="form-control">
-                                          <option value="Fire only" @if(isset($Item['IntumescentLeapingSealType'])) @if($Item['IntumescentLeapingSealType'] == "Fire only") {{'selected'}} @endif @endif>Fire only</option>
-                                          <option value="Fire and Smoke" @if(isset($Item['IntumescentLeapingSealType'])) @if($Item['IntumescentLeapingSealType'] == "Fire and Smoke") {{'selected'}} @endif @endif>Fire and Smoke</option>
-                                </select>
-                              </div>
-                           </div> -->
-                                            <!-- <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="intumescentSeal">Intumescent Seal
-                                                    @if(!empty($tooltip->intumescentSeal))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->intumescentSeal}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <select name="intumescentSeal" id="intumescentSeal" class="form-control">
-                                                        <option value="Frame" @if(isset($Item['IntumescentSeal'])) @if($Item['IntumescentSeal'] == "Frame") {{'selected'}} @endif @endif>Frame</option>
-                                                        <option value="Door Leaf 1" @if(isset($Item['IntumescentSeal'])) @if($Item['IntumescentSeal'] == "Door Leaf 1") {{'selected'}} @endif @endif>Door Leaf 1</option>
-                                                        <option value="Door Leaf 2" @if(isset($Item['IntumescentSeal'])) @if($Item['IntumescentSeal'] == "Door Leaf 2") {{'selected'}} @endif @endif>Door Leaf 2</option>
                                                     </select>
                                                 </div>
-                                            </div> -->
+                                            </div>
 
-                                            <!-- <div class="col-md-6">
+                                            <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="intumescentSealColor">Intumescent Seal Color
-                                                    @if(!empty($tooltip->intumescentSealColor))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->intumescentSealColor}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <select name="intumescentSealColor" id="intumescentSealColor"
-                                                        class="form-control">
-                                                        <option value="White" @if(isset($Item['IntumescentSealColor'])) @if($Item['IntumescentSealColor'] == "White") {{'selected'}} @endif @endif>White</option>
-                                                        <option value="brown" @if(isset($Item['IntumescentSealColor'])) @if($Item['IntumescentSealColor'] == "brown") {{'selected'}} @endif @endif>brown</option>
-                                                        <option value="black" @if(isset($Item['IntumescentSealColor'])) @if($Item['IntumescentSealColor'] == "black") {{'selected'}} @endif @endif>black</option>
-                                                    </select>
+                                                    <label for="rebatedWidth" id="rebatedWidthLabel">Saddle Location Between Styles</label>
+                                                    <input type="number" name="BetweenStyle" min="12" value="@if(isset($Item['BetweenStyle'])){{$Item['BetweenStyle']}}@else{{'0'}}@endif" id="BetweenStyle" class="form-control" @if(isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
                                                 </div>
-                                            </div> -->
-                                            <!-- <div class="col-md-6">
+                                            </div>
+                                            <div class="col-md-6">
                                                 <div class="position-relative form-group">
-                                                    <label for="intumescentSealSize">Intumescent Seal Size
-                                                    @if(!empty($tooltip->intumescentSealSize))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->intumescentSealSize}}'));
-                                                    </script>
-                                                    @endif
-                                                    </label>
-                                                    <select name="intumescentSealSize" id="intumescentSealSize"
-                                                        class="form-control">
-                                                        <option value="10x4mm" @if(isset($Item['IntumescentSealSize'])) @if($Item['IntumescentSealSize'] == "10x4mm") {{'selected'}} @endif @endif>10x4mm</option>
-                                                    </select>
+                                                    <label for="rebatedHeight">Saddle Location Under Frame</label>
+                                                    <input type="number" min="12" name="UnderFrame" id="UnderFrame" class="form-control change-event-calulation" value="@if(isset($Item['UnderFrame'])){{$Item['UnderFrame']}}@else{{'0'}}@endif" @if(isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
                                                 </div>
-                                            </div> -->
+                                            </div>
 
                                         </div>
                                     </div>

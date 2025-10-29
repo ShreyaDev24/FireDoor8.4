@@ -190,6 +190,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'Rebated Width should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'rebatedHeight'){
                         getmsginput = 'Rebated Depth should be a minimum '+getmininputvalue+ 'mm';
+                    } else if(id == 'RebatedHeadDepth'){
+                        getmsginput = 'Rebated Head Depth should be a minimum '+getmininputvalue+ 'mm';
+                    } else if(id == 'RebatedBottomDepth'){
+                        getmsginput = 'Rebated Bottom Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
                         getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
                     } else if(id == 'hinge2Location'){
