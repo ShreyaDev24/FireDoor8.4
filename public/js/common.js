@@ -367,3 +367,17 @@ document.getElementById("doorThickness").addEventListener("blur", validateFrameD
 document.getElementById("plantonStopWidth").addEventListener("blur", validateFrameDepth);
 document.getElementById("frameDepth").addEventListener("blur", validateFrameDepth);
 
+SaddleChange();
+$(document).on('change','#Saddle',function(e){
+    SaddleChange();
+});
+
+function SaddleChange(){
+    if($('#Saddle').val() == 'Yes'){
+        $('#BetweenStyle').attr({'readonly':false,"required":true});
+        $('#UnderFrame').attr({'readonly':false,"required":true});
+    }else{
+        $('#BetweenStyle').attr({'readonly':true,"required":false});
+        $('#UnderFrame').attr({'readonly':true,"required":false});
+    }
+}
