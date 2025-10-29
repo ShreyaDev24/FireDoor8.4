@@ -420,13 +420,13 @@
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="rebatedWidth" id="rebatedWidthLabel">Saddle Location Between Styles</label>
-                                                    <input type="number" name="BetweenStyle" min="12" value="@if(isset($Item['BetweenStyle'])){{$Item['BetweenStyle']}}@else{{'0'}}@endif" id="BetweenStyle" class="form-control" @if(!isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
+                                                    <input type="number" name="BetweenStyle" min="12" value="@if(isset($Item['BetweenStyle'])){{$Item['BetweenStyle']}}@else{{'0'}}@endif" id="BetweenStyle" class="form-control" @if(isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="rebatedHeight">Saddle Location Under Frame</label>
-                                                    <input type="number" min="12" name="UnderFrame" id="UnderFrame" class="form-control change-event-calulation" value="@if(isset($Item['UnderFrame'])){{$Item['UnderFrame']}}@else{{'0'}}@endif" @if(!isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
+                                                    <input type="number" min="12" name="UnderFrame" id="UnderFrame" class="form-control change-event-calulation" value="@if(isset($Item['UnderFrame'])){{$Item['UnderFrame']}}@else{{'0'}}@endif" @if(isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'readonly'}} @endif>
                                                 </div>
                                             </div>
 
