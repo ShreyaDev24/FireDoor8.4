@@ -3015,12 +3015,8 @@ class OMMAnualController extends Controller
 
     foreach ($order as $item) {
         $Setname = '-';
-        if (!empty(floatval($item->IronmongeryID)) && floatval($item->IronmongeryID) != 0) {
-            $AI = AddIronmongery::select('Setname')
-                ->where('id', floatval($item->IronmongeryID))
-                ->where('UserId', user_id())
-                ->first();
-            $Setname = $AI->Setname ?? '-';
+        if (!empty($item->IronmongeryID) && $item->IronmongeryID != 0) {
+            $Setname = IronmongerySetName($item->IronmongeryID);
         }
 
         $labels[] = [
