@@ -377,3 +377,15 @@ function frameThicknessHeadBottom(){
     $('#bottomframeThickness').val(frameThickness);
 }
 
+SaddleChange();
+$(document).on('change','#Saddle',function(e){
+    SaddleChange();
+});
+
+function SaddleChange(){
+    if($('#Saddle').val() == 'Yes'){
+        $('#saddleLocation').attr({'disabled':false,"required":true});
+    }else{
+        $('#saddleLocation').attr({'disabled':true,"required":false});
+    }
+}

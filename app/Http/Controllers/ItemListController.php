@@ -1195,6 +1195,8 @@ class ItemListController extends Controller
                             // streboard
                             'RebatedWidth'                  => $request->rebatedWidth,
                             'RebatedHeight'                 => $request->rebatedHeight,
+                            'RebatedHeadDepth'                  => $request->RebatedHeadDepth,
+                            'RebatedBottomDepth'                 => $request->RebatedBottomDepth,
                             //halspan
                             'standardWidth'                     => $request->standardWidth,
                             'standardHeight'                    => $request->standardHeight,
@@ -1213,6 +1215,8 @@ class ItemListController extends Controller
                         'ExtLinerValue'                         => $request->extLinerValue,
                         'ExtLinerThickness'                     => $request->extLinerThickness,
                         'ExtLinerFInish'                        => $request->extLinerFinish,
+                        'Saddle'                                => $request->Saddle,
+                        'saddleLocation'                        => $request->saddleLocation,
                         'IntumescentSeal'                       => $request->intumescentSeal,
                         'IntumescentSealColor'                  => $request->intumescentSealColor,
                         'IntumescentSealSize'                   => $request->intumescentSealSize,
@@ -1495,6 +1499,8 @@ class ItemListController extends Controller
                         // streboard
                         $item->RebatedWidth = $request->rebatedWidth;
                         $item->RebatedHeight = $request->rebatedHeight;
+                        $item->RebatedHeadDepth = $request->RebatedHeadDepth;
+                        $item->RebatedBottomDepth = $request->RebatedBottomDepth;
                         //halspan
                         $item->standardWidth = $request->standardWidth;
                         $item->standardHeight = $request->standardHeight;
@@ -1513,6 +1519,8 @@ class ItemListController extends Controller
                         $item->extLinerSize = $request->extLinerSize;
                         $item->ExtLinerThickness = $request->extLinerThickness;
                         $item->ExtLinerFInish = $request->extLinerFinish;
+                        $item->Saddle = $request->Saddle;
+                        $item->saddleLocation = $request->saddleLocation;
                         $item->IntumescentSeal = $request->intumescentSeal;
                         $item->IntumescentSealColor = $request->intumescentSealColor;
                         $item->IntumescentSealSize = $request->intumescentSealSize;

@@ -3217,6 +3217,24 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             </tbody>
                         </table>';
                         if($tt->FrameOnOff != 1){
+                            if($tt->Saddle == 'Yes'){
+                                $elevTbl .=  '<table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Saddle</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Required</td>
+                                        <td class="dicription_blank">' . $tt->Saddle . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Location</td>
+                                        <td class="dicription_blank">' . $tt->saddleLocation . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>';
+                            }
+
                             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -3228,6 +3246,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                             </tbody>
                         </table>';
+
+
                         }
 
                         $elevTbl .=  '</div></div>
