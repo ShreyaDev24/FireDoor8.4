@@ -213,6 +213,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $PlantonStopHeight = $item[$i]->PlantonStopHeight;
             $RebatedWidth = $item[$i]->RebatedWidth;
             $RebatedHeight = $item[$i]->RebatedHeight;
+            $RebatedHeadDepth = $item[$i]->RebatedHeadDepth;
+            $RebatedBottomDepth = $item[$i]->RebatedBottomDepth;
             $ScallopedWidth = $item[$i]->ScallopedWidth;
             $ScallopedHeight = $item[$i]->ScallopedHeight;
             $FrameWidth = $item[$i]->FrameWidth;
@@ -227,6 +229,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $ExtLinerValue = $item[$i]->ExtLinerValue;
             $extLinerSize = $item[$i]->extLinerSize;
             $ExtLinerThickness = $item[$i]->ExtLinerThickness;
+            $Saddle = $item[$i]->Saddle;
+            $saddleLocation = $item[$i]->saddleLocation;
             $SpecialFeatureRefs = $item[$i]->SpecialFeatureRefs;
 
             //Over Panel
@@ -435,6 +439,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $PlantonStopHeight,
                 $RebatedWidth,
                 $RebatedHeight,
+                $RebatedHeadDepth,
+                $RebatedBottomDepth,
                 $ScallopedWidth,
                 $ScallopedHeight,
                 $FrameWidth,
@@ -449,6 +455,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $ExtLinerValue,
                 $extLinerSize,
                 $ExtLinerThickness,
+                $Saddle,
+                $saddleLocation,
                 $SpecialFeatureRefs,
                 $Overpanel,
                 $OPWidth,
@@ -671,6 +679,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Plant on Stop Height ',
             'Rebated Width ',
             'Rebated Depth  ',
+            'Rebated Head Depth  ',
+            'Rebated Bottom Depth  ',
             'Scalloped Width ',
             'Scalloped Depth ',
             'Frame Width ',
@@ -685,6 +695,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'ExtLiner Value ',
             'extLiner Size ',
             'ExtLiner Thickness ',
+            'Saddle Required ',
+            'Saddle Location ',
             'Special Feature Refs ',
             'Overpanel ',
             'OPWidth ',
