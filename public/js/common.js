@@ -374,10 +374,8 @@ $(document).on('change','#Saddle',function(e){
 
 function SaddleChange(){
     if($('#Saddle').val() == 'Yes'){
-        $('#BetweenStyle').attr({'readonly':false,"required":true});
-        $('#UnderFrame').attr({'readonly':false,"required":true});
+        $('#saddleLocation').attr({'disabled':false,"required":true});
     }else{
-        $('#BetweenStyle').attr({'readonly':true,"required":false});
-        $('#UnderFrame').attr({'readonly':true,"required":false});
+        $('#saddleLocation').attr({'disabled':true,"required":false});
     }
 }

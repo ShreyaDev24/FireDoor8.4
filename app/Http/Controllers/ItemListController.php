@@ -1206,8 +1206,7 @@ class ItemListController extends Controller
                         'ExtLinerThickness'                     => $request->extLinerThickness,
                         'ExtLinerFInish'                        => $request->extLinerFinish,
                         'Saddle'                                => $request->Saddle,
-                        'BetweenStyle'                        => $request->BetweenStyle,
-                        'UnderFrame'                        => $request->UnderFrame,
+                        'saddleLocation'                        => $request->saddleLocation,
                         'IntumescentSeal'                       => $request->intumescentSeal,
                         'IntumescentSealColor'                  => $request->intumescentSealColor,
                         'IntumescentSealSize'                   => $request->intumescentSealSize,
@@ -1509,8 +1508,7 @@ class ItemListController extends Controller
                         $item->ExtLinerThickness = $request->extLinerThickness;
                         $item->ExtLinerFInish = $request->extLinerFinish;
                         $item->Saddle = $request->Saddle;
-                        $item->BetweenStyle = $request->BetweenStyle;
-                        $item->UnderFrame = $request->UnderFrame;
+                        $item->saddleLocation = $request->saddleLocation;
                         $item->IntumescentSeal = $request->intumescentSeal;
                         $item->IntumescentSealColor = $request->intumescentSealColor;
                         $item->IntumescentSealSize = $request->intumescentSealSize;
