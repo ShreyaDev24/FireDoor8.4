@@ -49,7 +49,7 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
                 $value->FrameDepth,
                 $value->RebatedWidth,
                 $value->RebatedHeight,
-                '',
+                $value->RebatedHeadDepth,
                 $value->HeadFrameThickness,
                 $value->FireRating,
                 $value->FrameHeight,
@@ -57,10 +57,10 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
                 IronmongerySetName($value->IronmongeryID),
                 $value->Handing,
                 $value->Undercut,
-                '',
-                '',
+                $value->Saddle,
+                str_replace('_', ' ', $value->saddleLocation),
                 $value->FourSidedFrame,
-                ''
+                1,
             ];
         }
 
