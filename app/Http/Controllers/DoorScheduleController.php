@@ -2297,6 +2297,8 @@ class DoorScheduleController extends Controller
                     $ScallopedHeight = trim((string) $row[$j++]);
                     $RebatedWidth = trim((string) $row[$j++]);
                     $RebatedHeight = trim((string) $row[$j++]);
+                    $RebatedHeadDepth = trim((string) $row[$j++]);
+                    $RebatedBottomDepth = trim((string) $row[$j++]);
                     $FrameWidth = trim((string) $row[$j++]);
                     $FrameHeight = trim((string) $row[$j++]);
                     $FrameDepth = trim((string) $row[$j++]);
@@ -2307,6 +2309,8 @@ class DoorScheduleController extends Controller
                     $ExtLinerValue = trim((string) $row[$j++]);
                     $extLinerSize = trim((string) $row[$j++]);
                     $ExtLinerThickness = trim((string) $row[$j++]);
+                    $Saddle = trim((string) $row[$j++]);
+                    $saddleLocation = trim((string) $row[$j++]);
                     $SpecialFeatureRefs = trim((string) $row[$j++]);
                     $Overpanel = trim((string) $row[$j++]);
                     $OPWidth = trim((string) $row[$j++]);
@@ -2546,6 +2550,8 @@ class DoorScheduleController extends Controller
                                 $aa->PlantonStopHeight = floatval($PlantonStopHeight);
                                 $aa->RebatedWidth = floatval($RebatedWidth);
                                 $aa->RebatedHeight = floatval($RebatedHeight);
+                                $aa->RebatedHeadDepth = floatval($RebatedHeadDepth);
+                                $aa->RebatedBottomDepth = floatval($RebatedBottomDepth);
                                 $aa->ScallopedWidth = floatval($ScallopedWidth);
                                 $aa->ScallopedHeight = floatval($ScallopedHeight);
                                 $aa->FrameWidth = floatval($FrameWidth);
@@ -2558,6 +2564,8 @@ class DoorScheduleController extends Controller
                                 $aa->ExtLinerValue = $ExtLinerValue;
                                 $aa->extLinerSize = floatval($extLinerSize);
                                 $aa->ExtLinerThickness = floatval($ExtLinerThickness);
+                                $aa->Saddle = $Saddle;
+                                $aa->saddleLocation = $saddleLocation;
                                 $aa->SpecialFeatureRefs = $SpecialFeatureRefs;
 
                                 $aa->Overpanel = $Overpanel;
@@ -3108,6 +3116,8 @@ class DoorScheduleController extends Controller
                     $PlantonStopHeight = trim((string) $row[$j++]);
                     $RebatedWidth = trim((string) $row[$j++]);
                     $RebatedHeight = trim((string) $row[$j++]);
+                    $RebatedHeadDepth = trim((string) $row[$j++]);
+                    $RebatedBottomDepth = trim((string) $row[$j++]);
                     $ScallopedWidth = trim((string) $row[$j++]);
                     $ScallopedHeight = trim((string) $row[$j++]);
                     $FrameWidth = trim((string) $row[$j++]);
@@ -3120,6 +3130,8 @@ class DoorScheduleController extends Controller
                     $ExtLinerValue = trim((string) $row[$j++]);
                     $extLinerSize = trim((string) $row[$j++]);
                     $ExtLinerThickness = trim((string) $row[$j++]);
+                    $Saddle = trim((string) $row[$j++]);
+                    $saddleLocation = trim((string) $row[$j++]);
                     $SpecialFeatureRefs = trim((string) $row[$j++]);
                     $Overpanel = trim((string) $row[$j++]);
                     $OPWidth = trim((string) $row[$j++]);
@@ -3399,6 +3411,8 @@ class DoorScheduleController extends Controller
                                 $aa->PlantonStopHeight = floatval($PlantonStopHeight);
                                 $aa->RebatedWidth = floatval($RebatedWidth);
                                 $aa->RebatedHeight = floatval($RebatedHeight);
+                                $aa->RebatedHeadDepth = floatval($RebatedHeadDepth);
+                                $aa->RebatedBottomDepth = floatval($RebatedBottomDepth);
                                 $aa->ScallopedWidth = floatval($ScallopedWidth);
                                 $aa->ScallopedHeight = floatval($ScallopedHeight);
                                 $aa->FrameWidth = floatval($FrameWidth);
@@ -3411,6 +3425,8 @@ class DoorScheduleController extends Controller
                                 $aa->ExtLinerValue = $ExtLinerValue;
                                 $aa->extLinerSize = floatval($extLinerSize);
                                 $aa->ExtLinerThickness = floatval($ExtLinerThickness);
+                                $aa->Saddle = $Saddle;
+                                $aa->saddleLocation = $saddleLocation;
                                 $aa->SpecialFeatureRefs = $SpecialFeatureRefs;
                                 $aa->Overpanel = $Overpanel;
                                 $aa->OPWidth = floatval($OPWidth);
