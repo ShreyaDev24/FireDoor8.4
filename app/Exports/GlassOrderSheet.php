@@ -247,13 +247,73 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             }
         }
 
-        $footData = [
-            '','','','','','','','','','','','','','','','',
+        // ✅ COMPLETE SUMMARY (Glass Type + all VP columns)
+        $summary = [];
+
+        foreach ($data as $row) {
+            if (empty($row[5])) continue; // skip if no Glass Type
+            $glassType = trim($row[5]);
+
+            // Indices for VP columns
+            $vpIndexes = [
+                'VP1' => ['H' => 6,  'W' => 7,  'Q' => 8],
+                'VP2' => ['H' => 9,  'W' => 10, 'Q' => 11],
+                'VP3' => ['H' => 12, 'W' => 13, 'Q' => 14],
+                'VP4' => ['H' => 15, 'W' => 16, 'Q' => 17],
+                'VP5' => ['H' => 18, 'W' => 19, 'Q' => 20],
+            ];
+
+            // initialize structure
+            if (!isset($summary[$glassType])) {
+                $summary[$glassType] = [
+                    'VP1' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
+                    'VP2' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
+                    'VP3' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
+                    'VP4' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
+                    'VP5' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
+                ];
+            }
+
+            // loop through VP1–VP5
+            foreach ($vpIndexes as $vp => $ix) {
+                $height = $row[$ix['H']] ?? 'N/A';
+                $width  = $row[$ix['W']] ?? 'N/A';
+                $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
+
+                // update only if not N/A
+                if ($height != '' && $height != 'N/A') $summary[$glassType][$vp]['H'] = $height;
+                if ($width  != '' && $width  != 'N/A') $summary[$glassType][$vp]['W'] = $width;
+                if ($summary[$glassType][$vp]['Q'] == 0) {
+                    $summary[$glassType][$vp]['Q'] = $qty;
+                }
+            }
+        }
+
+        // Add header + empty spacing
+        $data[] = array_fill(0, 21, '');
+        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        $data[] = [
+            'Glass Type',
+            'VP 1 Height', 'VP 1 Width', 'Qty',
+            'VP 2 Height', 'VP 2 Width', 'Qty',
+            'VP 3 Height', 'VP 3 Width', 'Qty',
+            'VP 4 Height', 'VP 4 Width', 'Qty',
+            'VP 5 Height', 'VP 5 Width', 'Qty'
         ];
 
-        $allData = [$data,$footData];
+        // Print summary
+        foreach ($summary as $type => $vpData) {
+            $data[] = [
+                $type,
+                $vpData['VP1']['H'], $vpData['VP1']['W'], $vpData['VP1']['Q'] ?: 'N/A',
+                $vpData['VP2']['H'], $vpData['VP2']['W'], $vpData['VP2']['Q'] ?: 'N/A',
+                $vpData['VP3']['H'], $vpData['VP3']['W'], $vpData['VP3']['Q'] ?: 'N/A',
+                $vpData['VP4']['H'], $vpData['VP4']['W'], $vpData['VP4']['Q'] ?: 'N/A',
+                $vpData['VP5']['H'], $vpData['VP5']['W'], $vpData['VP5']['Q'] ?: 'N/A',
+            ];
+        }
 
-        return collect($allData);
+        return collect($data);
     }
 
     public function headings(): array
@@ -284,44 +344,127 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         return $d;
     }
     public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:Q1';
-                $cellRange = 'A2:Q2';
-                $styleArray = [
+{
+    return [
+        AfterSheet::class => function (AfterSheet $event) {
+
+            // --------------------------------------------
+            // 🔹 1. GLASS ORDER SHEET HEADER STYLING
+            // --------------------------------------------
+            $titleRange = 'A1:Q1';
+            $headerRange = 'A2:Q2';
+
+            // Merge "Glass Order Sheet" title
+            $event->sheet->mergeCells($titleRange);
+
+            // Title styling (centered bold)
+            $event->sheet->getDelegate()->getStyle($titleRange)->applyFromArray([
+                'font' => [
+                    'bold' => true,
+                    'size' => 12,
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+                'fill' => [
+                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                    'color'    => ['argb' => 'FFFFFFFF'], // white background
+                ],
+                'borders' => [
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                        'color' => ['argb' => 'FFFF0000'], // red border
+                    ],
+                ],
+            ]);
+
+            // Table header styling (A2:Q2)
+            $event->sheet->getDelegate()->getStyle($headerRange)->applyFromArray([
+                'font' => [
+                    'bold' => true,
+                    'color' => ['argb' => 'FF000000'], // black text
+                ],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                        'color' => ['argb' => 'FFFF0000'],
+                    ],
+                ],
+            ]);
+
+            // Auto-size all columns A–Q
+            foreach (range('A', 'Q') as $col) {
+                $event->sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // --------------------------------------------
+            // 🔹 2. SUMMARY SECTION STYLING
+            // --------------------------------------------
+            $highestRow = $event->sheet->getDelegate()->getHighestRow();
+            $summaryRow = null;
+            for ($r = 1; $r <= $highestRow; $r++) {
+                $val = $event->sheet->getDelegate()->getCell("A{$r}")->getValue();
+                if (trim($val) === 'Summary') {
+                    $summaryRow = $r;
+                    break;
+                }
+            }
+
+            if ($summaryRow) {
+                // Summary title row styling (yellow bar)
+                $summaryTitle = "A{$summaryRow}:Q{$summaryRow}";
+                $event->sheet->mergeCells($summaryTitle);
+                $event->sheet->getDelegate()->getStyle($summaryTitle)->applyFromArray([
                     'font' => [
                         'bold' => true,
-                    ],
-                    'background' => [
-                        'color'=> '#000000'
+                        'size' => 12,
                     ],
                     'alignment' => [
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                         'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'color'    => ['argb' => 'FFFFE699'], // light yellow
                     ],
                     'borders' => [
                         'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                            'color' => ['argb' => 'FF0000'],
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                            'color' => ['argb' => 'FFFF0000'], // red border
                         ],
                     ],
+                ]);
 
-                ];
-                $event->sheet->mergeCells($cellRange1);
-                $columns = range('Q', 'O'); // 'O' should be replaced with the last column you need
+                // Summary header row ("Glass Type", etc.)
+                $summaryHeader = $summaryRow + 1;
+                $summaryHeaderRange = "A{$summaryHeader}:Q{$summaryHeader}";
+                $event->sheet->getDelegate()->getStyle($summaryHeaderRange)->applyFromArray([
+                    'font' => [
+                        'bold' => true,
+                        'color' => ['argb' => 'FF9C0006'], // dark red
+                    ],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['argb' => 'FFFF0000'],
+                        ],
+                    ],
+                ]);
+            }
+        },
+    ];
+}
 
-                foreach ($columns as $column) {
-                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
-                }
 
-
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
-            },
-        ];
-    }
 
     public function title(): string
     {

@@ -151,13 +151,53 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
             }
         }
 
-        $footData = [
-            '','','','','','','','',''
+         // ===================== SUMMARY =====================
+    $summary = [];
+    foreach ($data as $row) {
+        if (empty($row[6])) continue; // Glass Type column
+
+        $type = $row[6];
+        $width = $row[7] ?? 0;
+        $height = $row[8] ?? 0;
+        $qty = (int)($row[9] ?? 0);
+
+        $key = "{$type}|{$width}|{$height}";
+        if (!isset($summary[$key])) {
+            $summary[$key] = [
+                'Glass Type' => $type,
+                'Glass Width' => $width,
+                'Glass Height' => $height,
+                'QTY' => 0
+            ];
+        }
+        $summary[$key]['QTY'] += $qty;
+    }
+
+    // add blank row
+    $data[] = array_fill(0, 10, '');
+
+    $data[] = array_fill(0, 10, '');
+    $data[] = array_fill(0, 10, '');
+    $data[] = array_fill(0, 10, '');
+
+    // add summary header
+    $data[] = ['Summary', '', '', '', '', '', '', '', '', ''];
+    $data[] = ['Glass Type', 'Glass Width', 'Glass Height', 'QTY'];
+
+    // add summary rows
+    foreach ($summary as $row) {
+        $data[] = [
+            $row['Glass Type'],
+            $row['Glass Width'],
+            $row['Glass Height'],
+            $row['QTY']
         ];
+    }
 
-        $allData = [$data,$footData];
+    $footData = array_fill(0, 10, '');
+    $allData = [$data, $footData];
 
-        return collect($allData);
+    return collect($allData);
     }
 
     public function headings(): array
@@ -180,48 +220,82 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         return $d;
     }
 
-    public function registerEvents(): array
-    {
+public function registerEvents(): array
+{
+    return [
+        AfterSheet::class => function(AfterSheet $event): void {
+            $sheet = $event->sheet->getDelegate();
 
+            // ===== Main header design (same as before) =====
+            $sheet->mergeCells('A1:J1');
+            $sheet->getStyle('A1:J2')->applyFromArray([
+                'font' => ['bold' => true],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        'color' => ['argb' => 'FFFF0000'],
+                    ],
+                ],
+            ]);
 
-        return [
-            AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:J1';
-                $cellRange = 'A2:J2';
-                $styleArray = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'background' => [
-                        'color'=> '#000000'
-                    ],
-                    'alignment' => [
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                    ],
-                    'borders' => [
-                        'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                            'color' => ['argb' => 'FF0000'],
+            foreach (range('A','J') as $col) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // ===== Style the summary header (A:D) =====
+            $highestRow = $sheet->getHighestRow();
+            for ($r = 1; $r <= $highestRow; $r++) {
+                if (trim((string)$sheet->getCell("A{$r}")->getValue()) === 'Summary') {
+
+                    // Merge A:D for the Summary title
+                    $sheet->mergeCells("A{$r}:D{$r}");
+
+                    // Apply yellow fill + red border
+                    $sheet->getStyle("A{$r}:D{$r}")->getFill()
+                        ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                        ->getStartColor()->setARGB('FFFCE5CD');
+
+                    $sheet->getStyle("A{$r}:D{$r}")->applyFromArray([
+                        'font' => ['bold' => true],
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                         ],
-                    ],
+                        'borders' => [
+                            'outline' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                                'color' => ['argb' => 'FFFF0000'],
+                            ],
+                        ],
+                    ]);
 
-                ];
-                $event->sheet->mergeCells($cellRange1);
-                $event->sheet->getColumnDimension('A')->setAutoSize(true);
-                $event->sheet->getColumnDimension('B')->setAutoSize(true);
-                $event->sheet->getColumnDimension('C')->setAutoSize(true);
-                $event->sheet->getColumnDimension('D')->setAutoSize(true);
-                $event->sheet->getColumnDimension('E')->setAutoSize(true);
-                $event->sheet->getColumnDimension('F')->setAutoSize(true);
-                $event->sheet->getColumnDimension('G')->setAutoSize(true);
+                    // Header row under summary (A:D)
+                    $sheet->getStyle("A" . ($r+1) . ":D" . ($r+1))->applyFromArray([
+                        'font' => ['bold' => true],
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                        'borders' => [
+                            'outline' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                                'color' => ['argb' => 'FFFF0000'],
+                            ],
+                        ],
+                    ]);
+                    break;
+                }
+            }
+        },
+    ];
+}
 
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
-            },
-        ];
-    }
+
+
 
     public function title(): string
     {

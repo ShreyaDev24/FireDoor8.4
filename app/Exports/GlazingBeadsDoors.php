@@ -208,6 +208,62 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 );
             }
         }
+       // ===================== SUMMARY SECTION ==========================
+        $summary = [];
+
+        foreach ($data as $row) {
+            if (!isset($row[4]) || empty($row[4])) continue; // skip blanks
+
+            $species = $row[4];
+            $profile = $row[5];
+            $height  = $row[7] ?? 'N/A';
+            $depth   = $row[8] ?? 'N/A';
+            $width   = $row[9] ?? 'N/A';
+            $hgt     = $row[11] ?? 'N/A';
+            $qty     = (int)($row[10] ?? 0); // ✅ take only first QTY column
+
+            $size = "{$width}x{$hgt}";
+            $key = "{$species}|{$profile}|{$height}|{$depth}|{$size}";
+
+            if (!isset($summary[$key])) {
+                $summary[$key] = [
+                    'species' => $species,
+                    'profile' => $profile,
+                    'height'  => $height,
+                    'depth'   => $depth,
+                    'size'    => $size,
+                    'count'   => 0,
+                ];
+            }
+
+            $summary[$key]['count'] += $qty; // ✅ only add VP1 QTY (not all)
+        }
+
+        // blank row
+        $data[] = array_fill(0, 15, '');
+
+        // summary heading
+        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        $data[] = [
+            'Glazing Bead Species',
+            'Glazing Bead Profile',
+            'Glazing Bead Height',
+            'Glazing Bead Depth',
+            'Glazing Bead Size',
+            'Count'
+        ];
+
+        // summary rows
+        foreach ($summary as $row) {
+            $data[] = [
+                $row['species'],
+                $row['profile'],
+                $row['height'],
+                $row['depth'],
+                $row['size'],
+                $row['count']
+            ];
+        }
 
         $footData = [
             '','','','','','','','','','','','','',''
@@ -216,6 +272,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $allData = [$data,$footData];
 
         return collect($allData);
+
+
     }
 
     public function headings(): array
@@ -233,45 +291,126 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $d = [$b,$a];
         return $d;
     }
+
     public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:U1';
-                $cellRange = 'A2:U2';
-                $styleArray = [
-                    'font' => [
-                        'bold' => true,
+{
+    return [
+        AfterSheet::class => function(AfterSheet $event) {
+            $sheet = $event->sheet->getDelegate();
+
+            // ===== MAIN HEADER =====
+            $titleRange = 'A1:U1';
+            $sheet->mergeCells($titleRange);
+            $sheet->setCellValue('A1', 'Glazing Beads for Doors');
+
+            $titleStyle = [
+                'font' => ['bold' => true, 'size' => 12],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                ],
+                'borders' => [
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        'color' => ['argb' => 'FF0000'],
                     ],
-                    'background' => [
-                        'color'=> '#000000'
+                ],
+            ];
+
+            $headerStyle = [
+                'font' => ['bold' => true, 'size' => 10],
+                'alignment' => [
+                    'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    'wrapText'   => true,
+                ],
+                'borders' => [
+                    'bottom' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        'color' => ['argb' => 'FF0000'],
                     ],
-                    'alignment' => [
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    'outline' => [
+                        'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                        'color' => ['argb' => 'FF0000'],
                     ],
-                    'borders' => [
-                        'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                ],
+            ];
+
+            $sheet->getStyle($titleRange)->applyFromArray($titleStyle);
+            $sheet->getStyle('A2:U2')->applyFromArray($headerStyle);
+
+            foreach (range('A', 'U') as $col) {
+                $sheet->getColumnDimension($col)->setAutoSize(true);
+            }
+
+            // ===== SUMMARY STYLING =====
+            $highestRow = $sheet->getHighestRow();
+            $highestCol = $sheet->getHighestColumn(); // e.g. "F" or "U"
+            $highestColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestCol);
+
+            for ($row = 1; $row <= $highestRow; $row++) {
+                $cellValue = trim((string) $sheet->getCell("A{$row}")->getValue());
+                if (strtolower($cellValue) === 'summary') {
+
+                    // 🔹 Find last non-empty cell in this row’s next few lines
+                    $lastUsedCol = 'A';
+                    for ($col = 1; $col <= $highestColIndex; $col++) {
+                        $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($col);
+                        if (!empty(trim((string) $sheet->getCell("{$colLetter}" . ($row + 1))->getValue()))) {
+                            $lastUsedCol = $colLetter;
+                        }
+                    }
+
+                    // 🔸 Merge Summary only till the last active column (e.g. A:F)
+                    $sheet->mergeCells("A{$row}:{$lastUsedCol}{$row}");
+
+                    // 🔸 Apply background color
+                    $sheet->getStyle("A{$row}:{$lastUsedCol}{$row}")->applyFromArray([
+                        'font' => ['bold' => true, 'size' => 11],
+                        'fill' => [
+                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                            'startColor' => ['argb' => 'FFF2CC'],
+                        ],
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                        'borders' => [
+                            'outline' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                                'color' => ['argb' => 'FF0000'],
+                            ],
+                        ],
+                    ]);
+
+                    // 🔸 Header line below summary
+                    $nextRow = $row + 1;
+                    $sheet->getStyle("A{$nextRow}:{$lastUsedCol}{$nextRow}")->applyFromArray([
+                        'font' => [
+                            'bold' => true,
                             'color' => ['argb' => 'FF0000'],
                         ],
-                    ],
-
-                ];
-                $event->sheet->mergeCells($cellRange1);
-                $columns = range('U', 'O'); // 'O' should be replaced with the last column you need
-
-                foreach ($columns as $column) {
-                    $event->sheet->getColumnDimension($column)->setAutoSize(true);
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                        'borders' => [
+                            'bottom' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_MEDIUM,
+                                'color' => ['argb' => 'FF0000'],
+                            ],
+                        ],
+                    ]);
+                    break;
                 }
+            }
+        },
+    ];
+}
 
 
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
-            },
-        ];
-    }
+
+
 
     public function title(): string
     {
