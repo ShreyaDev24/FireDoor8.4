@@ -625,29 +625,33 @@ class DoorScheduleController extends Controller
     {
         $valid = $request->validate(
             [
-                'doortypeId'    => 'required',
-                'door_mode'     => 'required|in:single,multiple,range',
-                'doornumber'    => 'required_if:door_mode,single',
-                'multipledoornumber'    => 'required_if:door_mode,multiple',
-                'prefix'        => 'required_if:door_mode,range',
-                'range_start'   => 'required_if:door_mode,range|nullable|integer',
-                'range_end'     => 'required_if:door_mode,range|nullable|integer|gte:range_start',
+                'doortypeId'          => 'required',
+                'door_mode'           => 'required|in:single,multiple,range',
+                'doornumber'          => 'required_if:door_mode,single',
+                'multipledoornumber'  => [
+                    'required_if:door_mode,multiple',
+                    'regex:/^[A-Za-z0-9_-]+(?:\s+[A-Za-z0-9_-]+)*$/'
+                ],
+                'prefix'              => 'required_if:door_mode,range',
+                'range_start'         => 'required_if:door_mode,range|nullable|integer',
+                'range_end'           => 'required_if:door_mode,range|nullable|integer|gte:range_start',
             ],
             [
-                'doortypeId.required'     => 'Door type field is required.',
-                'doornumber.required'     => 'Door number field is required.',
-                'door_mode.required'      => 'Door mode is required.',
-                'door_mode.in'            => 'Door mode must be either single, multiple or range.',
-                'doornumber.required_if'  => 'Door number is required when mode is single.',
-                'multipledoornumber.required_if'  => 'Multiple Door number is required when mode is Multiple.',
-                'prefix.required_if'      => 'Prefix is required when mode is range.',
-                'range_start.required_if' => 'Start of range is required.',
-                'range_start.integer'     => 'Start of range must be an integer.',
-                'range_end.required_if'   => 'End of range is required.',
- //               'range_end.integer'       => 'End of range must be an integer.',
-                'range_end.gte'           => 'End of range must be greater than or equal to start.',
+                'doortypeId.required'           => 'Door type field is required.',
+                'door_mode.required'            => 'Door mode is required.',
+                'door_mode.in'                  => 'Door mode must be either single, multiple or range.',
+                'doornumber.required_if'        => 'Door number is required when mode is single.',
+                'multipledoornumber.required_if'=> 'Multiple door numbers are required when mode is multiple.',
+                'multipledoornumber.regex'      => 'Enter valid door numbers separated by spaces (letters, numbers, hyphens, and underscores only).',
+                'prefix.required_if'            => 'Prefix is required when mode is range.',
+                'range_start.required_if'       => 'Start of range is required.',
+                'range_start.integer'           => 'Start of range must be an integer.',
+                'range_end.required_if'         => 'End of range is required.',
+                'range_end.integer'             => 'End of range must be an integer.',
+                'range_end.gte'                 => 'End of range must be greater than or equal to start.',
             ]
         );
+
 
 
         $QuotationId = $request->quotationID;
