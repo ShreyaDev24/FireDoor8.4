@@ -103,6 +103,10 @@
                                                 <label class="form-check-label" for="single_door">Single Door</label>
                                             </div>
                                             <div class="form-check form-check-inline">
+                                                <input class="form-check-input" type="radio" name="door_mode" id="multiple_door" value="multiple">
+                                                <label class="form-check-label" for="multiple_door">Multiple Door</label>
+                                            </div>
+                                            <div class="form-check form-check-inline">
                                                 <input class="form-check-input" type="radio" name="door_mode" id="range_door" value="range">
                                                 <label class="form-check-label" for="range_door">Door Range</label>
                                             </div>
@@ -114,6 +118,14 @@
                                         <div class="position-relative form-group">
                                             <label for="doornumber">Door Number</label>
                                             <input name="doornumber" value="{{ old('doornumber') }}" id="doornumber" class="form-control" placeholder="Door Number">
+                                        </div>
+                                    </div>
+
+                                    <!-- Multiple Door Field -->
+                                    <div class="col-md-6 multiple-door-field" style="display: none;">
+                                        <div class="position-relative form-group">
+                                            <label for="doornumber">Door Number</label>
+                                            <input name="multipledoornumber" value="{{ old('doornumber') }}" id="multipledoornumber" class="form-control" placeholder="Enter multiple door numbers separated by spaces (e.g., DOOR1 DOOR2 DOOR3)">
                                         </div>
                                     </div>
 
@@ -191,9 +203,15 @@ $(document).ready(function () {
     $('input[name="door_mode"]').change(function () {
         if ($(this).val() === 'single') {
             $('.single-door-field').show();
+            $('.multiple-door-field').hide();
+            $('.range-fields').hide();
+        }else if ($(this).val() === 'multiple') {
+            $('.single-door-field').hide();
+            $('.multiple-door-field').show();
             $('.range-fields').hide();
         } else {
             $('.single-door-field').hide();
+            $('.multiple-door-field').hide();
             $('.range-fields').show();
         }
     });

@@ -626,8 +626,9 @@ class DoorScheduleController extends Controller
         $valid = $request->validate(
             [
                 'doortypeId'    => 'required',
-                'door_mode'     => 'required|in:single,range',
+                'door_mode'     => 'required|in:single,multiple,range',
                 'doornumber'    => 'required_if:door_mode,single',
+                'multipledoornumber'    => 'required_if:door_mode,multiple',
                 'prefix'        => 'required_if:door_mode,range',
                 'range_start'   => 'required_if:door_mode,range|nullable|integer',
                 'range_end'     => 'required_if:door_mode,range|nullable|integer|gte:range_start',
@@ -636,8 +637,9 @@ class DoorScheduleController extends Controller
                 'doortypeId.required'     => 'Door type field is required.',
                 'doornumber.required'     => 'Door number field is required.',
                 'door_mode.required'      => 'Door mode is required.',
-                'door_mode.in'            => 'Door mode must be either single or range.',
+                'door_mode.in'            => 'Door mode must be either single, multiple or range.',
                 'doornumber.required_if'  => 'Door number is required when mode is single.',
+                'multipledoornumber.required_if'  => 'Multiple Door number is required when mode is Multiple.',
                 'prefix.required_if'      => 'Prefix is required when mode is range.',
                 'range_start.required_if' => 'Start of range is required.',
                 'range_start.integer'     => 'Start of range must be an integer.',
@@ -756,10 +758,21 @@ class DoorScheduleController extends Controller
                     'DoorsetPrice' => $GTSellPriceTotal
                 ]);
             }
-        }else if ($doorMode === 'range') {
-            $prefix = $request->prefix;
-            $start = (int) $request->range_start;
-            $end = (int) $request->range_end;
+        }else if ($doorMode === 'range' || $doorMode === 'multiple') {
+
+            if ($doorMode === 'multiple') {
+                $multipledoornumber = trim($request->multipledoornumber);
+
+                // Split by spaces and remove any empty values
+                $array = array_filter(explode(' ', $multipledoornumber));
+
+                $start = 0;
+                $end = count($array) - 1;
+            } else {
+                $prefix = $request->prefix;
+                $start = (int) $request->range_start;
+                $end = (int) $request->range_end;
+            }
 
             if ($start > $end) {
                 return back()->withErrors(['range_start' => 'Start number cannot be greater than end number.']);
@@ -767,7 +780,12 @@ class DoorScheduleController extends Controller
 
             // Store multiple records
             for ($i = $start; $i <= $end; $i++) {
-                $DoorNo = $prefix . $i;
+                if ($doorMode === 'multiple') {
+                    $DoorNo = $array[$i];
+                } else {
+                    $DoorNo = $prefix . $i;
+                    // process door number for range mode
+                }
 
                 $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $QuotationId, 'item_master.doorNumber' => $DoorNo, 'items.VersionId' => $versionID])->count();
 
