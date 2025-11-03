@@ -346,6 +346,34 @@ $(document).on('change','#NumberOfGrooveLeaf2',function(e){
     }
 })
 
+$('#frameThickness, #rebatedHeight, #fireRating').on('keyup, change', function () {
+    frameThicknessRebatedValidation();
+});
+
+function frameThicknessRebatedValidation() {
+    let frameThickness = parseFloat($('#frameThickness').val()) || 0;
+    let rebatedDepth = parseFloat($('#rebatedHeight').val()) || 0;
+    let fireRating = $('#fireRating').val(); // Example: "NFR", "FD30", "FD60"
+
+    // Skip validation until both values entered
+    if (!frameThickness || !rebatedDepth) return;
+
+    // Calculate effective frame thickness (in background)
+    let effectiveThickness = frameThickness - rebatedDepth;
+
+    // Determine min required based on fire rating
+    let minRequired = 28; // Default for NFR/FD30
+    if (fireRating && (fireRating == "FD60" || fireRating == "FD60")) {
+        minRequired = 32;
+    }
+
+    // Check rule
+    if (effectiveThickness < minRequired) {
+        let msg = `Warning: Frame thickness - Rebated Depth should be more than ${minRequired} mm (${fireRating || 'NFR/FD30'}).`;
+        swal('Warning', msg);
+    }
+}
+
 function validateFrameDepth() {
     const doorThickness = parseFloat(document.getElementById("doorThickness").value);
     const plantonStopWidth = parseFloat(document.getElementById("plantonStopWidth").value);
