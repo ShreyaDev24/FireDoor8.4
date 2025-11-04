@@ -369,6 +369,7 @@ function frameThicknessRebatedValidation() {
 
     // Check rule
     if (effectiveThickness < minRequired) {
+        $('#frameThickness').val('');
         let msg = `Warning: Frame thickness - Rebated Depth should be more than ${minRequired} mm (${fireRating || 'NFR/FD30'}).`;
         swal('Warning', msg);
     }
