@@ -446,13 +446,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadNrfWidth">VP GLAZING BEAD WIDTH NFR OR FD30 </label>
-                                        <input type="number" min="-5" max="20" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Width}}@endif">
+                                        <input type="number" name="vpBeadNrfWidth" id="vpBeadNrfWidth" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadNrfHeight">VP GLAZING BEAD HEIGHT NFR OR FD30 </label>
-                                        <input type="number" min="-5" max="20" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Height}}@endif">
+                                        <input type="number" name="vpBeadNrfHeight" id="vpBeadNrfHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.NRF'])){{$allSettings['VPBead.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
@@ -461,13 +461,13 @@
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadFd60Width">VP GLAZING BEAD WIDTH FD60 </label>
-                                        <input type="number" min="-10" max="20" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Width}}@endif">
+                                        <input type="number" name="vpBeadFd60Width" id="vpBeadFd60Width" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
                                         <label for="vpBeadFd60Height">VP GLAZING BEAD HEIGHT FD60 </label>
-                                        <input type="number" min="-10" max="20" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Height}}@endif">
+                                        <input type="number" name="vpBeadFd60Height" id="vpBeadFd60Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VPBead.FD60'])){{$allSettings['VPBead.FD60']->Height}}@endif">
                                     </div>
                                 </div>
 
