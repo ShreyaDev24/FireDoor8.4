@@ -303,6 +303,11 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/import_fields', [App\Http\Controllers\DoorScheduleController::class,'import_fields'])->name('import_fields');
     Route::post('/import_process', [App\Http\Controllers\DoorScheduleController::class,'import_process'])->name('import_process');
     Route::post('/import-non-config', [App\Http\Controllers\DoorScheduleController::class,'import_non_config'])->name('option/import-non-config');
+    Route::post('/preview-discount', [App\Http\Controllers\DoorScheduleController::class, 'previewDiscount']);
+    Route::post('/discount/preview', [\App\Http\Controllers\DoorScheduleController::class, 'previewAdjustPriceDiscount'])
+     ->name('quotation.discount.preview');
+
+
 
 
 
