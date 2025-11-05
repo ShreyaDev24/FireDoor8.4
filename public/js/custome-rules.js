@@ -3386,8 +3386,9 @@ function copyOfSideLite1Change(isstatus = false){
                                 $("#sideLight2GlazingSystemsThickness").val(data.GlazingThickness);
                                 $('#sideLight2GlazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
                             }else{
+                                let Glazingrecords = (data.GlazingBeadFixingDetail && data.GlazingBeadFixingDetail) ?? $("#glazingBeadsFixingDetail").val();
                                 $("#glazingSystemsThickness").val(data.GlazingThickness);
-                                $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                $('#glazingBeadsFixingDetail').val(Glazingrecords);
                             }
 
                         } else {

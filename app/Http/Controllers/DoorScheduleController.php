@@ -6877,7 +6877,8 @@ class DoorScheduleController extends Controller
                     'Thumbturn',
                     'KeyholeEscutchen',
                     'DoorStops',
-                    'Cylinders'
+                    'Cylinders',
+                    'Miscellaneous'
                 ];
 
                 $IronmongeryInfoSetQut = [
@@ -6906,11 +6907,12 @@ class DoorScheduleController extends Controller
                     'keyholeEscutcheonQty',
                     'DoorStopsQty',
                     'CylindersQty',
+                    'MiscellaneousQty'
 
                 ];
 
                 $unit_cost = 0;
-                for ($i = 0; $i <= 24; $i++) {
+                for ($i = 0; $i < count($IronmongeryInfoSet); $i++) {
                     $valIronmongey = $IronmongeryInfoSet[$i];
                     $valIronmongeyQty = $IronmongeryInfoSetQut[$i];
                     if (!empty($IronmongeryInfo->$valIronmongey)) {
@@ -6957,7 +6959,8 @@ class DoorScheduleController extends Controller
                     'Thumbturn',
                     'KeyholeEscutchen',
                     'DoorStops',
-                    'Cylinders'
+                    'Cylinders',
+                    'Miscellaneous'
                 ];
 
                 $IronmongeryInfoSetQut = [
@@ -6986,11 +6989,12 @@ class DoorScheduleController extends Controller
                     'keyholeEscutcheonQty',
                     'DoorStopsQty',
                     'CylindersQty',
+                    'MiscellaneousQty'
 
                 ];
 
                 $price = 0;
-                for ($i = 0; $i <= 24; $i++) {
+                for ($i = 0; $i < count($IronmongeryInfoSet); $i++) {
 
                     $valIronmongey = $IronmongeryInfoSet[$i];
                     $valIronmongeyQty = $IronmongeryInfoSetQut[$i];

@@ -2720,7 +2720,8 @@ function IronmongeryCostExport($request,$version_id): void{
             'Thumbturn',
             'KeyholeEscutchen',
             'DoorStops',
-            'Cylinders'
+            'Cylinders',
+            'Miscellaneous'
         ];
         $IronmongeryInfoSetQut = [
             'hingesQty',
@@ -2748,9 +2749,10 @@ function IronmongeryCostExport($request,$version_id): void{
             'keyholeEscutcheonQty',
             'DoorStopsQty',
             'CylindersQty',
+            'MiscellaneousQty',
 
         ];
-        for($i = 0; $i <= 24; $i++){
+        for($i = 0; $i < count($IronmongeryInfoSet); $i++){
 
             $valIronmongey = $IronmongeryInfoSet[$i];
             $valIronmongeyQty = $IronmongeryInfoSetQut[$i];

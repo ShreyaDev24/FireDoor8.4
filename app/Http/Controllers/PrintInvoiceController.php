@@ -244,7 +244,7 @@ class PrintInvoiceController extends Controller
         $pdf2->save($path2 . '/' . $fileName2);
 
         $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
-        $QuotationSiteDeliveryAddress = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->first();
+        $QuotationSiteDelivery = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->get();
         $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
 
         $htmlPreview = '<p><span style="font-size:36px"><strong>' .$project->ProjectName.'</strong></span></p>
@@ -252,7 +252,14 @@ class PrintInvoiceController extends Controller
             <p><span style="font-size:36px"><strong>' .$quotaion->QuotationGenerationId.' -&nbsp;&nbsp; Delivery Summary </strong></span></p>
 
             <p>&nbsp;</p>
-            <table class="table table-bordered">
+            <table class="table table-bordered">';
+
+            $i = 1;
+            foreach($QuotationSiteDelivery as $QuotationSiteDeliveryAddress){
+
+                $htmlPreview .= '<tr>
+                    <td colspan="4"><p><span style="font-size:15px"><strong>Site Delivery Address - '.$i++.' </strong></span></p></td>
+                </tr>
                 <tr>
                     <td class="tbl_color"><span>Address 1</span></td>
                     <td colspan="3">
@@ -267,17 +274,19 @@ class PrintInvoiceController extends Controller
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Country</span></td>
-                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
+                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>City</span></td>
-                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
+                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Postal Code</span></td>
                     <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->PostalCode) ? $QuotationSiteDeliveryAddress->PostalCode : (!empty($ProjectsAddress->PostalCode) ? $ProjectsAddress->PostalCode : '')) . '</span></td>
-                </tr>
-                <tr>
+                </tr>';
+            }
+
+            $htmlPreview .= '<tr>
                     <td class="tbl_color"><span>Delivery Restrictions</span></td>
                     <td colspan="3"><span>' . ($QuotationShipToInformation->DeliveryRestrictions ?? '') . '</span></td>
                 </tr>
@@ -4065,7 +4074,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $pdf2->save($path2 . '/' . $fileName2);
 
         $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
-        $QuotationSiteDeliveryAddress = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->first();
+        $QuotationSiteDelivery = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->get();
         $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
 
         $htmlPreview = '<p><span style="font-size:36px"><strong>' .$project->ProjectName.'</strong></span></p>
@@ -4073,7 +4082,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             <p><span style="font-size:36px"><strong>' .$quotaion->QuotationGenerationId.' -&nbsp;&nbsp; Delivery Summary </strong></span></p>
 
             <p>&nbsp;</p>
-            <table class="table table-bordered">
+            <table class="table table-bordered">';
+
+            $i = 1;
+            foreach($QuotationSiteDelivery as $QuotationSiteDeliveryAddress){
+
+                $htmlPreview .= '<tr>
+                    <td colspan="4"><p><span style="font-size:15px"><strong>Site Delivery Address - '.$i++.' </strong></span></p></td>
+                </tr>
                 <tr>
                     <td class="tbl_color"><span>Address 1</span></td>
                     <td colspan="3">
@@ -4088,17 +4104,19 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Country</span></td>
-                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
+                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>City</span></td>
-                    <td><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
+                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Postal Code</span></td>
                     <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->PostalCode) ? $QuotationSiteDeliveryAddress->PostalCode : (!empty($ProjectsAddress->PostalCode) ? $ProjectsAddress->PostalCode : '')) . '</span></td>
-                </tr>
-                <tr>
+                </tr>';
+            }
+
+            $htmlPreview .= '<tr>
                     <td class="tbl_color"><span>Delivery Restrictions</span></td>
                     <td colspan="3"><span>' . ($QuotationShipToInformation->DeliveryRestrictions ?? '') . '</span></td>
                 </tr>
