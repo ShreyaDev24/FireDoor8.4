@@ -247,14 +247,14 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             }
         }
 
-        // ✅ COMPLETE SUMMARY (Glass Type + all VP columns)
+        // ✅ COMPLETE SUMMARY (Glass Type + all VP columns + Grand Total Qty)
         $summary = [];
 
         foreach ($data as $row) {
             if (empty($row[5])) continue; // skip if no Glass Type
             $glassType = trim($row[5]);
 
-            // Indices for VP columns
+            // VP column indexes
             $vpIndexes = [
                 'VP1' => ['H' => 6,  'W' => 7,  'Q' => 8],
                 'VP2' => ['H' => 9,  'W' => 10, 'Q' => 11],
@@ -263,7 +263,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'VP5' => ['H' => 18, 'W' => 19, 'Q' => 20],
             ];
 
-            // initialize structure
+            // initialize
             if (!isset($summary[$glassType])) {
                 $summary[$glassType] = [
                     'VP1' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
@@ -274,35 +274,36 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 ];
             }
 
-            // loop through VP1–VP5
+            // fill data
             foreach ($vpIndexes as $vp => $ix) {
                 $height = $row[$ix['H']] ?? 'N/A';
                 $width  = $row[$ix['W']] ?? 'N/A';
                 $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
 
-                // update only if not N/A
                 if ($height != '' && $height != 'N/A') $summary[$glassType][$vp]['H'] = $height;
                 if ($width  != '' && $width  != 'N/A') $summary[$glassType][$vp]['W'] = $width;
-                if ($summary[$glassType][$vp]['Q'] == 0) {
-                    $summary[$glassType][$vp]['Q'] = $qty;
-                }
+                $summary[$glassType][$vp]['Q'] += $qty;
             }
         }
 
-        // Add header + empty spacing
-        $data[] = array_fill(0, 21, '');
-        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+        // HEADER + SPACING
+        $data[] = array_fill(0, 22, '');
+        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
         $data[] = [
             'Glass Type',
             'VP 1 Height', 'VP 1 Width', 'Qty',
             'VP 2 Height', 'VP 2 Width', 'Qty',
             'VP 3 Height', 'VP 3 Width', 'Qty',
             'VP 4 Height', 'VP 4 Width', 'Qty',
-            'VP 5 Height', 'VP 5 Width', 'Qty'
+            'VP 5 Height', 'VP 5 Width', 'Qty',
+            'Grand Total Qty' // ✅ NEW COLUMN
         ];
 
         // Print summary
         foreach ($summary as $type => $vpData) {
+            // calculate grand total qty for all VPs
+            $grandTotal = array_sum(array_column($vpData, 'Q'));
+
             $data[] = [
                 $type,
                 $vpData['VP1']['H'], $vpData['VP1']['W'], $vpData['VP1']['Q'] ?: 'N/A',
@@ -310,6 +311,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 $vpData['VP3']['H'], $vpData['VP3']['W'], $vpData['VP3']['Q'] ?: 'N/A',
                 $vpData['VP4']['H'], $vpData['VP4']['W'], $vpData['VP4']['Q'] ?: 'N/A',
                 $vpData['VP5']['H'], $vpData['VP5']['W'], $vpData['VP5']['Q'] ?: 'N/A',
+                $grandTotal // ✅ FINAL TOTAL
             ];
         }
 
