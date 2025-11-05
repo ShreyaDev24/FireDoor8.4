@@ -142,6 +142,8 @@ function pageIdentity(){
         var oPWidth = 0;
         var oPHeigth = 0;
         var doorsetType = $("#doorsetType").val();
+        var frameWidth = 0;
+        var frameThickness = 0;
         // var leafWidth1=0;
         var thisvalue = document.getElementsByClassName("forcoreWidth1");
         for (var i = 0; i < thisvalue.length; i++) {
@@ -210,6 +212,22 @@ function pageIdentity(){
                     oPHeigth = parseInt(thisvalue[i].value);
                 }
             }
+            if (thisvalue[i].name == 'frameWidth') {
+                if (thisvalue[i].value == '') {
+                    frameWidth = 0;
+                }
+                else {
+                    frameWidth = parseInt(thisvalue[i].value);
+                }
+            }
+            if (thisvalue[i].name == 'frameThickness') {
+                if (thisvalue[i].value == '') {
+                    frameThickness = 0;
+                }
+                else {
+                    frameThickness = parseInt(thisvalue[i].value);
+                }
+            }
         }
 
         var ConfigurableDoorFormula = JSON.parse(ConfigurableDoorFormulaJson);
@@ -237,7 +255,8 @@ function pageIdentity(){
         var calculateCoreWidth2 = leafWidth2-(LippingThicknessAdditionalNumberForCoreWidth2 * lipping_thickness);
         var calculateCoreHeight = leafHeight-(LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
         var opCoreWidthcalculate =  oPWidth - (OpBeadThickness * 2) - (gap * 2) - (lipping_thickness * 2);
-        var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (lipping_thickness * 2);
+        // var opCoreHeightcalculate = oPHeigth - (OpBeadThickness * 2) - (lipping_thickness * 2);
+        var opCoreHeightcalculate = oPHeigth - (frameThickness * 2);
         // var calculate = leafWidth1-(randomkey*lipping_thickness);
         // OP Width -OP frame thicknessX2-GapX2-Lipping ticknessX2
         // OP height-OP framethicknessX2-GapX2- lipping thicknessx2
@@ -247,6 +266,7 @@ function pageIdentity(){
             $("#coreWidth2").val(calculateCoreWidth2);
         }
         if($("#overpanel").val() == 'Overpanel'){
+            var calculate = frameWidth - (frameThickness * 2);
             if(doorsetType == 'SD'){
                 $("#opCoreWidth").val(calculate);
             } else {
