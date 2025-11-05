@@ -783,6 +783,7 @@
                                             <p>Discount(% Off List) <span id="QSdiscountValue">0.00</span></p>
 
                                             <input type="number" class="dis" id="QuoteSummaryDiscount" name="QuoteSummaryDiscount" placeholder="0.00" value="">
+                                            <p id="discountPreview" style="margin-top:8px;font-weight:600;color:#0a7d2a;"></p>
                                             <button type="button" class="btn btn-primary mt-3"
                                                     style="color:#fff; font-size:15px; margin-left:26px;margin-top:-5px;margin-top: 0px !important;float: right;"
                                                     onclick="adjustPriceDiscountBtn()">
@@ -3055,6 +3056,88 @@
                     });
                 }
             }
+
+  // simple debounce so we don't spam the server while typing
+  let __previewTimer = null;
+
+  $('#QuoteSummaryDiscount').on('input', function () {
+    clearTimeout(__previewTimer);
+    __previewTimer = setTimeout(function () {
+      const discountVal = $('#QuoteSummaryDiscount').val();
+      const versionId   = $('#versionId').val();
+      const quotationId = $('#quotationId').val();
+      const token       = $('#_token').val();
+
+      if (!discountVal || !versionId || !quotationId) {
+        $('#discountPreview').text('');
+        return;
+      }
+
+      $.ajax({
+        url: '/quotation/discount/preview',   // <-- NEW route (see step 3)
+        type: 'POST',
+        dataType: 'json',
+        data: {
+          _token: token,
+          QuoteSummaryDiscount: discountVal,
+          versionId: versionId,
+          quotationId: quotationId
+        },
+    success: function (res) {
+  if (res.status) {
+    const color = res.changeType === 'decrease' ? '#28a745' : '#dc3545';
+    const arrow = res.changeType === 'decrease' ? '↓' : '↑';
+
+    $('#discountPreview').html(
+      `Before: ₹${res.old_total.toLocaleString()}<br>
+       After ${res.discount}% discount: ₹${res.new_total.toLocaleString()}<br>
+       <span style="color:${color};font-weight:600;">
+         Actual ${res.changeType} ${arrow} ₹${res.difference}
+       </span>`
+    );
+  } else {
+    $('#discountPreview').html(`<span style="color:red">${res.msg}</span>`);
+  }
+},
+        error: function () {
+          $('#discountPreview').text('');
+        }
+      });
+    }, 400);
+  });
+
+
+            $('#QuoteSummaryDiscount').on('input', function() {
+                let discountVal = $(this).val();
+                let versionId = $('#versionId').val();
+                let quotationId = $('#quotationId').val();
+                let token = $("#_token").val();
+
+                if (discountVal === '') {
+                    $('#discountPreview').text('');
+                    return;
+                }
+
+                $.ajax({
+                    url: '/quotation/preview-discount',
+                    type: 'POST',
+                    data: {
+                        _token: token,
+                        QuoteSummaryDiscount: discountVal,
+                        versionId: versionId,
+                        quotationId: quotationId
+                    },
+                    success: function(res) {
+                        if (res.status) {
+                            $('#discountPreview').html(
+                                `Before: ₹${res.before.toLocaleString()} <br>
+                                After ${res.discount}% discount: <span style="color:#014073;">₹${res.after.toLocaleString()}</span>`
+                            );
+                        }
+                    }
+                });
+            });
+
 
             @if (isset($Count))
                 let CustomerCounter = {{ $Count }};
