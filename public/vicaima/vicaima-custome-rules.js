@@ -121,6 +121,8 @@ function corewidth1Value(){
     var oPHeigth = 0;
     var OpBeadThickness = 0;
     var gap = 0;
+    var frameWidth = 0;
+    var frameThickness = 0;
     // var leafWidth1=0;
     var thisvalue = document.getElementsByClassName("forcoreWidth1");
     for (var i = 0; i < thisvalue.length; i++) {
@@ -182,6 +184,22 @@ function corewidth1Value(){
                 gap = parseInt(thisvalue[i].value);
             }
         }
+        if (thisvalue[i].name == 'frameWidth') {
+            if (thisvalue[i].value == '') {
+                frameWidth = 0;
+            }
+            else {
+                frameWidth = parseInt(thisvalue[i].value);
+            }
+        }
+        if (thisvalue[i].name == 'frameThickness') {
+            if (thisvalue[i].value == '') {
+                frameThickness = 0;
+            }
+            else {
+                frameThickness = parseInt(thisvalue[i].value);
+            }
+        }
     }
 
     var ConfigurableDoorFormula = JSON.parse(ConfigurableDoorFormulaJson);
@@ -209,7 +227,9 @@ function corewidth1Value(){
 
     let checkdoorsetType = $('#doorsetType').val();
     var calculateCoreHeight = leafHeight - (LippingThicknessAdditionalNumberForCoreHeight * lipping_thickness);
-    var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - lipping_thickness;
+    //old caculation
+    //var calculateHeight = oPHeigth - (OpBeadThickness * 2) - (gap * 2) - lipping_thickness;
+    var calculateHeight = oPHeigth - (frameThickness * 2);
     console.log(oPHeigth,gap,OpBeadThickness,lipping_thickness,calculateHeight);
     var adjustmentLeafHeightNoOP = parseInt($('input[name="adjustmentLeafHeightNoOP"]').val(), 10) || 0;
     var adjustmentLeafWidth1 = parseInt($('input[name="adjustmentLeafWidth1"]').val(), 10) || 0;
@@ -279,7 +299,9 @@ function corewidth1Value(){
 
     if($("#overpanel").val() === 'Overpanel'){
         if(checkdoorsetType == 'leaf_and_a_half' || checkdoorsetType == 'DD'){
-            var calculate = leafWidth1 + leafWidth2 + gap;
+            //old calcualation
+            //var calculate = leafWidth1 + leafWidth2 + gap;
+            var calculate = frameWidth - (frameThickness * 2);
             $("#opCoreWidth").val(calculate);
         }else{
             var calculate = leafWidth1 - (1 * lipping_thickness);
