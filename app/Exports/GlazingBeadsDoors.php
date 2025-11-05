@@ -219,11 +219,10 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             $height  = $row[7] ?? 'N/A';
             $depth   = $row[8] ?? 'N/A';
             $width   = $row[9] ?? 'N/A';
-            $hgt     = $row[11] ?? 'N/A';
-            $qty     = (int)($row[10] ?? 0); // ✅ take only first QTY column
+            $length  = $row[11] ?? 'N/A';  // was $hgt
+            // $row[10] is the per-row Qty (often 4). We are NOT summing it anymore.
 
-            $size = "{$width}x{$hgt}";
-            $key = "{$species}|{$profile}|{$height}|{$depth}|{$size}";
+            $key = "{$species}|{$profile}|{$height}|{$depth}|{$width}x{$length}";
 
             if (!isset($summary[$key])) {
                 $summary[$key] = [
@@ -231,12 +230,14 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     'profile' => $profile,
                     'height'  => $height,
                     'depth'   => $depth,
-                    'size'    => $size,
-                    'count'   => 0,
+                    'width'   => $width,
+                    'length'  => $length,
+                    'count'   => 0,        // count occurrences (rows)
                 ];
             }
 
-            $summary[$key]['count'] += $qty; // ✅ only add VP1 QTY (not all)
+            // 🔧 CHANGED: count rows/occurrences instead of summing Qty pieces
+            $summary[$key]['count'] += 1;
         }
 
         // blank row
@@ -249,8 +250,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             'Glazing Bead Profile',
             'Glazing Bead Height',
             'Glazing Bead Depth',
-            'Glazing Bead Size',
-            'Count'
+            'Glazing Bead Width',
+            'Glazing Bead Length',
+            'Count',
         ];
 
         // summary rows
@@ -260,16 +262,14 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                 $row['profile'],
                 $row['height'],
                 $row['depth'],
-                $row['size'],
-                $row['count']
+                $row['width'],
+                $row['length'],
+                $row['count'],   // now 2 for your example
             ];
         }
 
-        $footData = [
-            '','','','','','','','','','','','','',''
-        ];
-
-        $allData = [$data,$footData];
+        $footData = ['','','','','','','','','','','','','',''];
+        $allData  = [$data, $footData];
 
         return collect($allData);
 

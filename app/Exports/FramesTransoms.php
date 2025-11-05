@@ -575,6 +575,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $first->FrameHeight ?? '',
                     $first->FrameWidth ?? '',
                     $first->FrameDepth ?? '',
+                    $group->count(), // ✅ Add quantity count per group
                 ];
             })
             ->values()
@@ -587,22 +588,26 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'O/A Frame Height',
             'O/A Frame Width',
             'Frame Depth',
+            'QTY', // ✅ Add qty header
         ];
 
-        // Add a few empty rows before the summary
+        // Add empty rows before summary
         $data[] = array_fill(0, 32, '');
         $data[] = array_fill(0, 32, '');
-        $data[] = ['Summary', '', '', '', '', ''];
+        $data[] = ['Summary', '', '', '', '', '', ''];
         $data[] = $summaryHeader;
 
+        // Add summary rows
+        $totalQty = 0;
         foreach ($summaryData as $row) {
+            $totalQty += $row[5]; // sum qty
             $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
         }
 
-        // ----------------------------------------------------------
-        // RETURN
+
         // ----------------------------------------------------------
         return collect($data);
+
     }
 
     public function registerEvents(): array
