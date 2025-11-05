@@ -783,9 +783,8 @@
                                             <p>Discount(% Off List) <span id="QSdiscountValue">0.00</span></p>
 
                                             <input type="number" class="dis" id="QuoteSummaryDiscount" name="QuoteSummaryDiscount" placeholder="0.00" value="">
-                                            <p id="discountPreview" style="margin-top:8px;font-weight:600;color:#0a7d2a;"></p>
                                             <button type="button" class="btn btn-primary mt-3"
-                                                    style="color:#fff; font-size:15px; margin-left:26px;margin-top:-5px;margin-top: 0px !important;float: right;"
+                                                    style="color:#fff; font-size:15px; margin-left:26px;margin-top:-52px;margin-top: 0px !important;float: right;"
                                                     onclick="adjustPriceDiscountBtn()">
                                                 Adjust Price
                                             </button>
@@ -2987,32 +2986,32 @@
             $(function() {
                 $('#QuoteSummaryDiscount').keyup();;
             });
-            $(document).on('keyup', '#QuoteSummaryDiscount', function(e) {
-                e.preventDefault();
+            // $(document).on('keyup', '#QuoteSummaryDiscount', function(e) {
+            //     e.preventDefault();
 
-                // Get the discount percentage and convert to a number
-                let QuoteSummaryDiscountValue = parseFloat($(this).val()) || 0;
+            //     // Get the discount percentage and convert to a number
+            //     let QuoteSummaryDiscountValue = parseFloat($(this).val()) || 0;
 
-                // Get the total price and convert to a number
-                let QuoteSummaryTotalDoorPriceValue = parseFloat($('#QuoteSummaryTotalDoorPrice').val()) || 0;
+            //     // Get the total price and convert to a number
+            //     let QuoteSummaryTotalDoorPriceValue = parseFloat($('#QuoteSummaryTotalDoorPrice').val()) || 0;
 
-                // Calculate the discount amount
-                let totalQSdiscountValue = (QuoteSummaryTotalDoorPriceValue * Math.abs(QuoteSummaryDiscountValue)) / 100;
+            //     // Calculate the discount amount
+            //     let totalQSdiscountValue = (QuoteSummaryTotalDoorPriceValue * Math.abs(QuoteSummaryDiscountValue)) / 100;
 
-                // Apply positive discount as subtraction, negative discount as addition
-                let totalGBP = QuoteSummaryDiscountValue > 0
-                    ? QuoteSummaryTotalDoorPriceValue + totalQSdiscountValue
-                    : QuoteSummaryTotalDoorPriceValue - totalQSdiscountValue;
+            //     // Apply positive discount as subtraction, negative discount as addition
+            //     let totalGBP = QuoteSummaryDiscountValue > 0
+            //         ? QuoteSummaryTotalDoorPriceValue + totalQSdiscountValue
+            //         : QuoteSummaryTotalDoorPriceValue - totalQSdiscountValue;
 
-                // Update the discount and total amount display
-                $('#QSdiscountValue').html((QuoteSummaryDiscountValue > 0 ? '+' : '-') + totalQSdiscountValue.toFixed(2));
-                if (totalQSdiscountValue === 0) {
-                    $('#QSdiscountValue').closest('p').hide(); // Hide when discount is 0.00
-                } else {
-                    $('#QSdiscountValue').closest('p').show(); // Show when discount is non-zero
-                }
-                //$('.total_amount > span').html(totalGBP.toFixed(2));
-            });
+            //     // Update the discount and total amount display
+            //     $('#QSdiscountValue').html((QuoteSummaryDiscountValue > 0 ? '+' : '-') + totalQSdiscountValue.toFixed(2));
+            //     if (totalQSdiscountValue === 0) {
+            //         $('#QSdiscountValue').closest('p').hide(); // Hide when discount is 0.00
+            //     } else {
+            //         $('#QSdiscountValue').closest('p').show(); // Show when discount is non-zero
+            //     }
+            //     //$('.total_amount > span').html(totalGBP.toFixed(2));
+            // });
 
             function adjustPriceDiscountBtn(){
                 var url = $('#adjustPriceDiscountUrl').val();
@@ -3057,87 +3056,56 @@
                 }
             }
 
-  // simple debounce so we don't spam the server while typing
-  let __previewTimer = null;
+            let __previewTimer = null;
+            $('#QuoteSummaryDiscount').on('input', function () {
+                clearTimeout(__previewTimer);
 
-  $('#QuoteSummaryDiscount').on('input', function () {
-    clearTimeout(__previewTimer);
-    __previewTimer = setTimeout(function () {
-      const discountVal = $('#QuoteSummaryDiscount').val();
-      const versionId   = $('#versionId').val();
-      const quotationId = $('#quotationId').val();
-      const token       = $('#_token').val();
+                __previewTimer = setTimeout(function () {
+                    const discountVal = $('#QuoteSummaryDiscount').val();
+                    const versionId   = $('#versionId').val();
+                    const quotationId = $('#quotationId').val();
+                    const token       = $('#_token').val();
 
-      if (!discountVal || !versionId || !quotationId) {
-        $('#discountPreview').text('');
-        return;
-      }
-
-      $.ajax({
-        url: '/quotation/discount/preview',   // <-- NEW route (see step 3)
-        type: 'POST',
-        dataType: 'json',
-        data: {
-          _token: token,
-          QuoteSummaryDiscount: discountVal,
-          versionId: versionId,
-          quotationId: quotationId
-        },
-    success: function (res) {
-  if (res.status) {
-    const color = res.changeType === 'decrease' ? '#28a745' : '#dc3545';
-    const arrow = res.changeType === 'decrease' ? '↓' : '↑';
-
-    $('#discountPreview').html(
-      `Before: ₹${res.old_total.toLocaleString()}<br>
-       After ${res.discount}% discount: ₹${res.new_total.toLocaleString()}<br>
-       <span style="color:${color};font-weight:600;">
-         Actual ${res.changeType} ${arrow} ₹${res.difference}
-       </span>`
-    );
-  } else {
-    $('#discountPreview').html(`<span style="color:red">${res.msg}</span>`);
-  }
-},
-        error: function () {
-          $('#discountPreview').text('');
-        }
-      });
-    }, 400);
-  });
-
-
-            $('#QuoteSummaryDiscount').on('input', function() {
-                let discountVal = $(this).val();
-                let versionId = $('#versionId').val();
-                let quotationId = $('#quotationId').val();
-                let token = $("#_token").val();
-
-                if (discountVal === '') {
-                    $('#discountPreview').text('');
+                    if (!discountVal || !versionId || !quotationId) {
+                    $('#QSdiscountValue').text('0.00');
                     return;
-                }
+                    }
 
-                $.ajax({
-                    url: '/quotation/preview-discount',
+                    // show loader while waiting
+                    $('.loader').css({'display':'block'});
+
+                    $.ajax({
+                    url: '/quotation/discount/preview',
                     type: 'POST',
+                    dataType: 'json',
                     data: {
                         _token: token,
                         QuoteSummaryDiscount: discountVal,
                         versionId: versionId,
                         quotationId: quotationId
                     },
-                    success: function(res) {
+                    success: function (res) {
+                        $('.loader').css({'display':'none'});
                         if (res.status) {
-                            $('#discountPreview').html(
-                                `Before: ₹${res.before.toLocaleString()} <br>
-                                After ${res.discount}% discount: <span style="color:#014073;">₹${res.after.toLocaleString()}</span>`
-                            );
-                        }
-                    }
-                });
-            });
+                        // show discount change directly in that area
+                        // const color = res.changeType === 'decrease' ? '#28a745' : '#dc3545';
+                        // const sign = res.changeType === 'decrease' ? '-' : '+';
 
+                        $('#QSdiscountValue').html(
+                            `<span style="font-weight:600;">
+                            ${res.difference.toLocaleString()}
+                            </span>`
+                        );
+                        } else {
+                        $('#QSdiscountValue').html(`<span style="color:red;">Error</span>`);
+                        }
+                    },
+                    error: function () {
+                        $('#QSdiscountValue').html(`<span style="color:red;">Failed</span>`);
+                    }
+                    });
+                }, 400);
+            });
 
             @if (isset($Count))
                 let CustomerCounter = {{ $Count }};

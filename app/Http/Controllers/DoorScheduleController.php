@@ -9874,88 +9874,107 @@ class DoorScheduleController extends Controller
 public function previewAdjustPriceDiscount(Request $request)
 {
     $quotationId = $request->quotationId;
-    $versionId = $request->versionId;
+    $versionId   = $request->versionId;
     $QuoteSummaryDiscount = (float)$request->QuoteSummaryDiscount;
 
     try {
         Log::info('---------------- PREVIEW ADJUST PRICE DEBUG START ----------------');
-        Log::info("Quotation ID: {$quotationId}, Version ID: {$versionId}");
-        Log::info("Discount entered: {$QuoteSummaryDiscount}");
 
-        // 🟩 1️⃣ Get total before adjustment
+        // 🟩 1️⃣ Fetch old list using the same join structure as Schedule
+        $oldItems = \App\Models\Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+            ->where('quotation_version_items.version_id', $versionId)
+            ->select(
+                'items.itemId',
+                'item_master.id as masterId',
+                'items.DoorsetPrice',
+                'items.IronmongaryPrice',
+                'items.AdjustPrice'
+            )
+            ->orderBy('item_master.id')
+            ->get();
+
         $oldTotal = $this->getQuotationGrandTotal($quotationId, $versionId);
-        Log::info("Old Total (Before Preview): {$oldTotal}");
 
-        // 🟩 2️⃣ Start transaction
+        // 🟩 Begin transaction
         \DB::beginTransaction();
 
-        // 🟩 3️⃣ Apply same update logic
+        // 🟩 2️⃣ Apply discount logic (same as Adjust Price)
         $discountQuotationValue = discountQuotationValue($quotationId, $versionId);
-        Log::info("Existing discountQuotationValue (before update): {$discountQuotationValue}");
-
-        if ($QuoteSummaryDiscount == 0) {
-            $discountQuotationValue = 0;
-        }
-
+        if ($QuoteSummaryDiscount == 0) $discountQuotationValue = 0;
         $finalDiscountValue = $QuoteSummaryDiscount + $discountQuotationValue;
-        Log::info("Final discountQuotationValue used in update: {$finalDiscountValue}");
 
         \App\Models\QuotationVersion::where('quotation_id', $quotationId)
             ->where('id', $versionId)
             ->update(['discountQuotation' => $finalDiscountValue]);
 
-        // 🟩 4️⃣ Run real discountQuote (simulate full backend logic)
+        // 🟩 Execute recalculation
         discountQuote($quotationId, $versionId);
-        Log::info("discountQuote() executed.");
 
-        // 🟩 5️⃣ Get total after discount
-        $newTotal = $this->getQuotationGrandTotal($quotationId, $versionId);
-        Log::info("New Total (After Preview): {$newTotal}");
+        // 🟩 3️⃣ Fetch new list with same structure
+        $newItems = \App\Models\Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+            ->where('quotation_version_items.version_id', $versionId)
+            ->select(
+                'items.itemId',
+                'item_master.id as masterId',
+                'items.DoorsetPrice',
+                'items.IronmongaryPrice',
+                'items.AdjustPrice'
+            )
+            ->orderBy('item_master.id')
+            ->get();
 
-        // 🟩 6️⃣ Rollback
+        $sumOld = 0;
+        $sumNew = 0;
+
+        // 🟩 4️⃣ Compare per-row values (by index)
+        foreach ($newItems as $index => $item) {
+            $old = $oldItems[$index] ?? null;
+            if (!$old) continue;
+
+            $oldDoor = ($old->AdjustPrice && $old->AdjustPrice > 0) ? $old->AdjustPrice : $old->DoorsetPrice;
+            $newDoor = ($item->AdjustPrice && $item->AdjustPrice > 0) ? $item->AdjustPrice : $item->DoorsetPrice;
+
+            $oldIron = $old->IronmongaryPrice ?? 0;
+            $newIron = $item->IronmongaryPrice ?? 0;
+
+            $oldTotalRow = round($oldDoor + $oldIron, 2);
+            $newTotalRow = round($newDoor + $newIron, 2);
+            $diff = round($oldTotalRow - $newTotalRow, 2);
+
+            $sumOld += $oldTotalRow;
+            $sumNew += $newTotalRow;
+
+            Log::info("Door {$item->masterId} | OLD: Door={$oldDoor}, Iron={$oldIron}, Total={$oldTotalRow} | NEW: Door={$newDoor}, Iron={$newIron}, Total={$newTotalRow} | Diff={$diff}");
+        }
+
+        // 🟩 Rollback (no data saved)
         \DB::rollBack();
 
-        // 🟩 7️⃣ Calculate difference
-        // If discountQuote() increased price instead of reducing, invert for preview
-        // 🧮 Step 1: calculate raw difference
-            $difference = $oldTotal - $newTotal;
-            $changeType = $difference > 0 ? 'decrease' : 'increase';
+        $totalDifference = round($sumOld - $sumNew, 2);
+        $changeType = $totalDifference > 0 ? 'decrease' : 'increase';
 
-            // 🧩 Step 2: if difference is tiny (less than 2%), calculate pure % discount manually
-            if (abs($difference) < ($oldTotal * 0.02)) {
-                $calculatedDiscountAmount = ($oldTotal * $QuoteSummaryDiscount) / 100;
-                $newTotal = $oldTotal - $calculatedDiscountAmount;
-                $difference = $calculatedDiscountAmount;
-                $changeType = 'decrease';
-            }
-
-            // 🧾 Step 3: Log final corrected values
-            Log::info("Preview Adjustment Correction: old={$oldTotal}, new={$newTotal}, diff={$difference}, type={$changeType}");
-
-
-
-
-        Log::info("Calculated difference: {$difference} ({$changeType})");
+        Log::info("TOTAL | OldSum={$sumOld}, NewSum={$sumNew}, Diff={$totalDifference} ({$changeType})");
         Log::info('---------------- PREVIEW ADJUST PRICE DEBUG END ----------------');
 
         return response()->json([
             'status' => true,
             'discount' => $QuoteSummaryDiscount,
             'old_total' => round($oldTotal, 2),
-            'new_total' => round($newTotal, 2),
-            'difference' => round(abs($difference), 2),
-            'changeType' => $changeType
+            'difference' => abs($totalDifference),
+            'changeType' => $changeType,
         ]);
 
     } catch (\Throwable $e) {
         \DB::rollBack();
-        Log::error('PREVIEW ADJUST PRICE ERROR: ' . $e->getMessage());
-        return response()->json([
-            'status' => false,
-            'msg' => $e->getMessage()
-        ]);
+        Log::error("Preview Adjust Price ERROR: ".$e->getMessage());
+        return response()->json(['status'=>false,'msg'=>$e->getMessage()]);
     }
 }
+
+
+
 
 private function getQuotationGrandTotal($quotationId, $versionId)
 {
@@ -9974,55 +9993,5 @@ private function getQuotationGrandTotal($quotationId, $versionId)
 
     return (float) $itemsTotal + (float) $nonConfigTotal + (float) $sideScreenTotal;
 }
-
-
-public function applyDiscountForPreview($quotationId, $versionId)
-    {
-        $items = Item::where(['QuotationId' => $quotationId, 'VersionId' => $versionId])->get();
-        $quotation = Quotation::where('id', $quotationId)->first();
-        if ($items->isEmpty()) return false;
-
-        foreach ($items as $data) {
-            $margin = BOMSetting::whereIn('UserId', CompanyUsers())->value('margin_for_material');
-            $marginDiscount = discountQuotationValue($data->QuotationId, $data->VersionId);
-
-            // ✅ SUBTRACT discount from margin instead of adding it
-            if ($marginDiscount != 0) {
-                $margin -= $marginDiscount;
-            }
-
-            $marginWithCal = 100 - $margin;
-            $factor = $marginWithCal / 100;
-
-            // 🔹 Recalculate Ironmongery price
-            $ironPrice = 0;
-            if (!empty($data->IronmongeryID)) {
-                $AI = AddIronmongery::select('discountprice')->where('id', $data->IronmongeryID)->first();
-                if ($AI) {
-                    $totalCost = $AI->discountprice / $factor;
-                    $ironPrice = round($totalCost, 2);
-                }
-            }
-
-            // 🔹 Recalculate BOM totals
-            $BOMCalc = BOMCalculation::where('QuotationId', $quotationId)
-                ->where('DoorType', $data->DoorType)
-                ->where('itemId', $data->itemId)
-                ->get();
-
-            $GTSellPrice = $BOMCalc->where('Category', '!=', 'Ironmongery&MachiningCosts')->sum('GTSellPrice');
-            $count = \App\Models\ItemMaster::where('itemID', $data->itemId)->count();
-
-            $GTSellPriceTotal = ($count > 0) ? round(($GTSellPrice / $count), 2) : $GTSellPrice;
-
-            // Apply recalculated preview prices (won’t save after rollback)
-            Item::where('itemId', $data->itemId)->update([
-                'DoorsetPrice' => $GTSellPriceTotal,
-                'IronmongaryPrice' => $ironPrice,
-            ]);
-        }
-
-        return true;
-    }
 
 }
