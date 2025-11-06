@@ -529,7 +529,7 @@ function glazingBeadExport($request,$userIds): void{
 
         $oPHeigth = ($request->fireRating == 'FD60s' || $request->fireRating == 'FD60') ? $request->oPHeigth - ($request->OpBeadThickness * 2) + $VisionPanelHeightFD60 : $request->oPHeigth - ($request->OpBeadThickness * 2) + $VisionPanelHeightNFR;
 
-        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$acronym.'_'.$request->opglazingBeadsThickness.' x '.$request->opglazingBeadsHeight.'|'.$oPWidth.'mm x '.$oPHeigth.'mm';
+        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$acronym.'_'.$request->opglazingBeadsHeight.' x '.$request->opglazingBeadsThickness.'|'.$oPWidth.'mm x '.$oPHeigth.'mm';
         $category = 'GlazingBeads';
         $frame_unit = 'Each';
         $opglazingBeadsThickness = getLippingSpeciesNearTheeknessValue($request->opglazingBeadsThickness);
