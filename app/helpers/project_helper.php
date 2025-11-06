@@ -481,7 +481,7 @@ function glazingBeadExport($request,$userIds): void{
     if ($request->overpanel == 'Fan_Light' && ( !empty($request->OpBeadThickness) && !empty($request->opGlazingBeadSpecies))) {
         $selected_lipping_species = LippingSpecies::where('id', $request->opGlazingBeadSpecies)->get()->first();
         // $selected_lipping_species = SelectedLippingSpecies::where('LippingSpeciesId', $request->lippingSpecies)->get()->first();
-        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->OpBeadThickness.' x '.$request->OpBeadHeight.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
+        $description = '[Fanlight Bead] '.str_replace('_', ' ',  $request->opGlazingBeads).'|'.$selected_lipping_species->SpeciesName.'|Primer|'.$request->opglazingBeadsHeight.' x '.$request->opglazingBeadsThickness.'|'.$request->oPWidth.'mm x '.$request->oPHeigth.'mm';
         $category = 'GlazingBeads';
         $frame_unit = 'Each';
         $OpBeadThickness = getLippingSpeciesNearTheeknessValue($request->OpBeadThickness);
