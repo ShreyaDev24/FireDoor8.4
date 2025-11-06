@@ -178,72 +178,79 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         $parseMeta = function($code) {
-        $code = trim((string)$code);
-        $meta = ['width' => '', 'height' => ''];
-        if ($code === '') return $meta;
+    $code = trim((string)$code);
+    $meta = ['width' => '', 'height' => ''];
+    if ($code === '') return $meta;
 
-        // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
-        if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
-            $meta['width']  = $m[1] ?? '';
-            $meta['height'] = $m[2] ?? '';
-        }
-        return $meta;
-    };
-        // Count occurrences for each product code in col 8 (Leaf 1) and col 9 (Leaf 2)
-        $leaf1Counts = [];
-        $leaf2Counts = [];
-        $codeMeta    = []; // store width/height per code
+    // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
+    if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
+        $meta['width']  = $m[1] ?? '';
+        $meta['height'] = $m[2] ?? '';
+    }
+    return $meta;
+};
 
-        foreach ($data as $row) {
-            $c1 = $row[8] ?? ''; // PRODUCT CODE LEAF 1
-            $c2 = $row[9] ?? ''; // PRODUCT CODE LEAF 2
+// Count occurrences for each product code in col 8 (Leaf 1) and col 9 (Leaf 2)
+$leaf1Counts = [];
+$leaf2Counts = [];
+$codeMeta    = []; // store width/height per code
 
-            if ($c1) {
-                $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
-                if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
-            }
-            if ($c2) {
-                $leaf2Counts[$c2] = ($leaf2Counts[$c2] ?? 0) + 1;
-                if (!isset($codeMeta[$c2])) $codeMeta[$c2] = $parseMeta($c2);
-            }
-        }
+foreach ($data as $row) {
+    $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
+    $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+    $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
 
-        // Union of all codes (preserve a stable order)
-        $allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
+    // ✅ Leaf 1 logic
+    if ($c1) {
+        $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
+        if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
+    }
 
-        // Build summary rows
-        $summaryRows = [];
-        foreach ($allCodes as $code) {
-            $l1Count = $leaf1Counts[$code] ?? 0;
-            $l2Count = $leaf2Counts[$code] ?? 0;
+    // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
+    if ($c2 || (is_numeric($cutW2) && $cutW2 > 0)) {
+        // Use Leaf 2’s code if available; else reuse Leaf 1’s code for dimension grouping
+        $targetCode = $c2 ?: $c1;
+        $leaf2Counts[$targetCode] = ($leaf2Counts[$targetCode] ?? 0) + 1;
+        if (!isset($codeMeta[$targetCode])) $codeMeta[$targetCode] = $parseMeta($targetCode);
+    }
+}
 
-            // Always compute width/height from the code
-            $meta   = $codeMeta[$code] ?? $parseMeta($code);
-            $width  = $meta['width'];
-            $height = $meta['height'];
+// Union of all codes (preserve a stable order)
+$allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
 
-            // Show width under the side that actually has a count
-            $leaf1Width = $l1Count > 0 ? $width : '';
-            $leaf2Width = $l2Count > 0 ? $width : '';
+// Build summary rows
+$summaryRows = [];
+foreach ($allCodes as $code) {
+    $l1Count = $leaf1Counts[$code] ?? 0;
+    $l2Count = $leaf2Counts[$code] ?? 0;
 
-            $gt = $l1Count + $l2Count;
+    $meta   = $codeMeta[$code] ?? $parseMeta($code);
+    $width  = $meta['width'];
+    $height = $meta['height'];
 
-            $summaryRows[] = [
-                $code,           // Summary (Product Code)
-                $leaf1Width, $l1Count,   // Leaf 1 | Count
-                $leaf2Width, $l2Count,   // Leaf 2 | Count
-                $height,                // Height
-                $gt                     // GT
-            ];
-        }
+    // Show width under the side that actually has a count
+    $leaf1Width = $l1Count > 0 ? $width : '';
+    $leaf2Width = $l2Count > 0 ? $width : '';
 
-        // Header row for summary
-        $summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+    $gt = $l1Count + $l2Count;
 
-        // Merge: main rows + blank separator + summary header + summary rows
-        $merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+    $summaryRows[] = [
+        $code,           // Summary (Product Code)
+        $leaf1Width, $l1Count,   // Leaf 1 | Count
+        $leaf2Width, $l2Count,   // Leaf 2 | Count
+        $height,                // Height
+        $gt                     // GT
+    ];
+}
 
-        return collect($merged);
+// Header row for summary
+$summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+
+// Merge: main rows + blank separator + summary header + summary rows
+$merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+
+return collect($merged);
+
 
         // $footData = [
         //     '','','','','','','','','','','','','','','','','','','',''
