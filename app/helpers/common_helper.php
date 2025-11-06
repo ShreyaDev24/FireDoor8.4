@@ -3647,7 +3647,11 @@ function frameExport($request,$userIds): void{
            // dd($request->all(), $archiTrave);
 
             if($archiTrave){
-                $LM = (($request->frameHeight*2)+$request->frameWidth)/1000;
+                $OPHeight = $request->oPHeigth ?? 0;
+                $SL1Width = $request->SL1Width ?? 0;
+                $SL2Width = $request->SL2Width ?? 0;
+
+                $LM = ((($request->frameHeight + $OPHeight) * 2) + $request->frameWidth  +  $SL1Width + $SL2Width)/1000;
 
                 $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
 
