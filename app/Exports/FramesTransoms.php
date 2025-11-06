@@ -556,7 +556,57 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         //     '1000', '1000', '44', '12', '44', '', '', '', '', '100', ''
         // ], array_fill(0, 32 - 18, ''));
 
+            $summaryData = collect($item)
+            ->groupBy(function ($row) {
+                return implode('|', [
+                    $row->SpeciesName,
+                    $row->FireRating,
+                    $row->FrameHeight,
+                    $row->FrameWidth,
+                    $row->FrameDepth
+                ]);
+            })
+            ->map(function ($group) {
+                $first = $group->first();
+                return [
+                    $first->SpeciesName ?? '',
+                    $first->FireRating ?? '',
+                    $first->FrameHeight ?? '',
+                    $first->FrameWidth ?? '',
+                    $first->FrameDepth ?? '',
+                    $group->count(), // ✅ Add quantity count per group
+                ];
+            })
+            ->values()
+            ->toArray();
+
+        // Header row for summary
+        $summaryHeader = [
+            'Frame Material',
+            'Fire Rating',
+            'O/A Frame Height',
+            'O/A Frame Width',
+            'Frame Depth',
+            'QTY', // ✅ Add qty header
+        ];
+
+        // Add empty rows before summary
+        $data[] = array_fill(0, 32, '');
+        $data[] = array_fill(0, 32, '');
+        $data[] = ['Summary', '', '', '', '', '', ''];
+        $data[] = $summaryHeader;
+
+        // Add summary rows
+        $totalQty = 0;
+        foreach ($summaryData as $row) {
+            $totalQty += $row[5]; // sum qty
+            $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
+        }
+
+
+        // ----------------------------------------------------------
         return collect($data);
+
     }
 
     public function registerEvents(): array
@@ -565,16 +615,22 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             \Maatwebsite\Excel\Events\AfterSheet::class => function (\Maatwebsite\Excel\Events\AfterSheet $event) {
                 $sheet = $event->sheet;
 
-                // Auto-size all columns A to AF
+                // ----------------------------------------------------------
+                // Auto-size all columns A to AC
+                // ----------------------------------------------------------
                 $col = 'A';
-                while ($col !== 'AC') {
+                while ($col !== 'AD') { // Adjust as per your last column
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
 
                 $highestRow = $sheet->getHighestRow();
 
-                // Title row style (green top and bottom borders)
+                // ----------------------------------------------------------
+                // Define main reusable styles
+                // ----------------------------------------------------------
+
+                // Green top & bottom border titles (main section headings)
                 $mainTitleStyle = [
                     'font' => ['bold' => true],
                     'alignment' => [
@@ -593,7 +649,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     ],
                 ];
 
-                // Header row style (red bottom border only)
+                // Red thick underline for column headers
                 $headerRowStyle = [
                     'font' => ['bold' => true],
                     'alignment' => [
@@ -608,30 +664,52 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     ],
                 ];
 
+                // Gray summary header styling
+                $summaryHeaderStyle = [
+                    'font' => ['bold' => true],
+                    'alignment' => [
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                    ],
+                    'fill' => [
+                        'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                        'startColor' => ['argb' => 'FFD9D9D9'], // light gray background
+                    ],
+                    'borders' => [
+                        'allBorders' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                            'color' => ['argb' => 'FF000000'],
+                        ],
+                    ],
+                ];
+
+                // ----------------------------------------------------------
+                // Loop through rows to apply conditional styling
+                // ----------------------------------------------------------
                 for ($i = 1; $i <= $highestRow; $i++) {
                     $val = trim((string) $sheet->getCell("A{$i}")->getValue());
 
-                    // Green border title rows
+                    // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
                         $sheet->mergeCells("A{$i}:AC{$i}");
                         $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($mainTitleStyle);
                     }
 
-                    // Green border for SCREEN INFO title
+                    // ✅ Green title for "SCREEN INFO"
                     if ($val === 'SCREEN INFO') {
                         $sheet->mergeCells("A{$i}:U{$i}");
                         $sheet->getStyle("A{$i}:U{$i}")->applyFromArray($mainTitleStyle);
                     }
 
-                    // Red border for headings (Door Section and Screen Section)
+                    // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
                         $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($headerRowStyle);
                     }
 
+                    // ✅ Red underline for Screen Info section header
                     if ($val === 'S.No') {
-                        // Find the last non-empty column in the current row
-                        $lastColIndex = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString('A');
-                        for ($colIndex = 1; $colIndex <= 100; $colIndex++) { // limit to 100 columns max
+                        $lastColIndex = 1;
+                        for ($colIndex = 1; $colIndex <= 100; $colIndex++) {
                             $colLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($colIndex);
                             $cellVal = trim((string) $sheet->getCell("{$colLetter}{$i}")->getValue());
                             if (!empty($cellVal)) {
@@ -640,15 +718,24 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                         }
 
                         $lastColLetter = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::stringFromColumnIndex($lastColIndex);
-                        $range = "A{$i}:{$lastColLetter}{$i}";
-                        $sheet->getStyle($range)->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:{$lastColLetter}{$i}")->applyFromArray($headerRowStyle);
                     }
 
+                    // ✅ Gray background + bold for Summary table header
+                    if ($val === 'Frame Material') {
+                        $sheet->getStyle("A{$i}:F{$i}")->applyFromArray($summaryHeaderStyle);
+                    }
 
+                    // ✅ Optional: green merge bar for the "Summary" label row
+                    if ($val === 'Summary') {
+                        $sheet->mergeCells("A{$i}:F{$i}");
+                        $sheet->getStyle("A{$i}:F{$i}")->applyFromArray($mainTitleStyle);
+                    }
                 }
             },
         ];
     }
+
 
 
     public function title(): string

@@ -177,13 +177,88 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         }
 
-        $footData = [
-            '','','','','','','','','','','','','','','','','','','',''
-        ];
+        $parseMeta = function($code) {
+    $code = trim((string)$code);
+    $meta = ['width' => '', 'height' => ''];
+    if ($code === '') return $meta;
 
-        $allData = [$data,$footData];
+    // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
+    if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
+        $meta['width']  = $m[1] ?? '';
+        $meta['height'] = $m[2] ?? '';
+    }
+    return $meta;
+};
 
-        return collect($allData);
+// Count occurrences for each product code in col 8 (Leaf 1) and col 9 (Leaf 2)
+$leaf1Counts = [];
+$leaf2Counts = [];
+$codeMeta    = []; // store width/height per code
+
+foreach ($data as $row) {
+    $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
+    $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+    $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
+
+    // ✅ Leaf 1 logic
+    if ($c1) {
+        $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
+        if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
+    }
+
+    // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
+    if ($c2 || (is_numeric($cutW2) && $cutW2 > 0)) {
+        // Use Leaf 2’s code if available; else reuse Leaf 1’s code for dimension grouping
+        $targetCode = $c2 ?: $c1;
+        $leaf2Counts[$targetCode] = ($leaf2Counts[$targetCode] ?? 0) + 1;
+        if (!isset($codeMeta[$targetCode])) $codeMeta[$targetCode] = $parseMeta($targetCode);
+    }
+}
+
+// Union of all codes (preserve a stable order)
+$allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
+
+// Build summary rows
+$summaryRows = [];
+foreach ($allCodes as $code) {
+    $l1Count = $leaf1Counts[$code] ?? 0;
+    $l2Count = $leaf2Counts[$code] ?? 0;
+
+    $meta   = $codeMeta[$code] ?? $parseMeta($code);
+    $width  = $meta['width'];
+    $height = $meta['height'];
+
+    // Show width under the side that actually has a count
+    $leaf1Width = $l1Count > 0 ? $width : '';
+    $leaf2Width = $l2Count > 0 ? $width : '';
+
+    $gt = $l1Count + $l2Count;
+
+    $summaryRows[] = [
+        $code,           // Summary (Product Code)
+        $leaf1Width, $l1Count,   // Leaf 1 | Count
+        $leaf2Width, $l2Count,   // Leaf 2 | Count
+        $height,                // Height
+        $gt                     // GT
+    ];
+}
+
+// Header row for summary
+$summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+
+// Merge: main rows + blank separator + summary header + summary rows
+$merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+
+return collect($merged);
+
+
+        // $footData = [
+        //     '','','','','','','','','','','','','','','','','','','',''
+        // ];
+
+        // $allData = [$data,$footData];
+
+        // return collect($allData);
     }
 
     public function headings(): array
@@ -219,16 +294,15 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:T1';
-                $cellRange = 'A2:T2';
+            AfterSheet::class => function (AfterSheet $event) {
+                // ----------------------------
+                // 🔹 Existing header styling
+                // ----------------------------
+                $cellRange1 = 'A1:T1'; // main merged header
+                $cellRange2 = 'A2:T2'; // column headings row
+
                 $styleArray = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'background' => [
-                        'color'=> '#000000'
-                    ],
+                    'font' => ['bold' => true],
                     'alignment' => [
                         'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                         'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -239,31 +313,58 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                             'color' => ['argb' => 'FF0000'],
                         ],
                     ],
-
                 ];
-                $event->sheet->mergeCells($cellRange1);
-                $event->sheet->getColumnDimension('A')->setAutoSize(true);
-                $event->sheet->getColumnDimension('B')->setAutoSize(true);
-                $event->sheet->getColumnDimension('C')->setAutoSize(true);
-                $event->sheet->getColumnDimension('D')->setAutoSize(true);
-                $event->sheet->getColumnDimension('E')->setAutoSize(true);
-                $event->sheet->getColumnDimension('F')->setAutoSize(true);
-                $event->sheet->getColumnDimension('G')->setAutoSize(true);
-                $event->sheet->getColumnDimension('H')->setAutoSize(true);
-                $event->sheet->getColumnDimension('I')->setAutoSize(true);
-                $event->sheet->getColumnDimension('J')->setAutoSize(true);
-                $event->sheet->getColumnDimension('K')->setAutoSize(true);
-                $event->sheet->getColumnDimension('L')->setAutoSize(true);
-                $event->sheet->getColumnDimension('M')->setAutoSize(true);
-                $event->sheet->getColumnDimension('N')->setAutoSize(true);
-                $event->sheet->getColumnDimension('O')->setAutoSize(true);
 
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
+                // Merge and style top header
+                $event->sheet->mergeCells($cellRange1);
+                $event->sheet->getStyle($cellRange1)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
+
+                // Auto size all columns A–T
+                foreach (range('A', 'T') as $col) {
+                    $event->sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+
+                // ----------------------------
+                // 🔹 New Summary Header Styling
+                // ----------------------------
+                $highestRow = $event->sheet->getHighestRow(); // last row on the sheet
+
+                // Find the row number of "Summary" header (by searching for text)
+                $summaryHeaderRow = null;
+                foreach (range(1, $highestRow) as $r) {
+                    $cellVal = $event->sheet->getCell('A' . $r)->getValue();
+                    if (trim((string)$cellVal) === 'Summary') {
+                        $summaryHeaderRow = $r;
+                        break;
+                    }
+                }
+
+                if ($summaryHeaderRow) {
+                    // Make the summary header bold, centered, with light gray fill
+                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':G' . $summaryHeaderRow)->applyFromArray([
+                        'font' => ['bold' => true],
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                        'fill' => [
+                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                            'startColor' => ['argb' => 'FFD9D9D9'], // light gray background
+                        ],
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                'color' => ['argb' => 'FF000000'],
+                            ],
+                        ],
+                    ]);
+                }
             },
         ];
     }
+
 
     public function title(): string
     {
