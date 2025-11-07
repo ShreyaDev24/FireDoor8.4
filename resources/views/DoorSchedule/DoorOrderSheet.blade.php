@@ -42,31 +42,31 @@
     <table style="max-width: 100vw; width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
-                <th colspan="20">Door Order Sheet BOM</th>
+                <th colspan="21">Door Order Sheet BOM</th>
             </tr>
             <tr>
                 <th>Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
-                <th colspan="3">Prepared By</th>
+                <th colspan="4">Prepared By</th>
                 <td colspan="6">{{ $userName }}</td>
             </tr>
             <tr>
                 <th colspan="3">Revision</th>
                 <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
-                <td colspan="2">{{ $today }}</td>
+                <td colspan="3">{{ $today }}</td>
                 <th colspan="2">Main Contractor</th>
                 <td colspan="3">{{ $quotation->CstCompanyName }}</td>
                 <th colspan="3">Sales Contact</th>
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="20">Text</th>
+                <th colspan="21">Text</th>
             </tr>
             <tr>
-                <th colspan="20">Items</th>
+                <th colspan="21">Items</th>
             </tr>
             <tr>
                 <th>Total Doors</th>
@@ -79,6 +79,7 @@
                 <th>Door Finish</th>
                 <th>Product code leaf 1</th>
                 <th>Product code leaf 2</th>
+                <th>Ironmongery Ref</th>
                 <th>Cut Size H</th>
                 <th>Cut Size W</th>
                 <th>Cut Size W2</th>
@@ -92,6 +93,7 @@
             </tr>
             <tr style="background:#00B0F0">
                 <td style="padding:5px 0px;"><b></b></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

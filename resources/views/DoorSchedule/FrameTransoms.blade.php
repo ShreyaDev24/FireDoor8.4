@@ -47,10 +47,10 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="29">Frames & Transoms BOM</th>
+                <th colspan="30">Frames & Transoms BOM</th>
             </tr>
             <tr>
-                <th colspan="4">Ref</th>
+                <th colspan="5">Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th colspan="5">Project</th>
                 <td colspan="5">{{ $quotation->projectname }}</td>
@@ -58,7 +58,7 @@
                 <td colspan="5">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="3">Revision</th>
+                <th colspan="4">Revision</th>
                 <td colspan="2">{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="3">{{ $today }}</td>
@@ -68,10 +68,10 @@
                 <td colspan="5">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="29">Text</th>
+                <th colspan="30">Text</th>
             </tr>
             <tr>
-                <th colspan="29">Items</th>
+                <th colspan="30">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -83,6 +83,7 @@
                         <th>Plot Number/Ref</th>
                         <th>IFC/Certifire No/Q mark Plug</th>
                         <th>Door Type</th>
+                        <th>Ironmongery Ref</th>
                         <th>Fire Rating</th>
                         <th>Door Thickness</th>
                         <th>Frame Material</th>
@@ -112,6 +113,7 @@
 
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
