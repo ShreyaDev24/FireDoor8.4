@@ -74,6 +74,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
             'Door Type',
+            'Ironmongery Ref',
             'Fire Rating',
             'Door Thickness',
             'Frame Material',
@@ -191,6 +192,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->plot_ref_no,
                 $value->certification_no,
                 $value->DoorType,
+                IronmongerySetName($value->IronmongeryID),
                 $value->FireRating,
                 $value->LeafThickness,
                 $value->SpeciesName,
@@ -278,6 +280,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' '. $value->Overpanel,
+                    IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
                     $value->SpeciesName,
@@ -350,6 +353,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' Side Light 1',
+                    IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
                     $value->SpeciesName,
@@ -422,6 +426,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->DoorType . ' Side Light 2',
+                    IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
                     $value->LeafThickness,
                     $value->SpeciesName,
@@ -692,8 +697,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
-                        $sheet->mergeCells("A{$i}:AC{$i}");
-                        $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AD{$i}");
+                        $sheet->getStyle("A{$i}:AD{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // ✅ Green title for "SCREEN INFO"
@@ -704,7 +709,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
-                        $sheet->getStyle("A{$i}:AC{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AD{$i}")->applyFromArray($headerRowStyle);
                     }
 
                     // ✅ Red underline for Screen Info section header

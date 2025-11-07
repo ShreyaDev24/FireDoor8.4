@@ -125,6 +125,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 str_replace('_', ' ', $value->DoorLeafFacing),
                 $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
                 $DoorDimensionsCode2,
+                IronmongerySetName($value->IronmongeryID),
                 $cutSizeH,
                 $cutSizeW,
                 $cutSizeW2,
@@ -160,6 +161,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     str_replace('_', ' ', $value->DoorLeafFacing),
                     $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
                     $DoorDimensionsCode2,
+                    IronmongerySetName($value->IronmongeryID),
                     $cutSizeH,
                     $cutSizeW,
                     $cutSizeW2,
@@ -274,6 +276,7 @@ return collect($merged);
             'Door Finish',
             'PRODUCT CODE LEAF 1 ',
             'PRODUCT CODE LEAF 2',
+            'Ironmongery Ref',
             'Cut Size H',
             'Cut Size W',
             'Cut Size W2',
@@ -294,13 +297,9 @@ return collect($merged);
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function (AfterSheet $event) {
-                // ----------------------------
-                // 🔹 Existing header styling
-                // ----------------------------
-                $cellRange1 = 'A1:T1'; // main merged header
-                $cellRange2 = 'A2:T2'; // column headings row
-
+            AfterSheet::class    => function(AfterSheet $event) {
+                $cellRange1 = 'A1:U1';
+                $cellRange = 'A2:U2';
                 $styleArray = [
                     'font' => ['bold' => true],
                     'alignment' => [
