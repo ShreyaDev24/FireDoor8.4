@@ -44,6 +44,7 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
 
         $result = BOMCAlculationExport($id,$vid);
         $total = 0;
+        $totalIronmongery = 0;
         $GTSell = 0;
 
         $j = 1;
@@ -54,8 +55,12 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
                 $GTSellPrice += $value->GTSellPrice;
                 $Margin += $value->Margin;
             }
+
+            if($value->Category == 'Ironmongery&MachiningCosts'){
+                $totalIronmongery += $value->TotalCost;
+            }
         }
-        
+
         $data = [];
         $data[0] = [
             'Ref',
@@ -96,14 +101,18 @@ class Summary implements FromCollection,WithTitle,WithEvents,WithColumnFormattin
             $result['totIronmongerySet'],
         ];
         $data[6] = [
+            'Ironmongery Price',
+            $totalIronmongery,
+        ];
+        $data[7] = [
             'Total Cost',
             $total,
         ];
-        $data[7] = [
+        $data[8] = [
             'Calculated Sale Price',
             $GTSellPrice,
         ];
-        $data[8] = [
+        $data[9] = [
             'Any Prices OverRidden',
             '0',
         ];
