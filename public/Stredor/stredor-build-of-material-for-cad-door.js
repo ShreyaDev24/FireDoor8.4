@@ -159,11 +159,11 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'rebatedHeight'){
                         getmsginput = 'Rebated Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
+                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
+                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     }
@@ -191,11 +191,11 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'rebatedHeight'){
                         getmsginput = 'Rebated Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 100mm and maximum of 180mm ';
+                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 250mm `;
+                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm `;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     } else if(id == 'sideLight1FrameThickness'){
