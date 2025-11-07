@@ -299,7 +299,7 @@ return collect($merged);
         return [
             AfterSheet::class    => function(AfterSheet $event) {
                 $cellRange1 = 'A1:U1';
-                $cellRange = 'A2:U2';
+                $cellRange2 = 'A2:U2';
                 $styleArray = [
                     'font' => ['bold' => true],
                     'alignment' => [
