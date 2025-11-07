@@ -3636,42 +3636,43 @@ function frameExport($request,$userIds): void{
                 }
 
             $archiTrave = LippingSpecies::where('id', $request->architraveMaterial)->first();
-           // dd($request->all(), $archiTrave);
 
-            if($archiTrave){
-                $LM = (($request->frameHeight*2)+$request->frameWidth)/1000;
+            $OPHeight = $request->oPHeigth ?? 0;
+            $SL1Width = $request->SL1Width ?? 0;
+            $SL2Width = $request->SL2Width ?? 0;
 
-                $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
+            $LM = ((($request->frameHeight + $OPHeight) * 2) + $request->frameWidth  +  $SL1Width + $SL2Width)/1000;
 
-                $finishCost = (empty($Architrave_Finish))?0 : $Architrave_Finish->SelectedOptionCost??0;
+            $Architrave_Finish =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where(['selected_option.SelectedUserId'=>auth()->user()->id, 'options.OptionSlug' => 'Architrave_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->architraveFinish])->where("options.configurableitems",$request->issingleconfiguration)->wherein('options.editBy', $u_id)->select('selected_option.SelectedOptionCost')->first();
 
-                $architraveHeight1 = getLippingSpeciesNearTheeknessValue($request->architraveHeight);
+            $finishCost = (empty($Architrave_Finish))?0 : $Architrave_Finish->SelectedOptionCost??0;
 
-                if(in_array(Auth::user()->UserType, [1,4])){
+            $architraveHeight1 = getLippingSpeciesNearTheeknessValue($request->architraveHeight);
 
-                    $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->architraveMaterial)->where('thickness','>=',$architraveHeight1)->get()->first();
-                }else{
-                    $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->architraveMaterial)->where('selected_thickness','>=',$architraveHeight1)->get()->first();
+            if(in_array(Auth::user()->UserType, [1,4])){
 
-                }
+                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->architraveMaterial)->where('thickness','>=',$architraveHeight1)->get()->first();
+            }else{
+                $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->architraveMaterial)->where('selected_thickness','>=',$architraveHeight1)->get()->first();
 
-                if(isset($unitcost->id)){
-                    $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
+            }
 
-                    $unit_cost = (($request->architraveHeight * $request->architraveWidth * $unitcost_selected_price)/1000000) + $finishCost;
+            if(isset($unitcost->id)){
+                $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
 
-                    $archiTraveFinishCost = $LM*$finishCost;
+                $unit_cost = (($request->architraveHeight * $request->architraveWidth * $unitcost_selected_price)/1000000) + $finishCost;
 
-                    $description = sprintf(' %s x %s|  %s| %s| %s | %s', $request->architraveWidth, $request->architraveHeight, $request->architraveType, $archiTrave->SpeciesName, $request->architraveFinish, $request->architraveSetQty);
-                    $category = 'Architrave';
-                    $frame_unit = 'Each';
-                    $QtyPerDoorType = $LM;
+                $archiTraveFinishCost = $LM*$finishCost;
 
-                    $total_cost = ($LM*$unit_cost) * $request->architraveSetQty;
+                $description = sprintf(' %s x %s|  %s| %s| %s | %s', $request->architraveWidth, $request->architraveHeight, $request->architraveType, $archiTrave->SpeciesName ?? '-', $request->architraveFinish, $request->architraveSetQty);
+                $category = 'Architrave';
+                $frame_unit = 'Each';
+                $QtyPerDoorType = $LM;
 
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost,$request->architraveSetQty, true);
+                $total_cost = ($LM*$unit_cost) * $request->architraveSetQty;
 
-                }
+                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost,$request->architraveSetQty, true);
+
             }
         }
     }
