@@ -584,17 +584,25 @@ class OptionController extends Controller
                 $optionCheckall = "";
 
                 $tbl1 = '';
-                $tbl1 .= '<div class="row">
-                        <div class="col-sm-10"></div>
-                        <div class="col-sm-2">
-                            <div class="control-group d-flex">Check All
-                                <label class="control control-checkbox">
-                                    <input type="checkbox" class="checkall" value="' . $optionType . '" />
-                                    <div class="control_indicator"></div>
-                                </label>
-                            </div>
-                        </div>
-                    </div>';
+                $tbl1 .= '
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; padding:4px 0;">
+
+                    <label style="display:flex; align-items:center; font-weight:bold; gap:6px; cursor:pointer; margin-left:8px;">
+                        <span>Check All</span>
+                        <input type="checkbox" class="checkall" value="' . $optionType . '"
+                            style="width:18px; height:18px; cursor:pointer;">
+                    </label>
+
+                    <button type="button" class="btn btn-success accordian_update_button"
+                        onclick="updateMe(\'' . $optionType . "'," . $pageId . ')"
+                        style="padding:6px 20px; font-size:14px; margin-right:8px;">
+                        UPDATE
+                    </button>
+
+                </div>';
+
+
+
                 foreach ($allData as $row) {
 
                     if (!empty($row->lipping_species_items->toArray())) {
@@ -615,11 +623,10 @@ class OptionController extends Controller
                             <main><div class="row">
                                 <div class="col-sm-10"></div>
                                 <div class="col-sm-2">
-                                    <div class="control-group d-flex">Check All
-                                        <label class="control control-checkbox">
-                                            <input type="checkbox" class="checkall" value="' . $optionType . $row->id . '" ' . $optionCheckall . " " . $select . '/>
-                                            <div class="control_indicator"></div>
-                                        </label>
+                                    <div style="display:flex; align-items:center; font-weight:bold; gap:6px;">
+                                        Check All
+                                        <input type="checkbox" class="checkall" value="' . $optionType . $row->id . '" ' . $optionCheckall . " " . $select . '
+                                            style="width:18px; height:18px; cursor:pointer;">
                                     </div>
                                 </div>
                             </div>
@@ -703,7 +710,7 @@ class OptionController extends Controller
                         </div>';
                 }
 
-                $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" onclick="updateMe(\'' . $optionType . "'," . $pageId . ')">Update</button>';
+
 
                 break;
 
