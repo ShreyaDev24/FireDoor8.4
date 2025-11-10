@@ -85,6 +85,9 @@
             max-height: 120px;
             }
 
+    thead { display: table-header-group; }
+    tfoot { display: table-footer-group; }
+
 </style>
 </head>
 <body>
@@ -146,7 +149,7 @@
         </div>
     </div>
     <table class="table table-bordered cusTable" style="margin-top: 100px;">
-        <tbody>
+        <thead>
             <tr>
                 <td class="tbl_leaft" colspan="19"></td>
                 <td class="tbl_extra" colspan="3">Vision Panel</td>
@@ -223,14 +226,11 @@
                 @endif
             </tr>
 
-            {!! $a !!}
+        </thead>
 
+        <tbody>
+            {!! $a !!}
         </tbody>
     </table>
-
-
-    {{--  @php
-    die;
-@endphp  --}}
 </body>
 </html>
