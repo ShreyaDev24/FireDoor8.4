@@ -633,7 +633,7 @@ class DoorScheduleController extends Controller
             'multipledoornumber'  => [
                 'exclude_unless:door_mode,multiple',
                 'required',
-                'regex:/^[A-Za-z0-9_-]+(?:\s+[A-Za-z0-9_-]+)*$/'
+                'regex:/^[A-Za-z0-9._-]+(?:\s+[A-Za-z0-9._-]+)*$/'
             ],
 
             'prefix'              => 'required_if:door_mode,range',
@@ -646,7 +646,7 @@ class DoorScheduleController extends Controller
             'door_mode.in'                   => 'Door mode must be either single, multiple or range.',
             'doornumber.required_if'         => 'Door number is required when mode is single.',
             'multipledoornumber.required'    => 'Multiple door numbers are required when mode is multiple.',
-            'multipledoornumber.regex'       => 'Enter valid door numbers separated by spaces (letters, numbers, hyphens, and underscores only).',
+            'multipledoornumber.regex' => 'Enter valid door numbers separated by spaces. Decimals, letters, hyphens, and underscores are allowed.',
             'prefix.required_if'             => 'Prefix is required when mode is range.',
             'range_start.required_if'        => 'Start of range is required.',
             'range_start.integer'            => 'Start of range must be an integer.',
