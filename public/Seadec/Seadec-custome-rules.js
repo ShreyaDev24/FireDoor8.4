@@ -1909,6 +1909,7 @@ function FireRatingChange() {
     if ($("#fireRating").val() != '') {
         let $doorsetType = $("#doorsetType");
         $doorsetType.find("option").show().prop("disabled", false);
+        let selectedValue = $("#doorthickness").val();
         if ($("#fireRating").val() == "NFR") {
             $(".seadechide").removeClass("hidden-force");
             $("#grooveDepth").attr("max", "");
