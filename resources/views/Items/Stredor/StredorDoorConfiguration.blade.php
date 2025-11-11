@@ -855,9 +855,11 @@ $(document).on('click', '#submit', function(e) {
         let sideLight2 = $("#sideLight2").val();
         if(sideLight1 == 'No'){
             $("#SL1TransomDepth").attr({ 'readonly': true, "required": false });
+            $("#SL1transomThickness").attr({ 'readonly': true, "required": false });
         }
         if(sideLight2 == 'No'){
             $("#SL2TransomDepth").attr({ 'readonly': true, "required": false });
+            $("#SL1transomThickness").attr({ 'readonly': true, "required": false });
         }
 
     document.getElementById("itemForm").querySelectorAll(".form-control").forEach(function(i) {
