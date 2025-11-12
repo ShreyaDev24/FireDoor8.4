@@ -38,7 +38,7 @@ class DoorDimensionController extends Controller
         }
 
         $doorCore = doorcorename($request->configurableitems);
-        if ($request->configurableitems == 3 && $request->hasFile('image')) {
+        if (in_array((int)$request->configurableitems, [4, 5, 6, 9], true)  && $request->hasFile('image')) {
             $file = $request->file('image');
             $name = time().$file->getClientOriginalName();
             $filepath = public_path('DoorDimension');
