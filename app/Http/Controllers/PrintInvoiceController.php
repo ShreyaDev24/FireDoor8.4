@@ -916,10 +916,11 @@ class PrintInvoiceController extends Controller
         }
 
         // return $pdf4->download('file4.pdf');
-        $path4 = public_path() . '/allpdfFile';
-        $fileName4 = $id . '4' . '.' . 'pdf';
-        $pdf4->save($path4 . '/' . $fileName4);
-
+        if($quotaion->configurableitems != 9){
+            $path4 = public_path() . '/allpdfFile';
+            $fileName4 = $id . '4' . '.' . 'pdf';
+            $pdf4->save($path4 . '/' . $fileName4);
+        }
         // side screen door list
 
         $s2 = '';
@@ -3723,32 +3724,61 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
         if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-            $pdfFiles = [
-                public_path() . '/allpdfFile' . '/' . $fileName1,
-                public_path() . '/allpdfFile' . '/' . $fileName2,
-                public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                public_path() . '/allpdfFile' . '/' . $fileName3,
-                public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                public_path() . '/allpdfFile' . '/' . $fileName4,
-                public_path() . '/allpdfFile' . '/' . $fileName9,
-                public_path() . '/allpdfFile' . '/' . $fileName6,
-                public_path() . '/allpdfFile' . '/' . $fileName8,
-                public_path() . '/allpdfFile' . '/' . $fileName7,
-                public_path() . '/allpdfFile' . '/' . $fileName5,
-            ];
+            if($quotaion->configurableitems != 9){
+                 $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName7,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
+            } else {
+                 $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName7,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
+            }
         }else{
-            $pdfFiles = [
-                public_path() . '/allpdfFile' . '/' . $fileName1,
-                public_path() . '/allpdfFile' . '/' . $fileName2,
-                public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                public_path() . '/allpdfFile' . '/' . $fileName3,
-                public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                public_path() . '/allpdfFile' . '/' . $fileName4,
-                public_path() . '/allpdfFile' . '/' . $fileName9,
-                public_path() . '/allpdfFile' . '/' . $fileName6,
-                public_path() . '/allpdfFile' . '/' . $fileName8,
-                public_path() . '/allpdfFile' . '/' . $fileName5,
-            ];
+            if($quotaion->configurableitems != 9){
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
+            } else {
+                    $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
+            }
         }
 
         if(count($ed) == 0){
