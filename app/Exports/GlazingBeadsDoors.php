@@ -25,12 +25,13 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id,$vid,$result,$section;
 
-    function __construct($id,$vid,$result) {
+    function __construct($id,$vid,$result,$section = null) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
+        $this->section = $section;
     }
 
     public function collection()
@@ -240,33 +241,64 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             $summary[$key]['count'] += 1;
         }
 
-        // blank row
-        $data[] = array_fill(0, 15, '');
+        if($this->section != 'Summary'){
+            // blank row
+            $data[] = array_fill(0, 15, '');
 
-        // summary heading
-        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-        $data[] = [
-            'Glazing Bead Species',
-            'Glazing Bead Profile',
-            'Glazing Bead Height',
-            'Glazing Bead Depth',
-            'Glazing Bead Width',
-            'Glazing Bead Length',
-            'Count',
-        ];
-
-        // summary rows
-        foreach ($summary as $row) {
+            // summary heading
+            $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             $data[] = [
-                $row['species'],
-                $row['profile'],
-                $row['height'],
-                $row['depth'],
-                $row['width'],
-                $row['length'],
-                $row['count'],   // now 2 for your example
+                'Glazing Bead Species',
+                'Glazing Bead Profile',
+                'Glazing Bead Height',
+                'Glazing Bead Depth',
+                'Glazing Bead Width',
+                'Glazing Bead Length',
+                'Count',
             ];
+
+            // summary rows
+            foreach ($summary as $row) {
+                $data[] = [
+                    $row['species'],
+                    $row['profile'],
+                    $row['height'],
+                    $row['depth'],
+                    $row['width'],
+                    $row['length'],
+                    $row['count'],   // now 2 for your example
+                ];
+            }
+        }else{
+            // blank row
+            $data = [];
+
+            // summary heading
+            $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+            $data[] = [
+                'Glazing Bead Species',
+                'Glazing Bead Profile',
+                'Glazing Bead Height',
+                'Glazing Bead Depth',
+                'Glazing Bead Width',
+                'Glazing Bead Length',
+                'Count',
+            ];
+
+            // summary rows
+            foreach ($summary as $row) {
+                $data[] = [
+                    $row['species'],
+                    $row['profile'],
+                    $row['height'],
+                    $row['depth'],
+                    $row['width'],
+                    $row['length'],
+                    $row['count'],   // now 2 for your example
+                ];
+            }
         }
+
 
         $footData = ['','','','','','','','','','','','','',''];
         $allData  = [$data, $footData];
@@ -278,12 +310,15 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
     public function headings(): array
     {
-        $a = [
-        'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
-        'Glazing Bead Height', 'Glazing Bead Depth',
-        'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
-        'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
-        ];
+        $a = [];
+        if($this->section != 'Summary'){
+            $a = [
+            'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+            'Glazing Bead Height', 'Glazing Bead Depth',
+            'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
+            'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
+            ];
+        }
 
 
         $b = ['Glazing Beads for Doors'];
