@@ -34,7 +34,11 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         /**
          * @return \Illuminate\Support\Collection
          */
-        protected $result
+        protected $result,
+        /**
+         * @return \Illuminate\Support\Collection
+         */
+        protected $section
     )
     {
     }
@@ -164,28 +168,50 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
         $summary[$key]['QTY'] += $qty;
     }
 
-    // add blank row
-    $data[] = array_fill(0, 10, '');
+    if($this->section != 'Summary'){
+        // add blank row
+        $data[] = array_fill(0, 10, '');
 
-    $data[] = array_fill(0, 10, '');
-    $data[] = array_fill(0, 10, '');
-    $data[] = array_fill(0, 10, '');
+        $data[] = array_fill(0, 10, '');
+        $data[] = array_fill(0, 10, '');
+        $data[] = array_fill(0, 10, '');
 
-    // add summary header
-    $data[] = ['Summary', '', '', '', '', '', '', '', '', ''];
-    $data[] = ['Glass Type', 'Glass Width', 'Glass Height', 'QTY'];
+        // add summary header
+        $data[] = ['Summary', '', '', '', '', '', '', '', '', ''];
+        $data[] = ['Glass Type', 'Glass Width', 'Glass Height', 'QTY'];
 
-    // add summary rows
-    foreach ($summary as $row) {
-        $data[] = [
-            $row['Glass Type'],
-            $row['Glass Width'],
-            $row['Glass Height'],
-            $row['QTY']
-        ];
+        // add summary rows
+        foreach ($summary as $row) {
+            $data[] = [
+                $row['Glass Type'],
+                $row['Glass Width'],
+                $row['Glass Height'],
+                $row['QTY']
+            ];
+        }
+
+        $footData = array_fill(0, 10, '');
+    }else{
+        // add blank row
+        $data = [];
+
+        // add summary header
+        $data[] = ['Summary', '', '', '', '', '', '', '', '', ''];
+        $data[] = ['Glass Type', 'Glass Width', 'Glass Height', 'QTY'];
+
+        // add summary rows
+        foreach ($summary as $row) {
+            $data[] = [
+                $row['Glass Type'],
+                $row['Glass Width'],
+                $row['Glass Height'],
+                $row['QTY']
+            ];
+        }
+
+        $footData = array_fill(0, 10, '');
     }
 
-    $footData = array_fill(0, 10, '');
     $allData = [$data, $footData];
 
     return collect($allData);
@@ -193,18 +219,22 @@ class ScreenGlass implements FromCollection,WithHeadings,WithEvents,WithTitle
 
     public function headings(): array
     {
-        $a = [
-            'S.No',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Screen Number',
-            'Screen Type',
-            'Glass Panes ',
-            'Glass Type',
-            'Glass Width',
-            'Glass Height ',
-            'Quantity of Screen  types'
-        ];
+        $a = [];
+        if($this->section != 'Summary'){
+            $a = [
+                'S.No',
+                'Plot Number/Ref',
+                'IFC/Certifire No/Q mark Plug',
+                'Screen Number',
+                'Screen Type',
+                'Glass Panes ',
+                'Glass Type',
+                'Glass Width',
+                'Glass Height ',
+                'Quantity of Screen  types'
+            ];
+        }
+
         $b = ['Screen Glass'];
 
         $d = [$b,$a];
@@ -218,8 +248,13 @@ public function registerEvents(): array
             $sheet = $event->sheet->getDelegate();
 
             // ===== Main header design (same as before) =====
-            $sheet->mergeCells('A1:J1');
-            $sheet->getStyle('A1:J2')->applyFromArray([
+            if($this->section != 'Summary'){
+                    $titleRange = 'A1:J1';
+                }else{
+                    $titleRange = 'A1:D1';
+                }
+            $sheet->mergeCells($titleRange);
+            $sheet->getStyle($titleRange)->applyFromArray([
                 'font' => ['bold' => true],
                 'alignment' => [
                     'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
