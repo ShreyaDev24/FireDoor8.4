@@ -299,51 +299,48 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     {
         return [
             AfterSheet::class => function (AfterSheet $event) {
-
-                // 🔹 Merge and style first row (main title)
-                $highestColumn = $event->sheet->getHighestColumn();
-                $titleRange = 'A1:' . $highestColumn . '1'; // Merge from A1 to last used column (e.g., G1)
-
-                $event->sheet->mergeCells($titleRange);
-                $event->sheet->getStyle($titleRange)->applyFromArray([
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'alignment' => [
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        'vertical'   => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                    ],
-                ]);
-
-                // 🔹 Existing styling (optional: only for other sections)
-                if ($this->section != 'Summary') {
+                // ----------------------------
+                // 🔹 Existing header styling
+                // ----------------------------
+                if($this->section != 'Summary'){
+                    $cellRange1 = 'A1:T1'; // main merged header
                     $cellRange2 = 'A2:T2'; // column headings row
-
-                    $styleArray = [
-                        'font' => ['bold' => true],
-                        'alignment' => [
-                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
-                        ],
-                        'borders' => [
-                            'outline' => [
-                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
-                                'color' => ['argb' => 'FF0000'],
-                            ],
-                        ],
-                    ];
-
-                    $event->sheet->getStyle($cellRange2)->applyFromArray($styleArray);
-                    $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
-
-                    // Auto-size columns
-                    foreach (range('A', 'T') as $col) {
-                        $event->sheet->getColumnDimension($col)->setAutoSize(true);
-                    }
+                }else{
+                    $cellRange1 = 'A1:G1'; // main merged header
+                    $cellRange2 = 'A2:G2'; // column headings row
                 }
 
-                // 🔹 Style “Summary” header row
-                $highestRow = $event->sheet->getHighestRow();
+                $styleArray = [
+                    'font' => ['bold' => true],
+                    'alignment' => [
+                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'borders' => [
+                        'outline' => [
+                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'color' => ['argb' => 'FF0000'],
+                        ],
+                    ],
+                ];
+
+                // Merge and style top header
+                $event->sheet->mergeCells($cellRange1);
+                $event->sheet->getStyle($cellRange1)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
+
+                // Auto size all columns A–T
+                foreach (range('A', 'T') as $col) {
+                    $event->sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+
+                // ----------------------------
+                // 🔹 New Summary Header Styling
+                // ----------------------------
+                $highestRow = $event->sheet->getHighestRow(); // last row on the sheet
+
+                // Find the row number of "Summary" header (by searching for text)
                 $summaryHeaderRow = null;
                 foreach (range(1, $highestRow) as $r) {
                     $cellVal = $event->sheet->getCell('A' . $r)->getValue();
@@ -354,6 +351,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 }
 
                 if ($summaryHeaderRow) {
+                    // Make the summary header bold, centered, with light gray fill
                     $event->sheet->getStyle('A' . $summaryHeaderRow . ':G' . $summaryHeaderRow)->applyFromArray([
                         'font' => ['bold' => true],
                         'alignment' => [
@@ -362,7 +360,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                         ],
                         'fill' => [
                             'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
-                            'startColor' => ['argb' => 'FFD9D9D9'],
+                            'startColor' => ['argb' => 'FFD9D9D9'], // light gray background
                         ],
                         'borders' => [
                             'allBorders' => [
