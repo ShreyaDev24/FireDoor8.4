@@ -374,6 +374,11 @@ class PrintInvoiceController extends Controller
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
+            ->select(
+                'items.itemId','items.DoorsetType','item_master.doorNumber','items.DoorType','items.AdjustPrice','items.DoorsetPrice','items.IronmongaryPrice',
+                DB::raw('COUNT(items.itemId) AS qty')
+            )
+            ->groupBy('items.itemId')
             ->where('quotation_version_items.version_id', $versionID)->get();
         $i = 1;
 
@@ -387,13 +392,14 @@ class PrintInvoiceController extends Controller
                 '<tr>
             <td>' . $show->doorNumber . '</td>
             <td>' . $DoorDescription . '</td>
-            <td>' . $show->DoorType . '</td>';
+            <td>' . $show->DoorType . '</td>
+            <td>' . $show->qty . '</td>';
 
             if($HideCosts == 0){
-               $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice)), 2) . '</td><td>' . round($show->IronmongaryPrice, 2) . '</td>';
+               $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) * $show->qty :floatval($show->DoorsetPrice)), 2) * $show->qty . '</td><td>' . round($show->IronmongaryPrice, 2) * $show->qty . '</td>';
             }
 
-            $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) + floatval($show->IronmongaryPrice):floatval($show->DoorsetPrice) + floatval($show->IronmongaryPrice)), 2) . '</td>
+            $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) * $show->qty + floatval($show->IronmongaryPrice) * $show->qty:floatval($show->DoorsetPrice) * $show->qty + floatval($show->IronmongaryPrice)), 2) * $show->qty . '</td>
             </tr>';
             $i++;
         }

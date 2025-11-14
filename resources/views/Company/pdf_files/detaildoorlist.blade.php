@@ -154,6 +154,7 @@
                         <th scope="col">Door</th>
                         <th scope="col">Description</th>
                         <th scope="col">D/Set</th>
+                        <th scope="col">No of Door QTY</th>
                         @if($HideCosts == 0)
                         <th scope="col">Doorset Price</th>
                         <th scope="col">Ironm'y Price</th>
