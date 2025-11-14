@@ -25,12 +25,13 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id,$vid,$result,$section;
 
-    function __construct($id,$vid,$result) {
+    function __construct($id,$vid,$result,$section = null) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
+        $this->section = $section;
     }
 
     public function collection()
@@ -286,18 +287,34 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             }
         }
 
-        // HEADER + SPACING
-        $data[] = array_fill(0, 22, '');
-        $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
-        $data[] = [
-            'Glass Type',
-            'VP 1 Height', 'VP 1 Width', 'Qty',
-            'VP 2 Height', 'VP 2 Width', 'Qty',
-            'VP 3 Height', 'VP 3 Width', 'Qty',
-            'VP 4 Height', 'VP 4 Width', 'Qty',
-            'VP 5 Height', 'VP 5 Width', 'Qty',
-            'Grand Total Qty' // ✅ NEW COLUMN
-        ];
+        if($this->section != 'Summary'){
+            // HEADER + SPACING
+            $data[] = array_fill(0, 22, '');
+            $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+            $data[] = [
+                'Glass Type',
+                'VP 1 Height', 'VP 1 Width', 'Qty',
+                'VP 2 Height', 'VP 2 Width', 'Qty',
+                'VP 3 Height', 'VP 3 Width', 'Qty',
+                'VP 4 Height', 'VP 4 Width', 'Qty',
+                'VP 5 Height', 'VP 5 Width', 'Qty',
+                'Grand Total Qty' // ✅ NEW COLUMN
+            ];
+        }else{
+            // HEADER + SPACING
+            $data = [];
+            $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
+            $data[] = [
+                'Glass Type',
+                'VP 1 Height', 'VP 1 Width', 'Qty',
+                'VP 2 Height', 'VP 2 Width', 'Qty',
+                'VP 3 Height', 'VP 3 Width', 'Qty',
+                'VP 4 Height', 'VP 4 Width', 'Qty',
+                'VP 5 Height', 'VP 5 Width', 'Qty',
+                'Grand Total Qty' // ✅ NEW COLUMN
+            ];
+        }
+
 
         // Print summary
         foreach ($summary as $type => $vpData) {
@@ -320,25 +337,28 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
     public function headings(): array
     {
-        $a = [
-            'Door Type',
-            'Door Number',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Glass Thickness in mm',
-            'Glass Type',
-            'VP1 H',
-            'VP W',
-            'QTY',
-            'VP2 H',
-            'QTY',
-            'VP3 H',
-            'QTY',
-            'VP4 H',
-            'QTY',
-            'VP5 H',
-            'QTY',
-        ];
+        $a = [];
+        if($this->section != 'Summary'){
+            $a = [
+                'Door Type',
+                'Door Number',
+                'Plot Number/Ref',
+                'IFC/Certifire No/Q mark Plug',
+                'Glass Thickness in mm',
+                'Glass Type',
+                'VP1 H',
+                'VP W',
+                'QTY',
+                'VP2 H',
+                'QTY',
+                'VP3 H',
+                'QTY',
+                'VP4 H',
+                'QTY',
+                'VP5 H',
+                'QTY',
+            ];
+        }
 
         $b = ['Glass Order Sheet'];
 

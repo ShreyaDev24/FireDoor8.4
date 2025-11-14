@@ -24,12 +24,13 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
     /**
     * @return \Illuminate\Support\Collection
     */
-    protected $id,$vid,$result;
+    protected $id,$vid,$result,$section;
 
-    function __construct($id,$vid,$result) {
+    function __construct($id,$vid,$result,$section = null) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
+        $this->section = $section;
     }
 
     public function collection()
@@ -179,127 +180,139 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         }
 
+
         $parseMeta = function($code) {
-    $code = trim((string)$code);
-    $meta = ['width' => '', 'height' => ''];
-    if ($code === '') return $meta;
+            $code = trim((string)$code);
+            $meta = ['width' => '', 'height' => ''];
+            if ($code === '') return $meta;
 
-    // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
-    if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
-        $meta['width']  = $m[1] ?? '';
-        $meta['height'] = $m[2] ?? '';
-    }
-    return $meta;
-};
+            // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
+            if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
+                $meta['width']  = $m[1] ?? '';
+                $meta['height'] = $m[2] ?? '';
+            }
+            return $meta;
+        };
 
-// Count occurrences for each product code in col 8 (Leaf 1) and col 9 (Leaf 2)
-$leaf1Counts = [];
-$leaf2Counts = [];
-$codeMeta    = []; // store width/height per code
+        // Count occurrences for each product code in col 8 (Leaf 1) and col 9 (Leaf 2)
+        $leaf1Counts = [];
+        $leaf2Counts = [];
+        $codeMeta    = []; // store width/height per code
 
-foreach ($data as $row) {
-    $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
-    $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
-    $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
+        foreach ($data as $row) {
+            $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
+            $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+            $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
 
-    // ✅ Leaf 1 logic
-    if ($c1) {
-        $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
-        if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
-    }
+            // ✅ Leaf 1 logic
+            if ($c1) {
+                $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
+                if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
+            }
 
-    // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
-    if ($c2 || (is_numeric($cutW2) && $cutW2 > 0)) {
-        // Use Leaf 2’s code if available; else reuse Leaf 1’s code for dimension grouping
-        $targetCode = $c2 ?: $c1;
-        $leaf2Counts[$targetCode] = ($leaf2Counts[$targetCode] ?? 0) + 1;
-        if (!isset($codeMeta[$targetCode])) $codeMeta[$targetCode] = $parseMeta($targetCode);
-    }
-}
+            // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
+            if ($c2 || (is_numeric($cutW2) && $cutW2 > 0)) {
+                // Use Leaf 2’s code if available; else reuse Leaf 1’s code for dimension grouping
+                $targetCode = $c2 ?: $c1;
+                $leaf2Counts[$targetCode] = ($leaf2Counts[$targetCode] ?? 0) + 1;
+                if (!isset($codeMeta[$targetCode])) $codeMeta[$targetCode] = $parseMeta($targetCode);
+            }
+        }
 
-// Union of all codes (preserve a stable order)
-$allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
+        // Union of all codes (preserve a stable order)
+        $allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
 
-// Build summary rows
-$summaryRows = [];
-foreach ($allCodes as $code) {
-    $l1Count = $leaf1Counts[$code] ?? 0;
-    $l2Count = $leaf2Counts[$code] ?? 0;
+        // Build summary rows
+        $summaryRows = [];
+        foreach ($allCodes as $code) {
+            $l1Count = $leaf1Counts[$code] ?? 0;
+            $l2Count = $leaf2Counts[$code] ?? 0;
 
-    $meta   = $codeMeta[$code] ?? $parseMeta($code);
-    $width  = $meta['width'];
-    $height = $meta['height'];
+            $meta   = $codeMeta[$code] ?? $parseMeta($code);
+            $width  = $meta['width'];
+            $height = $meta['height'];
 
-    // Show width under the side that actually has a count
-    $leaf1Width = $l1Count > 0 ? $width : '';
-    $leaf2Width = $l2Count > 0 ? $width : '';
+            // Show width under the side that actually has a count
+            $leaf1Width = $l1Count > 0 ? $width : '';
+            $leaf2Width = $l2Count > 0 ? $width : '';
 
-    $gt = $l1Count + $l2Count;
+            $gt = $l1Count + $l2Count;
 
-    $summaryRows[] = [
-        $code,           // Summary (Product Code)
-        $leaf1Width, $l1Count,   // Leaf 1 | Count
-        $leaf2Width, $l2Count,   // Leaf 2 | Count
-        $height,                // Height
-        $gt                     // GT
-    ];
-}
+            $summaryRows[] = [
+                $code,           // Summary (Product Code)
+                $leaf1Width, $l1Count,   // Leaf 1 | Count
+                $leaf2Width, $l2Count,   // Leaf 2 | Count
+                $height,                // Height
+                $gt                     // GT
+            ];
+        }
 
-// Header row for summary
-$summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+        // Header row for summary
+        $summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
 
-// Merge: main rows + blank separator + summary header + summary rows
-$merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+        if($this->section != 'Summary'){
+            // Merge: main rows + blank separator + summary header + summary rows
+            $merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+        }else{
+            // Merge: main rows + blank separator + summary header + summary rows
+            $merged = array_merge([$summaryHeader], $summaryRows);
+        }
 
-return collect($merged);
 
 
-        // $footData = [
-        //     '','','','','','','','','','','','','','','','','','','',''
-        // ];
-
-        // $allData = [$data,$footData];
-
-        // return collect($allData);
+        return collect($merged);
     }
 
     public function headings(): array
     {
-        $a = [
-            'Total Doors',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Door Number',
-            'Door Type',
-            'Door Thickness',
-            'Door Mat',
-            'Door Finish',
-            'PRODUCT CODE LEAF 1 ',
-            'PRODUCT CODE LEAF 2',
+        $a = [];
+        if($this->section != 'Summary'){
+            $a = [
+                'Total Doors',
+                'Plot Number/Ref',
+                'IFC/Certifire No/Q mark Plug',
+                'Door Number',
+                'Door Type',
+                'Door Thickness',
+                'Door Mat',
+                'Door Finish',
+                'PRODUCT CODE LEAF 1 ',
+                'PRODUCT CODE LEAF 2',
             'Ironmongery Ref',
-            'Cut Size H',
-            'Cut Size W',
-            'Cut Size W2',
-            'Lipping Thickness',
-            'Lipping Finish W',
-            'Lipping Finish H',
-            'Lipping Mat',
-            'Exposed or Concealed',
-            'Intumescent Seal Type',
-            'Notes'
-        ];
+                'Cut Size H',
+                'Cut Size W',
+                'Cut Size W2',
+                'Lipping Thickness',
+                'Lipping Finish W',
+                'Lipping Finish H',
+                'Lipping Mat',
+                'Exposed or Concealed',
+                'Intumescent Seal Type',
+                'Notes'
+            ];
+        }
 
         $b = ['Door Order Sheet'];
 
         $d = [$b,$a];
         return $d;
     }
+
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:U1';
-                $cellRange2 = 'A2:U2';
+            AfterSheet::class => function (AfterSheet $event) {
+                // ----------------------------
+                // 🔹 Existing header styling
+                // ----------------------------
+                if($this->section != 'Summary'){
+                    $cellRange1 = 'A1:U1'; // main merged header
+                    $cellRange2 = 'A2:U2'; // column headings row
+                }else{
+                    $cellRange1 = 'A1:G1'; // main merged header
+                    $cellRange2 = 'A2:G2'; // column headings row
+                }
+
                 $styleArray = [
                     'font' => ['bold' => true],
                     'alignment' => [
@@ -363,7 +376,6 @@ return collect($merged);
             },
         ];
     }
-
 
     public function title(): string
     {

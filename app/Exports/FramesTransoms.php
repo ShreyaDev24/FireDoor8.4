@@ -28,13 +28,13 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
     /**
      * @return \Illuminate\Support\Collection
      */
-    protected $id, $vid, $result;
+    protected $id,$vid,$result,$section;
 
-    function __construct($id, $vid, $result)
-    {
+    function __construct($id,$vid,$result,$section = null) {
         $this->id = $id;
         $this->vid = $vid;
         $this->result = $result;
+        $this->section = $section;
     }
 
     public function collection()
@@ -596,18 +596,33 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'QTY', // ✅ Add qty header
         ];
 
-        // Add empty rows before summary
-        $data[] = array_fill(0, 32, '');
-        $data[] = array_fill(0, 32, '');
-        $data[] = ['Summary', '', '', '', '', '', ''];
-        $data[] = $summaryHeader;
+        if($this->section != 'Summary'){
+            // Add empty rows before summary
+            $data[] = array_fill(0, 32, '');
+            $data[] = array_fill(0, 32, '');
+            $data[] = ['Summary', '', '', '', '', '', ''];
+            $data[] = $summaryHeader;
 
-        // Add summary rows
-        $totalQty = 0;
-        foreach ($summaryData as $row) {
-            $totalQty += $row[5]; // sum qty
-            $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
+            // Add summary rows
+            $totalQty = 0;
+            foreach ($summaryData as $row) {
+                $totalQty += $row[5]; // sum qty
+                $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
+            }
+        }else{
+            // Add empty rows before summary
+            $data = [];
+            $data[] = ['Summary', '', '', '', '', '', ''];
+            $data[] = $summaryHeader;
+
+            // Add summary rows
+            $totalQty = 0;
+            foreach ($summaryData as $row) {
+                $totalQty += $row[5]; // sum qty
+                $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
+            }
         }
+
 
 
         // ----------------------------------------------------------
