@@ -374,29 +374,49 @@ class PrintInvoiceController extends Controller
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
+            ->select(
+                'items.itemId','items.DoorsetType','item_master.doorNumber','items.DoorType','items.AdjustPrice','items.DoorsetPrice','items.IronmongaryPrice',
+                DB::raw('COUNT(items.itemId) AS qty')
+            )
+            ->groupBy('items.itemId')
             ->where('quotation_version_items.version_id', $versionID)->get();
         $i = 1;
 
         $DoorDescription = '';
         foreach ($shows as $show) {
+
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
 
-            $a2 .=
-                '<tr>
-            <td>' . $show->doorNumber . '</td>
-            <td>' . $DoorDescription . '</td>
-            <td>' . $show->DoorType . '</td>';
 
-            if($HideCosts == 0){
-               $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice)), 2) . '</td><td>' . round($show->IronmongaryPrice, 2) . '</td>';
+            $doorPrice = $show->AdjustPrice
+                            ? floatval($show->AdjustPrice)
+                            : floatval($show->DoorsetPrice);
+
+            $ironPrice = floatval($show->IronmongaryPrice);
+
+            $doorPriceTotal = round($doorPrice, 2);
+            $ironPriceTotal = round($ironPrice, 2);
+            $total = round(($doorPrice + $ironPrice), 2) * $show->qty;
+
+            $a2 .= '<tr>
+                        <td>' . $show->doorNumber . '</td>
+                        <td>' . $DoorDescription . '</td>
+                        <td>' . $show->DoorType . '</td>
+                        <td>' . $show->qty . '</td>';
+
+            if ($HideCosts == 0) {
+                $a2 .= '<td>' . $doorPriceTotal . '</td>
+                        <td>' . $ironPriceTotal . '</td>';
             }
 
-            $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) + floatval($show->IronmongaryPrice):floatval($show->DoorsetPrice) + floatval($show->IronmongaryPrice)), 2) . '</td>
-            </tr>';
+            $a2 .= '<td>' . $total . '</td>
+                </tr>';
+
             $i++;
         }
+
 
         $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'HideCosts' => $HideCosts]);
         // return $pdf3->download('file3.pdf');
