@@ -10173,7 +10173,6 @@ public function previewAdjustPriceDiscount(Request $request)
             ]);
         }
     }
-}
 
 
 
