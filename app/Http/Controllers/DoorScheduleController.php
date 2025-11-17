@@ -10017,6 +10017,7 @@ public function previewAdjustPriceDiscount(Request $request)
         Log::error("Preview Adjust Price ERROR: ".$e->getMessage());
         return response()->json(['status'=>false,'msg'=>$e->getMessage()]);
     }
+}
 
     public function updateRevision(Request $request){
         $url = url('quotation/generate') . '/' . $request->quotationId . '/' . $request->version;
