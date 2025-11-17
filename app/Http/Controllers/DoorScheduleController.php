@@ -96,6 +96,7 @@ use App\Exports\AllGlazingBeadsExport;
 use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\ExportReport;
+use Illuminate\Support\Facades\Log;
 
 class DoorScheduleController extends Controller
 {
@@ -9875,4 +9876,205 @@ class DoorScheduleController extends Controller
             ]);
         }
     }
+
+    public function previewDiscount(Request $request)
+{
+    $quotationId = $request->quotationId;
+    $versionId = $request->versionId;
+    $QuoteSummaryDiscount = $request->QuoteSummaryDiscount;
+
+    // 🧮 Run the same internal logic as adjustPriceDiscount,
+    // but don't update DB, just calculate and return result
+
+    $discountQuotationValue = discountQuotationValue($quotationId, $versionId);
+    if ($QuoteSummaryDiscount == 0) {
+        $discountQuotationValue = 0;
+    }
+
+    // Get original items and prices
+    $Items = Item::where(['QuotationId' => $quotationId, 'VersionId' => $versionId])->get();
+
+    $totalBefore = 0;
+    $totalAfter = 0;
+
+    foreach ($Items as $data) {
+        $originalPrice = $data->DoorsetPrice;
+        $totalBefore += $originalPrice;
+
+        $marginDiscount = $discountQuotationValue + $QuoteSummaryDiscount;
+        $discountAmount = ($originalPrice * $marginDiscount) / 100;
+        $adjustedPrice = $originalPrice - $discountAmount;
+
+        $totalAfter += $adjustedPrice;
+    }
+
+    // Return just preview data
+    return response()->json([
+        'status' => true,
+        'before' => round($totalBefore, 2),
+        'after' => round($totalAfter, 2),
+        'discount' => $QuoteSummaryDiscount
+    ]);
+}
+
+public function previewAdjustPriceDiscount(Request $request)
+{
+    $quotationId = $request->quotationId;
+    $versionId   = $request->versionId;
+    $QuoteSummaryDiscount = (float)$request->QuoteSummaryDiscount;
+
+    try {
+        Log::info('---------------- PREVIEW ADJUST PRICE DEBUG START ----------------');
+
+        // 🟩 1️⃣ Fetch old list using the same join structure as Schedule
+        $oldItems = \App\Models\Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+            ->where('quotation_version_items.version_id', $versionId)
+            ->select(
+                'items.itemId',
+                'item_master.id as masterId',
+                'items.DoorsetPrice',
+                'items.IronmongaryPrice',
+                'items.AdjustPrice'
+            )
+            ->orderBy('item_master.id')
+            ->get();
+
+        $oldTotal = $this->getQuotationGrandTotal($quotationId, $versionId);
+
+        // 🟩 Begin transaction
+        \DB::beginTransaction();
+
+        // 🟩 2️⃣ Apply discount logic (same as Adjust Price)
+        $discountQuotationValue = discountQuotationValue($quotationId, $versionId);
+        if ($QuoteSummaryDiscount == 0) $discountQuotationValue = 0;
+        $finalDiscountValue = $QuoteSummaryDiscount + $discountQuotationValue;
+
+        \App\Models\QuotationVersion::where('quotation_id', $quotationId)
+            ->where('id', $versionId)
+            ->update(['discountQuotation' => $finalDiscountValue]);
+
+        // 🟩 Execute recalculation
+        discountQuote($quotationId, $versionId);
+
+        // 🟩 3️⃣ Fetch new list with same structure
+        $newItems = \App\Models\Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+            ->where('quotation_version_items.version_id', $versionId)
+            ->select(
+                'items.itemId',
+                'item_master.id as masterId',
+                'items.DoorsetPrice',
+                'items.IronmongaryPrice',
+                'items.AdjustPrice'
+            )
+            ->orderBy('item_master.id')
+            ->get();
+
+        $sumOld = 0;
+        $sumNew = 0;
+
+        // 🟩 4️⃣ Compare per-row values (by index)
+        foreach ($newItems as $index => $item) {
+            $old = $oldItems[$index] ?? null;
+            if (!$old) continue;
+
+            $oldDoor = ($old->AdjustPrice && $old->AdjustPrice > 0) ? $old->AdjustPrice : $old->DoorsetPrice;
+            $newDoor = ($item->AdjustPrice && $item->AdjustPrice > 0) ? $item->AdjustPrice : $item->DoorsetPrice;
+
+            $oldIron = $old->IronmongaryPrice ?? 0;
+            $newIron = $item->IronmongaryPrice ?? 0;
+
+            $oldTotalRow = round($oldDoor + $oldIron, 2);
+            $newTotalRow = round($newDoor + $newIron, 2);
+            $diff = round($oldTotalRow - $newTotalRow, 2);
+
+            $sumOld += $oldTotalRow;
+            $sumNew += $newTotalRow;
+
+            Log::info("Door {$item->masterId} | OLD: Door={$oldDoor}, Iron={$oldIron}, Total={$oldTotalRow} | NEW: Door={$newDoor}, Iron={$newIron}, Total={$newTotalRow} | Diff={$diff}");
+        }
+
+        // 🟩 Rollback (no data saved)
+        \DB::rollBack();
+
+        $totalDifference = round($sumOld - $sumNew, 2);
+        $changeType = $totalDifference > 0 ? 'decrease' : 'increase';
+
+        Log::info("TOTAL | OldSum={$sumOld}, NewSum={$sumNew}, Diff={$totalDifference} ({$changeType})");
+        Log::info('---------------- PREVIEW ADJUST PRICE DEBUG END ----------------');
+
+        return response()->json([
+            'status' => true,
+            'discount' => $QuoteSummaryDiscount,
+            'old_total' => round($oldTotal, 2),
+            'difference' => abs($totalDifference),
+            'changeType' => $changeType,
+        ]);
+
+    } catch (\Throwable $e) {
+        \DB::rollBack();
+        Log::error("Preview Adjust Price ERROR: ".$e->getMessage());
+        return response()->json(['status'=>false,'msg'=>$e->getMessage()]);
+    }
+
+    public function updateRevision(Request $request){
+        $url = url('quotation/generate') . '/' . $request->quotationId . '/' . $request->version;
+        $quote = Quotation::where('id',$request->quotationId)->first();
+        if($quote){
+            $quote->QuotationStatus = 'Rivision';
+            $quote->fileByClient = null;
+            $quote->rejectreason = null;
+            $quote->linkStatus = 0;
+            $quote->status_accept_reject_at = date('Y-m-d H:i:s');
+            $updatequote = $quote->update();
+                if($updatequote){
+                    $projectId  = $quote->ProjectId;
+                    if(!empty($projectId) && $projectId != NULL ){
+                        $projectDetails = Project::find($projectId);
+                        $projectDetails->quotationId = null;
+                        $projectDetails->versionId =null;
+                        $projectDetails->save();
+                    }
+                    return response()->json([
+                    'status' => 'success',
+                    'message' => 'Now You rivised this quote',
+                    'url' => $url
+                ]);
+            } else{
+                return response()->json([
+                'status' => 'error',
+                'message' => 'Something went wrong !!!',
+                ]);
+            }
+        } else {
+             return response()->json([
+                'status' => 'error',
+                'message' => 'Quotation not found',
+            ]);
+        }
+    }
+}
+
+
+
+
+private function getQuotationGrandTotal($quotationId, $versionId)
+{
+    $itemsTotal = \App\Models\Item::where('QuotationId', $quotationId)
+        ->where('VersionId', $versionId)
+        ->selectRaw('SUM(COALESCE(DoorsetPrice,0) + COALESCE(IronmongaryPrice,0)) as t')
+        ->value('t') ?? 0;
+
+    $nonConfigTotal = \App\Models\NonConfigurableItemStore::where('quotationId', $quotationId)
+        ->where('versionId', $versionId)
+        ->sum('total_price');
+
+    $sideScreenTotal = \App\Models\SideScreenItem::where('QuotationId', $quotationId)
+        ->where('VersionId', $versionId)
+        ->sum('ScreenPrice');
+
+    return (float) $itemsTotal + (float) $nonConfigTotal + (float) $sideScreenTotal;
+}
+
 }

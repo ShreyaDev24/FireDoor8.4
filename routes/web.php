@@ -300,6 +300,11 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/import_fields', [App\Http\Controllers\DoorScheduleController::class,'import_fields'])->name('import_fields');
     Route::post('/import_process', [App\Http\Controllers\DoorScheduleController::class,'import_process'])->name('import_process');
     Route::post('/import-non-config', [App\Http\Controllers\DoorScheduleController::class,'import_non_config'])->name('option/import-non-config');
+    Route::post('/preview-discount', [App\Http\Controllers\DoorScheduleController::class, 'previewDiscount']);
+    Route::post('/discount/preview', [\App\Http\Controllers\DoorScheduleController::class, 'previewAdjustPriceDiscount'])
+     ->name('quotation.discount.preview');
+
+
 
 
 
@@ -335,6 +340,9 @@ Route::prefix('quotation')->group(function (): void {
 
     // get firerating options
     Route::get('/get-fire-rating-options', [App\Http\Controllers\DoorScheduleController::class, 'getFireRatingOptions']);
+
+    // 1066
+    Route::post('/create-rivison-qutation', [App\Http\Controllers\DoorScheduleController::class, 'updateRevision'])->name('create-rivison-qutation');
 
 
     //end

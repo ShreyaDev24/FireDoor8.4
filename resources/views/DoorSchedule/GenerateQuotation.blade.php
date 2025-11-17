@@ -98,6 +98,9 @@
                                                     id="">Generate Quote</a></li>
                                             <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
                                                     id="">Generate Elevation Drawing</a></li>
+                                            @if($quotation->QuotationStatus == 'Accept')
+                                                <li><a href="javascript:void(0);" onClick="CreateRivisionQuotation();">Create Revision Quotation</a></li>
+                                            @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
                                                     Doorset Schedule Excel</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
@@ -785,7 +788,7 @@
 
                                             <input type="number" class="dis" id="QuoteSummaryDiscount" name="QuoteSummaryDiscount" placeholder="0.00" value="">
                                             <button type="button" class="btn btn-primary mt-3"
-                                                    style="color:#fff; font-size:15px; margin-left:26px;margin-top:-5px;margin-top: 0px !important;float: right;"
+                                                    style="color:#fff; font-size:15px; margin-left:26px;margin-top:-52px;margin-top: 0px !important;float: right;"
                                                     onclick="adjustPriceDiscountBtn()">
                                                 Adjust Price
                                             </button>
@@ -2652,6 +2655,53 @@
                 //}
                 //});
             }
+            // 1066
+            function CreateRivisionQuotation(){
+                var Version = $('#currentVersion').val();
+                if (Version == "") {
+                    return false;
+                }
+                var QuotationId = $("#quotationId").val();
+                if (QuotationId == "") {
+                    return false;
+                }
+                $('.loader').empty().css({
+                    'display': 'block'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('quotation/create-rivison-qutation') }}",
+                    data: {
+                        _token: $("#_token").val(),
+                        version: Version,
+                        quotationId: QuotationId
+                    },
+                    dataType: 'Json',
+                    success: function(data) {
+                        console.log(data);
+                        if (data.status == "success") {
+                            $(".response-section").removeClass('alert-danger');
+                            $(".response-section").addClass('alert-success');
+                            setTimeout(function() {
+                                window.location.href = data.url;
+                            }, 3000);
+                        } else {
+                            $(".response-section").removeClass('alert-success');
+                            $(".response-section").addClass('alert-danger');
+                            $(".response-section").empty().append(data.message).show();
+                        }
+                        setTimeout(function() {
+                            $(".response-section").fadeOut();
+                        }, 3000);
+                        $('.loader').empty().css({'display': 'none'});
+                    },
+                    error: function(data) {
+                        swal("Oops!!", "Something went wrong. Please try again.", "error");
+                        $('.loader').empty().css({'display': 'none'});
+                    }
+                });
+
+            }
             function CreateNewVersion() {
                 var Version = $('#createNewSelectVersion').val();
                 if (Version == "") {
@@ -2999,32 +3049,32 @@
             $(function() {
                 $('#QuoteSummaryDiscount').keyup();;
             });
-            $(document).on('keyup', '#QuoteSummaryDiscount', function(e) {
-                e.preventDefault();
+            // $(document).on('keyup', '#QuoteSummaryDiscount', function(e) {
+            //     e.preventDefault();
 
-                // Get the discount percentage and convert to a number
-                let QuoteSummaryDiscountValue = parseFloat($(this).val()) || 0;
+            //     // Get the discount percentage and convert to a number
+            //     let QuoteSummaryDiscountValue = parseFloat($(this).val()) || 0;
 
-                // Get the total price and convert to a number
-                let QuoteSummaryTotalDoorPriceValue = parseFloat($('#QuoteSummaryTotalDoorPrice').val()) || 0;
+            //     // Get the total price and convert to a number
+            //     let QuoteSummaryTotalDoorPriceValue = parseFloat($('#QuoteSummaryTotalDoorPrice').val()) || 0;
 
-                // Calculate the discount amount
-                let totalQSdiscountValue = (QuoteSummaryTotalDoorPriceValue * Math.abs(QuoteSummaryDiscountValue)) / 100;
+            //     // Calculate the discount amount
+            //     let totalQSdiscountValue = (QuoteSummaryTotalDoorPriceValue * Math.abs(QuoteSummaryDiscountValue)) / 100;
 
-                // Apply positive discount as subtraction, negative discount as addition
-                let totalGBP = QuoteSummaryDiscountValue > 0
-                    ? QuoteSummaryTotalDoorPriceValue + totalQSdiscountValue
-                    : QuoteSummaryTotalDoorPriceValue - totalQSdiscountValue;
+            //     // Apply positive discount as subtraction, negative discount as addition
+            //     let totalGBP = QuoteSummaryDiscountValue > 0
+            //         ? QuoteSummaryTotalDoorPriceValue + totalQSdiscountValue
+            //         : QuoteSummaryTotalDoorPriceValue - totalQSdiscountValue;
 
-                // Update the discount and total amount display
-                $('#QSdiscountValue').html((QuoteSummaryDiscountValue > 0 ? '+' : '-') + totalQSdiscountValue.toFixed(2));
-                if (totalQSdiscountValue === 0) {
-                    $('#QSdiscountValue').closest('p').hide(); // Hide when discount is 0.00
-                } else {
-                    $('#QSdiscountValue').closest('p').show(); // Show when discount is non-zero
-                }
-                //$('.total_amount > span').html(totalGBP.toFixed(2));
-            });
+            //     // Update the discount and total amount display
+            //     $('#QSdiscountValue').html((QuoteSummaryDiscountValue > 0 ? '+' : '-') + totalQSdiscountValue.toFixed(2));
+            //     if (totalQSdiscountValue === 0) {
+            //         $('#QSdiscountValue').closest('p').hide(); // Hide when discount is 0.00
+            //     } else {
+            //         $('#QSdiscountValue').closest('p').show(); // Show when discount is non-zero
+            //     }
+            //     //$('.total_amount > span').html(totalGBP.toFixed(2));
+            // });
 
             function adjustPriceDiscountBtn(){
                 var url = $('#adjustPriceDiscountUrl').val();
@@ -3068,6 +3118,57 @@
                     });
                 }
             }
+
+            let __previewTimer = null;
+            $('#QuoteSummaryDiscount').on('input', function () {
+                clearTimeout(__previewTimer);
+
+                __previewTimer = setTimeout(function () {
+                    const discountVal = $('#QuoteSummaryDiscount').val();
+                    const versionId   = $('#versionId').val();
+                    const quotationId = $('#quotationId').val();
+                    const token       = $('#_token').val();
+
+                    if (!discountVal || !versionId || !quotationId) {
+                    $('#QSdiscountValue').text('0.00');
+                    return;
+                    }
+
+                    // show loader while waiting
+                    $('.loader').css({'display':'block'});
+
+                    $.ajax({
+                    url: '/quotation/discount/preview',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        _token: token,
+                        QuoteSummaryDiscount: discountVal,
+                        versionId: versionId,
+                        quotationId: quotationId
+                    },
+                    success: function (res) {
+                        $('.loader').css({'display':'none'});
+                        if (res.status) {
+                        // show discount change directly in that area
+                        // const color = res.changeType === 'decrease' ? '#28a745' : '#dc3545';
+                        // const sign = res.changeType === 'decrease' ? '-' : '+';
+
+                        $('#QSdiscountValue').html(
+                            `<span style="font-weight:600;">
+                            ${res.difference.toLocaleString()}
+                            </span>`
+                        );
+                        } else {
+                        $('#QSdiscountValue').html(`<span style="color:red;">Error</span>`);
+                        }
+                    },
+                    error: function () {
+                        $('#QSdiscountValue').html(`<span style="color:red;">Failed</span>`);
+                    }
+                    });
+                }, 400);
+            });
 
             @if (isset($Count))
                 let CustomerCounter = {{ $Count }};
