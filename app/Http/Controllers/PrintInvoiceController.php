@@ -4190,6 +4190,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         // Details Door List PDF
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
+
+        if ((int)$project->QualificationsStatus === 1) {
+            $MoreInformation = $project->MoreInformation;
+            $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'version' => $version,'project' => $project,'MoreInformation' => $MoreInformation,'quotaion' => $quotaion]);
+
+            // return $pdf2->download('file2.pdf');
+            $path2_2 = public_path() . '/allpdfFile';
+            $fileName2_2 = $id . '2_2' . '.' . 'pdf';
+            $pdf2_2->save($path2_2 . '/' . $fileName2_2);
+        }
+
         $a2 = '';
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
@@ -4773,6 +4784,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         })
         ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
+        // ->where('items.itemId',2335) //to see particular quote
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
 
         $TotalItems = count($ed->toArray());
@@ -4810,29 +4822,37 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
            $certMap = [
                 4 => [
+                    'NFR' => 'FEA/F99112 Revision L',
                     'FD30' => 'FEA/F99112 Revision L',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 8 => [
+                    'NFR' => 'BMT/CNA/F15159 Revision F',
                     'FD30' => 'BMT/CNA/F15159 Revision F',
                     'FD60' => 'WF377027 Revision A',
                 ],
                 1 => [
+                    'NFR' => 'Chilt/A02066 Revision P',
                     'FD30' => 'Chilt/A02066 Revision P',
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
+                    'NFR' => 'Chilt/A01204 Revision H',
                     'FD30' => 'Chilt/A01204 Revision H',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 7 => [
+                    'NFR' => 'FEA98164 Revision P',
                     'FD30' => 'FEA98164 Revision P',
                     'FD60' => 'FEA/F02141 Revision M',
                 ],
                 6 => [
+                    'NFR' => 'WF399992 Revision E',
                     'FD30' => 'WF399992 Revision E',
+                    'FD60' => 'WF399992 Revision E',
                 ],
                 5 => [
+                    'NFR' => '10133/22-2.R1',
                     'FD30' => '10133/22-2.R1',
                     'FD60' => '10133/22-2.R1',
                 ],
@@ -5028,7 +5048,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
 
-                   if(($show->DoorsetType == "SD")){
+                   if(($tt->DoorsetType == "SD")){
                        if(!empty($tt->Handing) && $tt->Handing == "Left"){
                            $FullBlock =$FixedSpaceBlockScallopedLeft;
                        }else{
@@ -5708,10 +5728,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         if ($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') {
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
+                                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 18px;"></div>';
                             } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                              $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 13px;"></div>
                                             <div class="'.$redstripRightCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 24px;"></div>';
@@ -5826,7 +5846,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                                     if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385
+                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385;
                                     }
                     }
 
@@ -5843,7 +5863,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             if (($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') && in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
                                 // class="'.$redstripLeftCommonClass.'"
-                                $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 24px;"></div>
+                               $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 24px;"></div>
                                             <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 37px;"></div>';
                             }
 
@@ -5876,7 +5896,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'458') : '20')) .'px;">
+                                              $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'458') : '20')) .'px;">
                                             <img style="width:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
                                         </div>';
@@ -6023,7 +6043,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <div id="main">
                     <div id="section-left">
                         <table id="NoBorder">
-                            <tr>
+                           <tr>
     <td colspan="2">
         <!-- HEADER TABLE -->
         <table id="WithBorderNew" class="tbl1">
@@ -6031,12 +6051,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <tr>
                     <td class="marImg" rowspan="2">
                         <span>';
-if (!empty($comapnyDetail->ComplogoBase64)) {
-    $elevTbl .= '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
-} else {
-    $elevTbl .= Base64Image('defaultImg');
-}
-$elevTbl .= '</span>
+            if (!empty($comapnyDetail->ComplogoBase64)) {
+                $elevTbl .= '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+            } else {
+                $elevTbl .= Base64Image('defaultImg');
+            }
+            $elevTbl .= '</span>
                     </td>
                     <td class="tbl_color"><span>Ref</span></td>
                     <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
@@ -6092,65 +6112,36 @@ $elevTbl .= '</span>
                     <td>' . $project->intumescentPoOne . '</td>
                     <td>' . $project->intumescentPoTwo . '</td>
                     <td>' . $project->intumescentPoThree . '</td>
-                </tr>';
+                </tr>
 
-            $elevTbl .=
-                '</span>
-                                            </td>
-                                                <td class="tbl_color"><span>IO No</span></td>
-                                                <td>' . $project->ioNumberOne . '</td>
-                                                <td>' . $project->ioNumberTwo . '</td>
-                                                <td>' . $project->ioNumberThree . '</td>
-                                                <td class="tbl_color"><span>Frame Po</span></td>
-                                                <td>' . $project->framePoOne . '</td>
-                                                <td>' . $project->framePoTwo . '</td>
-                                                <td>' . $project->framePoThree . '</td>
-                                                <td class="tbl_color"><span>Ironmongery Po</span></td>
-                                                <td>' . $project->ironmongeryPoOne . '</td>
-                                                <td>' . $project->ironmongeryPoTwo . '</td>
-                                                <td>' . $project->ironmongeryPoThree . '</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tbl_color"><span>Door Po</span></td>
-                                                <td>' . $project->doorPoOne . '</td>
-                                                <td>' . $project->doorPoTwo . '</td>
-                                                <td>' . $project->doorPoThree . '</td>
-                                                <td class="tbl_color"><span>Glass Po</span></td>
-                                                <td>' . $project->glassPoOne . '</td>
-                                                <td>' . $project->glassPoTwo . '</td>
-                                                <td>' . $project->glassPoThree . '</td>
-                                                <td class="tbl_color"><span>Intumescent Po</span></td>
-                                                <td>' . $project->intumescentPoOne . '</td>
-                                                <td>' . $project->intumescentPoTwo . '</td>
-                                                <td>' . $project->intumescentPoThree . '</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                    <div style="margin-top: 10px;overflow: auto; padding: 0px 20px;align-items: center height: 150px ;display: flex;">
-                                    <div style="float: left;border: aliceblue;padding: 5px 10px;display: flex;width: 50%;">
-                                        <div style="display: inline-flex; align-items: center;">
-                                            <p style="font-size: 16px; line-height: 23px; padding: 0; margin: 0;">Signature</p>';
-                                            if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
-                                               $elevTbl .= ' <img style="width: 160px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
-                                            } else {
-                                                $elevTbl .= ' ';
-                                            }
-                                      $elevTbl .= '  </div>
-                                    </div>';
-
-                                    if($clientclick == 'yes'){
-                                     $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
-                                        Date - '. \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y').'
-                                    </div>';
-                                    } else{
-                                        $elevTbl .= '<div style="float: right;font-size: 16px;width: 46%;text-align: right;padding: 8px 0;">
-                                        Date -
-                                    </div>';
-                                    }
-                                    $elevTbl .= '
-                                </div>
+                <!-- SIGNATURE + DATE ROW -->
+                <tr>
+                    <td colspan="12" style="padding: 12px;">
+                        <table style="width:100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="text-align:left; font-size:16px; vertical-align:middle;">
+                                    <b>Signature:</b>
+                                    ';
+                                if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
+                                    $elevTbl .= '<img style="width: 160px; margin-left:10px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
+                                }
+                                $elevTbl .= '
+                                                                </td>
+                                                                <td style="text-align:right; font-size:16px; vertical-align:middle;">
+                                                                    <b>Date:</b> ';
+                                if($clientclick == 'yes'){
+                                    $elevTbl .= \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y');
+                                }
+                                $elevTbl .= '
                                 </td>
-                            </tr>';
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>';
             $elevTbl .= '<tr>';
 
             $ConfigurableItems = "Streboard";
@@ -6492,7 +6483,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlazingSystems)) {
                 // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
                 //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', $userid)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
+                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
                 $glazingSystems = @$gs->GlazingSystem;
             }
 
@@ -6657,7 +6648,44 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
                 $frameWidth = is_numeric($tt->FrameWidth) ? $tt->FrameWidth : 0;
                 $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                // old formula before 15-09-2025
+                // $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+                //new formula after 15-09-2025
+                //$OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width - $beadThickness - $beadThickness;
+                // NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+            }
+
+            $ElevSL1Width = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Width= is_numeric($tt->SL1Width) ? $tt->SL1Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Width = $SLight1Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL1Height = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Height = is_numeric($tt->SL1Height) ? $tt->SL1Height : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Height = $SLight1Height - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Width = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL2Width = $SLight2Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Height = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
+                $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
+                $ElevSL2Height = $SLight2Height - $SideLight2FrameThickness - $SideLight2FrameThickness;
             }
 
             $elevTbl .= '</table>
@@ -6902,18 +6930,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">Overpanel/Fanlight Section</th>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glass Type</td>
-                                    <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glazing Beads</td>
-                                    <td class="dicription_blank">' . $OPGlazingBeads . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">OP/FL Glazing Bead Species</td>
-                                    <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
                                 </tr>';
                                 if($tt->Overpanel == 'Overpanel'){
                                 $elevTbl .= '
@@ -6927,6 +6943,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>';
                                 } else if($tt->Overpanel == 'Fan_Light'){
                                 $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glass Type</td>
+                                    <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glazing Beads</td>
+                                    <td class="dicription_blank">' . $OPGlazingBeads . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP/FL Glazing Bead Species</td>
+                                    <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
+                                </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Width</td>
                                     <td class="dicription_blank">' . $OPFLWeidth . '</td>
@@ -6960,11 +6988,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     $elevTbl .= '
                                     <tr>
                                         <td class="dicription_grey">SL1 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL1Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Width . '</td>
                                     </tr>
                                      <tr>
                                         <td class="dicription_grey">SL1 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL1Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Height . '</td>
                                     </tr>
                                     ';
                                     }
@@ -6972,11 +7000,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     $elevTbl .= '
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL2Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Width . '</td>
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">SL2 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL2Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Height . '</td>
                                     </tr>
                                     ';
                                     }
@@ -7028,6 +7056,24 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             </tbody>
                         </table>';
                         if($tt->FrameOnOff != 1){
+                            if($tt->Saddle == 'Yes'){
+                                $elevTbl .=  '<table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Saddle</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Required</td>
+                                        <td class="dicription_blank">' . $tt->Saddle . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Location</td>
+                                        <td class="dicription_blank">' . $tt->saddleLocation . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>';
+                            }
+
                             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -7039,6 +7085,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                             </tbody>
                         </table>';
+
+
                         }
 
                         $elevTbl .=  '</div></div>
@@ -7101,7 +7149,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <div class="fr_d_tbl" style=" margin: 0 auto;">
 
                     <div style="text-align:center; margin-bottom: 20px;">
-                        <table style="width: 300px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
+                        <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>
                                 <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
                                 <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
@@ -7154,22 +7202,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
-
-        $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
-
-        if ($isActive) {
-            return $pdf6->download('ElevationDrawing.pdf');  // ✅ Forces download with correct name
-        } else {
-            $path6 = public_path('allpdfFile');
-            if (!file_exists($path6)) {
-                mkdir($path6, 0777, true);
-            }
-
-            $fileName6 = $id . '6' . '.pdf';
-            $pdf6->save($path6 . '/' . $fileName6);
-        }
-
-
+        $path6 = public_path() . '/allpdfFile';
+        $fileName6 = $id . '6' . '.' . 'pdf';
+        $pdf6->save($path6 . '/' . $fileName6);
         // back page design
 
 
@@ -7581,6 +7616,25 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
+        }
+
+        $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
+
+        if ($isActive) {
+            if(count($eds) == 0){
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName6
+                ];
+            } else if(count($ed) == 0) {
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName8
+                ];
+            } else {
+                $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8
+                ];
+            }
         }
 
             // Merge the PDF files using PDFMerger
