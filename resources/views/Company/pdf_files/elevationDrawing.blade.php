@@ -103,11 +103,26 @@
             font-weight: bold;
         }
 
-        #footer {
+        /* #footer {
             position: absolute;
             bottom: 20px;
             font-size: 9px;
             width: 100%
+        } */
+
+        #footer {
+            position: absolute;
+            bottom: 20px;
+            font-size: 9px;
+            width: 100% !important;
+            max-width: 100% !important;
+            clear: both;
+            white-space: normal !important;
+            word-wrap: break-word !important;
+            word-break: break-word !important;
+            margin-top: 30px !important;   /* ← Increase this */
+            padding-right: 5px;
+            font-size: 5px;
         }
 
         .tbl4 {
