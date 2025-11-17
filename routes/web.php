@@ -341,6 +341,9 @@ Route::prefix('quotation')->group(function (): void {
     // get firerating options
     Route::get('/get-fire-rating-options', [App\Http\Controllers\DoorScheduleController::class, 'getFireRatingOptions']);
 
+    // 1066
+    Route::post('/create-rivison-qutation', [App\Http\Controllers\DoorScheduleController::class, 'updateRevision'])->name('create-rivison-qutation');
+
 
     //end
 
