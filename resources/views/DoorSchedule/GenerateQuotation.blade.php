@@ -98,6 +98,9 @@
                                                     id="">Generate Quote</a></li>
                                             <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
                                                     id="">Generate Elevation Drawing</a></li>
+                                            @if($quotation->QuotationStatus == 'Accept')
+                                                <li><a href="javascript:void(0);" onClick="CreateRivisionQuotation();">Create Rivision Quotation</a></li>
+                                            @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
                                                     Doorset Schedule Excel</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
@@ -2677,6 +2680,53 @@
                 //swal("Oops!!", "Something went wrong. Please try again.", "error");
                 //}
                 //});
+            }
+            // 1066
+            function CreateRivisionQuotation(){
+                var Version = $('#currentVersion').val();
+                if (Version == "") {
+                    return false;
+                }
+                var QuotationId = $("#quotationId").val();
+                if (QuotationId == "") {
+                    return false;
+                }
+                $('.loader').empty().css({
+                    'display': 'block'
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "{{ url('quotation/create-rivison-qutation') }}",
+                    data: {
+                        _token: $("#_token").val(),
+                        version: Version,
+                        quotationId: QuotationId
+                    },
+                    dataType: 'Json',
+                    success: function(data) {
+                        console.log(data);
+                        if (data.status == "success") {
+                            $(".response-section").removeClass('alert-danger');
+                            $(".response-section").addClass('alert-success');
+                            setTimeout(function() {
+                                window.location.href = data.url;
+                            }, 3000);
+                        } else {
+                            $(".response-section").removeClass('alert-success');
+                            $(".response-section").addClass('alert-danger');
+                            $(".response-section").empty().append(data.message).show();
+                        }
+                        setTimeout(function() {
+                            $(".response-section").fadeOut();
+                        }, 3000);
+                        $('.loader').empty().css({'display': 'none'});
+                    },
+                    error: function(data) {
+                        swal("Oops!!", "Something went wrong. Please try again.", "error");
+                        $('.loader').empty().css({'display': 'none'});
+                    }
+                });
+
             }
             function CreateNewVersion() {
                 var Version = $('#createNewSelectVersion').val();
