@@ -760,7 +760,7 @@ class PrintInvoiceController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4){
+            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
@@ -916,11 +916,9 @@ class PrintInvoiceController extends Controller
         }
 
         // return $pdf4->download('file4.pdf');
-        if($quotaion->configurableitems != 9){
             $path4 = public_path() . '/allpdfFile';
             $fileName4 = $id . '4' . '.' . 'pdf';
             $pdf4->save($path4 . '/' . $fileName4);
-        }
         // side screen door list
 
         $s2 = '';
@@ -3724,7 +3722,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
         if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-            if($quotaion->configurableitems != 9){
                  $pdfFiles = [
                     public_path() . '/allpdfFile' . '/' . $fileName1,
                     public_path() . '/allpdfFile' . '/' . $fileName2,
@@ -3738,23 +3735,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     public_path() . '/allpdfFile' . '/' . $fileName7,
                     public_path() . '/allpdfFile' . '/' . $fileName5,
                 ];
-            } else {
-                 $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName7,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
             }
-        }else{
-            if($quotaion->configurableitems != 9){
-                $pdfFiles = [
+        else{
+            $pdfFiles = [
                     public_path() . '/allpdfFile' . '/' . $fileName1,
                     public_path() . '/allpdfFile' . '/' . $fileName2,
                     public_path() . '/allpdfFile' . '/' . $fileName2_1,
@@ -3766,20 +3749,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     public_path() . '/allpdfFile' . '/' . $fileName8,
                     public_path() . '/allpdfFile' . '/' . $fileName5,
                 ];
-            } else {
-                    $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
             }
-        }
 
         if(count($ed) == 0){
             $pdfFiles = [
