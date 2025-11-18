@@ -206,7 +206,7 @@ function IsSameAsDecorativeGroves1(){
         $("#GrooveLocationLeaf2").val($("#grooveLocation").val()).attr({'disabled': false, "required": true});
         $("#GrooveWidthLeaf2").val($("#grooveWidth").val()).attr({'readonly': false, "required": true});
         $("#GrooveDepthLeaf2").val($("#grooveDepth").val()).attr({'disabled': false, "required": true});
-        if(pageId == 4 || pageId == 5 || pageId == 6){
+        if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
             $("#NumberOfGrooveLeaf2").val($("#numberOfGroove").val()).attr({'readonly': true, "required": false});
             $("#DoorDimensionGrooveLeaf2").val($("#doorDimensionGroove").val()).attr({'readonly': false});
             $("#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true });
@@ -234,7 +234,7 @@ function IsSameAsDecorativeGroves1(){
         $("#GrooveDepthLeaf2").val('0').attr({'disabled': false, "required": true});
 
 
-        if(pageId == 4 || pageId == 5 || pageId == 6){
+        if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
             $('#GroovesIconLeaf2').removeAttr('data-target', '#DoorDimensionGrooves');
             $("#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true }).val('');
             $("#DoorDimensionGrooveLeaf2").addClass("bg-white");
@@ -275,7 +275,7 @@ function DecorativeGrovesLeaf2Change(){
             $("#NumberOfVerticalGrooveLeaf2").attr({'readonly':true,"required":false}).val('0');
             $("#NumberOfHorizontalGrooveLeaf2").attr({'readonly':true,"required":false}).val('0');
         }
-        if(pageId == 4 || pageId == 5 || pageId == 6){
+        if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
             $("#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true });
             $("#DoorDimensionGrooveLeaf2").addClass("bg-white");
         }
@@ -289,7 +289,7 @@ function DecorativeGrovesLeaf2Change(){
         $("#MaxNumberOfGrooveLeaf2").attr({'readonly':true,"required":false}).val('0');
         $("#NumberOfVerticalGrooveLeaf2").attr({'readonly':true,"required":false}).val('0');
         $("#NumberOfHorizontalGrooveLeaf2").attr({'readonly':true,"required":false}).val('0');
-        if(pageId == 4 || pageId == 5 || pageId == 6){
+        if(pageId == 4 || pageId == 5 || pageId == 6 || pageId == 9){
             $('#GroovesIconLeaf2').removeAttr('data-target', '#DoorDimensionGrooves');
             $("#DoorDimensionGrooveLeaf2").removeClass("bg-white");
             $("#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true }).val('');

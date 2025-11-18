@@ -419,7 +419,7 @@ function DoorDimensionGroovesIconLeaf2() {
 }
 
 function DoorDimensionGrooveValueFill(id, configurableitems, grooves_vertical, grooves_horizontal,imageName) {
-    if(configurableitems == 9){
+    if(configurableitems == 4){
         $('#numberOfVerticalGroove').val(grooves_vertical);
         $('#numberOfHorizontalGroove').val(grooves_horizontal);
         $('#doorDimensionGroove').val(imageName);
@@ -429,7 +429,7 @@ function DoorDimensionGrooveValueFill(id, configurableitems, grooves_vertical, g
 }
 
 function DoorDimensionGrooveValueFill2(id, configurableitems, grooves_vertical, grooves_horizontal,imageName) {
-    if(configurableitems == 9){
+    if(configurableitems == 4){
         $('#NumberOfVerticalGrooveLeaf2').val(grooves_vertical);
         $('#NumberOfHorizontalGrooveLeaf2').val(grooves_horizontal);
         $('#DoorDimensionGrooveLeaf2').val(imageName);
