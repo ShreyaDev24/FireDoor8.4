@@ -780,7 +780,7 @@ class PrintInvoiceController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4){
+            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
@@ -3762,50 +3762,45 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
-        // Now prepare the main PDF files array
-        $pdfFiles = [];
-        $pdfFiles[] = public_path('allpdfFile/' . $fileName1);
-        $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
-        $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
-        $pdfFiles[] = public_path('allpdfFile/' . $fileName3);
-
-        // Add More Information PDF only if it exists
-        if (!empty($fileName2_2)) {
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
-        }
-
-        // Conditional blocks
-        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName7);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
-        } else {
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
-        }
-
-        // If $ed count is 0, override with a smaller set
-        if (count($ed) == 0) {
-            $pdfFiles = [];
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName1);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName2);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName2_1);
-
-            if (!empty($fileName2_2)) {
-                $pdfFiles[] = public_path('allpdfFile/' . $fileName2_2);
+        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
+                 $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName7,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
+            }
+        else{
+            $pdfFiles = [
+                    public_path() . '/allpdfFile' . '/' . $fileName1,
+                    public_path() . '/allpdfFile' . '/' . $fileName2,
+                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                    public_path() . '/allpdfFile' . '/' . $fileName3,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
+                    public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName9,
+                    public_path() . '/allpdfFile' . '/' . $fileName6,
+                    public_path() . '/allpdfFile' . '/' . $fileName8,
+                    public_path() . '/allpdfFile' . '/' . $fileName5,
+                ];
             }
 
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
+        if(count($ed) == 0){
+            $pdfFiles = [
+                public_path() . '/allpdfFile' . '/' . $fileName1,
+                public_path() . '/allpdfFile' . '/' . $fileName2,
+                public_path() . '/allpdfFile' . '/' . $fileName2_1,
+                public_path() . '/allpdfFile' . '/' . $fileName9,
+                public_path() . '/allpdfFile' . '/' . $fileName8,
+                public_path() . '/allpdfFile' . '/' . $fileName5,
+            ];
         }
 
         $isActive = filter_var($isActive, FILTER_VALIDATE_BOOLEAN);
