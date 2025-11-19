@@ -1175,13 +1175,12 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     @if(isset($Item["SideLight2GlazingSystems"]))
     GlazingSystemsChange("{!! $Item['SideLight2GlazingSystems'] !!}",'sideLight2GlazingSystems');
     @endif
+    @if(isset($Item["GlazingSystems"]))
+    GlazingSystemsChange("{!! $Item['GlazingSystems'] !!}");
+    @endif
 
     @if(isset($Item["opGlassIntegrity"]))
     opGlassTypeFilter("{{$Item['opGlassIntegrity']}}","{{$Item['OPGlassType']}}");
-    @endif
-
-    @if(isset($Item["GlazingSystems"]))
-    GlazingSystemsChange("{!! $Item['GlazingSystems'] !!}");
     @endif
 
     @if(isset($Item["FrameFinish"]) && $Item["FrameFinish"] == "Painted_Finish")

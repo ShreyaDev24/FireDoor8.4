@@ -1111,18 +1111,17 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     opGlassTypeFilter("{{$Item['opGlassIntegrity']}}","{{$Item['OPGlassType']}}");
     @endif
 
-    @if(isset($Item["GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['GlazingSystems']}}");
-    @endif
-
     @if(isset($Item["opGlazingSystems"]))
-    GlazingSystemsChange("{{$Item['opGlazingSystems']}}",'opglazingSystems');
+    GlazingSystemsChange("{!! $Item['opGlazingSystems'] !!}",'opglazingSystems');
     @endif
     @if(isset($Item["SideLight1GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight1GlazingSystems']}}",'sideLight1GlazingSystems');
+    GlazingSystemsChange("{!! $Item['SideLight1GlazingSystems'] !!}",'sideLight1GlazingSystems');
     @endif
     @if(isset($Item["SideLight2GlazingSystems"]))
-    GlazingSystemsChange("{{$Item['SideLight2GlazingSystems']}}",'sideLight2GlazingSystems');
+    GlazingSystemsChange("{!! $Item['SideLight2GlazingSystems'] !!}",'sideLight2GlazingSystems');
+    @endif
+    @if(isset($Item["GlazingSystems"]))
+    GlazingSystemsChange("{!! $Item['GlazingSystems'] !!}");
     @endif
 
     @if(isset($Item["FrameFinish"]) && $Item["FrameFinish"] == "Painted_Finish")
