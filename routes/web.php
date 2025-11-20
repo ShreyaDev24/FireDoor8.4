@@ -275,7 +275,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/addcustomer', [App\Http\Controllers\DoorScheduleController::class,'addcustomer'])->name('quotation/addcustomer');
     Route::get('/getcustomer', [App\Http\Controllers\DoorScheduleController::class,'getcustomer'])->name('quotation/getcustomer');
     Route::post('/add-shipping-address', [App\Http\Controllers\DoorScheduleController::class,'add_shipping_address'])->name('quotation/add-shipping-address');
-    Route::get('/add-new-doors/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'getupdateddoors'])->name('quotation/add-new-doors');
+    Route::get('/add-new-doors/{id}/{vid}/{doortype?}', [App\Http\Controllers\DoorScheduleController::class,'getupdateddoors'])->name('quotation/add-new-doors');
     Route::get('/add-new-screens/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'getupdatedScreens'])->name('quotation/add-new-screens');
     Route::post('/store-new-door', [App\Http\Controllers\DoorScheduleController::class,'newdoorsstore'])->name('quotation/store-new-door');
     Route::post('/store-new-screen', [App\Http\Controllers\DoorScheduleController::class,'newScreenStore'])->name('quotation/store-new-screen');

@@ -1657,7 +1657,7 @@ class ItemListController extends Controller
 
                     // $itemGTSellPrice = countTotalPrice($request->QuotationId, $versionId, $Item->itemId);
 
-                    $Item = Item::where('itemId', $Item->itemId)->update([
+                    Item::where('itemId', $Item->itemId)->update([
                         'DoorsetPrice' => $GTSellPrice
                         // 'DoorsetPrice' => $itemGTSellPrice['GTSellPrice']
                     ]);
@@ -1674,7 +1674,7 @@ class ItemListController extends Controller
                 //     Item::where('itemId',$item->id)->update(["SvgImage" => $SvgImage]);
                 // }
                 $successmsg = "Configure door successfully, now please add door's.";
-                $url = 'quotation/add-new-doors/'.$request->QuotationId.'/'.$versionId;
+                $url = 'quotation/add-new-doors/'.$request->QuotationId.'/'.$versionId.'/'.$Item->itemId;
                 \Session::flash('success', __($successmsg));
                 return response()->json(['status'=>'success','data'=>$successmsg,'url'=>$url]);
             }
