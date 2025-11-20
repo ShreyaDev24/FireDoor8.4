@@ -233,6 +233,7 @@
                                                 <ul class="CustomTabs tabs inline_tab">
                                                     <li class="active"><a data-toggle="tab" href="#DoorFav">Favorite Configurable Items</a></li>
                                                     <li><a data-toggle="tab" href="#screenFav">Favorite Screen Items</a></li>
+
                                                 </ul>
                                             </div>
                                             <div class="col-sm-12 mt-3">
@@ -573,6 +574,9 @@
                                                                 <ul class="dropdown-menu drop_style">
                                                                     <li><a
                                                                             href="{{ ConfigurationURL($quotation->configurableitems, $row->itemId, $version_id) }}">Edit</a>
+                                                                    </li>
+                                                                    <li><a
+                                                                            href="{{url('quotation/add-new-doors')}}/{{$quotationId}}/{{$version_id}}/{{ $row->itemId }}">Add New</a>
                                                                     </li>
                                                                     <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favourite Item','Configurable Type Name')"
                                                                             href="javascript:void(0);">Name
@@ -1298,7 +1302,7 @@
                             if(favorite_type == 'Door'){
                                 swal('success', data.msg, 'success').then(function() {
                                     window.location.href = "{{ url('/') }}/quotation/add-new-doors/" +
-                                        data.QuotationId + "/" + data.VersionId;
+                                        data.QuotationId + "/" + data.VersionId + "/" + data.itemId;
                                 });
                             }else{
                                 swal('success', data.msg, 'success').then(function() {

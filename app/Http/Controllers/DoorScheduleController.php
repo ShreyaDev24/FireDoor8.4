@@ -576,7 +576,7 @@ class DoorScheduleController extends Controller
         return "success";
     }
 
-    public function getupdateddoors($id, $vid)
+    public function getupdateddoors($id, $vid, $doortypeselect = null)
     {
         $quotationID = $id;
         $addDoorType = '';
@@ -590,7 +590,7 @@ class DoorScheduleController extends Controller
         $doortype = '<option value="">Select Door Type</option>';
         foreach ($zz as $rr) {
             $select = '';
-            if (old('doortypeId') == $rr->itemId) {
+            if ($doortypeselect == $rr->itemId) {
                 $select = 'selected';
             }
 
@@ -9230,6 +9230,7 @@ class DoorScheduleController extends Controller
                                     'status' => true,
                                     'QuotationId' => $request->qId,
                                     'VersionId' => $request->vId,
+                                    'itemId' => $NewItemInformation->itemId,
                                     'msg' => 'Door added successfully!'
                                 ];
                             } else {
