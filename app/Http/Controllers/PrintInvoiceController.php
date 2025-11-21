@@ -461,7 +461,7 @@ class PrintInvoiceController extends Controller
             //     $item = Item::where(['itemId' => $dt->itemID , 'CompanyID' => $CompanyId , 'QuotationId' => $quatationId ])->get();
             //     foreach($item as $show){
             // $totalpriceperdoorset = $show->DoorsetPrice + $show->IronmongaryPrice;
-            $DoorQuantity += $show->DoorQuantity;
+            $DoorQuantity++;
             // $DoorsetPrice += $show->DoorsetPrice;
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
