@@ -209,11 +209,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             }
 
             // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
-            if ($c2 || (is_numeric($cutW2) && $cutW2 > 0)) {
-                // Use Leaf 2’s code if available; else reuse Leaf 1’s code for dimension grouping
-                $targetCode = $c2 ?: $c1;
-                $leaf2Counts[$targetCode] = ($leaf2Counts[$targetCode] ?? 0) + 1;
-                if (!isset($codeMeta[$targetCode])) $codeMeta[$targetCode] = $parseMeta($targetCode);
+            // Leaf 2 should count ONLY when PRODUCT CODE LEAF 2 exists
+            if ($c2) {
+                $leaf2Counts[$c2] = ($leaf2Counts[$c2] ?? 0) + 1;
+                if (!isset($codeMeta[$c2])) $codeMeta[$c2] = $parseMeta($c2);
             }
         }
 
