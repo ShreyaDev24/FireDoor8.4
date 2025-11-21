@@ -1027,8 +1027,8 @@ class PrintInvoiceController extends Controller
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
-                    'NFR' => 'Chilt/A01204 Revision H',
-                    'FD30' => 'Chilt/A01204 Revision H',
+                    'NFR' => 'Chilt/A01205 Part 1 Revision K',
+                    'FD30' => 'Chilt/A01205 Part 1 Revision K',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 7 => [
@@ -4852,8 +4852,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
-                    'NFR' => 'Chilt/A01204 Revision H',
-                    'FD30' => 'Chilt/A01204 Revision H',
+                    'FD30' => 'Chilt/A01205 Part 1 Revision K',
                     'FD60' => 'FEA/F96103  Revision Q',
                 ],
                 7 => [
