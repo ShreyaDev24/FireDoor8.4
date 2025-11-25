@@ -157,10 +157,8 @@
                 <td class="tbl_extra" colspan="6">Frame</td>
                 <td class="tbl_leaft" colspan="2"></td>
                 <td class="tbl_extra" colspan="5">Architrave</td>
-                @if($HideCosts == 0 || $HideCosts != 5)
+                @if($HideCosts == 0)
                 <td class="tbl_leaft" colspan="8"></td>
-                @elseif ($HideCosts == 5)
-                <td class="tbl_leaft" colspan="5"></td>
                 @else
                 <td class="tbl_leaft" colspan="6"></td>
                 @endif
