@@ -154,7 +154,7 @@
                 <td class="tbl_extra" colspan="3">Vision Panel</td>
                 <td class="tbl_leaft" colspan="4"></td>
                 <td class="tbl_extra" colspan="6">Frame</td>
-                <td class="tbl_leaft" colspan="1"></td>
+                <td class="tbl_leaft" colspan="2"></td>
                 <td class="tbl_extra" colspan="5">Architrave</td>
                 @if($HideCosts == 0 || $HideCosts != 5)
                 <td class="tbl_leaft" colspan="8"></td>
@@ -234,7 +234,6 @@
 
         </tbody>
     </table>
-
 
     {{--  @php
     die;
