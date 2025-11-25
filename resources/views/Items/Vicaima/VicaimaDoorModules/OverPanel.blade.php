@@ -127,7 +127,7 @@
                             @endif
 
                             </label>
-                            <input required  name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration forcoreWidth1"
+                            <input name="oPHeigth" id="oPHeigth" max="600" class="form-control door-configuration forcoreWidth1"
                                 type="number" value="@if(isset($Item['OPHeigth'])){{$Item['OPHeigth']}}@endif">
                         </div>
                     </div>
