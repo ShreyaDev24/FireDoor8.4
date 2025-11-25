@@ -219,6 +219,7 @@
                 <th class="page2_2 tbl_last"><p> Doorset Price </p></th>
                 <th class="page2_2 tbl_last"><p> Ironmongery Price </p></th>
                 @endif
+                <th class="page2_2 tbl_last"><p> Total Price Per Doorset </p></th>
             </tr>
 
         </thead>
