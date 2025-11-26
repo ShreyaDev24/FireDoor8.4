@@ -231,12 +231,18 @@ class PrintInvoiceController extends Controller
 
         // $totIronmongaryPrice = Item::where(['QuotationId' => $quatationId ])->sum('IronmongaryPrice');
         $screenDataprice = round(floatval($screenData),2);
-        $nettot = itemAdjustCount($quatationId, $versionID) + (float) $totIronmongaryPrice + (float) $nonConfigDataPrice + (float) $screenDataprice;
 
         $QSTI = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
 
+        // Calculate Transportation Cost
+        $transportationCost = 0;
+        if (!empty($QSTI->ActualNoOfDeliveries) && !empty($QSTI->Costperdelivery)) {
+            $transportationCost = floatval($QSTI->ActualNoOfDeliveries) * floatval($QSTI->Costperdelivery);
+        }
+        $nettot = itemAdjustCount($quatationId, $versionID) + (float) $totIronmongaryPrice + (float) $nonConfigDataPrice + (float) $screenDataprice + (float) $transportationCost;
 
-        $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice, 'currency' => $currency]);
+        // dd($transportationCost, $nettot);
+        $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice, 'currency' => $currency, 'transportationCost' => $transportationCost]);
 
         // return $pdf2->download('file2.pdf');
         $path2 = public_path() . '/allpdfFile';

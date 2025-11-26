@@ -117,6 +117,7 @@
                                         <p>[TotalIronmongeryValue]</p>
                                         <p>[TotalNonConfigValue]</p>
                                         <p>[TotalScreenValue]</p>
+                                        <p>[TransportationCost]</p>
                                         <p>[NetSubTotal]</p>
                                         <p>[NetTotal]</p>
                                         <p>[NoOfDeliveries]</p>
