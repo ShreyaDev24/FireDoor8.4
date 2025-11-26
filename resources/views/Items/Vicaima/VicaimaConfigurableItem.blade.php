@@ -588,10 +588,15 @@
 
     $( document ).ajaxStop(function() {
         if(counter == 1){
-            $('#submit').attr({'disabled': false,"readonly":false });
+            // Disable immediately when all ajax calls complete
+            $('#submit').attr({'disabled': true, "readonly": true });
+            $('.defaultbutton').attr({'disabled': true,"readonly":true });
+
+            // Enable after 10 seconds
             setTimeout(function() {
-              $('.defaultbutton').attr({'disabled': false,"readonly":false });
-            }, 5000);
+                $('#submit').attr({'disabled': false, "readonly": false });
+                $('.defaultbutton').attr({'disabled': false,"readonly":false });
+            }, 5000); // 5 seconds = 5000 ms
             counter = 0;
         }
     });
