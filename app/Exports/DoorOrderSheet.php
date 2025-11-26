@@ -200,6 +200,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         foreach ($data as $row) {
             $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
             $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+            $opLeafExist = $row[4] ?? '';  // PRODUCT CODE LEAF 2
             $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
 
             // ✅ Leaf 1 logic
@@ -211,8 +212,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
             // Leaf 2 should count ONLY when PRODUCT CODE LEAF 2 exists
             if ($c2) {
-                $leaf2Counts[$c2] = ($leaf2Counts[$c2] ?? 0) + 1;
-                if (!isset($codeMeta[$c2])) $codeMeta[$c2] = $parseMeta($c2);
+                if(!str_contains($opLeafExist, 'OP LEAF SIZE')){
+                    $leaf2Counts[$c2] = ($leaf2Counts[$c2] ?? 0) + 1;
+                    if (!isset($codeMeta[$c2])) $codeMeta[$c2] = $parseMeta($c2);
+                }
             }
         }
 
