@@ -294,31 +294,7 @@
                 $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[TransportationCost]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]','ProjectIronmongery'];
                 $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$transportationCostFormatted,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName,$ProjectIronmongery];
 
-                $output = str_replace($str,$rplc,$ExtractPdf2);
-
-                // If Transportation Cost placeholder is not in the template, inject it after Total Screen Value
-                if (strpos($output, 'Transportation Cost:') === false) {
-                    // Create the Transportation Cost row HTML matching the existing table structure
-                    $transportationRow = "\n                        <tr>\n"
-                        . "                            <td><span style=\"font-size:18px\">Transportation Cost:</span></td>\n"
-                        . "                            <td style=\"text-align:right\"><span style=\"font-size:18px\">" . $transportationCostFormatted . "</span></td>\n"
-                        . "                        </tr>";
-
-                    // Find and inject after Total Side Screen Value or Total Screen Value row
-                    $patterns = [
-                        '/(<tr>\s*<td>.*?Total Side Screen Value:.*?<\/td>\s*<td[^>]*>.*?' . preg_quote($screenDataprice, '/') . '.*?<\/td>\s*<\/tr>)/is',
-                        '/(<tr>\s*<td>.*?Total Screen Value:.*?<\/td>\s*<td[^>]*>.*?' . preg_quote($screenDataprice, '/') . '.*?<\/td>\s*<\/tr>)/is',
-                    ];
-
-                    foreach ($patterns as $pattern) {
-                        if (preg_match($pattern, $output)) {
-                            $output = preg_replace($pattern, '$1' . $transportationRow, $output, 1);
-                            break;
-                        }
-                    }
-                }
-
-                echo $output;
+                echo str_replace($str,$rplc,$ExtractPdf2);
             }
             @endphp
             @if (strpos($ExtractPdf2, 'COC:') === false)
