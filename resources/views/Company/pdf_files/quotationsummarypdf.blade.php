@@ -201,6 +201,13 @@
             </div>
 
             @php
+            // Format Transportation Cost outside the conditional block
+            if (!empty($transportationCost) && is_numeric($transportationCost)) {
+                $transportationCostFormatted = $currency . round((float) $transportationCost, 2);
+            } else {
+                $transportationCostFormatted = $currency . '0.00';
+            }
+
             if(!empty( $pdf2->msg)){
                 $ExtractPdf2 =   $pdf2->msg;
                 if(!empty($totDoorsetType)){
@@ -284,8 +291,8 @@
                     $contractorName = '';
                 }
 
-                $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]','ProjectIronmongery'];
-                $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName,$ProjectIronmongery];
+                $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[TransportationCost]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]','ProjectIronmongery'];
+                $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$transportationCostFormatted,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName,$ProjectIronmongery];
 
                 echo str_replace($str,$rplc,$ExtractPdf2);
             }
