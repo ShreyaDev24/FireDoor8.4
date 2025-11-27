@@ -258,10 +258,10 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // VP column indexes
             $vpIndexes = [
                 'VP1' => ['H' => 6,  'W' => 7,  'Q' => 8],
-                'VP2' => ['H' => 9,  'W' => 10, 'Q' => 11],
-                'VP3' => ['H' => 12, 'W' => 13, 'Q' => 14],
-                'VP4' => ['H' => 15, 'W' => 16, 'Q' => 17],
-                'VP5' => ['H' => 18, 'W' => 19, 'Q' => 20],
+                'VP2' => ['H' => 9,  'W' => 7, 'Q' => 10],
+                'VP3' => ['H' => 11, 'W' => 7, 'Q' => 12],
+                'VP4' => ['H' => 13, 'W' => 7, 'Q' => 14],
+                'VP5' => ['H' => 15, 'W' => 7, 'Q' => 16],
             ];
 
             // initialize
