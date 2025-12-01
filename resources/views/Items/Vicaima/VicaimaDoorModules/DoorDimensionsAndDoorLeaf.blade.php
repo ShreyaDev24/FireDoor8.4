@@ -32,8 +32,8 @@
                                 </script>
                                 @endif
                             </label>
-                            <i class="fa fa-info icon" id="doorLeafFinishColorIcon"></i>
-                            <input type="text" readonly @if(empty($Item['DoorLeafFinishColor'])){{'readonly'}}@endif name="doorLeafFinishColor" id="doorLeafFinishColor" class="form-control" value="@if(!empty($Item['DoorLeafFinishColor'])){{$Item['DoorLeafFinishColor']}}@endif">
+                            <i class="fa fa-info icon" id="doorLeafFinishColorIcon1"></i>
+                            <input type="text" readonly name="doorLeafFinishColor1" id="doorLeafFinishColor1" class="form-control" value="">
                         </div>
                     </div>
                     <!-- <div class="col-md-6">
@@ -250,6 +250,41 @@
                             <div id="door_thickness_div">
                                 <input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="@if(!empty($Item['LeafThickness'])){{$Item['LeafThickness']}}@endif">
                             </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group doorLeafFinishDiv">
+                            <label for="doorLeafFacing">Door Leaf Finish
+                                @if(!empty($tooltip->doorLeafFacing))
+                                <script type="text/javascript">
+                                    document.write(Tooltip('{{$tooltip->doorLeafFacing}}'));
+                                </script>
+                                @endif
+                            </label>
+                            <select name="doorLeafFinish" onchange="doorLeafFinishChangePrimed();" id="doorLeafFinishprimed" class="form-control">
+                                <option value="">Select Door Leaf Finish</option>
+                                <option value="Painted"
+                                    @selected(isset($Item['DoorLeafFinish']) && $Item['DoorLeafFinish'] === 'Painted')>
+                                    Painted
+                                </option>
+                                <option value="Primed"
+                                    @selected(isset($Item['DoorLeafFinish']) && $Item['DoorLeafFinish'] === 'Primed')>
+                                    Primed
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group input-icons">
+                            <label for="doorLeafFinishColor">Door Leaf Finish Color
+                                @if(!empty($tooltip->doorLeafFinishColor))
+                                <script type="text/javascript">
+                                document.write(Tooltip('{{$tooltip->doorLeafFinishColor}}'));
+                                </script>
+                                @endif
+                            </label>
+                            <i class="fa fa-info icon" id="doorLeafFinishColorIcon"></i>
+                            <input type="text" @if(empty($Item['DoorLeafFinishColor'])){{'readonly'}}@endif name="doorLeafFinishColor" id="doorLeafFinishColor" class="form-control" value="@if(!empty($Item['DoorLeafFinishColor'])){{$Item['DoorLeafFinishColor']}}@endif">
                         </div>
                     </div>
                     <input name="doorthickness" value="@if(!empty($Item['LeafThickness'])){{$Item['LeafThickness']}}@endif" type="hidden" id="doorthickness">
