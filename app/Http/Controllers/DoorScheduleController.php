@@ -3064,7 +3064,6 @@ class DoorScheduleController extends Controller
                     $FolderId = trim((string) $row[$j++]);
                     $IronmongeryID = trim((string) $row[$j++]);
                     $DoorLeafFacing = trim((string) $row[$j++]);
-                    $DoorLeafFinish = trim((string) $row[$j++]);
                     $DoorDimensionId = trim((string) $row[$j++]);
                     $DoorDimensionId2 = trim((string) $row[$j++]);
                     $DoorDimension = trim((string) $row[$j++]);
@@ -3079,6 +3078,8 @@ class DoorScheduleController extends Controller
                     $LeafHeight = trim((string) $row[$j++]);
                     $LeafHeightAdjustment = trim((string) $row[$j++]);
                     $LeafThickness = trim((string) $row[$j++]);
+                    $DoorLeafFinish = trim((string) $row[$j++]);
+                    $DoorLeafFinishColor = trim((string) $row[$j++]);
                     $Hinge1Location = trim((string) $row[$j++]);
                     $Hinge2Location = trim((string) $row[$j++]);
                     $Hinge3Location = trim((string) $row[$j++]);
@@ -3378,7 +3379,7 @@ class DoorScheduleController extends Controller
                             $aa->DoorLeafFacing = $DoorLeafFacing;
                             // $aa->DoorLeafFacingValue = $DoorLeafFacingValue;
                             $aa->DoorLeafFinish = $DoorLeafFinish;
-                            // $aa->DoorLeafFinishColor = $DoorLeafFinishColor;
+                            $aa->DoorLeafFinishColor = $DoorLeafFinishColor;
                             // $aa->SheenLevel = $SheenLevel;
                             $aa->DecorativeGroves = $DecorativeGroves;
                             // $aa->GrooveLocation = $GrooveLocation;

@@ -330,12 +330,12 @@ function corewidth1Value(){
 //     IntumescentSeals();
 // });
 
-$("#doorLeafFacing").change(function () {
-    DoorLeafFacingChange();
+// $("#doorLeafFacing").change(function () {
+    // DoorLeafFacingChange();
     // if($(this).val()=='Laminate'){
     // $("#decorativeGroves").removeAttr('required')
     // }
-});
+// });
 
 // $("#doorLeafFinish").change(function(){
 // doorLeafFinishChange();
@@ -349,7 +349,7 @@ $(document).on('change', '#doorLeafFacingValue', function (e) {
     if (doorLeafFacingValue_C == 'CS_acrovyn') {
         IntumescentSeals();
     } else if ($('#doorLeafFacing').val() == 'Laminate') {
-        DoorLeafFacingChange(true);
+        // DoorLeafFacingChange(true);
     }
 });
 
@@ -3799,6 +3799,101 @@ function doorLeafFinishChange() {
         }
     }
 }
+
+function doorLeafFinishChangePrimed() {
+
+    var changedFieldId = "#doorLeafFinishprimed";
+    var doorLeafFinish = $(changedFieldId).val();
+    var ActualValue = $(changedFieldId + ' :selected').val();
+    var ElementValue = $(changedFieldId + ' :selected').text();
+    doorLeafFacingPrice('LeafSet', ActualValue);
+    $('#LeafSet-selected1').empty().text(ActualValue);
+    if (ActualValue == "") {
+
+        var DoorLeafFinishValue = document.getElementById('DoorLeafFinish-value');
+        if (DoorLeafFinishValue != null) {
+            DoorLeafFinishValue = $("#DoorLeafFinish-value").data("value");
+            if (DoorLeafFinishValue != "") {
+                doorLeafFinish = ActualValue = ElementValue = DoorLeafFinishValue;
+            }
+        }
+    }
+
+    var Options = JSON.parse(OptionsJson);
+    var SelectedOptions = JSON.parse(SelectedOptionsJson);
+    var possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+    var option_slug = $(changedFieldId).attr("option_slug");
+
+
+
+    var price = 0.00;
+
+    if (possibleSelectedOptionsArray.hasOwnProperty(option_slug)) {
+        SelectedOptions.forEach(function (elem, index) {
+            if (ActualValue == elem.OptionKey) {
+                price = elem.SelectedOptionCost;
+            }
+        });
+
+    } else {
+
+        Options.forEach(function (elem, index) {
+            if (ActualValue == elem.OptionKey) {
+                price = elem.OptionCost;
+            }
+        });
+    }
+
+    var name = $(changedFieldId).attr("name");
+    $("#" + name + "-selected").empty().text(ElementValue);
+    $("#" + name + "-price").empty().text("£" + price);
+    $("#" + name + "-section").removeClass("table_row_hide");
+    $("#" + name + "-section").addClass("table_row_show");
+
+    if (doorLeafFinish == "Painted" || doorLeafFinish == 'Paint_Finish') {
+        $('.SheenLevel').css({ 'display': 'none' });
+        $("#doorLeafFinishColor").addClass("bg-white");
+        $.ajax({
+            url: $("#ral-color-filter").html(),
+            method: "POST",
+            dataType: "Json",
+            data: { doorLeafFinish: doorLeafFinish, _token: $("#_token").val() },
+            success: function (result) {
+                // console.log(result)
+                if (result.status == "ok") {
+
+                    var innerHtml = '';
+                    var innerHtml1 = '';
+                    var data = result.data;
+                    var length = result.data.length;
+                    // innerHtml+='<option value="">Select Door leaf color value</option>';
+                    innerHtml += '<div class="container"><div class="row">';
+                    $("#ralColorModalLabel").text("Door Leaf Finish Color");
+                    $("#doorLeafFinishColor").attr({ 'disabled': false });
+                    for (var index = 0; index < length; index++) {
+                        innerHtml += '<div class="col-md-2 col-sm-4 col-6" onClick="SelectRalColor(\'\',' + data[index].id + ',\'' + data[index].Hex + '\',\'' + data[index].ColorName + '\',\'' + doorLeafFinish + '\')">';
+                        innerHtml += '<div class="color_box">';
+                        innerHtml += '<div class="color_place" style="background:' + data[index].Hex + '"></div>';
+                        innerHtml += ' <h4>' + data[index].ColorName + '</h4>';
+                        innerHtml += '</div></div>';
+                        // innerHtml+='<option value="'+data[index].Hex+'" style="background:'+data[index].Hex+'">'+data[index].ColorName+'</option>'
+                    }
+                    innerHtml += '</div></div>';
+                    $("#printedColor").empty().append(innerHtml);
+                    // $("#doorLeafFinishColor").empty().append(innerHtml);
+                    // $("#ralColor").modal('show');
+                    $("#doorLeafFinishColorIcon").attr("onclick", "$('#ralColor').modal('show')");
+                } else {
+                    $("#doorLeafFinishColor").empty().append('<option value="">No Door leaf Ral Color Found</option>');
+                }
+            }
+        });
+    } else {
+        $("#doorLeafFinishColor").removeClass("bg-white");
+        $("#doorLeafFinishColor").val('').attr({ 'disabled': true });
+        $("#doorLeafFinishColorIcon").attr("onclick", "");
+    }
+}
 // function doorLeafFinishChange() {
 
 //     var changedFieldId = "#doorLeafFinish";
@@ -3943,7 +4038,7 @@ function SelectRalColor(typeinput, id, code, name, fieldname) {
 
     var innerHtml = '';
     innerHtml += '<option value="' + code + '" style="background:' + code + '">' + name + '</option>'
-    if (fieldname == "Factory Industrial Primed" || fieldname == "Paint Sanded" || fieldname == "Primed 2 Go") {
+    if (fieldname=="Painted" || fieldname == "Factory Industrial Primed" || fieldname == "Paint Sanded" || fieldname == "Primed 2 Go") {
         // $("#doorLeafFinishColor").empty().append(innerHtml);
         $("#doorLeafFinishColorIcon").show();
         // $("#doorLeafFinishColor").val(code);

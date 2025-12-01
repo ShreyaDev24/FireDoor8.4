@@ -146,7 +146,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $DoorLeafFacing = $item[$i]->DoorLeafFacing;
             // $DoorLeafFacingValue = $item[$i]->DoorLeafFacingValue;
             $DoorLeafFinish = $item[$i]->DoorLeafFinish;
-            // $DoorLeafFinishColor = $item[$i]->DoorLeafFinishColor;
+            $DoorLeafFinishColor = $item[$i]->DoorLeafFinishColor;
             // $SheenLevel = $item[$i]->SheenLevel;
             $DecorativeGroves = $item[$i]->DecorativeGroves;
             $groovesNumber = $item[$i]->groovesNumber;
@@ -361,7 +361,6 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $FolderId,
                 $IronmongeryID,
                 $DoorLeafFacing,
-                $DoorLeafFinish,
                 $DoorDimensions,
                 $DoorDimensions2,
                 $DoorDimensionsCode,
@@ -377,6 +376,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $AdjustmentLeafHeightNoOP,
                 $LeafThickness,
 
+                $DoorLeafFinish,
+                $DoorLeafFinishColor,
                 $hinge1Location,
                 $hinge2Location,
                 $hinge3Location,
@@ -561,7 +562,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -602,7 +603,6 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Select Folder',
             'Ironmongery ID ',
             'DoorLeaf Facing ',
-            'DoorLeaf Finish ',
             'Door Dimension Id ',
             'Door Dimension(leafandhalf) Id ',
             'Door Dimensions ',
@@ -617,6 +617,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'LeafHeight ',
             'Leaf Height Adjustment ',
             'Leaf Thickness ',
+            'Door Leaf Finish ',
+            'Door Leaf Finish Color',
             'Hinge1 Location',
             'Hinge2 Location',
             'Hinge3 Location',
@@ -815,7 +817,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GU1'; // All headers
+                $cellRange = 'A1:GV1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -837,7 +839,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GU1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GV1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
