@@ -4263,7 +4263,33 @@ class OptionController extends Controller
                             $selectedOption = new SelectedOverpanelGlassGlazing();
                         }
                     } elseif ($GlassType) {
-                        $data = OverpanelGlassGlazing::where('key',$key)->first();
+                        $data = OverpanelGlassGlazing::where('key', $key)
+                        ->where(function ($q) use ($config) {
+                            if (in_array('1', $config)) {
+                                $q->where('Streboard', 1);
+                            }
+                            if (in_array('2', $config)) {
+                                $q->orWhere('Halspan', 2);
+                            }
+                            if (in_array('7', $config)) {
+                                $q->orWhere('Flamebreak', 7);
+                            }
+                            if (in_array('8', $config)) {
+                                $q->orWhere('Stredor', 8);
+                            }
+                        })
+                        ->where(function ($q) use ($firerating) {
+                            if (in_array('NFR', $firerating)) {
+                                $q->where('NFR', 'NFR');
+                            }
+                            if (in_array('FD30', $firerating)) {
+                                $q->orWhere('FD30', 'FD30');
+                            }
+                            if (in_array('FD60', $firerating)) {
+                                $q->orWhere('FD60', 'FD60');
+                            }
+                        })
+                        ->first();
                         $selectedOption = SelectedOverpanelGlassGlazing::where('glass_glazing_id',$data->id)->first();
                     }
 
