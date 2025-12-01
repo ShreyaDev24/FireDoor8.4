@@ -4004,7 +4004,7 @@ function SelectRalColor(typeinput, id, code, name, fieldname) {
     innerHtml += '<option value="' + code + '" style="background:' + code + '">' + name + '</option>'
     if (fieldname=="Painted" || fieldname == "Factory Industrial Primed" || fieldname == "Paint Sanded" || fieldname == "Primed 2 Go") {
         // $("#doorLeafFinishColor").empty().append(innerHtml);
-        $("#doorLeafFinishColorIcon").show();2.011
+        $("#doorLeafFinishColorIcon").show();
         // $("#doorLeafFinishColor").val(code);
         $("#doorLeafFinishColor").val(name);
         var Colors = JSON.parse(ColorsJson);
@@ -4319,7 +4319,7 @@ function LeafCoreCalculation() {
         let leafWidth1 = $('#leafWidth1').val();
         let leafWidth2 = soWidth - (tolleranceValue_B * TolleranceAdditionalNumber) - (gapValue_B * GapAdditionalNumber) - (frameThicknessValue_B * FrameThicknessAdditionalNumber) - parseInt(leafWidth1);
         // $('#leafWidth2').val(leafWidth2).attr('readonly',true);
-    }
+    } 
 }
 
 // Architrave Material needs to work exactly the same as ‘Frame Material’ so the exact same options needs to be here.
