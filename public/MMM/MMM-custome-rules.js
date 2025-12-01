@@ -293,9 +293,9 @@ function corewidth1Value(){
     // $("#coreHeight").val(calculateCoreHeight);
 }
 
-$("#doorLeafFacing").change(function () {
-    DoorLeafFacingChange();
-});
+// $("#doorLeafFacing").change(function () {
+//     DoorLeafFacingChange();
+// });
 
 $(document).on('change', '#doorLeafFacingValue', function (e) {
     e.preventDefault();
@@ -303,7 +303,7 @@ $(document).on('change', '#doorLeafFacingValue', function (e) {
     if (doorLeafFacingValue_C == 'CS_acrovyn') {
         IntumescentSeals();
     } else if ($('#doorLeafFacing').val() == 'Laminate') {
-        DoorLeafFacingChange(true);
+        // DoorLeafFacingChange(true);
     }
 });
 

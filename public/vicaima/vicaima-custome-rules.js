@@ -304,7 +304,7 @@ function corewidth1Value(){
 }
 
 $("#doorLeafFacing").change(function () {
-    DoorLeafFacingChange();
+   // DoorLeafFacingChange();
 });
 
 $(document).on('change', '#doorLeafFacingValue', function (e) {
@@ -313,7 +313,7 @@ $(document).on('change', '#doorLeafFacingValue', function (e) {
     if (doorLeafFacingValue_C == 'CS_acrovyn') {
         IntumescentSeals();
     } else if ($('#doorLeafFacing').val() == 'Laminate') {
-        DoorLeafFacingChange(true);
+  //      DoorLeafFacingChange(true);
     }
 });
 

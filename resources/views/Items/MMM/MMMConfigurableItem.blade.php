@@ -1147,7 +1147,7 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     @endif
 
     @if(isset($Item['DoorLeafFacing']))
-    DoorLeafFacingChange();
+   // DoorLeafFacingChange();
     doorLeafFacingPrice('doorLeafFacing',"@if (isset($Item['DoorLeafFacing'])){{ $Item['DoorLeafFacing'] }}@endif");
     @endif
 
@@ -1202,7 +1202,7 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     @endif
 
     @if(isset($Item["DoorLeafFinishColor"]))
-    doorLeafFinishChange();
+    doorLeafFinishChangePrimed();
     @endif
 
     @if(isset($Item['FireRating']))

@@ -211,12 +211,12 @@ function corewidth1Value(){
 //     IntumescentSeals();
 // });
 
-$("#doorLeafFacing").change(function () {
-    DoorLeafFacingChange();
+// $("#doorLeafFacing").change(function () {
+    // DoorLeafFacingChange();
     // if($(this).val()=='Laminate'){
     // $("#decorativeGroves").removeAttr('required')
     // }
-});
+// });
 
 // $("#doorLeafFinish").change(function(){
 // doorLeafFinishChange();
@@ -230,7 +230,7 @@ $(document).on('change', '#doorLeafFacingValue', function (e) {
     if (doorLeafFacingValue_C == 'CS_acrovyn') {
         IntumescentSeals();
     } else if ($('#doorLeafFacing').val() == 'Laminate') {
-        DoorLeafFacingChange(true);
+        // DoorLeafFacingChange(true);
     }
 });
 
