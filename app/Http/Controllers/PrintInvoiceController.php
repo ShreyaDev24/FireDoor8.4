@@ -417,9 +417,12 @@ class PrintInvoiceController extends Controller
                         <td>' . $ironPriceTotal . '</td>';
             }
 
-            $a2 .= '<td>' . $total . '</td>
-                </tr>';
-
+            $a2 .= '<td>' . number_format(
+                $total,
+                2,
+                '.',
+                ''
+            ) . '</td></tr>';
             $i++;
         }
 
