@@ -389,8 +389,15 @@
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="Costperdelivery">Cost per delivery</label>
-                            <input type="text" readonly readonly name="Costperdelivery" class="form-control"
+                            <div class="input-group">
+                                <select name="CurrencyCostperdelivery" readonly class="form-control" style="max-width: 100px;">
+                                    <option value=""></option>
+                                    <option value="€" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '€' ? 'selected' : '' }}>€</option>
+                                    <option value="£" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '£' ? 'selected' : '' }}>£</option>
+                                </select>
+                                <input type="text" readonly name="Costperdelivery" class="form-control"
                                 value="@if(!empty($QuotationShipToInformation->Costperdelivery)){{$QuotationShipToInformation->Costperdelivery}}@endif">
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-6">

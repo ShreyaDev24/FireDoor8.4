@@ -342,7 +342,7 @@ class PrintInvoiceController extends Controller
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Cost Per Delivery</span></td>
-                    <td><span>' . ($QuotationShipToInformation->Costperdelivery ?? '') . '</span></td>
+                    <td><span>' . ($QuotationShipToInformation->CurrencyCostperdelivery  ?? '').($QuotationShipToInformation->Costperdelivery ?? '') . '</span></td>
                     <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
                     <td><span>' . ($QuotationShipToInformation->AverageNoDoorsetsperdrop ?? '') . '</span></td>
                 </tr>
