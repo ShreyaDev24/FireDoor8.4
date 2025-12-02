@@ -2944,7 +2944,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
             if($quotaion->configurableitems == 4){
-                    $elevTbl .= '<tr>
+                    $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">Door leaf Finish</td>
+                                    <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Leaf Type</td>
                                     <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
                                 </tr>
