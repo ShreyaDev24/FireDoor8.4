@@ -232,6 +232,7 @@ class DoorScheduleController extends Controller
         $quoteShipInfo->Offloading = $request->Offloading;
         $quoteShipInfo->NoOfDeliveries = $request->NoOfDeliveries;
         $quoteShipInfo->ActualNoOfDeliveries = $request->ActualNoOfDeliveries;
+        $quoteShipInfo->CurrencyCostperdelivery = $request->CurrencyCostperdelivery;
         $quoteShipInfo->Costperdelivery = $request->Costperdelivery;
         $quoteShipInfo->AverageNoDoorsetsperdrop = $request->AverageNoDoorsetsperdrop;
         $quoteShipInfo->PaymentMethod = $request->PaymentMethod;
