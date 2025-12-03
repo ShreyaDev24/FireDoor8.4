@@ -399,7 +399,7 @@ class PrintInvoiceController extends Controller
                $a2 .= '<td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice)), 2) . '</td><td>' . round($show->IronmongaryPrice, 2) . '</td>';
             }
 
-            $a2 .= '<td>' . number_format(
+            $a2 .= '<td class="price">' . number_format(
                 (($show->AdjustPrice)
                     ? floatval($show->AdjustPrice) + floatval($show->IronmongaryPrice)
                     : floatval($show->DoorsetPrice) + floatval($show->IronmongaryPrice)
