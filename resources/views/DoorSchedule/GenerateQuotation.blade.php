@@ -562,9 +562,9 @@
                                                         <td>{{ $row->SOWidth }}</td>
                                                         <td>{{ $row->SOHeight }}</td>
                                                         <td>{{ $row->SOWallThick }}</td>
-                                                        <td>{{ (($row->AdjustPrice)?floatval($row->AdjustPrice) :floatval($row->DoorsetPrice)) }}</td>
-                                                        <td>{{ $row->IronmongaryPrice }}</td>
-                                                        <td>{{ (($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice))  }}
+                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) :floatval($row->DoorsetPrice)),2) }}</td>
+                                                        <td>{{ number_format($row->IronmongaryPrice,2) }}</td>
+                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2)  }}
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="dropdown">

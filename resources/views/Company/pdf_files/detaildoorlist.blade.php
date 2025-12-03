@@ -113,6 +113,11 @@
             min-height: 100px;
             max-height: 120px;
             }
+            .price {
+                text-align: right;
+                padding-right: 10px;
+                font-variant-numeric: tabular-nums; /* keeps digits evenly spaced */
+            }
         </style>
     </head>
     <body style="position: relative;">
