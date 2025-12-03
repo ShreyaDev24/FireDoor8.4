@@ -292,57 +292,13 @@
                 }
 
                 $str = ['[UserName]','[ProjectName]','[QuotationGenerationId]','[TotalDoorSet]','[TotalIronmongery]','[TotalNonConfig]','[TotalScreenSet]','[TotalDoorValue]','[TotalIronmongeryValue]','[TotalNonConfigValue]','[TotalScreenValue]','[TransportationCost]','[NetSubTotal]','[NetTotal]','[PaymentTerms]','[NoOfDeliveries]','[customerName]','[coc]', '[ContractorName]','ProjectIronmongery'];
-                $rplc = [
-                    $userName,
-                    $projectName,
-                    $QuotationGenerationId,
-                    $totDoorsetType,
-                    $totIronmongerySet,
-                    $nonConfigDataCount,
-                    $ScreenSetQty,
-                    number_format((float)$totDoorsetPrice, 2),
-                    number_format((float)$totIronmongaryPrice, 2),
-                    number_format((float)$nonConfigDataPrice, 2),
-                    number_format((float)$screenDataprice, 2),
-                    $transportationCostFormatted,
-                    number_format((float)$nettot, 2),
-                    number_format((float)$nettot, 2),
-                    $PaymentTerms,
-                    $NoOfDeliveries,
-                    $customerName,
-                    $coc,
-                    $contractorName,
-                    $ProjectIronmongery
-                ];
-
+                $rplc =[$userName,$projectName,$QuotationGenerationId,$totDoorsetType,$totIronmongerySet,$nonConfigDataCount,$ScreenSetQty,$totDoorsetPrice,$totIronmongaryPrice,$nonConfigDataPrice,$screenDataprice,$transportationCostFormatted,$nettot,$nettot,$PaymentTerms,$NoOfDeliveries,$customerName, $coc,  $contractorName,$ProjectIronmongery];
 
                 echo str_replace($str,$rplc,$ExtractPdf2);
             }
             @endphp
             @if (strpos($ExtractPdf2, 'COC:') === false)
-                <table c$rplc = [
-    $userName,
-    $projectName,
-    $QuotationGenerationId,
-    $totDoorsetType,
-    $totIronmongerySet,
-    $nonConfigDataCount,
-    $ScreenSetQty,
-    number_format((float)$totDoorsetPrice, 2),
-    number_format((float)$totIronmongaryPrice, 2),
-    number_format((float)$nonConfigDataPrice, 2),
-    number_format((float)$screenDataprice, 2),
-    $transportationCostFormatted,
-    number_format((float)$nettot, 2),
-    number_format((float)$nettot, 2),
-    $PaymentTerms,
-    $NoOfDeliveries,
-    $customerName,
-    $coc,
-    $contractorName,
-    $ProjectIronmongery
-];
-lass="table table-bordered">
+                <table class="table table-bordered">
                     <tr>
                         <td class="tbl_color"><span>COC:</span></td>
                         <td colspan="3">{{ !empty($project->coc) ? $project->coc : '' }}</td>
