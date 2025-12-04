@@ -2901,9 +2901,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 if($tt->FrameOnOff != 1){
                     $Handing = '';
                     if($tt->Handing == 'Left_Hand_Master_Right_Hand_Slave'){
-                        $Handing = 'Primary Leaf Right';
-                    }else if($tt->Handing == 'Right_Hand_Master_Left_Hand_Slave'){
                         $Handing = 'Primary Leaf Left';
+                    }else if($tt->Handing == 'Right_Hand_Master_Left_Hand_Slave'){
+                        $Handing = 'Primary Leaf Right';
                     }else{
                         $Handing = $tt->Handing;
                     }
