@@ -2005,7 +2005,6 @@ $sn++;
 
         $valid = $request->validate([
             'Setname' => 'required',
-            'discountprice' => 'required'
         ]);
         $useTbl = auth()->user();
         $item = null;
