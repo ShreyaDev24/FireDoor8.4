@@ -372,16 +372,18 @@ class PrintInvoiceController extends Controller
         }
 
         $a2 = '';
-        $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-            ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
+       $shows = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
+            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
+            ->where('quotation_version_items.version_id', $versionID)
             ->select(
-                'items.itemId','items.DoorsetType','item_master.doorNumber','items.DoorType','items.AdjustPrice','items.DoorsetPrice','items.IronmongaryPrice',
+                'items.*',
+                'item_master.doorNumber',
                 DB::raw('COUNT(items.itemId) AS qty')
             )
-            ->groupBy('items.itemId')
-            ->where('quotation_version_items.version_id', $versionID)->get();
-        $i = 1;
+            ->groupBy('items.itemId', 'item_master.doorNumber')
+            ->get();
 
+        $i = 1;
         $DoorDescription = '';
         foreach ($shows as $show) {
 
@@ -780,7 +782,7 @@ class PrintInvoiceController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4){
+            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
