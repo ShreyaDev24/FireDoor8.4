@@ -386,7 +386,7 @@ class PrintInvoiceController extends Controller
                 'item_master.doorNumber',
                 DB::raw('COUNT(items.itemId) AS qty')
             )
-            ->groupBy('items.itemId', 'item_master.doorNumber')
+            ->groupBy('items.itemId')
             ->get();
 
         $i = 1;
