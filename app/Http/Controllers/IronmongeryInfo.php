@@ -702,10 +702,17 @@ class IronmongeryInfo extends Controller
                                         ->where('ironmongery_info.Category',$request->ironCategoryType)->orderBy('ironmongery_info.id','desc')->get();
         }else{
 
-            $data = IronmongeryInfoModel::join('selected_ironmongery','selected_ironmongery.ironmongery_id','ironmongery_info.id')
-                                        ->wherein( 'selected_ironmongery.UserId', $useTbl )
-                                        ->orderBy('ironmongery_info.Category','ASC')->orderBy('ironmongery_info.id','desc')
-                                        ->get();
+           $data = IronmongeryInfoModel::join('selected_ironmongery', function ($join) {
+                $join->on('selected_ironmongery.ironmongery_id', '=', 'ironmongery_info.IronmongeryId');
+                $join->on('selected_ironmongery.UserId', '=', 'ironmongery_info.UserId');
+            })
+            ->wherein('selected_ironmongery.UserId', $useTbl)
+            ->orderBy('ironmongery_info.Category', 'ASC')
+            ->orderBy('ironmongery_info.id', 'DESC')
+            ->get();
+
+
+
 
             // $data = IronmongeryInfoModel::wherein('UserId',$useTbl)->orderBy('id','desc')->get();
 
