@@ -1390,11 +1390,10 @@ function IronmongerySetData($IronmongeryID): string{
             $count = count($Ironmongey);
 
             for($j = 0; $j < $count; $j++){
-
                 $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',user_id())->first();
 
                 if(!empty($SelectedIronmongery)){
-                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
                     $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
 
                     $QtyPerDoorType = intval($IronmongeyQty[$j]);
@@ -1553,7 +1552,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
                 $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',$userid)->first();
 
                 if(!empty($SelectedIronmongery)){
-                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
                     $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
 
                     $QtyPerDoorType = intval($IronmongeyQty[$j]);
@@ -2759,7 +2758,7 @@ function IronmongeryCostExport($request,$version_id): void{
                     $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',user_id())->first();
 
                     if(isset($SelectedIronmongery) && $SelectedIronmongery != "" && $SelectedIronmongery != null && !empty($SelectedIronmongery)){
-                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
 
                         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('Category','Ironmongery&MachiningCosts')->where('VersionId',$version_id)->where('itemId',$request->itemID)->get()->toArray();
 
@@ -4191,7 +4190,7 @@ function MachiningCostExport($request): void{
                     $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', $Ironmongey[$j])->where('UserId',user_id())->first();
 
                     if(isset($SelectedIronmongery) && $SelectedIronmongery != "" && $SelectedIronmongery != null && !empty($SelectedIronmongery)){
-                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
 
                         $BOMSetting = BOMSetting::select('*')->where('UserId', user_id())->first();
 

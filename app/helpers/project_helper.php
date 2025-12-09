@@ -793,7 +793,10 @@ function ironmongeryGetCodeName($id): array{
     $price = [];
     foreach($data as $val){
         $a = SelectedIronmongery::select('selected_ironmongery.id','ironmongery_info.Name','ironmongery_info.Code','ironmongery_info.Price')
-            ->leftJoin('ironmongery_info','ironmongery_info.id','selected_ironmongery.ironmongery_id')
+            ->join('ironmongery_info', function ($join) {
+                    $join->on('selected_ironmongery.ironmongery_id', '=', 'ironmongery_info.IronmongeryId');
+                    $join->on('selected_ironmongery.UserId', '=', 'ironmongery_info.UserId');
+                })
             ->where([ 'selected_ironmongery.UserId' => Auth::user()->id ,'selected_ironmongery.id'=>$val])->first();
         // $a = IronmongeryInfoModel::where(['UserId'=>Auth::user()->id,'id'=>$val])->orderBy('id','desc')->first();
         if(!empty($a)){

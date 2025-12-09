@@ -6886,7 +6886,7 @@ class DoorScheduleController extends Controller
                     if (!empty($IronmongeryInfo->$valIronmongey)) {
                         $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', $IronmongeryInfo->$valIronmongey)->where('user_id', Auth::user()->id)->first();
                         if (!empty($SelectedIronmongery)) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
                             $unit_cost += $IronmongeryInfoModel->Price;
                         }
                     }
@@ -7038,7 +7038,7 @@ class DoorScheduleController extends Controller
                 if (!empty($IronmongeryInfo->$valIronmongey)) {
                     $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', $IronmongeryInfo->$valIronmongey)->where('user_id', Auth::user()->id)->first();
                     if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('id', $SelectedIronmongery->ironmongery_id)->first();
+                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
                     }
                 }
             }
