@@ -2934,9 +2934,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
                 if($tt->FrameOnOff != 1){
+                    $Handing = '';
+                    if($tt->Handing == 'Left_Hand_Master_Right_Hand_Slave'){
+                        $Handing = 'Primary Leaf Left';
+                    }else if($tt->Handing == 'Right_Hand_Master_Left_Hand_Slave'){
+                        $Handing = 'Primary Leaf Right';
+                    }else{
+                        $Handing = $tt->Handing;
+                    }
                     $elevTbl .=  '<tr>
                                     <td class="dicription_grey">Handing</td>
-                                    <td class="dicription_blank">' . $tt->Handing . '</td>
+                                    <td class="dicription_blank">' . $Handing . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Undercut</td>
@@ -6694,9 +6702,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
                 if($tt->FrameOnOff != 1){
+                    $Handing = '';
+                    if($tt->Handing == 'Left_Hand_Master_Right_Hand_Slave'){
+                        $Handing = 'Primary Leaf Right';
+                    }else if($tt->Handing == 'Right_Hand_Master_Left_Hand_Slave'){
+                        $Handing = 'Primary Leaf Left';
+                    }else{
+                        $Handing = $tt->Handing;
+                    }
                     $elevTbl .=  '<tr>
                                     <td class="dicription_grey">Handing</td>
-                                    <td class="dicription_blank">' . $tt->Handing . '</td>
+                                    <td class="dicription_blank">' . $Handing . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Undercut</td>
