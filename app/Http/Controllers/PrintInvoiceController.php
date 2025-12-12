@@ -383,16 +383,20 @@ class PrintInvoiceController extends Controller
             ->where('quotation_version_items.version_id', $versionID)
             ->select(
                 'items.*',
-                'item_master.doorNumber',
-                DB::raw('COUNT(items.itemId) AS qty')
+                'item_master.doorNumber'
             )
-            ->groupBy('items.itemId')
             ->get();
+
+
+        // SUMMARY (if you still need it)
+        $showDatas = $shows->groupBy('itemId'); // no ->get()
 
         $i = 1;
         $DoorDescription = '';
-        foreach ($shows as $show) {
+        foreach ($showDatas as $itemId => $rows) {
 
+            $qty = $rows->count();           // qty based on grouped rows
+            $show = $rows->first();          // ✔ pick first row for properties
             if (!empty($show->DoorsetType)) {
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
@@ -406,13 +410,13 @@ class PrintInvoiceController extends Controller
 
             $doorPriceTotal = round($doorPrice, 2);
             $ironPriceTotal = round($ironPrice, 2);
-            $total = round(($doorPrice + $ironPrice), 2) * $show->qty;
+            $total = round(($doorPrice + $ironPrice), 2) * $qty;
 
             $a2 .= '<tr>
                         <td>' . $show->doorNumber . '</td>
                         <td>' . $DoorDescription . '</td>
                         <td>' . $show->DoorType . '</td>
-                        <td>' . $show->qty . '</td>';
+                        <td>' . $qty . '</td>';
 
             if ($HideCosts == 0) {
                 $a2 .= '<td>' . $doorPriceTotal . '</td>
