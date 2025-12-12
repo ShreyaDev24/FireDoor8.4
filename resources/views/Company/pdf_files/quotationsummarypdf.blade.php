@@ -223,24 +223,25 @@
                 }
 
                 if (!empty($screenDataprice) && is_numeric($screenDataprice)) {
-                    $screenDataprice = $currency . round((float) $screenDataprice, 2);
+                    $screenDataprice = $currency . number_format((float)$screenDataprice, 2, '.', '');
                 } else {
                     $screenDataprice = $currency . '0.00';
                 }
+
                 if (!empty($totDoorsetPrice) && is_numeric($totDoorsetPrice)) {
-                    $totDoorsetPrice = $currency . round((float) $totDoorsetPrice, 2);
+                    $totDoorsetPrice = $currency . number_format((float)$totDoorsetPrice, 2, '.', '');
                 } else {
                     $totDoorsetPrice = $currency . '0.00';
                 }
 
                 if (!empty($totIronmongaryPrice) && is_numeric($totIronmongaryPrice)) {
-                    $totIronmongaryPrice = $currency . round((float) $totIronmongaryPrice, 2);
+                    $totIronmongaryPrice = $currency . number_format((float)$totIronmongaryPrice, 2, '.', '');
                 } else {
                     $totIronmongaryPrice = $currency . '0.00';
                 }
 
                 if (!empty($nonConfigDataPrice) && is_numeric($nonConfigDataPrice)) {
-                    $nonConfigDataPrice = $currency . round((float) $nonConfigDataPrice, 2);
+                    $nonConfigDataPrice = $currency . number_format((float)$nonConfigDataPrice, 2, '.', '');
                 } else {
                     $nonConfigDataPrice = $currency . '0.00';
                 }
@@ -251,8 +252,8 @@
                     $nonConfigDataCount = '';
                 }
 
-                if(!empty($nettot)){
-                    $nettot = $currency . round((float) $nettot,2);
+                if (!empty($nettot)) {
+                    $nettot = $currency . number_format((float)$nettot, 2, '.', '');
                 } else {
                     $nettot = $currency . '0.00';
                 }
