@@ -44,16 +44,16 @@ class SendToClientController extends Controller
 
         $q = Quotation::select('QuotationGenerationId','quotTag','SalesContact','ProjectId','UserId')->where('id',$quotationId)->first();
 
-        if($q->ProjectId != Null){
-            $projectDetails = Project::find($q->ProjectId);
-            if($projectDetails && $projectDetails->quotationId != Null && $projectDetails->versionId != Null){
-                echo json_encode([
-                    'status'=>'error',
-                    'message'=>'Quotation is already selected on this project.'
-                ]);
-                exit;
-            }
-        }
+        // if($q->ProjectId != Null){
+        //     $projectDetails = Project::find($q->ProjectId);
+        //     if($projectDetails && $projectDetails->quotationId != Null && $projectDetails->versionId != Null){
+        //         echo json_encode([
+        //             'status'=>'error',
+        //             'message'=>'Quotation is already selected on this project.'
+        //         ]);
+        //         exit;
+        //     }
+        // }
 
         $QuotationGenerationId = $q->QuotationGenerationId;
         $SalesCon =  $q->SalesContact;
@@ -180,12 +180,12 @@ class SendToClientController extends Controller
         if($q->save()){
             $projectId  = $q->ProjectId;
 
-            if(!empty($projectId) && $projectId != NULL ){
-                $projectDetails = Project::find($projectId);
-                $projectDetails->quotationId = $q->id;
-                $projectDetails->versionId = $request->versionId;
-                $projectDetails->save();
-            }
+            // if(!empty($projectId) && $projectId != NULL ){
+            //     $projectDetails = Project::find($projectId);
+            //     $projectDetails->quotationId = $q->id;
+            //     $projectDetails->versionId = $request->versionId;
+            //     $projectDetails->save();
+            // }
 
             // $survey = SurveyInfo::where('companyId' , Auth::user()->id)->where('projectId',$projectId)->get()->first();
 
