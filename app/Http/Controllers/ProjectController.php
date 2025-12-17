@@ -296,10 +296,13 @@ class ProjectController extends Controller
                         $ProjectBuildingDetails->save();
                     }
                 } elseif ($request->building_type == 'Apartment') {
-                    $ProjectBuildingDetails = new ProjectBuildingDetails();
-                    $ProjectBuildingDetails->projectId = $project->id;
-                    $ProjectBuildingDetails->buildingType = $request->building_type;
-                    $ProjectBuildingDetails->save();
+                    for ($i = 0; $i < (int)$request->floorCount1; $i++) {
+                        $ProjectBuildingDetails = new ProjectBuildingDetails();
+                        $ProjectBuildingDetails->projectId = $project->id;
+                        $ProjectBuildingDetails->buildingType = $request->building_type;
+                        $ProjectBuildingDetails->floorCount = $i;
+                        $ProjectBuildingDetails->save();
+                    }
                 }
 
 
