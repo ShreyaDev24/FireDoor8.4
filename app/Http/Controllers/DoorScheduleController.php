@@ -5593,6 +5593,7 @@ class DoorScheduleController extends Controller
         $qq->QSCustomerContactId = $QSCustomerContactId;
         $qq->QSQuotationSiteDeliveryAddressId = $QSQuotationSiteDeliveryAddressId;
         $qq->PONumber = $PONumber;
+        $qq->IsOrdered = 1;
         if (!empty($CompanyOrderCounter) && !empty($QuotationCounter)) {
             $qq->OrderNumber = str_replace($QuotationCounter->quotation_prefix, $CompanyOrderCounter->order_prefix, $qq->QuotationGenerationId);
         } elseif (!empty($CompanyOrderCounter) && empty($QuotationCounter)) {
