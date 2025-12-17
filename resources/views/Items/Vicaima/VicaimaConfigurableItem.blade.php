@@ -1619,6 +1619,22 @@ function changeLippingThickness(){
         } else {
                 $("#frameCostuction").attr({ 'disabled': false, "required": false });
         }
+        let overpanel = $("#overpanel").val();
+        if(overpanel != 'No'){
+            let oPHeigth = $("#oPHeigth").val();
+            let OpBeadThickness = $("#OpBeadThickness").val();
+            let OpBeadHeight = $("#OpBeadHeight").val();
+            console.log(overpanel,oPHeigth)
+            if(oPHeigth == 0){
+                $("#oPHeigth").attr({ "required": true }).val('');
+            }
+            if(OpBeadThickness == 0){
+                $("#OpBeadThickness").attr({ "required": true }).val('');
+            }
+            if(OpBeadHeight == 0){
+                $("#OpBeadHeight").attr({ "required": true }).val('');
+            }
+        }
         document.getElementById("itemForm").querySelectorAll(".form-control").forEach(function(i) {
             $(".optionItem a").css({'background':'#3b86ff'});
             $('#'+i.id).css({'border':'1px solid #ced4da'});
