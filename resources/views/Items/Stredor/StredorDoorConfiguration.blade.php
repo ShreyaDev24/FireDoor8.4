@@ -862,6 +862,22 @@ $(document).on('click', '#submit', function(e) {
             $("#SL2TransomDepth").attr({ 'readonly': true, "required": false });
             $("#SL1transomThickness").attr({ 'readonly': true, "required": false });
         }
+        let overpanel = $("#overpanel").val();
+        if(overpanel != 'No'){
+            let oPHeigth = $("#oPHeigth").val();
+            let OpBeadThickness = $("#OpBeadThickness").val();
+            let OpBeadHeight = $("#OpBeadHeight").val();
+            console.log(overpanel,oPHeigth)
+            if(oPHeigth == 0){
+                $("#oPHeigth").attr({ "required": true }).val('');
+            }
+            if(OpBeadThickness == 0){
+                $("#OpBeadThickness").attr({ "required": true }).val('');
+            }
+            if(OpBeadHeight == 0){
+                $("#OpBeadHeight").attr({ "required": true }).val('');
+            }
+        }
 
     document.getElementById("itemForm").querySelectorAll(".form-control").forEach(function(i) {
         $(".optionItem a").css({
