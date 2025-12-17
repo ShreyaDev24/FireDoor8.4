@@ -130,7 +130,7 @@
                                                     </label>
                                                     <label for="Rebated_Height" style="display: none;">Rebated Depth </label>
                                                     <input type="number" @if(empty($Item['RebatedHeight'])){{'readonly'}}@endif min="12" name="rebatedHeight"
-                                                        id="rebatedHeight" class="form-control"
+                                                        id="rebatedHeight" class="form-control change-event-calulation"
                                                         value="@if(isset($Item['RebatedHeight'])){{$Item['RebatedHeight']}}@else{{'0'}}@endif">
                                                 </div>
                                             </div>
