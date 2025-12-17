@@ -77,13 +77,13 @@
                                     <div class="col-md-6">
                                         <div class="position-relative form-group">
                                             <label for="floor">Floor</label>
-                                            @if(!empty($floor) || floor[0]->buildingType != 'Apartment')
+                                            @if(!empty($floor))
                                             <select required="" name="floor" id="floor" class="form-control">
                                                <option value="" disabled selected>Select Floor</option>
                                                 @foreach ($floor as $val)
                                                 @if($val->buildingType == 'House')
                                                 <option value="{{ $val->houseType }}">{{ $val->houseType }}</option>
-                                                @elseif ($val->buildingType == 'Commercial')
+                                                @elseif ($val->buildingType == 'Commercial' || $val->buildingType == 'Apartment')
                                                 <option value="{{ $val->floorCount }}">{{ $val->floorCount }}</option>
                                                 @endif
 
