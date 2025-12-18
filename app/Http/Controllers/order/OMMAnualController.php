@@ -101,8 +101,15 @@ class OMMAnualController extends Controller
                 ->where('customers.UserId',$quotaion->MainContractorId)->first();
 
         $data = [
+            'project' => $project,
+            'companyLogo' => 'storage/company/logo.png',
+            'preparedByName' => $quotaion->SalesContact,
+            'preparedByCompany' => $quotaion->CompanyName,
+            'mainContractor' => $project->main_contractor,
+
             'project_name' => $project->ProjectName ?? '',
-            'client_contractor' => $customerDetails->CstCompanyName,
+            'projectImageBase64' => $project->projectImageBase64 ?? '',
+            'client_contractor' => $comapnyDetail->CstCompanyName,
             'site_address' => (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')),
             'fire_door_types' => 'Door cores used '. $configurationItemName .' FD30/FD60',
             'configurationItemName' => $configurationItemName,

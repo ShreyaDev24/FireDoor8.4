@@ -1,78 +1,131 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Cover Page</title>
+    <title>{{ $project->name ?? 'Project Cover' }}</title>
+
     <style>
+        @page {
+            margin: 0;
+        }
+
         body {
             font-family: DejaVu Sans, sans-serif;
             margin: 0;
             padding: 0;
-            text-align: center;
-            background: #f9f9f9;
+            color: #333;
         }
-        .cover-container {
-            padding: 50px;
-            text-align: center;
+
+        .page {
+            width: 100%;
+            height: 100%;
             position: relative;
         }
-        .cover-image {
-            width: 220px;
-            position: absolute;
-            top: 20px;
-            right: 40px;
+
+        /* Header */
+        .header {
+            padding: 30px 50px;
+            border-bottom: 2px solid #e5e5e5;
         }
-        .info-table {
-            margin: 100px auto 0 auto;
-            border-collapse: separate;
-            border-spacing: 0;
-            width: 70%;
-            font-size: 16px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
+
+        .logo {
+            height: 60px;
         }
-        .info-table td {
-            padding: 12px 15px;
-            border-bottom: 1px solid #ddd;
-            text-align: left;
+
+        /* Main Content */
+        .content {
+            padding: 60px 50px;
+            text-align: center;
         }
-        .info-table tr:last-child td {
-            border-bottom: none;
-        }
-        .heading {
+
+        .project-title {
+            font-size: 32px;
             font-weight: bold;
-            width: 200px;
-            background: #f0f0f0;
+            margin-bottom: 30px;
         }
-        .info-table tr:hover td {
-            background: #f9f9f9;
-            transition: background 0.3s ease;
+
+        .project-image {
+            margin: 30px 0;
         }
-        @page {
-            size: 710pt 950pt;
-            margin: 40pt;
+
+        .project-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 6px;
+        }
+
+        /* Footer Section */
+        .footer {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
+            right: 50px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+        }
+
+        .footer-box {
+            width: 45%;
+        }
+
+        .label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .value {
+            font-size: 15px;
         }
     </style>
-
 </head>
 <body>
-    <div class="cover-container">
-        @if(!empty($comapnyDetail->ComplogoBase64))
-        <img src="{{$comapnyDetail->ComplogoBase64}}" class="imgClass" alt="Logo" style="position:absolute; top:-20px; right: 10px;" />
-        @else
-        {!! Base64Image('defaultImg') !!}
-        @endif
 
-        <table class="info-table">
-            <tr><td class="heading">Project Name:</td><td>{{ $data['project_name'] }}</td></tr>
-            <tr><td class="heading">Client/Contractor:</td><td>{{ $data['client_contractor'] }}</td></tr>
-            <tr><td class="heading">Site Address:</td><td>{{ $data['site_address'] }}</td></tr>
-            <tr><td class="heading">Fire Door Types:</td><td>{{ $data['fire_door_types'] }}</td></tr>
-            <tr><td class="heading">Date:</td><td>{{ $data['date'] }}</td></tr>
-            <tr><td class="heading">Compiled By:</td><td>{{ $data['compiled_by'] }}</td></tr>
-        </table>
+<div class="page">
+
+    <!-- Header -->
+    <div class="header">
+        @if(!empty($comapnyDetail->ComplogoBase64))
+            <img src="{{$comapnyDetail->ComplogoBase64}}" class="logo" alt="Company Logo" />
+        @else
+            {!! Base64Image('defaultImg') !!}
+        @endif
     </div>
+
+    <!-- Content -->
+    <div class="content">
+        <div class="project-title">
+            {{ $data['project_name'] ?? 'Project Name' }}
+        </div>
+
+        @if(!empty($project->cover_image))
+            <div class="project-image">
+                <img src="{{ $data['projectImageBase64'] }}" alt="Project Image">
+            </div>
+        @endif
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-box">
+            <div class="label">Prepared By</div>
+            <div class="value">
+                {{ $data['preparedByName'] ?? '' }}<br>
+                {{ $data['preparedByCompany'] ?? '' }}
+            </div>
+        </div>
+
+        <div class="footer-box">
+            <div class="label">Prepared For</div>
+            <div class="value">
+                {{ $data['client_contractor'] ?? '' }}
+            </div>
+        </div>
+    </div>
+
+</div>
+
 </body>
 </html>
+
