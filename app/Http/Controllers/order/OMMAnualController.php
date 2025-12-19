@@ -560,86 +560,139 @@ class OMMAnualController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            $a .= '<tr>
-                        <td>' . $i . '</td>
-                        <td>' . $show->floor . '</td>
-                        <td>' . configurationDoor($quotaion->configurableitems) . '</td>
-                        <td>' . $show->doorNumber . '</td>
-                        <td>' . $DoorDescription . '</td>
-                        <td>' . $show->DoorQuantity . '</td>
-                        <td>' . $show->SOHeight . '</td>
-                        <td>' . $show->SOWidth . '</td>
-                        <td>' . $show->SOWallThick . '</td>
-                        <td>' . $show->DoorType . '</td>
-                        <td>' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
-                        <td>' . $DoorLeafFacing . '</td>
-                        <td>' . $Lipping . '</td>
-                        <td>' . $show->LeafWidth1 . '</td>
-                        <td>' . $show->LeafWidth2 . '</td>
-                        <td>' . $show->LeafHeight . '</td>
-                        <td>' . $show->LeafThickness . '</td>
-                        <td>' . $show->Undercut . '</td>
-                        <td>' . $show->Handing . '</td>
-                        <td>' . $show->OpensInwards . '</td>
+            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+                $a .= '<tr>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
+                            <td>' . $show->floor . '</td>
+                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . $show->doorNumber . '</td>
+                            <td>' . $DoorDescription . '</td>
+                            <td>' . $show->SOHeight . '</td>
+                            <td>' . $show->SOWidth . '</td>
+                            <td>' . $show->SOWallThick . '</td>
+                            <td>' . $show->DoorType . '</td>
+                            <td>' . $show->LeafConstruction . '</td>
+                            <td>' . $DoorLeafFacing . '</td>
+                            <td>' . $show->DoorDimensionsCode . '</td>
+                            <td>' . $Lipping . '</td>
+                            <td>' . $show->LeafWidth1 . '</td>
+                            <td>' . $show->LeafWidth2 . '</td>
+                            <td>' . $show->LeafHeight . '</td>
+                            <td>' . $show->LeafThickness . '</td>
+                            <td>' . $show->Undercut . '</td>
+                            <td>' . $show->Handing . '</td>
+                            <td>' . $show->OpensInwards . '</td>
 
 
-                        <td>' . $Leaf1VisionPanel . '</td>
-                        <td>' . $Leaf2VisionPanel . '</td>
-                        <td>' . $GlassTypeForDoorDetailsTable . '</td>
+                            <td>' . $Leaf1VisionPanel . '</td>
+                            <td>' . $Leaf2VisionPanel . '</td>
+                            <td>' . $GlassTypeForDoorDetailsTable . '</td>
 
-                        <td>' . $OverpanelForDoorDetailsTable . '</td>
-                        <td>' . $OPGlassTypeForDoorDetailsTable . '</td>
-                        <td>' . $SideScreen1 . '</td>
-                        <td>' . $SideScreen2 . '</td>
+                            <td>' . $OverpanelForDoorDetailsTable . '</td>
+                            <td>' . $OPGlassTypeForDoorDetailsTable . '</td>
+                            <td>' . $SideScreen1 . '</td>
+                            <td>' . $SideScreen2 . '</td>
 
 
-                        <td>' . $FrameMaterialForDoorDetailsTable . '</td>
-                        <td>' . $FrameTypeForDoorDetailsTable . '</td>
-                        <td>' . $FrameSizeForDoorDetailsTable . '</td>
-                        <td>' . $FrameFinishForDoorDetailsTable . '</td>
-                        <td>' . $ExtLiner . '</td>
-                        <td>' . $ExtLinerSizeForDoorDetailsTable . '</td>
+                            <td>' . $FrameMaterialForDoorDetailsTable . '</td>
+                            <td>' . $FrameTypeForDoorDetailsTable . '</td>
+                            <td>' . $FrameSizeForDoorDetailsTable . '</td>
+                            <td>' . $FrameFinishForDoorDetailsTable . '</td>
+                            <td>' . $ExtLiner . '</td>
+                            <td>' . $ExtLinerSizeForDoorDetailsTable . '</td>
 
-                        <td>' . $intumescentSeal . '</td>
+                            <td>' . $intumescentSeal . '</td>
 
-                        <td>' . $ArchitraveMaterialForDoorDetailsTable . '</td>
-                        <td>' . $ArchitraveTypeForDoorDetailsTable . '</td>
-                        <td>' . $ArchitraveSizeForDoorDetailsTable . '</td>
-                        <td>' . $ArchitraveFinishForDoorDetailsTable . '</td>
-                        <td>' . $ArchitraveSetQty . '</td>
+                            <td>' . $ArchitraveMaterialForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveTypeForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveSizeForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveFinishForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveSetQty . '</td>
 
-                        <td>' . $IronmongerySet . '</td>
-                        <td>' . $rWdBRating . '</td>
-                        <td>' . $fireRate . '</td>
-                        <td>' . $COC . '</td>
-                        <td>' . $SpecialFeatureRefs . '</td>
-                        </tr>
-                        ';
+                            <td>' . $IronmongerySet . '</td>
+                            <td>' . $rWdBRating . '</td>
+                            <td>' . $fireRate . '</td>
+                            <td>' . $SpecialFeatureRefs . '</td>
+                            </tr>
+                            ';
+            }else{
+
+                $a .= '<tr>
+                            <td>' . $show->plot_ref_no . '</td>
+                            <td>' . $show->certification_no . '</td>
+                            <td>' . $show->floor . '</td>
+                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . $show->doorNumber . '</td>
+                            <td>' . $DoorDescription . '</td>
+                            <td>' . $show->SOHeight . '</td>
+                            <td>' . $show->SOWidth . '</td>
+                            <td>' . $show->SOWallThick . '</td>
+                            <td>' . $show->DoorType . '</td>
+                            <td>' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
+                            <td>' . $DoorLeafFacing . '</td>
+                            <td>' . $Lipping . '</td>
+                            <td>' . $show->LeafWidth1 . '</td>
+                            <td>' . $show->LeafWidth2 . '</td>
+                            <td>' . $show->LeafHeight . '</td>
+                            <td>' . $show->LeafThickness . '</td>
+                            <td>' . $show->Undercut . '</td>
+                            <td>' . $show->Handing . '</td>
+                            <td>' . $show->OpensInwards . '</td>
+
+
+                            <td>' . $Leaf1VisionPanel . '</td>
+                            <td>' . $Leaf2VisionPanel . '</td>
+                            <td>' . $GlassTypeForDoorDetailsTable . '</td>
+
+                            <td>' . $OverpanelForDoorDetailsTable . '</td>
+                            <td>' . $OPGlassTypeForDoorDetailsTable . '</td>
+                            <td>' . $SideScreen1 . '</td>
+                            <td>' . $SideScreen2 . '</td>
+
+
+                            <td>' . $FrameMaterialForDoorDetailsTable . '</td>
+                            <td>' . $FrameTypeForDoorDetailsTable . '</td>
+                            <td>' . $FrameSizeForDoorDetailsTable . '</td>
+                            <td>' . $FrameFinishForDoorDetailsTable . '</td>
+                            <td>' . $ExtLiner . '</td>
+                            <td>' . $ExtLinerSizeForDoorDetailsTable . '</td>
+
+                            <td>' . $intumescentSeal . '</td>
+
+                            <td>' . $ArchitraveMaterialForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveTypeForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveSizeForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveFinishForDoorDetailsTable . '</td>
+                            <td>' . $ArchitraveSetQty . '</td>
+
+                            <td>' . $IronmongerySet . '</td>
+                            <td>' . $rWdBRating . '</td>
+                            <td>' . $fireRate . '</td>
+                            <td>' . $COC . '</td>
+                            <td>' . $SpecialFeatureRefs . '</td>
+                            </tr>
+                            ';
+            }
+
             $i++;
             //     }
             // }
         }
 
-
         $a .= '
                 <tr>
                     <td class="tbl_bottom" colspan="4"></td>
                     <td class="tbl_bottom">' . $DoorQuantity . '</td>
-                    <td class="tbl_bottom" colspan="39"></td>';
-                    if($HideCosts == 0){
-                        $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
-                        <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
-                    }
-
-                    $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
+                    <td class="tbl_bottom" colspan="39"></td>
                 </tr>
             ';
 
 
         if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
-            $pdf5 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+            $pdf5 = PDF::loadView('Order.pdf_files.vicaimapdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }else{
-            $pdf5 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+            $pdf5 = PDF::loadView('Order.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
         // return $pdf4->download('file4.pdf');
         $path5 = public_path().'/allpdfFile';
