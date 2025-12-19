@@ -13,66 +13,87 @@
             font-family: DejaVu Sans, sans-serif;
             margin: 0;
             padding: 0;
-            color: #333;
+            background: #f4f6f8;
+            color: #2c2c2c;
         }
 
         .page {
             width: 100%;
             height: 100%;
+            background: #ffffff;
             position: relative;
         }
 
-        /* Header */
+        /* ================= HEADER ================= */
         .header {
-            padding: 30px 50px;
-            border-bottom: 2px solid #e5e5e5;
+            padding: 25px 50px;
+            border-bottom: 1px solid #ddd;
+            text-align: right;
         }
 
         .logo {
-            height: 60px;
+            height: 55px;
         }
 
-        /* Main Content */
+        /* ================= MAIN CONTENT ================= */
         .content {
-            padding: 60px 50px;
+            padding: 80px 70px 40px;
             text-align: center;
         }
 
         .project-title {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: bold;
-            margin-bottom: 30px;
+            margin-bottom: 12px;
         }
 
-        .project-image {
-            margin: 30px 0;
+        .project-subtitle {
+            font-size: 16px;
+            color: #777;
+            margin-bottom: 40px;
         }
 
-        .project-image img {
+        .project-image-box {
+            margin: 0 auto;
+            width: 70%;
+            background: #f8f9fb;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #e2e2e2;
+        }
+
+        .project-image-box img {
             max-width: 100%;
-            max-height: 300px;
-            border-radius: 6px;
+            max-height: 320px;
         }
 
-        /* Footer Section */
+        /* ================= FOOTER ================= */
         .footer {
             position: absolute;
-            bottom: 50px;
-            left: 50px;
-            right: 50px;
-            display: flex;
-            justify-content: space-between;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #f1f3f5;
+            padding: 30px 60px;
+            border-top: 1px solid #ddd;
             font-size: 14px;
         }
 
-        .footer-box {
-            width: 45%;
+        .footer-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .footer-table td {
+            width: 50%;
+            vertical-align: top;
         }
 
         .label {
             font-weight: bold;
+            font-size: 13px;
+            color: #555;
             margin-bottom: 5px;
-            color: #666;
         }
 
         .value {
@@ -84,48 +105,56 @@
 
 <div class="page">
 
-    <!-- Header -->
+    <!-- HEADER -->
     <div class="header">
         @if(!empty($comapnyDetail->ComplogoBase64))
-            <img src="{{$comapnyDetail->ComplogoBase64}}" class="logo" alt="Company Logo" />
+            <img src="{{ $comapnyDetail->ComplogoBase64 }}" class="logo">
         @else
             {!! Base64Image('defaultImg') !!}
         @endif
     </div>
 
-    <!-- Content -->
+    <!-- CONTENT -->
     <div class="content">
+
         <div class="project-title">
             {{ $data['project_name'] ?? 'Project Name' }}
         </div>
 
-        @if(!empty($project->cover_image))
-            <div class="project-image">
-                <img src="{{ $data['projectImageBase64'] }}" alt="Project Image">
+        {{--  <div class="project-subtitle">
+            Fire Door Specification & Technical Documentation
+        </div>  --}}
+
+        @if(!empty($data['projectImageBase64']))
+            <div class="project-image-box">
+                <img src="{{ $data['projectImageBase64'] }}">
             </div>
         @endif
+
     </div>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <div class="footer">
-        <div class="footer-box">
-            <div class="label">Prepared By</div>
-            <div class="value">
-                {{ $data['preparedByName'] ?? '' }}<br>
-                {{ $data['preparedByCompany'] ?? '' }}
-            </div>
-        </div>
-
-        <div class="footer-box">
-            <div class="label">Prepared For</div>
-            <div class="value">
-                {{ $data['client_contractor'] ?? '' }}
-            </div>
-        </div>
+        <table class="footer-table">
+            <tr>
+                <td>
+                    <div class="label">Prepared By</div>
+                    <div class="value">
+                        {{ $data['preparedByName'] ?? '' }}<br>
+                        {{ $data['preparedByCompany'] ?? '' }}
+                    </div>
+                </td>
+                <td>
+                    <div class="label">Prepared For</div>
+                    <div class="value">
+                        {{ $data['client_contractor'] ?? '' }}
+                    </div>
+                </td>
+            </tr>
+        </table>
     </div>
 
 </div>
 
 </body>
 </html>
-

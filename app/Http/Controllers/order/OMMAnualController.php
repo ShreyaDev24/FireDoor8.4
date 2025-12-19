@@ -104,12 +104,12 @@ class OMMAnualController extends Controller
             'project' => $project,
             'companyLogo' => 'storage/company/logo.png',
             'preparedByName' => $quotaion->SalesContact,
-            'preparedByCompany' => $quotaion->CompanyName,
+            'preparedByCompany' => $comapnyDetail->CompanyName,
             'mainContractor' => $project->main_contractor,
 
             'project_name' => $project->ProjectName ?? '',
             'projectImageBase64' => $project->projectImageBase64 ?? '',
-            'client_contractor' => $comapnyDetail->CstCompanyName,
+            'client_contractor' => $customerContact->CstCompanyName,
             'site_address' => (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')),
             'fire_door_types' => 'Door cores used '. $configurationItemName .' FD30/FD60',
             'configurationItemName' => $configurationItemName,
@@ -140,18 +140,18 @@ class OMMAnualController extends Controller
         // $fileName2 = $id . '2' . '.' . 'pdf';
         // $pdfTwo->save($path2 . '/' . $fileName2);
 
-        $pdf_mpr = PDF::loadView('Order.pdf_files.m_p_r');
-        $path_mpr = public_path() . '/allpdfFile';
-        $fileName_m_p_r = $id . 'm_p_r' . '.' . 'pdf';
-        $pdf_mpr->save($path_mpr . '/' . $fileName_m_p_r);
+        // $pdf_mpr = PDF::loadView('Order.pdf_files.m_p_r');
+        // $path_mpr = public_path() . '/allpdfFile';
+        // $fileName_m_p_r = $id . 'm_p_r' . '.' . 'pdf';
+        // $pdf_mpr->save($path_mpr . '/' . $fileName_m_p_r);
 
         // Third PDF
         // DOOR FURNITURE
-        $pdfThree = PDF::loadView('Order.pdf_files.doorfurniture', ['pdf3' => $pdf3, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
-        // return $pdfThree->download('file.pdf');
-        $path3 = public_path() . '/allpdfFile';
-        $fileName3 = $id . '3' . '.' . 'pdf';
-        $pdfThree->save($path3 . '/' . $fileName3);
+        // $pdfThree = PDF::loadView('Order.pdf_files.doorfurniture', ['pdf3' => $pdf3, 'comapnyDetail' => $comapnyDetail, 'customer' => $customer]);
+        // // return $pdfThree->download('file.pdf');
+        // $path3 = public_path() . '/allpdfFile';
+        // $fileName3 = $id . '3' . '.' . 'pdf';
+        // $pdfThree->save($path3 . '/' . $fileName3);
 
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
@@ -2944,8 +2944,8 @@ class OMMAnualController extends Controller
         // 🔹 list of PDFs
         $pdf1 = public_path() . '/allpdfFile' . '/' . $fileName1;
         $pdf2 = public_path() . '/allpdfFile' . '/' . $fileName2;
-        $pdf3 = public_path() . '/allpdfFile' . '/' . $fileName3;
-        $pdf_m_p_r = public_path() . '/allpdfFile' . '/' . $fileName_m_p_r;
+        // $pdf3 = public_path() . '/allpdfFile' . '/' . $fileName3;
+        // $pdf_m_p_r = public_path() . '/allpdfFile' . '/' . $fileName_m_p_r;
         $pdf64 = '';
         if ($fileName64 !== '' && $fileName64 !== '0') {
             $pdf64 = public_path() . '/allpdfFile' . '/' . $fileName64;
@@ -2957,8 +2957,8 @@ class OMMAnualController extends Controller
         $pdfMerger = PDFMerger::init();
         $pdfMerger->addPDF($pdf1, 'all');
         $pdfMerger->addPDF($pdf2, 'all');
-        $pdfMerger->addPDF($pdf3, 'all');
-        $pdfMerger->addPDF($pdf_m_p_r, 'all');
+        // $pdfMerger->addPDF($pdf3, 'all');
+        // $pdfMerger->addPDF($pdf_m_p_r, 'all');
 
         if ($pdf64 !== '' && $pdf64 !== '0' && file_exists($pdf64)) {
             $pdfMerger->addPDF($pdf64, 'all');
@@ -3014,10 +3014,10 @@ class OMMAnualController extends Controller
         // 🔹 Cleanup temporary files
         $unlinkpath1 = public_path() . '/allpdfFile' . '/' . $fileName1;
         $unlinkpath2 = public_path() . '/allpdfFile' . '/' . $fileName2;
-        $unlinkpath3 = public_path() . '/allpdfFile' . '/' . $fileName3;
-        $unlinkpath_m_p_r = public_path() . '/allpdfFile' . '/' . $fileName_m_p_r;
-        $unlinkpath4_2 = public_path() . '/allpdfFile' . '/' . $fileName4_2;
-        $unlinkpath4 = public_path() . '/allpdfFile' . '/' . $fileName4;
+        // $unlinkpath3 = public_path() . '/allpdfFile' . '/' . $fileName3;
+        // $unlinkpath_m_p_r = public_path() . '/allpdfFile' . '/' . $fileName_m_p_r;
+        // $unlinkpath4_2 = public_path() . '/allpdfFile' . '/' . $fileName4_2;
+        // $unlinkpath4 = public_path() . '/allpdfFile' . '/' . $fileName4;
         $unlinkpath64 = '';
         if ($fileName64 !== '' && $fileName64 !== '0') {
             $unlinkpath64 = public_path() . '/allpdfFile' . '/' . $fileName64;
@@ -3027,7 +3027,7 @@ class OMMAnualController extends Controller
         $unlinkpath7 = ($fileName7 !== '') ? public_path() . '/allpdfFile' . '/' . $fileName7 : '';
 
         // safely unlink files
-        foreach ([$unlinkpath1, $unlinkpath2, $unlinkpath3, $unlinkpath4_2, $unlinkpath4, $unlinkpath5, $unlinkpath6, $unlinkpath_m_p_r, $unlinkpath64, $unlinkpath7] as $f) {
+        foreach ([$unlinkpath1, $unlinkpath2, $unlinkpath5, $unlinkpath6, $unlinkpath64, $unlinkpath7] as $f) {
             if ($f !== '' && file_exists($f)) {
                 unlink($f);
             }
