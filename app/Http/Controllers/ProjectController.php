@@ -138,7 +138,7 @@ class ProjectController extends Controller
         if (!empty($request->AddressLine1) && !empty($request->City) && !empty($request->Country) && !empty($request->PostalCode)) {
 
             $valid = $request->validate([
-                'ProjectImage' => 'nullable|image|mimes:jpeg,png,jpg',
+                'ProjectImage' => 'image|mimes:jpg,jpeg,png|max:2048',
                 'AddressLine1' => 'required|string|max:150',
             ]);
             $msg = '';
@@ -201,24 +201,29 @@ class ProjectController extends Controller
             }
 
             if (!empty($project)) {
-                $returnTenderDate = date('Y-m-d', strtotime($request->returnTenderDate));
-                if ($request->hasFile('ProjectImage')) {
-                    $file = $request->file('ProjectImage');
-                    $path = $file;
-                    $type = pathinfo($path, PATHINFO_EXTENSION);
-                    $filedata = file_get_contents($path);
-                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
-                    $project->projectImageBase64 = $base64;
+                 $returnTenderDate = date('Y-m-d', strtotime($request->returnTenderDate));
 
+                if ($request->hasFile('ProjectImage')) {
+
+                    $file = $request->file('ProjectImage');
+
+                    // Base64 (correct MIME)
+                    $mime = $file->getMimeType();
+                    $filedata = file_get_contents($file->getRealPath());
+                    $project->projectImageBase64 =
+                        'data:' . $mime . ';base64,' . base64_encode($filedata);
+
+                    // Save physical file
                     $ImageName = rando() . $file->getClientOriginalName();
                     $filepath = public_path('uploads/Project/');
-                    $ImageExtension = $file->getClientOriginalExtension();
-                    $ext = pathinfo($filepath . $ImageName, PATHINFO_EXTENSION);
-                    if ($ext == 'jpg' || $ext == 'jpeg' || $ext == 'png') {
-                        $file->move($filepath, $ImageName);
+
+                    $file->move($filepath, $ImageName);
+
+                    if (!empty($project->ProjectImage)) {
                         File::delete($filepath . $project->ProjectImage);
-                        $project->ProjectImage = $ImageName;
                     }
+
+                    $project->ProjectImage = $ImageName;
                 }
 
                 // if(Auth::user()->UserType=='4'){
