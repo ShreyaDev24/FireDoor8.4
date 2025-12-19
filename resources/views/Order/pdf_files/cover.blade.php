@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>{{ $project->name ?? 'Project Cover' }}</title>
 
-    <style>
+     <style>
         @page {
             margin: 0;
         }
@@ -17,17 +17,17 @@
             color: #2c2c2c;
         }
 
+        /* ================= PAGE ================= */
         .page {
             width: 100%;
-            height: 100%;
+            height: 100vh;                 /* CRITICAL for PDF */
             background: #ffffff;
-            position: relative;
         }
 
         /* ================= HEADER ================= */
         .header {
-            padding: 25px 50px;
-            border-bottom: 1px solid #ddd;
+            padding: 30px 60px;
+            border-bottom: 1px solid #e2e2e2;
             text-align: right;
         }
 
@@ -37,46 +37,37 @@
 
         /* ================= MAIN CONTENT ================= */
         .content {
-            padding: 80px 70px 40px;
+            padding: 90px 80px 0;
             text-align: center;
         }
 
         .project-title {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
-        .project-subtitle {
-            font-size: 16px;
-            color: #777;
+            font-size: 38px;
+            font-weight: 700;
             margin-bottom: 40px;
+            color: #222;
         }
 
         .project-image-box {
             margin: 0 auto;
             width: 70%;
             background: #f8f9fb;
-            padding: 25px;
+            padding: 30px;
             border-radius: 10px;
             border: 1px solid #e2e2e2;
         }
 
         .project-image-box img {
             max-width: 100%;
-            max-height: 320px;
+            max-height: 340px;
         }
 
         /* ================= FOOTER ================= */
         .footer {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: #f1f3f5;
-            padding: 30px 60px;
-            border-top: 1px solid #ddd;
-            font-size: 14px;
+            margin-top: 120px;          /* controls vertical position */
+            padding: 35px 80px;
+            background: #f6f7f9;
+            border-top: 1px solid #e1e1e1;
         }
 
         .footer-table {
@@ -89,15 +80,28 @@
             vertical-align: top;
         }
 
+        .footer-table td:first-child {
+            text-align: left;
+        }
+
+        .footer-table td:last-child {
+            text-align: right;
+        }
+
         .label {
-            font-weight: bold;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .value {
-            font-size: 15px;
+            font-size: 18px;
+            font-weight: 500;
+            color: #222;
+            line-height: 1.5;
         }
     </style>
 </head>
