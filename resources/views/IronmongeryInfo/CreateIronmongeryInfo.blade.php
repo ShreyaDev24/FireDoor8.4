@@ -400,16 +400,16 @@ dd($IronmongeryInfo);
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                      <label class="d-flex align-items-center justify-content-between">
-            <span>
-                PDF Specification <span class="text-danger">*</span>
-            </span>
+                                                        <span>
+                                                            PDF Specification <span class="text-danger">*</span>
+                                                        </span>
 
-            @if(!empty($IronmongeryInfo->PdfSpecification))
-                <small class="text-muted">
-                    Upload only if you want to replace the PDF
-                </small>
-            @endif
-        </label>
+                                                        @if(!empty($IronmongeryInfo->PdfSpecification))
+                                                            <small class="text-muted">
+                                                                Upload only if you want to replace the PDF
+                                                            </small>
+                                                        @endif
+                                                    </label>
 
                                                     <div class="input-group">
                                                         <input type="file"
