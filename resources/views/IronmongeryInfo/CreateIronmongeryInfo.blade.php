@@ -125,12 +125,33 @@ dd($IronmongeryInfo);
                                     </select>
                                 </div>
                             </div> -->
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group"><label for="Image" class="">Image<span class="text-danger">*</span></label>
-                                                    <input type="file" name="Image" accept=".jpg, .jpeg, .png, .JPG, .JPEG, .PNG" @if(!isset($IronmongeryInfo->GeneratedKey)) required @endif
-                                                    class="form-control">
-                                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Image @if(!empty($IronmongeryInfo->Image))<small class="text-muted">(Upload only if you want to replace the image)</small>@endif<span class="text-danger">*</span></label>
+                                        <input type="file"
+                                            name="Image"
+                                            accept=".jpg,.jpeg,.png"
+                                            class="form-control">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <div class="form-group">
+                                        @if(!empty($IronmongeryInfo->Image))
+                                            <div class="d-flex align-items-center mb-2">
+                                                <a href="{{ asset('uploads/IronmongeryInfo/'.$IronmongeryInfo->Image) }}"
+                                                target="_blank">
+                                                    <img src="{{ asset('uploads/IronmongeryInfo/'.$IronmongeryInfo->Image) }}"
+                                                        style="width:80px; height:auto; border:1px solid #ddd; padding:3px;">
+                                                </a>
+                                                <span class="ml-2 text-muted small">Click to view</span>
                                             </div>
+                                        @endif
+                                    </div>
+                                </div>
+
+
+
 
                                          {{--   <div class="col-md-6">
                                                 <div class="position-relative form-group">
@@ -377,11 +398,44 @@ dd($IronmongeryInfo);
                                             </div>
 
                                             <div class="col-md-6">
-                                                <div class="position-relative form-group"><label for="projectImage" class="">PDF specification <span class="text-danger">*</span></label>
-                                                    <input name="PdfSpecification" accept=".pdf,.PDF" @if(!isset($IronmongeryInfo->GeneratedKey)) required @endif
-                                                    type="file" class="form-control">
+                                                <div class="form-group">
+                                                     <label class="d-flex align-items-center justify-content-between">
+            <span>
+                PDF Specification <span class="text-danger">*</span>
+            </span>
+
+            @if(!empty($IronmongeryInfo->PdfSpecification))
+                <small class="text-muted">
+                    Upload only if you want to replace the PDF
+                </small>
+            @endif
+        </label>
+
+                                                    <div class="input-group">
+                                                        <input type="file"
+                                                            name="PdfSpecification"
+                                                            accept=".pdf"
+                                                            class="form-control">
+
+                                                        @if(!empty($IronmongeryInfo->PdfSpecification))
+                                                            <div class="input-group-append">
+                                                                <a href="{{ asset('uploads/IronmongeryInfo/'.$IronmongeryInfo->PdfSpecification) }}"
+                                                                target="_blank"
+                                                                class="btn btn-outline-primary">
+                                                                    View PDF
+                                                                </a>
+                                                            </div>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
+
+
+
+
+
+
+
 
 
                                             <div class="col-md-6">
