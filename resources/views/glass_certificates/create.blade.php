@@ -7,7 +7,10 @@
             <div class="card-body">
                 <h4>Add Glass Certificate</h4>
 
-                <form method="POST" action="{{ route('glass-certificates.store') }}">
+                <form action="{{ route('glass-certificates.store') }}"
+                    method="POST"
+                    enctype="multipart/form-data">
+
                     @csrf
                     @include('glass_certificates.form')
                     <button class="btn btn-success">Save</button>

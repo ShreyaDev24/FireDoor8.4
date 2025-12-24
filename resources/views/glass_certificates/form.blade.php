@@ -31,15 +31,13 @@
 </div>
 
 <div class="mb-3">
-    <label>Fire Rating</label>
-    <input type="text" name="fire_rating"
-           class="form-control"
-           value="{{ old('fire_rating', $glassCertificate->fire_rating ?? '') }}">
-</div>
-
-<div class="mb-3">
     <label>Expiry Date</label>
     <input type="date" name="expiry_date"
            class="form-control"
            value="{{ old('expiry_date', $glassCertificate->expiry_date ?? '') }}">
+</div>
+
+<div class="mb-2">
+    <label>Upload Document</label>
+    <input type="file" name="document" class="form-control">
 </div>

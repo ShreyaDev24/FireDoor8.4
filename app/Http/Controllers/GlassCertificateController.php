@@ -6,6 +6,7 @@ use App\Models\GlassCertificate;
 use App\Models\ConfigurableItems;
 use App\Models\GlassType;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 
 class GlassCertificateController extends Controller
@@ -30,21 +31,33 @@ class GlassCertificateController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'brand_of_core' => 'required|integer',
+            'fire_rating' => 'required',
             'glass_type_id' => 'required|exists:glass_type,id',
-            'certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
+            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
         ]);
 
+        $path = null;
+
+        if ($request->hasFile('document')) {
+            $filename = time().'_'.$request->file('document')->getClientOriginalName();
+            $request->file('document')->move(public_path('glassCertificates'), $filename);
+            $path = 'glassCertificates/'.$filename;
+        }
+
         GlassCertificate::create([
-            'user_id' => Auth::id(),
+            'user_id' => auth()->id(),
             'glass_type_id' => $request->glass_type_id,
             'brand_of_core' => $request->brand_of_core,
             'fire_rating' => $request->fire_rating,
             'certificate_reference' => $request->certificate_reference,
             'expiry_date' => $request->expiry_date,
+            'document_path' => $path,
         ]);
 
-        return redirect()->route('glass-certificates.index')
+        return redirect()
+            ->route('glass-certificates.index')
             ->with('success', 'Certificate created successfully');
     }
 
