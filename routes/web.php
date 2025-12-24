@@ -257,7 +257,17 @@ Route::prefix('options')->group(function (): void {
 
 Route::resource('favorites', FavoriteController::class);
 Route::resource('core_certificates', CoreCertificateController::class)->middleware('auth');
-Route::resource('glass-certificates', GlassCertificateController::class)->middleware('auth');
+Route::middleware('auth')->group(function () {
+
+    Route::get(
+        'glass-certificates/get-glass-types',
+        [GlassCertificateController::class, 'getByBrand']
+    )->name('glass-certificates.get-glass-types');
+
+    Route::resource('glass-certificates', GlassCertificateController::class);
+
+});
+
 
 
 Route::prefix('quotation')->group(function (): void {

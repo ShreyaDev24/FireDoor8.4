@@ -1,14 +1,18 @@
 @extends('layouts.Master')
 
 @section('main_section')
-<div class="container">
-    <h4>Edit Glass Certificate</h4>
-
-    <form method="POST" action="{{ route('glass-certificates.update', $glassCertificate) }}">
-        @csrf @method('PUT')
-        @include('glass_certificates.form')
-        <button class="btn btn-success">Update</button>
-    </form>
+<div class="app-main__outer">
+    <div class="app-main__inner">
+        <div class="main-card mb-3 card">
+            <div class="card-body">
+                <form method="POST" action="{{ route('glass-certificates.update', $glassCertificate) }}">
+                    @csrf @method('PUT')
+                    @include('glass_certificates.form')
+                    <button class="btn btn-success">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 @endsection
 @section('js')
