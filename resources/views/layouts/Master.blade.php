@@ -286,6 +286,54 @@
                             </div>
                         </div>
                     </div>
+                    <div class="header-btn-lg pr-0">
+                        @if(Auth::user()->UserType != '1')
+
+                            @php
+                                $user = Auth::user();
+
+                                $notificationCount = \App\Models\LatestNotification::where('is_read', 0)
+                                    ->where(function ($query) use ($user) {
+                                        $query->where('target_type', 'all')
+                                            ->orWhere(function ($q) use ($user) {
+                                                $q->where('target_type', 'user')
+                                                    ->where('target_user_id', $user->id);
+                                            })
+                                            ->orWhere(function ($q) use ($user) {
+                                                $q->where('target_type', 'company')
+                                                    ->where('company_id', $user->company_id);
+                                            });
+                                    })
+                                    ->count();
+                            @endphp
+
+                            <a href="{{ route('notifications.index') }}"
+                            class="position-relative d-inline-flex align-items-center justify-content-center"
+                            style="width:32px; height:32px;">
+
+                                <i class="fa fa-bell"
+                                style="font-size:18px; color:#212529;"></i>
+
+                                @if($notificationCount > 0)
+                                    <span class="badge bg-danger position-absolute"
+                                        style="
+                                            top:-6px;
+                                            right:-6px;
+                                            font-size:11px;
+                                            min-width:16px;
+                                            height:16px;
+                                            line-height:16px;
+                                            padding:0 4px;
+                                            z-index:2;
+                                        ">
+                                        {{ $notificationCount }}
+                                    </span>
+                                @endif
+                            </a>
+
+                        @endif
+                    </div>
+
                     <!-- <div class="header-btn-lg">
                         <button type="button" class="hamburger hamburger--elastic open-right-drawer">
                             <span class="hamburger-box">

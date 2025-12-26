@@ -23,6 +23,8 @@ use App\Models\ItemMaster;
 use App\Models\QuotationVersionItems;
 use App\Models\QuotationContactInformation;
 use phpDocumentor\Reflection\Types\Null_;
+use App\Services\NotificationService;
+use App\Models\User;
 
 class SendToClientController extends Controller
 {
@@ -127,7 +129,22 @@ class SendToClientController extends Controller
             $q2 = Quotation::find($quotationId);
             $q2->linkStatus = 0;
             $q2->QuotationStatus = 'Send To Client';
-            $q2->save();
+            $q = $q2->save();
+            if($q == true){
+                $myCreatedUser = myCreatedUser();
+                $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+                foreach ($data as $user) {
+                    NotificationService::send([
+                        'title' => 'Quotation Sent',
+                        'message' => auth()->user()->FirstName .' '. auth()->user()->LastName . ' has sent a quotation ' .
+                                $q2->QuotationGenerationId,
+                        'type' => 'action',
+                        'target_type' => 'user',
+                        'target_user_id' => $user->id,
+                        'action_url' => '/quotation/generate/' . $quotationId . '/' . $currentVersion
+                    ]);
+                }
+            }
 
             echo json_encode([
                 'status'=>'success',
@@ -186,6 +203,19 @@ class SendToClientController extends Controller
                 $projectDetails->versionId = $request->versionId;
                 $projectDetails->save();
             }
+
+                $myCreatedUser = myCreatedUser();
+                $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+                foreach ($data as $user) {
+                    NotificationService::send([
+                        'title' => 'Quotation Accepted',
+                        'message' => 'Quotation has accepted',
+                        'type' => 'action',
+                        'target_type' => 'user',
+                        'target_user_id' => $user->id,
+                        'action_url' => '/quotation/generate/' . $id . '/' . $request->versionId
+                    ]);
+                }
 
             // $survey = SurveyInfo::where('companyId' , Auth::user()->id)->where('projectId',$projectId)->get()->first();
 
@@ -249,7 +279,21 @@ class SendToClientController extends Controller
         $q->rejectreason = $rejectreason;
         $q->linkStatus = 1;
         $q->status_accept_reject_at = date('Y-m-d H:i:s');
-        $q->save();
+        $q1 = $q->save();
+        if($q1 == true){
+            $myCreatedUser = myCreatedUser();
+                $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+                foreach ($data as $user) {
+                    NotificationService::send([
+                        'title' => 'Quotation Rejected',
+                        'message' => 'Quotation has rejected',
+                        'type' => 'action',
+                        'target_type' => 'user',
+                        'target_user_id' => $user->id,
+                        'action_url' => '/quotation/generate/' . $id . '/0'
+                    ]);
+                }
+        }
         return redirect()->back()->with('success', 'You rejected the quotation!');
     }
 
