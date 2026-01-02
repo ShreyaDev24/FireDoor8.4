@@ -846,7 +846,7 @@ function FrameFinish($configurableitems,$FrameFinish,$FrameFinishColor){
     return null;
 }
 
-function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThickness){
+function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThickness,$type = null){
     $GlassTypeForDoorDetailsTable='';
     $configurationDoor = configurationDoor($configurableitems);
     $fireRatingDoor = fireRatingDoor($FireRating);
@@ -868,7 +868,11 @@ function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThic
         $GlassTypeForDoorDetailsTable .= " + ".$SelectedGlassTypeForDoorDetailsTable->GlassThickness;
     }
 
-    return $GlassTypeForDoorDetailsTable;
+    if($type === 'OMMGlassID'){
+        return $SelectedGlassTypeForDoorDetailsTable->id;
+    }else{
+        return $GlassTypeForDoorDetailsTable;
+    }
 }
 
 function OPGlassType($configurableitems,$FireRating,$OPGlassType){

@@ -38,6 +38,7 @@ use App\Models\OverpanelGlassGlazing;
 use App\Models\IntumescentSealLeafType;
 use App\Models\QuotationSiteDeliveryAddress;
 use App\Models\FittingInstructions;
+use App\Models\GlassCertificate;
 
 class OMMAnualController extends Controller
 {
@@ -717,6 +718,7 @@ class OMMAnualController extends Controller
 
         $PageBreakCount = 1;
         $PageBreakCounts = 1;
+        $GlassTypeIds = [];
 
         foreach ($ed as $tt) {
             $getLeaf = IntumescentSealLeafType::where('id', $tt->IntumescentLeafType)->select('id', 'leaf_type_key', 'door_thickness')->first();
@@ -2314,6 +2316,8 @@ class OMMAnualController extends Controller
             $GlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
+
+                $GlassTypeIds[] = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness,'OMMGlassID');
             }
 
             $OPGlassTypeForDoorDetailsTable = "N/A";
@@ -2923,6 +2927,8 @@ class OMMAnualController extends Controller
 
             $PageBreakCount++;
         }
+        $Glassids = array_unique($GlassTypeIds);
+        $Glassids = array_values($Glassids); // optional reindex
 
         // echo $elevTbl;die;
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
@@ -2999,6 +3005,13 @@ class OMMAnualController extends Controller
             ->select('core_certificates.*', 'configurableitems.name')
             ->get();
 
+        $GlassCertificate = GlassCertificate::join('configurableitems', 'configurableitems.id', 'glass_certificates.brand_of_core')
+            ->where('glass_certificates.user_id', Auth::id())
+            ->where('glass_certificates.brand_of_core', $quotaion->configurableitems)
+            ->wherein('glass_certificates.glass_type_id', $Glassids)
+            ->select('glass_certificates.*', 'configurableitems.name')
+            ->get();
+
         // 🔹 final merged PDF name
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
@@ -3031,6 +3044,15 @@ class OMMAnualController extends Controller
         // 🔹 Add certificate PDFs
         if (!empty($certificates)) {
             foreach ($certificates as $cert) {
+                $path = public_path($cert->document_path);
+                if (file_exists($path)) {
+                    $pdfMerger->addPDF($path, 'all');
+                }
+            }
+        }
+
+        if (!empty($GlassCertificate)) {
+            foreach ($GlassCertificate as $cert) {
                 $path = public_path($cert->document_path);
                 if (file_exists($path)) {
                     $pdfMerger->addPDF($path, 'all');
