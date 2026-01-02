@@ -22,40 +22,64 @@
 @endsection
 @section('js')
 <script>
-$(document).ready(function () {
+    // JS object from PHP
+    let certMap = @json($certMap);
 
-    function loadGlassTypes() {
-        let brandId    = $('#brand_of_core').val();
-        let fireRating = $('#fire_rating').val();
+    document.getElementById('brand_of_core').addEventListener('change', fillCertRef);
+    document.getElementById('fire_rating').addEventListener('change', fillCertRef);
 
-        if (brandId && fireRating) {
-            $.ajax({
-                url: "{{ route('glass-certificates.get-glass-types') }}",
-                type: "GET",
-                data: {
-                    brand_id: brandId,
-                    fire_rating: fireRating
-                },
-                success: function (data) {
-                    let options = '<option value="">Select</option>';
+    function fillCertRef() {
+        let brandId = document.getElementById('brand_of_core').value;
+        let fireRating = document.getElementById('fire_rating').value;
 
-                    $.each(data, function (key, value) {
-                        options += `<option value="${value.id}">
-                            ${value.GlassType} (${value.GlassThickness}mm)
-                        </option>`;
-                    });
-
-                    $('#glass_type').html(options);
-                }
-            });
+        if (
+            brandId &&
+            fireRating &&
+            certMap[brandId] &&
+            certMap[brandId][fireRating]
+        ) {
+            document.getElementById('certificate_reference').value =
+                certMap[brandId][fireRating];
         } else {
-            $('#glass_type').html('<option value="">Select</option>');
+            document.getElementById('certificate_reference').value = '';
         }
     }
 
-    $('#brand_of_core, #fire_rating').on('change', loadGlassTypes);
 
-});
+    $(document).ready(function () {
+
+        function loadGlassTypes() {
+            let brandId    = $('#brand_of_core').val();
+            let fireRating = $('#fire_rating').val();
+
+            if (brandId && fireRating) {
+                $.ajax({
+                    url: "{{ route('glass-certificates.get-glass-types') }}",
+                    type: "GET",
+                    data: {
+                        brand_id: brandId,
+                        fire_rating: fireRating
+                    },
+                    success: function (data) {
+                        let options = '<option value="">Select</option>';
+
+                        $.each(data, function (key, value) {
+                            options += `<option value="${value.id}">
+                                ${value.GlassType} (${value.GlassThickness}mm)
+                            </option>`;
+                        });
+
+                        $('#glass_type').html(options);
+                    }
+                });
+            } else {
+                $('#glass_type').html('<option value="">Select</option>');
+            }
+        }
+
+        $('#brand_of_core, #fire_rating').on('change', loadGlassTypes);
+
+    });
 </script>
 
 @endsection
