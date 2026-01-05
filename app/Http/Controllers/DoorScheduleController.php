@@ -4588,6 +4588,8 @@ class DoorScheduleController extends Controller
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
             \Log::info('Quotation Queries', \DB::getQueryLog());
 
+            $floor = Quotation::join('project_building_details', 'quotation.ProjectId', 'project_building_details.projectId')->where('quotation.id', $Id)->select('project_building_details.*')->get();
+
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
                 'favorites' => $favorites,
@@ -4626,6 +4628,7 @@ class DoorScheduleController extends Controller
                 'ProjectId' => $Quotation->ProjectId,
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
                 'setIronmongery' => $setIronmongery,
+                'floor' => $floor,
             ]);
         } else {
             return redirect()->route('quotation/list');
@@ -9559,6 +9562,39 @@ class DoorScheduleController extends Controller
 
         $pdf = PDF::loadView('Project.surveyReport', ['survey' => $survey, 'company' => $company, 'survey_changerequest' => $survey_changerequest, 'door_details' => $door_details, 'surveyUser' => $surveyUser, 'survey_changerequest_count' => $survey_changerequest_count, 'project_building_details' => $project_building_details, 'door_set' => $door_set, 'site_contact' => $site_contact, 'contact' => $contact, 'Project' => $Project])->setOptions(['defaultFont' => 'sans-serif']);
         return $pdf->download('surveyReport.pdf');
+    }
+
+    public function FloorNoChangeUrl(Request $request)
+    {
+        if (isset($request->itemMasterId, $request->floor)) {
+            $item = ItemMaster::where(['id' => $request->itemMasterId])->first();
+
+            if (!empty($item)) {
+                $updateDetails['floor'] = $request->floor;
+                ItemMaster::where('id', $request->itemMasterId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Floor updated successfully!'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'something went wrong!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
     }
 
     public function adjustPriceUrl(Request $request)
