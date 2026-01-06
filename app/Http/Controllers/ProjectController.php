@@ -28,6 +28,7 @@ use App\Models\ProjectFiles;
 use App\Models\ProjectFilesDS;
 use App\Models\Option;
 use App\Models\SettingCurrency;
+use App\Services\NotificationService;
 
 
 class ProjectController extends Controller
@@ -692,8 +693,24 @@ class ProjectController extends Controller
             $quotaionUpdate->editBy = Auth::user()->id;
             $quotaionUpdate->CompanyUserId = (empty(Auth::user()->main_id))?Auth::user()->id:Auth::user()->main_id;
             $quotaionUpdate->updated_at = date('Y-m-d H:i:s');
-            $quotaionUpdate->save();
+            $is_saved = $quotaionUpdate->save();
+            if($is_saved == true){
+                $myCreatedUser = myCreatedUser();
+                $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+                foreach ($data as $user) {
+                    NotificationService::send([
+                        'title' => 'Quotation Created',
+                        'message' => auth()->user()->FirstName .' '. auth()->user()->LastName . ' has created a quotation ' . $quotaionUpdate->QuotationGenerationId,
+                        'type' => 'action',
+                        'target_type' => 'user',
+                        'target_user_id' => $user->id,
+                        'action_url' => '/quotation/generate/' . $quotaionUpdate->id . '/0'
+                    ]);
+                }
+            }
         }
+
+
 
         return response()->json([
             'status' => 'success',

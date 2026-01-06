@@ -253,6 +253,25 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="mm-{{ (Request::segment(1) == 'notification') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="metismenu-icon">
+                                <i class="fa fa-table"></i>
+                            </i>
+                            Notification
+                            <i class="metismenu-state-icon">
+                                <i class="fa fa-caret-down"></i>
+                            </i>
+                        </a>
+                        <ul>
+                            <li class="submm-{{ (Request::segment(2) == 'index') ? 'active' : ''}}">
+                                <a href="{{route('admin.notifications.index')}}">
+                                    <i class="metismenu-icon"></i>
+                                    Send Notification
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}{{ (Request::segment(1) == 'options') ? 'active' : ''}}{{ (Request::segment(1) == 'non-configural-items') ? 'active' : ''}}">
                         <a href="#">
                             <i class="metismenu-icon">
@@ -1248,6 +1267,25 @@
                             </ul>
                         </li>
                     @endif
+                    <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="metismenu-icon">
+                                <i class="fa fa-table"></i>
+                            </i>
+                            Orders
+                            <i class="metismenu-state-icon">
+                                <i class="fa fa-caret-down"></i>
+                            </i>
+                        </a>
+                        <ul>
+                            <li class="submm-{{ (Request::segment(2) == 'orderlist') ? 'active' : ''}}">
+                                <a href="{{route('orderlist')}}">
+                                    <i class="metismenu-icon"></i>
+                                    Order List
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
                         <a href="#">
                             <i class="metismenu-icon">

@@ -321,10 +321,7 @@ class ProjectController2 extends Controller
                         <th>Project Name</th>
                         <th>Quotation Company Name</th>
                         <th>Building Type</th>
-                        <th>Files</th>
                         <th>Quotes</th>
-                        <th>Orders</th>
-                        <th>Ironmongery Set</th>
                         <th>Return Tender Date</th>
                         <th>Action</th>
                     </tr>
@@ -379,10 +376,7 @@ class ProjectController2 extends Controller
                 <td>'.$projectname.'</td>
                 <td>'.$CompanyName.'</td>
                 <td>'.ucwords((string) $BuildingType).'</td>
-                <td>'.$projectFilesCount.'</td>
                 <td>'.$quotesCount.'</td>
-                <td>'.$ordersCount.'</td>
-                <td>'.$countIronmongerySet.'</td>
                 <td>'.date2Formate($returnTenderDate).'</td>
                 <td><div class="dropdown">
                 <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -492,14 +486,8 @@ $sn++;
                             <span>'.ucwords((string) $BuildingType).'</span>
                             <b>Project Name</b>
                             <span>'.ucwords((string) $val->ProjectName).'</span>
-                            <b>Files</b>
-                            <span>'.$projectFilesCount.'</span>
                             <b>Quotes</b>
                             <span>'.$quotesCount.'</span>
-                            <b>Orders</b>
-                            <span>'.$ordersCount.'</span>
-                            <b>Ironmongery Set</b>
-                            <span>'.$countIronmongerySet.'</span>
                             <b>Return Tender Date</b>
                             <span>'.date2Formate($returnTenderDate).'</span>
                         </div>
