@@ -23,7 +23,7 @@
                         </div>
                     </div>
 
-                    <div class="col-md-6">
+                    {{-- <div class="col-md-6">
                         <div class="position-relative form-group input-icons">
                             <label for="doorLeafFinishColor">Door Leaf Finish
                                 @if(!empty($tooltip->doorLeafFinishColor))
@@ -34,6 +34,20 @@
                             </label>
                             <i class="fa fa-info icon" id="doorLeafFinishColorIcon1"></i>
                             <input type="text" readonly name="doorLeafFinishColor1" id="doorLeafFinishColor1" class="form-control" value="">
+                        </div>
+                    </div> --}}
+                       <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="doorThickness">Door Thickness (mm)
+                                @if(!empty($tooltip->doorThickness))
+                                <script type="text/javascript">
+                                    document.write(Tooltip('{{$tooltip->doorThickness}}'));
+                                </script>
+                                @endif
+                            </label>
+                            <div id="door_thickness_div">
+                                <input type="number" readonly name="doorThickness" id="doorThickness" class="form-control" value="@if(!empty($Item['LeafThickness'])){{$Item['LeafThickness']}}@endif">
+                            </div>
                         </div>
                     </div>
                     <!-- <div class="col-md-6">
