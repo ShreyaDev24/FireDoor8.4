@@ -323,7 +323,7 @@ Route::prefix('quotation')->group(function (): void {
 
 
 
-
+    Route::post('/fav-adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'favadjustPriceUrl'])->name('quotation/fav-adjustPriceUrl');
 
     Route::get('/generate', [App\Http\Controllers\DoorScheduleController::class,'generateQuotation'])->name('quotation/generate');
     Route::get('/generate/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'generateQuotation'])->name('quotation/generate/');
