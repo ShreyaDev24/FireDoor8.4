@@ -713,16 +713,15 @@
                                     Project List
                                 </a>
                             </li>
-                            <li class="submm-{{ (Request::segment(2) == 'list') ? 'active' : ''}}">
-                        <a href="{{route('assign-projects')}}">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-table"></i>
-                            </i>
-                            Assigned Projects
+                            {{-- <li class="submm-{{ (Request::segment(2) == 'list') ? 'active' : ''}}">
+                                <a href="{{route('assign-projects')}}">
+                                    <i class="metismenu-icon">
+                                        <i class="fa fa-table"></i>
+                                    </i>
+                                    Assigned Projects
 
-                        </a>
-
-                    </li>
+                                </a>
+                            </li> --}}
                         </ul>
                     </li>
                     <li class="mm-{{ (Request::segment(1) == 'quotation') ? 'active' : ''}}">
@@ -1366,7 +1365,7 @@
                         </ul>
                     </li>
 
-                    <li>
+                    {{-- <li>
                         <a href="{{route('project/list')}}">
                             <i class="metismenu-icon">
                                 <i class="fa fa-table"></i>
@@ -1374,8 +1373,7 @@
                             Assigned Projects
 
                         </a>
-
-                    </li>
+                    </li> --}}
 
 
                 @endif

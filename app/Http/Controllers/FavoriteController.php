@@ -61,6 +61,8 @@ class FavoriteController extends Controller
             $html .= '<th>Favourite Type</th>';
             $html .= '<th>Favorite Name</th>';
             $html .= '<th>Door Type</th>';
+            $html .= '<th>Door Set Price</th>';
+            $html .= '<th>Adjust Price</th>';
             $html .= '<th>Edit</th>';
             $html .= '<th>Delete</th>';
             $html .= '</tr>';
@@ -73,7 +75,21 @@ class FavoriteController extends Controller
                     $html .= '<td>' . $value->favorite_type . '</td>';
                     $html .= '<td>' . $value->name . '</td>';
                     $html .= '<td>' . $value->DoorType . '</td>';
-
+                    $html .= '<td>' . $value->AdjustPrice ?? $value->DoorsetPrice  . '</td>';
+                    $html .= '<td>';
+                    $html .= '<button
+                                onclick="adjustPrice('
+                                    . (int)$value->id . ','
+                                    . (int)$value->favorite_id . ','
+                                    . (floatval($value->DoorsetPrice) + floatval($value->IronmongaryPrice)) . ','
+                                    . $value->quotationId . ','
+                                    . $value->versionId . ','
+                                    . $value->itemId .
+                                ')"
+                                class="btn btn-secondary"">
+                                Adjust Price
+                            </button>';
+                    $html .= '</td>';
                     $html .= '<td>';
                     $html .= '<a href="' . ConfigurationURL($value->configurableitems, $value->itemId, $value->versionId) . '" class="btn btn-info">Door Edit</a>';
                     $html .= '</td>';
