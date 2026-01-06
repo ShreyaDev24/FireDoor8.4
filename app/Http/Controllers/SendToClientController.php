@@ -60,7 +60,7 @@ class SendToClientController extends Controller
         // $cc = CustomerContact::join('customers','customers.id','customer_contacts.MainContractorId')->select('customer_contacts.FirstName','customer_contacts.LastName','customer_contacts.ContactEmail')->where('customers.UserId',$CustomerContactId)->first();
         $cc = CustomerContact::where('id',$customer_contact_id[0])->first();
 
-        $fullname = $cc->FirstName.' '.$cc->LastName;
+        // $fullname = $cc->FirstName.' '.$cc->LastName;
 
         $com = Company::wherein('UserId',CompanyUsers())->first();
 
