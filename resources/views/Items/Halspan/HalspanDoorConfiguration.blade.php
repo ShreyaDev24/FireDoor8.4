@@ -886,6 +886,15 @@ $(document).on('click', '#submit', function(e) {
         $("#glazingSystems").attr({ 'disabled': false, "required": false });
     }
 
+        let visionPanel = $("#leaf1VisionPanel").val();
+            if(visionPanel == 'Yes'){
+                let glazingBeadsHeight = $("#glazingBeadsHeight").val();
+                if(glazingBeadsHeight == 0){
+                    $("#glazingBeadsHeight").val('');
+                    $("#glazingBeadsHeight").attr({ "required": true });
+                }
+        }
+
         let Handing = $('#Handing').val();
         if(Handing === ""){
             $("#Handing").attr({ 'disabled': false, "required": true });
