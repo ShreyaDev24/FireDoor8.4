@@ -1251,8 +1251,8 @@
                             </li>
                         </ul>
                     </li>
-                    <li>
-                        <a href="#">
+                    <li class="{{ request()->routeIs('help.center') ? 'mm-active' : '' }}">
+                        <a href="{{ route('help.center') }}">
                             <i class="metismenu-icon">
                                 <i class="fa fa-info-circle"></i>
                             </i>
