@@ -4489,11 +4489,12 @@ class DoorScheduleController extends Controller
             $quotation_data = Quotation::where('id', $Id)->first();
             if (Auth::user()->UserType == 1) {
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->get();
+                $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
             } else {
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
+                $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
             }
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
             $IronmongeryInfoSet = [
                 'Hinges',
                 'FloorSpring',

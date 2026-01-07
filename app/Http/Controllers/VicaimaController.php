@@ -145,8 +145,11 @@ class VicaimaController extends Controller
                 ->groupBy('folder_id');
 
 
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        if (Auth::user()->UserType == 1) {
+            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+        }else{
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        }
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
