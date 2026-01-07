@@ -2283,9 +2283,10 @@ dd(1);
     let halspan = $('input[name="Halspan"]').is(':checked');
     let norma = $('input[name="NormaDoorCore"]').is(':checked');
     let vicaima = $('input[name="VicaimaDoorCore"]').is(':checked');
+    let mmm = $('input[name="MMM"]').is(':checked');
     let sedac = $('input[name="SeadecDoorCore"]').is(':checked');
 
-    if (vicaima && sedac && (strebord || halspan || norma)) {
+    if (vicaima && mmm && sedac && (strebord || halspan || norma)) {
         $('.doorLeafType1').css('display', 'block');
         $('.doorLeafType2').css('display', 'block');
         $('.leafFacingfirst3option').css('display', 'block');
@@ -2295,12 +2296,22 @@ dd(1);
         $('.doorLeafType2').css('display', 'none');
         $('.leafFacingfirst3option').css('display', 'block');
         $('#DoorLeafOption').val(option);
-    } else if (sedac && (strebord || halspan || norma)) {
+    } else if (mmm && (strebord || halspan || norma)) {
+        $('.doorLeafType1').css('display', 'block');
+        $('.doorLeafType2').css('display', 'none');
+        $('.leafFacingfirst3option').css('display', 'block');
+        $('#DoorLeafOption').val(option);
+    }else if (sedac && (strebord || halspan || norma)) {
         $('.doorLeafType1').css('display', 'none');
         $('.doorLeafType2').css('display', 'block');
         $('.leafFacingfirst3option').css('display', 'block');
         $('#DoorLeafOption').val(option);
     }else if (vicaima && sedac) {
+        $('.doorLeafType1').css('display', 'block');
+        $('.doorLeafType2').css('display', 'block');
+        $('.leafFacingfirst3option').css('display', 'none');
+        $('#DoorLeafOption').val(option);
+    } else if (mmm && sedac) {
         $('.doorLeafType1').css('display', 'block');
         $('.doorLeafType2').css('display', 'block');
         $('.leafFacingfirst3option').css('display', 'none');
@@ -2313,6 +2324,11 @@ dd(1);
         $('#DoorLeafOption').val(option);
     }
     else if (vicaima) {
+        $('.doorLeafType1').css('display', 'block');
+        $('.doorLeafType2').css('display', 'none');
+        $('.leafFacingfirst3option').css('display', 'none');
+        $('#DoorLeafOption').val(option);
+    } else if (mmm) {
         $('.doorLeafType1').css('display', 'block');
         $('.doorLeafType2').css('display', 'none');
         $('.leafFacingfirst3option').css('display', 'none');
