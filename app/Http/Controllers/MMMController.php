@@ -144,8 +144,11 @@ class MMMController extends Controller
                 ->get()
                 ->groupBy('folder_id');
 
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        if (Auth::user()->UserType == 1) {
+            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+        } else{
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        }
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -202,8 +205,17 @@ class MMMController extends Controller
             // Dynamically add the additional_info attribute
             $ironmongery->setAttribute('additional_info', $additionalInfo);
         }
+        if(Auth::user()->UserType == 1){
+            $species = DB::table('leaf_type as lt')
+            ->where('lt.MMM', 9)
+            ->where('lt.EditBy', 1)
+            ->select('lt.*')
+            ->get();
+        } else {
+            $species = GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
+        }
+        // $species = GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
 
-        $species = GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
         if(Auth::user()->UserType == 3){
