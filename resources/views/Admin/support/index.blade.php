@@ -30,7 +30,7 @@
                             @foreach($tickets as $ticket)
                                 <tr>
                                     <td>#{{ $ticket->id }}</td>
-                                    <td>{{ $ticket->user->name }}</td>
+                                    <td>{{ $ticket->user->FirstName }} {{ $ticket->user->LastName }}</td>
                                     <td>
                                         <a href="/admin/support/{{ $ticket->id }}">
                                             {{ $ticket->subject }}
