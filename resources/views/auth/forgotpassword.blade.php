@@ -18,7 +18,7 @@
                 <div class="login-section">
                     <div class="logo clearfix" style="padding-bottom:10px">
                     <div class="login-logo">
-                    <img src="{{url('/images/logo/jfdswhitelogo.png')}}" height="100px" alt="comany logo">
+                    <img src="{{url('/images/logo/jfdswhitelogo.jpg')}}" height="100px" alt="comany logo">
                     </div>
                     </div>
                     @if (Session::has('message'))
