@@ -593,14 +593,15 @@
                         </ul>
                     </li>
 
-                    <li>
-                        <a href="#">
+                    <li class="{{ request()->is('admin/support*') ? 'mm-active' : '' }}">
+                        <a href="{{ route('admin.support.index') }}">
                             <i class="metismenu-icon">
                                 <i class="fa fa-info-circle"></i>
                             </i>
                             Help Center
                         </a>
                     </li>
+
                 @endif
 
 

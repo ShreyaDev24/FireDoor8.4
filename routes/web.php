@@ -47,10 +47,16 @@ Route::middleware(['auth'])
     ->prefix('admin')
     ->group(function () {
 
-        Route::get('/support', [AdminSupportTicketController::class, 'index']);
-        Route::get('/support/{ticket}', [AdminSupportTicketController::class, 'show']);
-        Route::post('/support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus']);
+        Route::get('/support', [AdminSupportTicketController::class, 'index'])
+            ->name('admin.support.index');
+
+        Route::get('/support/{ticket}', [AdminSupportTicketController::class, 'show'])
+            ->name('admin.support.show');
+
+        Route::post('/support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus'])
+            ->name('admin.support.status');
 });
+
 
 
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');

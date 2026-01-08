@@ -14,6 +14,7 @@ class SupportTicket extends Model
         'message',
         'category',
         'priority',
+        'attachment',
         'status'
     ];
 

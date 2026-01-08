@@ -12,8 +12,21 @@
                 <hr>
 
                 <div class="card-body">
+                    @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <strong>Success!</strong><br>
+                        {{ session('success') }}<br><br>
 
-                    <form method="POST" action="/help-center">
+                        <b>Your Ticket ID:</b>
+                        <span class="badge bg-primary">
+                            #{{ session('ticket_id') }}
+                        </span>
+
+                    </div>
+                    @endif
+
+
+                    <form method="POST" action="/help-center" enctype="multipart/form-data">
                         @csrf
 
                         <div class="row mb-3">
@@ -54,6 +67,11 @@
                                       rows="5"
                                       placeholder="Describe your issue clearly..."
                                       required></textarea>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">Attachment (optional)</label>
+                            <input type="file" name="attachment" class="form-control">
                         </div>
 
                         <div class="d-flex justify-content-end">
