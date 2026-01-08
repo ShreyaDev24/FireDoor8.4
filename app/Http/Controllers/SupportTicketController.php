@@ -22,7 +22,7 @@ class SupportTicketController extends Controller
             'category' => 'required',
             'priority' => 'required',
             'contact_email' => 'required|email',
-            'attachment' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,pdf,doc,docx'
+            'attachment' => 'nullable|file|max:10240|mimes:jpg,jpeg,png,pdf,doc,docx,mp4,mov,avi,webm,mkv'
         ]);
 
         $attachmentPath = null;
