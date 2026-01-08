@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CoreCertificateController;
 use App\Http\Controllers\GlassCertificateController;
+use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +36,31 @@ Route::get('/', function () {
 
     return view('auth.login');
 });
+
+
+// User
+Route::middleware('auth')->group(function () {
+    Route::get('/help-center', [SupportTicketController::class, 'create'])->name('help.center');
+    Route::post('/help-center', [SupportTicketController::class, 'store']);
+});
+
+// Super Admin
+Route::middleware(['auth'])
+    ->prefix('admin')
+    ->group(function () {
+
+        Route::get('/support', [AdminSupportTicketController::class, 'index'])
+            ->name('admin.support.index');
+
+        Route::get('/support/{ticket}', [AdminSupportTicketController::class, 'show'])
+            ->name('admin.support.show');
+
+        Route::post('/support/{ticket}/status', [AdminSupportTicketController::class, 'updateStatus'])
+            ->name('admin.support.status');
+});
+
+
+
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
 Auth::routes();
 
