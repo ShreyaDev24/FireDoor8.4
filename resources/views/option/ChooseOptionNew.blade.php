@@ -2359,10 +2359,11 @@ function doorLeafFacingOption(option = '') {
     let vicaima  = $('input[name="VicaimaDoorCore"]').is(':checked');
     let sedac    = $('input[name="SeadecDoorCore"]').is(':checked');
 
-    // 🔴 RESET EVERYTHING FIRST
+    // 🔴 RESET EVERYTHING
     $('#DoorLeafOption option.leaf-option').prop('hidden', true);
+    $('.leafFacingfirst3option').hide();
 
-    // ✅ MMM → ONLY MMM OPTIONS
+    // ✅ MMM ONLY
     if (mmm && !vicaima && !sedac) {
         $('#DoorLeafOption option[data-core="mmm"]').prop('hidden', false);
     }
@@ -2377,13 +2378,19 @@ function doorLeafFacingOption(option = '') {
         $('#DoorLeafOption option[data-core="sedac"]').prop('hidden', false);
     }
 
-    // ✅ COMBINATIONS (if really needed)
+    // ✅ MMM + SEDAC
     else if (mmm && sedac) {
         $('#DoorLeafOption option[data-core="mmm"], option[data-core="sedac"]').prop('hidden', false);
     }
 
+    // ✅ MMM + VICAIMA
     else if (mmm && vicaima) {
         $('#DoorLeafOption option[data-core="mmm"], option[data-core="vicaima"]').prop('hidden', false);
+    }
+
+    // ✅ NOTHING SELECTED → show default Veneer / Laminate / PVC
+    else {
+        $('.leafFacingfirst3option').show();
     }
 
     $('#DoorLeafOption').val(option);
