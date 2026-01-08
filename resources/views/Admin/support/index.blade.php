@@ -21,6 +21,7 @@
                             <tr>
                                 <th>ID</th>
                                 <th>User</th>
+                                <th>Contact E-mail</th>
                                 <th>Subject</th>
                                 <th>Status</th>
                                 <th>Created</th>
@@ -31,6 +32,7 @@
                                 <tr>
                                     <td>#{{ $ticket->id }}</td>
                                     <td>{{ $ticket->user->FirstName }} {{ $ticket->user->LastName }}</td>
+                                    <td>{{ $ticket->contact_email }}</td>
                                     <td>
                                         <a href="/admin/support/{{ $ticket->id }}">
                                             {{ $ticket->subject }}

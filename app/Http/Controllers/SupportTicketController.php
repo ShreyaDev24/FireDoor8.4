@@ -21,6 +21,7 @@ class SupportTicketController extends Controller
             'message' => 'required|string',
             'category' => 'required',
             'priority' => 'required',
+            'contact_email' => 'required|email',
             'attachment' => 'nullable|file|max:2048|mimes:jpg,jpeg,png,pdf,doc,docx'
         ]);
 
@@ -43,6 +44,7 @@ class SupportTicketController extends Controller
 
         $ticket = SupportTicket::create([
             'user_id' => auth()->id(),
+            'contact_email' => $request->contact_email,
             'subject' => $request->subject,
             'message' => $request->message,
             'category' => $request->category,
@@ -58,7 +60,7 @@ class SupportTicketController extends Controller
             'success' => 'Thank you for contacting us! We will check your request and get back to you shortly.',
             'ticket_id' => $ticket->id
         ]);
-    
+
     }
 }
 
