@@ -1,7 +1,8 @@
 <h2>New Support Ticket Created</h2>
 
 <p><strong>User:</strong> {{ $ticket->user->FirstName }} {{ $ticket->user->LastName }}</p>
-<p><strong>Email:</strong> {{ $ticket->user->UserEmail }}</p>
+<p><strong>User Email:</strong> {{ $ticket->user->UserEmail }}</p>
+<p><strong>Contact Email: </strong> {{ $ticket->contact_email }}</p>
 <p><strong>Subject:</strong> {{ $ticket->subject }}</p>
 <p><strong>Priority:</strong> {{ ucfirst($ticket->priority) }}</p>
 

@@ -17,10 +17,8 @@
                         <strong>Success!</strong><br>
                         {{ session('success') }}<br><br>
 
-                        <b>Your Ticket ID:</b>
-                        <span class="badge bg-primary">
-                            #{{ session('ticket_id') }}
-                        </span>
+                        Your Ticket Reference:
+                        <strong>#{{ session('ticket_id') }}</strong>
 
                     </div>
                     @endif
@@ -37,6 +35,17 @@
                                        class="form-control"
                                        placeholder="Enter subject"
                                        required>
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label class="form-label fw-semibold">Contact Email</label>
+                                <input type="email"
+                                    name="contact_email"
+                                    class="form-control"
+                                    placeholder="Enter your email"
+                                    required>
                             </div>
                         </div>
 

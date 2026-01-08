@@ -45,6 +45,11 @@
                         <h6 class="mb-0">{{ $ticket->subject }}</h6>
                     </div>
 
+                    <div class="mb-3">
+                        <small class="text-muted">Contact Email</small>
+                        <h6 class="mb-0">{{ $ticket->contact_email }}</h6>
+                    </div>
+
                     <div class="row mb-4">
                         <div class="col-md-6">
                             <small class="text-muted">Category</small><br>
