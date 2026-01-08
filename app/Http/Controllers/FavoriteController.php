@@ -75,7 +75,10 @@ class FavoriteController extends Controller
                     $html .= '<td>' . $value->favorite_type . '</td>';
                     $html .= '<td>' . $value->name . '</td>';
                     $html .= '<td>' . $value->DoorType . '</td>';
-                    $html .= '<td>' . $value->AdjustPrice ?? $value->DoorsetPrice  . '</td>';
+                    $html .= '<td>' . number_format(
+                                    !empty($value->AdjustPrice) ? $value->AdjustPrice : $value->DoorsetPrice,
+                                    2
+                                ) . '</td>';
                     $html .= '<td>';
                     $html .= '<button
                                 onclick="adjustPrice('
