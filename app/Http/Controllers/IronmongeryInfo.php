@@ -70,33 +70,23 @@ class IronmongeryInfo extends Controller
     }
 
     public function index($id="")
-    {  //dd($id);
-        // $ConfigurableItems = ConfigurableItems::get();
-
-        if (Auth::user()->UserType == 2) {
-            $myAdminGroup = getMyCreatedAdmins();
-            $userId = $myAdminGroup;
-            // $useTbl = array_merge(['1'], $myAdminGroup);
-            }else{
-
-                $user = auth()->user();
-
-                $userId = [$user->id];
-            }
+    {
+        // if (Auth::user()->UserType == 2) {
+        //     $myAdminGroup = getMyCreatedAdmins();
+        // }else{
+            $user = auth()->user();
+            $userId = [$user->id];
+        // }
 
         $option = Option::distinct()->where(['OptionSlug'=>'fire_rating','configurableitems'=>1])->get(['OptionKey','OptionValue']);
+
         if(!empty($id)){
-
-
             if(Auth::user()->id==1){
                 $IronmongeryInfo = IronmongeryInfoModel::where('GeneratedKey',$id)->first();
-            }
-            else{
+            }else{
                 $IronmongeryInfo = IronmongeryInfoModel::whereIn('UserId', $userId)->where(['GeneratedKey' => $id])->first();
             }
 
-            // $pageId = $IronmongeryInfo->configurableitems;
-            // $option = Option::where(['configurableitems'=>$pageId,'OptionSlug'=>'fire_rating'])->get();
             if(isset($IronmongeryInfo->CategoryFieldsJSON)){
                 $categoryFieldsArray = json_decode($IronmongeryInfo->CategoryFieldsJSON);
             }
@@ -107,10 +97,8 @@ class IronmongeryInfo extends Controller
                 return redirect()->route('ironmongery-info/reports');
             }
         } else {
-
             return view('IronmongeryInfo.CreateIronmongeryInfo',['option' => $option]);
         }
-
     }
 
 
