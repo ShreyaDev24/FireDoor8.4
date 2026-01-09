@@ -1286,44 +1286,6 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-table"></i>
-                            </i>
-                            Orders
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
-                        </a>
-                        <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'orderlist') ? 'active' : ''}}">
-                                <a href="{{route('orderlist')}}">
-                                    <i class="metismenu-icon"></i>
-                                    Order List
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-table"></i>
-                            </i>
-                            Orders
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
-                        </a>
-                        <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'orderlist') ? 'active' : ''}}">
-                                <a href="{{route('orderlist')}}">
-                                    <i class="metismenu-icon"></i>
-                                    Order List
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
                     <li class="{{ request()->routeIs('help.center') ? 'mm-active' : '' }}">
                         <a href="{{ route('help.center') }}">
                             <i class="metismenu-icon">
