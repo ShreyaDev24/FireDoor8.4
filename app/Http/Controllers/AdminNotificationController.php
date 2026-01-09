@@ -12,7 +12,7 @@ class AdminNotificationController extends Controller
     {
         $notifications = LatestNotification::latest()->paginate(20);
 
-        return view('admin.notifications.index', compact('notifications'));
+        return view('admin.Notifications.index', compact('notifications'));
     }
 
     public function create()
