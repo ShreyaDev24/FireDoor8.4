@@ -93,6 +93,9 @@
                         dataType: "Json",
                         success: function(data) {
                             if (data.status == true) {
+                                 $('.loader').empty().css({
+                                        'display': 'none'
+                                    });
                                 swal('success', data.msg, 'success').then(function() {
                                     location.reload();
                                 });
