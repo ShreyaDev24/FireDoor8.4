@@ -100,7 +100,8 @@
                                                     @endif
                                                     </label>
                                                     <label for="OpBead_Thickness" style="display: none;">Fan Light/ Over Panel Frame Thickness</label>
-                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(empty(@$Item['OpBeadThickness'])) readonly @else required @endif class="form-control OpBeadThickness door-configuration forcoreWidth1 change-event-calulation"
+                                                    <input name="OpBeadThickness" id="OpBeadThickness" @if(isset($Item['Overpanel']))
+                                                            @if($Item['Overpanel'] == 'No') readonly @else required @endif @endif class="form-control OpBeadThickness door-configuration forcoreWidth1 change-event-calulation"
                                                         type="text" value="@if(isset($Item['OpBeadThickness'])){{$Item['OpBeadThickness']}}@endif">
                                                 </div>
                                             </div>
@@ -114,7 +115,7 @@
                                                     @endif
                                                     </label>
                                                     <label for="OpBead_Height" style="display: none;">Fan Light/ Over Panel Frame Depth</label>
-                                                    <input @if(empty(@$Item['OpBeadHeight'])) readonly @else required @endif  name="OpBeadHeight" id="OpBeadHeight" max="600" class="form-control door-configuration"
+                                                    <input  @if(isset($Item['Overpanel']))@if($Item['Overpanel'] == 'No') readonly @else required @endif @endif  name="OpBeadHeight" id="OpBeadHeight" max="600" class="form-control door-configuration"
                                                         type="number" value="@if(isset($Item['OpBeadHeight'])){{$Item['OpBeadHeight']}}@endif">
                                                 </div>
                                             </div>
