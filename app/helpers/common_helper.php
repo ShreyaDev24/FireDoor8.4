@@ -1250,7 +1250,7 @@ function QuotationList($val): string{
     return $htmlData;
 }
 
-function orderQuotationList(array $val): float|int{
+function orderQuotationList(Quotation $val): float|int{
     $QVID = $val['QVID'] != ""?$val['QVID']:0;
     $DoorsetPrice = 0;
     $Item = Item::join('item_master','item_master.itemID','=','items.itemId')->join('quotation','quotation.id','=','items.QuotationId')->

@@ -31,6 +31,7 @@ use App\Models\IronmongeryID;
 use App\Models\GlassType;
 use App\Models\GlazingSystem;
 use App\Models\User;
+use App\Models\SettingCurrency;
 
 class OMMAnualController extends Controller
 {
@@ -48,6 +49,8 @@ class OMMAnualController extends Controller
 
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id',$quatationId)->first();
+        $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
+        $currency = QuotationCurrency($quotaion->Currency);
         $configurationItem = 1;
         if (!empty($quotaion->configurableitems)) {
             $configurationItem = $quotaion->configurableitems;
@@ -613,21 +616,29 @@ class OMMAnualController extends Controller
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
 
         $a .= '
-                    <tr>
-                        <td class="tbl_bottom" colspan="4"></td>
-                        <td class="tbl_bottom">' . $DoorQuantity . '</td>
-                        <td class="tbl_bottom" colspan="38"></td>
-                        <td class="tbl_bottom">£' . round($SumDoorsetPrice, 2) . '</td>
-                        <td class="tbl_bottom">£' . round($SumIronmongaryPrice, 2) . '</td>
-                        <td class="tbl_bottom">£' . round($Alltotalpriceperdoorset, 2) . '</td>
-                    </tr>
-                ';
+                <tr>
+                    <td class="tbl_bottom" colspan="4"></td>
+                    <td class="tbl_bottom">' . $DoorQuantity . '</td>
+                    <td class="tbl_bottom" colspan="39"></td>';
+                    if($HideCosts == 0){
+                        $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
+                        <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
+                    }
 
-            $pdf5 = PDF::loadView('Company.pdf_files.pdf2',['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
-            // return $pdf4->download('file4.pdf');
-            $path5 = public_path().'/allpdfFile';
-            $fileName5 = $id.'5' . '.' . 'pdf' ;
-            $pdf5->save($path5 . '/' . $fileName5);
+                    $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
+                </tr>
+            ';
+
+
+        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+            $pdf5 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        }else{
+            $pdf5 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        }
+        // return $pdf4->download('file4.pdf');
+        $path5 = public_path().'/allpdfFile';
+        $fileName5 = $id.'5' . '.' . 'pdf' ;
+        $pdf5->save($path5 . '/' . $fileName5);
 
 
         // Eight PDF
