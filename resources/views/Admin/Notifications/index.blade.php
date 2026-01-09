@@ -37,6 +37,7 @@
                             <tr>
                                 <td>{{ $note->title }}</td>
                                 <td>{{ $note->message }} </td>
+                                {{-- <td>{{ $note->created_at->format('d M Y') }}</td> --}}
                                 <td>{{ $note->created_at->format('d M Y') }}</td>
                                 <td class="text-center">
 
