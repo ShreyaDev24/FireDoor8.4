@@ -16,9 +16,11 @@
                             <h5 class="card-title">Notification List</h5>
                         </div>
                     </div>
+                    @if(Auth::user()->UserType==1)
                     <div class="col-sm-6 ">
                         <a href="{{ route('admin.notifications.create') }}"  class="btn-shadow btn btn-info float-right">Send Notification</a>
                     </div>
+                    @endif
                 </div>
                 <hr>
 
