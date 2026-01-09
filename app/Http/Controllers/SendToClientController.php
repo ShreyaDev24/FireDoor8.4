@@ -107,7 +107,7 @@ class SendToClientController extends Controller
 
             $emailFromName = $com->CompanyName ?? 'noreply@jfds.co.uk';
 
-            $usermname = $cc->FirstName.' '.$cc->LastName;
+           $usermname = ($cc?->FirstName ?? '') . ' ' . ($cc?->LastName ?? '');
             $data_set = ['usermname'=>$usermname,'CompanyName'=>$com->CompanyName, 'url'=>$url, 'SalesCon'=>$SalesCon,'signatureUrl' => $signatureUrl];
 
             ini_set('display_errors', 1);
