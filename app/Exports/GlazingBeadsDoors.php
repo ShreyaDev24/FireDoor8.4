@@ -66,8 +66,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->DoorType,
                     $value->doorNumber,
+                    $value->DoorType,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
@@ -109,8 +109,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['FanlightBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->DoorType. ' ' .$value->Overpanel,
                     $value->doorNumber,
+                    $value->DoorType. ' ' .$value->Overpanel,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
@@ -146,8 +146,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->DoorType. ' Side Light 1',
                     $value->doorNumber,
+                    $value->DoorType. ' Side Light 1',
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
@@ -186,8 +186,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->DoorType. ' Side Light 2',
                     $value->doorNumber,
+                    $value->DoorType. ' Side Light 2',
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
@@ -213,6 +213,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $summary = [];
 
         foreach ($data as $row) {
+
             if (!isset($row[4]) || empty($row[4])) continue; // skip blanks
 
             $species = $row[4];
@@ -221,7 +222,22 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             $depth   = $row[8] ?? 'N/A';
             $width   = $row[9] ?? 'N/A';
             $length  = $row[11] ?? 'N/A';  // was $hgt
+
+            $Q1  = $row[10] ?? 0;  // was $hgt
+            $Q2  = $row[12] ?? 0;  // was $hgt
+            $Q3  = $row[14] ?? 0;  // was $hgt
+            $Q4  = $row[16] ?? 0;  // was $hgt
+            $Q5  = $row[18] ?? 0;  // was $hgt
+            $Q6  = $row[20] ?? 0;  // was $hgt
             // $row[10] is the per-row Qty (often 4). We are NOT summing it anymore.
+
+            $count =
+            (int)$Q1 +
+            (int)$Q2 +
+            (int)$Q3 +
+            (int)$Q4 +
+            (int)$Q5 +
+            (int)$Q6;
 
             $key = "{$species}|{$profile}|{$height}|{$depth}|{$width}x{$length}";
 
@@ -233,12 +249,12 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     'depth'   => $depth,
                     'width'   => $width,
                     'length'  => $length,
-                    'count'   => 0,        // count occurrences (rows)
+                    'count'   => $count,        // count occurrences (rows)
                 ];
             }
 
             // 🔧 CHANGED: count rows/occurrences instead of summing Qty pieces
-            $summary[$key]['count'] += 1;
+            // $summary[$key]['count'] += 1;
         }
 
         if($this->section != 'Summary'){
