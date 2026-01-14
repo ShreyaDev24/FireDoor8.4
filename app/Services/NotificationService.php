@@ -20,6 +20,7 @@ class NotificationService
             'target_role'     => $data['target_role'] ?? null,
             'target_user_id'  => $data['target_user_id'] ?? null,
             'action_url'      => $data['action_url'] ?? null,
+            'video_url'       => $data['video_url'] ?? null,
         ]);
     }
 }

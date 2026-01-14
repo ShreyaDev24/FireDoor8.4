@@ -12,7 +12,7 @@
 
 <div class="container">
 <h2>Send Notification</h2>
-   <form method="POST" action="{{ route('admin.notifications.store') }}">
+   <form method="POST" action="{{ route('admin.notifications.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="mb-3">
@@ -48,6 +48,18 @@
                 <option value="company">Specific Company</option>
             </select>
         </div>
+
+        <div class="mb-3">
+            <label>Update Video (optional)</label>
+            <input type="file"
+                name="update_video"
+                class="form-control"
+                accept="video/mp4,video/webm,video/ogg">
+            <small class="text-muted">
+                Upload a short video showing the new update (MP4 recommended)
+            </small>
+        </div>
+
 
         <button class="btn btn-primary">Send Notification</button>
 

@@ -1,9 +1,6 @@
 @extends('layouts.Master')
 
 @section('main_section')
-
-
-
 <div class="app-main__outer">
 
     <div class="app-main__inner">
@@ -73,6 +70,14 @@
                                         </form>
                                     @endif
 
+                                     @if(!empty($note->video_url))
+                                        <button type="button"
+                                                class="btn btn-sm btn-outline-danger ms-1 play-video"
+                                                data-video="{{ $note->video_url }}">
+                                            🎬
+                                        </button>
+                                    @endif
+
                                     @if(!empty($note->action_url))
                                         <a href="{{ $note->action_url }}"
                                         class="btn btn-sm btn-outline-secondary">
@@ -96,24 +101,94 @@
     </div>
 </div>
 
+<div class="modal fade" id="videoModal" role="dialog" tabindex="-1" data-backdrop="false">
+    <div class="modal-dialog modal-lg" style="margin-top:70px">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close close_btn" data-dismiss="modal">&times;</button>
+                <h5 class="modal-title">Update Video</h5>
+            </div>
+
+            <div class="modal-body">
+
+                <!-- HTML5 video (MP4) -->
+                <video id="html5Video"
+                       controls
+                       style="width:100%; border-radius:6px; display:none;">
+                    <source src="" type="video/mp4">
+                </video>
+
+                <!-- YouTube / external video -->
+                <iframe id="iframeVideo"
+                        style="width:100%; height:400px; display:none;"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen>
+                </iframe>
+
+            </div>
+
+        </div>
+    </div>
+</div>
 
 
 
+@endsection
 
+@section('js')
+<script>
+$(document).ready(function () {
 
-{{-- ////////////////////////////////////////// --}}
-    @if (session()->has('error'))
-        <style type="text/css">
-            #useremail {
-                border-color: red
+    $('.play-video').on('click', function () {
+
+        let videoUrl = $(this).data('video');
+
+        // reset
+        $('#html5Video').hide();
+        $('#iframeVideo').hide();
+        $('#html5Video source').attr('src', '');
+        $('#iframeVideo').attr('src', '');
+
+        // YouTube / external link
+        if (videoUrl.includes('youtube') || videoUrl.includes('youtu.be')) {
+
+            let embedUrl = videoUrl;
+
+            if (videoUrl.includes('watch?v=')) {
+                embedUrl = videoUrl.replace('watch?v=', 'embed/');
             }
 
-        </style>
-    @endif
-   <h3>Notifications</h3>
+            $('#iframeVideo')
+                .show()
+                .attr('src', embedUrl + '?autoplay=1');
+
+        }
+        // MP4 file
+        else {
+
+            $('#html5Video')
+                .show()
+                .find('source')
+                .attr('src', videoUrl);
+
+            $('#html5Video')[0].load();
+            $('#html5Video')[0].play();
+        }
+
+        $('#videoModal').modal('show');
+    });
+
+    $('#videoModal').on('hidden.bs.modal', function () {
+        $('#html5Video')[0]?.pause();
+        $('#html5Video source').attr('src', '');
+        $('#iframeVideo').attr('src', '');
+    });
+
+});
 
 
-<script>
 document.querySelectorAll('.mark-read').forEach(btn => {
     btn.addEventListener('click', function () {
         fetch('/notifications/read/' + this.dataset.id, {
@@ -126,3 +201,6 @@ document.querySelectorAll('.mark-read').forEach(btn => {
 });
 </script>
 @endsection
+
+
+
