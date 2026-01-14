@@ -72,11 +72,12 @@
 
                                      @if(!empty($note->video_url))
                                         <button type="button"
-                                                class="btn btn-sm btn-outline-danger ms-1 play-video"
-                                                data-video="{{ $note->video_url }}">
+                                                class="btn btn-sm btn-outline-danger play-video"
+                                                data-video="{{ asset($note->video_url) }}">
                                             🎬
                                         </button>
                                     @endif
+
 
                                     @if(!empty($note->action_url))
                                         <a href="{{ $note->action_url }}"
@@ -111,27 +112,18 @@
             </div>
 
             <div class="modal-body">
-
-                <!-- HTML5 video (MP4) -->
-                <video id="html5Video"
+                <video id="notificationVideo"
                        controls
-                       style="width:100%; border-radius:6px; display:none;">
+                       style="width:100%; border-radius:6px;">
                     <source src="" type="video/mp4">
+                    Your browser does not support the video tag.
                 </video>
-
-                <!-- YouTube / external video -->
-                <iframe id="iframeVideo"
-                        style="width:100%; height:400px; display:none;"
-                        frameborder="0"
-                        allow="autoplay; encrypted-media"
-                        allowfullscreen>
-                </iframe>
-
             </div>
 
         </div>
     </div>
 </div>
+
 
 
 
@@ -143,50 +135,25 @@ $(document).ready(function () {
 
     $('.play-video').on('click', function () {
 
-        let videoUrl = $(this).data('video');
+        const videoUrl = $(this).data('video');
+        const video    = $('#notificationVideo')[0];
 
-        // reset
-        $('#html5Video').hide();
-        $('#iframeVideo').hide();
-        $('#html5Video source').attr('src', '');
-        $('#iframeVideo').attr('src', '');
-
-        // YouTube / external link
-        if (videoUrl.includes('youtube') || videoUrl.includes('youtu.be')) {
-
-            let embedUrl = videoUrl;
-
-            if (videoUrl.includes('watch?v=')) {
-                embedUrl = videoUrl.replace('watch?v=', 'embed/');
-            }
-
-            $('#iframeVideo')
-                .show()
-                .attr('src', embedUrl + '?autoplay=1');
-
-        }
-        // MP4 file
-        else {
-
-            $('#html5Video')
-                .show()
-                .find('source')
-                .attr('src', videoUrl);
-
-            $('#html5Video')[0].load();
-            $('#html5Video')[0].play();
-        }
+        $('#notificationVideo source').attr('src', videoUrl);
+        video.load();
+        video.play();
 
         $('#videoModal').modal('show');
     });
 
     $('#videoModal').on('hidden.bs.modal', function () {
-        $('#html5Video')[0]?.pause();
-        $('#html5Video source').attr('src', '');
-        $('#iframeVideo').attr('src', '');
+        const video = $('#notificationVideo')[0];
+        video.pause();
+        video.currentTime = 0;
+        $('#notificationVideo source').attr('src', '');
     });
 
 });
+
 
 
 document.querySelectorAll('.mark-read').forEach(btn => {
