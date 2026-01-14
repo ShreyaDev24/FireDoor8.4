@@ -21,6 +21,7 @@ class LatestNotification extends Model
         'target_role',
         'target_user_id',
         'action_url',
-        'is_read'
+        'is_read',
+        'video_url'
     ];
 }
