@@ -1568,7 +1568,7 @@ function IronmongerySetDataClient($IronmongeryID,$userid): string{
                 $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',$userid)->first();
 
                 if(!empty($SelectedIronmongery)){
-                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
+                    $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',$userid)->first();
                     $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
 
                     $QtyPerDoorType = intval($IronmongeyQty[$j]);
