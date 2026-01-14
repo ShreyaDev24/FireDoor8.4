@@ -35,7 +35,6 @@ class AdminNotificationController extends Controller
 
         // ✅ Upload video to public/notification/video/
         if ($request->hasFile('update_video')) {
-             dd('hii ');
 
             $video      = $request->file('update_video');
             $fileName   = 'update_' . time() . '.' . $video->getClientOriginalExtension();
@@ -51,7 +50,6 @@ class AdminNotificationController extends Controller
             // path to store in DB / notification payload
             $videoPath = 'notification/video/' . $fileName;
         }
-        dd($videoPath);
 
         NotificationService::send([
             'title'        => $request->title,
