@@ -331,6 +331,23 @@ class ProjectController extends Controller
             if (!is_null($update_val)) {
                 return redirect()->route('project/list')->with('success', 'Project update successfully! ' . $msg);
             } else {
+                    $myCreatedUser = myCreatedUser();
+                    $authId = Auth::user()->id;
+                    $data = User::whereIn('UserType', [2, 3])
+                                ->whereIn('CreatedBy', $myCreatedUser)
+                                ->where('id', '!=', $authId)
+                                ->orderBy('id', 'desc')
+                                ->get();
+                    foreach ($data as $user) {
+                        NotificationService::send([
+                            'title' => 'Project Created',
+                            'message' => 'A new project has been created by ' . Auth::user()->FirstName . ' ' . Auth::user()->LastName,
+                            'type' => 'action',
+                            'target_type' => 'user',
+                            'target_user_id' => $user->id,
+                            'action_url' => '/project/list/'
+                        ]);
+                    }
                 return redirect()->route('project/list')->with('success', 'Project added successfully! ' . $msg);
             }
         } else {
