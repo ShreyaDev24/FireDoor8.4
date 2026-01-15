@@ -4,7 +4,7 @@
 <style>
     .dropdown-div{
     left: -48px !important;
-    
+
     }
     .dropdown-menu {
         min-width: 6rem !important;
@@ -66,7 +66,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($data as $row)
-                                
+
                                 <tr>
                                     @if(Auth::user()->UserType=='1')
                                     <td><a href="{{url('company/details/'.$row->comId)}}">{{$row->CompanyName}}</a></td>
@@ -100,7 +100,7 @@
                                         <a class="user_delete" data-id="{{ $row->id }}"><i
                                             class="fa fa-trash fa-lg" style="color: red"></i></a>
                                       @endif
-                                        
+
                                     </td>
 
                                     @endif
@@ -131,15 +131,16 @@
     </script>
 @endif
 
- @if(session()->has('added'))
-    <script type="text/javascript">
-            swal(
-                'Success',
-                'User Added <b style="color:green;">Success</b>!',
-                'success'
-            )
-    </script>
+@if(session()->has('added'))
+<script type="text/javascript">
+    swal(
+        'Success',
+        'User added <b style="color:green;">successfully</b>!<br><br>Password has been sent to the registered email address.',
+        'success'
+    )
+</script>
 @endif
+
 
 @endsection
 

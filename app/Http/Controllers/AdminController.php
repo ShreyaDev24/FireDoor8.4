@@ -83,35 +83,38 @@ class AdminController extends Controller
 
 
             // $user->CreatedBy = Auth::user()->id;
-            if (isset($request->update)) {
-                if($_SERVER['SERVER_NAME'] == '127.0.0.1'){
-                    $password = '123456';
-                    $user->password = Hash::make($password);
-                }else{
-                    $password = random_int(100000,1000000);
-                    $user->password = Hash::make($password);
-                    $emailTo = $request->UserEmail;
-                    $subject = 'Login Password';
-                    $emailFrom = 'noreply@jfds.co.uk';
-                    $usermname = $request->FirstName.' '.$request->LastName;
-                    $data_set = ['usermname'=>$usermname,'pass'=>$password];
+            // if (isset($request->update)) {
+            //     if($_SERVER['SERVER_NAME'] == '127.0.0.1'){
+            //         $password = '123456';
+            //         $user->password = Hash::make($password);
+            //     }else{
+            if($flash == "added"){
+                $password = random_int(100000,1000000);
+                $user->password = Hash::make($password);
+                $emailTo = $request->UserEmail;
+                $subject = 'Login Password';
+                $emailFrom = 'noreply@jfds.co.uk';
+                $usermname = $request->FirstName.' '.$request->LastName;
+                $data_set = ['usermname'=>$usermname,'pass'=>$password];
 
-                    ini_set('display_errors', 1);
-                    try{
-                        Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
+                ini_set('display_errors', 1);
+                try{
+                    Mail::send(['html' => 'Mail.Password'], $data_set, function($message) use(&$emailTo, &$subject, &$emailFrom): void {
 
-                            $message->to($emailTo, $emailTo)->subject($subject);
-                            if($emailFrom !== ''){
-                                $message->from($emailFrom, $emailFrom);
-                            }
+                        $message->to($emailTo, $emailTo)->subject($subject);
+                        if($emailFrom !== ''){
+                            $message->from($emailFrom, $emailFrom);
+                        }
 
-                        });
+                    });
 
-                    } catch (Exception $e) {
-                            echo $e->getMessage();
-                    }
+                } catch (Exception $e) {
+                        echo $e->getMessage();
                 }
             }
+
+                // }
+            // }
 
             $user->save();
             // sending_mail_credential($user->UserEmail, $request->password);
