@@ -858,54 +858,6 @@
     <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
     <input type="hidden" name="SideScreenCount" id="SideScreenCount" value="{{ count($SideScreenData) }}" />
     <input type="hidden" name="ManualQuotationStatusvalue" id="ManualQuotationStatusvalue" value="{{ $quotation->ManualQuotationStatus }}" />
-
-    <!-- Consolidated URL Configuration (Performance Optimization) -->
-    <input type="hidden" id="urlConfig" value="{{ json_encode([
-        'addItem' => url('/quotation/add-configuration-cad-item'),
-        'addSideScreen' => url('/quotation/add-side-screen-item'),
-        'addSideScreen2' => url('/quotation/add-new-screens'),
-        'addHalspan' => url('/quotation/add-halspan-item'),
-        'addNormaDoorCore' => url('/quotation/add-norma-door-core-item'),
-        'addVicaima' => url('/quotation/add-vicaima-door-core-item'),
-        'addMMM' => url('/quotation/add-MMM-door-core-item'),
-        'addSeadec' => url('/quotation/add-seadec-cad-item'),
-        'addDeanta' => url('/quotation/add-deanta-cad-item'),
-        'addFlamebreak' => url('/quotation/add-flamebreak-item'),
-        'addStredor' => url('/quotation/add-stredor-item'),
-        'addItemUrl2' => url('/quotation/request'),
-        'printInvoice' => url('/quotation/printinvoice'),
-        'printInvoiceExcel' => url('/quotation/printinvoiceinexcel'),
-        'sendToClient' => route('sendToClientUrl'),
-        'buildofmaterial' => url('/quotation/generateBOM2'),
-        'bomCalculation' => url('quotation/generateBOMPrint'),
-        'qualityControl' => url('quotation/QualityControlPrint') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'screenBomCalculation' => url('quotation/ScreengenerateBOMPrint'),
-        'doorOrderSheetUrl' => url('quotation/DoorOrderSheetUrl'),
-        'frameTransomsUrl' => url('quotation/FrameTransomsUrl'),
-        'bomCalculationUrlGet' => url('quotation/generateBOM') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'screenBomCalculationUrlGet' => url('quotation/ScreengenerateBOM') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'doorOrderSheet' => url('quotation/DoorOrderSheet') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'frameTransoms' => url('quotation/FrameTransoms') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'glassOrderSheet' => url('quotation/GlassOrderSheet') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'glazingBeadsDoors' => url('quotation/GlazingBeadsDoors') . '/' . $quotation->id . '/' . ($VersionId !== null ? $VersionId : 0) . '/' . ($selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0),
-        'excelexport' => url('/quotation/excelexport'),
-        'excelexportNew' => url('/quotation/excelexportNew'),
-        'excelExportNonConfig' => url('/quotation/ExcelExportNonConfig'),
-        'exportBomCalculation' => url('/quotation/ExportBomCalculation'),
-        'exportDoorTypeBom' => url('/quotation/ExportDoorTypeBom'),
-        'exportSideScreen' => url('/quotation/ExportSideScreen'),
-        'exportScreenBomCalculation' => url('/quotation/ExportScreenBomCalculation'),
-        'cuttingList' => url('/quotation/cuttingList'),
-        'pickListExport' => url('/quotation/PickListExport'),
-        'allGlazingBeads' => url('/quotation/allGlazingBeadsExport'),
-        'exportIronmongery' => url('/quotation/ExportIronmongery'),
-        'exportFrameExcel' => url('/quotation/ExportFrameExcel'),
-        'excelexportVicaima' => url('/quotation/excelexportVicaimaUrl'),
-        'mainformimport' => url('quotation/excel-upload/'),
-        'generateBOM' => route('generateBOM')
-    ]) }}"/>
-
-    <!-- Keep existing hidden inputs for backward compatibility (accessed via individual IDs in JS) -->
     <input type="hidden" name="addItemUrl" id="addItemUrl"
         value="{{ url('/quotation/add-configuration-cad-item') }}" />
     <input type="hidden" name="addSideScreenUrl" id="addSideScreenUrl"
@@ -924,8 +876,13 @@
         value="{{ url('/quotation/add-seadec-cad-item') }}" />
     <input type="hidden" name="add_deanta_url" id="add_deanta_url"
         value="{{ url('/quotation/add-deanta-cad-item') }}" />
+    {{-- for new door core Flamebreak --}}
     <input type="hidden" name="addflamebreakUrl" id="addflamebreakUrl" value="{{ url('/quotation/add-flamebreak-item') }}" />
+     {{-- for end new door core Flamebreak --}}
+    {{-- for new door core Stredor --}}
     <input type="hidden" name="addstredorUrl" id="addstredorUrl" value="{{ url('/quotation/add-stredor-item') }}" />
+     {{-- for end new door core Stredor --}}
+    <!-- <input type="hidden" name="addItemUrl"  value="{{ url('/quotation/singleconfigurationitem') }}" /> -->
     <input type="hidden" name="addItemUrl2" id="addItemUrl2" value="{{ url('/quotation/request') }}" />
     <input type="hidden" name="printInvoiceUrl" id="printInvoiceUrl" value="{{ url('/quotation/printinvoice') }}" />
     <input type="hidden" name="printInvoiceExcelUrl" id="printInvoiceExcelUrl"
@@ -1027,41 +984,15 @@
             });
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
+        <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
+        @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
+            <script src="{{ url('/') }}/Halspan/new-cad.js"></script>
+        @else
+            <script src="{{ url('/') }}/vicaima/validate-all-cad.js"></script>
+        @endif
 
-        <!-- Lazy load D3 and CAD scripts for better performance -->
+        {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
-            // Function to lazy load scripts
-            function lazyLoadScript(src, callback) {
-                var script = document.createElement('script');
-                script.type = 'text/javascript';
-                script.src = src;
-                if (callback) script.onload = callback;
-                document.head.appendChild(script);
-            }
-
-            // Load D3 only when needed (after DOM is fully loaded)
-            window.addEventListener('load', function() {
-                // Load D3.js
-                lazyLoadScript('https://d3js.org/d3.v7.min.js', function() {
-                    console.log('D3 loaded successfully');
-                });
-
-                // Load CAD scripts based on configurable items
-                var configurableItems = {{ $quotation_data->configurableitems }};
-                if (configurableItems == 2 || configurableItems == 1 || configurableItems == 7 || configurableItems == 8) {
-                    lazyLoadScript('{{ url("/Halspan/new-cad.js") }}', function() {
-                        console.log('Halspan CAD loaded');
-                    });
-                } else {
-                    lazyLoadScript('{{ url("/vicaima/validate-all-cad.js") }}', function() {
-                        console.log('Vicaima CAD loaded');
-                    });
-                }
-            });
-        </script>
-
-        <script>
-            // Use data attributes or pass through props instead of global JSON strings
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
             var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery); ?>);
             $("#ManualQuotationStatus").click(function(e) {

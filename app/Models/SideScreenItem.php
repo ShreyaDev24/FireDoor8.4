@@ -112,39 +112,4 @@ class SideScreenItem extends Model
         'MullionWidthPoint3',
         'MullionWidthPoint4'
     ];
-
-    /**
-     * Scope for side screen items with optimized queries
-     */
-    public function scopeForQuotation($query, $quotationId, $versionId = 0) {
-        if ($versionId > 0) {
-            return $query->where('QuotationId', $quotationId)
-                ->where('VersionId', $versionId);
-        }
-        return $query->where('QuotationId', $quotationId);
-    }
-
-    /**
-     * Scope to get side screen items with joins
-     */
-    public function scopeWithScreenDetails($query, $quotationId, $versionId = 0) {
-        $selectColumns = [
-            'side_screen_items.FireRating',
-            'side_screen_items.VersionId',
-            'side_screen_items.ScreenType',
-            'side_screen_items.SOWidth',
-            'side_screen_items.SOHeight',
-            'side_screen_items.SODepth',
-            'side_screen_items.GlazingType',
-            'side_screen_items.ScreenPrice',
-            'side_screen_items.id',
-            'side_screen_item_master.screenNumber',
-            'side_screen_item_master.floor',
-            'side_screen_item_master.id as screenMasterid'
-        ];
-
-        return $query->join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')
-            ->forQuotation($quotationId, $versionId)
-            ->select($selectColumns);
-    }
 }
