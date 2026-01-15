@@ -4233,38 +4233,36 @@ class DoorScheduleController extends Controller
 
             if ($vId > 0) {
                 $userIds = CompanyUsers();
-                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-                $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-                    ->where('quotation_version_items.version_id', $vId)
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
-                    ->get();
+                // Cache BOM settings for better performance
+                $margin = \Cache::remember('bom_margin_' . implode('_', $userIds), 3600, function() use ($userIds) {
+                    return BOMSetting::wherein('UserId', $userIds)->value('margin_for_material');
+                });
 
-                // Total Door Price
-                $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-                    ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
+                // Optimized query using scope
+                $Schedule = Item::withScheduleDetails($Id, $vId)->get();
 
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                // Calculate totals from single query instead of separate database calls
+                $TotalExactDoorPrice = $Schedule->sum('DoorsetPrice');
+                $TotalIronmongeryPrice = $Schedule->sum('IronmongaryPrice');
 
-                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
-                    ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+                // Optimized side screen query using scope
+                $SideScreenData = SideScreenItem::withScreenDetails($Id, $vId);
             } else {
-                $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
-                    ->where(['items.QuotationId' => $Id])->get();
+                $userIds = CompanyUsers();
+                // Cache BOM settings
+                $margin = \Cache::remember('bom_margin_' . implode('_', $userIds), 3600, function() use ($userIds) {
+                    return BOMSetting::wherein('UserId', $userIds)->value('margin_for_material');
+                });
 
-                // Total Door Price
-                $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->where(['items.QuotationId' => $Id]);
-                    // dd( $TotalDoorPrice->get());
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                // Optimized query using scope
+                $Schedule = Item::withScheduleDetails($Id, $vId)->get();
 
-                $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
-                ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+                // Calculate totals from result set, not database
+                $TotalExactDoorPrice = $Schedule->sum('DoorsetPrice');
+                $TotalIronmongeryPrice = $Schedule->sum('IronmongaryPrice');
+
+                // Optimized side screen query using scope
+                $SideScreenData = SideScreenItem::withScreenDetails($Id, $vId);
             }
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
@@ -4292,8 +4290,13 @@ class DoorScheduleController extends Controller
             $CustomerDetails = CustomerContact::join('customers', 'customers.id', '=', 'customer_contacts.MainContractorId')
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
 
+            // Cache non-configurable items for better performance
+            $companyUsersIds = CompanyUsers();
+            $cacheKeyNonConfig = 'non_config_items_' . implode('_', $companyUsersIds);
+            $nonconfigdata = \Cache::remember($cacheKeyNonConfig, 3600, function() use ($companyUsersIds) {
+                return NonConfigurableItems::wherein('userId', $companyUsersIds)->orderBy('id', 'desc')->get();
+            });
 
-            $nonconfigdata = NonConfigurableItems::wherein('userId', CompanyUsers())->orderBy('id', 'desc')->get();
             $NonConfig = '<div class="col-sm-12 p-0">
             <div class="card-body">
             <div class="table-responsive">
@@ -4488,13 +4491,23 @@ class DoorScheduleController extends Controller
 
             $currency = SettingCurrency::where('UserId', Auth::user()->id)->first();
             $quotation_data = Quotation::where('id', $Id)->first();
+            
             if (Auth::user()->UserType == 1) {
-                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->get();
+                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
+                    ->select('favorite_item.*', 'quotation.configurableitems')->get();
             } else {
                 $UserIds = CompanyMultiUsers();
-                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
+                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
+                    ->select('favorite_item.*', 'quotation.configurableitems')
+                    ->wherein('favorite_item.userId', $UserIds)->get();
             }
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
+
+            // Cache ironmongery data for better performance
+            $cacheKey = 'ironmongery_sets_' . implode('_', $UserIds ?? [Auth::user()->id]);
+            $setIronmongery = \Cache::remember($cacheKey, 3600, function() use ($UserIds) {
+                return AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
+            });
+
             $IronmongeryInfoSet = [
                 'Hinges',
                 'FloorSpring',
@@ -4523,26 +4536,44 @@ class DoorScheduleController extends Controller
                 'Cylinders'
             ];
 
-            // Process the data and merge
+            // Optimized: Preload all ironmongery info in single query instead of N+1
+            $ironmongeryIds = [];
             foreach ($setIronmongery as $ironmongery) {
-                $additionalInfo = []; // Temporary array to hold additional info
+                foreach ($IronmongeryInfoSet as $valIronmongery) {
+                    if (!empty($ironmongery->$valIronmongery)) {
+                        $ironmongeryIds[] = $ironmongery->$valIronmongery;
+                    }
+                }
+            }
+
+            // Get all ironmongery info in one query
+            $allIronmongeryInfo = IronmongeryInfoModel::whereIn('id', array_unique($ironmongeryIds))
+                ->get()
+                ->keyBy('id');
+
+            // Get selected ironmongery in one query
+            $allSelectedIronmongery = SelectedIronmongery::whereIn('id', array_unique($ironmongeryIds))
+                ->where('UserId', Auth::user()->id)
+                ->get()
+                ->keyBy('id');
+
+            // Process the data efficiently
+            foreach ($setIronmongery as $ironmongery) {
+                $additionalInfo = [];
 
                 foreach ($IronmongeryInfoSet as $valIronmongery) {
-                    // Check if the property exists and is not empty
                     if (!empty($ironmongery->$valIronmongery)) {
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if (!empty($SelectedIronmongery)) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                    ->first();
-                            if(empty($IronmongeryInfoModel)){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if (!empty($IronmongeryInfoModel)) {
-                                $additionalInfo[] = $IronmongeryInfoModel;
+                        $selectedId = $ironmongery->$valIronmongery;
+                        
+                        // Use preloaded data instead of database queries
+                        if (isset($allSelectedIronmongery[$selectedId])) {
+                            $SelectedIronmongery = $allSelectedIronmongery[$selectedId];
+                            $ironmongeryId = $SelectedIronmongery->ironmongery_id;
+                            
+                            if (isset($allIronmongeryInfo[$ironmongeryId])) {
+                                $additionalInfo[] = $allIronmongeryInfo[$ironmongeryId];
+                            } elseif (isset($allIronmongeryInfo[$selectedId])) {
+                                $additionalInfo[] = $allIronmongeryInfo[$selectedId];
                             }
                         }
                     }
