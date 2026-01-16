@@ -4267,14 +4267,20 @@ class DoorScheduleController extends Controller
                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             }
 
+            // Cache helper function results to avoid duplicate queries
+            $CompanyUserIds = CompanyUsers();
+
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
-            $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
-            $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
+            $nonConfigData = nonConfigurableItem($Id, $vId, $CompanyUserIds);
+            $nonConfigDataPrice = nonConfigurableItem($Id, $vId, $CompanyUserIds, '', true);
             $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
-            $Version = QuotationVersion::where('quotation_id', $Id)->get()->toArray();
-            $MaxVersion = QuotationVersion::where('quotation_id', $Id)->max('version');
-            $VersionId = QuotationVersion::where('quotation_id', $Id)->where('id', $vId)->value('version');
+
+            // Cache version queries
+            $QuotationVersions = QuotationVersion::where('quotation_id', $Id)->get();
+            $Version = $QuotationVersions->toArray();
+            $MaxVersion = $QuotationVersions->max('version');
+            $VersionId = $QuotationVersions->where('id', $vId)->first()?->version ?? null;
             $SideScreenData = $SideScreenData->get();
             $companykacustomer = "";
             $customerMultiContact = "";
@@ -4293,7 +4299,7 @@ class DoorScheduleController extends Controller
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
 
 
-            $nonconfigdata = NonConfigurableItems::wherein('userId', CompanyUsers())->orderBy('id', 'desc')->get();
+            $nonconfigdata = NonConfigurableItems::wherein('userId', $CompanyUserIds)->orderBy('id', 'desc')->get();
             $NonConfig = '<div class="col-sm-12 p-0">
             <div class="card-body">
             <div class="table-responsive">
@@ -4488,13 +4494,20 @@ class DoorScheduleController extends Controller
 
             $currency = SettingCurrency::where('UserId', Auth::user()->id)->first();
             $quotation_data = Quotation::where('id', $Id)->first();
+
+            // Cache CompanyMultiUsers result
+            $UserIds = Auth::user()->UserType == 1 ? [] : CompanyMultiUsers();
+
             if (Auth::user()->UserType == 1) {
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->get();
             } else {
-                $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
             }
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
+
+            // Fetch all ironmongery in single query
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds ? $UserIds : [Auth::user()->id])
+                ->orderBy('Setname','ASC')
+                ->get();
             $IronmongeryInfoSet = [
                 'Hinges',
                 'FloorSpring',
@@ -4523,26 +4536,54 @@ class DoorScheduleController extends Controller
                 'Cylinders'
             ];
 
-            // Process the data and merge
+            // Batch fetch all ironmongery data to avoid N+1 queries
+            $allIronmongeryIds = [];
+            foreach ($setIronmongery as $ironmongery) {
+                foreach ($IronmongeryInfoSet as $valIronmongery) {
+                    if (!empty($ironmongery->$valIronmongery)) {
+                        $allIronmongeryIds[] = $ironmongery->$valIronmongery;
+                    }
+                }
+            }
+
+            // Fetch all selected ironmongery in one query
+            $allSelectedIronmongery = SelectedIronmongery::whereIn('id', array_unique($allIronmongeryIds))
+                ->where('UserId', Auth::user()->id)
+                ->get()
+                ->keyBy('id');
+
+            // Fetch all ironmongery info in one query
+            $allIronmongeryInfo = IronmongeryInfoModel::whereIn('IronmongeryId',
+                $allSelectedIronmongery->pluck('ironmongery_id')->unique()->toArray())
+                ->where('UserId', Auth::user()->id)
+                ->get()
+                ->groupBy('IronmongeryId');
+
+            // Fallback for ironmongery info without UserId filter
+            if ($allIronmongeryInfo->isEmpty()) {
+                $allIronmongeryInfo = IronmongeryInfoModel::whereIn('id',
+                    $allSelectedIronmongery->pluck('ironmongery_id')->unique()->toArray())
+                    ->get()
+                    ->groupBy('id');
+            }
+
+            // Process the data and merge using cached data
             foreach ($setIronmongery as $ironmongery) {
                 $additionalInfo = []; // Temporary array to hold additional info
 
                 foreach ($IronmongeryInfoSet as $valIronmongery) {
                     // Check if the property exists and is not empty
                     if (!empty($ironmongery->$valIronmongery)) {
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
+                        $selectedId = $ironmongery->$valIronmongery;
 
-                        if (!empty($SelectedIronmongery)) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                    ->first();
-                            if(empty($IronmongeryInfoModel)){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
+                        // Use cached selected ironmongery instead of querying
+                        if (isset($allSelectedIronmongery[$selectedId])) {
+                            $SelectedIronmongery = $allSelectedIronmongery[$selectedId];
+                            $ironmongeryId = $SelectedIronmongery->ironmongery_id;
 
-                            if (!empty($IronmongeryInfoModel)) {
-                                $additionalInfo[] = $IronmongeryInfoModel;
+                            // Use cached ironmongery info
+                            if (isset($allIronmongeryInfo[$ironmongeryId])) {
+                                $additionalInfo = array_merge($additionalInfo, $allIronmongeryInfo[$ironmongeryId]->toArray());
                             }
                         }
                     }
