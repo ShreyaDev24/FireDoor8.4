@@ -57,58 +57,48 @@ use Carbon\Carbon;
 use App\Models\{NonConfigurableItems,NonConfigurableItemStore};
 
 function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'){
-    // Optimized with eager loading and simplified joins
-    $query_builder = NonConfigurableItemStore::with('nonConfigurable')
-        ->where('non_configurable_item_store.quotationId', $Id)
-        ->where('non_configurable_item_store.versionId', $vId)
-        ->whereIn('non_configurable_item_store.userId', $userId);
+    $NonConfigurableItems = NonConfigurableItemStore::join('non_configurable_items','non_configurable_item_store.nonConfigurableId','non_configurable_items.id')->join('quotation','non_configurable_item_store.quotationId','quotation.id')->leftJoin("quotation_versions",function($join) use ($vId): void{
+        $join->on("quotation.id","quotation_versions.quotation_id")
+            ->On("quotation_versions.id","=","quotation.VersionId")
+            ->where("quotation_versions.id","=",$vId);
+    });
+    $NonConfigurableItems = $NonConfigurableItems->where(['non_configurable_item_store.quotationId'=>$Id, 'quotation.id'=>$Id,'non_configurable_item_store.versionId'=>$vId])->wherein('non_configurable_item_store.userId',$userId);
+
+    if(!empty($select)){
+        $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_item_store.*');
+    }else{
+        $NonConfigurableItems = $NonConfigurableItems->select('non_configurable_items.*','non_configurable_item_store.id as NonConfigId','non_configurable_item_store.quantity','non_configurable_item_store.total_price','non_configurable_item_store.price as storePrice');
+    }
 
     if($sum == true){
-        // For sum operations, just return the sum directly
-        return $query_builder->sum('non_configurable_item_store.total_price');
+        $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->sum('non_configurable_item_store.total_price');
     }else{
-        // Select appropriate columns and order results
-        if(!empty($select)){
-            $result = $query_builder->select('non_configurable_item_store.*')
-                ->orderBy('non_configurable_item_store.id','desc')
-                ->$query();
-        }else{
-            $result = $query_builder->select(
-                'non_configurable_items.*',
-                'non_configurable_item_store.id as NonConfigId',
-                'non_configurable_item_store.quantity',
-                'non_configurable_item_store.total_price',
-                'non_configurable_item_store.price as storePrice'
-            )
-            ->join('non_configurable_items', 'non_configurable_item_store.nonConfigurableId', 'non_configurable_items.id')
-            ->orderBy('non_configurable_item_store.id','desc')
-            ->$query();
-        }
-        return $result;
+        $NonConfigurableItems = $NonConfigurableItems->orderBy('non_configurable_item_store.id','desc')->$query();
     }
+
+
+    return $NonConfigurableItems;
 }
 
 
 function itemAdjustCount($Id,$vId): float|int{
-    // Optimized with eager loading and direct sum calculation
-    $TotalDoorSetPrice = 0;
-
     if($vId > 0){
-        // Use sum() in query builder instead of fetching and looping
-        $TotalDoorSetPrice = Item::where('items.QuotationId', $Id)
-            ->where('items.VersionId', $vId)
-            ->selectRaw('SUM(CASE WHEN AdjustPrice IS NOT NULL AND AdjustPrice > 0 THEN AdjustPrice ELSE DoorsetPrice END) as total')
-            ->first()
-            ->total ?? 0;
+        $Schedule = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
+        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
+        ->where(['quotation_version_items.version_id'=>$vId,'items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
     } else {
-        // For non-versioned items
-        $TotalDoorSetPrice = Item::where('items.QuotationId', $Id)
-            ->selectRaw('SUM(CASE WHEN AdjustPrice IS NOT NULL AND AdjustPrice > 0 THEN AdjustPrice ELSE DoorsetPrice END) as total')
-            ->first()
-            ->total ?? 0;
+        $Schedule = Item::join('item_master','items.itemId','item_master.itemID')
+        ->where(['items.QuotationId' => $Id ])->get();
     }
 
-    return floatval($TotalDoorSetPrice);
+    $TotalDoorSetPrice = 0;
+    if(!empty($Schedule)){
+        foreach($Schedule as $row){
+            $TotalDoorSetPrice += (($row->AdjustPrice)?floatval($row->AdjustPrice):floatval($row->DoorsetPrice));
+        }
+    }
+
+    return $TotalDoorSetPrice;
 }
 
 function countTotalPrice($Id,$vId,$itemId=0, $type=null): array{
