@@ -4284,16 +4284,16 @@ class DoorScheduleController extends Controller
                 $q7_time = (microtime(true) - $q7_start) * 1000;
                 Log::channel('queries')->info('Query 7: Fetch Items with version', ['time_ms' => round($q7_time, 2), 'item_count' => count($Schedule)]);
 
-                // QUERY 8: Total Door Price (version)
+                // QUERY 8 (OPTIMIZED): Total Door Price (version) - FROM CACHE
                 $q8_start = microtime(true);
-                $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-                    ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
-
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                $TotalExactDoorPrice = 0;
+                $TotalIronmongeryPrice = 0;
+                foreach ($Schedule as $item) {
+                    $TotalExactDoorPrice += floatval($item->DoorsetPrice ?? 0);
+                    $TotalIronmongeryPrice += floatval($item->IronmongaryPrice ?? 0);
+                }
                 $q8_time = (microtime(true) - $q8_start) * 1000;
-                Log::channel('queries')->info('Query 8: Total Door Price (version)', ['time_ms' => round($q8_time, 2)]);
+                Log::channel('queries')->info('Query 8: Total Door Price (version) - FROM CACHE', ['time_ms' => round($q8_time, 2)]);
 
                 // QUERY 9: Fetch SideScreenData (version)
                 $q9_start = microtime(true);
@@ -4310,16 +4310,16 @@ class DoorScheduleController extends Controller
                 $q10_time = (microtime(true) - $q10_start) * 1000;
                 Log::channel('queries')->info('Query 10: Fetch Items without version', ['time_ms' => round($q10_time, 2), 'item_count' => count($Schedule)]);
 
-                // QUERY 11: Total Door Price (no version)
+                // QUERY 11 (OPTIMIZED): Calculate totals from cached Schedule array instead of database query
                 $q11_start = microtime(true);
-                $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->where(['items.QuotationId' => $Id]);
-                    // dd( $TotalDoorPrice->get());
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                $TotalExactDoorPrice = 0;
+                $TotalIronmongeryPrice = 0;
+                foreach ($Schedule as $item) {
+                    $TotalExactDoorPrice += floatval($item->DoorsetPrice ?? 0);
+                    $TotalIronmongeryPrice += floatval($item->IronmongaryPrice ?? 0);
+                }
                 $q11_time = (microtime(true) - $q11_start) * 1000;
-                Log::channel('queries')->info('Query 11: Total Door Price (no version)', ['time_ms' => round($q11_time, 2)]);
+                Log::channel('queries')->info('Query 11: Total Door Price (no version) - FROM CACHE', ['time_ms' => round($q11_time, 2)]);
 
                 // QUERY 12: Fetch SideScreenData (no version)
                 $q12_start = microtime(true);
@@ -4329,17 +4329,22 @@ class DoorScheduleController extends Controller
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
 
-            // QUERY 13: nonConfigurableItem (data)
+            // QUERY 13 (OPTIMIZED): nonConfigurableItem - Single query with data caching
             $q13_start = microtime(true);
             $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
             $q13_time = (microtime(true) - $q13_start) * 1000;
             Log::channel('queries')->info('Query 13: nonConfigurableItem (data)', ['time_ms' => round($q13_time, 2)]);
 
-            // QUERY 14: nonConfigurableItem (price)
+            // QUERY 14 (OPTIMIZED): Calculate nonConfigurableItem price from cached data
             $q14_start = microtime(true);
-            $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
+            $nonConfigDataPrice = 0;
+            if (!empty($nonConfigData)) {
+                foreach ($nonConfigData as $item) {
+                    $nonConfigDataPrice += floatval($item->total_price ?? 0);
+                }
+            }
             $q14_time = (microtime(true) - $q14_start) * 1000;
-            Log::channel('queries')->info('Query 14: nonConfigurableItem (price)', ['time_ms' => round($q14_time, 2)]);
+            Log::channel('queries')->info('Query 14: nonConfigurableItem (price) - FROM CACHE', ['time_ms' => round($q14_time, 2)]);
 
             $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
