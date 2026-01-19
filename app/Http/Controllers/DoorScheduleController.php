@@ -98,6 +98,7 @@ use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\ExportReport;
 use Illuminate\Support\Facades\Log;
+use App\Helpers\QueryLogger;
 
 class DoorScheduleController extends Controller
 {
@@ -4164,14 +4165,43 @@ class DoorScheduleController extends Controller
     public function generateQuotation(string $Id, string $vId, $pId = null, $cId = null)
     {
         \DB::enableQueryLog();
+
+        // Log start of generateQuotation function
+        Log::channel('queries')->info('🚀 generateQuotation START', [
+            'quotation_id' => $Id,
+            'version_id' => $vId,
+            'timestamp' => now(),
+        ]);
+
+        $functionStartTime = microtime(true);
+
+        // QUERY 1: markAsRead
+        $q1_start = microtime(true);
         markAsRead($Id, 'quote');
+        $q1_time = (microtime(true) - $q1_start) * 1000;
+        Log::channel('queries')->info('Query 1: markAsRead', ['time_ms' => round($q1_time, 2)]);
+
         if ($Id == 0 && $vId == 0) {
             $qidFromhelper = GenerateQuotationFirstTime($pId, $cId);
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
         } else {
+            // QUERY 2: Fetch Quotation
+            $q2_start = microtime(true);
             $Quotation = Quotation::where('id', $Id)->first();
+            $q2_time = (microtime(true) - $q2_start) * 1000;
+            Log::channel('queries')->info('Query 2: Fetch Quotation', ['time_ms' => round($q2_time, 2)]);
+
+            // QUERY 3: Fetch QuotationContactInformation
+            $q3_start = microtime(true);
             $QuotationContactInformation = QuotationContactInformation::where('QuotationId', $Id)->first();
+            $q3_time = (microtime(true) - $q3_start) * 1000;
+            Log::channel('queries')->info('Query 3: QuotationContactInformation', ['time_ms' => round($q3_time, 2)]);
+
+            // QUERY 4: Fetch QuotationShipToInformation
+            $q4_start = microtime(true);
             $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
+            $q4_time = (microtime(true) - $q4_start) * 1000;
+            Log::channel('queries')->info('Query 4: QuotationShipToInformation', ['time_ms' => round($q4_time, 2)]);
         }
 
 
@@ -4182,6 +4212,9 @@ class DoorScheduleController extends Controller
 
         // NEED TO SHOW ALL PROJECT ON "EDIT HEADER DETAILS => PROJECT SELECT BOX" (09-12-2023)
         $projectUserId = [];
+
+        // QUERY 5: Build ProjectUserId list based on UserType
+        $q5_start = microtime(true);
         switch (auth()->user()->UserType) {
             case 2:
                 $projectUserId = User::where('CreatedBy', auth()->user()->id)->pluck('id')->toArray();
@@ -4197,10 +4230,15 @@ class DoorScheduleController extends Controller
                 $projectUserId = [$Quotation->UserId, auth()->user()->CreatedBy];
                 break;
         }
+        $q5_time = (microtime(true) - $q5_start) * 1000;
+        Log::channel('queries')->info('Query 5: Build ProjectUserId list', ['time_ms' => round($q5_time, 2)]);
 
         // $ProjectTable = '<option value="">Select Project</option>';
 
         $ProjectsAddress = '';
+
+        // QUERY 6: Fetch Projects based on MainContractorId
+        $q6_start = microtime(true);
         if ($Quotation->MainContractorId != '') {
             $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
             if ($dd > 0) {
@@ -4221,6 +4259,8 @@ class DoorScheduleController extends Controller
             // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
             $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
         }
+        $q6_time = (microtime(true) - $q6_start) * 1000;
+        Log::channel('queries')->info('Query 6: Fetch Projects', ['time_ms' => round($q6_time, 2)]);
 
         // if($Projects !== null){
         //     $Projects = $Projects->toArray();
@@ -4232,6 +4272,8 @@ class DoorScheduleController extends Controller
         if (!empty($Quotation)) {
 
             if ($vId > 0) {
+                // QUERY 7: Fetch Items with version
+                $q7_start = microtime(true);
                 $userIds = CompanyUsers();
                 $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
                 $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
@@ -4239,45 +4281,83 @@ class DoorScheduleController extends Controller
                     ->where('quotation_version_items.version_id', $vId)
                     ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
                     ->get();
+                $q7_time = (microtime(true) - $q7_start) * 1000;
+                Log::channel('queries')->info('Query 7: Fetch Items with version', ['time_ms' => round($q7_time, 2), 'item_count' => count($Schedule)]);
 
-                // Total Door Price
+                // QUERY 8: Total Door Price (version)
+                $q8_start = microtime(true);
                 $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
                     ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
                     ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
 
                 $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
                 $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                $q8_time = (microtime(true) - $q8_start) * 1000;
+                Log::channel('queries')->info('Query 8: Total Door Price (version)', ['time_ms' => round($q8_time, 2)]);
 
+                // QUERY 9: Fetch SideScreenData (version)
+                $q9_start = microtime(true);
                 $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+                $q9_time = (microtime(true) - $q9_start) * 1000;
+                Log::channel('queries')->info('Query 9: Fetch SideScreenData (version)', ['time_ms' => round($q9_time, 2)]);
             } else {
+                // QUERY 10: Fetch Items without version
+                $q10_start = microtime(true);
                 $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
                     ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
                     ->where(['items.QuotationId' => $Id])->get();
+                $q10_time = (microtime(true) - $q10_start) * 1000;
+                Log::channel('queries')->info('Query 10: Fetch Items without version', ['time_ms' => round($q10_time, 2), 'item_count' => count($Schedule)]);
 
-                // Total Door Price
+                // QUERY 11: Total Door Price (no version)
+                $q11_start = microtime(true);
                 $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
                     ->where(['items.QuotationId' => $Id]);
                     // dd( $TotalDoorPrice->get());
                 $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
                 // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
                 $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                $q11_time = (microtime(true) - $q11_start) * 1000;
+                Log::channel('queries')->info('Query 11: Total Door Price (no version)', ['time_ms' => round($q11_time, 2)]);
 
+                // QUERY 12: Fetch SideScreenData (no version)
+                $q12_start = microtime(true);
                 $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             }
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
+
+            // QUERY 13: nonConfigurableItem (data)
+            $q13_start = microtime(true);
             $nonConfigData = nonConfigurableItem($Id, $vId, CompanyUsers());
+            $q13_time = (microtime(true) - $q13_start) * 1000;
+            Log::channel('queries')->info('Query 13: nonConfigurableItem (data)', ['time_ms' => round($q13_time, 2)]);
+
+            // QUERY 14: nonConfigurableItem (price)
+            $q14_start = microtime(true);
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
+            $q14_time = (microtime(true) - $q14_start) * 1000;
+            Log::channel('queries')->info('Query 14: nonConfigurableItem (price)', ['time_ms' => round($q14_time, 2)]);
+
             $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
+
+            // QUERY 15: Fetch QuotationVersion
+            $q15_start = microtime(true);
             $Version = QuotationVersion::where('quotation_id', $Id)->get()->toArray();
             $MaxVersion = QuotationVersion::where('quotation_id', $Id)->max('version');
             $VersionId = QuotationVersion::where('quotation_id', $Id)->where('id', $vId)->value('version');
+            $q15_time = (microtime(true) - $q15_start) * 1000;
+            Log::channel('queries')->info('Query 15: Fetch QuotationVersion', ['time_ms' => round($q15_time, 2), 'version_count' => count($Version)]);
+
             $SideScreenData = $SideScreenData->get();
             $companykacustomer = "";
             $customerMultiContact = "";
+
+            // QUERY 16: Fetch Customer data
+            $q16_start = microtime(true);
             if (Auth::user()->UserType == "2" || Auth::user()->UserType == "3") {
                 $Quotation;
                 $UserId = Auth::user()->id;
@@ -4288,12 +4368,22 @@ class DoorScheduleController extends Controller
                 $companykacustomer = Customer::where(['UserId' => Auth::user()->id])->orderBy('customers.id', 'desc')->get();
                 $customerMultiContact = CustomerContact::where(['MainContractorId' => $Quotation->MainContractorId])->get();
             }
+            $q16_time = (microtime(true) - $q16_start) * 1000;
+            Log::channel('queries')->info('Query 16: Fetch Customer data', ['time_ms' => round($q16_time, 2)]);
 
+            // QUERY 17: Fetch CustomerDetails
+            $q17_start = microtime(true);
             $CustomerDetails = CustomerContact::join('customers', 'customers.id', '=', 'customer_contacts.MainContractorId')
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
+            $q17_time = (microtime(true) - $q17_start) * 1000;
+            Log::channel('queries')->info('Query 17: Fetch CustomerDetails', ['time_ms' => round($q17_time, 2)]);
 
-
+            // QUERY 18: Fetch NonConfigurableItems
+            $q18_start = microtime(true);
             $nonconfigdata = NonConfigurableItems::wherein('userId', CompanyUsers())->orderBy('id', 'desc')->get();
+            $q18_time = (microtime(true) - $q18_start) * 1000;
+            Log::channel('queries')->info('Query 18: Fetch NonConfigurableItems', ['time_ms' => round($q18_time, 2), 'item_count' => count($nonconfigdata)]);
+
             $NonConfig = '<div class="col-sm-12 p-0">
             <div class="card-body">
             <div class="table-responsive">
@@ -4552,10 +4642,29 @@ class DoorScheduleController extends Controller
                 $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
+            // QUERY 19: Fetch Favorites
+            $q19_start = microtime(true);
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
+            $q19_time = (microtime(true) - $q19_start) * 1000;
+            Log::channel('queries')->info('Query 19: Fetch Favorites', ['time_ms' => round($q19_time, 2)]);
+
+            // Log all queries execution log
             \Log::info('Quotation Queries', \DB::getQueryLog());
 
+            // QUERY 20: Fetch Floor/Project Building Details
+            $q20_start = microtime(true);
             $floor = Quotation::join('project_building_details', 'quotation.ProjectId', 'project_building_details.projectId')->where('quotation.id', $Id)->select('project_building_details.*')->get();
+            $q20_time = (microtime(true) - $q20_start) * 1000;
+            Log::channel('queries')->info('Query 20: Fetch Floor/Project Building Details', ['time_ms' => round($q20_time, 2)]);
+
+            // Calculate total function execution time
+            $totalFunctionTime = (microtime(true) - $functionStartTime) * 1000;
+            Log::channel('queries')->info('✅ generateQuotation COMPLETE', [
+                'quotation_id' => $Id,
+                'version_id' => $vId,
+                'total_time_ms' => round($totalFunctionTime, 2),
+                'timestamp' => now(),
+            ]);
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
