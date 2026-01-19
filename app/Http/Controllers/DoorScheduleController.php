@@ -4327,7 +4327,11 @@ class DoorScheduleController extends Controller
                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             }
 
-            $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
+            // QUERY 12 (OPTIMIZED): Calculate itemAdjustCount from cached Schedule array
+            $q12_start = microtime(true);
+            $TotalDoorSetPrice = itemAdjustCount($Id, $vId, $Schedule);
+            $q12_time = (microtime(true) - $q12_start) * 1000;
+            Log::channel('queries')->info('Query 12: itemAdjustCount - FROM CACHE', ['time_ms' => round($q12_time, 2)]);
 
             // QUERY 13 (OPTIMIZED): nonConfigurableItem - Single query with data caching
             $q13_start = microtime(true);
