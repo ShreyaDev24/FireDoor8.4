@@ -4334,11 +4334,13 @@ class DoorScheduleController extends Controller
                 $NonConfig .= '<tr>
                 <td>' . $SI++ . '</td>
                 <td>' . $value->name . '</td>
-                <td><img src="' . $value->NonconfiBase64 . '" alt="Non-ConfigImage" style="width: 100px;"></td>
+                <td><img loading="lazy" src="' . $value->NonconfiBase64 . '" alt="Non-ConfigImage" style="width: 100px;"></td>
                 <td>' . $value->product_code . '</td>
-                <td><p style="max-width: 200px;"><script type="text/javascript">
-                         document.write(ReadMore(5,"' . $value->description . '"))
-                     </script></p></td>
+                <td> <p style="max-width: 200px;">
+                    <script>
+                        document.write(ReadMore(5, ' . json_encode($value->description) . '))
+                    </script>
+                </p></td>
                 <td>' . $value->unit . '</td>
                 <td>' . floatval($value->price) . '</td>
                 <td><input type="number" class="form-control nonconfigQut" placeholder="Quantity" style="margin: 0 auto; max-width: 50px;font-size: 14px !important;" id="nonconfigQuantity-' . $value->id . '" value=""></td>
@@ -4389,7 +4391,7 @@ class DoorScheduleController extends Controller
                     $configItem .=
                         '<div class="col-sm-6 p-0 pr-1">
                             <div class="Quote_tems_vicima">
-                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <img loading="lazy" src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
                                 <a href="#">' . $ci->name . ' - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A </a>
                                 <input type="hidden" value="' . $ci->id . '" class="configItemId">
                                 <p class="vicimanewcss">Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical</p>
@@ -4401,7 +4403,7 @@ class DoorScheduleController extends Controller
                     $configItem .=
                         '<div class="col-sm-6 p-0 pr-1">
                             <div class="Quote_tems">
-                                <img src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
+                                <img loading="lazy" src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
                                 <a href="#">' . $ci->name . '</a>
                                 <input type="hidden" value="' . $ci->id . '" class="configItemId">
                                 <p>Configurable On Configuration</p>
@@ -6445,7 +6447,7 @@ class DoorScheduleController extends Controller
             <div class="col-md-2 col-sm-4 col-6 cursor-pointer" onclick="selectAccoustic(\'#' . $id . "' , '" . $tt->Key . "' , '" . $tt->Accoustics . "', '" . $SelectedOptionCost . '\')">
                 <div class="color_box">
                     <div class="frameMaterialImage">
-                        <img width="100%" height="100" src="' . url('/') . '/uploads/Options/' . $tt->file . '">
+                        <img loading="lazy" width="100%" height="100" src="' . url('/') . '/uploads/Options/' . $tt->file . '">
                     </div>
                     <h4>' . $tt->Accoustics . '</h4>
                 </div>

@@ -303,7 +303,7 @@
                                                         <td>{{ $value->name }}</td>
                                                         <td>{{ $value->product_code }}</td>
                                                         <td><script type="text/javascript">
-                                                            document.write(ReadMore(5,"{{ $value->description }}"))
+                                                            document.write(ReadMore(5, {!! json_encode($value->description) !!}))
                                                         </script></td>
                                                         <td>{{ $value->unit }}</td>
                                                         <td>{{ $value->quantity }}</td>

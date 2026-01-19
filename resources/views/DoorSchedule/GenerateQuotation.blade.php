@@ -633,9 +633,7 @@
                                                         <td>{{ $SI++; }}</td>
                                                         <td>{{ $value->name }}</td>
                                                         <td>{{ $value->product_code }}</td>
-                                                        <td><script type="text/javascript">
-                                                            document.write(ReadMore(5,"{{ $value->description }}"))
-                                                        </script></td>
+                                                        <td><script>document.write(ReadMore(5, {!! json_encode($value->description) !!}))</script></td>
                                                         <td>{{ $value->unit }}</td>
                                                         <td><input type="number" name="quantity" style="margin: 0 auto; max-width: 50px;font-size: 14px !important;" class="form-control quantity quantity_{{ $value->NonConfigId }} nonconfigQut" disabled value="{{ $value->quantity }}"></td>
                                                         <td>{{ floatval($value->storePrice) }}</td>
@@ -984,11 +982,11 @@
             });
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
-        <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
+        <script src="https://d3js.org/d3.v7.min.js" defer></script> <!-- Load D3 -->
         @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
-            <script src="{{ url('/') }}/Halspan/new-cad.js"></script>
+            <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
         @else
-            <script src="{{ url('/') }}/vicaima/validate-all-cad.js"></script>
+            <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
         @endif
 
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}

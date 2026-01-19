@@ -6051,7 +6051,7 @@ function opFlWidthAndHeight(val){
     var frameHeight = $("#frameHeight").val();
     var OpBeadThickness = $("#OpBeadThickness").val();
     var oPHeigth = $("#oPHeigth").val();
-    console.log(gap,frameWidth,OpBeadThickness)
+    // console.log(gap,frameWidth,OpBeadThickness)
     if (gap == '') {
         gap = 0;
     }

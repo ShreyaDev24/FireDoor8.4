@@ -83,7 +83,7 @@
                             <td class="text-center">{{ $i++ }}</td>
                             <td class="text-center">{{ $value->name }}</td>
                             <td class="text-center"><script type="text/javascript">
-                                document.write(ReadMore(5,"{{ $value->description }}"))
+                                document.write(ReadMore(5, {!! json_encode($value->description) !!}))
                             </script></td>
                             <td class="text-center"><img src="{{$value->NonconfiBase64}}" alt="" style="max-width:100px; max-height:50px;"></td>
                             <td class="text-center">{{ $value->product_code }}</td>
