@@ -442,7 +442,86 @@
                                                     <div id="nonconfigurable" class="tab-pane fade">
                                                         <h3 class="card-title">Non Configurable Items</h3>
                                                         <div class="row">
-                                                            {!! $NonConfig !!}
+                                                            {{--  {!! $NonConfig !!}  --}}
+                                                            <div class="col-sm-12 p-0">
+                                                                <div class="card-body">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered table-striped">
+                                                                            <thead class="table-header-bg">
+                                                                                <tr class="text-white">
+                                                                                    <th>Line</th>
+                                                                                    <th>Name</th>
+                                                                                    <th>Image</th>
+                                                                                    <th>Product Code</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Unit</th>
+                                                                                    <th>Price</th>
+                                                                                    <th>Qty</th>
+                                                                                    <th>Total</th>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tbody id="versionData">
+                                                                                @php $SI = 1; @endphp
+
+                                                                                @foreach($nonconfigdata as $value)
+                                                                                    <tr>
+                                                                                        <td>{{ $SI++ }}</td>
+
+                                                                                        <td>{{ $value->name }}</td>
+
+                                                                                        <td>
+                                                                                            <img loading="lazy"
+                                                                                                src="{{ $value->NonconfiBase64 }}"
+                                                                                                alt="Non-Config Image"
+                                                                                                style="width: 100px;">
+                                                                                        </td>
+
+                                                                                        <td>{{ $value->product_code }}</td>
+
+                                                                                        <td>
+                                                                                            <p style="max-width: 200px;">
+                                                                                                <script>
+                                                                                                    document.write(
+                                                                                                        ReadMore(5, @json($value->description))
+                                                                                                    );
+                                                                                                </script>
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td>{{ $value->unit }}</td>
+
+                                                                                        <td>{{ number_format($value->price, 2) }}</td>
+
+                                                                                        <td>
+                                                                                            <input type="number"
+                                                                                                class="form-control nonconfigQut"
+                                                                                                placeholder="Quantity"
+                                                                                                style="margin: 0 auto; max-width: 50px; font-size: 14px;"
+                                                                                                id="nonconfigQuantity-{{ $value->id }}">
+                                                                                        </td>
+
+                                                                                        <td>
+                                                                                            <a href="javascript:void(0);"
+                                                                                            class="configure_btn"
+                                                                                            onclick="nonConfigStore(
+                                                                                                {{ $quotationId }},
+                                                                                                {{ $vId }},
+                                                                                                {{ $value->id }},
+                                                                                                {{ $value->price }}
+                                                                                            );">
+                                                                                                Add
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            </tbody>
+
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -528,9 +607,9 @@
                                                 <?php $index = 0;
                                                 $SI = 1; ?>
                                                 @foreach ($data as $row)
-                                                    @if (!empty($row->version_id))
+                                                    @if (!empty($row['version_id']))
                                                         @php
-                                                            $version_id = $row->version_id;
+                                                            $version_id = $row['version_id'];
                                                         @endphp
                                                     @else
                                                         @php
@@ -540,31 +619,29 @@
                                                     @php
                                                         $SvgImage = '';
                                                     @endphp
-                                                    @if (empty($row->SvgImage))
+                                                    @if (empty($row['SvgImage']))
                                                         @php
                                                             $SvgImage = 'color_red';
                                                         @endphp
                                                     @endif
-                                                    <tr id="validate{{ $row->itemId }}" class="{{ $SvgImage }}">
+                                                    <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
                                                         <td>
                                                             {{ $SI }}
-                                                            <input type="hidden" class="check"
-                                                                value="{{ $row->itemId }}">
-                                                            <input type="hidden" class="doors_{{ $index }}"
-                                                                value="{{ $row->id }}">
+                                                            <input type="hidden" class="check" value="{{ $row['itemId'] }}">
+                                                            <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
                                                         </td>
-                                                        <td>{{ $row->DoorQuantity }}</td>
-                                                        <td>{{ $row->FireRating }}</td>
-                                                        <td>{{ $row->DoorType }}</td>
-                                                        <td>{{ $row->doorNumber }}</td>
-                                                        <td>{{ $row->floor }}</td>
-                                                        <td>{{ $row->DoorsetType }}</td>
-                                                        <td>{{ $row->SOWidth }}</td>
-                                                        <td>{{ $row->SOHeight }}</td>
-                                                        <td>{{ $row->SOWallThick }}</td>
-                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) :floatval($row->DoorsetPrice)),2) }}</td>
-                                                        <td>{{ number_format($row->IronmongaryPrice,2) }}</td>
-                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2)  }}
+                                                        <td>{{ $row['DoorQuantity'] }}</td>
+                                                        <td>{{ $row['FireRating'] }}</td>
+                                                        <td>{{ $row['DoorType'] }}</td>
+                                                        <td>{{ $row['doorNumber'] }}</td>
+                                                        <td>{{ $row['floor'] }}</td>
+                                                        <td>{{ $row['DoorsetType'] }}</td>
+                                                        <td>{{ $row['SOWidth'] }}</td>
+                                                        <td>{{ $row['SOHeight'] }}</td>
+                                                        <td>{{ $row['SOWallThick'] }}</td>
+                                                        <td>{{ number_format((($row['AdjustPrice'])?floatval($row['AdjustPrice']) :floatval($row['DoorsetPrice'])),2) }}</td>
+                                                        <td>{{ number_format($row['IronmongaryPrice'],2) }}</td>
+                                                        <td>{{ number_format((($row['AdjustPrice'])?floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice']):floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])),2)  }}
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="dropdown">
@@ -573,28 +650,38 @@
                                                                         class="fa fa-ellipsis-h"></i></a>
                                                                 <ul class="dropdown-menu drop_style">
                                                                     <li><a
-                                                                            href="{{ ConfigurationURL($quotation->configurableitems, $row->itemId, $version_id) }}">Edit</a>
+                                                                            href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">Edit</a>
                                                                     </li>
                                                                     <li>
-                                                                        <a onclick="FloorNoChange('{{ $row->id }}','{{ $row->DoorType }}','{{ $row->doorNumber }}')"
+                                                                        <a onclick="FloorNoChange('{{ $row['id'] }}','{{ $row['DoorType'] }}','{{ $row['doorNumber'] }}')"
                                                                             href="javascript:void(0);">Edit FLoor No.</a>
                                                                     </li>
                                                                     <li><a
-                                                                            href="{{url('quotation/add-new-doors')}}/{{$quotationId}}/{{$version_id}}/{{ $row->itemId }}">Add New</a>
+                                                                            href="{{url('quotation/add-new-doors')}}/{{$quotationId}}/{{$version_id}}/{{ $row['itemId'] }}">Add New</a>
                                                                     </li>
-                                                                    <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name')"
-                                                                            href="javascript:void(0);">Name
-                                                                            Configuration</a></li>
-                                                                    <li><a onclick="adjustPrice('{{ $row->itemId }}','{{ $row->id }}','{{ floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice) }}')"
+                                                                    <li>
+                                                                        {{--  <a onclick="favoriteItem(
+                                                                            @json($row['itemId']),
+                                                                            @json($row['id']),
+                                                                            'Door',
+                                                                            'Configurable Favorite Item',
+                                                                            'Configurable Type Name'
+                                                                        )"
+                                                                        href="javascript:void(0);">
+                                                                            Name Configuration
+                                                                        </a>
+                                                                    </li>  --}}
+
+                                                                    <li><a onclick="adjustPrice({{ $row["itemId"] }},{{ $row["id"] }},{{ floatval($row["DoorsetPrice"]) + floatval($row["IronmongaryPrice"]) }})"
                                                                             href="javascript:void(0);">Adjust Price</a>
                                                                     </li>
                                                                     <li><a href="javascript:void(0);">Comment</a></li>
                                                                     <li><a href="javascript:void(0);"
-                                                                            onClick="CopyDoorSet({{ $quotationId }},'{{ $row->id }}');">Copy</a>
+                                                                            onClick="CopyDoorSet({{ $quotationId }},{{ $row["id"] }})">Copy</a>
                                                                     </li>
-                                                                    <li><a onclick="remove_item('{{ $row->id }}')"
+                                                                    <li><a onclick="remove_item({{ $row["id"] }})"
                                                                             href="#">Remove</a></li>
-                                                                     <li><a onclick="edit_image1('{{ $row->itemId }}')"
+                                                                     <li><a onclick="edit_image1({{ $row["itemId"] }})"
                                                                             href="javascript:void(0);">Validate</a></li>
                                                                 </ul>
                                                             </div>
@@ -746,6 +833,7 @@
                                                 </div>
                                             @endif
                                         </div>
+
                                         <div class="quote_card_header mt-4">
                                             <h4>Pricing </h4>
                                         </div>
@@ -1000,6 +1088,16 @@
 
             $('.close_model').on('click', function() {
                 $('#ManualAddForm').modal('hide');
+            });
+
+            $('.fav-btn').click(function () {
+                favoriteItem(
+                    $(this).data('item'),
+                    $(this).data('id'),
+                    'Door',
+                    'Configurable Favorite Item',
+                    'Configurable Type Name'
+                );
             });
 
             function ManualAccpetReject(value){

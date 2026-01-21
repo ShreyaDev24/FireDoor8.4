@@ -4163,105 +4163,168 @@ class DoorScheduleController extends Controller
 
     public function generateQuotation(string $Id, string $vId, $pId = null, $cId = null)
     {
-        \DB::enableQueryLog();
+        // \DB::enableQueryLog();
         markAsRead($Id, 'quote');
         if ($Id == 0 && $vId == 0) {
             $qidFromhelper = GenerateQuotationFirstTime($pId, $cId);
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
         } else {
-            $Quotation = Quotation::where('id', $Id)->first();
-            $QuotationContactInformation = QuotationContactInformation::where('QuotationId', $Id)->first();
-            $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
+            $Quotation = Quotation::findOrFail($Id);
+            $QuotationContactInformation = QuotationContactInformation::with('quotation')->first();
+            $QuotationShipToInformation = QuotationShipToInformation::with('quotation')->first();
         }
-
-
 
         if ($Quotation === null) {
             return abort(404);
         }
 
         // NEED TO SHOW ALL PROJECT ON "EDIT HEADER DETAILS => PROJECT SELECT BOX" (09-12-2023)
-        $projectUserId = [];
-        switch (auth()->user()->UserType) {
-            case 2:
-                $projectUserId = User::where('CreatedBy', auth()->user()->id)->pluck('id')->toArray();
-                $projectUserId[] = $Quotation->UserId;
-                $projectUserId[] = auth()->user()->id;
-                break;
-            case 3:
-                $projectUserId = User::where('CreatedBy', auth()->user()->CreatedBy)->pluck('id')->toArray();
-                $projectUserId[] = $Quotation->UserId;
-                $projectUserId[] = intval(auth()->user()->CreatedBy);
-                break;
-            default:
-                $projectUserId = [$Quotation->UserId, auth()->user()->CreatedBy];
-                break;
-        }
+        $projectUserId = match (auth()->user()->UserType) {
+            2 => User::whereCreatedBy(auth()->id())
+            ->pluck('id')
+            ->push($Quotation->UserId)
+            ->push(auth()->id())
+            ->unique(),
+
+
+            3 => User::whereCreatedBy(auth()->user()->CreatedBy)
+            ->pluck('id')
+            ->push($Quotation->UserId)
+            ->push(auth()->user()->CreatedBy)
+            ->unique(),
+
+
+            default => collect([
+            $Quotation->UserId,
+            auth()->user()->CreatedBy
+            ])
+        };
 
         // $ProjectTable = '<option value="">Select Project</option>';
 
         $ProjectsAddress = '';
         if ($Quotation->MainContractorId != '') {
-            $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
-            if ($dd > 0) {
-                if ($Quotation->ProjectId != '') {
-                    // it show single project it come from project list when create New Quotation press button `New Quotation`
-                    $Projects = Project::where(['UserId' => $Quotation->UserId, 'id' => $Quotation->ProjectId, 'Status' => 1])->get();
-                } else {
-                    // when you directly create quotation it show multiple project
-                    $Projects = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId, 'Status' => 1])->get();
-                }
-            } else {
-                // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
-                $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
-            }
+            // $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
+            // if ($dd > 0) {
+            //     if ($Quotation->ProjectId != '') {
+            //         // it show single project it come from project list when create New Quotation press button `New Quotation`
+            //         $Projects = Project::where(['UserId' => $Quotation->UserId, 'id' => $Quotation->ProjectId, 'Status' => 1])->get();
+            //     } else {
+            //         // when you directly create quotation it show multiple project
+            //         $Projects = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId, 'Status' => 1])->get();
+            //     }
+            // } else {
+            //     // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
+            //     $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
+            // }
 
             $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $Quotation->CompanyId, 'quotation.ProjectId' => $Quotation->ProjectId])->first();
         } else {
             // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
-            $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
+            // $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
         }
 
-        // if($Projects !== null){
-        //     $Projects = $Projects->toArray();
-        //     foreach($Projects as $Project){
-        //         $ProjectTable .= '<option value="'.$Project['id'].'">'.$Project['ProjectName'].'</option>';
-        //     }
-        // }
+        $Projects = Project::whereStatus(1)
+        ->whereIn('UserId', $projectUserId)
+        ->when($Quotation->MainContractorId, function ($q) use ($Quotation) {
+        $q->whereMainContractorId($Quotation->MainContractorId);
+        })
+        ->get();
+
 
         if (!empty($Quotation)) {
 
+            $userIds = CompanyUsers();
+            $margin  = BOMSetting::whereIn('UserId', $userIds)
+                        ->value('margin_for_material');
+
             if ($vId > 0) {
-                $userIds = CompanyUsers();
-                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-                $Schedule = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-                    ->where('quotation_version_items.version_id', $vId)
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id', 'quotation_version_items.version_id')
-                    ->get();
 
-                // Total Door Price
-                $TotalDoorPrice = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
-                    ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-                    ->where(['quotation_version_items.version_id' => $vId, 'items.VersionId' => $vId, 'items.QuotationId' => $Id]);
+                /* Schedule */
+                $Schedule = Item::with([
+                        'versionItem.master'
+                    ])
+                    ->whereHas('versionItem', function ($q) use ($vId) {
+                        $q->where('version_id', $vId);
+                    })
+                    ->get()
+                    ->map(function ($item) {
 
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                        $version = $item->versionItem;
+                        $master  = $version->master ?? null;
+
+                        return [
+                            'FireRating'        => $item->FireRating,
+                            'SvgImage'          => $item->SvgImage,
+                            'DoorType'          => $item->DoorType,
+                            'DoorQuantity'      => $item->DoorQuantity,
+                            'DoorsetType'       => $item->DoorsetType,
+                            'SOWidth'           => $item->SOWidth,
+                            'SOHeight'          => $item->SOHeight,
+                            'SOWallThick'       => $item->SOWallThick,
+                            'AdjustPrice'       => $item->AdjustPrice,
+                            'DoorsetPrice'      => $item->DoorsetPrice,
+                            'IronmongaryPrice'  => $item->IronmongaryPrice,
+                            'itemId'            => $item->itemId,
+
+                            'id'         => $master->id ?? null,
+                            'doorNumber'        => $master->doorNumber ?? null,
+                            'floor'             => $master->floor ?? null,
+                            'version_id'        => $version->version_id,
+                        ];
+                    });
+
+                /* Totals */
+                $totals = Item::where('VersionId', $vId)
+                    ->where('QuotationId', $Id)
+                    ->selectRaw('
+                        SUM(DoorsetPrice) as totalDoor,
+                        SUM(IronmongaryPrice) as totalIron
+                    ')->first();
+
+                $TotalExactDoorPrice    = $totals->totalDoor;
+                $TotalIronmongeryPrice  = $totals->totalIron;
 
                 $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
             } else {
-                $Schedule = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->select('items.FireRating', 'items.SvgImage', 'items.DoorType', 'items.DoorQuantity', 'items.DoorsetType', 'items.SOWidth', 'items.SOHeight', 'items.SOWallThick', 'items.AdjustPrice', 'items.DoorsetPrice', 'items.IronmongaryPrice', 'items.itemId', 'item_master.id', 'item_master.doorNumber', 'item_master.floor', 'item_master.id', 'item_master.id')
-                    ->where(['items.QuotationId' => $Id])->get();
+                 /* Schedule */
+                $Schedule = Item::with('master')
+                    ->where('QuotationId', $Id)
+                    ->get()
+                    ->map(function ($item) {
 
-                // Total Door Price
-                $TotalDoorPrice = Item::join('item_master', 'items.itemId', 'item_master.itemID')
-                    ->where(['items.QuotationId' => $Id]);
-                    // dd( $TotalDoorPrice->get());
-                $TotalExactDoorPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                // $TotalDoorSetPrice = $TotalDoorPrice->sum('items.DoorsetPrice');
-                $TotalIronmongeryPrice = $TotalDoorPrice->sum('items.IronmongaryPrice');
+                        $master = $item->master;
+
+                        return [
+                            'FireRating'        => $item->FireRating,
+                            'SvgImage'          => $item->SvgImage,
+                            'DoorType'          => $item->DoorType,
+                            'DoorQuantity'      => $item->DoorQuantity,
+                            'DoorsetType'       => $item->DoorsetType,
+                            'SOWidth'           => $item->SOWidth,
+                            'SOHeight'          => $item->SOHeight,
+                            'SOWallThick'       => $item->SOWallThick,
+                            'AdjustPrice'       => $item->AdjustPrice,
+                            'DoorsetPrice'      => $item->DoorsetPrice,
+                            'IronmongaryPrice'  => $item->IronmongaryPrice,
+                            'itemId'            => $item->itemId,
+
+                            'id'         => $master->id ?? null,
+                            'doorNumber'        => $master->doorNumber ?? null,
+                            'floor'             => $master->floor ?? null,
+                        ];
+                    });
+
+                /* Totals */
+                $totals = Item::where('QuotationId', $Id)
+                    ->selectRaw('
+                        SUM(DoorsetPrice) as totalDoor,
+                        SUM(IronmongaryPrice) as totalIron
+                    ')->first();
+
+                $TotalExactDoorPrice    = $totals->totalDoor;
+                $TotalIronmongeryPrice  = $totals->totalIron;
 
                 $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id])
                 ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
@@ -4294,66 +4357,7 @@ class DoorScheduleController extends Controller
 
 
             $nonconfigdata = NonConfigurableItems::wherein('userId', CompanyUsers())->orderBy('id', 'desc')->get();
-            $NonConfig = '<div class="col-sm-12 p-0">
-            <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead class="table-header-bg">
-                        <tr class="text-white">
-                            <th>Line</th>
-                            <th>Name</th>
-                            <th>Image</th>
-                            <th>Product Code</th>
-                            <th>Description</th>
-                            <th>Unit</th>
-                            <th>Price</th>
-                            <th>Qty</th>
-                            <th>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody id="versionData">';
-            $SI = 1;
-            foreach ($nonconfigdata as $value) {
-                // $NonConfig .=
-                // '
-                // <div class="col-sm-6 p-0 pr-1">
-                //     <div class="Quote_tems">
-                //         <img src="'.$nonconfigdatas->NonconfiBase64.'">
-                //         <a href="javascript:void(0);">'.$nonconfigdatas->name.'</a>
-                //         <p class="description_msg">
-                //             '.$nonconfigdatas->description.'
-                //         </p>
-                //         <p class="nonConfigData">Product Code : <span>'.$nonconfigdatas->product_code.'</span></p>
-                //         <p class="nonConfigData">Unit : <span>'.$nonconfigdatas->unit.'</span></p>
-                //         <p class="nonConfigData">Price : <span>$'.$nonconfigdatas->price.'</span></p>
-                //         <input type="number" class="form-control " placeholder="Quantity" style="display:inline-block !important; max-width: 120px;font-size: 14px !important;" id="nonconfigQuantity-'.$nonconfigdatas->id.'" value="">
-                //         <a href="javascript:void(0);" data-type="strebord" onclick="nonConfigStore('.$Id.','.$vId.','.$nonconfigdatas->id.','.$nonconfigdatas->price.');" class="configure_btn">Non Configure</a>
-                //     </div>
-                // </div>
-                // ';
-                $NonConfig .= '<tr>
-                <td>' . $SI++ . '</td>
-                <td>' . $value->name . '</td>
-                <td><img loading="lazy" src="' . $value->NonconfiBase64 . '" alt="Non-ConfigImage" style="width: 100px;"></td>
-                <td>' . $value->product_code . '</td>
-                <td> <p style="max-width: 200px;">
-                    <script>
-                        document.write(ReadMore(5, ' . json_encode($value->description) . '))
-                    </script>
-                </p></td>
-                <td>' . $value->unit . '</td>
-                <td>' . floatval($value->price) . '</td>
-                <td><input type="number" class="form-control nonconfigQut" placeholder="Quantity" style="margin: 0 auto; max-width: 50px;font-size: 14px !important;" id="nonconfigQuantity-' . $value->id . '" value=""></td>
-                <td><a href="javascript:void(0);" data-type="strebord" onclick="nonConfigStore(' . $Id . ',' . $vId . ',' . $value->id . ',' . $value->price . ');" class="configure_btn">Add</a></td>
-            </tr>';
-            }
 
-            $NonConfig .= '</tbody></table></div></div></div>';
-            //     <script type="text/javascript">
-            //          document.write(ReadMore(5,"'.$nonconfigdatas->description.'"))
-            //     </script>
-            // hide or disabled 'Add Item' button from GenerateQuotation.blade page
-            // Button only appear when version is selected.
             $selectQV = ['selectVersionID' => 0, 'selectVersion' => 0, 'discountQuotation' => 0];
             $additem = 0;
             if ($vId > 0) {
@@ -4578,7 +4582,6 @@ class DoorScheduleController extends Controller
                 'QuotationContactInformation' => $QuotationContactInformation,
                 'QuotationShipToInformation' => $QuotationShipToInformation,
                 'additem' => $additem,
-                'NonConfig' => $NonConfig,
                 'TotalDoorPrice' => $TotalDoorSetPrice,
                 'TotalExactDoorPrice' => $TotalExactDoorPrice,
                 'TotalIronmongeryPrice' => $TotalIronmongeryPrice,
@@ -4593,11 +4596,12 @@ class DoorScheduleController extends Controller
                 'currency' => $currency,
                 'Favorite' => $Favorite,
                 'ProjectsAddress' => $ProjectsAddress,
-                'nonConfigData' => $nonConfigData,
+                'nonconfigdata' => $nonconfigdata,
                 'ProjectId' => $Quotation->ProjectId,
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
                 'setIronmongery' => $setIronmongery,
                 'floor' => $floor,
+                'vId' => $vId,
             ]);
         } else {
             return redirect()->route('quotation/list');
