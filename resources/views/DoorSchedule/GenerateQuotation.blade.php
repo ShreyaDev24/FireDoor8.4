@@ -436,7 +436,65 @@
                                                     <div id="configurable" class="tab-pane active">
                                                         <h3 class="card-title ">Configurable Items</h3>
                                                         <div class="row m-0">
-                                                            {!! $configItem !!}
+                                                            @foreach ($configurableItem as $ci)
+
+                                                            {{-- BUTTON LOGIC --}}
+                                                            @php
+                                                                $showButtons = empty($quotation_data->configurableitems)
+                                                                    || $quotation_data->configurableitems == $ci->id;
+                                                            @endphp
+
+                                                            <div class="col-sm-6 p-0 pr-1">
+
+                                                                <div class="{{ $ci->name == 'Vicaima' ? 'Quote_tems_vicima' : 'Quote_tems' }}">
+
+                                                                    <img loading="lazy"
+                                                                        src="{{ url('/images/' . $ci->img) }}"
+                                                                        style="height: 52px;">
+
+                                                                    <a href="#">
+                                                                        {{ $ci->name }}
+                                                                        @if ($ci->name == 'Vicaima')
+                                                                            - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A
+                                                                        @endif
+                                                                    </a>
+
+                                                                    <input type="hidden" value="{{ $ci->id }}" class="configItemId">
+
+                                                                    @if ($ci->name == 'Vicaima')
+                                                                        <p class="vicimanewcss">
+                                                                            Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical
+                                                                        </p>
+                                                                    @else
+                                                                        <p>Configurable On Configuration</p>
+                                                                    @endif
+
+                                                                    {{-- BUTTONS --}}
+                                                                    @if ($showButtons)
+
+                                                                        <a href="javascript:void(0);"
+                                                                        data-type="{{ $ci->id }}"
+                                                                        class="configure_btn">
+                                                                            Create <br>Door Set
+                                                                        </a>
+
+                                                                        <a href="javascript:void(0);"
+                                                                        data-type="{{ $ci->id }}"
+                                                                        class="configure_btn configure_door_btn">
+                                                                            Add Additional <br> Door Set
+                                                                        </a>
+
+                                                                    @else
+                                                                        <p class="configure_btn">
+                                                                            Another Door is selected for these quotation
+                                                                        </p>
+                                                                    @endif
+
+                                                                </div>
+                                                            </div>
+
+                                                        @endforeach
+
                                                         </div>
                                                     </div>
                                                     <div id="nonconfigurable" class="tab-pane fade">
@@ -1080,7 +1138,6 @@
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
-            var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
                 $("#ManualAddForm").modal('show');

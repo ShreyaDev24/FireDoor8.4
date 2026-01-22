@@ -4179,58 +4179,46 @@ class DoorScheduleController extends Controller
         }
 
         // NEED TO SHOW ALL PROJECT ON "EDIT HEADER DETAILS => PROJECT SELECT BOX" (09-12-2023)
-        $projectUserId = match (auth()->user()->UserType) {
-            2 => User::whereCreatedBy(auth()->id())
-            ->pluck('id')
-            ->push($Quotation->UserId)
-            ->push(auth()->id())
-            ->unique(),
-
-
-            3 => User::whereCreatedBy(auth()->user()->CreatedBy)
-            ->pluck('id')
-            ->push($Quotation->UserId)
-            ->push(auth()->user()->CreatedBy)
-            ->unique(),
-
-
-            default => collect([
-            $Quotation->UserId,
-            auth()->user()->CreatedBy
-            ])
-        };
+        $projectUserId = [];
+        switch (auth()->user()->UserType) {
+            case 2:
+                $projectUserId = User::where('CreatedBy', auth()->user()->id)->pluck('id')->toArray();
+                $projectUserId[] = $Quotation->UserId;
+                $projectUserId[] = auth()->user()->id;
+                break;
+            case 3:
+                $projectUserId = User::where('CreatedBy', auth()->user()->CreatedBy)->pluck('id')->toArray();
+                $projectUserId[] = $Quotation->UserId;
+                $projectUserId[] = intval(auth()->user()->CreatedBy);
+                break;
+            default:
+                $projectUserId = [$Quotation->UserId, auth()->user()->CreatedBy];
+                break;
+        }
 
         // $ProjectTable = '<option value="">Select Project</option>';
 
         $ProjectsAddress = '';
         if ($Quotation->MainContractorId != '') {
-            // $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
-            // if ($dd > 0) {
-            //     if ($Quotation->ProjectId != '') {
-            //         // it show single project it come from project list when create New Quotation press button `New Quotation`
-            //         $Projects = Project::where(['UserId' => $Quotation->UserId, 'id' => $Quotation->ProjectId, 'Status' => 1])->get();
-            //     } else {
-            //         // when you directly create quotation it show multiple project
-            //         $Projects = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId, 'Status' => 1])->get();
-            //     }
-            // } else {
-            //     // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
-            //     $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
-            // }
+            $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
+            if ($dd > 0) {
+                if ($Quotation->ProjectId != '') {
+                    // it show single project it come from project list when create New Quotation press button `New Quotation`
+                    $Projects = Project::where(['UserId' => $Quotation->UserId, 'id' => $Quotation->ProjectId, 'Status' => 1])->get();
+                } else {
+                    // when you directly create quotation it show multiple project
+                    $Projects = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId, 'Status' => 1])->get();
+                }
+            } else {
+                // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
+                $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
+            }
 
             $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $Quotation->CompanyId, 'quotation.ProjectId' => $Quotation->ProjectId])->first();
         } else {
-            // $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
-            // $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
+            $Projects = Project::where(['UserId' => $Quotation->UserId , 'Status' => 1])->get();
+            $Projects = Project::where(['Status' => 1])->whereIn('UserId', $projectUserId)->get();
         }
-
-        $Projects = Project::whereStatus(1)
-        ->whereIn('UserId', $projectUserId)
-        ->when($Quotation->MainContractorId, function ($q) use ($Quotation) {
-        $q->whereMainContractorId($Quotation->MainContractorId);
-        })
-        ->get();
-
 
         if (!empty($Quotation)) {
 
@@ -4335,9 +4323,12 @@ class DoorScheduleController extends Controller
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, CompanyUsers(), '', true);
             $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
-            $Version = QuotationVersion::where('quotation_id', $Id)->get()->toArray();
-            $MaxVersion = QuotationVersion::where('quotation_id', $Id)->max('version');
-            $VersionId = QuotationVersion::where('quotation_id', $Id)->where('id', $vId)->value('version');
+
+            $versions = QuotationVersion::where('quotation_id', $Id)->select('id', 'version')->get();
+            $Version    = $versions->toArray();
+            $MaxVersion = $versions->max('version');
+            $VersionId  = $versions->firstWhere('id', $vId)?->version;
+
             $SideScreenData = $SideScreenData->get();
             $companykacustomer = "";
             $customerMultiContact = "";
@@ -4368,129 +4359,9 @@ class DoorScheduleController extends Controller
             // Configurable Items
             $configurableItem = ConfigurableItems::orderBy('orderBy','ASC')->get();
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-            $configItem = '';
-            foreach ($configurableItem as $ci) {
-                if (!empty($Quotation->configurableitems)) {
-                    if ($Quotation->configurableitems == $ci->id) {
-                        $btnLink = '<a href="javascript:void(0);" data-type="' . $ci->id . '"
-                            class="configure_btn">Create <br>Door Set</a>
-                            <a href="javascript:void(0);"
-                            data-type="' . $ci->id . '" class="configure_btn configure_door_btn">Add
-                            Additional <br> Door Set</a>';
-                    } else {
-                        $btnLink = '<p class="configure_btn"> Another Door is selected for these quotation</p>';
-                    }
-                } else {
-                    $btnLink =
-                        '
-                        <a href="javascript:void(0);" data-type="' . $ci->id . '"
-                        class="configure_btn">Create <br>Door Set</a>
-                        <a href="javascript:void(0);"
-                        data-type="' . $ci->id . '" class="configure_btn configure_door_btn">Add
-                        Additional <br> Door Set</a>
-                    ';
-                }
-                // dd($ci);
-                if($ci->name == 'Vicaima'){
-                    $configItem .=
-                        '<div class="col-sm-6 p-0 pr-1">
-                            <div class="Quote_tems_vicima">
-                                <img loading="lazy" src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
-                                <a href="#">' . $ci->name . ' - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A </a>
-                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
-                                <p class="vicimanewcss">Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical</p>
-                                ' . $btnLink . '
-                            </div>
-                        </div>
-                    ';
-                } else {
-                    $configItem .=
-                        '<div class="col-sm-6 p-0 pr-1">
-                            <div class="Quote_tems">
-                                <img loading="lazy" src="' . url('/') . '/images/' . $ci->img . '" style="height: 52;">
-                                <a href="#">' . $ci->name . '</a>
-                                <input type="hidden" value="' . $ci->id . '" class="configItemId">
-                                <p>Configurable On Configuration</p>
-                                ' . $btnLink . '
-                            </div>
-                        </div>
-                    ';
-                }
-            }
 
-            $countDeliveryAddressInEditHeader = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->count();
-            $xx = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->get();
-            $DA = '';
-            $loop = 0;
-            foreach ($xx as $xxs) {
-                $plus = '';
-                if ($loop == 0) {
-                    $plus = '
-                    <div>
-                        <a style="float: right; margin-right: 10px; margin-top: -45px" href="javascript:void(0);" id="add-customer-detail" class="btn-shadow btn btn-success">
-                            <i class="fa fa-plus"></i>
-                        </a>
-                    </div>';
-                } else {
-                    $plus = '
-                    <div>
-                        <input type="hidden" class="QuotDeliverAddrID" value="' . $xxs->id . '">
-                        <a style="float: right; margin-right: 10px; margin-top: -45px" href="javascript:void(0);" class="btn-shadow btn btn-danger deleteQuotDeliverAddr">
-                            <i class="fa fa-remove"></i>
-                        </a>
-                    </div>';
-                }
-
-                $DA .= '
-                <input type="hidden" name="quotation_sitedeliveryaddressID[]" value="' . $xxs->id . '">
-                <div class="col-sm-12">
-                    <div class="card-header">
-                        <h5 class="card-title" style="margin-top: 10px">Site Delivery Address</h5>
-                    </div>
-                    ' . $plus . '
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="position-relative form-group">
-                                <label for="Address1">Address 1<span
-                                        class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="Address1[]"
-                                    value="' . $xxs->Address1 . '" required>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="position-relative form-group">
-                                <label for="Address2">Address 2</label>
-                                <input type="text" class="form-control" name="Address2[]"
-                                    value="' . $xxs->Address2 . '">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="position-relative form-group">
-                                <label for="Country">Country</label>
-                                <input type="text" class="form-control" name="Country[]"
-                                    value="' . $xxs->Country . '">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="position-relative form-group">
-                                <label for="City">City</label>
-                                <input type="text" class="form-control" name="City[]"
-                                    value="' . $xxs->City . '">
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="position-relative form-group">
-                                <label for="PostalCode">Postal Code/Eircode</label>
-                                <input type="text" class="form-control" name="PostalCode[]"
-                                    value="' . $xxs->PostalCode . '">
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                ';
-                $loop++;
-            }
+            $deliveryAddresses = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->get();
+            $countDeliveryAddressInEditHeader = $deliveryAddresses->count();
 
             $currency = SettingCurrency::where('UserId', Auth::user()->id)->first();
             $quotation_data = Quotation::where('id', $Id)->first();
@@ -4499,63 +4370,6 @@ class DoorScheduleController extends Controller
             } else {
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
-            }
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
-            $IronmongeryInfoSet = [
-                'Hinges',
-                'FloorSpring',
-                'LocksAndLatches',
-                'FlushBolts',
-                'ConcealedOverheadCloser',
-                'PullHandles',
-                'PushHandles',
-                'KickPlates',
-                'DoorSelectors',
-                'PanicHardware',
-                'Doorsecurityviewer',
-                'Morticeddropdownseals',
-                'Facefixeddropseals',
-                'ThresholdSeal',
-                'AirTransferGrill',
-                'Letterplates',
-                'CableWays',
-                'SafeHinge',
-                'LeverHandle',
-                'DoorSinage',
-                'FaceFixedDoorCloser',
-                'Thumbturn',
-                'KeyholeEscutchen',
-                'DoorStops',
-                'Cylinders'
-            ];
-
-            // Process the data and merge
-            foreach ($setIronmongery as $ironmongery) {
-                $additionalInfo = []; // Temporary array to hold additional info
-
-                foreach ($IronmongeryInfoSet as $valIronmongery) {
-                    // Check if the property exists and is not empty
-                    if (!empty($ironmongery->$valIronmongery)) {
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if (!empty($SelectedIronmongery)) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                    ->first();
-                            if(empty($IronmongeryInfoModel)){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if (!empty($IronmongeryInfoModel)) {
-                                $additionalInfo[] = $IronmongeryInfoModel;
-                            }
-                        }
-                    }
-                }
-
-                // Dynamically add the additional_info attribute
-                $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
@@ -4589,17 +4403,15 @@ class DoorScheduleController extends Controller
                 'nonConfigDataPrice' => $nonConfigDataPrice,
                 'screenDataprice' => $screenDataprice,
                 'selectQV' => $selectQV,
-                'configItem' => $configItem,
+                'configurableItem' => $configurableItem,
                 'countDeliveryAddressInEditHeader' => $countDeliveryAddressInEditHeader,
-                'QuotationSiteDeliveryAddress' => $xx,
-                'DA' => $DA,
+                'deliveryAddresses' => $deliveryAddresses,
                 'currency' => $currency,
                 'Favorite' => $Favorite,
                 'ProjectsAddress' => $ProjectsAddress,
                 'nonconfigdata' => $nonconfigdata,
                 'ProjectId' => $Quotation->ProjectId,
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
-                'setIronmongery' => $setIronmongery,
                 'floor' => $floor,
                 'vId' => $vId,
             ]);
