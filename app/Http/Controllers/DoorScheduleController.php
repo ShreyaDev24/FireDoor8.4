@@ -98,6 +98,9 @@ use App\Exports\BomCalculationScreenExport;
 use Illuminate\Support\Facades\Validator;
 use App\Exports\ExportReport;
 use Illuminate\Support\Facades\Log;
+use App\Jobs\RecalculateItemsBOMJob;
+use App\Jobs\RecalculateNonConfigurableItemsJob;
+use App\Jobs\RecalculateSideScreenItemsJob;
 
 class DoorScheduleController extends Controller
 {
@@ -136,11 +139,12 @@ class DoorScheduleController extends Controller
         $quotationId = $request->quotationId;
         $selectVersionID = $request->selectVersionID;
 
-
+        $existCurrency = '';
         // Quote Information fields
         if (!empty($quotationId)) {
             $array_data[1] = 0;
             $quotation = Quotation::find($quotationId);
+            $existCurrency = $quotation->Currency;
         } else {
             $quotation = new Quotation();
             $quotation->MainContractorId = $request->MainContractorId;
@@ -241,79 +245,86 @@ class DoorScheduleController extends Controller
         $quoteShipInfo->updated_at = date('Y-m-d H:i:s');
         $quoteShipInfo->save();
 
-        $Items = Item::where(['items.QuotationId' => $quotationId, 'items.VersionId' => $selectVersionID])->get();
-
-        $quotation = Quotation::where('id',$quotationId)->first();
-
-        if(!empty($Items)){
-            foreach($Items as $data){
-                $itemid = $data->itemId;
-
-                BOMUpdate($data, $quotation->configurableitems);
-
-                $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$quotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-                $GTSellPrice = 0;
-                $GTSellPriceTotal = 0;
-                if(!empty($BOMCalculation)){
-                    foreach($BOMCalculation as $value){
-                        if($value->Category != 'Ironmongery&MachiningCosts'){
-                            $GTSellPrice += $value->GTSellPrice;
-                        }
-                    }
-
-                    $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                    $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
-                }
-
-                Item::where('itemId', $itemid)->update([
-                    'DoorsetPrice' => $GTSellPriceTotal,
-                ]);
-            }
+        if($existCurrency !== $request->Currency){
+            $userLoginId = auth()->user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
+            dispatch(new RecalculateItemsBOMJob($quotationId, $selectVersionID,$userLoginId));
+            dispatch(new RecalculateNonConfigurableItemsJob($quotationId, $selectVersionID,$userLoginId));
+            dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId));
         }
 
-        $NonConfigurableItemStore = NonConfigurableItemStore::where(['non_configurable_item_store.quotationId' => $quotationId, 'non_configurable_item_store.versionId' => $selectVersionID])->get();
-        $currencyPrice = getCurrencyRate($quotationId);
-        $margin = QuotationVersion::where(['quotation_id'=> $quotationId,'id'=> $selectVersionID])->value('discountQuotation');
-        if(!empty($NonConfigurableItemStore)){
-            foreach($NonConfigurableItemStore as $val){
-                $NonConfigurableItems = NonConfigurableItems::where('id',$val->nonConfigurableId)->first();
-                $QuoteSummaryDiscountValue = 0 ;
-                if($margin != 0){
-                    $QuoteSummaryDiscountValue = ($NonConfigurableItems->price * $margin) / 100;
-                }
+        // $Items = Item::where(['items.QuotationId' => $quotationId, 'items.VersionId' => $selectVersionID])->get();
 
-                $price = ($margin > 0)? ($NonConfigurableItems->price + $QuoteSummaryDiscountValue):
-                ($NonConfigurableItems->price - $QuoteSummaryDiscountValue);
-                NonConfigurableItemStore::where('id', $val->id)->update([
-                    'price' => $price * $currencyPrice,
-                    'total_price' => $price * $val->quantity * $currencyPrice,
-                ]);
-            }
-        }
+        // $quotation = Quotation::where('id',$quotationId)->first();
 
-        $SideScreenItems = SideScreenItem::where(['side_screen_items.QuotationId' => $quotationId, 'side_screen_items.VersionId' => $selectVersionID])->get();
-        if(!empty($SideScreenItems)){
-            foreach($SideScreenItems as $data){
-                $id = $data->id;
-                sideScreenBOM($data);
+        // if(!empty($Items)){
+        //     foreach($Items as $data){
+        //         $itemid = $data->itemId;
 
-                $ScreenBOMCalculation = ScreenBOMCalculation::select('*')->where('QuotationId',$quotationId)->where('ScreenType',$data->ScreenType)->where('ScreenId',$id)->get();
-                $GTSellPrice = 0;
-                $GTSellPriceTotal = 0;
-                if(!empty($ScreenBOMCalculation)){
-                    foreach($ScreenBOMCalculation as $value){
-                        $GTSellPrice += $value->GTSellPrice;
-                    }
+        //         BOMUpdate($data, $quotation->configurableitems);
 
-                    $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
-                    $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
-                }
+        //         $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$quotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
+        //         $GTSellPrice = 0;
+        //         $GTSellPriceTotal = 0;
+        //         if(!empty($BOMCalculation)){
+        //             foreach($BOMCalculation as $value){
+        //                 if($value->Category != 'Ironmongery&MachiningCosts'){
+        //                     $GTSellPrice += $value->GTSellPrice;
+        //                 }
+        //             }
 
-                SideScreenItem::where('id', $id)->update([
-                    'ScreenPrice' => $GTSellPriceTotal
-                ]);
-            }
-        }
+        //             $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
+        //             $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
+        //         }
+
+        //         Item::where('itemId', $itemid)->update([
+        //             'DoorsetPrice' => $GTSellPriceTotal,
+        //         ]);
+        //     }
+        // }
+
+        // $NonConfigurableItemStore = NonConfigurableItemStore::where(['non_configurable_item_store.quotationId' => $quotationId, 'non_configurable_item_store.versionId' => $selectVersionID])->get();
+        // $currencyPrice = getCurrencyRate($quotationId);
+        // $margin = QuotationVersion::where(['quotation_id'=> $quotationId,'id'=> $selectVersionID])->value('discountQuotation');
+        // if(!empty($NonConfigurableItemStore)){
+        //     foreach($NonConfigurableItemStore as $val){
+        //         $NonConfigurableItems = NonConfigurableItems::where('id',$val->nonConfigurableId)->first();
+        //         $QuoteSummaryDiscountValue = 0 ;
+        //         if($margin != 0){
+        //             $QuoteSummaryDiscountValue = ($NonConfigurableItems->price * $margin) / 100;
+        //         }
+
+        //         $price = ($margin > 0)? ($NonConfigurableItems->price + $QuoteSummaryDiscountValue):
+        //         ($NonConfigurableItems->price - $QuoteSummaryDiscountValue);
+        //         NonConfigurableItemStore::where('id', $val->id)->update([
+        //             'price' => $price * $currencyPrice,
+        //             'total_price' => $price * $val->quantity * $currencyPrice,
+        //         ]);
+        //     }
+        // }
+
+        // $SideScreenItems = SideScreenItem::where(['side_screen_items.QuotationId' => $quotationId, 'side_screen_items.VersionId' => $selectVersionID])->get();
+        // if(!empty($SideScreenItems)){
+        //     foreach($SideScreenItems as $data){
+        //         $id = $data->id;
+        //         sideScreenBOM($data);
+
+        //         $ScreenBOMCalculation = ScreenBOMCalculation::select('*')->where('QuotationId',$quotationId)->where('ScreenType',$data->ScreenType)->where('ScreenId',$id)->get();
+        //         $GTSellPrice = 0;
+        //         $GTSellPriceTotal = 0;
+        //         if(!empty($ScreenBOMCalculation)){
+        //             foreach($ScreenBOMCalculation as $value){
+        //                 $GTSellPrice += $value->GTSellPrice;
+        //             }
+
+        //             $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
+        //             $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+        //         }
+
+        //         SideScreenItem::where('id', $id)->update([
+        //             'ScreenPrice' => $GTSellPriceTotal
+        //         ]);
+        //     }
+        // }
 
         \Session::flash('status', 'success');
         \Session::flash('message', 'Headers added successfully!!!');
