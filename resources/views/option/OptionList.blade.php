@@ -140,7 +140,7 @@ input {
                                 <td><img src="{{url('/')}}/uploads/Options/{{$file}}" style="width:50px;height:50px;"></td>
                                 <td style="width: 20% !important;word-break: break-all;">
                                     <script type="text/javascript">
-                                        document.write(ReadMore(30,"{!! $row->OptionKey !!}"))
+                                        document.write(ReadMore(30, {!! json_encode($row->OptionKey) !!}))
                                     </script>
                                 </td>
                                 <td style="width: 20% !important;word-break: break-all;">{{$row->OptionValue}}</td>

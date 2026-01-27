@@ -436,13 +436,150 @@
                                                     <div id="configurable" class="tab-pane active">
                                                         <h3 class="card-title ">Configurable Items</h3>
                                                         <div class="row m-0">
-                                                            {!! $configItem !!}
+                                                            @foreach ($configurableItem as $ci)
+
+                                                            {{-- BUTTON LOGIC --}}
+                                                            @php
+                                                                $showButtons = empty($quotation_data->configurableitems)
+                                                                    || $quotation_data->configurableitems == $ci->id;
+                                                            @endphp
+
+                                                            <div class="col-sm-6 p-0 pr-1">
+
+                                                                <div class="{{ $ci->name == 'Vicaima' ? 'Quote_tems_vicima' : 'Quote_tems' }}">
+
+                                                                    <img loading="lazy"
+                                                                        src="{{ url('/images/' . $ci->img) }}"
+                                                                        style="height: 52px;">
+
+                                                                    <a href="#">
+                                                                        {{ $ci->name }}
+                                                                        @if ($ci->name == 'Vicaima')
+                                                                            - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A
+                                                                        @endif
+                                                                    </a>
+
+                                                                    <input type="hidden" value="{{ $ci->id }}" class="configItemId">
+
+                                                                    @if ($ci->name == 'Vicaima')
+                                                                        <p class="vicimanewcss">
+                                                                            Please check Fanlights/ Side Lights / Over Panels with Vicaima Technical
+                                                                        </p>
+                                                                    @else
+                                                                        <p>Configurable On Configuration</p>
+                                                                    @endif
+
+                                                                    {{-- BUTTONS --}}
+                                                                    @if ($showButtons)
+
+                                                                        <a href="javascript:void(0);"
+                                                                        data-type="{{ $ci->id }}"
+                                                                        class="configure_btn">
+                                                                            Create <br>Door Set
+                                                                        </a>
+
+                                                                        <a href="javascript:void(0);"
+                                                                        data-type="{{ $ci->id }}"
+                                                                        class="configure_btn configure_door_btn">
+                                                                            Add Additional <br> Door Set
+                                                                        </a>
+
+                                                                    @else
+                                                                        <p class="configure_btn">
+                                                                            Another Door is selected for these quotation
+                                                                        </p>
+                                                                    @endif
+
+                                                                </div>
+                                                            </div>
+
+                                                        @endforeach
+
                                                         </div>
                                                     </div>
                                                     <div id="nonconfigurable" class="tab-pane fade">
                                                         <h3 class="card-title">Non Configurable Items</h3>
                                                         <div class="row">
-                                                            {!! $NonConfig !!}
+                                                            {{--  {!! $NonConfig !!}  --}}
+                                                            <div class="col-sm-12 p-0">
+                                                                <div class="card-body">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered table-striped">
+                                                                            <thead class="table-header-bg">
+                                                                                <tr class="text-white">
+                                                                                    <th>Line</th>
+                                                                                    <th>Name</th>
+                                                                                    <th>Image</th>
+                                                                                    <th>Product Code</th>
+                                                                                    <th>Description</th>
+                                                                                    <th>Unit</th>
+                                                                                    <th>Price</th>
+                                                                                    <th>Qty</th>
+                                                                                    <th>Total</th>
+                                                                                </tr>
+                                                                            </thead>
+
+                                                                            <tbody id="versionData">
+                                                                                @php $SI = 1; @endphp
+
+                                                                                @foreach($nonconfigdata as $value)
+                                                                                    <tr>
+                                                                                        <td>{{ $SI++ }}</td>
+
+                                                                                        <td>{{ $value->name }}</td>
+
+                                                                                        <td>
+                                                                                            <img loading="lazy"
+                                                                                                src="{{ $value->NonconfiBase64 }}"
+                                                                                                alt="Non-Config Image"
+                                                                                                style="width: 100px;">
+                                                                                        </td>
+
+                                                                                        <td>{{ $value->product_code }}</td>
+
+                                                                                        <td>
+                                                                                            <p style="max-width: 200px;">
+                                                                                                <script>
+                                                                                                    document.write(
+                                                                                                        ReadMore(5, @json($value->description))
+                                                                                                    );
+                                                                                                </script>
+                                                                                            </p>
+                                                                                        </td>
+
+                                                                                        <td>{{ $value->unit }}</td>
+
+                                                                                        <td>{{ number_format($value->price, 2) }}</td>
+
+                                                                                        <td>
+                                                                                            <input type="number"
+                                                                                                class="form-control nonconfigQut"
+                                                                                                placeholder="Quantity"
+                                                                                                style="margin: 0 auto; max-width: 50px; font-size: 14px;"
+                                                                                                id="nonconfigQuantity-{{ $value->id }}">
+                                                                                        </td>
+
+                                                                                        <td>
+                                                                                            <a href="javascript:void(0);"
+                                                                                            class="configure_btn"
+                                                                                            onclick="nonConfigStore(
+                                                                                                {{ $quotationId }},
+                                                                                                {{ $vId }},
+                                                                                                {{ $value->id }},
+                                                                                                {{ $value->price }}
+                                                                                            );">
+                                                                                                Add
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                @endforeach
+                                                                            </tbody>
+
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
                                                     </div>
                                                 </div>
@@ -525,91 +662,134 @@
                                         </thead>
                                         <tbody id="versionData">
                                             @if (!empty($data) && count($data) > 0)
-                                                <?php $index = 0;
-                                                $SI = 1; ?>
+
+                                                @php
+                                                    $index = 0;
+                                                    $SI = 1;
+                                                @endphp
+
                                                 @foreach ($data as $row)
-                                                    @if (!empty($row->version_id))
-                                                        @php
-                                                            $version_id = $row->version_id;
-                                                        @endphp
-                                                    @else
-                                                        @php
-                                                            $version_id = 0;
-                                                        @endphp
-                                                    @endif
+
                                                     @php
-                                                        $SvgImage = '';
+                                                        $version_id = $row['version_id'] ?? 0;
+                                                        $SvgImage = empty($row['SvgImage']) ? 'color_red' : '';
                                                     @endphp
-                                                    @if (empty($row->SvgImage))
-                                                        @php
-                                                            $SvgImage = 'color_red';
-                                                        @endphp
+
+                                                    {{-- 🔥 LOOP DOORS --}}
+                                                    @if (!empty($row['doors']) && count($row['doors']) > 0)
+                                                        @foreach ($row['doors'] as $door)
+
+                                                            <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
+                                                                <td>
+                                                                    {{ $SI }}
+                                                                    <input type="hidden" class="check" value="{{ $row['itemId'] }}">
+                                                                    <input type="hidden" class="doors_{{ $index }}" value="{{ $door['id'] }}">
+                                                                </td>
+
+                                                                <td>{{ $row['DoorQuantity'] }}</td>
+                                                                <td>{{ $row['FireRating'] }}</td>
+                                                                <td>{{ $row['DoorType'] }}</td>
+                                                                <td>{{ $door['doorNumber'] }}</td>
+                                                                <td>{{ $door['floor'] }}</td>
+                                                                <td>{{ $row['DoorsetType'] }}</td>
+                                                                <td>{{ $row['SOWidth'] }}</td>
+                                                                <td>{{ $row['SOHeight'] }}</td>
+                                                                <td>{{ $row['SOWallThick'] }}</td>
+
+                                                                <td>
+                                                                    {{ number_format(
+                                                                        ($row['AdjustPrice'] ? floatval($row['AdjustPrice']) : floatval($row['DoorsetPrice'])),
+                                                                        2
+                                                                    ) }}
+                                                                </td>
+
+                                                                <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
+
+                                                                <td>
+                                                                    {{ number_format(
+                                                                        ($row['AdjustPrice']
+                                                                            ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'])
+                                                                            : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])),
+                                                                        2
+                                                                    ) }}
+                                                                </td>
+
+                                                                <td class="text-center">
+                                                                    <div class="dropdown">
+                                                                        <a class="dropdown-toggle btn btn-light" data-toggle="dropdown">
+                                                                            <i class="fa fa-ellipsis-h"></i>
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu drop_style">
+
+                                                                            <li>
+                                                                                <a href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">
+                                                                                    Edit
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="FloorNoChange(
+                                                                                    '{{ $door['id'] }}',
+                                                                                    '{{ $row['DoorType'] }}',
+                                                                                    '{{ $door['doorNumber'] }}'
+                                                                                )" href="javascript:void(0);">
+                                                                                    Edit Floor No.
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a href="{{ url('quotation/add-new-doors') }}/{{ $quotationId }}/{{ $version_id }}/{{ $row['itemId'] }}">
+                                                                                    Add New
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="adjustPrice(
+                                                                                    {{ $row['itemId'] }},
+                                                                                    {{ $door['id'] }},
+                                                                                    {{ floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) }}
+                                                                                )" href="javascript:void(0);">
+                                                                                    Adjust Price
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="CopyDoorSet({{ $quotationId }}, {{ $door['id'] }})"
+                                                                                href="javascript:void(0);">
+                                                                                    Copy
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="remove_item({{ $door['id'] }})" href="javascript:void(0);">
+                                                                                    Remove
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="edit_image1({{ $row['itemId'] }})"
+                                                                                href="javascript:void(0);">
+                                                                                    Validate
+                                                                                </a>
+                                                                            </li>
+
+                                                                        </ul>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+
+                                                            @php
+                                                                $index++;
+                                                                $SI++;
+                                                            @endphp
+
+                                                        @endforeach
                                                     @endif
-                                                    <tr id="validate{{ $row->itemId }}" class="{{ $SvgImage }}">
-                                                        <td>
-                                                            {{ $SI }}
-                                                            <input type="hidden" class="check"
-                                                                value="{{ $row->itemId }}">
-                                                            <input type="hidden" class="doors_{{ $index }}"
-                                                                value="{{ $row->id }}">
-                                                        </td>
-                                                        <td>{{ $row->DoorQuantity }}</td>
-                                                        <td>{{ $row->FireRating }}</td>
-                                                        <td>{{ $row->DoorType }}</td>
-                                                        <td>{{ $row->doorNumber }}</td>
-                                                        <td>{{ $row->floor }}</td>
-                                                        <td>{{ $row->DoorsetType }}</td>
-                                                        <td>{{ $row->SOWidth }}</td>
-                                                        <td>{{ $row->SOHeight }}</td>
-                                                        <td>{{ $row->SOWallThick }}</td>
-                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) :floatval($row->DoorsetPrice)),2) }}</td>
-                                                        <td>{{ number_format($row->IronmongaryPrice,2) }}</td>
-                                                        <td>{{ number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2)  }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="dropdown">
-                                                                <a class="dropdown-toggle btn btn-light" type="button"
-                                                                    data-toggle="dropdown"><i
-                                                                        class="fa fa-ellipsis-h"></i></a>
-                                                                <ul class="dropdown-menu drop_style">
-                                                                    <li><a
-                                                                            href="{{ ConfigurationURL($quotation->configurableitems, $row->itemId, $version_id) }}">Edit</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a onclick="FloorNoChange('{{ $row->id }}','{{ $row->DoorType }}','{{ $row->doorNumber }}')"
-                                                                            href="javascript:void(0);">Edit FLoor No.</a>
-                                                                    </li>
-                                                                    <li><a
-                                                                            href="{{url('quotation/add-new-doors')}}/{{$quotationId}}/{{$version_id}}/{{ $row->itemId }}">Add New</a>
-                                                                    </li>
-                                                                    {{-- <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name')"
-                                                                            href="javascript:void(0);">Name
-                                                                            Configuration</a></li> --}}
-                                                                            @php
-                                                                              $doorsSetPrice = number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2);
-                                                                            @endphp
-                                                                    <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name','{{ $doorsSetPrice }}','{{ $row->IronmongaryPrice }}')"
-                                                                            href="javascript:void(0);">Name
-                                                                            Configuration</a></li>
-                                                                    <li><a onclick="adjustPrice('{{ $row->itemId }}','{{ $row->id }}','{{ floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice) }}')"
-                                                                            href="javascript:void(0);">Adjust Price</a>
-                                                                    </li>
-                                                                    <li><a href="javascript:void(0);">Comment</a></li>
-                                                                    <li><a href="javascript:void(0);"
-                                                                            onClick="CopyDoorSet({{ $quotationId }},'{{ $row->id }}');">Copy</a>
-                                                                    </li>
-                                                                    <li><a onclick="remove_item('{{ $row->id }}')"
-                                                                            href="#">Remove</a></li>
-                                                                     <li><a onclick="edit_image1('{{ $row->itemId }}')"
-                                                                            href="javascript:void(0);">Validate</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <?php $index++;
-                                                    $SI++; ?>
+
                                                 @endforeach
                                             @endif
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -639,9 +819,7 @@
                                                         <td>{{ $SI++; }}</td>
                                                         <td>{{ $value->name }}</td>
                                                         <td>{{ $value->product_code }}</td>
-                                                        <td><script type="text/javascript">
-                                                            document.write(ReadMore(5,"{{ $value->description }}"))
-                                                        </script></td>
+                                                        <td><script>document.write(ReadMore(5, {!! json_encode($value->description) !!}))</script></td>
                                                         <td>{{ $value->unit }}</td>
                                                         <td><input type="number" name="quantity" style="margin: 0 auto; max-width: 50px;font-size: 14px !important;" class="form-control quantity quantity_{{ $value->NonConfigId }} nonconfigQut" disabled value="{{ $value->quantity }}"></td>
                                                         <td>{{ floatval($value->storePrice) }}</td>
@@ -754,13 +932,14 @@
                                                 </div>
                                             @endif
                                         </div>
+
                                         <div class="quote_card_header mt-4">
                                             <h4>Pricing </h4>
                                         </div>
                                         <div class="quote_pricing">
                                             <p>DoorSet
                                                 <span>
-                                                    @if (!empty($TotalExactDoorPrice))
+                                                    @if (!empty($TotalDoorPrice))
                                                         {{ number_format( (float) $TotalDoorPrice, 2, '.', '') }}
                                                     @else
                                                         {{ '0.00' }}@endif
@@ -990,17 +1169,16 @@
             });
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
-        <script src="https://d3js.org/d3.v7.min.js"></script> <!-- Load D3 -->
+        <script src="https://d3js.org/d3.v7.min.js" defer></script> <!-- Load D3 -->
         @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
-            <script src="{{ url('/') }}/Halspan/new-cad.js"></script>
+            <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
         @else
-            <script src="{{ url('/') }}/vicaima/validate-all-cad.js"></script>
+            <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
         @endif
 
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
-            var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
                 $("#ManualAddForm").modal('show');
@@ -1008,6 +1186,16 @@
 
             $('.close_model').on('click', function() {
                 $('#ManualAddForm').modal('hide');
+            });
+
+            $('.fav-btn').click(function () {
+                favoriteItem(
+                    $(this).data('item'),
+                    $(this).data('id'),
+                    'Door',
+                    'Configurable Favorite Item',
+                    'Configurable Type Name'
+                );
             });
 
             function ManualAccpetReject(value){

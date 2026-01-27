@@ -1883,9 +1883,9 @@ function price_view_vlidator(): int{
 
 }
 
-function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $returnType="get", $selectFields = [],$orwhere = []){
+function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $returnType="get", $selectFields = [],$orwhere = [],$userLoginId = null){
 
-    $userIds = CompanyUsers();
+    $userIds = CompanyUsers(false,$userLoginId);
     switch($type){
         case "DoorDimension":
 
@@ -2244,7 +2244,7 @@ function GetOptions($where = [], $JoinSelectedOption = "", $type = "option", $re
                     $Options->select($selectFields);
                 }
 
-                $Options->where('selected_intumescentseals2.selected_intumescentseals2_user_id',Auth::user()->id);
+                $Options->where('selected_intumescentseals2.selected_intumescentseals2_user_id',$userLoginId ?? Auth::user()->id);
                 // $Options->wherein('setting_intumescentseals2.editBy',$userIds);
             }else{
 
@@ -2539,8 +2539,9 @@ function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireR
     return $doordimension;
 }
 
-function getCurrencyRate($QuotationId){
-    $currencyRate = SettingCurrency::where('UserId', Auth::user()->id)->first();
+function getCurrencyRate($QuotationId,$userLoginId=null){
+    $UserId = $userLoginId ?? Auth::user()->id;
+    $currencyRate = SettingCurrency::where('UserId', $UserId)->first();
     $currency = $currencyRate->currency;
     $quotation = Quotation::where('id', $QuotationId)->first();
     $project = Project::where('id', $quotation->ProjectId)->value('projectCurrency');
@@ -2559,15 +2560,16 @@ function getCurrencyRate($QuotationId){
     return $currencyPrice;
 }
 
-function SaveBOMCalculation($request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false): void{
-    $userIds = CompanyUsers();
+function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false): void{
 
     $version_id = QuotationVersion::where('quotation_id', $request->QuotationId)->where('id', $request->version_id)->value('version');
     if(empty($version_id)){
         $version_id = 0;
     }
 
-    $currencyPrice = getCurrencyRate($request->QuotationId);
+    $quotation = Quotation::findOrFail($request->QuotationId);
+
+    $currencyPrice = getCurrencyRate($request->QuotationId,$quotation->UserId);
 
     $items = Item::where('QuotationId',$request->QuotationId)->get();
 
@@ -2677,8 +2679,8 @@ function SaveBOMCalculation($request, $category, $frame_unit, string $descriptio
 }
 
 //bom calculation
-function BomCalculation($request): void{
-    $userIds = CompanyUsers();
+function BomCalculation($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -2712,10 +2714,10 @@ function BomCalculation($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -2724,26 +2726,26 @@ function BomCalculation($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //LeafSetBesPoke
     LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
-function StredorBomCalculation($request): void{
-    $userIds = CompanyUsers();
+function StredorBomCalculation($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -2777,10 +2779,10 @@ function StredorBomCalculation($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -2789,27 +2791,27 @@ function StredorBomCalculation($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //LeafSetBesPoke
     LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
-function IronmongeryCostExport($request,$version_id): void{
+function IronmongeryCostExport($request,$version_id,$userIds,$userLoginId): void{
     if ($request->ironmongerySet == 'Yes' && (!empty($request->ironmongerySet) && !empty($request->IronmongeryID))) {
-        $IronmongeryInfo = AddIronmongery::select('*')->where('id', $request->IronmongeryID)->where('UserId',user_id())->get()->first();
+        $IronmongeryInfo = AddIronmongery::select('*')->where('id', $request->IronmongeryID)->where('UserId',$userLoginId ?? Auth()->user()->id)->get()->first();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -2879,10 +2881,10 @@ function IronmongeryCostExport($request,$version_id): void{
                 $count = count($Ironmongey);
                 for($j = 0; $j < $count; $j++){
 
-                    $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',user_id())->first();
+                    $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', intval($Ironmongey[$j]))->where('UserId',$userLoginId ?? Auth()->user()->id)->first();
 
                     if(isset($SelectedIronmongery) && $SelectedIronmongery != "" && $SelectedIronmongery != null && !empty($SelectedIronmongery)){
-                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
+                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',$userLoginId ?? Auth()->user()->id)->first();
 
                         $BOMCalculation = BOMCalculation::where('QuotationId',$request->QuotationId)->where('Category','Ironmongery&MachiningCosts')->where('VersionId',$version_id)->where('itemId',$request->itemID)->get()->toArray();
 
@@ -2907,7 +2909,7 @@ function IronmongeryCostExport($request,$version_id): void{
                             $category = 'Ironmongery&MachiningCosts';
                             $frame_unit = 'Each';
 
-                            SaveBOMCalculation($request, $category, $frame_unit, $description, floatval($unit_cost), floatval($QtyPerDoorType));
+                            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, floatval($unit_cost), floatval($QtyPerDoorType));
                         }
                     }
                 }
@@ -2937,14 +2939,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('DoorLeafFacingVaneer', $GeneralLabourCost->genLaborCost);
                     $description = "Make Door Slab Veneer |".($GeneralLabourCost->DoorLeafFacingVaneerManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFacingVaneerMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingVaneerManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingVaneerMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->doorLeafFacing == "Kraft_Paper" && $GeneralLabourCost->DoorLeafFacingKraftPaper == 1) {
                     $data = getMyLaborCost('DoorLeafFacingKraftPaper', $GeneralLabourCost->genLaborCost);
                     $description = "Make door slab Kraft Paper |".($GeneralLabourCost->DoorLeafFacingKraftPaperManMinutes/ 60)."|".$data->labour_cost_per_man ."|".($GeneralLabourCost->DoorLeafFacingKraftPaperMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingKraftPaperManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingKraftPaperMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->doorLeafFacing == "Laminate" && $GeneralLabourCost->DoorLeafFacingLaminate == 1) {
@@ -2952,14 +2954,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $description = "Make door slab, Laminate |".($GeneralLabourCost->DoorLeafFacingLaminateManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFacingLaminateMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingLaminateManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingLaminateMachineMinutes
                     * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->doorLeafFacing == "PVC" && $GeneralLabourCost->DoorLeafFacingPVC == 1) {
                     $data = getMyLaborCost('DoorLeafFacingPVC', $GeneralLabourCost->genLaborCost);
                     $description = "Make door slab PVC |".($GeneralLabourCost->DoorLeafFacingPVCManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFacingPVCMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFacingPVCManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFacingPVCMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -2970,21 +2972,21 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('DoorLeafFinishPrimed', $GeneralLabourCost->genLaborCost);
                     $description = "Prime of door slab |".($GeneralLabourCost->DoorLeafFinishPrimedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPrimedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if (($request->doorLeafFinish == "Paint_Finish" || $request->doorLeafFinish == "Painted") && $GeneralLabourCost->DoorLeafFinishPainted == 1) {
                     $data = getMyLaborCost('DoorLeafFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Paint of door slab |".($GeneralLabourCost->DoorLeafFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishPaintedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPaintedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->doorLeafFinish == "Laqure_Finish" && $GeneralLabourCost->DoorLeafFinishLacquered == 1) {
                     $data = getMyLaborCost('DoorLeafFinishLacquered', $GeneralLabourCost->genLaborCost);
                     $description = "Lacquer of door slab |".($GeneralLabourCost->DoorLeafFinishLacqueredManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishLacqueredMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishLacqueredManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishLacqueredMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
         }
@@ -2995,7 +2997,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('MachiningOfDoorFrame', $GeneralLabourCost->genLaborCost);
                 $description = "Machining of door frame |".($GeneralLabourCost->MachiningOfDoorFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfDoorFrameMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->MachiningOfDoorFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfDoorFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             //frame finish
@@ -3004,21 +3006,21 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('FrameFinishPrimed', $GeneralLabourCost->genLaborCost);
                     $description = "Priming of door frame |".($GeneralLabourCost->FrameFinishPrimedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FrameFinishPrimedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->FrameFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->	FrameFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->frameFinish == "Painted_Finish" && $GeneralLabourCost->FrameFinishPainted == 1) {
                     $data = getMyLaborCost('FrameFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Painting of door frame |".($GeneralLabourCost->FrameFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FrameFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->FrameFinishPaintedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FrameFinishPaintedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->frameFinish == 'Clear_Lacquer' && $GeneralLabourCost->FrameFinishLacqured == 1) {
                     $data = getMyLaborCost('FrameFinishLacqured', $GeneralLabourCost->genLaborCost);
                     $description = "Lacquering of Door Frame |".($GeneralLabourCost->FrameFinishLacquredManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FrameFinishLacquredMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->FrameFinishLacquredManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FrameFinishLacquredMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3027,7 +3029,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('ExtLiner', $GeneralLabourCost->genLaborCost);
                 $description = "Machining of Liner |".($GeneralLabourCost->ExtLinerManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->ExtLinerManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             //Ext-Liner & Frame Finish
@@ -3036,21 +3038,21 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('ExtLinerandFrameFinishPrimed', $GeneralLabourCost->genLaborCost);
                     $description = "Priming of liner |".($GeneralLabourCost->ExtLinerandFrameFinishPrimedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerandFrameFinishPrimedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishPrimedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishPrimedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->extLiner == "Yes" && $request->frameFinish == "Clear_Lacquer" && $GeneralLabourCost->ExtLinerandFrameFinishLacqured == 1) {
                     $data = getMyLaborCost('ExtLinerandFrameFinishLacqured', $GeneralLabourCost->genLaborCost);
                     $description = "Lacquering liner |".($GeneralLabourCost->ExtLinerandFrameFinishLacquredManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerandFrameFinishLacquredMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishLacquredManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishLacquredMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->extLiner == "Yes" && $request->frameFinish == "Painted_Finish" && $GeneralLabourCost->ExtLinerandFrameFinishPainted == 1) {
                     $data = getMyLaborCost('ExtLinerandFrameFinishPainted', $GeneralLabourCost->genLaborCost);
                     $description = "Painting of liner |".($GeneralLabourCost->ExtLinerandFrameFinishPaintedManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ExtLinerandFrameFinishPaintedMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->ExtLinerandFrameFinishPaintedManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ExtLinerandFrameFinishPaintedMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
         }
@@ -3060,14 +3062,14 @@ function commonGeneralLabourCost($request,$userIds): void{
             $data = getMyLaborCost('VisionPanel2', $GeneralLabourCost->genLaborCost);
             $description = "Maching of Glazing Bead |".($GeneralLabourCost->VisionPanel2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanel2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->VisionPanel2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanel2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if (!empty($request->leaf2VisionPanel) && $request->leaf2VisionPanel == "Yes" && $GeneralLabourCost->VisionPanel2 == 1) {
             $data = getMyLaborCost('VisionPanel2', $GeneralLabourCost->genLaborCost);
             $description = "Maching of Glazing Bead 2 |".($GeneralLabourCost->VisionPanel2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanel2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->VisionPanel2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanel2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         //dooor leaf finish
@@ -3077,7 +3079,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('DoorLeafFinishPrimed2', $GeneralLabourCost->genLaborCost);
                     $description = "Priming of glazing bead |".($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorLeafFinishPrimed2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPrimed2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3085,14 +3087,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('DoorLeafFinishPainted2', $GeneralLabourCost->genLaborCost);
                 $description = "Painting of glazing bead |".($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorLeafFinishPainted2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishPainted2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if ($request->doorLeafFinish == "Laqure_Finish" && $GeneralLabourCost->DoorLeafFinishLacquered2 == 1) {
                 $data = getMyLaborCost('DoorLeafFinishLacquered2', $GeneralLabourCost->genLaborCost);
                 $description = "Lacquering of glazing bead |".($GeneralLabourCost->DoorLeafFinishLacquered2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafFinishLacquered2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorLeafFinishLacquered2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafFinishLacquered2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3102,7 +3104,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('VisionPanel', $GeneralLabourCost->genLaborCost);
                 $description = "Vision Panel Cut Outs |".($GeneralLabourCost->VisionPanelManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             //vision panel and fire rating
@@ -3111,14 +3113,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
                     $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3128,14 +3130,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if (($request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf1VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
                     $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
                     $description = "VP (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
         }
@@ -3145,7 +3147,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('VisionPanel', $GeneralLabourCost->genLaborCost);
                 $description = "Vision Panel 2 Cut Outs |".($GeneralLabourCost->VisionPanelManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             //vision panel and fire rating
@@ -3153,28 +3155,28 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('VisionPanelandFireRatingFD30', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Hockey Stick) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRatingFD60 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRatingFD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Hockey Stick) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRatingFD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRatingFD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD30s") && $GeneralLabourCost->VisionPanelandFireRating2FD30 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD30', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Flush) - FD30 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD30ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD30MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if (($request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60" || $request->leaf2VisionPanel == "Yes" && $request->fireRating == "FD60s") && $GeneralLabourCost->VisionPanelandFireRating2FD60 == 1) {
                 $data = getMyLaborCost('VisionPanelandFireRating2FD60', $GeneralLabourCost->genLaborCost);
                 $description = "VP2 (Flush) - FD60 Fit |".($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->VisionPanelandFireRating2FD60ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->VisionPanelandFireRating2FD60MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3184,14 +3186,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('FittingOfIntumescentToFrame', $GeneralLabourCost->genLaborCost);
                 $description = "Fitting of intumescent to frame FD30 |".($GeneralLabourCost->FittingOfIntumescentToFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfIntumescentToFrameMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->FittingOfIntumescentToFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FittingOfIntumescentToFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if (($request->fireRating == "FD60" || $request->fireRating == "FD60s") && $GeneralLabourCost->FittingOfIntumescentToFrameFD60 == 1) {
                 $data = getMyLaborCost('FittingOfIntumescentToFrameFD60', $GeneralLabourCost->genLaborCost);
                 $description = "Fitting of intumescent to frame FD60 |".($GeneralLabourCost->FittingOfIntumescentToFrameManMinutesFD60/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfIntumescentToFrameMachineMinutesFD60/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->FittingOfIntumescentToFrameManMinutesFD60 * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FittingOfIntumescentToFrameMachineMinutesFD60 * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3201,7 +3203,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('DecorativeGroves', $GeneralLabourCost->genLaborCost);
                 $description = "V Grooves |".($GeneralLabourCost->DecorativeGrovesManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DecorativeGrovesManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             //decorativeGrovesLeaf2
@@ -3209,7 +3211,7 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('DecorativeGrovesLeaf2', $GeneralLabourCost->genLaborCost);
                 $description = "V Grooves Leaf2 |".($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DecorativeGrovesLeaf2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DecorativeGrovesLeaf2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3219,14 +3221,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('DoorsetTypeDD', $GeneralLabourCost->genLaborCost);
                     $description = "Assemble Double Door Leaf Into Frame |".($GeneralLabourCost->DoorsetTypeDDManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeDDMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorsetTypeDDManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeDDMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->doorsetType == "SD" && $GeneralLabourCost->DoorsetTypeSD == 1) {
                     $data = getMyLaborCost('DoorsetTypeSD', $GeneralLabourCost->genLaborCost);
                     $description = "Assemble Single Door Leaf Into Frame |".($GeneralLabourCost->DoorsetTypeSDManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeSDMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->DoorsetTypeSDManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeSDMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3234,14 +3236,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('DoorsetTypeSD2', $GeneralLabourCost->genLaborCost);
                 $description = "Doorset Delivery Single |".($GeneralLabourCost->DoorsetTypeSD2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeSD2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorsetTypeSD2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeSD2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if ($request->doorsetType == "DD" && $GeneralLabourCost->DoorsetTypeDD2 == 1) {
                 $data = getMyLaborCost('DoorsetTypeDD2', $GeneralLabourCost->genLaborCost);
                 $description = "Doorset Delivery Double |".($GeneralLabourCost->DoorsetTypeDD2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorsetTypeDD2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->DoorsetTypeDD2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorsetTypeDD2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3250,21 +3252,21 @@ function commonGeneralLabourCost($request,$userIds): void{
                 $data = getMyLaborCost('HingeAssembley', $GeneralLabourCost->genLaborCost);
                 $description = "Hinge Assembly |".($GeneralLabourCost->HingeAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->HingeAssembleyMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->HingeAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->HingeAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if (($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') && $GeneralLabourCost->HingeAssembleyLeafandHalfDD == 1) {
                 $data = getMyLaborCost('HingeAssembleyLeafandHalfDD', $GeneralLabourCost->genLaborCost);
                 $description = "Hinge Assembly for Leaf and Half and DD |".($GeneralLabourCost->HingeAssembleyLeafandHalfDDManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->HingeAssembleyLeafandHalfDDMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->HingeAssembleyLeafandHalfDDManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->HingeAssembleyLeafandHalfDDMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
 
             if($GeneralLabourCost->FrameAssembley == 1){
                 $data = getMyLaborCost('FrameAssembley', $GeneralLabourCost->genLaborCost);
                 $description = "Frame Assembley |".($GeneralLabourCost->FrameAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FrameAssembleyMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                 $unit_cost = ($GeneralLabourCost->FrameAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FrameAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
             }
         }
 
@@ -3272,21 +3274,21 @@ function commonGeneralLabourCost($request,$userIds): void{
             $data = getMyLaborCost('LocksetAssembley', $GeneralLabourCost->genLaborCost);
             $description = "Lockset (Standard) - Assembly |".($GeneralLabourCost->LocksetAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LocksetAssembleyMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LocksetAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LocksetAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->PlotLabelDoorsetsy == 1){
             $data = getMyLaborCost('PlotLabelDoorsetsy', $GeneralLabourCost->genLaborCost);
             $description = "Plot & Label Door sets |".($GeneralLabourCost->PlotLabelDoorsetsyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->PlotLabelDoorsetsMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->PlotLabelDoorsetsyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->PlotLabelDoorsetsMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->PalletPackaging == 1){
             $data = getMyLaborCost('PalletPackaging', $GeneralLabourCost->genLaborCost);
             $description = "Pallet & Packaging |".($GeneralLabourCost->PalletPackagingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->PalletPackagingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->PalletPackagingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->PalletPackagingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($request->FrameOnOff == 0 ){
@@ -3296,14 +3298,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('OverpanelFanlight', $GeneralLabourCost->genLaborCost);
                     $description = "Fanlight Assembley |".($GeneralLabourCost->OverpanelFanlightManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->OverpanelFanlightMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->OverpanelFanlightManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->OverpanelFanlightMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->overpanel == "Fan_Light" && $GeneralLabourCost->OverpanelFanlightGlazing == 1) {
                     $data = getMyLaborCost('OverpanelFanlightGlazing', $GeneralLabourCost->genLaborCost);
                     $description = "Fanlight Glazing |".($GeneralLabourCost->OverpanelFanlightGlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->OverpanelFanlightGlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->OverpanelFanlightGlazingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->OverpanelFanlightGlazingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3313,14 +3315,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('SideLight', $GeneralLabourCost->genLaborCost);
                     $description = "Side light Assembley |".($GeneralLabourCost->SideLightManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLightMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->SideLightManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLightMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->sideLight1 == "Yes" && $GeneralLabourCost->SideLightGlazing == 1) {
                     $data = getMyLaborCost('SideLightGlazing', $GeneralLabourCost->genLaborCost);
                     $description = "Side Light Glazing |".($GeneralLabourCost->SideLightGlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLightGlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->SideLightGlazingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLightGlazingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
 
@@ -3330,14 +3332,14 @@ function commonGeneralLabourCost($request,$userIds): void{
                     $data = getMyLaborCost('SideLight2', $GeneralLabourCost->genLaborCost);
                     $description = "Side light 2 Assembley |".($GeneralLabourCost->SideLight2ManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLight2MachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->SideLight2ManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLight2MachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
 
                 if ($request->sideLight2 == "Yes" && $GeneralLabourCost->SideLight2Glazing == 1) {
                     $data = getMyLaborCost('SideLight2Glazing', $GeneralLabourCost->genLaborCost);
                     $description = "Side Light 2 Glazing |".($GeneralLabourCost->SideLight2GlazingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SideLight2GlazingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
                     $unit_cost = ($GeneralLabourCost->SideLight2GlazingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SideLight2GlazingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
                 }
             }
         }
@@ -3346,14 +3348,14 @@ function commonGeneralLabourCost($request,$userIds): void{
             $data = getMyLaborCost('DoorLeafProtectionPlasticSleeve', $GeneralLabourCost->genLaborCost);
             $description = "Door Leaf Protection - Plastic Sleeve SD |".($GeneralLabourCost->DoorLeafProtectionPlasticSleeveManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafProtectionPlasticSleeveMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if (($request->doorsetType == 'DD' || $request->doorsetType == 'leaf_and_a_half') && $GeneralLabourCost->DoorLeafProtectionPlasticSleeveFD60 == 1) {
             $data = getMyLaborCost('DoorLeafProtectionPlasticSleeveFD60', $GeneralLabourCost->genLaborCost);
             $description = "Door Leaf Protection - Plastic Sleeve DD |".($GeneralLabourCost->DoorLeafProtectionPlasticSleeveManMinutesFD60/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->DoorLeafProtectionPlasticSleeveMachineMinutesFD60/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveManMinutesFD60 * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->DoorLeafProtectionPlasticSleeveMachineMinutesFD60 * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         $isStatus = true;
@@ -3369,58 +3371,58 @@ function commonGeneralLabourCost($request,$userIds): void{
             $data = getMyLaborCost('LeafSizing', $GeneralLabourCost->genLaborCost);
             $description = "Leaf sizing |".($GeneralLabourCost->LeafSizingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafSizingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafSizingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafSizingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->LeafLiping == 1 && $isStatus == true){
             $data = getMyLaborCost('LeafLiping', $GeneralLabourCost->genLaborCost);
             $description = "Leaf Lipping |".($GeneralLabourCost->LeafLipingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafLipingMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafLipingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafLipingMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->LeafCalibration == 1 && $isStatus == true){
             $data = getMyLaborCost('LeafCalibration', $GeneralLabourCost->genLaborCost);
             $description = "Leaf Calibration (sanding) |".($GeneralLabourCost->LeafCalibrationManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LeafCalibrationMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LeafCalibrationManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LeafCalibrationMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->PaintPrep == 1){
             $data = getMyLaborCost('PaintPrep', $GeneralLabourCost->genLaborCost);
             $description = "Paint prep (trimming, chamfer and filling if required) |".($GeneralLabourCost->PaintPrepManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->PaintPrepMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->PaintPrepManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->PaintPrepMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if($GeneralLabourCost->LoadingOfLorry == 1){
             $data = getMyLaborCost('LoadingOfLorry', $GeneralLabourCost->genLaborCost);
             $description = "Loading Of Lorry |".($GeneralLabourCost->LoadingOfLorryManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LoadingOfLorryMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LoadingOfLorryManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LoadingOfLorryMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if ($request->frameType == "Scalloped" && $GeneralLabourCost->LabourProcessForScallopedFrame == 1) {
             $data = getMyLaborCost('LabourProcessForScallopedFrame', $GeneralLabourCost->genLaborCost);
             $description = "Labour Process For Scalloped Frame |".($GeneralLabourCost->LabourProcessForScallopedFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LabourProcessForScallopedFrameMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LabourProcessForScallopedFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LabourProcessForScallopedFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
 
         if ($request->FourSidedFrame == 1 && $GeneralLabourCost->LabourAssemblyFor4SidedFrame == 1) {
             $data = getMyLaborCost('LabourAssemblyFor4SidedFrame', $GeneralLabourCost->genLaborCost);
             $description = "Labour Assembly For 4 Sided Frame |".($GeneralLabourCost->LabourAssemblyFor4SidedFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LabourAssemblyFor4SidedFrameMachineMinutes/ 60)."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LabourAssemblyFor4SidedFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LabourAssemblyFor4SidedFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
         }
     }
 }
 
-function frameExport($request,$userIds): void{
+function frameExport($request,$userIds,$userLoginId): void{
     if(!empty($request->frameMaterial) && !empty($request->frameType)){
         $frameMaterial = LippingSpecies::where('id', $request->frameMaterial)->get();
 
-        $Frame_Finish_Cost =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where("options.configurableitems",$request->issingleconfiguration)->where(['selected_option.SelectedUserId'=>auth()->user()->id,'options.OptionSlug' => 'Frame_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->frameFinish])->wherein('options.editBy', $userIds)->select('selected_option.SelectedOptionCost','selected_option.id')->first();
+        $Frame_Finish_Cost =  Option::join('selected_option','options.id','=', 'selected_option.optionId')->where("options.configurableitems",$request->issingleconfiguration)->where(['selected_option.SelectedUserId'=>$userLoginId ?? auth()->user()->id,'options.OptionSlug' => 'Frame_Finish','options.is_deleted' => 0, 'OptionKey'=>$request->frameFinish])->wherein('options.editBy', $userIds)->select('selected_option.SelectedOptionCost','selected_option.id')->first();
 
         $selectedPrice = (empty($Frame_Finish_Cost))?0 : $Frame_Finish_Cost->SelectedOptionCost??0;
 
@@ -3432,23 +3434,23 @@ function frameExport($request,$userIds): void{
 
             $frameThickness = getLippingSpeciesNearTheeknessValue($request->frameThickness);
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$frameThickness)->get()->first();
-            }
+            // }
 
             if(isset($unitcost->id)){
                 $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
 
                 $unit_cost = (($request->frameThickness * $request->frameDepth * $unitcost_selected_price)/1000000) + $selectedPrice;
                 $QtyPerDoorType = $request->frameWidth/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
                 $description = '[Rebated Frame Sides]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'| '.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->frameHeight."mm|".$request->frameType."|".$request->rebatedWidth."mm x ".$request->rebatedHeight."mm";
                 $QtyPerDoorType = ($request->frameHeight/1000)*2;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
             }
         }
@@ -3463,13 +3465,13 @@ function frameExport($request,$userIds): void{
             $frameThickness = getLippingSpeciesNearTheeknessValue($request->frameThickness);
 
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$frameThickness)->get()->first();
 
-            }
+            // }
 
             if(isset($unitcost->id)){
 
@@ -3479,11 +3481,11 @@ function frameExport($request,$userIds): void{
 
                 $unit_cost = (($request->frameThickness * $request->frameDepth * $unitcost_selected_price)/1000000) + $selectedPrice;
                 $QtyPerDoorType = $request->frameWidth/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
                 $description = '[Scalloped Frame Sides]| '.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->frameHeight."mm | ".$request->frameType." | ".$request->ScallopedWidth."mm x ".$request->ScallopedHeight."mm";
                 $QtyPerDoorType = ($request->frameHeight/1000)*2;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
             }
         }
@@ -3505,7 +3507,7 @@ function frameExport($request,$userIds): void{
                 $category = 'Frame';
                 $frame_unit = 'Metre';
                 $QtyPerDoorType = $request->frameWidth/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
             }
         }
 
@@ -3518,17 +3520,17 @@ function frameExport($request,$userIds): void{
             $plantonStopHeight = getLippingSpeciesNearTheeknessValue($request->plantonStopHeight);
 
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
 
-                $unitcostPlantonStopHeight = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$plantonStopHeight)->get()->first();
+            //     $unitcostPlantonStopHeight = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$plantonStopHeight)->get()->first();
 
-            }else{
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$frameThickness)->get()->first();
 
                 $unitcostPlantonStopHeight = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$plantonStopHeight)->get()->first();
-            }
+            // }
 
             if(isset($unitcost->id) && isset($unitcostPlantonStopHeight->id)){
 
@@ -3542,29 +3544,29 @@ function frameExport($request,$userIds): void{
                 $category = 'Frame';
                 $frame_unit = 'Metre';
                 $QtyPerDoorType = $request->frameWidth/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
                 $description = '[Plant On Stop Head]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm x '. $request->frameWidth.'mm |'.str_replace('_', ' ',  $request->frameType).'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm';
                 $QtyPerDoorType = $request->frameWidth/1000;
                 $unit_cost = (($request->plantonStopWidth * $request->plantonStopHeight * $unitcostPlantonStopHeight_selected_price)/1000000) + $selectedPrice;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
                 if($request->FourSidedFrame == 1){
                     $description = '[Plant On Stop Bottom]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm x '. $request->frameWidth.'mm |'.str_replace('_', ' ',  $request->frameType).'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm';
                     $QtyPerDoorType = $request->frameWidth/1000;
                     $unit_cost = (($request->plantonStopWidth * $request->plantonStopHeight * $unitcostPlantonStopHeight_selected_price)/1000000) + $selectedPrice;
-                    SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                    SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
                 }
 
                 $description = '[Sides]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '. $request->frameHeight.'mm | - | -';
                 $QtyPerDoorType = ($request->frameHeight/1000)*2;
                 $unit_cost = (($request->frameThickness * $request->frameDepth * $unitcost_selected_price)/1000000) + $selectedPrice;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
                 $description = '[Plant On Stop Sides]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm x '. $request->frameHeight.'mm |'.str_replace('_', ' ',  $request->frameType).'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm';
                 $QtyPerDoorType = ($request->frameHeight/1000)*2;
                 $unit_cost = (($request->plantonStopWidth * $request->plantonStopHeight * $unitcostPlantonStopHeight_selected_price)/1000000) + $selectedPrice;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
             }
         }
 
@@ -3601,12 +3603,12 @@ function frameExport($request,$userIds): void{
         //         $category = 'Frame';
         //         $frame_unit = 'Metre';
         //         $QtyPerDoorType = $request->frameWidth/1000;
-        //         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+        //         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
         //         $description = '[Plant on stop Bottom]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm x '. $request->frameWidth.'mm |'.str_replace('_', ' ',  $request->frameType).'|'.$request->plantonStopWidth.'mm x '.$request->plantonStopHeight.'mm';
         //         $QtyPerDoorType = $request->frameWidth/1000;
         //         $unit_cost = (($request->plantonStopWidth * $request->plantonStopHeight * $unitcostPlantonStopHeight_selected_price)/1000000) + $selectedPrice;
-        //         SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+        //         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
         //     }
         // }
 
@@ -3614,13 +3616,13 @@ function frameExport($request,$userIds): void{
             // $extLinerThickness = round($request->extLinerThickness/25.4,1);
             $extLinerThickness = getLippingSpeciesNearTheeknessValue($request->extLinerThickness);
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$extLinerThickness)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$extLinerThickness)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$extLinerThickness)->get()->first();
 
-            }
+            // }
 
             if(isset($unitcost->id)){
 
@@ -3632,11 +3634,11 @@ function frameExport($request,$userIds): void{
                 $description = '[Liner Top]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->extLinerValue.'mm x '.$request->extLinerThickness."mm x ".$request->frameWidth."mm | - | -";
                 $unit_cost = ($request->extLinerThickness * $request->frameDepth * $unitcost_selected_price)/1000000;
                 $QtyPerDoorType = $request->frameWidth/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
                 $description = '[Liner Sides]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->extLinerValue.'mm x '.$request->extLinerThickness."mm x ".$request->frameHeight."mm | - | -";
                 $QtyPerDoorType = ($request->frameHeight/1000)*2;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
             }
 
         }
@@ -3648,13 +3650,13 @@ function frameExport($request,$userIds): void{
 
             // $unitcost = SelectedLippingSpeciesItems::where('selected_user_id',Auth::user()->id)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','=',$frameThickness)->get()->first();
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$frameThickness)->get()->first();
 
-            }
+            // }
 
             if(isset($unitcost->id)){
 
@@ -3666,7 +3668,7 @@ function frameExport($request,$userIds): void{
                 $frame_unit = 'Metre';
                 $description = '[Sidelight 1 Top/Bottom]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->SL1Width."mm | - | -";
                 $QtyPerDoorType = ($request->SL1Width * 2)/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
                 $description = '[Sidelight Sides]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->SL1Height."mm | - | -";
 
@@ -3676,7 +3678,7 @@ function frameExport($request,$userIds): void{
 
                 $QtyPerDoorType = (($request->SL1Height * 2) + ($request->SL2Height * 2))/1000;
 
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
             }
         }
 
@@ -3684,12 +3686,12 @@ function frameExport($request,$userIds): void{
 
             $frameThickness = getLippingSpeciesNearTheeknessValue($request->frameThickness);
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness','>=',$frameThickness)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness','>=',$frameThickness)->get()->first();
-            }
+            // }
 
             if(isset($unitcost->id)){
 
@@ -3701,7 +3703,7 @@ function frameExport($request,$userIds): void{
                 $frame_unit = 'Metre';
                 $description = '[Sidelight 2 Top/Bottom]|'.$frameMaterial[0]['SpeciesName'].', '.$request->frameFinish.'|'.$request->frameDepth.'mm x '.$request->frameThickness.'mm x '.$request->SL2Width."mm | - | -";
                 $QtyPerDoorType = ($request->SL2Width * 2)/1000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
             }
         }
 
@@ -3715,13 +3717,13 @@ function frameExport($request,$userIds): void{
             // $OPLippingThickness = getLippingSpeciesNearTheeknessValue($request->OPLippingThickness);
 
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness',1)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->frameMaterial)->where('thickness',1)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->frameMaterial)->where('selected_thickness',1)->get()->first();
 
-            }
+            // }
             if(isset($unitcost->id)){
 
                 $unitcost_selected_price = ($unitcost->selected_price)?$unitcost->selected_price:$unitcost->price;
@@ -3731,7 +3733,7 @@ function frameExport($request,$userIds): void{
                 $QtyPerDoorType = ($request->oPHeigth * 2)/1000;
 
                 $unit_cost = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
 
                 if($request->overpanel=='Fan_Light'){
                     $overpanelKey = "Fanlight head & Bottom";
@@ -3743,7 +3745,7 @@ function frameExport($request,$userIds): void{
                 $QtyPerDoorType = ($request->frameWidth * 2)/1000;
 
                 $unit_cost = ($request->OpBeadThickness * $request->OpBeadHeight * $unitcost_selected_price)/1000000;
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
             }
         }
 
@@ -3772,13 +3774,13 @@ function frameExport($request,$userIds): void{
 
             $architraveHeight1 = getLippingSpeciesNearTheeknessValue($request->architraveHeight);
 
-            if(in_array(Auth::user()->UserType, [1,4])){
+            // if(in_array(Auth::user()->UserType, [1,4])){
 
-                $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->architraveMaterial)->where('thickness','>=',$architraveHeight1)->get()->first();
-            }else{
+            //     $unitcost = LippingSpeciesItems::where('lipping_species_id',$request->architraveMaterial)->where('thickness','>=',$architraveHeight1)->get()->first();
+            // }else{
                 $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->architraveMaterial)->where('selected_thickness','>=',$architraveHeight1)->get()->first();
 
-            }
+            // }
 
             if(isset($unitcost->id)){
                 $unitcost_selected_price = $unitcost->selected_price ?: $unitcost->price;
@@ -3794,7 +3796,7 @@ function frameExport($request,$userIds): void{
 
                 $total_cost = ($LM*$unit_cost) * $request->architraveSetQty;
 
-                SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost,$request->architraveSetQty, true);
+                SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost,$request->architraveSetQty, true);
 
             }
         }
@@ -3802,8 +3804,8 @@ function frameExport($request,$userIds): void{
 }
 
 //vicaima bom calculation
-function BomCalculationVicaima($request): void{
-    $userIds = CompanyUsers();
+function BomCalculationVicaima($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -3837,10 +3839,10 @@ function BomCalculationVicaima($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -3849,13 +3851,13 @@ function BomCalculationVicaima($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //Leaf Set BesPoke
     if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
@@ -3925,7 +3927,7 @@ function BomCalculationVicaima($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 4) {
         $doorConfiguration = "Vicaima";
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
@@ -3952,11 +3954,11 @@ function BomCalculationVicaima($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
@@ -4007,7 +4009,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $category = 'Glass';
         $frame_unit = 'Area M2';
         $unit_cost = (empty($frame_unit_cost))?0:$frame_unit_cost->selectedPrice;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
 
     }else if($request->leaf2VisionPanel == 'Yes' && !empty($request->visionPanelQuantityforLeaf2) && !empty($request->issingleconfiguration) && !empty($request->glassType)){
         if($request->visionPanelQuantityforLeaf2 == '1'){
@@ -4031,7 +4033,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         $category = 'Glass';
         $frame_unit = 'Area M2';
         $unit_cost = (!empty($frame_unit_cost))?$frame_unit_cost->selectedPrice:0;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
     if ($request->overpanel == 'Fan_Light' && (!empty($request->opGlassType) && !empty($request->frameThickness))) {
@@ -4048,7 +4050,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         }
 
         $QtyPerDoorType = (($request->oPWidth - (2 * $request->frameThickness))/1000) * (($request->oPHeigth - (2 * $request->frameThickness))/1000);
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
     }
 
     if ($request->sideLight1 == 'Yes' && (!empty($request->SL1Width) && !empty($request->sideLight1GlassType) && !empty($request->frameThickness))) {
@@ -4069,7 +4071,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
         }
 
         $QtyPerDoorType = (($request->SL1Width - (2 * $request->frameThickness))/1000) * (($request->SL1Height - (2 * $request->frameThickness))/1000);
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
     }
 
     if($request->sideLight2 == 'Yes'){
@@ -4095,7 +4097,7 @@ function GlassExport($request,$userIds,string $configurationDoor): void{
 
             $QtyPerDoorType = (($request->SL2Width - (2 * $request->frameThickness))/1000) * (($request->SL2Height - (2 * $request->frameThickness))/1000);
 
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType);
         }
     }
 }
@@ -4137,7 +4139,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
 
         $unit_cost = empty($glazing_unit_cost) ? 0 : $glazing_unit_cost->selectedPrice;
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }elseif(!empty($request->issingleconfiguration) && !empty($request->glazingSystems) && !empty($request->visionPanelQuantityforLeaf2)){
 
         $glazing_unit_cost = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->wherein('selected_glazing_system.userId', $userIds)->where('glazing_system.'.$configurationDoor,$request->issingleconfiguration)->where('glazing_system.Key',$request->glazingSystems)->first();
@@ -4165,7 +4167,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
             $unit_cost = 0;
         }
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
     if ($request->overpanel == 'Fan_Light' && (!empty($request->issingleconfiguration) && !empty($request->opglazingSystems))) {
@@ -4186,7 +4188,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
             $unit_cost = 0;
         }
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
     if ($request->sideLight1 == 'Yes' && (!empty($request->issingleconfiguration) && !empty($request->sideLight1GlazingSystems))) {
@@ -4209,7 +4211,7 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
             $unit_cost = 0;
         }
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
     }
 
     if($request->sideLight2 == 'Yes'){
@@ -4236,14 +4238,14 @@ function glazingExport($request,$userIds,string $configurationDoor): void{
                 $unit_cost = 0;
             }
 
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
         }
     }
 }
 
-function MachiningCostExport($request): void{
+function MachiningCostExport($request,$userIds,$userLoginId): void{
     if ($request->ironmongerySet == 'Yes' && (!empty($request->ironmongerySet) && !empty($request->IronmongeryID))) {
-        $IronmongeryInfo = AddIronmongery::select('*')->where('id', $request->IronmongeryID)->where('UserId',user_id())->get()->first();
+        $IronmongeryInfo = AddIronmongery::select('*')->where('id', $request->IronmongeryID)->where('UserId',$userLoginId ?? Auth()->user()->id)->get()->first();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -4311,12 +4313,12 @@ function MachiningCostExport($request): void{
                 $count = count($Ironmongey);
                 for($j = 0; $j < $count; $j++){
 
-                    $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', $Ironmongey[$j])->where('UserId',user_id())->first();
+                    $SelectedIronmongery = SelectedIronmongery::select('*')->where('id', $Ironmongey[$j])->where('UserId',$userLoginId ?? Auth()->user()->id)->first();
 
                     if(isset($SelectedIronmongery) && $SelectedIronmongery != "" && $SelectedIronmongery != null && !empty($SelectedIronmongery)){
-                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
+                        $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',$userLoginId ?? Auth()->user()->id)->first();
 
-                        $BOMSetting = BOMSetting::select('*')->where('UserId', user_id())->first();
+                        $BOMSetting = BOMSetting::select('*')->where('UserId', $userLoginId ?? Auth()->user()->id)->first();
 
                         $description = "";
                         $unit_cost = 0;
@@ -4332,7 +4334,7 @@ function MachiningCostExport($request): void{
                             $frame_unit = 'Each';
 
 
-                            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
+                            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, $QtyPerDoorType);
                         }
                     }
                 }
@@ -4509,11 +4511,11 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 }
 
-function IntumescentExport($request): void{
+function IntumescentExport($request,$userIds,$userLoginId): void{
     if(!empty($request->intumescentSealArrangement) && !empty($request->intumescentSealType) && !empty($request->intumescentSealLocation) && !empty($request->intumescentSealColor)){
         $IntumescentSealsDetails = SettingIntumescentSeals2::select('id', 'intumescentSeals','brand')
         ->where("id", $request->intumescentSealArrangement)->first();
@@ -4522,7 +4524,7 @@ function IntumescentExport($request): void{
             $intumescentSealArrangement = $IntumescentSealsDetails->brand."-".$IntumescentSealsDetails->intumescentSeals;
             $description = str_replace("_", ' ', $request->intumescentSealType)."| ".$request->intumescentSealLocation."| ".$request->intumescentSealColor."| ".$IntumescentSealsDetails->brand."|".$IntumescentSealsDetails->intumescentSeals;
 
-            $intumescentSealTypeDetails = GetOptions(["setting_intumescentseals2.id" => $request->intumescentSealArrangement],"join" ,"intumescentSealArrangement", "first", ["selected_intumescentseals2.selected_cost", "selected_intumescentseals2.id"]);
+            $intumescentSealTypeDetails = GetOptions(["setting_intumescentseals2.id" => $request->intumescentSealArrangement],"join" ,"intumescentSealArrangement", "first", ["selected_intumescentseals2.selected_cost", "selected_intumescentseals2.id"],[],$userLoginId);
 
             $lm = 0;
             if(!empty($request->frameHeight) && !empty($request->frameWidth) && $request->frameHeight != "NaN" && $request->frameWidth != "NaN"){
@@ -4548,12 +4550,12 @@ function IntumescentExport($request): void{
                 $total_cost = $lm * $unit_cost;
             }
 
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$lm);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$lm);
         }
     }
 }
 
-function AccousticsExport($request): void{
+function AccousticsExport($request,$userIds): void{
     if(!empty($request->accoustics) && !empty($request->frameHeight) && !empty($request->frameWidth) && $request->accoustics == "Yes"){
 
 
@@ -4564,28 +4566,26 @@ function AccousticsExport($request): void{
 
         $LM = ((intval($request->frameHeight) * 2) + intval($request->frameWidth))/1000;
 
-        $perimeterSeal1 = $LM * accousticPrice($request->perimeterSeal1,'Perimeter_Seal_1');
-        $perimeterSeal2 = $LM * accousticPrice($request->perimeterSeal2,'Perimeter_Seal_2');
+        $perimeterSeal1 = $LM * accousticPrice($userIds, $request->perimeterSeal1,'Perimeter_Seal_1');
+        $perimeterSeal2 = $LM * accousticPrice($userIds, $request->perimeterSeal2,'Perimeter_Seal_2');
         $meetingstiles = 0;
         $accousticsmeetingStiles = 0;
         if(!empty($request->accousticsmeetingStiles) && !empty($request->leafHeightNoOP)){
-            $meetingstiles = ($request->leafHeightNoOP / 1000) * accousticPrice($request->accousticsmeetingStiles,'accousticsmeetingStiles');
-            $accousticsmeetingStiles = accousticPrice($request->accousticsmeetingStiles,'accousticsmeetingStiles');
+            $meetingstiles = ($request->leafHeightNoOP / 1000) * accousticPrice($userIds, $request->accousticsmeetingStiles,'accousticsmeetingStiles');
+            $accousticsmeetingStiles = accousticPrice($userIds, $request->accousticsmeetingStiles,'accousticsmeetingStiles');
         }
 
         $category = 'Accoustics';
         $frame_unit = 'Each';
-        $unit_cost = accousticPrice($request->perimeterSeal1,'Perimeter_Seal_1') + accousticPrice($request->perimeterSeal2,'Perimeter_Seal_2') + $accousticsmeetingStiles;
+        $unit_cost = accousticPrice($userIds, $request->perimeterSeal1,'Perimeter_Seal_1') + accousticPrice($userIds, $request->perimeterSeal2,'Perimeter_Seal_2') + $accousticsmeetingStiles;
 
         $total_cost = $perimeterSeal1 + $perimeterSeal2 + $meetingstiles;
 
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$LM,$total_cost,'',false);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$LM,$total_cost,'',false);
     }
 }
 
-function accousticPrice($id,$name){
-    $userIds = CompanyUsers();
-
+function accousticPrice($userIds,$id,$name){
     $accoustic = SelectedAccoustics::join('accoustics','accoustics.id','selected_accoustics.accousticsId')->wherein('selected_accoustics.userId',$userIds)->where('accoustics.Key',$id)->get()->first();
     return $accoustic->selectedPrice ?? 0;
 }
@@ -4631,13 +4631,21 @@ function getParentId() {
 }
 
 
-function CompanyUsers($isstatus = false){
-    $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
-    if (Auth::user()->UserType == 2) {
+function CompanyUsers($isstatus = false, $userLoginId=null){
+    $loginId = $userLoginId ?? Auth::user()->id;
+    $users = User::where('UserType',3)->where('id',$loginId)->first();
+    if ($userLoginId != null) {
+        if ($isstatus == true) {
+            $UserId = [$loginId];
+        } else {
+            $UserId = ['1', $loginId];
+        }
+
+    }else if (Auth::user()->UserType == 2) {
         if($isstatus == true){
-            $UserId = [Auth::user()->id];
+            $UserId = [$loginId];
         }else{
-            $UserId = ['1', Auth::user()->id];
+            $UserId = ['1', $loginId];
         }
 
         // $UserId = ['1', getParentId()];

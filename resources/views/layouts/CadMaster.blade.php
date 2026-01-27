@@ -70,7 +70,7 @@
         <div class="app-header header-shadow">
             <div class="app-header__logo">
                 <div class="logo-src">
-                    <a href="{{url('/')}}"><img src="{{url('/')}}/CompanyLogo/companylogo.png" style="width: 100%"></a>
+                    <a href="{{url('/')}}"><img src="{{url('/')}}/CompanyLogo/companylogo.png" loading="lazy" style="width: 100%"></a>
                 </div>
                 <div class="header__pane ml-auto">
                     <div>

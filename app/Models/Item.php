@@ -17,7 +17,7 @@ class Item extends Model
     protected $fillable = [
         'ItemName','ItemPhoto','ItemStatus','ItemType'
     ];
-    
+
       /**
      * The attributes that should be hidden for arrays.
      *
@@ -30,4 +30,15 @@ class Item extends Model
     public function ItemCategory(){
         return $this->hasMany(ItemCategory::class,'ItemId');
     }
+
+    public function versionItem()
+    {
+        return $this->hasOne(QuotationVersionItems::class, 'itemID', 'itemId');
+    }
+
+    public function master()
+    {
+        return $this->belongsTo(ItemMaster::class, 'itemId', 'itemID');
+    }
+
 }
