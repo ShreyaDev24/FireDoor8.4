@@ -18,7 +18,7 @@ class Items extends Model
     //     'ItemName','ItemPhoto','ItemStatus','ItemType',
     // ];
     protected $table = 'items';
-    
+
     // protected $fillable = [
     //     'LineNumber',
     //     'Floor',
@@ -204,7 +204,7 @@ class Items extends Model
         'QuotationId',
         'DoorScheduleId',
     ];
-    
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -214,7 +214,12 @@ class Items extends Model
         'remember_token',
     ];
 
-    public function ItemCategory(){
-        return $this->hasMany(ItemCategory::class,'ItemId');
+    public function masters()
+    {
+        return $this->hasMany(
+            ItemMaster::class,
+            'itemID', // FK in item_master
+            'itemId'  // PK in items
+        );
     }
 }

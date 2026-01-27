@@ -29,18 +29,22 @@ class QuotationVersionItems extends Model
         'remember_token',
     ];
 
-    public function ItemCategory(){
-        return $this->hasMany(ItemCategory::class,'ItemId');
-    }
-
-    public function item()
-    {
-        return $this->belongsTo(Item::class, 'itemID', 'itemId');
-    }
-
     public function master()
     {
-        return $this->belongsTo(ItemMaster::class, 'itemmasterID', 'id');
+        return $this->belongsTo(
+            ItemMaster::class,
+            'itemmasterID',
+            'id'
+        );
     }
 
+    // QuotationVersionItems → Item
+    public function item()
+    {
+        return $this->belongsTo(
+            Item::class,
+            'itemID',
+            'itemId'
+        );
+    }
 }

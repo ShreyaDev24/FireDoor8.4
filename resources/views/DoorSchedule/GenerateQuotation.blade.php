@@ -662,93 +662,134 @@
                                         </thead>
                                         <tbody id="versionData">
                                             @if (!empty($data) && count($data) > 0)
-                                                <?php $index = 0;
-                                                $SI = 1; ?>
-                                                @foreach ($data as $row)
-                                                    @if (!empty($row['version_id']))
-                                                        @php
-                                                            $version_id = $row['version_id'];
-                                                        @endphp
-                                                    @else
-                                                        @php
-                                                            $version_id = 0;
-                                                        @endphp
-                                                    @endif
-                                                    @php
-                                                        $SvgImage = '';
-                                                    @endphp
-                                                    @if (empty($row['SvgImage']))
-                                                        @php
-                                                            $SvgImage = 'color_red';
-                                                        @endphp
-                                                    @endif
-                                                    <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
-                                                        <td>
-                                                            {{ $SI }}
-                                                            <input type="hidden" class="check" value="{{ $row['itemId'] }}">
-                                                            <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
-                                                        </td>
-                                                        <td>{{ $row['DoorQuantity'] }}</td>
-                                                        <td>{{ $row['FireRating'] }}</td>
-                                                        <td>{{ $row['DoorType'] }}</td>
-                                                        <td>{{ $row['doorNumber'] }}</td>
-                                                        <td>{{ $row['floor'] }}</td>
-                                                        <td>{{ $row['DoorsetType'] }}</td>
-                                                        <td>{{ $row['SOWidth'] }}</td>
-                                                        <td>{{ $row['SOHeight'] }}</td>
-                                                        <td>{{ $row['SOWallThick'] }}</td>
-                                                        <td>{{ number_format((($row['AdjustPrice'])?floatval($row['AdjustPrice']) :floatval($row['DoorsetPrice'])),2) }}</td>
-                                                        <td>{{ number_format($row['IronmongaryPrice'],2) }}</td>
-                                                        <td>{{ number_format((($row['AdjustPrice'])?floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice']):floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])),2)  }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="dropdown">
-                                                                <a class="dropdown-toggle btn btn-light" type="button"
-                                                                    data-toggle="dropdown"><i
-                                                                        class="fa fa-ellipsis-h"></i></a>
-                                                                <ul class="dropdown-menu drop_style">
-                                                                    <li><a
-                                                                            href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">Edit</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        <a onclick="FloorNoChange('{{ $row['id'] }}','{{ $row['DoorType'] }}','{{ $row['doorNumber'] }}')"
-                                                                            href="javascript:void(0);">Edit FLoor No.</a>
-                                                                    </li>
-                                                                    <li><a
-                                                                            href="{{url('quotation/add-new-doors')}}/{{$quotationId}}/{{$version_id}}/{{ $row['itemId'] }}">Add New</a>
-                                                                    </li>
-                                                                    <li>
-                                                                        {{--  <a onclick="favoriteItem(
-                                                                            @json($row['itemId']),
-                                                                            @json($row['id']),
-                                                                            'Door',
-                                                                            'Configurable Favorite Item',
-                                                                            'Configurable Type Name'
-                                                                        )"
-                                                                        href="javascript:void(0);">
-                                                                            Name Configuration
-                                                                        </a>
-                                                                    </li>  --}}
 
-                                                                    <li><a onclick="adjustPrice({{ $row["itemId"] }},{{ $row["id"] }},{{ floatval($row["DoorsetPrice"]) + floatval($row["IronmongaryPrice"]) }})"
-                                                                            href="javascript:void(0);">Adjust Price</a>
-                                                                    </li>
-                                                                    <li><a href="javascript:void(0);">Comment</a></li>
-                                                                    <li><a href="javascript:void(0);"
-                                                                            onClick="CopyDoorSet({{ $quotationId }},{{ $row["id"] }})">Copy</a>
-                                                                    </li>
-                                                                    <li><a onclick="remove_item({{ $row["id"] }})"
-                                                                            href="#">Remove</a></li>
-                                                                     <li><a onclick="edit_image1({{ $row["itemId"] }})"
-                                                                            href="javascript:void(0);">Validate</a></li>
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <?php $index++;
-                                                    $SI++; ?>
+                                                @php
+                                                    $index = 0;
+                                                    $SI = 1;
+                                                @endphp
+
+                                                @foreach ($data as $row)
+
+                                                    @php
+                                                        $version_id = $row['version_id'] ?? 0;
+                                                        $SvgImage = empty($row['SvgImage']) ? 'color_red' : '';
+                                                    @endphp
+
+                                                    {{-- 🔥 LOOP DOORS --}}
+                                                    @if (!empty($row['doors']) && count($row['doors']) > 0)
+                                                        @foreach ($row['doors'] as $door)
+
+                                                            <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
+                                                                <td>
+                                                                    {{ $SI }}
+                                                                    <input type="hidden" class="check" value="{{ $row['itemId'] }}">
+                                                                    <input type="hidden" class="doors_{{ $index }}" value="{{ $door['id'] }}">
+                                                                </td>
+
+                                                                <td>{{ $row['DoorQuantity'] }}</td>
+                                                                <td>{{ $row['FireRating'] }}</td>
+                                                                <td>{{ $row['DoorType'] }}</td>
+                                                                <td>{{ $door['doorNumber'] }}</td>
+                                                                <td>{{ $door['floor'] }}</td>
+                                                                <td>{{ $row['DoorsetType'] }}</td>
+                                                                <td>{{ $row['SOWidth'] }}</td>
+                                                                <td>{{ $row['SOHeight'] }}</td>
+                                                                <td>{{ $row['SOWallThick'] }}</td>
+
+                                                                <td>
+                                                                    {{ number_format(
+                                                                        ($row['AdjustPrice'] ? floatval($row['AdjustPrice']) : floatval($row['DoorsetPrice'])),
+                                                                        2
+                                                                    ) }}
+                                                                </td>
+
+                                                                <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
+
+                                                                <td>
+                                                                    {{ number_format(
+                                                                        ($row['AdjustPrice']
+                                                                            ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'])
+                                                                            : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])),
+                                                                        2
+                                                                    ) }}
+                                                                </td>
+
+                                                                <td class="text-center">
+                                                                    <div class="dropdown">
+                                                                        <a class="dropdown-toggle btn btn-light" data-toggle="dropdown">
+                                                                            <i class="fa fa-ellipsis-h"></i>
+                                                                        </a>
+
+                                                                        <ul class="dropdown-menu drop_style">
+
+                                                                            <li>
+                                                                                <a href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">
+                                                                                    Edit
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="FloorNoChange(
+                                                                                    '{{ $door['id'] }}',
+                                                                                    '{{ $row['DoorType'] }}',
+                                                                                    '{{ $door['doorNumber'] }}'
+                                                                                )" href="javascript:void(0);">
+                                                                                    Edit Floor No.
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a href="{{ url('quotation/add-new-doors') }}/{{ $quotationId }}/{{ $version_id }}/{{ $row['itemId'] }}">
+                                                                                    Add New
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="adjustPrice(
+                                                                                    {{ $row['itemId'] }},
+                                                                                    {{ $door['id'] }},
+                                                                                    {{ floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) }}
+                                                                                )" href="javascript:void(0);">
+                                                                                    Adjust Price
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="CopyDoorSet({{ $quotationId }}, {{ $door['id'] }})"
+                                                                                href="javascript:void(0);">
+                                                                                    Copy
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="remove_item({{ $door['id'] }})" href="javascript:void(0);">
+                                                                                    Remove
+                                                                                </a>
+                                                                            </li>
+
+                                                                            <li>
+                                                                                <a onclick="edit_image1({{ $row['itemId'] }})"
+                                                                                href="javascript:void(0);">
+                                                                                    Validate
+                                                                                </a>
+                                                                            </li>
+
+                                                                        </ul>
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+
+                                                            @php
+                                                                $index++;
+                                                                $SI++;
+                                                            @endphp
+
+                                                        @endforeach
+                                                    @endif
+
                                                 @endforeach
                                             @endif
+
                                         </tbody>
                                     </table>
                                 </div>
@@ -898,7 +939,7 @@
                                         <div class="quote_pricing">
                                             <p>DoorSet
                                                 <span>
-                                                    @if (!empty($TotalExactDoorPrice))
+                                                    @if (!empty($TotalDoorPrice))
                                                         {{ number_format( (float) $TotalDoorPrice, 2, '.', '') }}
                                                     @else
                                                         {{ '0.00' }}@endif

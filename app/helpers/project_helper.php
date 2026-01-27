@@ -82,14 +82,12 @@ function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'
 
 
 function itemAdjustCount($Id,$vId): float|int{
-    if($vId > 0){
-        $Schedule = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->where(['quotation_version_items.version_id'=>$vId,'items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
-    } else {
-        $Schedule = Item::join('item_master','items.itemId','item_master.itemID')
-        ->where(['items.QuotationId' => $Id ])->get();
+    if (!isset($vId) || $vId <= 0) {
+        $vId = 0;
     }
+
+    $Schedule = Item::join('item_master','items.itemId','item_master.itemID')
+        ->where(['items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
 
     $TotalDoorSetPrice = 0;
     if(!empty($Schedule)){

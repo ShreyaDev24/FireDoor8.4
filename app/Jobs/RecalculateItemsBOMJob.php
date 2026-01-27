@@ -29,7 +29,8 @@ class RecalculateItemsBOMJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $Items = Item::where(['items.QuotationId' => $this->quotationId, 'items.VersionId' => $this->selectVersionID])->get();
+        $Items = Item::where(['items.QuotationId' => $this->quotationId, 'items.VersionId' => $this->selectVersionID])
+        ->distinct('itemId')->get();
 
         $quotation = Quotation::where('id',$this->quotationId)->first();
 
@@ -39,23 +40,22 @@ class RecalculateItemsBOMJob implements ShouldQueue
 
                 BOMUpdate($data, $quotation->configurableitems,$this->userLoginId);
 
-                $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$this->quotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-                $GTSellPrice = 0;
-                $GTSellPriceTotal = 0;
-                if(!empty($BOMCalculation)){
-                    foreach($BOMCalculation as $value){
-                        if($value->Category != 'Ironmongery&MachiningCosts'){
-                            $GTSellPrice += $value->GTSellPrice;
-                        }
-                    }
+                $GTSellPrice = BOMCalculation::where('QuotationId', $this->quotationId)
+                    ->where('DoorType', $data->DoorType)
+                    ->where('itemId', $itemid)
+                    ->where('Category', '!=', 'Ironmongery&MachiningCosts')
+                    ->sum('GTSellPrice');
 
-                    $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                    $GTSellPriceTotal = ($ItemMaster > 0) ? round(($GTSellPrice/$ItemMaster),2) : $GTSellPrice;
-                }
+                $itemCount = ItemMaster::where('itemID', $itemid)->count();
+                $itemCount = max(1, $itemCount); // prevent divide-by-zero
+
+                $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
 
                 Item::where('itemId', $itemid)->update([
                     'DoorsetPrice' => $GTSellPriceTotal,
                 ]);
+
+
             }
         }
 
