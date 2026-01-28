@@ -37,7 +37,7 @@ class CoreCertificateController extends Controller
             ],
             2 => [
                 'FD30' => 'Chilt/A01204 Revision H',
-                'FD60' => 'FEA/F96103  Revision Q',
+                'FD60' => 'Chilt/A01205 Part 1 Revision K',
             ],
             7 => [
                 'FD30' => 'FEA98164 Revision P',
@@ -113,7 +113,7 @@ class CoreCertificateController extends Controller
             ],
             2 => [
                 'FD30' => 'Chilt/A01204 Revision H',
-                'FD60' => 'FEA/F96103  Revision Q',
+                'FD60' => 'Chilt/A01205 Part 1 Revision K',
             ],
             7 => [
                 'FD30' => 'FEA98164 Revision P',
