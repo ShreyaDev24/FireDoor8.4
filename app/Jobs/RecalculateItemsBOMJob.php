@@ -1,0 +1,63 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Item;
+use App\Models\ItemMaster;
+use App\Models\Quotation;
+use App\Models\BOMCalculation;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class RecalculateItemsBOMJob implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    /**
+     * Create a new job instance.
+     */
+    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId)
+    {
+        //
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+        $Items = Item::where(['items.QuotationId' => $this->quotationId, 'items.VersionId' => $this->selectVersionID])
+        ->distinct('itemId')->get();
+
+        $quotation = Quotation::where('id',$this->quotationId)->first();
+
+        if(!empty($Items)){
+            foreach($Items as $data){
+                $itemid = $data->itemId;
+
+                BOMUpdate($data, $quotation->configurableitems,$this->userLoginId);
+
+                $GTSellPrice = BOMCalculation::where('QuotationId', $this->quotationId)
+                    ->where('DoorType', $data->DoorType)
+                    ->where('itemId', $itemid)
+                    ->where('Category', '!=', 'Ironmongery&MachiningCosts')
+                    ->sum('GTSellPrice');
+
+                $itemCount = ItemMaster::where('itemID', $itemid)->count();
+                $itemCount = max(1, $itemCount); // prevent divide-by-zero
+
+                $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
+
+                Item::where('itemId', $itemid)->update([
+                    'DoorsetPrice' => $GTSellPriceTotal,
+                ]);
+
+
+            }
+        }
+
+    }
+}

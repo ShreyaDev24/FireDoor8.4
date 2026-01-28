@@ -14,7 +14,7 @@
     <!-- <link rel="shortcut icon" type="image/png" href="{{asset('images/icon/favicon.ico')}}"> -->
     <!-- <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro' rel='stylesheet' type='text/css'> -->
     <!-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> -->
-    
+
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"> -->
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}" type="text/css">
     <!-- <link rel="stylesheet" href="{{asset('css/bootstrap-theme.min.css')}}" type="text/css"> -->
@@ -42,12 +42,12 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css" type="text/css">
     <!-- modernizr css -->
     <script src="{{asset('js/vendor/modernizr-2.8.3.min.js')}}"></script>
-    
+
 </head>
 <body>
-    <div id="app">  
+    <div id="app">
         <div class="container">
-               
+
         </div>
             <!--[if lt IE 8]>
             <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -61,14 +61,14 @@
     </div>
 
     <!-- Scripts -->
-    
+
      <!-- jquery latest version -->
 
-    
+
     <script src="{{asset('js/jquery.min.js')}}"></script>
     <!-- bootstrap 4 js -->
     <script src="{{asset('js/popper.min.js')}}"></script>
-    <script src="{{asset('js/bootstrap.min.js')}}"></script>    
+    <script src="{{asset('js/bootstrap.min.js')}}"></script>
     <script src="{{asset('js/owl.carousel.min.js')}}"></script>
     <script src="{{asset('js/metisMenu.min.js')}}"></script>
     <script src="{{asset('js/jquery.slimscroll.min.js')}}"></script>
@@ -89,7 +89,7 @@
     <script src="{{asset('js/plugins.js')}}"></script>
     <script src="{{asset('js/scripts.js')}}"></script>
     <!-- maps Resources -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbeBYsZSDkbIyfUkoIw1Rt38eRQOQQU0o"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCbeBYsZSDkbIyfUkoIw1Rt38eRQOQQU0o"></script>
     <script>
     function initialize() {
     var latlng = new google.maps.LatLng(18.520266,73.856406);
@@ -113,7 +113,7 @@
     };
 
     var map = new google.maps.Map(document.getElementById("google_map"), myOptions);
-    
+
     var map2 = new google.maps.Map(document.getElementById("google_map2"), myOptions2);
     var map3 = new google.maps.Map(document.getElementById("google_map3"), myOptions3);
 

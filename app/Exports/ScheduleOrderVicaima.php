@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Support\Facades\File;
-use App\Models\Item;
+use App\Models\Items;
 use App\Models\Project;
 use App\Models\Quotation;
 use App\Models\DoorDimension;
@@ -38,11 +38,11 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         $versionId = $this->vid;
         $quotaion = Quotation::where('id',$quotationId)->first();
 
+        $item = Items::join('item_master', 'item_master.itemID', '=', 'items.itemId')
+            ->where('QuotationId', $quotationId)
+            ->where('VersionId', $versionId)
+            ->get();
 
-        $item = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->join('quotation','items.QuotationId','quotation.id')
-        ->where('quotation_version_items.version_id',$versionId)->get();
         $SumDoorsetPrice = 0;
         $SumIronmongaryPrice = 0;
         $SumDoorQuantity = 0;

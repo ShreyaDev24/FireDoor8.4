@@ -15,11 +15,11 @@ class QuotationVersionItems extends Model
      * @var array
      */
     protected $table = 'quotation_version_items';
-    
+
     protected $fillable = [
         'QuotationId','itemID','Version','Status','IsDeleted',
     ];
-    
+
       /**
      * The attributes that should be hidden for arrays.
      *
@@ -29,7 +29,22 @@ class QuotationVersionItems extends Model
         'remember_token',
     ];
 
-    public function ItemCategory(){
-        return $this->hasMany(ItemCategory::class,'ItemId');
+    public function master()
+    {
+        return $this->belongsTo(
+            ItemMaster::class,
+            'itemmasterID',
+            'id'
+        );
+    }
+
+    // QuotationVersionItems → Item
+    public function item()
+    {
+        return $this->belongsTo(
+            Item::class,
+            'itemID',
+            'itemId'
+        );
     }
 }

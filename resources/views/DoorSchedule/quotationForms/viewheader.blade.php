@@ -270,7 +270,98 @@
                 </div>
             </div>
             @else
-                {!! $DA !!}
+                @php $loopIndex = 0; @endphp
+
+                @foreach ($deliveryAddresses as $xxs)
+
+                    <input type="hidden" name="quotation_sitedeliveryaddressID[]" value="{{ $xxs->id }}">
+
+                    <div class="col-sm-12">
+                        <div class="card-header">
+                            <h5 class="card-title" style="margin-top: 10px">
+                                Site Delivery Address
+                            </h5>
+                        </div>
+
+                        {{-- PLUS / DELETE BUTTON --}}
+                        @if ($loopIndex == 0)
+                            <div>
+                                <a style="float: right; margin-right: 10px; margin-top: -45px"
+                                href="javascript:void(0);"
+                                id="add-customer-detail"
+                                class="btn-shadow btn btn-success">
+                                    <i class="fa fa-plus"></i>
+                                </a>
+                            </div>
+                        @else
+                            <div>
+                                <input type="hidden" class="QuotDeliverAddrID" value="{{ $xxs->id }}">
+                                <a style="float: right; margin-right: 10px; margin-top: -45px"
+                                href="javascript:void(0);"
+                                class="btn-shadow btn btn-danger deleteQuotDeliverAddr">
+                                    <i class="fa fa-remove"></i>
+                                </a>
+                            </div>
+                        @endif
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label>Address 1 <span class="text-danger">*</span></label>
+                                    <input type="text"
+                                        class="form-control"
+                                        name="Address1[]"
+                                        value="{{ $xxs->Address1 }}"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="position-relative form-group">
+                                    <label>Address 2</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        name="Address2[]"
+                                        value="{{ $xxs->Address2 }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label>Country</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        name="Country[]"
+                                        value="{{ $xxs->Country }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label>City</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        name="City[]"
+                                        value="{{ $xxs->City }}">
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="position-relative form-group">
+                                    <label>Postal Code / Eircode</label>
+                                    <input type="text"
+                                        class="form-control"
+                                        name="PostalCode[]"
+                                        value="{{ $xxs->PostalCode }}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @php $loopIndex++; @endphp
+
+                @endforeach
+
             @endif
             <span id="customer-details-section"></span>
             <div class="col-sm-8">

@@ -82,14 +82,12 @@ function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'
 
 
 function itemAdjustCount($Id,$vId): float|int{
-    if($vId > 0){
-        $Schedule = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->where(['quotation_version_items.version_id'=>$vId,'items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
-    } else {
-        $Schedule = Item::join('item_master','items.itemId','item_master.itemID')
-        ->where(['items.QuotationId' => $Id ])->get();
+    if (!isset($vId) || $vId <= 0) {
+        $vId = 0;
     }
+
+    $Schedule = Item::join('item_master','items.itemId','item_master.itemID')
+        ->where(['items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
 
     $TotalDoorSetPrice = 0;
     if(!empty($Schedule)){
@@ -284,8 +282,8 @@ function GetlippingSpeciesName($LippingSpeciesNames){
 }
 
 ///halspan bom calculation
-function HalspanBomCalculation($request): void{
-    $userIds = CompanyUsers();
+function HalspanBomCalculation($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -319,10 +317,10 @@ function HalspanBomCalculation($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -331,25 +329,25 @@ function HalspanBomCalculation($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //LeafSetBesPoke
     LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
-function glazingBeadExport($request,$userIds): void{
+function glazingBeadExport($request,$userIds,$userLoginId): void{
     if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP1Width) && !empty($request->vP1Height1) && !empty($request->visionPanelQuantity)){
         $selected_lipping_species = LippingSpecies::where('id', $request->glazingBeadSpecies)->get();
 
@@ -411,7 +409,7 @@ function glazingBeadExport($request,$userIds): void{
         $frame_unit = 'Each';
         $QtyPerDoorType = $request->visionPanelQuantity * 2;
         $total_cost = $unit_cost*$QtyPerDoorType;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
 
     } else if(!empty($request->glazingBeadSpecies) && !empty($request->glazingBeads) && !empty($request->glazingBeadsThickness) &&  !empty($request->glazingBeadsHeight) &&  !empty($request->vP2Width) && !empty($request->vP2Height1) && !empty($request->visionPanelQuantityforLeaf2) && empty($request->vP1Width) && empty($request->vP1Height1)){
         $selected_lipping_species = LippingSpecies::where('id', $request->glazingBeadSpecies)->get();
@@ -474,11 +472,11 @@ function glazingBeadExport($request,$userIds): void{
         $frame_unit = 'Each';
         $QtyPerDoorType = $request->visionPanelQuantityforLeaf2 * 2;
         $total_cost = $unit_cost*$QtyPerDoorType;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$QtyPerDoorType,$total_cost);
 
     }
 
-    $allSettings = DoorFrameConstruction::where('UserId', Auth()->user()->id)->get()->keyBy('DoorFrameConstruction');
+    $allSettings = DoorFrameConstruction::where('UserId', $userLoginId ?? Auth()->user()->id)->get()->keyBy('DoorFrameConstruction');
     $VisionPanelWidthNFR = 0;
     $VisionPanelHeightNFR = 0;
     $VisionPanelWidthFD60 = 0;
@@ -539,7 +537,7 @@ function glazingBeadExport($request,$userIds): void{
 
             $total_cost = $unit_cost*$quantity_of_door_type;
 
-            SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+            SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
 
         }
     }
@@ -590,7 +588,7 @@ function glazingBeadExport($request,$userIds): void{
         $quantity_of_door_type = 2;
 
         $total_cost = $unit_cost*$quantity_of_door_type;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
     }
 
     if ($request->sideLight2 == 'Yes' && (!empty($request->SlBeadThickness) && !empty($request->SideLight2GlazingBeadSpecies))) {
@@ -640,12 +638,12 @@ function glazingBeadExport($request,$userIds): void{
         $quantity_of_door_type = 2;
 
         $total_cost = $unit_cost*$quantity_of_door_type;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost,$quantity_of_door_type,$total_cost);
     }
 }
 ///flamebreak bom calculation
-function FlamebreakBomCalculation($request): void{
-    $userIds = CompanyUsers();
+function FlamebreakBomCalculation($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -679,10 +677,10 @@ function FlamebreakBomCalculation($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -691,19 +689,19 @@ function FlamebreakBomCalculation($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //LeafSetBesPoke
     LeafSetBesPoke($request,$userIds,$configurationDoor);
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
@@ -884,8 +882,8 @@ function ironmongeryGetCodeName($id): array{
 }
 
 //Sreadec bom calculation
-function BomCalculationSeadec($request): void{
-    $userIds = CompanyUsers();
+function BomCalculationSeadec($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -919,10 +917,10 @@ function BomCalculationSeadec($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -931,13 +929,13 @@ function BomCalculationSeadec($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //Leaf Set BesPoke
     if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
@@ -1007,7 +1005,7 @@ function BomCalculationSeadec($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 5) {
         $doorConfiguration = "Seadec";
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
@@ -1034,20 +1032,20 @@ function BomCalculationSeadec($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
 //MMM bom calculation
-function MMMBomCalculation($request): void{
-    $userIds = CompanyUsers();
+function MMMBomCalculation($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -1081,10 +1079,10 @@ function MMMBomCalculation($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -1093,13 +1091,13 @@ function MMMBomCalculation($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //Leaf Set BesPoke
     if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
@@ -1169,7 +1167,7 @@ function MMMBomCalculation($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 9) {
         $doorConfiguration = "MMM";
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
@@ -1196,23 +1194,24 @@ function MMMBomCalculation($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
-function BOMUpdate($data, $configurableitems): void{
+function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
+    $UserId = $userLoginId ?? Auth::user()->id;
     $item = new Item();
     $item->itemID = $data->itemId;
     $item->QuotationId = $data->QuotationId;
     $item->version_id = $data->VersionId;
-    $item->UserId = Auth::user()->id;
+    $item->UserId = $UserId;
     $item->DoorQuantity = $data->DoorQuantity;
     $item->intumescentLeafType = $data->IntumescentLeafType;
     $item->ScallopedWidth = $data->ScallopedWidth;
@@ -1451,20 +1450,20 @@ function BOMUpdate($data, $configurableitems): void{
     $item->issingleconfiguration = $configurableitems;
 
     match ($configurableitems) {
-        4 => BomCalculationVicaima($item),
-        5 => BomCalculationSeadec($item),
-        6 => BomCalculationDeanta($item),
-        2 => HalspanBomCalculation($item),
-        7 => FlamebreakBomCalculation($item),
-        8 => StredorBomCalculation($item),
-        9 => MMMBomCalculation($item),
-        default => BomCalculation($item),
+        4 => BomCalculationVicaima($item,$userLoginId),
+        5 => BomCalculationSeadec($item,$userLoginId),
+        6 => BomCalculationDeanta($item,$userLoginId),
+        2 => HalspanBomCalculation($item,$userLoginId),
+        7 => FlamebreakBomCalculation($item,$userLoginId),
+        8 => StredorBomCalculation($item,$userLoginId),
+        9 => MMMBomCalculation($item,$userLoginId),
+        default => BomCalculation($item,$userLoginId),
     };
 
 }
 
-function BomCalculationDeanta($request): void{
-    $userIds = CompanyUsers();
+function BomCalculationDeanta($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
         $fireRatingVal = 'FD30';
     } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
@@ -1498,10 +1497,10 @@ function BomCalculationDeanta($request): void{
         BOMCalculation::where('QuotationId',$request->QuotationId)->where('itemId',$request->itemID)->delete();
     }
 
-    glazingBeadExport($request,$userIds);
+    glazingBeadExport($request,$userIds,$userLoginId);
 
     //frame
-    frameExport($request,$userIds);
+    frameExport($request,$userIds,$userLoginId);
 
     //glass
     GlassExport($request,$userIds,$configurationDoor);
@@ -1510,13 +1509,13 @@ function BomCalculationDeanta($request): void{
     glazingExport($request,$userIds,$configurationDoor);
 
     //Intumescent Seal
-    IntumescentExport($request);
+    IntumescentExport($request,$userIds,$userLoginId);
 
     //Ironmongery Material Costs
-    IronmongeryCostExport($request,$version_id);
+    IronmongeryCostExport($request,$version_id,$userIds,$userLoginId);
 
     //Ironmongery & Machining Costs
-    MachiningCostExport($request);
+    MachiningCostExport($request,$userIds,$userLoginId);
 
     //Leaf Set BesPoke
     if (!empty($request->issingleconfiguration) && !empty($request->lippingSpecies)) {
@@ -1586,7 +1585,7 @@ function BomCalculationDeanta($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (floatval($door_core1) + (floatval($lm) * floatval($thickness_cost))) + floatval($leafandhalfunitcost);
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 6) {
         $doorConfiguration = "Deanta";
         $lipping_type = str_replace('_', ' ',  $request->lippingType);
@@ -1613,26 +1612,28 @@ function BomCalculationDeanta($request): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
-        SaveBOMCalculation($request, $category, $frame_unit, $description, $unit_cost);
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
 
     //Accoustics
-    AccousticsExport($request);
+    AccousticsExport($request,$userIds);
 
     // General Labour Costs
     commonGeneralLabourCost($request,$userIds);
 }
 
-function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$unit,$unit_cost,$total_cost,$category): void{
-    $userIds = CompanyUsers();
+function saveScreenBOMCalculation($userLoginId, $request,$description,$Qty,$QTYOfScreenType,$unit,$unit_cost,$total_cost,$category): void{
+    $userIds = CompanyUsers(true,$userLoginId);
 
     $version_id = QuotationVersion::where('quotation_id', $request->QuotationId)->where('id', $request->VersionId)->value('version');
     if(empty($version_id)){
         $version_id = 0;
     }
 
-    $currencyPrice = getCurrencyRate($request->QuotationId);
+    $quotation = Quotation::findOrFail($request->QuotationId);
+
+    $currencyPrice = getCurrencyRate($request->QuotationId,$quotation->UserId);
 
     $items = SideScreenItem::where('QuotationId',$request->QuotationId)->get();
 
@@ -1673,8 +1674,8 @@ function saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,$u
     $bom_calculation->save();
 }
 
-function sideScreenBOM($request): void{
-    $userIds = CompanyUsers(true);
+function sideScreenBOM($request,$userLoginId=null): void{
+    $userIds = CompanyUsers(true,$userLoginId);
     $FireRating = $request->FireRating;
     if($FireRating == 'IGU 0-0'){
         $FireRating = '0-0';
@@ -1784,7 +1785,7 @@ function sideScreenBOM($request): void{
                 $unit_cost = $PricePerLM * $LM;
                 $total_cost = $unit_cost * $QTYOfScreenType;
 
-                saveScreenBOMCalculation($request,$description,$Qty,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GlazingBeads');
+                saveScreenBOMCalculation($userLoginId, $request,$description,$Qty,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GlazingBeads');
             }
         }
     }
@@ -1823,7 +1824,7 @@ function sideScreenBOM($request): void{
             $unit_cost = ($request->FrameThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
 
         }
 
@@ -1845,7 +1846,7 @@ function sideScreenBOM($request): void{
                 $unit_cost = ($request->$TransomThickness * $request->TransomDepth * ($unitcost->selected_price ?? 0)) / 1000000;
                 $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
+                saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
             }
         }
 
@@ -1866,7 +1867,7 @@ function sideScreenBOM($request): void{
                 $unit_cost = ($request->$MullionThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
                 $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-                saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
+                saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
             }
         }
 
@@ -1885,7 +1886,7 @@ function sideScreenBOM($request): void{
             $unit_cost = ($request->FrameThickness * $request->FrameDepth * ($unitcost->selected_price ?? 0)) / 1000000;
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'Frame');
         }
     }
 
@@ -1943,7 +1944,7 @@ function sideScreenBOM($request): void{
 
             $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Area M2',$unit_cost,$total_cost,'Glass');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Area M2',$unit_cost,$total_cost,'Glass');
         }
     }
 
@@ -2008,7 +2009,7 @@ function sideScreenBOM($request): void{
 
         $total_cost = $unit_cost * $LMData * $QTYOfScreenType;
 
-        saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'GlazingSystem');
+        saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Metre',$unit_cost,$total_cost,'GlazingSystem');
     }
 
 
@@ -2024,7 +2025,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Machining of Screen frame |".($GeneralLabourCost->MachiningOfScreenframeManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfScreenframeMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->MachiningOfScreenframeManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfScreenframeMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->MachiningOfGlazingBead == 1){
@@ -2032,7 +2033,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Machining of Glazing Bead |".($GeneralLabourCost->MachiningOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->MachiningOfGlazingBeadManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfGlazingBeadMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->MachiningOfTransom == 1) {
@@ -2040,7 +2041,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Machining of Transom |".($GeneralLabourCost->MachiningOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->MachiningOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->MachiningOfSubFrame == 1) {
@@ -2048,7 +2049,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Machining of Sub Frame |".($GeneralLabourCost->MachiningOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->MachiningOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->MachiningOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->MachiningOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->CuttingOfScreenframe == 1){
@@ -2056,7 +2057,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Cutting Of Screen frame |".($GeneralLabourCost->CuttingOfScreenframeManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfScreenframeMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->CuttingOfScreenframeManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfScreenframeMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->CuttingOfGlazingBead == 1){
@@ -2064,7 +2065,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Cutting Of Glazing Bead |".($GeneralLabourCost->CuttingOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->CuttingOfGlazingBeadManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfGlazingBeadMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->CuttingOfTransom == 1) {
@@ -2072,7 +2073,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Cutting Of Transom |".($GeneralLabourCost->CuttingOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->CuttingOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->CuttingOfSubFrame == 1) {
@@ -2080,7 +2081,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Cutting Of Sub Frame |".($GeneralLabourCost->CuttingOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->CuttingOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->CuttingOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->CuttingOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->ScreenAssembley == 1){
@@ -2088,7 +2089,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Screen Assembley |".($GeneralLabourCost->ScreenAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->ScreenAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->ScreenAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->ScreenAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->TransomAssembley == 1) {
@@ -2096,7 +2097,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Transom Assembley |".($GeneralLabourCost->TransomAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->TransomAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->TransomAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->TransomAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->SubFrameAssembley == 1) {
@@ -2104,7 +2105,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Sub Frame Assembley |".($GeneralLabourCost->SubFrameAssembleyManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SubFrameAssembleyMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->SubFrameAssembleyManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SubFrameAssembleyMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->FittingOfGlass == 1){
@@ -2112,7 +2113,7 @@ function sideScreenBOM($request): void{
             $description = "SS -Fitting Of Glass |".($GeneralLabourCost->FittingOfGlassManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlassMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->FittingOfGlassManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FittingOfGlassMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->FittingOfGlazingSystem == 1){
@@ -2120,7 +2121,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Fitting Of Glazing System |".($GeneralLabourCost->FittingOfGlazingSystemManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlazingSystemMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->FittingOfGlazingSystemManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FittingOfGlazingSystemMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->FittingOfGlazingBead == 1){
@@ -2128,7 +2129,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Fitting Of Glazing Bead |".($GeneralLabourCost->FittingOfGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->FittingOfGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->FittingOfGlazingBeadManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->FittingOfGlazingBeadMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         // if($GeneralLabourCost->SprayFinishOf == 1){
@@ -2136,7 +2137,7 @@ function sideScreenBOM($request): void{
         //     $description = "SS - Spray Finish Of |".($GeneralLabourCost->SprayFinishOfManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
         //     $unit_cost = ($GeneralLabourCost->SprayFinishOfManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfMachineMinutes * ($data->labour_cost_per_machine/ 60));
         //     $total_cost = $unit_cost * $QTYOfScreenType;
-        //     saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+        //     saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         // }
 
         if($GeneralLabourCost->SprayFinishOfScreenframe == 1){
@@ -2144,7 +2145,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Spray Finish Of Screen frame |".($GeneralLabourCost->SprayFinishOfScreenframeManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfScreenframeMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->SprayFinishOfScreenframeManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfScreenframeMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->SprayFinishGlazingBead == 1){
@@ -2152,7 +2153,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Spray Finish Glazing Bead |".($GeneralLabourCost->SprayFinishGlazingBeadManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishGlazingBeadMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->SprayFinishGlazingBeadManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishGlazingBeadMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->TransomQuantity) && $request->TransomQuantity != 0 && $GeneralLabourCost->SprayFinishOfTransom == 1) {
@@ -2160,7 +2161,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Spray Finish Of Transom |".($GeneralLabourCost->SprayFinishOfTransomManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfTransomMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->SprayFinishOfTransomManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfTransomMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if (!empty($request->SubFrameMaterial) && !empty($request->SubFrameBottomThickness) && $GeneralLabourCost->SprayFinishOfSubFrame == 1) {
@@ -2168,7 +2169,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Spray Finish Of Sub Frame |".($GeneralLabourCost->SprayFinishOfSubFrameManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->SprayFinishOfSubFrameManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->SprayFinishOfSubFrameMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->PallettingPackaging == 1){
@@ -2176,7 +2177,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Palletting Packaging |".($GeneralLabourCost->PallettingPackagingManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->PallettingPackagingMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->PallettingPackagingManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->PallettingPackagingMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
         if($GeneralLabourCost->LoadingOfLorry == 1){
@@ -2184,7 +2185,7 @@ function sideScreenBOM($request): void{
             $description = "SS - Loading Of Lorry |".($GeneralLabourCost->LoadingOfLorryManMinutes/ 60)."|".$data->labour_cost_per_man."|".($GeneralLabourCost->LoadingOfLorryMachineMinutes / 60) ."|".$data->labour_cost_per_machine;
             $unit_cost = ($GeneralLabourCost->LoadingOfLorryManMinutes * ($data->labour_cost_per_man/ 60)) + ($GeneralLabourCost->LoadingOfLorryMachineMinutes * ($data->labour_cost_per_machine/ 60));
             $total_cost = $unit_cost * $QTYOfScreenType;
-            saveScreenBOMCalculation($request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
+            saveScreenBOMCalculation($userLoginId, $request,$description,$LMData,$QTYOfScreenType,'Each',$unit_cost,$total_cost,'GeneralLabourCosts');
         }
 
     }
