@@ -44,7 +44,7 @@ class GlassCertificateController extends Controller
             2 => [
                 'NFR' => 'Chilt/A01204 Revision H',
                 'FD30' => 'Chilt/A01204 Revision H',
-                'FD60' => 'FEA/F96103  Revision Q',
+                'FD60' => 'Chilt/A01205 Part 1 Revision K',
             ],
             7 => [
                 'NFR' => 'FEA98164 Revision P',
@@ -123,7 +123,7 @@ class GlassCertificateController extends Controller
             2 => [
                 'NFR' => 'Chilt/A01204 Revision H',
                 'FD30' => 'Chilt/A01204 Revision H',
-                'FD60' => 'FEA/F96103  Revision Q',
+                'FD60' => 'Chilt/A01205 Part 1 Revision K',
             ],
             7 => [
                 'NFR' => 'FEA98164 Revision P',
