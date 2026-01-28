@@ -4168,9 +4168,6 @@ class DoorScheduleController extends Controller
     {
         // \DB::enableQueryLog();
         markAsRead($Id, 'quote');
-        $q1_time = (microtime(true) - $q1_start) * 1000;
-        Log::channel('queries')->info('Query 1: markAsRead', ['time_ms' => round($q1_time, 2)]);
-
         if ($Id == 0 && $vId == 0) {
             $qidFromhelper = GenerateQuotationFirstTime($pId, $cId);
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
@@ -4186,9 +4183,6 @@ class DoorScheduleController extends Controller
 
         // NEED TO SHOW ALL PROJECT ON "EDIT HEADER DETAILS => PROJECT SELECT BOX" (09-12-2023)
         $projectUserId = [];
-
-        // QUERY 5: Build ProjectUserId list based on UserType
-        $q5_start = microtime(true);
         switch (auth()->user()->UserType) {
             case 2:
                 $projectUserId = User::where('CreatedBy', auth()->user()->id)->pluck('id')->toArray();
@@ -4204,15 +4198,10 @@ class DoorScheduleController extends Controller
                 $projectUserId = [$Quotation->UserId, auth()->user()->CreatedBy];
                 break;
         }
-        $q5_time = (microtime(true) - $q5_start) * 1000;
-        Log::channel('queries')->info('Query 5: Build ProjectUserId list', ['time_ms' => round($q5_time, 2)]);
 
         // $ProjectTable = '<option value="">Select Project</option>';
 
         $ProjectsAddress = '';
-
-        // QUERY 6: Fetch Projects based on MainContractorId
-        $q6_start = microtime(true);
         if ($Quotation->MainContractorId != '') {
             $dd = Project::where(['UserId' => $Quotation->UserId, 'MainContractorId' => $Quotation->MainContractorId])->count();
             if ($dd > 0) {
@@ -4303,9 +4292,6 @@ class DoorScheduleController extends Controller
             $SideScreenData = $SideScreenData->get();
             $companykacustomer = "";
             $customerMultiContact = "";
-
-            // QUERY 16: Fetch Customer data
-            $q16_start = microtime(true);
             if (Auth::user()->UserType == "2" || Auth::user()->UserType == "3") {
                 $Quotation;
                 $UserId = Auth::user()->id;
@@ -4316,15 +4302,9 @@ class DoorScheduleController extends Controller
                 $companykacustomer = Customer::where(['UserId' => Auth::user()->id])->orderBy('customers.id', 'desc')->get();
                 $customerMultiContact = CustomerContact::where(['MainContractorId' => $Quotation->MainContractorId])->get();
             }
-            $q16_time = (microtime(true) - $q16_start) * 1000;
-            Log::channel('queries')->info('Query 16: Fetch Customer data', ['time_ms' => round($q16_time, 2)]);
 
-            // QUERY 17: Fetch CustomerDetails
-            $q17_start = microtime(true);
             $CustomerDetails = CustomerContact::join('customers', 'customers.id', '=', 'customer_contacts.MainContractorId')
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
-            $q17_time = (microtime(true) - $q17_start) * 1000;
-            Log::channel('queries')->info('Query 17: Fetch CustomerDetails', ['time_ms' => round($q17_time, 2)]);
 
 
             $nonconfigdata = NonConfigurableItems::wherein('userId', $userIds)->orderBy('id', 'desc')->get();
@@ -4351,80 +4331,10 @@ class DoorScheduleController extends Controller
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
             }
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
-            $IronmongeryInfoSet = [
-                'Hinges',
-                'FloorSpring',
-                'LocksAndLatches',
-                'FlushBolts',
-                'ConcealedOverheadCloser',
-                'PullHandles',
-                'PushHandles',
-                'KickPlates',
-                'DoorSelectors',
-                'PanicHardware',
-                'Doorsecurityviewer',
-                'Morticeddropdownseals',
-                'Facefixeddropseals',
-                'ThresholdSeal',
-                'AirTransferGrill',
-                'Letterplates',
-                'CableWays',
-                'SafeHinge',
-                'LeverHandle',
-                'DoorSinage',
-                'FaceFixedDoorCloser',
-                'Thumbturn',
-                'KeyholeEscutchen',
-                'DoorStops',
-                'Cylinders'
-            ];
-
-            // Process the data and merge
-            foreach ($setIronmongery as $ironmongery) {
-                $additionalInfo = []; // Temporary array to hold additional info
-
-                foreach ($IronmongeryInfoSet as $valIronmongery) {
-                    // Check if the property exists and is not empty
-                    if (!empty($ironmongery->$valIronmongery)) {
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if (!empty($SelectedIronmongery)) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                    ->first();
-                            if(empty($IronmongeryInfoModel)){
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if (!empty($IronmongeryInfoModel)) {
-                                $additionalInfo[] = $IronmongeryInfoModel;
-                            }
-                        }
-                    }
-                }
-
-                // Dynamically add the additional_info attribute
-                $ironmongery->setAttribute('additional_info', $additionalInfo);
-            }
 
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
 
-            // QUERY 20: Fetch Floor/Project Building Details
-            $q20_start = microtime(true);
             $floor = Quotation::join('project_building_details', 'quotation.ProjectId', 'project_building_details.projectId')->where('quotation.id', $Id)->select('project_building_details.*')->get();
-            $q20_time = (microtime(true) - $q20_start) * 1000;
-            Log::channel('queries')->info('Query 20: Fetch Floor/Project Building Details', ['time_ms' => round($q20_time, 2)]);
-
-            // Calculate total function execution time
-            $totalFunctionTime = (microtime(true) - $functionStartTime) * 1000;
-            Log::channel('queries')->info('✅ generateQuotation COMPLETE', [
-                'quotation_id' => $Id,
-                'version_id' => $vId,
-                'total_time_ms' => round($totalFunctionTime, 2),
-                'timestamp' => now(),
-            ]);
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
