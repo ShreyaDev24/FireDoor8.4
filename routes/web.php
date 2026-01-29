@@ -32,6 +32,11 @@ Route::get('/', function () {
 
     return view('auth.login');
 });
+
+Route::fallback(function () {
+    return redirect('/');
+});
+
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
 Auth::routes();
 
