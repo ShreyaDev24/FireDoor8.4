@@ -85,6 +85,9 @@ class PrintInvoiceController extends Controller
         }
 
         $configurationItemName = configurationDoor($configurationItem);
+        if($configurationItemName === 'Halspan'){
+            $configurationItemName = 'Halspan Optima';
+        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -3937,6 +3940,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
         $configurationItemName = configurationDoor($configurationItem);
+        if($configurationItemName === 'Halspan'){
+            $configurationItemName = 'Halspan Optima';
+        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
