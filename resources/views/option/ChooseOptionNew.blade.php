@@ -1227,14 +1227,25 @@ dd(1);
                                         <option class="leafFacingfirst3option" value="Veneer">Veneer</option>
                                         <option class="leafFacingfirst3option" value="Laminate">Laminate</option>
                                         <option class="leafFacingfirst3option" value="PVC">PVC</option>
-                                        @if(isset($leaftype))
-                                            @foreach($leaftype as $val)
-                                                <option value="{{ $val->LeafType }}" style="display:none" class="doorLeafType1">{{ $val->LeafType }}</option>
+                                            @if(isset($leaftypevicima))
+                                            @foreach($leaftypevicima as $val)
+                                                <option value="{{ $val->LeafType }}" data-core="vicaima" class="leaf-option" hidden>
+                                                    {{ $val->LeafType }}
+                                                </option>
                                             @endforeach
                                             @endif
                                             @if(isset($leaftype2))
                                             @foreach($leaftype2 as $val)
-                                                <option value="{{ $val->LeafType }}" style="display:none" class="doorLeafType2">{{ $val->LeafType }}</option>
+                                                <option value="{{ $val->LeafType }}" data-core="sedac" class="leaf-option" hidden>
+                                                    {{ $val->LeafType }}
+                                                </option>
+                                            @endforeach
+                                            @endif
+                                             @if(isset($leaftypemmm))
+                                            @foreach($leaftypemmm as $val)
+                                                <option value="{{ $val->LeafType }}" data-core="mmm" class="leaf-option" hidden>
+                                                    {{ $val->LeafType }}
+                                                </option>
                                             @endforeach
                                             @endif
 
@@ -2218,52 +2229,111 @@ dd(1);
     });
 
 
-    function doorLeafFacingOption(option = '') {
-    let strebord = $('input[name="Streboard"]').is(':checked');
-    let halspan = $('input[name="Halspan"]').is(':checked');
-    let norma = $('input[name="NormaDoorCore"]').is(':checked');
-    let vicaima = $('input[name="VicaimaDoorCore"]').is(':checked');
-    let sedac = $('input[name="SeadecDoorCore"]').is(':checked');
+    // function doorLeafFacingOption(option = '') {
+//     let strebord = $('input[name="Streboard"]').is(':checked');
+//     let halspan = $('input[name="Halspan"]').is(':checked');
+//     let norma = $('input[name="NormaDoorCore"]').is(':checked');
+//     let vicaima = $('input[name="VicaimaDoorCore"]').is(':checked');
+//     let mmm = $('input[name="MMM"]').is(':checked');
+//     let sedac = $('input[name="SeadecDoorCore"]').is(':checked');
 
-    if (vicaima && sedac && (strebord || halspan || norma)) {
-        $('.doorLeafType1').css('display', 'block');
-        $('.doorLeafType2').css('display', 'block');
-        $('.leafFacingfirst3option').css('display', 'block');
-        $('#DoorLeafOption').val(option);
-    } else if (vicaima && (strebord || halspan || norma)) {
-        $('.doorLeafType1').css('display', 'block');
-        $('.doorLeafType2').css('display', 'none');
-        $('.leafFacingfirst3option').css('display', 'block');
-        $('#DoorLeafOption').val(option);
-    } else if (sedac && (strebord || halspan || norma)) {
-        $('.doorLeafType1').css('display', 'none');
-        $('.doorLeafType2').css('display', 'block');
-        $('.leafFacingfirst3option').css('display', 'block');
-        $('#DoorLeafOption').val(option);
-    }else if (vicaima && sedac) {
-        $('.doorLeafType1').css('display', 'block');
-        $('.doorLeafType2').css('display', 'block');
-        $('.leafFacingfirst3option').css('display', 'none');
-        $('#DoorLeafOption').val(option);
+//     if (vicaima && mmm && sedac && (strebord || halspan || norma)) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'block');
+//         $('.leafFacingfirst3option').css('display', 'block');
+//         $('#DoorLeafOption').val(option);
+//     } else if (vicaima && (strebord || halspan || norma)) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'none');
+//         $('.leafFacingfirst3option').css('display', 'block');
+//         $('#DoorLeafOption').val(option);
+//     } else if (mmm && (strebord || halspan || norma)) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'none');
+//         $('.leafFacingfirst3option').css('display', 'block');
+//         $('#DoorLeafOption').val(option);
+//     }else if (sedac && (strebord || halspan || norma)) {
+//         $('.doorLeafType1').css('display', 'none');
+//         $('.doorLeafType2').css('display', 'block');
+//         $('.leafFacingfirst3option').css('display', 'block');
+//         $('#DoorLeafOption').val(option);
+//     }else if (vicaima && sedac) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'block');
+//         $('.leafFacingfirst3option').css('display', 'none');
+//         $('#DoorLeafOption').val(option);
+//     } else if (mmm && sedac) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'block');
+//         $('.leafFacingfirst3option').css('display', 'none');
+//         $('#DoorLeafOption').val(option);
+//     }
+//     else if (sedac) {
+//         $('.doorLeafType1').css('display', 'none');
+//         $('.doorLeafType2').css('display', 'block');
+//         $('.leafFacingfirst3option').css('display', 'none');
+//         $('#DoorLeafOption').val(option);
+//     }
+//     else if (vicaima) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'none');
+//         $('.leafFacingfirst3option').css('display', 'none');
+//         $('#DoorLeafOption').val(option);
+//     } else if (mmm) {
+//         $('.doorLeafType1').css('display', 'block');
+//         $('.doorLeafType2').css('display', 'none');
+//         $('.leafFacingfirst3option').css('display', 'none');
+//         $('#DoorLeafOption').val(option);
+//     }
+//     else {
+//         $('#DoorLeafOption').val(option);
+//             $('.doorLeafType1').css('display', 'none');
+//             $('.doorLeafType2').css('display', 'none');
+//             $('.leafFacingfirst3option').css('display', 'block');
+//     }
+// }
+
+function doorLeafFacingOption(option = '') {
+
+    let mmm      = $('input[name="MMM"]').is(':checked');
+    let vicaima  = $('input[name="VicaimaDoorCore"]').is(':checked');
+    let sedac    = $('input[name="SeadecDoorCore"]').is(':checked');
+
+    // 🔴 RESET EVERYTHING
+    $('#DoorLeafOption option.leaf-option').prop('hidden', true);
+    $('.leafFacingfirst3option').hide();
+
+    // ✅ MMM ONLY
+    if (mmm && !vicaima && !sedac) {
+        $('#DoorLeafOption option[data-core="mmm"]').prop('hidden', false);
     }
-    else if (sedac) {
-        $('.doorLeafType1').css('display', 'none');
-        $('.doorLeafType2').css('display', 'block');
-        $('.leafFacingfirst3option').css('display', 'none');
-        $('#DoorLeafOption').val(option);
+
+    // ✅ VICAIMA ONLY
+    else if (vicaima && !mmm && !sedac) {
+        $('#DoorLeafOption option[data-core="vicaima"]').prop('hidden', false);
     }
-    else if (vicaima) {
-        $('.doorLeafType1').css('display', 'block');
-        $('.doorLeafType2').css('display', 'none');
-        $('.leafFacingfirst3option').css('display', 'none');
-        $('#DoorLeafOption').val(option);
+
+    // ✅ SEDAC ONLY
+    else if (sedac && !mmm && !vicaima) {
+        $('#DoorLeafOption option[data-core="sedac"]').prop('hidden', false);
     }
+
+    // ✅ MMM + SEDAC
+    else if (mmm && sedac) {
+        $('#DoorLeafOption option[data-core="mmm"], option[data-core="sedac"]').prop('hidden', false);
+    }
+
+    // ✅ MMM + VICAIMA
+    else if (mmm && vicaima) {
+        $('#DoorLeafOption option[data-core="mmm"], option[data-core="vicaima"]').prop('hidden', false);
+    }
+
+    // ✅ NOTHING SELECTED → show default Veneer / Laminate / PVC
     else {
-        $('#DoorLeafOption').val(option);
-            $('.doorLeafType1').css('display', 'none');
-            $('.doorLeafType2').css('display', 'none');
-            $('.leafFacingfirst3option').css('display', 'block');
+        $('.leafFacingfirst3option').show();
     }
+
+    $('#DoorLeafOption').val(option);
 }
 
 

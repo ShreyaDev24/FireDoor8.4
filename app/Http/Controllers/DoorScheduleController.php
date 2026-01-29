@@ -4327,9 +4327,67 @@ class DoorScheduleController extends Controller
             $quotation_data = Quotation::where('id', $Id)->first();
             if (Auth::user()->UserType == 1) {
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->get();
+                $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
             } else {
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
+                $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
+            }
+            $IronmongeryInfoSet = [
+                'Hinges',
+                'FloorSpring',
+                'LocksAndLatches',
+                'FlushBolts',
+                'ConcealedOverheadCloser',
+                'PullHandles',
+                'PushHandles',
+                'KickPlates',
+                'DoorSelectors',
+                'PanicHardware',
+                'Doorsecurityviewer',
+                'Morticeddropdownseals',
+                'Facefixeddropseals',
+                'ThresholdSeal',
+                'AirTransferGrill',
+                'Letterplates',
+                'CableWays',
+                'SafeHinge',
+                'LeverHandle',
+                'DoorSinage',
+                'FaceFixedDoorCloser',
+                'Thumbturn',
+                'KeyholeEscutchen',
+                'DoorStops',
+                'Cylinders'
+            ];
+
+            // Process the data and merge
+            foreach ($setIronmongery as $ironmongery) {
+                $additionalInfo = []; // Temporary array to hold additional info
+
+                foreach ($IronmongeryInfoSet as $valIronmongery) {
+                    // Check if the property exists and is not empty
+                    if (!empty($ironmongery->$valIronmongery)) {
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                    ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                        }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
             }
 
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();

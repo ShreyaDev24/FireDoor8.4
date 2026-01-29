@@ -4523,9 +4523,19 @@ class OptionController extends Controller
         $authdata = Auth::user();
         $ConfigurableItems = ConfigurableItems::get();
         $intumenseLeafType = IntumescentSealLeafType::where('status',1)->get();
+        $myAdminGroup = CompanyUsers();
+        $UserId = array_merge(['1'], $myAdminGroup);
         $leaftype = GetOptions(['leaf_type.Status' => 1], "join","leaf_type");
+        if(Auth::user()->UserType == 1){
+            $leaftypemmm = DB::table('leaf_type')->where('MMM',9)->get();
+            $leaftype2 = DB::table('leaf_type')->where('Seadec',5)->get();
+            $leaftypevicima = DB::table('leaf_type')->where('VicaimaDoorCore',4)->get();
+        } else{
+            $leaftypemmm = DB::table('leaf_type')->whereIn('EditBy',$UserId)->where('MMM',9)->get();
+            $leaftype2 = DB::table('leaf_type')->whereIn('EditBy',$UserId)->where('Seadec',5)->get();
+            $leaftypevicima = DB::table('leaf_type')->whereIn('EditBy',$UserId)->where('VicaimaDoorCore',4)->get();
+        }
 
-         $leaftype2 = DB::table('leaf_type')->where('Seadec',5)->get();
        // dd($leaftype2);
 
 
@@ -4624,7 +4634,7 @@ class OptionController extends Controller
 
         }
 
-        return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'leaftype2' => $leaftype2, 'intumenseLeafType' => $intumenseLeafType, 'GlassType' => $GlassType, 'GlazingSystem' => $GlazingSystem, 'screenGlassType' => $screenGlassType]);
+        return view('option/ChooseOptionNew', ['optionType' => $optionType, 'tbl1' => $tbl1, 'option_data' => $option_data, 'IntumescentSealsConfiguration' => $IntumescentSealsConfiguration, 'leaftype' => $leaftype, 'leaftype2' => $leaftype2, 'intumenseLeafType' => $intumenseLeafType, 'GlassType' => $GlassType, 'GlazingSystem' => $GlazingSystem, 'screenGlassType' => $screenGlassType,'leaftypemmm' => $leaftypemmm,'leaftypevicima' => $leaftypevicima]);
     }
 
     public function colorOptionNew(string $optionType,$colorType){
