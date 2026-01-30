@@ -13,6 +13,7 @@ use Illuminate\Http\Request;
 use DB;
 use App\Models\User;
 use App\Models\Users;
+use App\Models\Items;
 use App\Models\Option;
 use App\Models\Company;
 use App\Models\ConfigurableItems;
@@ -72,8 +73,11 @@ class PrintInvoiceController extends Controller
 
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
-        $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
-        $contractorName = $contractorName ?: '';
+
+        $contractorName = DB::table('users')
+        ->where('id', $quotaion->MainContractorId)
+        ->where('UserType', 5)
+        ->value('FirstName') ?? '';
 
         $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
         $currency = QuotationCurrency($quotaion->Currency);
@@ -89,91 +93,74 @@ class PrintInvoiceController extends Controller
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
-        $SalesContact = 'N/A';
-        if (!empty($quotaion->QuotationName)) {
-            $SalesContact = $quotaion->QuotationName;
-        }
+        // Sales Contact
+        $SalesContact = $quotaion->QuotationName ?? 'N/A';
 
-        // PDF 1 ( Introduction PDF )
-        if (!empty($quotaion->MainContractorId)) {
-            $customerContact = Users::where('id', $quotaion->MainContractorId)->first();
-        } else {
-            $customerContact = '';
-        }
+        // PDF 1 (Introduction PDF)
+        $customerContact = !empty($quotaion->MainContractorId)
+            ? Users::find($quotaion->MainContractorId)
+            : null;
 
-        $customer = '';
+        // Customer & Address
+        $customer = null;
         $CstCompanyAddressLine1 = '';
-        if (!empty($customerContact)) {
-            $customer = Customer::where(['UserId' => $quotaion->MainContractorId])->first();
-            $CstCompanyAddressLine1 = $customer->CstCompanyAddressLine1;
+
+        if ($customerContact) {
+            $customer = Customer::where('UserId', $quotaion->MainContractorId)->first();
+            $CstCompanyAddressLine1 = $customer->CstCompanyAddressLine1 ?? '';
         }
 
-        $quotaion_contact_info = QuotationContactInformation::where('QuotationId',$quatationId)->first();
-        if($quotaion_contact_info->Contact){
-            $contactid = explode(',',(string) $quotaion_contact_info->Contact);
-            $contact_persion = CustomerContact::where('id',$contactid[0])->first();
-            $contactfirstandlastname = $contact_persion->FirstName . ' ' . $contact_persion->LastName;
-        }
-        else{
-            $contactfirstandlastname = '';
-        }
+        // Quotation Contact Info
+        $contactfirstandlastname = '';
 
+        $quotaion_contact_info = QuotationContactInformation::where('QuotationId', $quatationId)->first();
+
+        if (!empty($quotaion_contact_info?->Contact)) {
+            $contactId = explode(',', (string) $quotaion_contact_info->Contact)[0];
+
+            $contactPerson = CustomerContact::find($contactId);
+
+            $contactfirstandlastname = trim(
+                ($contactPerson->FirstName ?? '') . ' ' . ($contactPerson->LastName ?? '')
+            );
+        }
 
         $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $pdf1 = SettingPDF1::where('UserId', $id)->first();
         $pdf = PDF::loadView('Company.pdf_files.introductionpdf', ['pdf1' => $pdf1, 'pdf_footer' => $pdf_footer, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'customerContact' => $customerContact, 'project' => $project, 'user' => $user, 'customer' => $customer, 'contactfirstandlastname' => $contactfirstandlastname, 'contractorName' => $contractorName]);
-        // return $pdf->download('file.pdf');
         $path1 = public_path() . '/allpdfFile';
         $fileName1 = $id . '1' . '.' . 'pdf';
         $pdf->save($path1 . '/' . $fileName1);
 
-
-
-
         // Quotation Sumary PDF
         $pdf2 = SettingPDF2::where('UserId', $id)->first();
-        // $totDoorsetType = Item::where(['QuotationId' => $quatationId ])->groupBy('DoorsetType')->count();
+
         $totDoorsetType = NumberOfDoorSets($versionID,$quatationId);
 
         // for getting margin
         $userIds = CompanyUsers();
-        $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+        $margin = BOMSetting::whereIn('UserId', $userIds)
+            ->value('margin_for_material') ?? 0;
 
-// dd(\Config::get('constants.base64Images.FrameRebatedLeft'),"139");
-// dd(\Config::get('constants.base64Images.ScallopedLeft'),"139");
-        // $totDoorsetPrice = Item::where(['QuotationId' => $quatationId ])->sum('DoorsetPrice');
-
-        $totgrand_total = BOMDetails::where(['quotationId' => $quatationId, 'version' => $versionID])->sum('grand_total');
-        $totlabour_total = BOMDetails::where(['quotationId' => $quatationId, 'version' => $versionID])->sum('labour_total');
-
-        // $totDoorsetPrice = 0;
-        // $DoorsetPrice = Item::select('DoorsetPrice', 'itemID')->where(['QuotationId' => $quatationId])->whereNotNull('DoorsetPrice')->get();
-        // foreach ($DoorsetPrice as $price) {
-        //     if (!empty($price->DoorsetPrice)) {
-        //         $itemMaster = ItemMaster::where(['itemID' => $price->itemID])->count();
-        //         $totDoorsetPrice = $totDoorsetPrice + ($price->DoorsetPrice * $itemMaster);
-        //     }
-        // }
-
-        $DoorsetPrice = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-                ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-                ->where(['quotation_version_items.version_id'=>$versionID,'items.VersionId'=>$versionID,'items.QuotationId' => $quatationId]);
+        $DoorsetPrice = Items::join('item_master', 'item_master.itemID', '=', 'items.itemId')
+            ->where('QuotationId', $quatationId)
+            ->where('VersionId', $versionID)
+            ->get();
 
         $totDoorsetPrice = itemAdjustCount($quatationId,$versionID);
         $totIronmongaryPrice = $DoorsetPrice->sum('items.IronmongaryPrice');
 
         //end changes
-        $nonConfigDataPrice = nonConfigurableItem($quatationId,$versionID,CompanyUsers(),'',true);
-        $nonConfigDataCount = nonConfigurableItem($quatationId,$versionID,CompanyUsers(),'','','count');
+        $nonConfigDataPrice = nonConfigurableItem($quatationId,$versionID,$userIds,'',true);
+        $nonConfigDataCount = nonConfigurableItem($quatationId,$versionID,$userIds,'','','count');
 
         $totIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->count();
 
-        // $GetIronmongerySetCount = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->count();
         $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
         $IronmongeryData = '';
         $PageBreakCount = 1;
-        // dd($GetIronmongerySet,count($GetIronmongerySet));
+
         if(!empty($GetIronmongerySet)){
             foreach($GetIronmongerySet as $ironData){
                 if (!empty($ironData->IronmongeryID)) {
@@ -219,17 +206,7 @@ class PrintInvoiceController extends Controller
 
         $screenData = $SideScreenData->sum('side_screen_items.ScreenPrice');
         $ScreenSetQty = $SideScreenData->count();
-        // $totIronmongerySet = Item::where(['QuotationId' => $quatationId,'items.VersionId'=>$versionID])->whereNotNull('IronmongeryID')->count();
-        // $jj = Item::select('IronmongeryID', 'itemID', 'IronmongaryPrice')->where(['QuotationId' => $quatationId])->whereNotNull('IronmongeryID')->get();
-        // $totIronmongaryPrice = 0;
-        // foreach ($jj as $price) {
-        //     if (!empty($price->IronmongeryID)) {
-        //         $itemMaster = ItemMaster::where(['itemID' => $price->itemID])->count();
-        //         $totIronmongaryPrice = $totIronmongaryPrice + ($price->IronmongaryPrice * $itemMaster);
-        //     }
-        // }
 
-        // $totIronmongaryPrice = Item::where(['QuotationId' => $quatationId ])->sum('IronmongaryPrice');
         $screenDataprice = round(floatval($screenData),2);
 
         $QSTI = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
@@ -241,7 +218,6 @@ class PrintInvoiceController extends Controller
         }
         $nettot = itemAdjustCount($quatationId, $versionID) + (float) $totIronmongaryPrice + (float) $nonConfigDataPrice + (float) $screenDataprice + (float) $transportationCost;
 
-        // dd($transportationCost, $nettot);
         $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice, 'currency' => $currency, 'transportationCost' => $transportationCost]);
 
         // return $pdf2->download('file2.pdf');
@@ -356,10 +332,6 @@ class PrintInvoiceController extends Controller
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
 
 
-
-
-        // for getting margin
-        $userIds = CompanyUsers();
         $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
 
 
@@ -441,7 +413,7 @@ class PrintInvoiceController extends Controller
 
 
         //Non Configurable Item
-        $nonConfigData = nonConfigurableItem($quatationId,$versionID,CompanyUsers());
+        $nonConfigData = nonConfigurableItem($quatationId,$versionID,$userIds);
 
         $pdf4_2 = PDF::loadView('Company.pdf_files.nonconfigdoor', ['nonConfigData' => $nonConfigData, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
         // return $pdf4->download('file4.pdf');

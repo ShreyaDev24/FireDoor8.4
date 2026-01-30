@@ -638,40 +638,37 @@ class DoorScheduleController extends Controller
 
     public function newdoorsstore(request $request)
     {
-       $valid = $request->validate(
-        [
-            'doortypeId'          => 'required',
-            'door_mode'           => 'required|in:single,multiple,range',
-            'doornumber'          => 'required_if:door_mode,single',
+        $valid = $request->validate(
+            [
+                'doortypeId'          => 'required',
+                'door_mode'           => 'required|in:single,multiple,range',
+                'doornumber'          => 'required_if:door_mode,single',
 
-            'multipledoornumber'  => [
-                'exclude_unless:door_mode,multiple',
-                'required',
-                'regex:/^[A-Za-z0-9._-]+(?:\s+[A-Za-z0-9._-]+)*$/'
+                'multipledoornumber'  => [
+                    'exclude_unless:door_mode,multiple',
+                    'required',
+                    'regex:/^[A-Za-z0-9._-]+(?:\s+[A-Za-z0-9._-]+)*$/'
+                ],
+
+                'prefix'              => 'required_if:door_mode,range',
+                'range_start'         => 'required_if:door_mode,range|nullable|integer',
+                'range_end'           => 'required_if:door_mode,range|nullable|integer|gte:range_start',
             ],
-
-            'prefix'              => 'required_if:door_mode,range',
-            'range_start'         => 'required_if:door_mode,range|nullable|integer',
-            'range_end'           => 'required_if:door_mode,range|nullable|integer|gte:range_start',
-        ],
-        [
-            'doortypeId.required'            => 'Door type field is required.',
-            'door_mode.required'             => 'Door mode is required.',
-            'door_mode.in'                   => 'Door mode must be either single, multiple or range.',
-            'doornumber.required_if'         => 'Door number is required when mode is single.',
-            'multipledoornumber.required'    => 'Multiple door numbers are required when mode is multiple.',
-            'multipledoornumber.regex' => 'Enter valid door numbers separated by spaces. Decimals, letters, hyphens, and underscores are allowed.',
-            'prefix.required_if'             => 'Prefix is required when mode is range.',
-            'range_start.required_if'        => 'Start of range is required.',
-            'range_start.integer'            => 'Start of range must be an integer.',
-            'range_end.required_if'          => 'End of range is required.',
-            'range_end.integer'              => 'End of range must be an integer.',
-            'range_end.gte'                  => 'End of range must be greater than or equal to start.',
-        ]
-    );
-
-
-
+            [
+                'doortypeId.required'            => 'Door type field is required.',
+                'door_mode.required'             => 'Door mode is required.',
+                'door_mode.in'                   => 'Door mode must be either single, multiple or range.',
+                'doornumber.required_if'         => 'Door number is required when mode is single.',
+                'multipledoornumber.required'    => 'Multiple door numbers are required when mode is multiple.',
+                'multipledoornumber.regex' => 'Enter valid door numbers separated by spaces. Decimals, letters, hyphens, and underscores are allowed.',
+                'prefix.required_if'             => 'Prefix is required when mode is range.',
+                'range_start.required_if'        => 'Start of range is required.',
+                'range_start.integer'            => 'Start of range must be an integer.',
+                'range_end.required_if'          => 'End of range is required.',
+                'range_end.integer'              => 'End of range must be an integer.',
+                'range_end.gte'                  => 'End of range must be greater than or equal to start.',
+            ]
+        );
 
         $QuotationId = $request->quotationID;
         $itemid = $request->doortypeId;
@@ -763,22 +760,19 @@ class DoorScheduleController extends Controller
 
                 BOMUpdate($data, $quotation->configurableitems);
 
-                $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-                $GTSellPrice = 0;
-                $GTSellPriceTotal = 0;
-                if(!empty($BOMCalculation)){
-                    foreach($BOMCalculation as $value){
-                        if($value->Category != 'Ironmongery&MachiningCosts'){
-                            $GTSellPrice += $value->GTSellPrice;
-                        }
-                    }
+                $GTSellPrice = BOMCalculation::where('QuotationId', $QuotationId)
+                    ->where('DoorType', $data->DoorType)
+                    ->where('itemId', $itemid)
+                    ->where('Category', '!=', 'Ironmongery&MachiningCosts')
+                    ->sum('GTSellPrice');
 
-                    $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                    $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
-                }
+                $itemCount = ItemMaster::where('itemID', $itemid)->count();
+                $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
-                $Item = Item::where('itemId', $itemid)->update([
-                    'DoorsetPrice' => $GTSellPriceTotal
+                $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
+
+                Item::where('itemId', $itemid)->update([
+                    'DoorsetPrice' => $GTSellPriceTotal,
                 ]);
             }
         }else if ($doorMode === 'range' || $doorMode === 'multiple') {
@@ -842,22 +836,19 @@ class DoorScheduleController extends Controller
 
                     BOMUpdate($data, $quotation->configurableitems);
 
-                    $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$QuotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
-                    $GTSellPrice = 0;
-                    $GTSellPriceTotal = 0;
-                    if(!empty($BOMCalculation)){
-                        foreach($BOMCalculation as $value){
-                            if($value->Category != 'Ironmongery&MachiningCosts'){
-                                $GTSellPrice += $value->GTSellPrice;
-                            }
-                        }
+                    $GTSellPrice = BOMCalculation::where('QuotationId', $QuotationId)
+                    ->where('DoorType', $data->DoorType)
+                    ->where('itemId', $itemid)
+                    ->where('Category', '!=', 'Ironmongery&MachiningCosts')
+                    ->sum('GTSellPrice');
 
-                        $ItemMaster = ItemMaster::where('itemID',$itemid)->get()->count();
-                        $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
-                    }
+                    $itemCount = ItemMaster::where('itemID', $itemid)->count();
+                    $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
-                    $Item = Item::where('itemId', $itemid)->update([
-                        'DoorsetPrice' => $GTSellPriceTotal
+                    $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
+
+                    Item::where('itemId', $itemid)->update([
+                        'DoorsetPrice' => $GTSellPriceTotal,
                     ]);
                 }
             }

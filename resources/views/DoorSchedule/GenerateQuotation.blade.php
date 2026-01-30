@@ -728,6 +728,10 @@
                                                                                 </a>
                                                                             </li>
 
+                                                                            <li><a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $door['id'] }}','Door','Configurable Favorite Item','Configurable Type Name')"
+                                                                            href="javascript:void(0);">Name
+                                                                            Configuration</a></li>
+
                                                                             <li>
                                                                                 <a onclick="FloorNoChange(
                                                                                     '{{ $door['id'] }}',
