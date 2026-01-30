@@ -148,8 +148,7 @@ class PrintInvoiceController extends Controller
 
         $DoorsetPrice = Items::join('item_master', 'item_master.itemID', '=', 'items.itemId')
             ->where('QuotationId', $quatationId)
-            ->where('VersionId', $versionID)
-            ->get();
+            ->where('VersionId', $versionID);
 
         $totDoorsetPrice = itemAdjustCount($quatationId,$versionID);
         $totIronmongaryPrice = $DoorsetPrice->sum('items.IronmongaryPrice');
@@ -160,7 +159,7 @@ class PrintInvoiceController extends Controller
 
         $totIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->count();
 
-        $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId');
+        $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
         $IronmongeryData = '';
         $PageBreakCount = 1;
 
