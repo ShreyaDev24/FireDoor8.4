@@ -160,7 +160,7 @@ class PrintInvoiceController extends Controller
 
         $totIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->count();
 
-        $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
+        $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId');
         $IronmongeryData = '';
         $PageBreakCount = 1;
 
