@@ -121,4 +121,6 @@ return [
             'allow_self_signed' => true,
         ],
     ],
+    // 'support_email' => 'shreyagupta.dev@gmail.com',
+    'support_email' => 'aidan.mckenna@fd-comsol.com',
 ];
