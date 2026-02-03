@@ -149,6 +149,10 @@
     </div>
     <table class="table table-bordered cusTable" style="margin-top: 100px;">
         <thead>
+            @php
+                $simpleConfig = in_array($configurationItem, [4,5,6,9]);
+            @endphp
+
             <tr>
                 <td class="tbl_leaft" colspan="19"></td>
                 <td class="tbl_extra" colspan="3">Vision Panel</td>
@@ -157,9 +161,9 @@
                 <td class="tbl_leaft" colspan="2"></td>
                 <td class="tbl_extra" colspan="5">Architrave</td>
                 @if($HideCosts == 0)
-                <td class="tbl_leaft" colspan="8"></td>
+                <td class="tbl_leaft" colspan="7"></td>
                 @else
-                <td class="tbl_leaft" colspan="6"></td>
+                <td class="tbl_leaft" colspan="5"></td>
                 @endif
 
             </tr>
@@ -174,8 +178,16 @@
                 <th class="page2_2"><p> S.O Width </p></th>
                 <th class="page2_2"><p> S.O Wall Thick </p></th>
                 <th class="page2_2"><p> Door Type </p></th>
-                <th class="page2_2"><p> Door Leaf Finish </p></th>
+                @if($simpleConfig)
+                     <th class="page2_2"><p> Leaf Type </p></th>
+                @else
+                   <th class="page2_2"><p> Door Leaf Finish </p></th>
+                @endif
+
                 <th class="page2_2"><p> Door leaf facing + Brand </p></th>
+                @if($simpleConfig)
+                <th class="page2_2"><p> Door Dimensions </p></th>
+                @endif
                 <th class="page2_2"><p> LippingType - LippingSpecies</p></th>
                 <th class="page2_2"><p> Leaf Width 1 </p></th>
                 <th class="page2_2"><p> Leaf Width 2 </p></th>
@@ -213,7 +225,6 @@
                 <th class="page2_2"><p> Iron. Set </p></th>
                 <th class="page2_2"><p> rW Db Rating </p></th>
                 <th class="page2_2"><p> Fire Rating </p></th>
-                <th class="page2_2"><p> COC Type </p></th>
                 <th class="page2_2"><p> Special Feature Refs </p></th>
                 @if($HideCosts == 0)
                 <th class="page2_2 tbl_last"><p> Doorset Price </p></th>
@@ -226,7 +237,82 @@
 
         <tbody>
 
-            {!! $a !!}
+
+            @foreach($rows as $row)
+            @php
+                $show = $row['show'] ?? null;
+            @endphp
+                <tr>
+                    <td>{{ $show?->plot_ref_no ?? '' }}</td>
+                    <td>{{ $show?->certification_no ?? '' }}</td>
+                    <td>{{ $show?->floor ?? '' }}</td>
+                    <td>{{ $configurationDoor }}</td>
+                    <td>{{ $show?->doorNumber ?? '' }}</td>
+                    <td>{{ $row['DoorDescription'] ?? '' }}</td>
+                    <td>{{ $show?->SOHeight ?? '' }}</td>
+                    <td>{{ $show?->SOWidth ?? '' }}</td>
+                    <td>{{ $show?->SOWallThick ?? '' }}</td>
+                    <td>{{ $show?->DoorType ?? '' }}</td>
+
+                    @if($simpleConfig)
+                        <td>{{ $show?->LeafConstruction ?? '' }}</td>
+                    @else
+                        <td>{{ ($row['DoorLeafFinish'] ?? '') . ($row['DoorLeafFinishColor'] ?? '') }}</td>
+                    @endif
+
+                    <td>{{ $row['DoorLeafFacing'] ?? '' }}</td>
+
+                    @if($simpleConfig)
+                        <td>{{ $show?->DoorDimensionsCode ?? '' }}</td>
+                    @endif
+
+                    <td>{{ $row['Lipping'] ?? '' }}</td>
+                    <td>{{ $show?->LeafWidth1 ?? '' }}</td>
+                    <td>{{ $show?->LeafWidth2 ?? '' }}</td>
+                    <td>{{ $show?->LeafHeight ?? '' }}</td>
+                    <td>{{ $show?->LeafThickness ?? '' }}</td>
+                    <td>{{ $show?->Undercut ?? '' }}</td>
+                    <td>{{ $show?->Handing ?? '' }}</td>
+                    <td>{{ $show?->OpensInwards ?? '' }}</td>
+
+                    <td>{!! $row['Leaf1VisionPanel'] ?? '' !!}</td>
+                    <td>{!! $row['Leaf2VisionPanel'] ?? '' !!}</td>
+                    <td>{{ $row['GlassTypeForDoorDetailsTable'] ?? '' }}</td>
+
+                    <td>{{ $row['OverpanelForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['OPGlassTypeForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['SideScreen1'] ?? '' }}</td>
+                    <td>{{ $row['SideScreen2'] ?? '' }}</td>
+
+                    <td>{{ $row['FrameMaterialForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['FrameTypeForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['FrameSizeForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['FrameFinishForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['ExtLiner'] ?? '' }}</td>
+                    <td>{{ $row['ExtLinerSizeForDoorDetailsTable'] ?? '' }}</td>
+
+                    <td>{{ $row['intumescentSeal'] ?? '' }}</td>
+
+                    <td>{{ $row['ArchitraveMaterialForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['ArchitraveTypeForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['ArchitraveSizeForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['ArchitraveFinishForDoorDetailsTable'] ?? '' }}</td>
+                    <td>{{ $row['ArchitraveSetQty'] ?? '' }}</td>
+
+                    <td>{{ $row['IronmongerySet'] ?? '' }}</td>
+                    <td>{{ $row['rWdBRating'] ?? '' }}</td>
+                    <td>{{ $row['fireRate'] ?? '' }}</td>
+
+                    <td>{{ $row['SpecialFeatureRefs'] ?? '' }}</td>
+
+                    @if($HideCosts == 0)
+                        <td class="tbl_last">{{ number_format($row['DoorsetPrice'] ?? 0, 2) }}</td>
+                        <td class="tbl_last">{{ number_format($row['IronmongaryPrice'] ?? 0, 2) }}</td>
+                    @endif
+
+                    <td class="tbl_last">{{ number_format($row['totalpriceperdoorset'] ?? 0, 2) }}</td>
+                </tr>
+            @endforeach
 
         </tbody>
     </table>
