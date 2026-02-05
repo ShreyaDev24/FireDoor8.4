@@ -4172,10 +4172,10 @@ class DoorScheduleController extends Controller
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
         } else {
             $Quotation = Quotation::findOrFail($Id);
-            $QuotationContactInformation = QuotationContactInformation::with('quotation')->first();
-            $QuotationShipToInformation = QuotationShipToInformation::with('quotation')->first();
+            $QuotationContactInformation = QuotationContactInformation::where('QuotationId', $Id)->first();
+            $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
         }
-
+        
         if ($Quotation === null) {
             return abort(404);
         }

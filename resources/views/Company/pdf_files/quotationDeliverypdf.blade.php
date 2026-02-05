@@ -162,6 +162,110 @@
             {!! Base64Image('defaultImg') !!}
             @endif
         </div>
-        {!! htmlspecialchars_decode($htmlPreview) !!}
+        <p style="font-size:36px;font-weight:bold;">
+            {{ $project->ProjectName }}
+        </p>
+
+        <p style="font-size:36px;font-weight:bold;">
+            {{ $quotation->QuotationGenerationId }} - Delivery Summary
+        </p>
+
+        <br>
+
+        <table class="table table-bordered">
+            @foreach($quotationSiteDeliveries as $index => $delivery)
+                <tr>
+                    <td colspan="4">
+                        <strong>Site Delivery Address - {{ $index + 1 }}</strong>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tbl_color">Address 1</td>
+                    <td colspan="3">
+                        {{ $delivery->Address1 ?? $projectAddress->AddressLine1 ?? '' }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tbl_color">Address 2</td>
+                    <td colspan="3">
+                        {{ $delivery->Address2 ?? $projectAddress->AddressLine2 ?? '' }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tbl_color">Country</td>
+                    <td colspan="3">
+                        {{ $delivery->Country ?? $projectAddress->Country ?? '' }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tbl_color">City</td>
+                    <td colspan="3">
+                        {{ $delivery->City ?? $projectAddress->City ?? '' }}
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="tbl_color">Postal Code</td>
+                    <td colspan="3">
+                        {{ $delivery->PostalCode ?? $projectAddress->PostalCode ?? '' }}
+                    </td>
+                </tr>
+            @endforeach
+
+            <tr>
+                <td class="tbl_color">Delivery Restrictions</td>
+                <td colspan="3">{{ $quotationShipToInformation->DeliveryRestrictions ?? '' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">Wagon Preference</td>
+                <td colspan="3">
+                    {{ $wagonOptions[$quotationShipToInformation->WagonPreference ?? ''] ?? '' }}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">Booking Notice & Contact</td>
+                <td colspan="3">{{ $quotationShipToInformation->Booking ?? '' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">Delivery Policy</td>
+                <td colspan="3">{{ $quotationShipToInformation->Deliverypolicy ?? '' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">FORS Requirement - Silver</td>
+                <td>{{ $quotationShipToInformation->silver ?? 'No' }}</td>
+                <td class="tbl_color">FORS Requirement - Gold</td>
+                <td>{{ $quotationShipToInformation->gold ?? 'No' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">Off-loading Requirements</td>
+                <td colspan="3">{{ $quotationShipToInformation->Offloading ?? '' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">No. of Deliveries</td>
+                <td>{{ $quotationShipToInformation->NoOfDeliveries ?? '' }}</td>
+                <td class="tbl_color">Actual No. of Deliveries</td>
+                <td>{{ $quotationShipToInformation->ActualNoOfDeliveries ?? '' }}</td>
+            </tr>
+
+            <tr>
+                <td class="tbl_color">Cost Per Delivery</td>
+                <td>
+                    {{ $quotationShipToInformation->CurrencyCostperdelivery ?? '' }}
+                    {{ $quotationShipToInformation->Costperdelivery ?? '' }}
+                </td>
+                <td class="tbl_color">Average No. Doorsets per Drop</td>
+                <td>{{ $quotationShipToInformation->AverageNoDoorsetsperdrop ?? '' }}</td>
+            </tr>
+        </table>
     </body>
 </html>

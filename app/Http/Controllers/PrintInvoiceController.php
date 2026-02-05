@@ -140,8 +140,6 @@ class PrintInvoiceController extends Controller
 
         // for getting margin
         $userIds = CompanyUsers();
-        $margin = BOMSetting::whereIn('UserId', $userIds)
-            ->value('margin_for_material') ?? 0;
 
         $DoorsetPrice = Items::join('item_master', 'item_master.itemID', '=', 'items.itemId')
             ->where('QuotationId', $quatationId)
@@ -224,115 +222,36 @@ class PrintInvoiceController extends Controller
         $fileName2 = $id . '2' . '.' . 'pdf';
         $pdf2->save($path2 . '/' . $fileName2);
 
-        $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $quatationId)->first();
         $QuotationSiteDelivery = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->get();
         $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
 
-        $htmlPreview = '<p><span style="font-size:36px"><strong>' .$project->ProjectName.'</strong></span></p>
 
-            <p><span style="font-size:36px"><strong>' .$quotaion->QuotationGenerationId.' -&nbsp;&nbsp; Delivery Summary </strong></span></p>
+        $wagonOptions = [
+            '40ft_Artic_Curtain_Side' => '40ft Artic Curtain Side',
+            '26t_Rigid_Curtain_Side' => '26t Rigid Curtain Side',
+            '18t_Rigid_Curtain_Side' => '18t Rigid Curtain Side',
+            '7.5t_Curtain_Side' => '7.5t Curtain Side',
+            '1t_Box_Van_Curtain_Side' => '1t Box Van Curtain Side',
+            'Pallet' => 'Pallet',
+            'Moffit_Off_Load' => 'Moffit Off Load',
+            'Tail_Lift_Offload' => 'Tail Lift Offload',
+            'Retractable_Roof' => 'Retractable Roof (Crane Off Load)',
+        ];
 
-            <p>&nbsp;</p>
-            <table class="table table-bordered">';
-
-            $i = 1;
-            foreach($QuotationSiteDelivery as $QuotationSiteDeliveryAddress){
-
-                $htmlPreview .= '<tr>
-                    <td colspan="4"><p><span style="font-size:15px"><strong>Site Delivery Address - '.$i++.' </strong></span></p></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Address 1</span></td>
-                    <td colspan="3">
-                        <span>' . (!empty($QuotationSiteDeliveryAddress->Address1) ? $QuotationSiteDeliveryAddress->Address1 : (!empty($ProjectsAddress->AddressLine1) ? $ProjectsAddress->AddressLine1 : '')) . '</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Address 2</span></td>
-                    <td colspan="3">
-                        <span>' . (!empty($QuotationSiteDeliveryAddress->Address2) ? $QuotationSiteDeliveryAddress->Address2 : (!empty($ProjectsAddress->AddressLine2) ? $ProjectsAddress->AddressLine2 : '')) . '</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Country</span></td>
-                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->Country) ? $QuotationSiteDeliveryAddress->Country : (!empty($ProjectsAddress->Country) ? $ProjectsAddress->Country : '')) . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>City</span></td>
-                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->City) ? $QuotationSiteDeliveryAddress->City : (!empty($ProjectsAddress->City) ? $ProjectsAddress->City : '')) . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Postal Code</span></td>
-                    <td colspan="3"><span>' . (!empty($QuotationSiteDeliveryAddress->PostalCode) ? $QuotationSiteDeliveryAddress->PostalCode : (!empty($ProjectsAddress->PostalCode) ? $ProjectsAddress->PostalCode : '')) . '</span></td>
-                </tr>';
-            }
-
-            $htmlPreview .= '<tr>
-                    <td class="tbl_color"><span>Delivery Restrictions</span></td>
-                    <td colspan="3"><span>' . ($QuotationShipToInformation->DeliveryRestrictions ?? '') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Wagon Preference</span></td>
-                    <td colspan="3">
-                        <span>';
-                            $wagonOptions = [
-                                '40ft_Artic_Curtain_Side' => '40ft Artic Curtain Side',
-                                '26t_Rigid_Curtain_Side' => '26t Rigid Curtain Side',
-                                '18t_Rigid_Curtain_Side' => '18t Rigid Curtain Side',
-                                '7.5t_Curtain_Side' => '7.5t Curtain Side',
-                                '1t_Box_Van_Curtain_Side' => '1t Box Van Curtain Side',
-                                'Pallet' => 'Pallet',
-                                'Moffit_Off_Load' => 'Moffit Off Load',
-                                'Tail_Lift_Offload' => 'Tail Lift Offload',
-                                'Retractable_Roof' => 'Retractable Roof (Crane Off Load)'
-                            ];
-                            $wagon = $QuotationShipToInformation->WagonPreference ?? '';
-                            $htmlPreview .= $wagonOptions[$wagon] ?? '';
-            $htmlPreview .= '</span>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Booking Notice & Contact</span></td>
-                    <td colspan="3"><span>' . ($QuotationShipToInformation->Booking ?? '') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Delivery Policy</span></td>
-                    <td colspan="3"><span>' . ($QuotationShipToInformation->Deliverypolicy ?? '') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>FORS Requirement - Silver</span></td>
-                    <td><span>' . ($QuotationShipToInformation->silver ?? 'No') . '</span></td>
-                    <td class="tbl_color"><span>FORS Requirement - Gold</span></td>
-                    <td><span>' . ($QuotationShipToInformation->gold ?? 'No') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Off-loading Requirements</span></td>
-                    <td colspan="3"><span>' . ($QuotationShipToInformation->Offloading ?? '') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>No. of Deliveries</span></td>
-                    <td><span>' . ($QuotationShipToInformation->NoOfDeliveries ?? '') . '</span></td>
-                    <td class="tbl_color"><span>Actual No. of Deliveries</span></td>
-                    <td><span>' . ($QuotationShipToInformation->ActualNoOfDeliveries ?? '') . '</span></td>
-                </tr>
-                <tr>
-                    <td class="tbl_color"><span>Cost Per Delivery</span></td>
-                    <td><span>' . ($QuotationShipToInformation->CurrencyCostperdelivery  ?? '').($QuotationShipToInformation->Costperdelivery ?? '') . '</span></td>
-                    <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
-                    <td><span>' . ($QuotationShipToInformation->AverageNoDoorsetsperdrop ?? '') . '</span></td>
-                </tr>
-            </table>';
-
-        $pdf2_1 = PDF::loadView('Company.pdf_files.quotationDeliverypdf', ['comapnyDetail' => $comapnyDetail,'htmlPreview' => $htmlPreview]);
+        $pdf2_1 = PDF::loadView('Company.pdf_files.quotationDeliverypdf',[
+            'companyDetail'             => $comapnyDetail,
+            'quotation'                 => $quotaion,
+            'project'                   => $project,
+            'quotationShipToInformation'=> $QSTI,
+            'quotationSiteDeliveries'   => $QuotationSiteDelivery,
+            'projectAddress'            => $ProjectsAddress,
+            'wagonOptions'              => $wagonOptions
+            ]);
 
         // return $pdf2->download('file2.pdf');
         $path2_1 = public_path() . '/allpdfFile';
         $fileName2_1 = $id . '2_1' . '.' . 'pdf';
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
-
-
-        $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-
 
         // Details Door List PDF
         $qv = QuotationVersion::where('id', $versionID)->first();
@@ -349,31 +268,23 @@ class PrintInvoiceController extends Controller
         }
 
         $a2 = '';
-       $shows = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
-            ->where('quotation_version_items.version_id', $versionID)
-            ->select(
+       $shows = $DoorsetPrice->select(
                 'items.*',
                 'item_master.doorNumber',
                 'item_master.floor',
                 'item_master.plot_ref_no',
                 'item_master.certification_no',
-            )
-            ->get();
+            )->get();
 
 
         // SUMMARY (if you still need it)
         $showDatas = $shows->groupBy('itemId'); // no ->get()
-
-        $i = 1;
+        $doorRows = [];
         $DoorDescription = '';
         foreach ($showDatas as $itemId => $rows) {
 
             $qty = $rows->count();           // qty based on grouped rows
             $show = $rows->first();          // ✔ pick first row for properties
-            if (!empty($show->DoorsetType)) {
-                $DoorDescription = DoorDescription($show->DoorsetType);
-            }
 
 
             $doorPrice = $show->AdjustPrice
@@ -386,28 +297,22 @@ class PrintInvoiceController extends Controller
             $ironPriceTotal = round($ironPrice, 2);
             $total = round(($doorPrice + $ironPrice), 2) * $qty;
 
-            $a2 .= '<tr>
-                        <td>' . $show->doorNumber . '</td>
-                        <td>' . $DoorDescription . '</td>
-                        <td>' . $show->DoorType . '</td>
-                        <td>' . $qty . '</td>';
-
-            if ($HideCosts == 0) {
-                $a2 .= '<td>' . $doorPriceTotal . '</td>
-                        <td>' . $ironPriceTotal . '</td>';
-            }
-
-            $a2 .= '<td class="price">' . number_format(
-                $total,
-                2,
-                '.',
-                ''
-            ) . '</td></tr>';
-            $i++;
+            $doorRows[] = [
+                'doorNumber'     => $show->doorNumber,
+                'doorDescription'=> !empty($show->DoorsetType)
+                                        ? DoorDescription($show->DoorsetType)
+                                        : '',
+                'doorType'       => $show->DoorType,
+                'qty'            => $qty,
+                'doorPrice'      => round($doorPriceTotal, 2),
+                'ironPrice'      => round($ironPriceTotal, 2),
+                'total'          => number_format($total,2,'.',''),
+            ];
         }
 
 
-        $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'HideCosts' => $HideCosts]);
+
+        $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['doorRows' => $doorRows, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'HideCosts' => $HideCosts]);
         // return $pdf3->download('file3.pdf');
         $path3 = public_path() . '/allpdfFile';
         $fileName3 = $id . '3' . '.' . 'pdf';
@@ -649,11 +554,6 @@ class PrintInvoiceController extends Controller
             $rWdBRating = 'N/A';
             if (!empty($show->rWdBRating)) {
                 $rWdBRating = $show->rWdBRating;
-            }
-
-            $COC = 'None';
-            if (!empty($show->COC)) {
-                $COC = $show->COC;
             }
 
             $SpecialFeatureRefs = 'None';

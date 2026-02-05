@@ -168,7 +168,23 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {!! $a2 !!}
+                    @foreach($doorRows as $row)
+                        <tr>
+                            <td>{{ $row['doorNumber'] }}</td>
+                            <td>{{ $row['doorDescription'] }}</td>
+                            <td>{{ $row['doorType'] }}</td>
+                            <td>{{ $row['qty'] }}</td>
+
+                            @if($HideCosts == 0)
+                                <td>{{ number_format($row['doorPrice'], 2) }}</td>
+                                <td>{{ number_format($row['ironPrice'], 2) }}</td>
+                            @endif
+
+                            <td class="price">
+                                {{ number_format($row['total'], 2, '.', '') }}
+                            </td>
+                        </tr>
+                    @endforeach
                 </tbody>
             </table>
         <!-- Page 3 End -->
