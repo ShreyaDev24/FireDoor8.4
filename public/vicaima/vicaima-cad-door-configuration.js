@@ -3053,40 +3053,47 @@ if (IsFourSidedFrame == true) {
 
                     // console.log(elem);
 
-                    if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
+                    if (
+                        elem.kickPlatesQty !== '' &&
+                        elem.kickPlatesQty !== null &&
+                        Array.isArray(elem.additional_info)
+                    ) {
                         IsKickPlateEnable = true;
-                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                        KickPlatesHeight = KickPlatesData.staticHeight
+
+                        const KickPlatesData = elem.additional_info.find(
+                            item => item.Category === "KickPlates"
+                        );
+
+                        KickPlatesHeight = KickPlatesData?.staticHeight ?? null;
                     }
 
-                  if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
 
+                 if (elem.doorSignageQty && Array.isArray(elem.additional_info)) {
+                        const doorSignages = elem.additional_info.filter(
+                            i => i.Category === "DoorSignage"
+                        );
 
+                        if (doorSignages[0]) {
+                            IsDoorSinageEnable = true;
+                            DoorSignagedistanceFromLeadingEdgeOfDoor = doorSignages[0].distanceFromLeadingEdgeOfDoor;
+                            DoorSignageCentered = doorSignages[0].centered;
+                            DoorSignageDistanceFromBottomOfDoor = doorSignages[0].distanceFromBottomOfDoor;
+                        }
 
-                    const doorSignages = elem.additional_info.filter(item => item.Category === "DoorSignage");
-
-                    if (doorSignages.length > 0) {
-                         IsDoorSinageEnable = true;
-                        const DoorSignageData1 = doorSignages[0];
-                        DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData1.distanceFromLeadingEdgeOfDoor;
-                        DoorSignageCentered = DoorSignageData1.centered;
-                        DoorSignageDistanceFromBottomOfDoor = DoorSignageData1.distanceFromBottomOfDoor
+                        if (doorSignages[1]) {
+                            IsDoorSinageEnable2 = true;
+                            DoorSignagedistanceFromLeadingEdgeOfDoor2 = doorSignages[1].distanceFromLeadingEdgeOfDoor;
+                            DoorSignageCentered2 = doorSignages[1].centered;
+                            DoorSignageDistanceFromBottomOfDoor2 = doorSignages[1].distanceFromBottomOfDoor;
+                        }
                     }
 
-                    if (doorSignages.length > 1) {
-                        IsDoorSinageEnable2 = true;
-                        const DoorSignageData2 = doorSignages[1];
-                        DoorSignagedistanceFromLeadingEdgeOfDoor2 = DoorSignageData2.distanceFromLeadingEdgeOfDoor;
-                        DoorSignageCentered2 = DoorSignageData2.centered;
-                        DoorSignageDistanceFromBottomOfDoor2 = DoorSignageData2.distanceFromBottomOfDoor
-                    }
-               }
 
-                    if (elem.hingesQty != '' && elem.hingesQty != null) {
+                    if (elem.hingesQty != '' && elem.hingesQty != null && Array.isArray(elem.additional_info)) {
                         IsHingesEnable = true;
                     }
 
-                    if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null) {
+                    if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null  && Array.isArray(elem.additional_info)) {
 
                           const LocksAndLatches = elem.additional_info.filter(item => item.Category === "LocksandLatches");
 
@@ -3104,7 +3111,7 @@ if (IsFourSidedFrame == true) {
                         LockNLatchesDistanceFromLeadingEdgeOfDoor2=LockNLatchesData2.distanceFromLeadingEdgeOfDoor
                     }
                     }
-                    if (elem.Thumbturn != '' && elem.Thumbturn != null) {
+                    if (elem.Thumbturn != '' && elem.Thumbturn != null && Array.isArray(elem.additional_info)) {
 
                          const Thumbturns = elem.additional_info.filter(item => item.Category === "Thumbturn");
 
@@ -3122,7 +3129,7 @@ if (IsFourSidedFrame == true) {
                         ThumbturnDistanceFromLeadingEdgeOfDoor2=ThumbturnData2.distanceFromLeadingEdgeOfDoor
                     }
                     }
-                    if (elem.Cylinders != '' && elem.Cylinders != null) {
+                    if (elem.Cylinders != '' && elem.Cylinders != null && Array.isArray(elem.additional_info)) {
 
 
                           const Cylinders = elem.additional_info.filter(item => item.Category === "Cylinders");
@@ -3142,7 +3149,7 @@ if (IsFourSidedFrame == true) {
                     }
                     }
 
-                    if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
+                    if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null && Array.isArray(elem.additional_info)) {
 
 
                                                const ConcealedOverheadCloser = elem.additional_info.filter(item => item.Category === "ConcealedOverheadCloser");
@@ -3162,50 +3169,54 @@ if (IsFourSidedFrame == true) {
                         ConcealedOverheadCloserHeight2 = ConcealedOverheadCloserData2.staticHeight
                     }
                     }
-                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
-                                 const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
-   console.log(FaceFixedDoorClosers.length,'/////////////////////////')
-                    if (FaceFixedDoorClosers.length > 0) {
-                        IsFaceFixedDoorClosersEnable = true;
-                        const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
-                       FaceFixedDoorClosersWidth = FaceFixedDoorClosersData1.staticWidth
-                        FaceFixedDoorCloserDataHeight = FaceFixedDoorClosersData1.staticHeight
+                    if (
+                        elem.FaceFixedDoorCloser !== '' &&
+                        elem.FaceFixedDoorCloser !== null &&
+                        Array.isArray(elem.additional_info)
+                    ) {
+                        const FaceFixedDoorClosers = elem.additional_info.filter(
+                            item => item.Category === "FaceFixedDoorClosers"
+                        );
+
+                        if (FaceFixedDoorClosers[0]) {
+                            IsFaceFixedDoorClosersEnable = true;
+                            FaceFixedDoorClosersWidth = FaceFixedDoorClosers[0].staticWidth ?? null;
+                            FaceFixedDoorCloserDataHeight = FaceFixedDoorClosers[0].staticHeight ?? null;
+                        }
+
+                        if (FaceFixedDoorClosers[1]) {
+                            IsFaceFixedDoorClosersEnable2 = true;
+                            FaceFixedDoorClosersWidth2 = FaceFixedDoorClosers[1].staticWidth ?? null;
+                            FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosers[1].staticHeight ?? null;
+                        }
                     }
 
-                    if (FaceFixedDoorClosers.length > 1) {
-                        IsFaceFixedDoorClosersEnable2 = true;
-                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
-                        const FaceFixedDoorClosersData2 = FaceFixedDoorClosers[1];
-                       FaceFixedDoorClosersWidth2 = FaceFixedDoorClosersData2.staticWidth
-                        FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosersData2.staticHeight
-                    }
-                    }
 
-                    if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
+                    if (
+                            elem.pullHandlesQty !== '' &&
+                            elem.pullHandlesQty !== null &&
+                            Array.isArray(elem.additional_info)
+                        ) {
+                            const PullHandles = elem.additional_info.filter(
+                                item => item.Category === "PullHandles"
+                            );
 
+                            if (PullHandles[0]) {
+                                IsPullHandlesEnable = true;
+                                PullHandleHeight = PullHandles[0].staticHeight ?? null;
+                                PullHandleDistanceFromBottomOfDoor = PullHandles[0].distanceFromBottomOfDoor ?? null;
+                                PullHandleDistanceFromLeadingEdgeOfDoor = PullHandles[0].distanceFromLeadingEdgeOfDoor ?? null;
+                            }
 
-                         const PullHandles = elem.additional_info.filter(item => item.Category === "PullHandles");
+                            if (PullHandles[1]) {
+                                IsPullHandlesEnable2 = true;
+                                PullHandleHeight2 = PullHandles[1].staticHeight ?? null;
+                                PullHandleDistanceFromBottomOfDoor2 = PullHandles[1].distanceFromBottomOfDoor ?? null;
+                                PullHandleDistanceFromLeadingEdgeOfDoor2 = PullHandles[1].distanceFromLeadingEdgeOfDoor ?? null;
+                            }
+                        }
 
-                    if (PullHandles.length > 0) {
-                        IsPullHandlesEnable = true;
-                        const PullHandlesData1 = PullHandles[0];
-                        PullHandleHeight = PullHandlesData1.staticHeight
-                        PullHandleDistanceFromBottomOfDoor = PullHandlesData1.distanceFromBottomOfDoor
-                        PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData1.distanceFromLeadingEdgeOfDoor
-                        console.log(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
-                    }
-
-                    if (PullHandles.length > 1) {
-                        IsPullHandlesEnable2 = true;
-                        const PullHandlesData2 = PullHandles[1];
-                        PullHandleHeight2 = PullHandlesData2.staticHeight
-                        PullHandleDistanceFromBottomOfDoor2 = PullHandlesData2.distanceFromBottomOfDoor
-                        PullHandleDistanceFromLeadingEdgeOfDoor2 = PullHandlesData2.distanceFromLeadingEdgeOfDoor
-                        console.log(PullHandleHeight2,PullHandleDistanceFromBottomOfDoor2,PullHandleDistanceFromLeadingEdgeOfDoor2)
-                    }
-                    }
-
-                    if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null) {
+                    if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null && Array.isArray(elem.additional_info)) {
 
                         const PushHandles = elem.additional_info.filter(item => item.Category === "PushHandles");
 
@@ -3226,7 +3237,7 @@ if (IsFourSidedFrame == true) {
                     }
                     }
 
-                    if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
+                    if (elem.leverHandleQty != '' && elem.leverHandleQty != null && Array.isArray(elem.additional_info)) {
                         IsLeverHandlesEnable = true;
                         const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
                         LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
@@ -3234,7 +3245,7 @@ if (IsFourSidedFrame == true) {
                         // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
                     }
 
-                    if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
+                    if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null && Array.isArray(elem.additional_info)) {
 
 
                     const SecurityViewers = elem.additional_info.filter(item => item.Category === "Doorsecurityviewer");
@@ -3252,7 +3263,7 @@ if (IsFourSidedFrame == true) {
                     }
 
                     }
-                    if (elem.Letterplates != '' && elem.Letterplates != null) {
+                    if (elem.Letterplates != '' && elem.Letterplates != null && Array.isArray(elem.additional_info)) {
 
 
                          const LetterPlates = elem.additional_info.filter(item => item.Category === "Letterplates");
@@ -3279,7 +3290,7 @@ if (IsFourSidedFrame == true) {
 
 
                     }
-                    if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null) {
+                    if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null && Array.isArray(elem.additional_info)) {
 
                     const AirTransfers = elem.additional_info.filter(item => item.Category === "Airtransfergrills");
 
@@ -3300,7 +3311,7 @@ if (IsFourSidedFrame == true) {
                     }
 
                     }
-                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
+                     if (elem.FlushBolts != '' && elem.FlushBolts != null && Array.isArray(elem.additional_info)) {
 
                         const FlushBoltsData = elem.additional_info.filter(item => item.Category === "FlushBolts");
 
