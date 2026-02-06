@@ -7,6 +7,13 @@
                 width: 100%;
                 border-collapse: collapse;
             }
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                table-layout: fixed;
+            }
+
             table thead tr th {
                 border-bottom: 1px solid #000000;
                 text-align: left !important;
@@ -16,6 +23,11 @@
             table td {
                 border: 0px solid #555;
                 padding-left: 5px;
+                padding: 4px;
+                font-size: 11px;
+                white-space: normal;
+                word-wrap: break-word;
+                word-break: break-word;
             }
             table tbody tr td {
                 font-size:13px;
@@ -170,20 +182,19 @@
                 <tbody>
                     @foreach($doorRows as $row)
                         <tr>
-                            <td>{{ $row['doorNumber'] }}</td>
-                            <td>{{ $row['doorDescription'] }}</td>
-                            <td>{{ $row['doorType'] }}</td>
-                            <td>{{ $row['qty'] }}</td>
+                            <td class="col-door">{{ $row['doorNumber'] }}</td>
+                            <td class="col-desc">{{ $row['doorDescription'] }}</td>
+                            <td class="col-type">{{ $row['doorType'] }}</td>
+                            <td class="col-qty">{{ $row['qty'] }}</td>
 
                             @if($HideCosts == 0)
-                                <td>{{ number_format($row['doorPrice'], 2) }}</td>
-                                <td>{{ number_format($row['ironPrice'], 2) }}</td>
+                                <td class="col-price">{{ number_format($row['doorPrice'], 2) }}</td>
+                                <td class="col-price">{{ number_format($row['ironPrice'], 2) }}</td>
                             @endif
 
-                            <td class="price">
-                                {{ number_format($row['total'], 2, '.', '') }}
-                            </td>
+                            <td class="col-price">{{ number_format($row['total'], 2, '.', '') }}</td>
                         </tr>
+
                     @endforeach
                 </tbody>
             </table>

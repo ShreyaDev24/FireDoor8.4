@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Session;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 use PDF;
 use PdfMerger;
 use Maatwebsite\Excel\Facades\Excel;
@@ -61,6 +63,9 @@ class PrintInvoiceController extends Controller
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
+
+        $start = microtime(true);
+Log::info('PDF START');
 
         $quatationId = $quatationId;
 
@@ -146,57 +151,15 @@ class PrintInvoiceController extends Controller
             ->where('VersionId', $versionID);
 
         $totDoorsetPrice = itemAdjustCount($quatationId,$versionID);
-        $totIronmongaryPrice = $DoorsetPrice->sum('items.IronmongaryPrice');
+        $totIronmongaryPrice = (clone $DoorsetPrice)->sum('items.IronmongaryPrice');
 
         //end changes
         $nonConfigDataPrice = nonConfigurableItem($quatationId,$versionID,$userIds,'',true);
         $nonConfigDataCount = nonConfigurableItem($quatationId,$versionID,$userIds,'','','count');
 
-        $totIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->count();
+        $totIronmongerySet = (clone $DoorsetPrice)->whereNotNull('items.IronmongeryID')->count();
 
-        $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
-        $IronmongeryData = '';
-        $PageBreakCount = 1;
-
-        if(!empty($GetIronmongerySet)){
-            foreach($GetIronmongerySet as $ironData){
-                if (!empty($ironData->IronmongeryID)) {
-                    $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
-                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
-                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetData($ironData->IronmongeryID) .'</table></div>';
-
-                    $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
-
-                    if (!empty($doorNumbers)) {
-                        $rows = '';
-                        foreach ($doorNumbers as $door) {
-                            $rows .= '<tr><td>&bull; '. e($ironData->DoorType) .' - '. e($door) .'</td></tr>';
-                        }
-
-                        // Door list with repeating header
-                        $IronmongeryData .= '
-                        <table class="door-list">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div id="headText"><b>Ironmongery Data</b></div>
-                                        <div><strong>Door list that this belongs to:</strong></div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>'. $rows .'</tbody>
-                        </table>';
-                    }
-
-                    if ($PageBreakCount < count($GetIronmongerySet)) {
-                        $IronmongeryData .= '<div class="page-break"></div>';
-                    }
-
-
-                    $PageBreakCount++;
-                }
-            }
-        }
+        $GetIronmongerySet = (clone $DoorsetPrice)->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
 
         $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $quatationId,'side_screen_items.VersionId' => $versionID])
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
@@ -267,49 +230,42 @@ class PrintInvoiceController extends Controller
             $pdf2_2->save($path2_2 . '/' . $fileName2_2);
         }
 
-        $a2 = '';
-       $shows = $DoorsetPrice->select(
+
+       $shows = (clone $DoorsetPrice)->select(
                 'items.*',
-                'item_master.doorNumber',
+                DB::raw('COUNT(item_master.itemID) as qty'),
+                DB::raw('GROUP_CONCAT(item_master.doorNumber) as doorNumbers'),
                 'item_master.floor',
                 'item_master.plot_ref_no',
                 'item_master.certification_no',
-            )->get();
+            )->groupBy('itemId')->get();
 
-
-        // SUMMARY (if you still need it)
-        $showDatas = $shows->groupBy('itemId'); // no ->get()
         $doorRows = [];
         $DoorDescription = '';
-        foreach ($showDatas as $itemId => $rows) {
+        foreach ($shows as $rows) {
 
-            $qty = $rows->count();           // qty based on grouped rows
-            $show = $rows->first();          // ✔ pick first row for properties
+            $doorPrice = $rows->AdjustPrice
+                            ? floatval($rows->AdjustPrice)
+                            : floatval($rows->DoorsetPrice);
 
-
-            $doorPrice = $show->AdjustPrice
-                            ? floatval($show->AdjustPrice)
-                            : floatval($show->DoorsetPrice);
-
-            $ironPrice = floatval($show->IronmongaryPrice);
+            $ironPrice = floatval($rows->IronmongaryPrice);
 
             $doorPriceTotal = round($doorPrice, 2);
             $ironPriceTotal = round($ironPrice, 2);
-            $total = round(($doorPrice + $ironPrice), 2) * $qty;
+            $total = round(($doorPrice + $ironPrice), 2) * $rows->qty;
 
             $doorRows[] = [
-                'doorNumber'     => $show->doorNumber,
-                'doorDescription'=> !empty($show->DoorsetType)
-                                        ? DoorDescription($show->DoorsetType)
+                'doorNumber'     => $rows->doorNumbers,
+                'doorDescription'=> !empty($rows->DoorsetType)
+                                        ? DoorDescription($rows->DoorsetType)
                                         : '',
-                'doorType'       => $show->DoorType,
-                'qty'            => $qty,
+                'doorType'       => $rows->DoorType,
+                'qty'            => $rows->qty,
                 'doorPrice'      => round($doorPriceTotal, 2),
                 'ironPrice'      => round($ironPriceTotal, 2),
                 'total'          => number_format($total,2,'.',''),
             ];
         }
-
 
 
         $pdf3 = PDF::loadView('Company.pdf_files.detaildoorlist', ['doorRows' => $doorRows, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'HideCosts' => $HideCosts]);
@@ -334,13 +290,22 @@ class PrintInvoiceController extends Controller
         $a = '';
         $i = 1;
         $DoorQuantity = 0;
-        $DoorsetPrice = 0;
 
         $SumDoorsetPrice = 0;
         $SumIronmongaryPrice = 0;
         $configurationDoor = configurationDoor($quotaion->configurableitems);
         $rows = [];
-        foreach ($shows as $show) {
+
+        $showDatas = (clone $DoorsetPrice)->select(
+            'items.*',
+            'item_master.floor',
+            'item_master.doorNumber',
+            'item_master.plot_ref_no',
+            'item_master.certification_no',
+        )->get();
+
+        $DoorsetPriceSUM = 0;
+        foreach ($showDatas as $show) {
 
             $fireRate = $show->FireRating;
 
@@ -349,13 +314,14 @@ class PrintInvoiceController extends Controller
             } elseif (in_array($show->FireRating, ['FD60', 'FD60s'])) {
                 $show->FireRating = 'FD60';
             }
-            $DoorQuantity++;
-            $DoorsetPrice      = (float) ($show->AdjustPrice ?: $show->DoorsetPrice);
+            $DoorQuantity += $show->DoorQuantity;
+
+            $DoorsetPriceSUM      = (float) ($show->AdjustPrice ?: $show->DoorsetPrice);
             $IronmongaryPrice  = (float) ($show->IronmongeryID ? ($show->IronmongaryPrice ?? 0) : 0);
 
-            $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
+            $totalpriceperdoorset = $DoorsetPriceSUM + $IronmongaryPrice;
 
-            $SumDoorsetPrice      += $DoorsetPrice;
+            $SumDoorsetPrice      += $DoorsetPriceSUM;
             $SumIronmongaryPrice  += $IronmongaryPrice;
 
             $DoorLeafFinish = "N/A";
@@ -654,13 +620,15 @@ class PrintInvoiceController extends Controller
                 'rWdBRating' => $rWdBRating,
                 'fireRate' => $fireRate,
                 'SpecialFeatureRefs' => $SpecialFeatureRefs,
-                'DoorsetPrice' => $DoorsetPrice,
+                'DoorsetPrice' => $DoorsetPriceSUM,
                 'IronmongaryPrice' => $IronmongaryPrice,
                 'totalpriceperdoorset' => $totalpriceperdoorset,
             ];
         }
 
-        $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['rows' => $rows, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts,'configurationDoor' => $configurationDoor,'configurationItem' => $configurationItem]);
+        $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
+
+        $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['rows' => $rows, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts,'configurationDoor' => $configurationDoor,'DoorQuantity' => $DoorQuantity,'SumDoorsetPrice' => $SumDoorsetPrice,'SumIronmongaryPrice' => $SumIronmongaryPrice,'Alltotalpriceperdoorset' => $Alltotalpriceperdoorset,'configurationItem' => $configurationItem,'currency' => $currency]);
 
         $path4 = public_path() . '/allpdfFile';
         $fileName4 = $id . '4' . '.' . 'pdf';
@@ -691,22 +659,13 @@ class PrintInvoiceController extends Controller
 
         // Elevation Drawing
         $elevTbl = '';
-        // $ed = Item::where('QuotationId',$quatationId)->get();
-        $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
-            $join->on("quotation_version_items.itemID","=","items.itemId")
-                ->on("quotation_version_items.itemmasterID","=","item_master.id");
-        })
-        ->join('quotation','quotation.id','=','items.QuotationId')
-        ->where('items.QuotationId', $quatationId)
-        // ->where('items.itemId',2342) to see particular quote
-        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
 
-        $TotalItems = count($ed->toArray());
+        $TotalItems = count($shows ->toArray());
 
         $PageBreakCount = 1;
         $PageBreakCounts = 1;
 
-        foreach ($ed as $tt) {
+        foreach ($shows as $tt) {
             $getLeaf = IntumescentSealLeafType::where('id',$tt->IntumescentLeafType)->select('id','leaf_type_key','door_thickness')->first();
             if($getLeaf){
                 $fire = $tt->FireRating . ' - ' . $getLeaf->leaf_type_key . ' (' . $getLeaf->door_thickness . 'mm)';
@@ -772,9 +731,9 @@ class PrintInvoiceController extends Controller
                 ],
             ];
 
-            $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
+            $certNo = $certMap[$quotaion->configurableitems][$FireRatingActualValue] ?? '';
 
-            $configurationDoor = configurationDoor($tt->configurableitems);
+            $configurationDoor = configurationDoor($quotaion->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
 
             // dd($tt);
@@ -2397,7 +2356,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlazingSystems)) {
                 // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
                 //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
+                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$quotaion->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
                 $glazingSystems = @$gs->GlazingSystem;
             }
 
@@ -2431,28 +2390,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $FrameDepth = empty($tt->FrameDepth) ? 'N/A' : $tt->FrameDepth;
             $IronmongerySet = empty($tt->IronmongeryID) ? 'N/A' : IronmongerySetName($tt->IronmongeryID);
 
-            // if (!empty($tt->IronmongerySet)) {
-            //     if ($tt->IronmongerySet == 'No') {
-            //         $IronmongerySet = 'N/A';
-            //         $IronmongeryData .= '';
-            //     } else {
-            //         if (!empty($tt->IronmongeryID)) {
-            //             $IronmongerySet = IronmongerySetName($tt->IronmongeryID);
-            //             $IronmongeryDataCountVal = ($IronmongeryDataCount == 1)?'':'';
-            //             $IronmongeryData .= '<div>'.$IronmongeryDataCountVal.'
-            //             <table id="WithBorder" class="tbl2">'.IronmongerySetData($tt->IronmongeryID).'</table></div>';
-            //             $IronmongeryDataCount++;
-            //             // $IronmongeryData .= '<div class="page-break"></div>';
-
-            //         } else {
-            //             $IronmongerySet = 'N/A';
-            //             $IronmongeryData .= '';
-            //         }
-            //     }
-            // } else {
-            //     $IronmongerySet = 'N/A';
-            //     $IronmongeryData .= '';
-            // }
             $rWdBRating = 'N/A';
             if (!empty($tt->rWdBRating)) {
                 $rWdBRating = $tt->rWdBRating;
@@ -2512,19 +2449,19 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
                 //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                 //         ->where('selected_glass_type.editBy', '=', $id);
-                // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                // })->where('glass_type.'.$configurationDoor,$quotaion->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
                 if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
                     $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                             ->where('selected_glass_type.editBy', '=', $id);
-                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                    })->where('glass_type.'.$configurationDoor,$quotaion->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
                 }
                 else{
                     $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
                         $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
                             ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
-                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$quotaion->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
         }
 
@@ -3460,11 +3397,38 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         // end
 
         $fileName7 = '';
-        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-            $pdf7 = PDF::loadView('Company.pdf_files.IronmongeryData', ['IronmongeryData' => $IronmongeryData]);
-            $path7 = public_path() . '/allpdfFile';
-            $fileName7 = $id . '7' . '.' . 'pdf';
-            // return $pdf7->download('IronmongeryData.pdf');
+        $ironmongerySets = [];
+
+        if (!empty($GetIronmongerySet)) {
+
+            foreach ($GetIronmongerySet as $ironData) {
+
+                if (empty($ironData->IronmongeryID)) {
+                    continue;
+                }
+
+                $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)
+                    ->pluck('doorNumber')
+                    ->toArray();
+
+                $ironmongerySets[] = [
+                    'ironmongery_id' => $ironData->IronmongeryID,
+                    'ironmongery_name' => IronmongerySetName($ironData->IronmongeryID),
+                    'ironmongery_table' =>  IronmongerySetData($ironData->IronmongeryID),
+                    'door_type' => $ironData->DoorType,
+                    'door_numbers' => $doorNumbers,
+                ];
+            }
+        }
+
+        if (!empty($ironmongerySets)) {
+            $pdf7 = PDF::loadView('Company.pdf_files.IronmongeryDataList', [
+                'ironmongerySets' => $ironmongerySets
+            ]);
+
+            $path7 = public_path('allpdfFile');
+            $fileName7 = $id . '7.pdf';
+
             $pdf7->save($path7 . '/' . $fileName7);
         }
 
@@ -3479,7 +3443,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
-        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
+        if($ironmongerySets !== '' && $ironmongerySets !== '0'){
                  $pdfFiles = [
                     public_path() . '/allpdfFile' . '/' . $fileName1,
                     public_path() . '/allpdfFile' . '/' . $fileName2,
@@ -3509,7 +3473,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 ];
             }
 
-        if(count($ed) == 0){
+        if(count($shows) == 0){
             $pdfFiles = [
                 public_path() . '/allpdfFile' . '/' . $fileName1,
                 public_path() . '/allpdfFile' . '/' . $fileName2,
@@ -3538,7 +3502,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 ];
             }
         }
-
+Log::info('Before merge: ' . round(microtime(true) - $start, 2));
             // Merge the PDF files using PDFMerger
             $pdfMerger = PDFMerger::init();
             foreach ($pdfFiles as $pdfFile) {
@@ -3549,72 +3513,47 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
             $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
-
-            $quo = Quotation::find($quatationId);
-            $quo->quotTag = 1;
-            $quo->save();
+Log::info('After merge: ' . round(microtime(true) - $start, 2));
 
             // new code
-            $pdf = new Fpdi();
-            // Source file path
+           $pdf = new Fpdi();
+
+            // Load merged PDF ONCE
             $pageCount = $pdf->setSourceFile($mergedFilePath);
-            // Disable auto page break to avoid pushing content down
+
             $pdf->SetAutoPageBreak(false);
             $pdf->setPrintHeader(false);
             $pdf->setPrintFooter(false);
-            $pdf->SetMargins(0, 0, 0); // Full-page use
-
-            for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
-                $tplId = $pdf->importPage($pageNo);
-                $pdf->AddPage();
-                $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
-                // Add page number without adding new page or overlapping content
-                $pdf->SetFont('Helvetica', '', 9);
-                $pdf->SetTextColor(0, 0, 0);
-                // ✅ Position footer safely above bottom margin
-                $pdf->SetXY(0, -12); // or -15 if needed
-                $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
-            }
-            // Save the final PDF
-            $pdf->Output($PDFfilename, 'F');
-            $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
-            // Source file path
-            $pageCount = $pdf->setSourceFile($mergedFilePath);
-
-            // Disable auto page break to avoid pushing content down
-            $pdf->SetAutoPageBreak(false);
-            $pdf->setPrintHeader(false);
-            $pdf->setPrintFooter(false);
-
-            $pdf->SetMargins(0, 0, 0); // Full-page use
+            $pdf->SetMargins(0, 0, 0);
 
             for ($pageNo = 1; $pageNo <= $pageCount; $pageNo++) {
                 $tplId = $pdf->importPage($pageNo);
                 $pdf->AddPage();
                 $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
 
-                // Add page number without adding new page or overlapping content
+                // Footer page number
                 $pdf->SetFont('Helvetica', '', 9);
                 $pdf->SetTextColor(0, 0, 0);
-
-                // ✅ Position footer safely above bottom margin
-                $pdf->SetXY(0, -12); // or -15 if needed
-                $pdf->Cell(0, 10, 'Page ' . $pageNo . ' / ' . $pageCount, 0, 0, 'C');
+                $pdf->SetXY(0, -12);
+                $pdf->Cell(0, 10, "Page {$pageNo} / {$pageCount}", 0, 0, 'C');
             }
 
-            // Save the final PDF
+            // Save once
             $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
+            Log::info('After FPDI: ' . round(microtime(true) - $start, 2));
+
             // end code
 
-            $quo = Quotation::find($quatationId);
-            $quo->quotTag = 1;
-            $quo->save();
+            Quotation::where('id', $quatationId)->update(['quotTag' => 1]);
+
 
             // unlink($mergedFilePath); (27-11-2024 comment these code bcs it deleted the file to the system and getting 404 not found when send to client the quotations.)
 
             foreach ($pdfFiles as $unlinkPath) {
-                unlink($unlinkPath);
+                if (file_exists($unlinkPath)) {
+                    unlink($unlinkPath);
+                }
             }
 
     }
@@ -3733,48 +3672,48 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         // $GetIronmongerySetCount = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->count();
         $GetIronmongerySet = $DoorsetPrice->whereNotNull('items.IronmongeryID')->groupby('items.itemId')->get();
-        $IronmongeryData = '';
+        // $IronmongeryData = '';
         $PageBreakCount = 1;
         // dd($GetIronmongerySet,count($GetIronmongerySet));
-        if(!empty($GetIronmongerySet)){
-            foreach($GetIronmongerySet as $ironData){
-                if (!empty($ironData->IronmongeryID)) {
-                    $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
-                    $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
-                    <div><table id="WithBorder" class="tbl2">'. IronmongerySetDataClient($ironData->IronmongeryID,$userid) .'</table></div>';
+        // if(!empty($GetIronmongerySet)){
+        //     foreach($GetIronmongerySet as $ironData){
+        //         if (!empty($ironData->IronmongeryID)) {
+        //             $IronmongerySet = IronmongerySetName($ironData->IronmongeryID);
+        //             $IronmongeryData .= '<div id="headText"><b>Ironmongery Data</b></div>
+        //             <div><table id="WithBorder" class="tbl2">'. IronmongerySetDataClient($ironData->IronmongeryID,$userid) .'</table></div>';
 
-                    $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
+        //             $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
 
-                    if (!empty($doorNumbers)) {
-                        $rows = '';
-                        foreach ($doorNumbers as $door) {
-                            $rows .= '<tr><td>&bull; '. e($ironData->DoorType) .' - '. e($door) .'</td></tr>';
-                        }
+        //             if (!empty($doorNumbers)) {
+        //                 $rows = '';
+        //                 foreach ($doorNumbers as $door) {
+        //                     $rows .= '<tr><td>&bull; '. e($ironData->DoorType) .' - '. e($door) .'</td></tr>';
+        //                 }
 
-                        // Door list with repeating header
-                        $IronmongeryData .= '
-                        <table class="door-list">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        <div id="headText"><b>Ironmongery Data</b></div>
-                                        <div><strong>Door list that this belongs to:</strong></div>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>'. $rows .'</tbody>
-                        </table>';
-                    }
+        //                 // Door list with repeating header
+        //                 $IronmongeryData .= '
+        //                 <table class="door-list">
+        //                     <thead>
+        //                         <tr>
+        //                             <th>
+        //                                 <div id="headText"><b>Ironmongery Data</b></div>
+        //                                 <div><strong>Door list that this belongs to:</strong></div>
+        //                             </th>
+        //                         </tr>
+        //                     </thead>
+        //                     <tbody>'. $rows .'</tbody>
+        //                 </table>';
+        //             }
 
-                    if ($PageBreakCount < count($GetIronmongerySet)) {
-                        $IronmongeryData .= '<div class="page-break"></div>';
-                    }
+        //             if ($PageBreakCount < count($GetIronmongerySet)) {
+        //                 $IronmongeryData .= '<div class="page-break"></div>';
+        //             }
 
 
-                    $PageBreakCount++;
-                }
-            }
-        }
+        //             $PageBreakCount++;
+        //         }
+        //     }
+        // }
 
         $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $quatationId,'side_screen_items.VersionId' => $versionID])
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
@@ -4570,9 +4509,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 ],
             ];
 
-            $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
+            $certNo = $certMap[$quotaion->configurableitems][$FireRatingActualValue] ?? '';
 
-            $configurationDoor = configurationDoor($tt->configurableitems);
+            $configurationDoor = configurationDoor($quotaion->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
 
             // dd($tt);
@@ -6202,7 +6141,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlazingSystems)) {
                 // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
                 //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', $userid)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
+                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', $userid)->where('glazing_system.'.$configurationDoor,$quotaion->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
                 $glazingSystems = @$gs->GlazingSystem;
             }
 
@@ -6317,19 +6256,19 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
                 //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                 //         ->where('selected_glass_type.editBy', '=', $id);
-                // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                // })->where('glass_type.'.$configurationDoor,$quotaion->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
                 if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
                     $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
                             ->where('selected_glass_type.editBy', '=', $id);
-                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                    })->where('glass_type.'.$configurationDoor,$quotaion->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
                 }
                 else{
                     $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
                         $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
                             ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
-                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$quotaion->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
         }
 

@@ -314,11 +314,27 @@
                 </tr>
             @endforeach
 
+            <tr>
+                <td class="tbl_bottom" colspan="4"></td>
+                <td class="tbl_bottom">{{ $DoorQuantity }}</td>
+                <td class="tbl_bottom" colspan="39"></td>
+
+                @if($HideCosts == 0)
+                    <td class="tbl_bottom">
+                        {{ $currency . number_format((float) ($SumDoorsetPrice ?? 0), 2) }}
+                    </td>
+                    <td class="tbl_bottom">
+                        {{ $currency . number_format((float) ($SumIronmongaryPrice ?? 0), 2) }}
+                    </td>
+                @endif
+
+                <td class="tbl_bottom">
+                    {{ $currency . number_format((float) ($Alltotalpriceperdoorset ?? 0), 2) }}
+                </td>
+            </tr>
+
+
         </tbody>
     </table>
-
-    {{--  @php
-    die;
-@endphp  --}}
 </body>
 </html>

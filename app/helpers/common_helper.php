@@ -1368,14 +1368,15 @@ function IronmongerySetData($IronmongeryID): string{
     $table = ' <tr class="d-flex">
                     <td colspan="6" style="text-align:center;"><b>'.$IronmongeryInfo->Setname.'</b></td>
                 </tr>
-                <tr class="d-flex">
-                <td style="text-align:center; width:5%"><b>#</b></td>
-                <td style="text-align:center; width:10%"><b>Image</b></td>
-                <td style="text-align:center; width:10%"><b>Category</b></td>
-                <td style="text-align:center; width:30%"><b>Code/Name</b></td>
-                <td style="text-align:center; width:40%"><b>Description</b></td>
-                <td style="text-align:center; width:5%"><b>Qty</b></td>
-            </tr>';
+                <tr>
+                    <th style="width:5%; text-align:center">#</th>
+                    <th style="width:10%; text-align:center">Image</th>
+                    <th style="width:10%; text-align:center">Category</th>
+                    <th style="width:30%; text-align:center">Code/Name</th>
+                    <th style="width:40%; text-align:center">Description</th>
+                    <th style="width:5%; text-align:center">Qty</th>
+                </tr>';
+
     $Counter = 1;
     for($i = 0; $i <= 25; $i++){
 
@@ -1414,14 +1415,17 @@ function IronmongerySetData($IronmongeryID): string{
                             }
                         }
 
-                       $table.= '<tr class="d-flex">
-                                    <td style="text-align:center;width:5%">'.$Counter++.'</td>
-                                    <td style="text-align:center;width:10%"><img class="imgClass" alt="Logo" src="'.$base64 .'"></td>
-                                    <td style="text-align:center;width:10%">'.$valIronmongeryInfoName.'</td>
-                                    <td style="text-align:center;width:30%">'.$name.'</td>
-                                    <td style="text-align:center;width:40%">'.$IronmongeryInfoModel->Description.'</td>
-                                    <td style="text-align:center;width:5%">' . $QtyPerDoorType . '</td>
-                                </tr>';
+                       $table .= '<tr>
+                            <td style="text-align:center; width:5%">'.$Counter++.'</td>
+                            <td style="text-align:center; width:10%">
+                                <img src="'.$base64.'" style="width:60px; height:auto;">
+                            </td>
+                            <td style="text-align:center; width:10%">'.$valIronmongeryInfoName.'</td>
+                            <td style="width:30%">'.$name.'</td>
+                            <td style="width:40%">'.$IronmongeryInfoModel->Description.'</td>
+                            <td style="text-align:center; width:5%">'.$QtyPerDoorType.'</td>
+                        </tr>';
+
                     }
                 }
             }
