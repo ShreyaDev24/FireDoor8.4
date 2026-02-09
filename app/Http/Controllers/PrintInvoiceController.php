@@ -59,7 +59,7 @@ class PrintInvoiceController extends Controller
         $this->middleware('auth')->except(['printinvoiceclient','signaturesubmit']);
     }
 
-    public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null): mixed
+    public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null)
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
@@ -137,7 +137,7 @@ Log::info('PDF START');
         $path1 = public_path() . '/allpdfFile';
         $fileName1 = $id . '1' . '.' . 'pdf';
         $pdf->save($path1 . '/' . $fileName1);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         // Quotation Sumary PDF
         $pdf2 = SettingPDF2::where('UserId', $id)->first();
 
@@ -184,7 +184,7 @@ Log::info('PDF START');
         $path2 = public_path() . '/allpdfFile';
         $fileName2 = $id . '2' . '.' . 'pdf';
         $pdf2->save($path2 . '/' . $fileName2);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         $QuotationSiteDelivery = QuotationSiteDeliveryAddress::where('QuotationId', $quatationId)->get();
         $ProjectsAddress = Project::join('quotation', 'quotation.ProjectId', 'project.id')->where(['quotation.CompanyId' => $quotaion->CompanyId, 'quotation.ProjectId' => $quotaion->ProjectId])->first();
 
@@ -215,7 +215,7 @@ Log::info('PDF START');
         $path2_1 = public_path() . '/allpdfFile';
         $fileName2_1 = $id . '2_1' . '.' . 'pdf';
         $pdf2_1->save($path2_1 . '/' . $fileName2_1);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         // Details Door List PDF
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
@@ -229,7 +229,7 @@ Log::info('PDF START');
             $fileName2_2 = $id . '2_2' . '.' . 'pdf';
             $pdf2_2->save($path2_2 . '/' . $fileName2_2);
         }
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
 
        $shows = (clone $DoorsetPrice)->select(
                 'items.*',
@@ -274,7 +274,7 @@ Log::info('PDF START');
         $fileName3 = $id . '3' . '.' . 'pdf';
         $pdf3->save($path3 . '/' . $fileName3);
 
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         //Non Configurable Item
         $nonConfigData = nonConfigurableItem($quatationId,$versionID,$userIds);
 
@@ -283,7 +283,7 @@ Log::info('PDF START');
         $path4_2 = public_path() . '/allpdfFile';
         $fileName4_2 = $id . '4_2' . '.' . 'pdf';
         $pdf4_2->save($path4_2 . '/' . $fileName4_2);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
 
 
         //PDF 2
@@ -633,7 +633,7 @@ Log::info('PDF START');
         $path4 = public_path() . '/allpdfFile';
         $fileName4 = $id . '4' . '.' . 'pdf';
         $pdf4->save($path4 . '/' . $fileName4);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         $s2 = '';
         $shocw = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $quatationId])
         ->where(['side_screen_items.VersionId' => $versionID])
@@ -656,7 +656,7 @@ Log::info('PDF START');
         $fileName9 = $id . '9' . '.' . 'pdf';
         $pdf9->save($path9 . '/' . $fileName9);
         // end
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         // Elevation Drawing
         $elevTbl = '';
 
@@ -3050,7 +3050,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $fileName6 = $id . '6' . '.' . 'pdf';
         $pdf6->save($path6 . '/' . $fileName6);
         // back page design
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
 
 
         // end
@@ -3395,7 +3395,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $fileName8 = $id . '8' . '.' . 'pdf';
         $pdf8->save($path8 . '/' . $fileName8);
         // end
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
         $fileName7 = '';
         $ironmongerySets = [];
 
@@ -3431,6 +3431,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             $pdf7->save($path7 . '/' . $fileName7);
         }
+Log::info('Door PDF time: ' . (microtime(true) - $start));
 
         // Document PDF
         $pdf_document = SettingPDFDocument::where('UserId', $id)->first();
@@ -3438,7 +3439,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $path5 = public_path() . '/allpdfFile';
         $fileName5 = $id . '5' . '.' . 'pdf';
         $pdf5->save($path5 . '/' . $fileName5);
-
+Log::info('Door PDF time: ' . (microtime(true) - $start));
 
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
@@ -3505,20 +3506,24 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 Log::info('Before merge: ' . round(microtime(true) - $start, 2));
             // Merge the PDF files using PDFMerger
             $pdfMerger = PDFMerger::init();
-            foreach ($pdfFiles as $pdfFile) {
-                $pdfMerger->addPDF($pdfFile, 'all');
+
+            foreach ($pdfFiles as $file) {
+                if (file_exists($file)) {
+                    $pdfMerger->addPDF($file, 'all');
+                }
             }
 
             $mergedFilePath = public_path() . '/allpdfFile/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
             $pdfMerger->merge();
             $pdfMerger->save($mergedFilePath);
-            $pdfMerger->save(public_path().'/quotationFiles'.'/'.$quotaion->QuotationGenerationId.'_'.$version.'.pdf');
-Log::info('After merge: ' . round(microtime(true) - $start, 2));
+            $pdfMerger->save(public_path("quotationFiles/{$quotaion->QuotationGenerationId}_{$version}.pdf"));
 
-            // new code
-           $pdf = new Fpdi();
-
-            // Load merged PDF ONCE
+            /*
+            |--------------------------------------------------------------------------
+            | Add Page Numbers using FPDI
+            |--------------------------------------------------------------------------
+            */
+            $pdf = new Fpdi();
             $pageCount = $pdf->setSourceFile($mergedFilePath);
 
             $pdf->SetAutoPageBreak(false);
@@ -3531,28 +3536,31 @@ Log::info('After merge: ' . round(microtime(true) - $start, 2));
                 $pdf->AddPage();
                 $pdf->useTemplate($tplId, ['adjustPageSize' => true]);
 
-                // Footer page number
                 $pdf->SetFont('Helvetica', '', 9);
                 $pdf->SetTextColor(0, 0, 0);
                 $pdf->SetXY(0, -12);
-                $pdf->Cell(0, 10, "Page {$pageNo} / {$pageCount}", 0, 0, 'C');
+                $pdf->Cell(0, 10, "Page $pageNo / $pageCount", 0, 0, 'C');
             }
 
-            // Save once
             $pdf->Output($PDFfilename, 'F');
             $pdf->Output($quotaion->QuotationGenerationId . '_' . $version . '.pdf', 'D');
-            Log::info('After FPDI: ' . round(microtime(true) - $start, 2));
 
-            // end code
-
+             Log::info('After FPDI: ' . round(microtime(true) - $start, 2));
+            /*
+            |--------------------------------------------------------------------------
+            | Update quotation once
+            |--------------------------------------------------------------------------
+            */
             Quotation::where('id', $quatationId)->update(['quotTag' => 1]);
 
-
-            // unlink($mergedFilePath); (27-11-2024 comment these code bcs it deleted the file to the system and getting 404 not found when send to client the quotations.)
-
-            foreach ($pdfFiles as $unlinkPath) {
-                if (file_exists($unlinkPath)) {
-                    unlink($unlinkPath);
+            /*
+            |--------------------------------------------------------------------------
+            | Cleanup temporary PDFs
+            |--------------------------------------------------------------------------
+            */
+            foreach ($pdfFiles as $file) {
+                if (file_exists($file)) {
+                    unlink($file);
                 }
             }
 

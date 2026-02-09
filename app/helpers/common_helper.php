@@ -1397,36 +1397,49 @@ function IronmongerySetData($IronmongeryID): string{
                     $IronmongeryInfoModel = IronmongeryInfoModel::select('*')->where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId',user_id())->first();
                     $name = $IronmongeryInfoModel ? $IronmongeryInfoModel->Code .'-'.$IronmongeryInfoModel->Name : '';
 
-                    $QtyPerDoorType = intval($IronmongeyQty[$j]);
-                    if(!empty($IronmongeryInfoModel))
-                    {
+                   $QtyPerDoorType = intval($IronmongeyQty[$j]);
 
-                        $file = $IronmongeryInfoModel->Image;
+                    if (!empty($IronmongeryInfoModel)) {
+
                         $base64 = '';
-                        if(!empty($file)){
-                            try {
-                                $filepath = public_path('uploads/IronmongeryInfo/'.$IronmongeryInfoModel->Image);
-                                $type = pathinfo($filepath, PATHINFO_EXTENSION); // Corrected variable name
-                                $filedata = file_get_contents($filepath);
-                                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
-                            } catch (\Exception $e) { // Added exception type
-                                // Handle the exception or log the error message
-                                \Log::error("Error encoding image to base64: " . $e->getMessage());
+                        $imageName = $IronmongeryInfoModel->Image;
+
+                        if (!empty($imageName)) {
+
+                            $filepath = public_path('uploads/IronmongeryInfo/' . $imageName);
+
+                            if (file_exists($filepath)) {
+
+                                $type = strtolower(pathinfo($filepath, PATHINFO_EXTENSION));
+
+                                // Allow only valid image types
+                                if (in_array($type, ['png', 'jpg', 'jpeg', 'webp'])) {
+
+                                    $filedata = file_get_contents($filepath);
+                                    $base64 = 'data:image/' . $type . ';base64,' . base64_encode($filedata);
+                                }
+
                             }
                         }
 
-                       $table .= '<tr>
-                            <td style="text-align:center; width:5%">'.$Counter++.'</td>
-                            <td style="text-align:center; width:10%">
-                                <img src="'.$base64.'" style="width:60px; height:auto;">
-                            </td>
-                            <td style="text-align:center; width:10%">'.$valIronmongeryInfoName.'</td>
-                            <td style="width:30%">'.$name.'</td>
-                            <td style="width:40%">'.$IronmongeryInfoModel->Description.'</td>
-                            <td style="text-align:center; width:5%">'.$QtyPerDoorType.'</td>
-                        </tr>';
+                        $table .= '<tr>
+                            <td style="text-align:center; width:5%">' . $Counter++ . '</td>
+                            <td style="text-align:center; width:10%">';
 
+                        if (!empty($base64)) {
+                            $table .= '<img src="' . $base64 . '" style="width:60px; height:auto;">';
+                        } else {
+                            $table .= '-';
+                        }
+
+                        $table .= '</td>
+                            <td style="text-align:center; width:10%">' . $valIronmongeryInfoName . '</td>
+                            <td style="width:30%">' . $name . '</td>
+                            <td style="width:40%">' . $IronmongeryInfoModel->Description . '</td>
+                            <td style="text-align:center; width:5%">' . $QtyPerDoorType . '</td>
+                        </tr>';
                     }
+
                 }
             }
         }
