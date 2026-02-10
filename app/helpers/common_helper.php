@@ -2542,7 +2542,7 @@ function getDoorDimensionFirstVicaimaData($userIds,$issingleconfiguration,$fireR
 function getCurrencyRate($QuotationId,$userLoginId=null){
     $UserId = $userLoginId ?? Auth::user()->id;
     $currencyRate = SettingCurrency::where('UserId', $UserId)->first();
-    $currency = $currencyRate->currency;
+    $currency = empty($currencyRate) ? "£" : $currencyRate->currency;
     $quotation = Quotation::where('id', $QuotationId)->first();
     $project = Project::where('id', $quotation->ProjectId)->value('projectCurrency');
     $quotationCurrency = $quotation->Currency;
@@ -2550,10 +2550,10 @@ function getCurrencyRate($QuotationId,$userLoginId=null){
     if(!empty($project)){
         if (!empty($quotationCurrency)) {
             if($quotationCurrency != $currency){
-                $currencyPrice = $currencyRate->SetCurrencyRate;
+                $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
             }
         } elseif ($project != $currency) {
-            $currencyPrice = $currencyRate->SetCurrencyRate;
+            $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
         }
     }
 

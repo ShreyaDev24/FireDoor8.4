@@ -175,6 +175,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\QueryLogServiceProvider::class,
         LynX39\LaraPdfMerger\PdfMergerServiceProvider::class,
         Barryvdh\DomPDF\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -237,4 +238,19 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Query Logging Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Configure database query logging to track slow queries and performance issues.
+    |
+    */
+
+    'enable_query_logging' => env('ENABLE_QUERY_LOGGING', true),
+    'query_log_threshold' => env('QUERY_LOG_THRESHOLD', 100), // milliseconds
+    'log_slow_queries' => env('LOG_SLOW_QUERIES', true),
+    'debug_queries' => env('DEBUG_QUERIES', false), // Log ALL queries (be careful in production)
+
 ];
+

@@ -741,6 +741,7 @@ $sn++;
             }
 
             $VersionId = QuotationVersion::where('quotation_id', $Id)->where('id', $vId)->value('version');
+            $deliveryAddresses = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->get();
 
             $quotation_data = Quotation::where('id',$Id)->first();
             $currency = SettingCurrency::where('companyId',Auth::user()->CompanyId)->first();
@@ -765,6 +766,7 @@ $sn++;
                 'configItem' => $configItem,
                 'countDeliveryAddressInEditHeader' => $countDeliveryAddressInEditHeader,
                 'QuotationSiteDeliveryAddress' => $xx,
+                'deliveryAddresses'=> $deliveryAddresses,
                 'DA' => $DA,
                 'quotation_data' => $quotation_data,
                 'nonConfigData' => $nonConfigData,

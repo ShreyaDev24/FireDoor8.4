@@ -89,6 +89,9 @@ class PrintInvoiceController extends Controller
         }
 
         $configurationItemName = configurationDoor($configurationItem);
+        if($configurationItemName === 'Halspan'){
+            $configurationItemName = 'Halspan Optima';
+        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -145,8 +148,7 @@ class PrintInvoiceController extends Controller
 
         $DoorsetPrice = Items::join('item_master', 'item_master.itemID', '=', 'items.itemId')
             ->where('QuotationId', $quatationId)
-            ->where('VersionId', $versionID)
-            ->get();
+            ->where('VersionId', $versionID);
 
         $totDoorsetPrice = itemAdjustCount($quatationId,$versionID);
         $totIronmongaryPrice = $DoorsetPrice->sum('items.IronmongaryPrice');
@@ -3930,6 +3932,9 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
         $configurationItemName = configurationDoor($configurationItem);
+        if($configurationItemName === 'Halspan'){
+            $configurationItemName = 'Halspan Optima';
+        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
