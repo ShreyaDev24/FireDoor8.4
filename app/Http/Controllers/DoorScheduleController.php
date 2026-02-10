@@ -4173,8 +4173,8 @@ class DoorScheduleController extends Controller
             return redirect()->route('quotation/generate/', [$qidFromhelper, 0]);
         } else {
             $Quotation = Quotation::findOrFail($Id);
-            $QuotationContactInformation = QuotationContactInformation::with('quotation')->first();
-            $QuotationShipToInformation = QuotationShipToInformation::with('quotation')->first();
+            $QuotationContactInformation = QuotationContactInformation::where('QuotationId', $Id)->first();
+            $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
         }
 
         if ($Quotation === null) {
@@ -4321,6 +4321,7 @@ class DoorScheduleController extends Controller
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
 
             $deliveryAddresses = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->get();
+            $xx = QuotationSiteDeliveryAddress::where('QuotationId', $Id)->get();
             $countDeliveryAddressInEditHeader = $deliveryAddresses->count();
 
             $currency = SettingCurrency::where('UserId', Auth::user()->id)->first();
@@ -4422,6 +4423,7 @@ class DoorScheduleController extends Controller
                 'configurableItem' => $configurableItem,
                 'countDeliveryAddressInEditHeader' => $countDeliveryAddressInEditHeader,
                 'deliveryAddresses' => $deliveryAddresses,
+                'QuotationSiteDeliveryAddress' => $xx,
                 'currency' => $currency,
                 'Favorite' => $Favorite,
                 'ProjectsAddress' => $ProjectsAddress,
