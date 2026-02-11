@@ -4534,6 +4534,14 @@ function CompanyUsers($isstatus = false, $userLoginId=null){
     return $UserId;
 }
 
+function yesNoIcon($value)
+{
+    return $value
+        ? '<i class="fa fa-check text-success"></i>'
+        : '<i class="fa fa-times text-danger"></i>';
+}
+
+
 function CompanyUsersClient($isstatus = false,$userid){
     $users = User::where('UserType',3)->where('id',$userid)->first();
     if($users){

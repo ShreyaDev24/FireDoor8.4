@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\DoorLeafFacingController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -66,6 +67,13 @@ Route::middleware(['auth'])
 
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
 Auth::routes();
+
+Route::resource('options/door-leaf-facing', DoorLeafFacingController::class)->middleware('auth');
+Route::post(
+    'options/door-leaf-facing/update-selected',
+    [DoorLeafFacingController::class, 'updateSelected']
+)->name('door-leaf-facing.updateSelected')->middleware('auth');
+
 
 Route::get('project/floorPlanList/{id}',[App\Http\Controllers\ProjectController2::class,'floorPlanList'])->name('project/floorPlanList');
 Route::get('project/get-floor-plan-doors', [App\Http\Controllers\ProjectController2::class,'getFloorPlanDoors'])->name('project/get-floor-plan-doors');

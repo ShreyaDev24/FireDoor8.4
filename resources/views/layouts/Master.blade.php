@@ -380,10 +380,13 @@
     <script src="{{asset('js/quotation-box.js')}}"></script>
 
 
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    {{--  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>  --}}
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.13.1/js/bootstrap-select.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
     @yield('js')
 
     <script type="text/javascript">
@@ -453,9 +456,9 @@
     </script> -->
 
     @yield('script_section')
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.0.6/css/dataTables.dataTables.css" />
+    {{--  <link rel="stylesheet" href="https://cdn.datatables.net/2.0.6/css/dataTables.dataTables.css" />  --}}
 
-<script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>
+{{--  <script src="https://cdn.datatables.net/2.0.6/js/dataTables.js"></script>  --}}
 
 
 </body>

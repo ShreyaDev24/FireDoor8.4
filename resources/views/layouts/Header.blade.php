@@ -17,6 +17,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="{{url('/')}}/css/main.css" rel="stylesheet">
     <link href="{{url('/')}}/css/datepicker.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="{{url('/')}}/css/custom.css" rel="stylesheet">
     <link href="{{url('/')}}/css/quotation-box.css" rel="stylesheet">
