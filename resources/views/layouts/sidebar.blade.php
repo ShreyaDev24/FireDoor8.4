@@ -848,32 +848,7 @@
                             </ul>
                         </li>
 
-
                         <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1')) ? 'active' : ''}}">
-                            <a href="#">
-                                <i class="metismenu-icon">
-                                    <i class="fa fa-check"></i>
-                                </i>
-                                Selected Option
-                                <i class="metismenu-state-icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </i>
-                            </a>
-                            <ul>
-
-                                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
-                                    <a href="{{ route('door-leaf-facing.index') }}">
-                                        <i class="metismenu-icon"></i>
-                                        Door Leaf Facing Value
-                                    </a>
-                                </li>
-
-
-
-                            </ul>
-                        </li>
-
-                        {{--  <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1')) ? 'active' : ''}}">
                             <a href="#">
                                 <i class="metismenu-icon">
                                     <i class="fa fa-check"></i>
@@ -1147,7 +1122,7 @@
                                     </li>
 
                             </ul>
-                        </li>  --}}
+                        </li>
 
 
                         <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">

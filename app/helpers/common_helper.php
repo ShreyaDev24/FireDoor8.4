@@ -4688,15 +4688,15 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                     // }
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -4821,15 +4821,15 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                     // }
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if ($authdata->id != 1 && $value->selectedPrice !== null) {
                         $disable = '';
@@ -4964,15 +4964,15 @@ function Accoustics($authdata,string $optionType,$UserId): string{
 
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -5096,18 +5096,18 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                     // }
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     // $cost = '';
                     // if($authdata->id != 1){
                     //     if ($value->selectedPrice !== null) {
@@ -5204,11 +5204,11 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
 $i = 1;
     foreach($aa as $value){
 
-        $configurableItem = "<img src='".url('/')."/images/green_icon.svg'>";
+        $configurableItem = "<i class='fa fa-check text-success'></i>";
 
-        $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-        $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-        $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+        $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+        $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+        $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
         $action = '';
         if (($value->UserId != 1 || Auth::user()->UserType == 1)) {
             $action = '
@@ -5319,17 +5319,17 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
                     // }
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    // $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    // $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -5464,13 +5464,13 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
 
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -5584,11 +5584,11 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                     $selectedOption = SelectedLeafType::where([ 'leaf_id' => $value->id, 'editBy' => $authdata->id])->count();
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                     $cost = '<div class="input-group">
@@ -5711,15 +5711,15 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                     $selectedOption = SelectedGlassType::where([ 'glass_id' => $value->id, 'editBy' => $authdata->id])->count();
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    // $NormaDoorCore = $value->NormaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $seadec = $value->Seadec?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $deanta = $value->Deanta?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $MMM = $value->MMM?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    // $NormaDoorCore = $value->NormaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $VicaimaDoorCore = $value->VicaimaDoorCore?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $seadec = $value->Seadec?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $deanta = $value->Deanta?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $MMM = $value->MMM?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                     $cost = '<div class="input-group">
@@ -5867,13 +5867,13 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                     $selectedOption = SelectedGlassType::where([ 'glass_id' => $value->id, 'editBy' => $authdata->id])->count();
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->selectedPrice !== null){
                     $cost = '<div class="input-group">
@@ -6136,57 +6136,57 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                         $select = $selectedOption > 0 ? 'checked' : '';
 
                     if($value->configurableitems == 1){
-                        $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $streboard = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $streboard = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 2){
-                        $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Halspan = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Halspan = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 3){
-                        $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 4){
-                        $vicaima = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $vicaima = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $vicaima = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $vicaima = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 5){
-                        $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $seadec = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $seadec = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 6){
-                        $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $deanta = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $deanta = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 7){
-                        $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $flamebreak = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $flamebreak = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 8){
-                        $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $stredor = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $stredor = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 9){
-                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $MMM = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $MMM = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -6294,57 +6294,57 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
                     $select = $selectedOption > 0 ? 'checked' : '';
 
                     if($value->configurableitems == 1){
-                        $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $streboard = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $streboard = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 2){
-                        $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Halspan = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Halspan = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 3){
-                        $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 4){
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 5){
-                        $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $seadec = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $seadec = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 6){
-                        $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $deanta = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $deanta = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 7){
-                        $flambreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $flambreak = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $flambreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $flambreak = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 8){
-                        $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $stredor = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $stredor = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 9){
-                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $MMM = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $MMM = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -6444,56 +6444,56 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                         $select = $selectedOption > 0 ? 'checked' : '';
 
                     if($value->configurableitems == 1){
-                        $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $streboard = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $streboard = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 2){
-                        $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Halspan = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Halspan = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 3){
-                        $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 4){
-                        $vicaima = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $vicaima = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $vicaima = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $vicaima = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 5){
-                        $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $seadec = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $seadec = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 6){
-                        $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $deanta = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $deanta = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 7){
-                        $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $flamebreak = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $flamebreak = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->Stredor == 8){
-                        $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $stredor = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $stredor = "<i class='fa fa-times text-danger'></i>";
                     }
                     if($value->configurableitems == 9){
-                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $MMM = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $MMM = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -6565,7 +6565,7 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -6587,45 +6587,43 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                 <tbody>';
 
                 $i = 1;
+
+                $selectedIds = SelectedDoorDimension::where('doordimension_user_id', $authdata->id)
+                ->pluck('doordimension_id')
+                ->toArray();
+
                 foreach($aa as $value){
 
-                    // $selectedOption = SelectedDoorDimension::where([ 'doordimension_id' => $value->id, 'doordimension_user_id' => $authdata->id])->count();
-
-                    // if(Auth::user()->UserType == 2){
-                    //     $selectedOption = SelectedDoorDimension::where([ 'doordimension_id' => $value->id])->wherein('doordimension_user_id',array_diff($UserId, ["1"]))->count();
-                    // }else{
-                        $selectedOption = SelectedDoorDimension::where([ 'doordimension_id' => $value->id, 'doordimension_user_id' => $authdata->id])->count();
-                    // }
-                    $select = $selectedOption > 0 ? 'checked' : '';
+                    $select = in_array($value->id, $selectedIds) ? 'checked' : '';
 
                     if($value->configurableitems == 3){
-                        $NormaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $NormaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $NormaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 4){
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 5){
-                        $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $seadec = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $seadec = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 6){
-                        $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $deanta = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $deanta = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 9){
-                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $MMM = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $MMM = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -6845,27 +6843,27 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
         $select = $selectedOption > 0 ? 'checked' : '';
 
                     if($value->configurableitems == 1){
-                        $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $streboard = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $streboard = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 2){
-                        $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Halspan = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Halspan = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 7){
-                        $Flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Flamebreak = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Flamebreak = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 8){
-                        $Stredor = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $Stredor = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $Stredor = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $Stredor = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -7071,33 +7069,33 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                     $select = $selectedOption > 0 ? 'checked' : '';
 
                     if($value->configurableitems == 4){
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $VicaimaDoorCore = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $VicaimaDoorCore = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 5){
-                        $seadec = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $seadec = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $seadec = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $seadec = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 6){
-                        $deanta = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $deanta = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $deanta = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $deanta = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 7){
-                        $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $flamebreak = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $flamebreak = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     if($value->configurableitems == 9){
-                        $MMM = "<img src='".url('/')."/images/green_icon.svg'>";
+                        $MMM = "<i class='fa fa-check text-success'></i>";
                     }else{
-                        $MMM = "<img src='".url('/')."/images/red-cross.svg'>";
+                        $MMM = "<i class='fa fa-times text-danger'></i>";
                     }
 
                     $cost = '';
@@ -7239,27 +7237,27 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                         $select = $selectedOption > 0 ? 'checked' : '';
 
                         if($value->configurableitems == 1){
-                            $streboard = "<img src='".url('/')."/images/green_icon.svg'>";
+                            $streboard = "<i class='fa fa-check text-success'></i>";
                         }else{
-                            $streboard = "<img src='".url('/')."/images/red-cross.svg'>";
+                            $streboard = "<i class='fa fa-times text-danger'></i>";
                         }
 
                         if($value->configurableitems == 2){
-                            $Halspan = "<img src='".url('/')."/images/green_icon.svg'>";
+                            $Halspan = "<i class='fa fa-check text-success'></i>";
                         }else{
-                            $Halspan = "<img src='".url('/')."/images/red-cross.svg'>";
+                            $Halspan = "<i class='fa fa-times text-danger'></i>";
                         }
 
                         if($value->configurableitems == 7){
-                            $flamebreak = "<img src='".url('/')."/images/green_icon.svg'>";
+                            $flamebreak = "<i class='fa fa-check text-success'></i>";
                         }else{
-                            $flamebreak = "<img src='".url('/')."/images/red-cross.svg'>";
+                            $flamebreak = "<i class='fa fa-times text-danger'></i>";
                         }
 
                         if($value->configurableitems == 8){
-                            $stredor = "<img src='".url('/')."/images/green_icon.svg'>";
+                            $stredor = "<i class='fa fa-check text-success'></i>";
                         }else{
-                            $stredor = "<img src='".url('/')."/images/red-cross.svg'>";
+                            $stredor = "<i class='fa fa-times text-danger'></i>";
                         }
 
                         $cost = '';
@@ -7404,13 +7402,13 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                      $selectedOption = SelectedOverpanelGlassGlazing::where([ 'glass_glazing_id' => $value->id, 'editBy' => $authdata->id])->count();
                      $select = $selectedOption > 0 ? 'checked' : '';
 
-                     $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                     $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                     $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                     $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                      $cost = '';
                      if($authdata->id != 1 && $value->glassSelectedPrice !== null){
                      $cost = '<div class="input-group">
@@ -7563,13 +7561,13 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
 
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    $streboard = $value->Streboard?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Halspan = $value->Halspan?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Flamebreak = $value->Flamebreak?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $Stredor = $value->Stredor?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $NFR = $value->NFR?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD30 = $value->FD30?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    $FD60 = $value->FD60?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    $streboard = $value->Streboard?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Halspan = $value->Halspan?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Flamebreak = $value->Flamebreak?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $Stredor = $value->Stredor?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $NFR = $value->NFR?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD30 = $value->FD30?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $FD60 = $value->FD60?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->glazingSelectedPrice !== null){
                         $cost = '<div class="input-group">
@@ -7693,13 +7691,13 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                     $selectedOption = SelectedScreenGlass::where([ 'glass_id' => $value->id, 'editBy' => $authdata->id])->count();
                     $select = $selectedOption > 0 ? 'checked' : '';
 
-                    // $streboard = $value->DFRating == 1 ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $Halspan = $value->DFRating == 2 ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $Flamebreak = $value->DFRating == 7 ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $Stredor = $value->DFRating == 8 ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $NFR = $value->FireRating == 'NFR' ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $FD30 = $value->FireRating == 'FD30' ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
-                    // $FD60 = $value->FireRating == 'FD60' ?"<img src='".url('/')."/images/green_icon.svg'>":"<img src='".url('/')."/images/red-cross.svg'>";
+                    // $streboard = $value->DFRating == 1 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $Halspan = $value->DFRating == 2 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $Flamebreak = $value->DFRating == 7 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $Stredor = $value->DFRating == 8 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $NFR = $value->FireRating == 'NFR' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $FD30 = $value->FireRating == 'FD30' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    // $FD60 = $value->FireRating == 'FD60' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
                     $cost = '';
                     if($authdata->id != 1 && $value->glassSelectedPrice !== null){
                     $cost = '<div class="input-group">

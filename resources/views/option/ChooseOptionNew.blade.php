@@ -2546,45 +2546,65 @@ function doorLeafFacingOption(option = '') {
     // }); old code
 
     var table;
-    $(document).ready(function() {
-            table = $('#example').DataTable({
-            searching: false,
-            info: false,
-            "lengthChange": true,
-            "bPaginate": false,
-            "responsive": true,
-            "order": [],  // No default sorting
-            "columnDefs": [{
-                "targets": 0,  // Checkbox column index
-                "orderDataType": "dom-checkbox",
-                "orderable": true  // Enable sorting for checkboxes
-            }]
-        });
+    $(document).ready(function () {
 
-        // Custom sorting for checkboxes (checked = 1, unchecked = 0)
-        $.fn.dataTable.ext.order['dom-checkbox'] = function(settings, col) {
-            return this.api().column(col, { order: 'index' }).nodes().map(function(td) {
-                return $(td).find('input[type="checkbox"]').prop('checked') ? 1 : 0;
-            });
+        // Register checkbox sorting ONCE
+        $.fn.dataTable.ext.order['dom-checkbox'] = function (settings, col) {
+            return this.api()
+                .column(col, { order: 'index' })
+                .nodes()
+                .map(function (td) {
+                    return $('input[type="checkbox"]', td).prop('checked') ? 1 : 0;
+                });
         };
 
-        // Ensure sorting is correct only when clicking the checkbox column
-        $('#example thead').on('click', 'th', function() {
-            var columnIndex = $(this).index(); // Get clicked column index
-            if (columnIndex === 0) { // If checkbox column is clicked
-                setTimeout(function() {
-                    table.order([0, 'desc']).draw(false); // Ensure checked first only when clicked
-                }, 50);
+        // Initialize all datatables safely
+        $('.datatable').each(function () {
+
+            // If already initialized, destroy properly
+            if ($.fn.DataTable.isDataTable(this)) {
+                $(this).DataTable().clear().destroy();
             }
+
+            table = $(this).DataTable({
+                deferRender: true,
+                processing: true,
+                searching: false,
+                info: false,
+                lengthChange: true,
+                paging: true,
+                pageLength: 50,
+                responsive: true,
+                order: [],
+                columnDefs: [{
+                    targets: 0,
+                    orderDataType: "dom-checkbox",
+                    orderable: true
+                }]
+            });
+
+
         });
 
-        // "Check All" functionality
-        $('.checkall').click(function() {
-            var rows = table.rows({ 'search': 'applied' }).nodes();
-            $('input[type="checkbox"]', rows).prop('checked', this.checked);
-            table.draw(); // Refresh table to reflect changes
-        });
     });
+
+
+    /* -------------------------
+    CHECK ALL FUNCTIONALITY
+    --------------------------*/
+
+    $(document).on('click', '.checkall', function () {
+
+        var table = $(this).closest('table').DataTable();
+
+        var rows = table.rows({ search: 'applied' }).nodes();
+
+        $('input[type="checkbox"]', rows).prop('checked', this.checked);
+
+    });
+
+
+
 
     function updateMeOption(className,colorType=null) {
 
