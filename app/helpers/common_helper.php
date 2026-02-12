@@ -4658,7 +4658,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
     </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -4789,7 +4789,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
     </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -4930,7 +4930,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
     </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5066,7 +5066,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
     </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5184,7 +5184,7 @@ function leaf1_glazing_systems_filter($authdata,$optionType,$UserId,$configurabl
     ->orderBy('glass_glazing_system.GlassType', 'ASC')->orderBy('glass_glazing_system.GlazingSystem', 'ASC')->get();
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
     <thead class="text-uppercase table-header-bg">
         <tr class="text-white">
             <th>#</th>
@@ -5287,7 +5287,7 @@ function leaf1_glazing_systems($authdata,string $optionType,$UserId): string{
     }
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5432,7 +5432,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
     }
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5563,7 +5563,7 @@ function leaf_type($authdata,string $optionType,$UserId): string{
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5684,7 +5684,7 @@ function leaf1_glass_type($authdata,string $optionType,$UserId): string{
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5841,7 +5841,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -5992,7 +5992,7 @@ function color($authdata,string $optionType,$UserId,$colorType): string{
         $DoorLeafFacingText = '<th>DoorLeafFacing Value</th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -6099,7 +6099,7 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         <th><div class="control-group">
@@ -6263,7 +6263,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
 
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         <th><div class="control-group">
@@ -6409,7 +6409,7 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
         $tbl1 .= '<button type="button" class="btn btn-success accordian_update_button" style="margin: 3px 10px 0;" onclick="updateMeOption(\'' . $optionType . '\')">Update</button>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         <th><div class="control-group">
@@ -6719,7 +6719,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
     }
 
     if(Auth::user()->UserType == 1){
-        $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+        $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -6740,7 +6740,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                 <tbody>';
     }
     else{
-        $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+        $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -7038,7 +7038,7 @@ function intumescentSealArrangement($authdata,string $optionType,$UserId): strin
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -7207,7 +7207,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -7373,7 +7373,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                  </div></th>';
      }
 
-     $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+     $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                  <thead class="text-uppercase table-header-bg">
                      <tr class="text-white">
                          '.$check.'
@@ -7527,7 +7527,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
     }
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -7663,7 +7663,7 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
                 </div></th>';
     }
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
@@ -7686,18 +7686,18 @@ function SideScreen_Glass_Type($authdata,string $optionType,$UserId): string{
 
                 $i = 1;
                 // dd($aa);
+                $selectedIds = SelectedScreenGlass::where('editBy', $authdata->id)
+                ->pluck('glass_id')
+                ->toArray();
+
                 foreach($aa as $value){
 
-                    $selectedOption = SelectedScreenGlass::where([ 'glass_id' => $value->id, 'editBy' => $authdata->id])->count();
-                    $select = $selectedOption > 0 ? 'checked' : '';
+                    // $selectedOption = SelectedScreenGlass::where([ 'glass_id' => $value->id, 'editBy' => $authdata->id])->count();
+                    // $select = $selectedOption > 0 ? 'checked' : '';
 
-                    // $streboard = $value->DFRating == 1 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $Halspan = $value->DFRating == 2 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $Flamebreak = $value->DFRating == 7 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $Stredor = $value->DFRating == 8 ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $NFR = $value->FireRating == 'NFR' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $FD30 = $value->FireRating == 'FD30' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
-                    // $FD60 = $value->FireRating == 'FD60' ?"<i class='fa fa-check text-success'></i>":"<i class='fa fa-times text-danger'></i>";
+                    $select = in_array($value->id, $selectedIds) ? 'checked' : '';
+
+
                     $cost = '';
                     if($authdata->id != 1 && $value->glassSelectedPrice !== null){
                     $cost = '<div class="input-group">
@@ -7812,7 +7812,7 @@ function SideScreen_Glazing_System($authdata,string $optionType,$UserId): string
     }
 
 
-    $tbl1 .= '<table style="width:100%" id="example" class="table table-hover table-striped table-bordered">
+    $tbl1 .= '<table style="width:100%" class="datatable table table-hover table-striped table-bordered">
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
