@@ -848,7 +848,7 @@
                             </ul>
                         </li>
 
-                        <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1')) ? 'active' : ''}}">
+                        <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
                             <a href="#">
                                 <i class="metismenu-icon">
                                     <i class="fa fa-check"></i>
@@ -859,8 +859,8 @@
                                 </i>
                             </a>
                             <ul>
-                                <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf_type') ? 'active' : ''}}">
-                                    <a href="{{route('options/selected',['leaf_type'])}}">
+                                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
+                                    <a href="{{ route('leaf-type.index') }}">
                                         <i class="metismenu-icon"></i>
                                         Leaf Type
                                     </a>
@@ -890,11 +890,11 @@
                                             </li>
                                         </ul>
                                 </li>
-                                <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_facing_value') ? 'active' : ''}}">
-                                        <a href="{{route('options/selected',['door_leaf_facing_value'])}}">
-                                            <i class="metismenu-icon"></i>
-                                            Door Leaf Facing Value
-                                        </a>
+                                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
+                                    <a href="{{ route('door-leaf-facing.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Door Leaf Facing Value
+                                    </a>
                                 </li>
                                  <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
                                         <a href="#">

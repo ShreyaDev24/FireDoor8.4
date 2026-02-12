@@ -100,8 +100,8 @@
                     ['name' => 'Flamebreak',       'value' => 7, 'label' => 'Flamebreak'],
                     ['name' => 'Stredor',          'value' => 8, 'label' => 'Stredor'],
                     ['name' => 'VicaimaDoorCore',  'value' => 4, 'label' => 'Vicaima Door Core'],
-                    ['name' => 'SeadecDoorCore',   'value' => 5, 'label' => 'Seadec'],
-                    ['name' => 'deantaDoorCore',   'value' => 6, 'label' => 'Deanta'],
+                    ['name' => 'Seadec',           'value' => 5, 'label' => 'Seadec'],
+                    ['name' => 'Deanta',           'value' => 6, 'label' => 'Deanta'],
                     ['name' => 'MMM',              'value' => 9, 'label' => 'MMM'],
                 ];
             @endphp
