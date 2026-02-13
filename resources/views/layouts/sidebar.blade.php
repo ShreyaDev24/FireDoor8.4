@@ -422,8 +422,8 @@
                         Architrave Type
                     </a>
                 </li>
-                <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Intumescent_Seal_Color') ? 'active' : ''}}">
-                    <a href="{{route('options/selected',['Intumescent_Seal_Color'])}}">
+                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
+                    <a href="{{ route('Intumescent-Seal-Color.index') }}">
                         <i class="metismenu-icon"></i>
                         Intumescent Seal Color
                     </a>
@@ -978,8 +978,8 @@
                         </ul>
                     </li>
 
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Intumescent_Seal_Color') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['Intumescent_Seal_Color'])}}">
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
+                        <a href="{{ route('Intumescent-Seal-Color.index') }}">
                             <i class="metismenu-icon"></i>
                             Intumescent Seal Color
                         </a>

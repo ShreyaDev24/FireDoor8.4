@@ -8,6 +8,7 @@ use App\Http\Controllers\DoorLeafFacingController;
 use App\Http\Controllers\LeafTypeController;
 use App\Http\Controllers\AccousticController;
 use App\Http\Controllers\ArchitraveTypeController;
+use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -85,6 +86,9 @@ Route::post('options/accoustics/update-selected', [AccousticController::class, '
 
 Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
 Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
+
+Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
+Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
 
 Route::get('project/floorPlanList/{id}',[App\Http\Controllers\ProjectController2::class,'floorPlanList'])->name('project/floorPlanList');
 Route::get('project/get-floor-plan-doors', [App\Http\Controllers\ProjectController2::class,'getFloorPlanDoors'])->name('project/get-floor-plan-doors');

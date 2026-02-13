@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\ArchitraveType;
-use App\Models\SelectedArchitraveType;
+use App\Models\IntumescentSealColor;
+use App\Models\SelectedIntumescentSealColor;
 use Illuminate\Support\Str;
 use DB;
 
-class ArchitraveTypeController extends Controller
+class IntumescentSealColorController extends Controller
 {
     /**
      * INDEX
@@ -17,28 +17,31 @@ class ArchitraveTypeController extends Controller
     {
         $auth = auth()->user();
 
-        $items = ArchitraveType::leftJoin('selected_architrave_type as sa', function ($join) use ($auth) {
-                $join->on('architrave_type.id', '=', 'sa.architraveTypeId')
-                     ->where('sa.userId', $auth->id);
-            })
-            ->whereIn('architrave_type.editBy', [$auth->id, 1])
-            ->select(
-                'architrave_type.*',
-                'sa.id as selectedId',
-                'sa.selectedPrice'
+        $items = IntumescentSealColor::leftJoin(
+                'selected_intumescent_seal_color as s',
+                function ($join) use ($auth) {
+                    $join->on('intumescent_seal_color.id', '=', 's.intumescentSealColorId')
+                         ->where('s.userId', $auth->id);
+                }
             )
-            ->orderBy('architrave_type.ArchitraveType')
+            ->whereIn('intumescent_seal_color.editBy', [$auth->id, 1])
+            ->select(
+                'intumescent_seal_color.*',
+                's.id as selectedId',
+                's.selectedPrice'
+            )
+            ->orderBy('intumescent_seal_color.IntumescentSealColor')
             ->get();
 
-        return view('SelectedOptions.architrave_type.index', compact('items', 'auth'));
+        return view('SelectedOptions.Intumescent_Seal_Color.index', compact('items', 'auth'));
     }
 
     /**
      * CREATE
-     */
+    */
     public function create()
     {
-        return view('SelectedOptions.architrave_type.create');
+        return view('SelectedOptions.Intumescent_Seal_Color.create');
     }
 
     /**
@@ -47,32 +50,33 @@ class ArchitraveTypeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ArchitraveType' => 'required|string',
-            'price'          => 'nullable|numeric|min:0',
+            'IntumescentSealColor' => 'required|string',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
         DB::transaction(function () use ($request) {
 
-            $slug = Str::slug($request->ArchitraveType, '_');
+            $slug = Str::slug($request->IntumescentSealColor, '_');
 
-            $architrave = ArchitraveType::create([
-                'Key'             => $slug,
-                'ArchitraveType'  => $request->ArchitraveType,
-                'editBy'          => auth()->id(),
+            $seal = IntumescentSealColor::create([
+                'Key' => $slug,
+                'IntumescentSealColor' => $request->IntumescentSealColor,
+                'Status' => 1,
+                'editBy' => auth()->id(),
                 ...$this->coreMap($request),
             ]);
 
             if (auth()->id() != 1) {
-                SelectedArchitraveType::create([
-                    'architraveTypeId' => $architrave->id,
-                    'userId'           => auth()->id(),
-                    'selectedPrice'    => $request->price,
+                SelectedIntumescentSealColor::create([
+                    'intumescentSealColorId' => $seal->id,
+                    'userId' => auth()->id(),
+                    'selectedPrice' => $request->price ?? 0,
                 ]);
             }
         });
 
-        return redirect()->route('Architrave-Type.index')
-            ->with('success', 'Architrave Type added successfully');
+        return redirect()->route('Intumescent-Seal-Color.index')
+            ->with('success', 'Added successfully');
     }
 
     /**
@@ -80,13 +84,13 @@ class ArchitraveTypeController extends Controller
      */
     public function edit($id)
     {
-        $item = ArchitraveType::with([
+        $item = IntumescentSealColor::with([
             'selectedPrice' => function ($q) {
                 $q->where('userId', auth()->id());
             }
         ])->findOrFail($id);
 
-        return view('SelectedOptions.architrave_type.edit', compact('item'));
+        return view('SelectedOptions.Intumescent_Seal_Color.edit', compact('item'));
     }
 
     /**
@@ -95,38 +99,37 @@ class ArchitraveTypeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'ArchitraveType' => 'required|string',
-            'price'          => 'nullable|numeric|min:0',
+            'IntumescentSealColor' => 'required|string',
+            'price' => 'nullable|numeric|min:0',
         ]);
 
-        $architrave = ArchitraveType::findOrFail($id);
+        $seal = IntumescentSealColor::findOrFail($id);
 
-        DB::transaction(function () use ($request, $architrave) {
+        DB::transaction(function () use ($request, $seal) {
 
-            $slug = Str::slug($request->ArchitraveType, '_');
+            $slug = Str::slug($request->IntumescentSealColor, '_');
 
-            $architrave->update([
-                'Key'            => $slug,
-                'ArchitraveType' => $request->ArchitraveType,
-                'editBy'         => auth()->id(),
+            $seal->update([
+                'Key' => $slug,
+                'IntumescentSealColor' => $request->IntumescentSealColor,
+                'editBy' => auth()->id(),
                 ...$this->coreMap($request),
             ]);
 
             if (auth()->id() != 1) {
-
-                SelectedArchitraveType::updateOrCreate(
+                SelectedIntumescentSealColor::updateOrCreate(
                     [
-                        'architraveTypeId' => $architrave->id,
-                        'userId'           => auth()->id(),
+                        'intumescentSealColorId' => $seal->id,
+                        'userId' => auth()->id(),
                     ],
                     [
-                        'selectedPrice' => $request->price,
+                        'selectedPrice' => $request->price ?? 0,
                     ]
                 );
             }
         });
 
-        return redirect()->route('Architrave-Type.index')
+        return redirect()->route('Intumescent-Seal-Color.index')
             ->with('success', 'Updated successfully');
     }
 
@@ -135,12 +138,12 @@ class ArchitraveTypeController extends Controller
      */
     public function destroy($id)
     {
-        ArchitraveType::where('id', $id)->delete();
+        IntumescentSealColor::where('id', $id)->delete();
         return back()->with('success', 'Deleted successfully');
     }
 
     /**
-     * Core Mapping (Checkbox Columns)
+     * CORE MAP
      */
     private function coreMap(Request $request)
     {
@@ -157,7 +160,7 @@ class ArchitraveTypeController extends Controller
         ];
     }
 
-    /**
+     /**
      * BULK UPDATE (Checkbox Selection)
      */
     public function updateSelected(Request $request)
@@ -171,16 +174,16 @@ class ArchitraveTypeController extends Controller
 
         if (!empty($keys)) {
 
-            SelectedArchitraveType::where('userId', $userId)
-                ->whereNotIn('architraveTypeId', $keys)
+            SelectedIntumescentSealColor::where('userId', $userId)
+                ->whereNotIn('intumescentSealColorId', $keys)
                 ->delete();
 
             foreach ($request->rows as $row) {
                 if ($row['checked']) {
-                    SelectedArchitraveType::updateOrCreate(
+                    SelectedIntumescentSealColor::updateOrCreate(
                         [
                             'userId'        => $userId,
-                            'architraveTypeId'  => $row['id']
+                            'intumescentSealColorId'  => $row['id']
                         ],
                         [
                             'selectedPrice' => $row['price'] ?? 0
@@ -190,7 +193,7 @@ class ArchitraveTypeController extends Controller
             }
 
         } else {
-            SelectedArchitraveType::where('userId', $userId)->delete();
+            SelectedIntumescentSealColor::where('userId', $userId)->delete();
         }
 
         return response()->json(['status' => 'ok']);

@@ -5,7 +5,7 @@
 
     <div class="app-main__inner">
 
-        <h4 class="mb-3">Edit Accoustic</h4>
+        <h4 class="mb-3">Edit Architrave Type</h4>
 
         @if(session('success'))
             <div class="alert alert-success">

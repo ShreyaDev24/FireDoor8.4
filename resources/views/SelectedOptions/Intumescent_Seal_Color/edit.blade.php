@@ -4,7 +4,8 @@
 <div class="app-main__outer">
 
     <div class="app-main__inner">
-        <h4 class="mb-3">Add Architrave Type</h4>
+
+        <h4 class="mb-3">Edit Intumescent Seal Color</h4>
 
         @if(session('success'))
             <div class="alert alert-success">
@@ -29,13 +30,14 @@
         @endif
 
 
-        <form action="{{ route('Architrave-Type.store') }}" method="POST"  enctype="multipart/form-data">
+        <form action="{{ route('Intumescent-Seal-Color.update',$item->id) }}" method="POST"  enctype="multipart/form-data">
             @csrf
+            @method('PUT')
 
-            @include('SelectedOptions.architrave_type._form')
+            @include('SelectedOptions.Intumescent_Seal_Color._form', ['item' => $item])
 
-            <button class="btn btn-success">Save</button>
-            <a href="{{ route('Architrave-Type.index') }}" class="btn btn-secondary">
+            <button class="btn btn-success">Update</button>
+            <a href="{{ route('Intumescent-Seal-Color.index') }}" class="btn btn-secondary">
                 Cancel
             </a>
         </form>
