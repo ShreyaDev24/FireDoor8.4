@@ -4382,6 +4382,12 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
+        $door_core1 = is_numeric($door_core1) ? (float)$door_core1 : 0;
+        $door_core2 = is_numeric($door_core2) ? (float)$door_core2 : 0;
+        $lm = is_numeric($lm) ? (float)$lm : 0;
+        $thickness_cost = is_numeric($thickness_cost) ? (float)$thickness_cost : 0;
+        $doorLeafFacingCost = is_numeric($doorLeafFacingCost) ? (float)$doorLeafFacingCost : 0;
+        $door_cost = is_numeric($door_cost) ? (float)$door_cost : 0;
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
