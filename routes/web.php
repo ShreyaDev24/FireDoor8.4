@@ -6,6 +6,7 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SupportTicketController;
 use App\Http\Controllers\DoorLeafFacingController;
 use App\Http\Controllers\LeafTypeController;
+use App\Http\Controllers\AccousticController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -76,8 +77,10 @@ Route::post(
 )->name('door-leaf-facing.updateSelected')->middleware('auth');
 
 Route::resource('options/leaf-type', LeafTypeController::class);
-Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])
-    ->name('leaf-type.updateSelected');
+Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
+
+Route::resource('options/accoustics', AccousticController::class);
+Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('accoustics.updateSelected');
 
 Route::get('project/floorPlanList/{id}',[App\Http\Controllers\ProjectController2::class,'floorPlanList'])->name('project/floorPlanList');
 Route::get('project/get-floor-plan-doors', [App\Http\Controllers\ProjectController2::class,'getFloorPlanDoors'])->name('project/get-floor-plan-doors');

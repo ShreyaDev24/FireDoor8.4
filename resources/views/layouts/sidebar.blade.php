@@ -407,12 +407,12 @@
                                     Glass Glazing System
                                 </a>
                             </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Accoustics') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['Accoustics'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Acoustics
-                                </a>
-                            </li>
+                            <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
+                                    <a href="{{ route('accoustics.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Accoustics
+                                    </a>
+                                </li>
                             <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Architrave_Type') ? 'active' : ''}}">
                                 <a href="{{route('options/selected',['Architrave_Type'])}}">
                                     <i class="metismenu-icon"></i>
@@ -927,12 +927,14 @@
                                             Glass Glazing System
                                         </a>
                                 </li>
-                                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Accoustics') ? 'active' : ''}}">
-                                        <a href="{{route('options/selected',['Accoustics'])}}">
-                                            <i class="metismenu-icon"></i>
-                                            Acoustics
-                                        </a>
-                                    </li>
+
+                                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
+                                    <a href="{{ route('accoustics.index') }}">
+                                        <i class="metismenu-icon"></i>
+                                        Accoustics
+                                    </a>
+                                </li>
+
                                     <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Architrave_Type') ? 'active' : ''}}">
                                         <a href="{{route('options/selected',['Architrave_Type'])}}">
                                             <i class="metismenu-icon"></i>
