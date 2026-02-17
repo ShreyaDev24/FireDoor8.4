@@ -10,6 +10,7 @@ use App\Http\Controllers\AccousticController;
 use App\Http\Controllers\ArchitraveTypeController;
 use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
+use App\Http\Controllers\GlazingSystemController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -96,6 +97,12 @@ Route::post('options/Glass-type/update-selected', [GlassTypeController::class, '
 Route::get('/glass-type/create/standard', [GlassTypeController::class, 'createStandard'])->name('Glass-type.createStandard');
 Route::get('glass-type/edit/standard/{id}', [GlassTypeController::class, 'editStandard'])
     ->name('Glass-type.editStandard');
+
+Route::resource('options/Glazing-System', GlazingSystemController::class);
+Route::post('options/Glazing-System/update-selected', [GlazingSystemController::class, 'updateSelected'])->name('Glazing-System.updateSelected');
+Route::get('/Glazing-System/create/standard', [GlazingSystemController::class, 'createStandard'])->name('Glazing-System.createStandard');
+Route::get('Glazing-System/edit/standard/{id}', [GlazingSystemController::class, 'editStandard'])
+    ->name('Glazing-System.editStandard');
 
 
 

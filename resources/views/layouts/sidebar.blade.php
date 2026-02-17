@@ -354,36 +354,17 @@
                         Glass Type
                     </a>
                 </li>
+                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
+                    <a href="{{ route('Glazing-System.index') }}">
+                        <i class="metismenu-icon"></i>
+                        Glazing System
+                    </a>
+                </li>
                 <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                     <a href="{{ route('door-leaf-facing.index') }}">
                         <i class="metismenu-icon"></i>
                         Door Leaf Facing Value
                     </a>
-                </li>
-                <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-check"></i>
-                        </i>
-                        Glazing System
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glazing_systems_custome') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['leaf1_glazing_systems_custome'])}}">
-                                <i class="metismenu-icon"></i>
-                                Custom Glazing System
-                            </a>
-                        </li>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glazing_systems') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['leaf1_glazing_systems'])}}">
-                                <i class="metismenu-icon"></i>
-                                Standard Glazing System
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li class="submm-{{ (Request::segment(2) == 'filter' && Request::segment(3) == 'leaf1_glazing_systems') ? 'active' : ''}}">
                     <a href="{{route('options/filter',['leaf1_glazing_systems','Halspan'])}}">
@@ -855,37 +836,18 @@
                             Glass Type
                         </a>
                     </li>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
+                        <a href="{{ route('Glazing-System.index') }}">
+                            <i class="metismenu-icon"></i>
+                            Glazing System
+                        </a>
+                    </li>
 
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                         <a href="{{ route('door-leaf-facing.index') }}">
                             <i class="metismenu-icon"></i>
                             Door Leaf Facing Value
                         </a>
-                    </li>
-                    <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-check"></i>
-                            </i>
-                            Glazing System
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
-                        </a>
-                        <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glazing_systems_custome') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['leaf1_glazing_systems_custome'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Custom Glazing System
-                                </a>
-                            </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glazing_systems') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['leaf1_glazing_systems'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Standard Glazing System
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                     <li class="submm-{{ (Request::segment(2) == 'filter' && Request::segment(3) == 'leaf1_glazing_systems') ? 'active' : ''}}">
                         <a href="{{route('options/filter',['leaf1_glazing_systems','Halspan'])}}">
