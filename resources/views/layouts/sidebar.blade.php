@@ -348,30 +348,11 @@
                         Leaf Type
                     </a>
                 </li>
-                <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-check"></i>
-                        </i>
+                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
+                    <a href="{{ route('Glass-type.index') }}">
+                        <i class="metismenu-icon"></i>
                         Glass Type
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
                     </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glass_type_custome') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['leaf1_glass_type_custome'])}}">
-                                <i class="metismenu-icon"></i>
-                                Custom Glass Type
-                            </a>
-                        </li>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glass_type') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['leaf1_glass_type'])}}">
-                                <i class="metismenu-icon"></i>
-                                Standard Glass Type
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                     <a href="{{ route('door-leaf-facing.index') }}">
@@ -868,31 +849,13 @@
                             Leaf Type
                         </a>
                     </li>
-                    <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-check"></i>
-                            </i>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
+                        <a href="{{ route('Glass-type.index') }}">
+                            <i class="metismenu-icon"></i>
                             Glass Type
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
                         </a>
-                        <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glass_type_custome') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['leaf1_glass_type_custome'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Custom Glass Type
-                                </a>
-                            </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'leaf1_glass_type') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['leaf1_glass_type'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Standard Glass Type
-                                </a>
-                            </li>
-                        </ul>
                     </li>
+
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                         <a href="{{ route('door-leaf-facing.index') }}">
                             <i class="metismenu-icon"></i>
