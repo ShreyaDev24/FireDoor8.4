@@ -44,14 +44,14 @@
     <div class="app-main__inner">
 
        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">Glazing Type</h4>
+            <h4 class="mb-0">Intumescent Seal Arrangement</h4>
 
             <div>
-                <a href="{{ route('Glazing-System.create') }}" class="btn btn-primary me-2">
+                <a href="{{ route('Intumescent-Seal-Arrangement.create') }}" class="btn btn-primary me-2">
                     + Add Custom New
                 </a>
 
-                <a href="{{ route('Glazing-System.createStandard') }}" class="btn btn-primary">
+                <a href="{{ route('Intumescent-Seal-Arrangement.createStandard') }}" class="btn btn-primary">
                     + Add Standard New
                 </a>
             </div>
@@ -94,24 +94,32 @@
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>
-                            <th>NFR</th>
-                            <th>FD30</th>
-                            <th>FD60</th>
+                            <th>FireDoor</th>
 
-                            <th>Glazing System</th>
-                            <th>Glazing Thickness</th>
-                            <th>Glazing Bead Fixing Detail</th>
+                            <th>Configuration</th>
+                            <th>Height</th>
+                            <th>Width</th>
+                            <th>intumescent Seal</th>
+                            <th>BRAND</th>
+                            <th>FireOnly Type</th>
+                            <th>Leaf Type</th>
                             <th>Action</th>
 
                             @if($auth->id != 1)
-                            <th>Price Per M2</th>
+                            <th style="min-width: 80px;">Price Per M2</th>
                             @endif
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($items as $item)
-                            @if($item->Streboard || $item->Halspan || $item->Flamebreak || $item->Stredor)
+                            @if(in_array($item->configurableitems, [1, 2, 7, 8]))
+                                @php
+                                    $streboard  = yesNoIcon($item->configurableitems == 1);
+                                    $Halspan    = yesNoIcon($item->configurableitems == 2);
+                                    $flamebreak = yesNoIcon($item->configurableitems == 7);
+                                    $stredor    = yesNoIcon($item->configurableitems == 8);
+                                @endphp
                                 <tr>
                                     @if($auth->id != 1)
                                     <td>
@@ -121,16 +129,37 @@
                                     </td>
                                     @endif
 
-                                    <td class="text-center">{!! yesNoIcon($item->Streboard) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->Halspan) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->Flamebreak) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->Stredor) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->NFR) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->FD30) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->FD60) !!}</td>
-                                    <td><b>{{ $item->GlazingSystem }}</b></td>
-                                    <td><b>{{ $item->GlazingThickness }}</b></td>
-                                    <td><b>{{ $item->GlazingBeadFixingDetail }}</b></td>
+                                    <td class="text-center"><?= $streboard ?></td>
+                                    <td class="text-center"><?= $Halspan ?></td>
+                                    <td class="text-center"><?= $flamebreak ?></td>
+                                    <td class="text-center"><?= $stredor ?></td>
+                                    <td class="text-center">{{ $item->firerating }}</td>
+                                    <td class="text-center">{{ $item->configuration }}</td>
+
+                                    <td>
+                                        {{ $item->Point1height }} - {{ $item->Point2height }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->Point1width }} - {{ $item->Point2width }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ $item->intumescentSeals }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->brand }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->FireOnly }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->leaf_type_keys }}
+                                    </td>
+
 
                                     @if($item->editBy != 1 || Auth::user()->UserType == 1)
 
@@ -138,13 +167,13 @@
                                         <div class="d-flex justify-content-center align-items-center gap-2">
 
                                             {{-- Edit --}}
-                                            <a href="{{ route('Glazing-System.edit', $item->id) }}" class="action-icon text-success"
+                                            <a href="{{ route('Intumescent-Seal-Arrangement.edit', $item->id) }}" class="action-icon text-success"
                                                 title="Edit">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
                                             {{-- Delete --}}
-                                            <form action="{{ route('Glazing-System.destroy', $item->id) }}" method="POST"
+                                            <form action="{{ route('Intumescent-Seal-Arrangement.destroy', $item->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure?')" class="m-0 p-0">
                                                 @csrf
                                                 @method('DELETE')
@@ -162,12 +191,12 @@
                                     <td></td>
                                     @endif
 
-                                    @if($auth->id != 1 && $item->selectedPrice !== null)
+                                    @if($auth->id != 1 && $item->selected_cost !== null)
                                     <td style="min-width: 80px;">
                                         <input type="number" step="0.01" class="form-control priceInput"
-                                            value="{{ number_format($item->selectedPrice, 2, '.', '') }}"
+                                            value="{{ number_format($item->selected_cost, 2, '.', '') }}"
                                             data-option-id="{{ $item->id }}" data-selected-id="{{ $item->selectedId }}"
-                                            data-option-type="leaf1_glazing_systems" onkeyup="chooseOptionCost(this)">
+                                            data-option-type="intumescentSealArrangement" onkeyup="chooseOptionCost(this)">
                                     </td>
                                     @elseif($auth->id != 1)
                                     <td></td>
@@ -195,24 +224,31 @@
                             <th>Seadec</th>
                             <th>Deanta</th>
                             <th>MMM</th>
-                            <th>NFR</th>
-                            <th>FD30</th>
-                            <th>FD60</th>
-                            <th>Glazing System</th>
-                            <th>Glazing Thickness</th>
-                            <th>Glazing Bead Fixing Detail</th>
-                            <th>Vp Area Size</th>
+                            <th>FireDoor</th>
+
+                            <th>Configuration</th>
+                            <th>Height</th>
+                            <th>Width</th>
+                            <th>intumescent Seal</th>
+                            <th>BRAND</th>
+                            <th>FireOnly Type</th>
                             <th>Action</th>
 
                             @if($auth->id != 1)
-                            <th>Price Per M2</th>
+                            <th style="min-width: 80px;">Price Per M2</th>
                             @endif
                         </tr>
                     </thead>
 
                     <tbody>
                         @foreach($items as $item)
-                            @if($item->VicaimaDoorCore || $item->Seadec || $item->Deanta || $item->MMM)
+                            @if(in_array($item->configurableitems, [4, 5, 6, 9]))
+                                @php
+                                    $vicaima = yesNoIcon($item->configurableitems == 4);
+                                    $seadec = yesNoIcon($item->configurableitems == 5);
+                                    $deanta = yesNoIcon($item->configurableitems == 6);
+                                    $MMM    = yesNoIcon($item->configurableitems == 9);
+                                @endphp
                                 <tr>
                                     @if($auth->id != 1)
                                     <td>
@@ -221,17 +257,32 @@
                                         '' }}>
                                     </td>
                                     @endif
-                                    <td class="text-center">{!! yesNoIcon($item->VicaimaDoorCore) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->Seadec) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->Deanta) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->MMM) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->NFR) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->FD30) !!}</td>
-                                    <td class="text-center">{!! yesNoIcon($item->FD60) !!}</td>
-                                    <td><b>{{ $item->GlazingSystem }}</b></td>
-                                    <td><b>{{ $item->GlazingThickness }}</b></td>
-                                    <td><b>{{ $item->GlazingBeadFixingDetail }}</b></td>
-                                    <td><b>{{ $item->VPAreaSize }}</b></td>
+                                    <td class="text-center"><?= $vicaima ?></td>
+                                    <td class="text-center"><?= $seadec ?></td>
+                                    <td class="text-center"><?= $deanta ?></td>
+                                    <td class="text-center"><?= $MMM ?></td>
+                                    <td class="text-center">{{ $item->firerating }}</td>
+                                    <td class="text-center">{{ $item->configuration }}</td>
+
+                                    <td>
+                                        {{ $item->Point1height }} - {{ $item->Point2height }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->Point1width }} - {{ $item->Point2width }}
+                                    </td>
+
+                                    <td class="text-center">
+                                        {{ $item->intumescentSeals }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->brand }}
+                                    </td>
+
+                                    <td>
+                                        {{ $item->FireOnly }}
+                                    </td>
 
                                     @if($item->editBy != 1 || Auth::user()->UserType == 1)
 
@@ -239,13 +290,13 @@
                                         <div class="d-flex justify-content-center align-items-center gap-2">
 
                                             {{-- Edit --}}
-                                            <a href="{{ route('Glazing-System.editStandard', $item->id) }}" class="action-icon text-success"
+                                            <a href="{{ route('Intumescent-Seal-Arrangement.editStandard', $item->id) }}" class="action-icon text-success"
                                                 title="Edit">
                                                 <i class="fa fa-edit"></i>
                                             </a>
 
                                             {{-- Delete --}}
-                                            <form action="{{ route('Glazing-System.destroy', $item->id) }}" method="POST"
+                                            <form action="{{ route('Intumescent-Seal-Arrangement.destroy', $item->id) }}" method="POST"
                                                 onsubmit="return confirm('Are you sure?')" class="m-0 p-0">
                                                 @csrf
                                                 @method('DELETE')
@@ -263,12 +314,12 @@
                                     <td></td>
                                     @endif
 
-                                    @if($auth->id != 1 && $item->selectedPrice !== null)
+                                    @if($auth->id != 1 && $item->selected_cost !== null)
                                     <td style="min-width: 80px;">
                                         <input type="number" step="0.01" class="form-control priceInput"
-                                            value="{{ number_format($item->selectedPrice, 2, '.', '') }}"
+                                            value="{{ number_format($item->selected_cost, 2, '.', '') }}"
                                             data-option-id="{{ $item->id }}" data-selected-id="{{ $item->selectedId }}"
-                                            data-option-type="leaf1_glazing_systems" onkeyup="chooseOptionCost(this)">
+                                            data-option-type="intumescentSealArrangement" onkeyup="chooseOptionCost(this)">
                                     </td>
                                     @elseif($auth->id != 1)
                                     <td></td>
@@ -374,7 +425,7 @@ $(document).ready(function () {
 
         if (!confirm(`Update ${data.length} selected records?`)) return;
 
-        fetch("{{ route('Glazing-System.updateSelected') }}", {
+        fetch("{{ route('Intumescent-Seal-Arrangement.updateSelected') }}", {
             method: "POST",
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',

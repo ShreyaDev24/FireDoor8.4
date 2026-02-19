@@ -137,7 +137,7 @@
                     @endif
 
                     @if($auth->id != 1 && $item->selectedPrice !== null)
-                    <td style="min-width: 8 0px;">
+                    <td style="min-width: 80px;">
                         <input type="number" step="0.01" class="form-control priceInput"
                             value="{{ number_format($item->selectedPrice, 2, '.', '') }}"
                             data-option-id="{{ $item->id }}" data-selected-id="{{ $item->selectedId }}"

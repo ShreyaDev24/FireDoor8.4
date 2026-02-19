@@ -285,31 +285,7 @@
                             Configurable Door Formula
                         </a>
                 </li> --}}
-                <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-check"></i>
-                        </i>
-                        intumescent Seal Arrangement
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'intumescentSealArrangementCustome') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['intumescentSealArrangementCustome'])}}">
-                                <i class="metismenu-icon"></i>
-                                Custom intumescent Seal Arrangement
-                            </a>
-                        </li>
-                        <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'intumescentSealArrangement') ? 'active' : ''}}">
-                            <a href="{{route('options/selected',['intumescentSealArrangement'])}}">
-                                <i class="metismenu-icon"></i>
-                                Standard intumescent Seal Arrangement
-                            </a>
-                        </li>
-                    </ul>
-                </li>
+
                 {{-- <li class="mm-{{ (Request::segment(1) == 'colors') ? 'active' : ''}}">
                 <a href="#" aria-expanded="true">
                     Colors
@@ -388,6 +364,12 @@
                     <a href="{{ route('Intumescent-Seal-Color.index') }}">
                         <i class="metismenu-icon"></i>
                         Intumescent Seal Color
+                    </a>
+                </li>
+                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
+                    <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">
+                        <i class="metismenu-icon"></i>
+                        Intumescent Seal Arrangement
                     </a>
                 </li>
                 <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list')) ? 'active' : ''}}">
@@ -842,6 +824,12 @@
                             Glazing System
                         </a>
                     </li>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
+                        <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">
+                            <i class="metismenu-icon"></i>
+                            Intumescent Seal Arrangement
+                        </a>
+                    </li>
 
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                         <a href="{{ route('door-leaf-facing.index') }}">
@@ -908,32 +896,6 @@
                             <i class="metismenu-icon"></i>
                             Intumescent Seal Color
                         </a>
-                    </li>
-
-                    <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-check"></i>
-                            </i>
-                            intumescent Seal Arrangement
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
-                        </a>
-                        <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'intumescentSealArrangementCustome') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['intumescentSealArrangementCustome'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Custom intumescent Seal Arrangement
-                                </a>
-                            </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'intumescentSealArrangement') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['intumescentSealArrangement'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Standard intumescent Seal Arrangement
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                     <li class="submm-{{ (Request::segment(2) == 'select' && Request::segment(4) == 'lippingSpecies') ? 'active' : ''}}">
                         <a href="{{route('options/select',[1,'lippingSpecies'])}}">

@@ -4542,6 +4542,7 @@ function yesNoIcon($value)
 }
 
 
+
 function CompanyUsersClient($isstatus = false,$userid){
     $users = User::where('UserType',3)->where('id',$userid)->first();
     if($users){

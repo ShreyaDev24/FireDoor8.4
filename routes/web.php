@@ -11,6 +11,7 @@ use App\Http\Controllers\ArchitraveTypeController;
 use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
 use App\Http\Controllers\GlazingSystemController;
+use App\Http\Controllers\IntumescentSealArrangementController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -103,6 +104,12 @@ Route::post('options/Glazing-System/update-selected', [GlazingSystemController::
 Route::get('/Glazing-System/create/standard', [GlazingSystemController::class, 'createStandard'])->name('Glazing-System.createStandard');
 Route::get('Glazing-System/edit/standard/{id}', [GlazingSystemController::class, 'editStandard'])
     ->name('Glazing-System.editStandard');
+
+Route::resource('options/Intumescent-Seal-Arrangement', IntumescentSealArrangementController::class);
+Route::post('options/Intumescent-Seal-Arrangement/update-selected', [IntumescentSealArrangementController::class, 'updateSelected'])->name('Intumescent-Seal-Arrangement.updateSelected');
+Route::get('/Intumescent-Seal-Arrangement/create/standard', [IntumescentSealArrangementController::class, 'createStandard'])->name('Intumescent-Seal-Arrangement.createStandard');
+Route::get('Intumescent-Seal-Arrangement/edit/standard/{id}', [IntumescentSealArrangementController::class, 'editStandard'])
+    ->name('Intumescent-Seal-Arrangement.editStandard');
 
 
 
