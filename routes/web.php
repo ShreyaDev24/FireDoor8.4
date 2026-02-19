@@ -6,6 +6,14 @@ use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\CoreCertificateController;
 use App\Http\Controllers\GlassCertificateController;
 use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\DoorLeafFacingController;
+use App\Http\Controllers\LeafTypeController;
+use App\Http\Controllers\AccousticController;
+use App\Http\Controllers\ArchitraveTypeController;
+use App\Http\Controllers\IntumescentSealColorController;
+use App\Http\Controllers\GlassTypeController;
+use App\Http\Controllers\GlazingSystemController;
+use App\Http\Controllers\IntumescentSealArrangementController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -68,6 +76,44 @@ Route::middleware(['auth'])
 
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
 Auth::routes();
+
+Route::resource('options/door-leaf-facing', DoorLeafFacingController::class)->middleware('auth');
+Route::post(
+    'options/door-leaf-facing/update-selected',
+    [DoorLeafFacingController::class, 'updateSelected']
+)->name('door-leaf-facing.updateSelected')->middleware('auth');
+
+Route::resource('options/leaf-type', LeafTypeController::class);
+Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
+
+Route::resource('options/accoustics', AccousticController::class);
+Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
+
+Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
+Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
+
+Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
+Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
+
+Route::resource('options/Glass-type', GlassTypeController::class);
+Route::post('options/Glass-type/update-selected', [GlassTypeController::class, 'updateSelected'])->name('Glass-type.updateSelected');
+Route::get('/glass-type/create/standard', [GlassTypeController::class, 'createStandard'])->name('Glass-type.createStandard');
+Route::get('glass-type/edit/standard/{id}', [GlassTypeController::class, 'editStandard'])
+    ->name('Glass-type.editStandard');
+
+Route::resource('options/Glazing-System', GlazingSystemController::class);
+Route::post('options/Glazing-System/update-selected', [GlazingSystemController::class, 'updateSelected'])->name('Glazing-System.updateSelected');
+Route::get('/Glazing-System/create/standard', [GlazingSystemController::class, 'createStandard'])->name('Glazing-System.createStandard');
+Route::get('Glazing-System/edit/standard/{id}', [GlazingSystemController::class, 'editStandard'])
+    ->name('Glazing-System.editStandard');
+
+Route::resource('options/Intumescent-Seal-Arrangement', IntumescentSealArrangementController::class);
+Route::post('options/Intumescent-Seal-Arrangement/update-selected', [IntumescentSealArrangementController::class, 'updateSelected'])->name('Intumescent-Seal-Arrangement.updateSelected');
+Route::get('/Intumescent-Seal-Arrangement/create/standard', [IntumescentSealArrangementController::class, 'createStandard'])->name('Intumescent-Seal-Arrangement.createStandard');
+Route::get('Intumescent-Seal-Arrangement/edit/standard/{id}', [IntumescentSealArrangementController::class, 'editStandard'])
+    ->name('Intumescent-Seal-Arrangement.editStandard');
+
+
 
 Route::get('project/floorPlanList/{id}',[App\Http\Controllers\ProjectController2::class,'floorPlanList'])->name('project/floorPlanList');
 Route::get('project/get-floor-plan-doors', [App\Http\Controllers\ProjectController2::class,'getFloorPlanDoors'])->name('project/get-floor-plan-doors');

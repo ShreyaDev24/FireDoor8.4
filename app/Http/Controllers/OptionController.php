@@ -4727,6 +4727,7 @@ class OptionController extends Controller
         $glazingBeads = DB::table('options')
                         ->whereIn('configurableitems', $configurations)
                         ->where('OptionSlug', $optionsslug)
+                        ->groupBy('OptionKey')
                         ->get(['id', 'OptionKey', 'OptionValue']); // Adjust to fetch the necessary fields
 
         return response()->json($glazingBeads);
