@@ -426,8 +426,8 @@
                     </i>
                 </a>
                 <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['SideScreen_Glass_Type'])}}">
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glass-Type') ? 'active' : '' }}">
+                        <a href="{{ route('Screen-Glass-Type.index') }}">
                             <i class="metismenu-icon"></i>
                             Glass Type
                         </a>
@@ -972,12 +972,13 @@
                     </i>
                 </a>
                 <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['SideScreen_Glass_Type'])}}">
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glass-Type') ? 'active' : '' }}">
+                        <a href="{{ route('Screen-Glass-Type.index') }}">
                             <i class="metismenu-icon"></i>
                             Glass Type
                         </a>
                     </li>
+
                     <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
                         <a href="{{route('options/selected',['SideScreen_Glazing_System'])}}">
                             <i class="metismenu-icon"></i>

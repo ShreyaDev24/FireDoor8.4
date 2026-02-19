@@ -257,28 +257,32 @@ class IntumescentSealArrangementController extends Controller
             ->toArray();
 
 
-        SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)
-            ->whereNotIn('intumescentseals2_id', $keys)
-            ->delete();
+        if (!empty($keys)) {
+            SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)
+                ->whereNotIn('intumescentseals2_id', $keys)
+                ->delete();
 
 
-        foreach ($request->rows as $row) {
+            foreach ($request->rows as $row) {
 
-            if ($row['checked']) {
+                if ($row['checked']) {
 
-                SelectedIntumescentSeals2::updateOrCreate(
+                    SelectedIntumescentSeals2::updateOrCreate(
 
-                    [
-                        'selected_intumescentseals2_user_id' => $userId,
-                        'intumescentseals2_id' => $row['id']
-                    ],
+                        [
+                            'selected_intumescentseals2_user_id' => $userId,
+                            'intumescentseals2_id' => $row['id']
+                        ],
 
-                    [
-                        'selected_cost' => $row['price'] ?? 0
-                    ]
+                        [
+                            'selected_cost' => $row['price'] ?? 0
+                        ]
 
-                );
+                    );
+                }
             }
+        } else {
+            SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)->delete();
         }
 
         return response()->json(['status' => 'ok']);
