@@ -12,6 +12,7 @@ use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
 use App\Http\Controllers\GlazingSystemController;
 use App\Http\Controllers\ScreenGlassTypeController;
+use App\Http\Controllers\ScreenGlazingTypeController;
 use App\Http\Controllers\IntumescentSealArrangementController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
@@ -95,6 +96,9 @@ Route::middleware(['auth', 'user.type'])->group(function () {
 
     Route::resource('options/Screen-Glass-Type', ScreenGlassTypeController::class);
     Route::post('options/Screen-Glass-Type/update-selected', [ScreenGlassTypeController::class, 'updateSelected'])->name('Screen-Glass-Type.updateSelected');
+
+    Route::resource('options/Screen-Glazing-Type', ScreenGlazingTypeController::class);
+    Route::post('options/Screen-Glazing-Type/update-selected', [ScreenGlazingTypeController::class, 'updateSelected'])->name('Screen-Glazing-Type.updateSelected');
 
     Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
     Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');

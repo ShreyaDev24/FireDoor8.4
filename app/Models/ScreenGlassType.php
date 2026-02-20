@@ -29,4 +29,9 @@ class ScreenGlassType extends Model
     {
         return $this->hasOne(SelectedScreenGlass::class, 'glass_id');
     }
+
+    public function glazingTypes()
+    {
+        return $this->hasMany(ScreenGlazingType::class, 'ScreenGlassId');
+    }
 }

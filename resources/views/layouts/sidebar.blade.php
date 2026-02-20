@@ -432,8 +432,8 @@
                             Glass Type
                         </a>
                     </li>
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['SideScreen_Glazing_System'])}}">
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glazing-Type') ? 'active' : '' }}">
+                        <a href="{{ route('Screen-Glazing-Type.index') }}">
                             <i class="metismenu-icon"></i>
                             Glazing System
                         </a>
@@ -979,8 +979,8 @@
                         </a>
                     </li>
 
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['SideScreen_Glazing_System'])}}">
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glazing-Type') ? 'active' : '' }}">
+                        <a href="{{ route('Screen-Glazing-Type.index') }}">
                             <i class="metismenu-icon"></i>
                             Glazing System
                         </a>
