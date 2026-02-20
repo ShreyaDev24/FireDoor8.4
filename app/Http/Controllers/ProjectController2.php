@@ -9,7 +9,8 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Exception;
 // use PDF;
 use PdfMerger;
@@ -60,59 +61,81 @@ use App\Exports\AllProjectExport;
 
 class ProjectController2 extends Controller
 {
-    public function list(Request $request){
+    /**
+     * Helper method to get currency symbol
+     */
+    private function getCurrencySymbol($currencyCode)
+    {
+        $currencies = [
+            '£_GBP' => '£',
+            '€_EURO' => '€',
+            '$_US_DOLLAR' => '$'
+        ];
+        return $currencies[$currencyCode] ?? '';
+    }
 
-        $loginUserId = Auth::user()->id;
-        $loginUserType = Auth::user()->UserType;
-        $login_company_id = get_company_id(Auth::user()->id);
+    /**
+     * Fetch all related data upfront to prevent N+1 queries
+     * Returns array with keys: users, customers, filesCount, ironmongeryCount
+     */
+    private function preloadRelatedData($projectIds): array
+    {
+        $editByIds = [];
+        $mainContractorIds = [];
 
-            switch ($loginUserType){
+        // First, get all unique IDs from projects
+        $projects = Project::whereIn('id', $projectIds)->get(['id', 'editBy', 'MainContractorId']);
 
-            case 1:
-
-                if(empty($request->id)){
-
-                     $data = Project::leftJoin('companies','companies.id','project.CompanyId')->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))->orderBy('project.id','desc')->get();
-
-                }else{
-
-                    $data = Project::leftJoin('companies','companies.id','project.CompanyId')->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))->where([
-                        ['UserId', '=', $request->id]
-                    ])->orderBy('project.id','desc')->get();
-
-                }
-
-                break;
-
-            case 2:
-
-                if(empty($request->id)){
-                    $data = Project::leftJoin('companies','companies.id','project.CompanyId')->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))->where([
-                        ['CompanyId', '=', $login_company_id]
-                    ])->orderBy('project.id','desc')->get();
-                }else{
-                    $data = Project::leftJoin('companies','companies.id','project.CompanyId')->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))->where([
-                        ['UserId', '=', $request->id],
-                        ['CompanyId', '=', $login_company_id]
-                    ])->orderBy('project.id','desc')->get();
-
-                }
-
-                break;
-
-                default:
-
-                $data = Project::leftJoin('companies','companies.id','project.CompanyId')->select('project.*', 'project.id as ProjectId', 'companies.*', DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId) quotesCount"), DB::raw("(SELECT count(*) from quotation  WHERE project.id = quotation.ProjectId AND quotation.IsOrdered = 1) ordersCount"))->where([
-                    ['project.UserId', '=', $loginUserId]
-                ])->orderBy('project.id','desc')->get();
+        foreach ($projects as $project) {
+            if ($project->editBy) {
+                $editByIds[] = $project->editBy;
             }
+            if ($project->MainContractorId) {
+                $mainContractorIds[] = $project->MainContractorId;
+            }
+        }
 
-        return view('Project.ProjectList',['data' => $data]);
+        // Pre-fetch all users, customers, files, and ironmongery
+        $users = with(User::whereIn('id', array_unique($editByIds))->get())->keyBy('id');
+        $customers = with(Customer::whereIn('id', array_unique($mainContractorIds))->get())->keyBy('id');
+
+        // Get files count grouped by project
+        $filesCount = ProjectFiles::whereIn('projectId', $projectIds)
+            ->groupBy('projectId')
+            ->selectRaw('projectId, count(*) as count')
+            ->get()
+            ->keyBy('projectId')
+            ->map(function($item) { return $item->count ?? 0; })
+            ->toArray();
+
+        // Get ironmongery count grouped by project
+        $ironmongeryCount = AddIronmongery::whereIn('ProjectId', $projectIds)
+            ->groupBy('ProjectId')
+            ->selectRaw('ProjectId, count(*) as count')
+            ->get()
+            ->keyBy('ProjectId')
+            ->map(function($item) { return $item->count ?? 0; })
+            ->toArray();
+
+        return [
+            'users' => $users,
+            'customers' => $customers,
+            'filesCount' => $filesCount,
+            'ironmongeryCount' => $ironmongeryCount
+        ];
+    }
+
+    public function list(Request $request){
+        // Simply return the view - all data fetching is handled by getProjectList via AJAX
+        return view('Project.ProjectList');
     }
 
 
     public function getProjectList(Request $request): array
     {
+        // Enable query logging
+        DB::enableQueryLog();
+        $startTime = microtime(true);
 
   //dd($request->all());
         $from = $request->from;
@@ -310,229 +333,39 @@ class ProjectController2 extends Controller
         }
 
         if((array)$data->toArray() !== []){
-            $htmlData = '';
-            $DoorsetPrice = 0;
+            // Preload all related data to prevent N+1 queries
+            $projectIds = $data->pluck('ProjectId')->toArray();
+            $relatedData = $this->preloadRelatedData($projectIds);
+
+            // Render appropriate template based on listType
             if ($request->input('listType') == 'dataListType') {
-                 // $Quotations = $Quotations->toArray();
-                 $htmlData .= '<table id="dataListType" class="table table-hover table-striped table-bordered dataTable no-footer dtr-inline">
-                <thead class="text-uppercase table-header-bg text-white">
-                    <tr>
-                        <th>S.N</th>
-                        <th>Project Name</th>
-                        <th>Quotation Company Name</th>
-                        <th>Building Type</th>
-                        <th>Files</th>
-                        <th>Quotes</th>
-                        <th>Orders</th>
-                        <th>Ironmongery Set</th>
-                        <th>Return Tender Date</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>';
-                 $sn = 1;
-            foreach($data as $val){
-                $us = User::where('id',$val->editBy)->first();
-                $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
-                $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
-                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
-
-                $BuildingType = $val->BuildingType != '' ? $val->BuildingType : '-----------';
-
-                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
-
-                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
-
-                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
-                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-
-                //firedoor2_role_update
-                // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
-                $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
-
-                if($val->Status == 1){
-                    $projectname = '<a href="'.url('project/quotation-list/'.$val->GeneratedKey).'" class="QuotationCode">'.$val->ProjectName.'</a>';
-                    $activedeactive = '<a href="javascript:void(0);" class="dropdown-item deactivateproject"><i class="fa fa-lock" style="margin-right: 8px;"></i>   Deactivate Project</a>';
-                } else {
-                    $projectname = '<a href="#" class="QuotationCode" style="color: black;">'.$val->ProjectName.'</a>';
-                    $activedeactive = '<a href="javascript:void(0);" class="dropdown-item activateproject"><i class="fa fa-unlock-alt" style="margin-right: 8px;"></i>  Activate Project</a>';
-                }
-
-
-                // currency showing formate is changed accordingly(dynamically)
-                $Currency = '';
-                if($UserType != 4 && !empty($val->projectCurrency)){
-                    if ($val->projectCurrency == '£_GBP') {
-                        $Currency = "£";
-                    } elseif ($val->projectCurrency == '€_EURO') {
-                        $Currency = "€";
-                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
-                        $Currency = "$";
-                    }
-                }
-
-
-
-
-                $htmlData .= '<tr>
-                <td>'.$sn.'</td>
-                <td>'.$projectname.'</td>
-                <td>'.$CompanyName.'</td>
-                <td>'.ucwords((string) $BuildingType).'</td>
-                <td>'.$projectFilesCount.'</td>
-                <td>'.$quotesCount.'</td>
-                <td>'.$ordersCount.'</td>
-                <td>'.$countIronmongerySet.'</td>
-                <td>'.date2Formate($returnTenderDate).'</td>
-                <td><div class="dropdown">
-                <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    ....
-                </button>
-                <div class="dropdown-menu dropdown-list" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item delproject" href="javascript:void(0);"><i class="fa fa-trash" style="margin-right: 8px;"></i>   Delete Project</a>
-                    <input type="hidden" value="'.$val->ProjectId.'">
-                    '.$activedeactive.'
-                    <input type="hidden" value="'.$val->ProjectId.'">
-                </div>
-            </div>
-
-                </td>
-            </tr>';
-$sn++;
-
-
-                // <div class="QuotationStatusNumber">'.$Currency .''. $totalCost .'</div>
+                $htmlData = view('Project.ProjectListTable', [
+                    'projects' => $data,
+                    'relatedData' => $relatedData,
+                    'UserType' => $UserType
+                ])->render();
+            } else {
+                $htmlData = view('Project.ProjectListCards', [
+                    'projects' => $data,
+                    'relatedData' => $relatedData,
+                    'UserType' => $UserType
+                ])->render();
             }
 
-            $htmlData .= '</tbody>
-            </table>';
-        }else{
+            // Log performance data
+            $totalTime = round((microtime(true) - $startTime) * 1000, 2);
+            $queries = DB::getQueryLog();
+            // Log::channel('performance')->info('getProjectList Performance', [
+            //     'user_id' => $loginUserId,
+            //     'user_type' => $UserType,
+            //     'from' => $from,
+            //     'limit' => $limit,
+            //     'total_time_ms' => $totalTime,
+            //     'query_count' => count($queries),
+            //     'total_records' => $countProject,
+            //     'slowest_query' => $this->getSlowestQuery($queries),
+            // ]);
 
-            foreach($data as $val)
-            {
-                // $projectList = Quotation::leftJoin("quotation_versions",function($join){
-                //     $join->on("quotation.id","quotation_versions.quotation_id")
-                //         ->orOn("quotation_versions.id","=","quotation.VersionId");
-                // })
-                // ->leftJoin("project","project.id","quotation.ProjectId")
-                // ->select('quotation.*','quotation.id as QuotationId', 'project.*','quotation_versions.id as QVID')
-                // ->where('ProjectId',$val->ProjectId)
-                // ->get();
-                // $DoorsetPrice = 0;
-                // if(!empty($projectList)){
-                //     foreach($projectList as $value){
-
-                //         $QVID = $value['QVID'] != ""?$value['QVID']:0;
-                //         $Item = Item::Join('quotation','quotation.id','=','items.QuotationId')->
-                //         // Join('item_master','item_master.itemID','=','items.itemId')->
-                //         leftJoin("quotation_version_items",function($join) use ($QVID){
-                //             $join->on("quotation_version_items.itemID","=","items.itemId")
-                //                 // ->on("quotation_version_items.itemmasterID","=","item_master.id")
-                //                 ->where("quotation_version_items.version_id","=",$QVID);
-                //         })->where('quotation.QuotationGenerationId',$value->QuotationGenerationId)->where('items.VersionId',$QVID)->get();
-                //         if(!empty($Item)){
-                //             foreach($Item as $data){
-                //                 $DoorsetPrice = $DoorsetPrice + ((($data->AdjustPrice)?floatval($data->AdjustPrice) :floatval($data->DoorsetPrice)) + $data->IronmongaryPrice);
-                //             }
-                //         }
-                //         $discountPrice = ($DoorsetPrice + nonConfigurableItem($value->QuotationId,$QVID,Auth::user()->id,'',true)) * $value->QuoteSummaryDiscount/100;
-                //         $DoorsetPrice = ($DoorsetPrice + nonConfigurableItem($value->QuotationId,$QVID,Auth::user()->id,'',true)) - $discountPrice;
-                //     }
-                // }
-
-                $us = User::where('id',$val->editBy)->first();
-                $custCompanyName = Customer::where('id',$val->MainContractorId)->first();
-                $projectFilesCount = ProjectFiles::where('projectId',$val->ProjectId)->count();
-                $CompanyName = $custCompanyName != '' ? $custCompanyName->CstCompanyName : '-----------';
-
-                $BuildingType = $val->BuildingType != '' ? $val->BuildingType : '-----------';
-
-                $quotesCount = $val->quotesCount != '' ? $val->quotesCount : 0;
-
-                $ordersCount = $val->ordersCount != '' ? $val->ordersCount : 0;
-
-                $returnTenderDate = $val->returnTenderDate != '' ? $val->returnTenderDate : '-----------';
-                $lastModifier = $us != '' ? $us->FirstName.' '.$us->LastName : '';
-
-                //firedoor2_role_update
-                // $countIronmongerySet = AddIronmongery::where(['CompanyId' => $login_company_id , 'ProjectId' => $val->ProjectId])->count();
-                $countIronmongerySet = AddIronmongery::where(['ProjectId' => $val->ProjectId])->count();
-
-                if($val->Status == 1){
-                    $projectname = '<a href="'.url('project/quotation-list/'.$val->GeneratedKey).'" class="QuotationCode">'.$val->ProjectName.'</a>';
-                    $activedeactive = '<a href="javascript:void(0);" class="deactivateproject"><i class="fa fa-lock"></i> Deactivate Project</a>';
-                } else {
-                    $projectname = '<a href="#" class="QuotationCode" style="color: black;">'.$val->ProjectName.'</a>';
-                    $activedeactive = '<a href="javascript:void(0);" class="activateproject"><i class="fa fa-unlock-alt"></i> Activate Project</a>';
-                }
-
-
-                // currency showing formate is changed accordingly(dynamically)
-                $Currency = '';
-                if($UserType != 4 && !empty($val->projectCurrency)){
-                    if ($val->projectCurrency == '£_GBP') {
-                        $Currency = "£";
-                    } elseif ($val->projectCurrency == '€_EURO') {
-                        $Currency = "€";
-                    } elseif ($val->projectCurrency == '$_US_DOLLAR') {
-                        $Currency = "$";
-                    }
-                }
-
-                $htmlData .=
-                '<div class="col-sm-3 mb-3">
-                    <div class="QuotationBox">
-                        '.$projectname.'
-                        <div class="QuotationCompanyName">
-                            <b>'.$CompanyName.'</b>
-                        </div>
-
-                        <div class="QuotationListData">
-                            <b>Building Type</b>
-                            <span>'.ucwords((string) $BuildingType).'</span>
-                            <b>Project Name</b>
-                            <span>'.ucwords((string) $val->ProjectName).'</span>
-                            <b>Files</b>
-                            <span>'.$projectFilesCount.'</span>
-                            <b>Quotes</b>
-                            <span>'.$quotesCount.'</span>
-                            <b>Orders</b>
-                            <span>'.$ordersCount.'</span>
-                            <b>Ironmongery Set</b>
-                            <span>'.$countIronmongerySet.'</span>
-                            <b>Return Tender Date</b>
-                            <span>'.date2Formate($returnTenderDate).'</span>
-                        </div>
-                        <div class="QuotationListNumber"></div>
-                        <div class="QuotationModifiedDate">
-                            <p>Last modified by '.$lastModifier.' on '.dateFormate($val->Projectupdated_at).'</p>
-                        </div>
-                        <div class="filter_action">
-                            <label for="filter" class="quote_filter">
-                                <i class="fas fa-ellipsis-h"></i>
-                            </label>
-                            <ul class="QuotationMenu">
-                                <li><a href="javascript:void(0);" class="delproject"><i class="fa fa-trash"></i> Delete Project</a>
-                                    <input type="hidden" value="'.$val->ProjectId.'">
-                                </li>
-                                <li>
-                                    '.$activedeactive.'
-                                    <input type="hidden" value="'.$val->ProjectId.'">
-                                </li>
-                            </ul>
-                        </div>
-
-
-                    </div>
-                </div>';
-            }
-
-        }
-
-            // <div class="QuotationStatusNumber">'.$Currency.floatval($DoorsetPrice).'</div>
-            // <li><a href="'.route('addironmongery',[$val->ProjectId]).'"><i class="fa fa-shield"></i> Add Ironmongery Set</a></li>
-
-            // return $htmlData;
             return [
                 'st' => "success",
                 'txt' => 'data found.',
@@ -540,86 +373,186 @@ $sn++;
                 'html' => $htmlData,
             ];
 
-
         } else {
-            $htmlData = 'Data not found.';
+            // Log performance data for error case
+            $totalTime = round((microtime(true) - $startTime) * 1000, 2);
+            $queries = DB::getQueryLog();
+            // Log::channel('performance')->info('getProjectList - No Data', [
+            //     'user_id' => $loginUserId,
+            //     'user_type' => $UserType,
+            //     'total_time_ms' => $totalTime,
+            //     'query_count' => count($queries),
+            // ]);
+
             return [
                 'st' => "error",
                 'txt' => 'Data not found.',
                 'total' => 0,
-                'html' => $htmlData,
+                'html' => 'Data not found.',
             ];
-
-
         }
-
     }
 
     //gettting project details
     //getting company architect customer list
     //check condition for architect assigned quotation
     public function getProjectDetails($id){
+        // Enable query logging
+        DB::enableQueryLog();
+        $startTime = microtime(true);
+
+        $timing = ['markAsReadNotification' => 0, 'projectDetails' => 0, 'quotationData' => 0, 'quotationCount' => 0, 'companyList' => 0, 'architectList' => 0, 'mainContractorList' => 0];
+
+        // 1. Mark notification as read
+        $t1 = microtime(true);
         $markAsReadNotification = markAsRead($id, 'project');
+        $timing['markAsReadNotification'] = round((microtime(true) - $t1) * 1000, 2);
 
-        $data = Project::leftJoin('quotation','quotation.ProjectId','project.id')
-        ->leftJoin('companies','companies.id','quotation.CompanyId')
-        ->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')
+        // 2. Get project details with company, architect, and customer info in single query
+        $t1 = microtime(true);
+        $project = Project::leftJoin('companies', 'companies.id', '=', 'project.CompanyId')
+            ->leftJoin('architects', 'architects.id', '=', 'project.ArchitectId')
+            ->leftJoin('customers', 'customers.id', '=', 'project.MainContractorId')
+            ->select(
+                'project.id',
+                'project.GeneratedKey',
+                'project.quotationId',
+                'project.versionId',
+                'project.BuildingType',
+                'project.ProjectImage',
+                'project.ProjectName',
+                'project.customerId',
+                'project.AddressLine1',
+                'companies.CompanyName',
+                'architects.ArcCompanyName',
+                'customers.CstCompanyName'
+            )
+            ->where('project.GeneratedKey', $id)
+            ->firstOrFail();
+        $timing['projectDetails'] = round((microtime(true) - $t1) * 1000, 2);
 
-            ->where('project.GeneratedKey',$id)
+        // 3. Get quotation data joined with companies (optimized to select only needed columns)
+        $t1 = microtime(true);
+        $data = DB::table('quotation')
+            ->leftJoin('companies', 'companies.id', '=', 'quotation.CompanyId')
+            ->leftJoin('project', 'project.id', '=', 'quotation.ProjectId')
+            ->select(
+                'quotation.*',
+                'quotation.id as QuotationId',
+                'companies.CompanyName',
+                'companies.id as CompanyId',
+                'project.ProjectImage',
+                'project.ProjectName',
+                'project.customerId',
+                'project.AddressLine1',
+                'project.GeneratedKey'
+            )
+            ->where('project.GeneratedKey', $id)
             ->get();
+        $timing['quotationData'] = round((microtime(true) - $t1) * 1000, 2);
 
-            $pro = Project::where('GeneratedKey',$id)->first();
-            $projectId = $pro->id;
-            $qid = $pro->quotationId;
-            $vid = $pro->versionId;
-            $buildingType = $pro->BuildingType;
-            $quotation_limit_for_arch = Quotation::where('UserId',Auth::user()->id)->where('ProjectId',$projectId)->count();
+        // Extract project details from single query result
+        $projectId = $project->id;
+        $qid = $project->quotationId;
+        $vid = $project->versionId;
+        $buildingType = $project->BuildingType;
 
+        // 4. Get quotation count for architect
+        $t1 = microtime(true);
+        $quotation_limit_for_arch = Quotation::where('UserId', Auth::user()->id)
+            ->where('ProjectId', $projectId)
+            ->count();
+        $timing['quotationCount'] = round((microtime(true) - $t1) * 1000, 2);
 
-            // send list of main contractor
-            // $main_contractors = ['john@gmail.com','lashn@gmail.com','pankaj@resiliencesoft.com','kunal@resiliencesoft.com','shailesh@resiliencesoft.com'];
-            // dd($data->toArray());
+        // 5. Getting company list
+        $t1 = microtime(true);
+        $company_list = Company::join('users', 'users.id', 'companies.UserId')
+            ->select('companies.id', 'companies.CompanyName', 'users.UserEmail')
+            ->where('users.UserType', 2)
+            ->orderBy('companies.CompanyName')
+            ->get();
+        $timing['companyList'] = round((microtime(true) - $t1) * 1000, 2);
 
+        // 6. Getting architect list
+        $t1 = microtime(true);
+        $architect_list = Architect::join('users', 'users.id', 'architects.UserId')
+            ->select('architects.ArcCompanyName', 'architects.id', 'users.UserEmail')
+            ->orderBy('architects.ArcCompanyName')
+            ->get();
+        $timing['architectList'] = round((microtime(true) - $t1) * 1000, 2);
 
-        //getting company architect customer list
-        $company_list = Company::join('users','users.id','companies.UserId')->select('companies.id','companies.CompanyName','users.UserEmail')->where('users.UserType',2)->orderBy('companies.CompanyName')->get();
-        $architect_list = Architect::join('users','users.id','architects.UserId')
-                                    ->select('architects.ArcCompanyName','architects.id','users.UserEmail')
-                                    ->orderBy('architects.ArcCompanyName')
-                                    ->get();
-
-
-        $main_contractor_list = "";
+        // 7. Get main contractor list based on user type
+        $t1 = microtime(true);
         if (Auth::user()->UserType == "2" || Auth::user()->UserType == "3") {
             $UserId = Auth::user()->id;
-            $main_contractor_list = Customer::join('users', 'customers.UserId', '=', 'users.id')->where(['users.CreatedBy' => $UserId])->select('customers.*', 'users.*', 'customers.id as CId')->orderBy('customers.id', 'desc')->get();
+            $main_contractor_list = Customer::join('users', 'customers.UserId', '=', 'users.id')
+                ->where(['users.CreatedBy' => $UserId])
+                ->select('customers.*', 'users.*', 'customers.id as CId')
+                ->orderBy('customers.id', 'desc')
+                ->get();
         } else {
-            $main_contractor_list = Customer::where(['UserId' => Auth::user()->id])->orderBy('customers.id', 'desc')->get();
+            $main_contractor_list = Customer::where(['UserId' => Auth::user()->id])
+                ->orderBy('customers.id', 'desc')
+                ->get();
+        }
+        $timing['mainContractorList'] = round((microtime(true) - $t1) * 1000, 2);
+
+        // Use data from join query instead of separate queries
+        $company_name = $project->CompanyName ?? '';
+        $architect_name = $project->ArcCompanyName ?? '';
+        $main_contractor_name = $project->CstCompanyName ?? '';
+
+        // Total execution time
+        $totalTime = round((microtime(true) - $startTime) * 1000, 2);
+
+        // Get all executed queries
+        $queries = DB::getQueryLog();
+
+        // Log performance data
+        // Log::channel('performance')->info('getProjectDetails Performance', [
+        //     'project_id' => $id,
+        //     'user_id' => Auth::user()->id,
+        //     'timing' => $timing,
+        //     'total_time_ms' => $totalTime,
+        //     'query_count' => count($queries),
+        //     'slowest_query' => $this->getSlowestQuery($queries),
+        // ]);
+
+        // dd($main_contractor_list);
+        return view('Project.ProjectQuotationList', [
+            'data' => $data,
+            'projectId' => $projectId,
+            'quotation_limit_for_arch' => $quotation_limit_for_arch,
+            'main_contractor_list' => $main_contractor_list,
+            'architect_list' => $architect_list,
+            'company_list' => $company_list,
+            'company_name' => $company_name,
+            'architect_name' => $architect_name,
+            'main_contractor_name' => $main_contractor_name,
+            'vid' => $vid,
+            'qid' => $qid,
+            'buildingType' => $buildingType,
+            'timing' => $timing, // Pass timing data to view for optional display
+        ]);
+    }
+
+    /**
+     * Helper method to find the slowest query
+     */
+    private function getSlowestQuery($queries): string
+    {
+        if (empty($queries)) {
+            return 'No queries logged';
         }
 
+        $slowest = array_reduce($queries, function ($carry, $query) {
+            if ($carry === null) {
+                return $query;
+            }
+            return ($query['time'] > $carry['time']) ? $query : $carry;
+        }, null);
 
-        //check condition for company assigned quotation
-        //    $get_company_id = get_company_id(Auth::user()->id);
-
-        //     $assigned_project = Project::join('quotation','quotation.ProjectId','project.id')->select('QuotationGenerationId')
-        //     ->where('project.CompanyId',$get_company_id->id)
-        //     ->where('project.id',$projectId)
-        //     ->value('QuotationGenerationId');
-
-
-        $company_name = '';
-        $architect_name = '';
-        $main_contractor_name = '';
-        $project = Project::where('id',$projectId)->first();
-
-
-        $company_name = Company::where('id',$project->CompanyId)->value('CompanyName');
-
-        $architect_name = Architect::where('id',$project->ArchitectId)->value('ArcCompanyName');
-
-        $main_contractor_name = Customer::where('id',$project->MainContractorId)->value('CstCompanyName');
-        // dd($main_contractor_list);
-        return view('Project.ProjectQuotationList',['data' => $data, 'projectId' => $projectId, 'quotation_limit_for_arch' => $quotation_limit_for_arch, 'main_contractor_list' => $main_contractor_list, 'architect_list' => $architect_list, 'company_list' => $company_list, 'company_name' => $company_name, 'architect_name' => $architect_name, 'main_contractor_name' => $main_contractor_name, 'vid' => $vid, 'qid' => $qid, 'buildingType' => $buildingType]);
+        return "Query: {$slowest['query']} | Time: {$slowest['time']}ms";
     }
 
     public function invite(Request $request)
