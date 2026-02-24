@@ -6637,10 +6637,34 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorDimensional('.$value->id.','.$value->configurableitems. ",'" .$value->fire_rating. "','" .$value->code. "','" .$value->inch_height. "','" .$value->inch_width. "','" .$value->mm_height. "','" . $value->mm_width . "','" . $value->door_leaf_finish . "','".$value->door_leaf_facing."','".$value->cost_price."','".$value->image."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->leaf_type. '\')">
+
+                            <button type="button"
+                                class="btn btn-success"
+                                style="color:#fff; font-size:15px"
+                                onclick="editDoorDimensional(
+                                    '.$value->id.',
+                                    '.$value->configurableitems.',
+                                    \''.addslashes($value->fire_rating).'\',
+                                    \''.addslashes($value->code).'\',
+                                    \''.addslashes($value->inch_height).'\',
+                                    \''.addslashes($value->inch_width).'\',
+                                    \''.addslashes($value->mm_height).'\',
+                                    \''.addslashes($value->mm_width).'\',
+                                    \''.addslashes($value->door_leaf_finish).'\',
+                                    \''.addslashes($value->door_leaf_facing).'\',
+                                    \''.addslashes($value->cost_price).'\',
+                                    \''.addslashes($value->image).'\',
+                                    \''.addslashes($value->selected_cost).'\',
+                                    \''.addslashes($value->selectedId).'\',
+                                    \''.addslashes($value->leaf_type).'\'
+                                )">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onClick="dimension_delete(' . $value->id .',' . $value->configurableitems .')">
+
+                            <button type="button"
+                                class="btn btn-danger"
+                                style="color:#fff; font-size:15px"
+                                onclick="dimension_delete('.$value->id.','.$value->configurableitems.')">
                                 <i class="fa fa-trash text-white text-center"></i>
                             </button>
                         </div>';

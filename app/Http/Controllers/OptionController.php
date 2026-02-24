@@ -4525,7 +4525,11 @@ class OptionController extends Controller
         $intumenseLeafType = IntumescentSealLeafType::where('status',1)->get();
         $myAdminGroup = CompanyUsers();
         $UserId = array_merge(['1'], $myAdminGroup);
-        $leaftype = GetOptions(['leaf_type.Status' => 1], "join","leaf_type");
+         if(Auth::user()->UserType == 1){
+            $leaftype = LeafType::where('Status',1)->where('EditBy',1)->get();
+         } else{
+            $leaftype = GetOptions(['leaf_type.Status' => 1], "join","leaf_type");
+         }
         if(Auth::user()->UserType == 1){
             $leaftypemmm = DB::table('leaf_type')->where('MMM',9)->get();
             $leaftype2 = DB::table('leaf_type')->where('Seadec',5)->get();
@@ -4549,7 +4553,7 @@ class OptionController extends Controller
 
         $IntumescentSealsConfiguration = SettingIntumescentSeals2::wherein('editBy', $UserId)->groupBy('configuration')->get();
         $tbl1 = '';
-        $option_data = Option::where('configurableitems',3)->get();
+        $option_data = Option::where('configurableitems',4)->get();
         $GlassType = GlassType::where('status',1)->where('Halspan',2)->get();
         $GlazingSystem = GlazingSystem::where('status',1)->where('Halspan',2)->get();
         $screenGlassType = ScreenGlassType::all();
@@ -4690,7 +4694,12 @@ class OptionController extends Controller
     }
 
     public function filter_leaf_type(Request $request){
-        $data['leaftype'] = IntumescentSealLeafType::where('configurableitems',$request->configurableitems)->get();
+         $configurationDoor = configurationDoor($request->configurableitems);
+        if($request->configurableitems != 4 && $request->configurableitems != 5 && $request->configurableitems != 6 && $request->configurableitems != 9){
+            $data['leaftype'] = IntumescentSealLeafType::where('configurableitems',$request->configurableitems)->get();
+        } else {
+            $data['leaftype'] = LeafType::where('status',1)->where($configurationDoor,$request->configurableitems)->get();
+        }
         if($data['leaftype']){
             return response()->json($data['leaftype']);
         }
