@@ -5508,6 +5508,9 @@ $("#DoorDimensionsIcon").on("click", function () {
     if ((doorThickness == '54' && firerating == 'FD30') || (doorThickness == '54' && firerating == 'FD30s')) {
         firerating = 'FD60';
     }
+    if ((doorThickness == '54' && firerating == 'NFR') || (doorThickness == '54' && firerating == 'NFR')) {
+        firerating = 'FD60';
+    }
     if(!door_leaf_facing || !leafConstruction || !firerating){
         return false;
     }
