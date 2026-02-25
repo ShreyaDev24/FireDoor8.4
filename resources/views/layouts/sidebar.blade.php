@@ -288,7 +288,7 @@
 
                 {{-- <li class="mm-{{ (Request::segment(1) == 'colors') ? 'active' : ''}}">
                 <a href="#" aria-expanded="true">
-                    Colors
+                    Colour
                     <i class="metismenu-state-icon">
                         <i class="fa fa-caret-down"></i>
                     </i>
@@ -363,7 +363,7 @@
                 <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
                     <a href="{{ route('Intumescent-Seal-Color.index') }}">
                         <i class="metismenu-icon"></i>
-                        Intumescent Seal Color
+                        Intumescent Seal Colour
                     </a>
                 </li>
                 <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
@@ -891,7 +891,7 @@
 
                     {{-- Intumescent Seal Color --}}
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
-                        <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Color</a>
+                        <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Colour</a>
                     </li>
 
                     {{-- Leaf Type --}}
