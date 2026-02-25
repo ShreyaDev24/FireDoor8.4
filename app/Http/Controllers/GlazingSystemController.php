@@ -196,29 +196,33 @@ class GlazingSystemController extends Controller
             ->pluck('id')
             ->toArray();
 
+        if (!empty($keys)) {
 
-        SelectedGlazingSystem::where('userId', $userId)
-            ->whereNotIn('glazingId', $keys)
-            ->delete();
+            SelectedGlazingSystem::where('userId', $userId)
+                ->whereNotIn('glazingId', $keys)
+                ->delete();
 
 
-        foreach ($request->rows as $row) {
+            foreach ($request->rows as $row) {
 
-            if ($row['checked']) {
+                if ($row['checked']) {
 
-                SelectedGlazingSystem::updateOrCreate(
+                    SelectedGlazingSystem::updateOrCreate(
 
-                    [
-                        'userId' => $userId,
-                        'glazingId' => $row['id']
-                    ],
+                        [
+                            'userId' => $userId,
+                            'glazingId' => $row['id']
+                        ],
 
-                    [
-                        'selectedPrice' => $row['price'] ?? 0
-                    ]
+                        [
+                            'selectedPrice' => $row['price'] ?? 0
+                        ]
 
-                );
+                    );
+                }
             }
+        } else {
+            SelectedGlazingSystem::where('userId', $userId)->delete();
         }
 
         return response()->json(['status' => 'ok']);

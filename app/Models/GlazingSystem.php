@@ -38,4 +38,15 @@ class GlazingSystem extends Model
     {
         return $this->hasOne(SelectedGlazingSystem::class, 'glazingId');
     }
+
+    public function selectedGlazing()
+    {
+        return $this->hasOne(SelectedGlazingSystem::class, 'glazingId')
+            ->where('userId', auth()->id());
+    }
+
+    public function glassGlazingSystems()
+    {
+        return $this->hasMany(GlassGlazingSystem::class, 'glazing_system');
+    }
 }

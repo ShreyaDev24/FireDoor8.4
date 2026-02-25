@@ -7,6 +7,8 @@ use App\Models\LeafType;
 use App\Models\SelectedLeafType;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use App\Exports\LeafTypeSelectedExport;
+use Maatwebsite\Excel\Facades\Excel;
 use DB;
 
 
@@ -189,5 +191,56 @@ class LeafTypeController extends Controller
             'Stredor'         => $request->has('Stredor') ? 8 : null,
             'MMM'             => $request->has('MMM') ? 9 : null,
         ];
+    }
+
+    public function exportSelected(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $items = LeafType::leftJoin('selected_leaf_type as slt', function ($join) {
+                $join->on('leaf_type.id', '=', 'slt.leaf_id')
+                    ->where('slt.editBy', auth()->id());
+            })
+            ->whereIn('leaf_type.id', $ids)
+            ->select(
+                'leaf_type.LeafType',
+                'leaf_type.VicaimaDoorCore',
+                'leaf_type.Seadec',
+                'leaf_type.Deanta',
+                'leaf_type.MMM',
+                'slt.selectedPrice'
+            )
+            ->orderBy('leaf_type.LeafType')
+            ->get();
+
+        $filename = 'leaf_types_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Leaf Type', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'Price Per m²']);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->LeafType,
+                    $item->VicaimaDoorCore ? 'Yes' : 'No',
+                    $item->Seadec ? 'Yes' : 'No',
+                    $item->Deanta ? 'Yes' : 'No',
+                    $item->MMM ? 'Yes' : 'No',
+                    number_format($item->selectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
     }
 }

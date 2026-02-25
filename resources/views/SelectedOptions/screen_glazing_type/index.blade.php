@@ -1,6 +1,19 @@
 @extends("layouts.Master")
 
 @section("main_section")
+<style>
+    .action-icon {
+        font-size: 14px;
+        cursor: pointer;
+        transition: 0.2s ease;
+    }
+
+    .action-icon:hover {
+        transform: scale(1.15);
+        opacity: 0.8;
+    }
+
+</style>
 <div class="app-main__outer">
     @if ($errors->any())
     <div class="alert alert-danger alert-dismissible float-right">
@@ -31,25 +44,21 @@
     <div class="app-main__inner">
 
         <div class="d-flex justify-content-between mb-3">
-            <h4>Leaf Type</h4>
-            <a href="{{ route('leaf-type.create') }}" class="btn btn-primary">
+            <h4>Screen Glazing Type</h4>
+            <a href="{{ route('Screen-Glazing-Type.create') }}" class="btn btn-primary">
                 + Add New
             </a>
         </div>
         @if($auth->id != 1)
-        <div class="mb-3 d-flex gap-2">
-            <button id="updateSelected" class="btn btn-success  mr-2">
+        <div class="mb-3">
+            <button id="updateSelected" class="btn btn-success">
                 <i class="fa fa-save"></i> Update Selected
-            </button>
-
-            <button id="exportSelected" class="btn btn-info">
-                <i class="fa fa-download"></i> Export Selected
             </button>
         </div>
         @endif
 
 
-        <table class="table table-bordered table-hover"  id="leafTypeTable">
+        <table class="table table-bordered table-hover" style="table-layout:auto;" id="screen_Glazing_typeTable">
             <thead>
                 <tr>
                     @if($auth->id != 1)
@@ -57,14 +66,17 @@
                         <input type="checkbox" id="checkAll">
                     </th>
                     @endif
-                    <th>Vicaima</th>
-                    <th>Seadec</th>
-                    <th>Deanta</th>
-                    <th>MMM</th>
-                    <th>Leaf Type</th>
+                    <th>Fire Rating</th>
+                    <th>Screen Glass</th>
+                    <th>Glazing System</th>
+                    <th>Glazing Thickness</th>
+                    <th>Beading</th>
+                    <th>Beading Height</th>
+                    <th>Beading Width</th>
+                    <th>Fixing Details</th>
                     <th>Action</th>
                     @if($auth->id != 1)
-                    <th>Price Per m²</th>
+                    <th style="min-width: 80px;">Price Per L/M</th>
                     @endif
                 </tr>
             </thead>
@@ -80,40 +92,58 @@
                     </td>
                     @endif
 
-                    <td class="text-center">{!! yesNoIcon($item->VicaimaDoorCore) !!}</td>
-                    <td class="text-center">{!! yesNoIcon($item->Seadec) !!}</td>
-                    <td class="text-center">{!! yesNoIcon($item->Deanta) !!}</td>
-                    <td class="text-center">{!! yesNoIcon($item->MMM) !!}</td>
-
-                    <td><b>{{ $item->LeafType }}</b></td>
+                    <td class="text-center">{{ $item->FireRating }}</td>
+                    <td class="text-center">{{ $item->glassType?->GlassType ?? '-' }}</td>
+                    <td>{{ $item->GlazingSystem }}</td>
+                    <td>{{ $item->GlazingThickness }}</td>
+                    <td>{{ $item->Beading }}</td>
+                    <td>{{ $item->BeadingHeight }}</td>
+                    <td>{{ $item->BeadingWidth }}</td>
+                    <td>{{ $item->FixingDetails }}</td>
 
                     @if($item->EditBy != 1 || Auth::user()->UserType == 1)
 
-                    <td>
-                        <a href="{{ route('leaf-type.edit',$item->id) }}" class="btn btn-sm btn-success">
-                            <i class="fa fa-edit"></i>
-                        </a>
+                    <td class="text-center">
+                        <div class="d-flex justify-content-center align-items-center gap-2">
 
-                        <form action="{{ route('leaf-type.destroy',$item->id) }}" method="POST" class="d-inline">
-                            @csrf @method('DELETE')
-                            <button class="btn btn-sm btn-danger">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
+                            {{-- Edit --}}
+                            <a href="{{ route('Screen-Glazing-Type.edit', $item->id) }}"
+                            class="action-icon text-success"
+                            title="Edit">
+                                <i class="fa fa-edit"></i>
+                            </a>
+
+                            {{-- Delete --}}
+                            <form action="{{ route('Screen-Glazing-Type.destroy', $item->id) }}"
+                                method="POST"
+                                onsubmit="return confirm('Are you sure?')"
+                                class="m-0 p-0">
+                                @csrf
+                                @method('DELETE')
+
+                                <button type="submit"
+                                        class="action-icon text-danger border-0 bg-transparent"
+                                        title="Delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+
+                        </div>
                     </td>
+
                     @else
                     <td></td>
                     @endif
 
-                    @if($auth->id != 1 && $item->selectedPrice !== null)
-                    <td>
+                    @if($auth->id != 1 && $item->glazingSelectedPrice !== null)
+                    <td style="min-width: 80px;">
                         <input type="number"
                             step="0.01"
                             class="form-control priceInput"
-                            value="{{ number_format($item->selectedPrice, 2, '.', '') }}"
+                            value="{{ number_format($item->glazingSelectedPrice, 2, '.', '') }}"
                             data-option-id="{{ $item->id }}"
                             data-selected-id="{{ $item->selectedId }}"
-                            data-option-type="leaf_type"
+                            data-option-type="SideScreen_Glazing_System"
                             onkeyup="chooseOptionCost(this)">
                     </td>
                     @elseif($auth->id != 1)
@@ -133,7 +163,7 @@
 <script>
 $(document).ready(function () {
 
-    let table = $('#leafTypeTable').DataTable({
+    let table = $('#screen_Glazing_typeTable').DataTable({
         pageLength: 10,
         lengthMenu: [10, 25, 50, 100],
         ordering: true,
@@ -179,7 +209,7 @@ $(document).ready(function () {
             return;
         }
 
-        fetch("{{ route('leaf-type.updateSelected') }}", {
+        fetch("{{ route('Screen-Glazing-Type.updateSelected') }}", {
             method: "POST",
             headers: {
                 'X-CSRF-TOKEN': '{{ csrf_token() }}',
@@ -231,48 +261,8 @@ function chooseOptionCost(input) {
         }
     });
 }
-
-$('#exportSelected').on('click', function () {
-
-    let ids = [];
-    let table = $('#leafTypeTable').DataTable();
-
-    table.rows().every(function () {
-        let row = $(this.node());
-        let checkbox = row.find('.rowCheck');
-
-        if (checkbox.length && checkbox.prop('checked')) {
-            ids.push(checkbox.val());
-        }
-    });
-
-    if (!ids.length) {
-        alert('Please select at least one record to export.');
-        return;
-    }
-
-    // Create a hidden form and submit (browser will download CSV)
-    let form = document.createElement('form');
-    form.method = 'POST';
-    form.action = "{{ route('leaf-type.exportSelected') }}";
-
-    let token = document.createElement('input');
-    token.type = 'hidden';
-    token.name = '_token';
-    token.value = "{{ csrf_token() }}";
-    form.appendChild(token);
-
-    let idsInput = document.createElement('input');
-    idsInput.type = 'hidden';
-    idsInput.name = 'ids';
-    idsInput.value = JSON.stringify(ids);
-    form.appendChild(idsInput);
-
-    document.body.appendChild(form);
-    form.submit();
-    form.remove();
-});
 </script>
+
 
 @endsection
 

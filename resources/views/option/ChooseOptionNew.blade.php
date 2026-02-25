@@ -2652,11 +2652,11 @@ function doorLeafFacingOption(option = '') {
             table = $(this).DataTable({
                 deferRender: true,
                 processing: true,
-                searching: false,
-                info: false,
+                searching: true,   // ✅ show search box
+                info: true,        // ✅ show data count ("Showing 1 to 50 of 1002 entries")
                 lengthChange: true,
                 paging: true,
-                pageLength: 50,
+                pageLength: 10,
                 responsive: true,
                 order: [],
                 columnDefs: [{
