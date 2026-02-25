@@ -4365,6 +4365,7 @@ class DoorScheduleController extends Controller
             } else {
                 $UserIds = CompanyMultiUsers();
                 $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
+                $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname','ASC')->get();
             }
             $IronmongeryInfoSet = [
                 'Hinges',
