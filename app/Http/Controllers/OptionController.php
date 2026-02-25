@@ -4683,11 +4683,39 @@ class OptionController extends Controller
         return response()->json($glazingBeads);
     }
 
-    public function glassconfigvalue(Request $request){
+    public function glassconfigvalue(Request $request)
+    {
+        $auth = auth()->user();
         $configurationDoor = configurationDoor($request->confi);
-        $data['GlassType'] = GlassType::where('status',1)->where($configurationDoor,$request->confi)->get();
-        $data['GlazingSystem'] = GlazingSystem::where('status',1)->where($configurationDoor,$request->confi)->get();
-        return response()->json($data);
+
+        $fireRatings = $request->firerating; // array: ['NFR','FD30']
+
+        $glassTypeQuery = GlassType::where('status', 1)
+            ->where($configurationDoor, $request->confi)
+            ->whereIn('EditBy', [$auth->id, 1]);
+
+        $glazingSystemQuery = GlazingSystem::where('status', 1)
+            ->where($configurationDoor, $request->confi)
+            ->whereIn('editBy', [$auth->id, 1]);
+
+        if (!empty($fireRatings)) {
+            $glassTypeQuery->where(function ($q) use ($fireRatings) {
+                foreach ($fireRatings as $fire) {
+                    $q->orWhere($fire, $fire); // column = 'NFR' AND value = 'NFR'
+                }
+            });
+
+            $glazingSystemQuery->where(function ($q) use ($fireRatings) {
+                foreach ($fireRatings as $fire) {
+                    $q->orWhere($fire, $fire);
+                }
+            });
+        }
+
+        return response()->json([
+            'GlassType' => $glassTypeQuery->get(),
+            'GlazingSystem' => $glazingSystemQuery->get(),
+        ]);
     }
 
     public function filter_leaf_type(Request $request){

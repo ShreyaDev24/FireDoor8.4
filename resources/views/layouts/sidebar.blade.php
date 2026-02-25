@@ -797,226 +797,147 @@
 
             <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
                 <a href="#">
-                    <i class="metismenu-icon">
-                        <i class="fa fa-check"></i>
-                    </i>
+                    <i class="metismenu-icon"><i class="fa fa-check"></i></i>
                     Selected Option
-                    <i class="metismenu-state-icon">
-                        <i class="fa fa-caret-down"></i>
-                    </i>
+                    <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
                 </a>
+
                 <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
-                        <a href="{{ route('leaf-type.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Leaf Type
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
-                        <a href="{{ route('Glass-type.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Glass Type
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
-                        <a href="{{ route('Glazing-System.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Glazing System
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
-                        <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Intumescent Seal Arrangement
-                        </a>
-                    </li>
 
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
-                        <a href="{{ route('door-leaf-facing.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Door Leaf Facing Value
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'filter' && Request::segment(3) == 'leaf1_glazing_systems') ? 'active' : ''}}">
-                        <a href="{{route('options/filter',['leaf1_glazing_systems','Halspan'])}}">
-                            <i class="metismenu-icon"></i>
-                            Glass Glazing System
-                        </a>
-                    </li>
-
+                    {{-- Accoustics --}}
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
-                        <a href="{{ route('accoustics.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Accoustics
-                        </a>
+                        <a href="{{ route('accoustics.index') }}">Accoustics</a>
                     </li>
 
+                    {{-- Architrave Type --}}
                     <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Architrave-Type') ? 'active' : '' }}">
-                        <a href="{{ route('Architrave-Type.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Architrave Type
-                        </a>
+                        <a href="{{ route('Architrave-Type.index') }}">Architrave Type</a>
                     </li>
 
-                    <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
+                    {{-- Colour List --}}
+                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-check"></i>
-                            </i>
-                            Door Leaf Finish
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
+                            Colour List
+                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
                         </a>
                         <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['Door_Leaf_Facing'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Door Leaf Facing
-                                </a>
+                            <li>
+                                <a href="{{route('options/selected1',['color_list','Kraft_Paper'])}}">Kraft Paper</a>
                             </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['door_leaf_finish'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Door Leaf Finish
-                                </a>
+                            <li>
+                                <a href="{{route('options/selected1',['color_list','Laminate'])}}">Laminate</a>
                             </li>
-
-                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Architrave_Finish') ? 'active' : ''}}">
-                                <a href="{{route('options/selected',['Architrave_Finish'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Finish Cost
-                                </a>
+                            <li>
+                                <a href="{{route('options/selected1',['color_list','PVC'])}}">PVC</a>
                             </li>
                         </ul>
                     </li>
 
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
-                        <a href="{{ route('Intumescent-Seal-Color.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Intumescent Seal Color
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'select' && Request::segment(4) == 'lippingSpecies') ? 'active' : ''}}">
-                        <a href="{{route('options/select',[1,'lippingSpecies'])}}">
-                            <i class="metismenu-icon"></i>
-                            Timber Species
-                        </a>
-                    </li>
+                    {{-- Door Dimension --}}
                     <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_dimension') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['door_dimension'])}}">
-                            <i class="metismenu-icon"></i>
-                            Door Dimension
-                        </a>
+                        <a href="{{route('options/selected',['door_dimension'])}}">Door Dimension</a>
                     </li>
 
+                    {{-- Door Dimension Custom --}}
                     <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_dimension_custome') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['door_dimension_custome'])}}">
-                            <i class="metismenu-icon"></i>
-                            Door Dimension Custom
-                        </a>
+                        <a href="{{route('options/selected',['door_dimension_custome'])}}">Door Dimension Custom</a>
                     </li>
 
-                    <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list')) ? 'active' : ''}}">
+                    {{-- Door Leaf Facing Value --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
+                        <a href="{{ route('door-leaf-facing.index') }}">Door Leaf Facing Value</a>
+                    </li>
+
+                    {{-- Door Leaf Finish --}}
+                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'selected') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="metismenu-icon">
-                                <i class="fa fa-check"></i>
-                            </i>
-                            Colour List
-                            <i class="metismenu-state-icon">
-                                <i class="fa fa-caret-down"></i>
-                            </i>
+                            Door Leaf Finish
+                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
                         </a>
                         <ul>
-                            <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                                <a href="{{route('options/selected1',['color_list','Kraft_Paper'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Kraft Paper
-                                </a>
+                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Architrave_Finish') ? 'active' : ''}}">
+                                <a href="{{route('options/selected',['Architrave_Finish'])}}">Finish Cost</a>
                             </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                                <a href="{{route('options/selected1',['color_list','Laminate'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    Laminate
-                                </a>
+
+                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
+                                <a href="{{route('options/selected',['Door_Leaf_Facing'])}}">Door Leaf Facing</a>
                             </li>
-                            <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                                <a href="{{route('options/selected1',['color_list','PVC'])}}">
-                                    <i class="metismenu-icon"></i>
-                                    PVC
-                                </a>
+
+                            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
+                                <a href="{{route('options/selected',['door_leaf_finish'])}}">Door Leaf Finish</a>
                             </li>
-                            {{-- <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                            <a href="{{route('options/selected1',['color_list','Veneer'])}}">
-                                <i class="metismenu-icon"></i>
-                                Veneer
-                            </a>
+                        </ul>
                     </li>
-                    <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                        <a href="{{route('options/selected1',['color_list','Painted'])}}">
-                            <i class="metismenu-icon"></i>
-                            Painted
+
+                    {{-- Glass Type --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
+                        <a href="{{ route('Glass-type.index') }}">Glass Type</a>
+                    </li>
+
+                    {{-- Glazing System --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
+                        <a href="{{ route('Glazing-System.index') }}">Glazing System</a>
+                    </li>
+
+                    {{-- Glass Glazing System --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-Glazing-System') ? 'active' : '' }}">
+                        <a href="{{ route('Glass-Glazing-System.index') }}">Glass Glazing System</a>
+                    </li>
+
+                    {{-- Intumescent Seal Arrangement --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
+                        <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">Intumescent Seal Arrangement</a>
+                    </li>
+
+                    {{-- Intumescent Seal Color --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
+                        <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Color</a>
+                    </li>
+
+                    {{-- Leaf Type --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
+                        <a href="{{ route('leaf-type.index') }}">Leaf Type</a>
+                    </li>
+
+                    {{-- Side Screen --}}
+                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'selected') ? 'active' : ''}}">
+                        <a href="#">
+                            Side Screen
+                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
                         </a>
-                    </li> --}}
+                        <ul>
+                            <li>
+                                <a href="{{ route('Screen-Glass-Type.index') }}">Glass Type</a>
+                            </li>
+                            <li>
+                                <a href="{{ route('Screen-Glazing-Type.index') }}">Glazing System</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Side Light / Fanlight --}}
+                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'selected') ? 'active' : ''}}">
+                        <a href="#">
+                            Side Light / Fanlight
+                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
+                        </a>
+                        <ul>
+                            <li>
+                                <a href="{{route('options/selected',['Overpanel_Glass_Type'])}}">Glass Type</a>
+                            </li>
+                            <li>
+                                <a href="{{route('options/selected',['Overpanel_Glazing_System'])}}">Glazing System</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    {{-- Timber Species --}}
+                    <li class="submm-{{ (Request::segment(2) == 'select' && Request::segment(4) == 'lippingSpecies') ? 'active' : ''}}">
+                        <a href="{{route('options/select',[1,'lippingSpecies'])}}">Timber Species</a>
+                    </li>
+
                 </ul>
             </li>
-
-            <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                <a href="#">
-                    <i class="metismenu-icon">
-                        <i class="fa fa-check"></i>
-                    </i>
-                    Side Screen
-                    <i class="metismenu-state-icon">
-                        <i class="fa fa-caret-down"></i>
-                    </i>
-                </a>
-                <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glass-Type') ? 'active' : '' }}">
-                        <a href="{{ route('Screen-Glass-Type.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Glass Type
-                        </a>
-                    </li>
-
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Screen-Glazing-Type') ? 'active' : '' }}">
-                        <a href="{{ route('Screen-Glazing-Type.index') }}">
-                            <i class="metismenu-icon"></i>
-                            Glazing System
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
-                <a href="#">
-                    <i class="metismenu-icon">
-                        <i class="fa fa-check"></i>
-                    </i>
-                    Side Light / Fanlight
-                    <i class="metismenu-state-icon">
-                        <i class="fa fa-caret-down"></i>
-                    </i>
-                </a>
-                <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'Door_Leaf_Facing') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['Overpanel_Glass_Type'])}}">
-                            <i class="metismenu-icon"></i>
-                            Glass Type
-                        </a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_leaf_finish') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['Overpanel_Glazing_System'])}}">
-                            <i class="metismenu-icon"></i>
-                            Glazing System
-                        </a>
-                    </li>
-                </ul>
-            </li>
-
-            </ul>
-            </li>
-
 
             <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">
                 <a href="#">

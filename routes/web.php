@@ -11,6 +11,7 @@ use App\Http\Controllers\ArchitraveTypeController;
 use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
 use App\Http\Controllers\GlazingSystemController;
+use App\Http\Controllers\GlassGlazingController;
 use App\Http\Controllers\ScreenGlassTypeController;
 use App\Http\Controllers\ScreenGlazingTypeController;
 use App\Http\Controllers\IntumescentSealArrangementController;
@@ -85,11 +86,14 @@ Route::middleware(['auth', 'user.type'])->group(function () {
         [DoorLeafFacingController::class, 'updateSelected']
     )->name('door-leaf-facing.updateSelected')->middleware('auth');
 
+    Route::post('options/leaf-type/export-selected', [LeafTypeController::class, 'exportSelected'])
+    ->name('leaf-type.exportSelected');
     Route::resource('options/leaf-type', LeafTypeController::class);
     Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
 
+
     Route::resource('options/accoustics', AccousticController::class);
-    Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
+    Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('accoustics.updateSelected');
 
     Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
     Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
@@ -102,6 +106,8 @@ Route::middleware(['auth', 'user.type'])->group(function () {
 
     Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
     Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
+
+    Route::resource('options/Glass-Glazing-System', GlassGlazingController::class);
 
     Route::resource('options/Glass-type', GlassTypeController::class);
     Route::post('options/Glass-type/update-selected', [GlassTypeController::class, 'updateSelected'])->name('Glass-type.updateSelected');

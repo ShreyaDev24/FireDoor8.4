@@ -35,4 +35,9 @@ class GlassType extends Model
     {
         return $this->hasOne(SelectedGlassType::class, 'glass_id');
     }
+
+    public function glassGlazingSystems()
+    {
+        return $this->hasMany(GlassGlazingSystem::class, 'glass_id');
+    }
 }

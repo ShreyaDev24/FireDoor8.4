@@ -18,4 +18,9 @@ class SelectedGlazingSystem extends Model
     {
         return $this->belongsTo(GlazingSystem::class, 'glazingId');
     }
+
+    public function glazingSystem()
+    {
+        return $this->belongsTo(GlazingSystem::class, 'glazingId');
+    }
 }
