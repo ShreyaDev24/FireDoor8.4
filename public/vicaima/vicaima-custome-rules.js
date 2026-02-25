@@ -5524,7 +5524,7 @@ $("#DoorDimensionsIcon").on("click", function () {
             let displayCode = row.code
                     ? `${row.code}`
                     : `${leaf_type} ${door_leaf_facing} ${firerating}`;
-            return  `<div class="col-md-2 col-sm-4 col-6 cursor-pointer" data-dismiss="modal" onclick="DoorDimensionValueFill(${row.id},'${displayCode}',${row.mm_width},${row.mm_height})"><div class="color_box"><div class="frameMaterialImage"><img width="100%" height="100" src="${base_url}/DoorDimension/${row.image ? row.image : "vicaima_default_doorDimantion.jpg"}"></div><h4>${displayCode}-${row.mm_width}x${row.mm_height}</h4></div></div>`
+            return  `<div class="col-md-2 col-sm-4 col-6 cursor-pointer" data-dismiss="modal" onclick="updateDoorThickness(${row.id},'${row.fire_rating}','${row.code}'); DoorDimensionValueFill(${row.id},'${displayCode}',${row.mm_width},${row.mm_height})"><div class="color_box"><div class="frameMaterialImage"><img width="100%" height="100" src="${base_url}/DoorDimension/${row.image ? row.image : "vicaima_default_doorDimantion.jpg"}"></div><h4>${displayCode}-${row.mm_width}x${row.mm_height}</h4></div></div>`
            });
             $("#DoorDimensionBody").empty().append(result)
 
@@ -5544,6 +5544,31 @@ $("#DoorDimensionsIcon").on("click", function () {
 
 
 })
+
+function updateDoorThickness(id, fire_rating, code) {
+    var firerating = $("#fireRating").val();
+    if (firerating == 'NFR') {
+        if (fire_rating == 'FD30') {
+            // For FD30, disable the entire dropdown and set thickness to 44mm
+            $("#door_thickness_div").empty().append(
+                "<select name='doorThickness' id='doorThickness' class='form-control' disabled>" +
+                "<option value='35'>35</option>" +
+                "<option value='44' selected>44</option>" +  // 44 is selected but dropdown is disabled
+                "<option value='54'>54</option>" +
+                "</select>"
+            );
+        } else {
+            // For other fire ratings, allow selection, default to 54mm
+            $("#door_thickness_div").empty().append(
+                "<select name='doorThickness' id='doorThickness' class='form-control' disabled>" +
+                "<option value='35'>35</option>" +
+                "<option value='44'>44</option>" +  // 44 is selected but dropdown is disabled
+                "<option value='54' selected>54</option>" +
+                "</select>"
+            );
+        }
+    }
+}
 
 $("#DoorDimensionsIcon2").on("click", function () {
     var url = $("#door_dimension_url_leaf").val();
