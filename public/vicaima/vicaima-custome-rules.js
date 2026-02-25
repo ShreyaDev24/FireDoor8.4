@@ -4319,7 +4319,7 @@ function LeafCoreCalculation() {
         let leafWidth1 = $('#leafWidth1').val();
         let leafWidth2 = soWidth - (tolleranceValue_B * TolleranceAdditionalNumber) - (gapValue_B * GapAdditionalNumber) - (frameThicknessValue_B * FrameThicknessAdditionalNumber) - parseInt(leafWidth1);
         // $('#leafWidth2').val(leafWidth2).attr('readonly',true);
-    } 
+    }
 }
 
 // Architrave Material needs to work exactly the same as ‘Frame Material’ so the exact same options needs to be here.
@@ -5511,6 +5511,9 @@ $("#DoorDimensionsIcon").on("click", function () {
     if ((doorThickness == '54' && firerating == 'NFR') || (doorThickness == '54' && firerating == 'NFR')) {
         firerating = 'FD60';
     }
+    if ((doorThickness == '44' && firerating == 'NFR') || (doorThickness == '44' && firerating == 'NFR')) {
+        firerating = 'FD30';
+    }
     if(!door_leaf_facing || !leafConstruction || !firerating){
         return false;
     }
@@ -5551,7 +5554,7 @@ function updateDoorThickness(id, fire_rating, code) {
         if (fire_rating == 'FD30') {
             // For FD30, disable the entire dropdown and set thickness to 44mm
             $("#door_thickness_div").empty().append(
-                "<select name='doorThickness' id='doorThickness' class='form-control' disabled>" +
+                "<select name='doorThickness' id='doorThickness' class='form-control'>" +
                 "<option value='35'>35</option>" +
                 "<option value='44' selected>44</option>" +  // 44 is selected but dropdown is disabled
                 "<option value='54'>54</option>" +
@@ -5560,7 +5563,7 @@ function updateDoorThickness(id, fire_rating, code) {
         } else {
             // For other fire ratings, allow selection, default to 54mm
             $("#door_thickness_div").empty().append(
-                "<select name='doorThickness' id='doorThickness' class='form-control' disabled>" +
+                "<select name='doorThickness' id='doorThickness' class='form-control'>" +
                 "<option value='35'>35</option>" +
                 "<option value='44'>44</option>" +  // 44 is selected but dropdown is disabled
                 "<option value='54' selected>54</option>" +
