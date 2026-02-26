@@ -113,6 +113,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightFD60 : (($value->Leaf1VPHeight5)?$value->Leaf1VPHeight5:$value->Leaf2VPHeight5) + $VisionPanelHeightNFR):'',
 
                     ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ? (($value->Leaf1VPHeight5)?1:0) + (($value->Leaf2VPHeight5)?1:0) : '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
 
 
@@ -157,6 +158,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
 
@@ -200,6 +202,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
 
@@ -244,6 +247,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
         }
@@ -357,6 +361,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'QTY',
                 'VP5 H',
                 'QTY',
+                'rW dB Rating'
             ];
         }
 
@@ -373,8 +378,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // --------------------------------------------
             // 🔹 1. GLASS ORDER SHEET HEADER STYLING
             // --------------------------------------------
-            $titleRange = 'A1:Q1';
-            $headerRange = 'A2:Q2';
+            $titleRange = 'A1:R1';
+            $headerRange = 'A2:R2';
 
             // Merge "Glass Order Sheet" title
             $event->sheet->mergeCells($titleRange);
@@ -419,8 +424,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 ],
             ]);
 
-            // Auto-size all columns A–Q
-            foreach (range('A', 'Q') as $col) {
+            // Auto-size all columns A–R
+            foreach (range('A', 'R') as $col) {
                 $event->sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
@@ -439,7 +444,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
             if ($summaryRow) {
                 // Summary title row styling (yellow bar)
-                $summaryTitle = "A{$summaryRow}:Q{$summaryRow}";
+                $summaryTitle = "A{$summaryRow}:R{$summaryRow}";
                 $event->sheet->mergeCells($summaryTitle);
                 $event->sheet->getDelegate()->getStyle($summaryTitle)->applyFromArray([
                     'font' => [
@@ -464,7 +469,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 // Summary header row ("Glass Type", etc.)
                 $summaryHeader = $summaryRow + 1;
-                $summaryHeaderRange = "A{$summaryHeader}:Q{$summaryHeader}";
+                $summaryHeaderRange = "A{$summaryHeader}:R{$summaryHeader}";
                 $event->sheet->getDelegate()->getStyle($summaryHeaderRange)->applyFromArray([
                     'font' => [
                         'bold' => true,

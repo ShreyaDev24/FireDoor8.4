@@ -172,6 +172,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->LippingType),
                     $value->IntumescentLeapingSealType,
+                    $value->rWdBRating ? $value->rWdBRating : '',
                     ''
                 );
 
@@ -281,7 +282,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'PRODUCT CODE LEAF 1 ',
                 'PRODUCT CODE LEAF 2',
                 'Ironmongery Ref',
-            'Cut Size H',
+                'Cut Size H',
                 'Cut Size W',
                 'Cut Size W2',
                 'Lipping Thickness',
@@ -290,6 +291,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'Lipping Mat',
                 'Exposed or Concealed',
                 'Intumescent Seal Type',
+                'rW dB Rating',
                 'Notes'
             ];
         }
@@ -308,8 +310,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 // 🔹 Existing header styling
                 // ----------------------------
                 if($this->section != 'Summary'){
-                    $cellRange1 = 'A1:U1'; // main merged header
-                    $cellRange2 = 'A2:U2'; // column headings row
+                    $cellRange1 = 'A1:V1'; // main merged header
+                    $cellRange2 = 'A2:V2'; // column headings row
                 }else{
                     $cellRange1 = 'A1:G1'; // main merged header
                     $cellRange2 = 'A2:G2'; // column headings row
@@ -335,8 +337,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $event->sheet->getStyle($cellRange2)->applyFromArray($styleArray);
                 $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
 
-                // Auto size all columns A–T
-                foreach (range('A', 'T') as $col) {
+                // Auto size all columns A–V
+                foreach (range('A', 'V') as $col) {
                     $event->sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 

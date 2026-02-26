@@ -61,7 +61,10 @@
                 <p><strong>Door Leaf Size:</strong> {{ $label['LeafWidth'] }} x {{ $label['LeafHeight'] }}</p>
                 <p><strong>Door Type:</strong> {{ $label['DoorType'] }}</p>
             </div>
-            <p><strong>Ironmongery Pk Ref:</strong> {{ $label['Ironmongery'] }}</p>
+            <div class="row">
+                <p><strong>Ironmongery Pk Ref:</strong> {{ $label['Ironmongery'] }}</p>
+                <p><strong>rW dB Rating:</strong> {{ $label['rWdBRating'] }}</p>
+            </div>
         </div>
     @endforeach
 </body>

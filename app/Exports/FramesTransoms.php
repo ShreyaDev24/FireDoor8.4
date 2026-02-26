@@ -99,6 +99,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Undercut',
             'Transom',
             'Mullion',
+            'rW dB Rating',
             'Notes'
         ];
 
@@ -218,6 +219,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->Undercut,
                 '', // Empty column
                 '', // Empty column
+                $value->rWdBRating ? $value->rWdBRating : '',
                 '', // Empty column
             ];
 
@@ -304,6 +306,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     '',
                     '', // Empty column
                     '', // Empty column
+                    $value->rWdBRating ? $value->rWdBRating : '',
                     '', // Empty column
                 ];
             }
@@ -377,6 +380,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     '',
                     '', // Empty column
                     '', // Empty column
+                    $value->rWdBRating ? $value->rWdBRating : '',
                     '', // Empty column
                 ];
             }
@@ -450,6 +454,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     '',
                     '', // Empty column
                     '', // Empty column
+                    $value->rWdBRating ? $value->rWdBRating : '',
                     '', // Empty column
                 ];
             }
@@ -639,7 +644,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 // Auto-size all columns A to AC
                 // ----------------------------------------------------------
                 $col = 'A';
-                while ($col !== 'AD') { // Adjust as per your last column
+                while ($col !== 'AE') { // Adjust as per your last column
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
@@ -711,8 +716,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
-                        $sheet->mergeCells("A{$i}:AD{$i}");
-                        $sheet->getStyle("A{$i}:AD{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AE{$i}");
+                        $sheet->getStyle("A{$i}:AE{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // ✅ Green title for "SCREEN INFO"
@@ -723,7 +728,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
-                        $sheet->getStyle("A{$i}:AD{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AE{$i}")->applyFromArray($headerRowStyle);
                     }
 
                     // ✅ Red underline for Screen Info section header
