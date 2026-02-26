@@ -203,7 +203,7 @@
             @php
             // Format Transportation Cost outside the conditional block
             if (!empty($transportationCost) && is_numeric($transportationCost)) {
-                $transportationCostFormatted = $currency . round((float) $transportationCost, 2);
+                $transportationCostFormatted = $currency . number_format((float) $transportationCost, 2);
             } else {
                 $transportationCostFormatted = $currency . '0.00';
             }

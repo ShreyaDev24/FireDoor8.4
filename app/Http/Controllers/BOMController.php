@@ -1447,6 +1447,7 @@ class BOMController extends Controller
 
                 if (!isset($grouped[$key])) {
                     $grouped[$key] = [
+                        'firerating' => $fireRatingVal,
                         'qty' => 0,
                         'LeafThickness' => $p['LeafThickness'],
                         'configurableitems' => $configurableitems,
@@ -1498,6 +1499,14 @@ class BOMController extends Controller
                     ];
                 }
 
+                if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
+                    $fireRatingVal = 'FD30';
+                } elseif ($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') {
+                    $fireRatingVal = 'FD60';
+                } else{
+                    $fireRatingVal = 'NFR';
+                }
+
                 foreach ($productCodes as $p) {
                     $pcode = $p['code'];
                     $cutSizeW = $p['cutSizeW'];
@@ -1506,6 +1515,7 @@ class BOMController extends Controller
 
                     if (!isset($grouped[$key])) {
                         $grouped[$key] = [
+                            'firerating' => $fireRatingVal,
                             'qty' => 0,
                             'LeafThickness' => $value->LeafThickness,
                             'configurableitems' => $configurableitems,
@@ -1526,6 +1536,7 @@ class BOMController extends Controller
         $data = [];
         foreach ($grouped as $row) {
             $data[] = '<tr>'
+                . '<td>' . $row['firerating'] . '</td>'
                 . '<td>' . $row['qty'] . '</td>'
                 . '<td>' . $row['LeafThickness'] . '</td>'
                 . '<td>' . $row['configurableitems'] . '</td>'

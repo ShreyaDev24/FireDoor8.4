@@ -89,6 +89,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->Leaf1VPHeight4 ? 4 : '',
                     $value->Leaf1VPHeight5 ?(($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->Leaf1VPHeight5 + $VisionPanelHeightFD60 : $value->Leaf1VPHeight5 + $VisionPanelHeightNFR) : '',
                     $value->Leaf1VPHeight5 ? 4 : '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
 
 
@@ -129,6 +130,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
 
@@ -169,6 +171,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
 
@@ -206,6 +209,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     '',
                     '',
                     '',
+                    $value->rWdBRating ? $value->rWdBRating : '',
                 );
             }
         }
@@ -332,7 +336,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
             'Glazing Bead Height', 'Glazing Bead Depth',
             'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
-            'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
+            'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY','rW dB Rating'
             ];
         }
 
@@ -351,7 +355,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 // ===== MAIN HEADER =====
                 if($this->section != 'Summary'){
-                    $titleRange = 'A1:U1';
+                    $titleRange = 'A1:V1';
                 }else{
                     $titleRange = 'A1:G1';
                 }
@@ -393,7 +397,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 $sheet->getStyle($titleRange)->applyFromArray($titleStyle);
                 if($this->section != 'Summary'){
-                    $sheet->getStyle('A2:U2')->applyFromArray($headerStyle);
+                    $sheet->getStyle('A2:V2')->applyFromArray($headerStyle);
                 }else{
                     $sheet->getStyle('A2:G2')->applyFromArray($headerStyle);
                 }

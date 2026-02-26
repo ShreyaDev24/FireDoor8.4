@@ -4506,6 +4506,12 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
+        $door_core1 = is_numeric($door_core1) ? (float)$door_core1 : 0;
+        $door_core2 = is_numeric($door_core2) ? (float)$door_core2 : 0;
+        $lm = is_numeric($lm) ? (float)$lm : 0;
+        $thickness_cost = is_numeric($thickness_cost) ? (float)$thickness_cost : 0;
+        $doorLeafFacingCost = is_numeric($doorLeafFacingCost) ? (float)$doorLeafFacingCost : 0;
+        $door_cost = is_numeric($door_cost) ? (float)$door_cost : 0;
         $unit_cost = ($door_core1) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
@@ -6805,10 +6811,34 @@ function door_dimension($authdata,string $optionType,$UserId): string{
                     if (($value->editBy != 1 || Auth::user()->UserType == 1)) {
                         $action = '
                         <div style="width:100px;">
-                            <button type="button" class="btn btn-success" style="color: #fff; font-size:15px" onclick="editDoorDimensional('.$value->id.','.$value->configurableitems. ",'" .$value->fire_rating. "','" .$value->code. "','" .$value->inch_height. "','" .$value->inch_width. "','" .$value->mm_height. "','" . $value->mm_width . "','" . $value->door_leaf_finish . "','".$value->door_leaf_facing."','".$value->cost_price."','".$value->image."','".$value->selected_cost. "','" .$value->selectedId. "','" .$value->leaf_type. '\')">
+
+                            <button type="button"
+                                class="btn btn-success"
+                                style="color:#fff; font-size:15px"
+                                onclick="editDoorDimensional(
+                                    '.$value->id.',
+                                    '.$value->configurableitems.',
+                                    \''.addslashes($value->fire_rating).'\',
+                                    \''.addslashes($value->code).'\',
+                                    \''.addslashes($value->inch_height).'\',
+                                    \''.addslashes($value->inch_width).'\',
+                                    \''.addslashes($value->mm_height).'\',
+                                    \''.addslashes($value->mm_width).'\',
+                                    \''.addslashes($value->door_leaf_finish).'\',
+                                    \''.addslashes($value->door_leaf_facing).'\',
+                                    \''.addslashes($value->cost_price).'\',
+                                    \''.addslashes($value->image).'\',
+                                    \''.addslashes($value->selected_cost).'\',
+                                    \''.addslashes($value->selectedId).'\',
+                                    \''.addslashes($value->leaf_type).'\'
+                                )">
                                 <i class="fa fa-edit text-white text-center"></i>
                             </button>
-                            <button type="button" class="btn btn-danger" style="color: #fff; font-size:15px" onClick="dimension_delete(' . $value->id .',' . $value->configurableitems .')">
+
+                            <button type="button"
+                                class="btn btn-danger"
+                                style="color:#fff; font-size:15px"
+                                onclick="dimension_delete('.$value->id.','.$value->configurableitems.')">
                                 <i class="fa fa-trash text-white text-center"></i>
                             </button>
                         </div>';

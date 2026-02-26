@@ -60,7 +60,7 @@ class PrintInvoiceController extends Controller
     public function printinvoice($quatationId, $versionID, $isActive = null , $userid = null,$clientclick=null): mixed
     {
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '2048M');
+        ini_set('memory_limit', '4096M');
 
         $quatationId = $quatationId;
 
@@ -320,7 +320,7 @@ class PrintInvoiceController extends Controller
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Cost Per Delivery</span></td>
-                    <td><span>' . ($QuotationShipToInformation->CurrencyCostperdelivery  ?? '').($QuotationShipToInformation->Costperdelivery ?? '') . '</span></td>
+                    <td><span>' . ($QuotationShipToInformation->CurrencyCostperdelivery  ?? '').(number_format((float)$QuotationShipToInformation->Costperdelivery, 2) ?? '0.00') . '</span></td>
                     <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
                     <td><span>' . ($QuotationShipToInformation->AverageNoDoorsetsperdrop ?? '') . '</span></td>
                 </tr>

@@ -2490,7 +2490,7 @@ class ItemListController extends Controller
         }
 
         if (!empty($leaf1VpAreaSizeM2Value)) {
-            $query->where('glass_glazing_system.VPAreaSize', '>=', $leaf1VpAreaSizeM2Value);
+            $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?',[$leaf1VpAreaSizeM2Value]);
         }
 
         $data = $query->groupBy('glass_glazing_system.glass_id')

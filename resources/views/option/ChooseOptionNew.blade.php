@@ -1479,11 +1479,16 @@ dd(1);
                                     <label for="Door Leaf Facing">Door Leaf Facing<span class="text-danger">*</span></label>
                                         <select name="door_leaf_facing" id="door_leaf_facing" class="form-control " onchange="doorleafFacing();" required>
                                         <option value="">Select Door leaf facing</option>
-                                            @foreach($option_data as $row)
-                                            @if($row->OptionSlug=='Door_Leaf_Facing')
-                                            <option class="doorLeafFacingExistingOption" value="{{$row->OptionKey}}" @if(isset($Item["DoorLeafFacing"]))
-                                            @if($Item["DoorLeafFacing"]==$row->OptionKey){{'selected'}} @endif
-                                            @endif>{{$row->OptionValue}}</option>
+                                        @foreach($option_data as $row)
+                                            @if($row->OptionSlug == 'Door_Leaf_Facing')
+                                                <option class="doorLeafFacingExistingOption"
+                                                    value="{{ $row->OptionValue }}"
+                                                    @if(isset($Item["DoorLeafFacing"]) && $Item["DoorLeafFacing"] == $row->OptionValue)
+                                                        selected
+                                                    @endif
+                                                >
+                                                    {{ $row->OptionValue }}
+                                                </option>
                                             @endif
                                             @endforeach
                                         </select>
@@ -3425,9 +3430,10 @@ function doorLeafFacingOption(option = '') {
         $("input[name=mm_height]").attr('required',true);
         $("input[name=mm_width]").attr('required',true);
         if(configurableitems == 3 || configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
-            $(".configurableitemsdoordimension").trigger("click");
+            $('input[name="configurableitems"][value="' + configurableitems + '"]').trigger("click");
             $(".leaf_type_door").css("display", "block");
             $("select[name=leaf_type]").val(leaf_type);
+            door_leaf_facing = door_leaf_facing.trim().replace(/ /g, "_");
             $("select[name=door_leaf_facing]").val(door_leaf_facing).trigger("change");
             $("input[name=code]").val(code);
             $("input[name=cost_price]").val(cost_price);
@@ -3436,6 +3442,7 @@ function doorLeafFacingOption(option = '') {
             $("#leaf_type").attr('required',true);
             $("#inch_height").attr('required',true);
             $("#inch_width").attr('required',true);
+            console.log(door_leaf_facing)
             if(configurableitems == 4 || configurableitems == 5 || configurableitems == 6 || configurableitems == 9){
 
                 $("#door_leaf_finish").attr('required',false);

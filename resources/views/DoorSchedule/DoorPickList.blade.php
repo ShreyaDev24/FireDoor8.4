@@ -72,6 +72,7 @@
                 <th colspan="15">Items</th>
             </tr>
             <tr>
+                <th>Fire Rating</th>
                 <th>Door Quantity</th>
                 <th>Door Thickness</th>
                 <th>Door Mat</th>
