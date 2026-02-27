@@ -581,7 +581,7 @@ class VicaimaController extends Controller
     public function getDoorFacing(Request $request): void{
 
         try {
-            $leafTypeFacing = DB::table('door_leaf_facing')->where('doorLeafFacing', $request->leaftypeValue)->where('Status',1)->get();
+            $leafTypeFacing = DB::table('door_leaf_facing')->where('doorLeafFacing', $request->leaftypeValue)->where('Status',1)->orderBy('doorLeafFacingValue','ASC')->get();
 
             $res = json_encode(['status' => 'ok', 'leafTypeFacing' => $leafTypeFacing]);
             print_r($res);

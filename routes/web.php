@@ -10,6 +10,7 @@ use App\Http\Controllers\DoorLeafFacingController;
 use App\Http\Controllers\LeafTypeController;
 use App\Http\Controllers\AccousticController;
 use App\Http\Controllers\ArchitraveTypeController;
+use App\Http\Controllers\DoorDimensionStandardController;
 use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
 use App\Http\Controllers\GlazingSystemController;
@@ -110,6 +111,11 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
 
     Route::resource('options/Glass-Glazing-System', GlassGlazingController::class);
+
+    Route::post('options/Door-Dimension/export-selected', [DoorDimensionStandardController::class, 'exportSelected'])
+    ->name('Door-Dimension.exportSelected');
+    Route::resource('options/Door-Dimension', DoorDimensionStandardController::class);
+    Route::post('options/Door-Dimension/update-selected', [DoorDimensionStandardController::class, 'updateSelected'])->name('Door-Dimension.updateSelected');
 
     Route::resource('options/Glass-type', GlassTypeController::class);
     Route::post('options/Glass-type/update-selected', [GlassTypeController::class, 'updateSelected'])->name('Glass-type.updateSelected');
