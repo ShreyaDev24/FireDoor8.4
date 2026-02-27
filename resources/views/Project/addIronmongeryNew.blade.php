@@ -166,7 +166,7 @@ input[type=number]::-webkit-outer-spin-button {
                                         </div>
                                     </div>
                                     <div class="col-md-3">
-                                        <label for="">Discounted Price </label>
+                                        <label for="">Set Pack Price </label>
                                         <div class="input-icons">
                                             <input type="text" min="0" name="discountprice" value="@if(isset($item)){{$item->discountprice}}@endif" class="form-control" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1'); if(!/^\d*\.?\d{0,2}$/.test(this.value)) { this.value = this.value.slice(0, -1); }">
 
