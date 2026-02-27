@@ -111,6 +111,8 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::resource('options/Screen-Glazing-Type', ScreenGlazingTypeController::class);
     Route::post('options/Screen-Glazing-Type/update-selected', [ScreenGlazingTypeController::class, 'updateSelected'])->name('Screen-Glazing-Type.updateSelected');
 
+    Route::post('options/Intumescent-Seal-Color/export-selected', [IntumescentSealColorController::class, 'exportSelected'])
+    ->name('Intumescent-Seal-Color.exportSelected');
     Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
     Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
 
