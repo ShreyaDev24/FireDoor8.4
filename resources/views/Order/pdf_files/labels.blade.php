@@ -63,7 +63,7 @@
             </div>
             <div class="row">
                 <p><strong>Ironmongery Pk Ref:</strong> {{ $label['Ironmongery'] }}</p>
-                <p><strong>rW dB Rating:</strong> {{ $label['rWdBRating'] }}</p>
+                <p><strong>DB Rating:</strong> {{ $label['rWdBRating'] }}</p>
             </div>
         </div>
     @endforeach

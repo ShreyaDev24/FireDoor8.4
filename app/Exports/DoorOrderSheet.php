@@ -199,6 +199,14 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $leaf1Counts = [];
         $leaf2Counts = [];
         $codeMeta    = []; // store width/height per code
+        $codeFireRating = []; // store fire rating per code
+
+        foreach ($item as $itemValue) {
+            $c1 = $itemValue->DoorDimensionsCode.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
+            if ($c1 && !isset($codeFireRating[$c1])) {
+                $codeFireRating[$c1] = $itemValue->FireRating ?? '';
+            }
+        }
 
         foreach ($data as $row) {
             $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
@@ -234,6 +242,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             $meta   = $codeMeta[$code] ?? $parseMeta($code);
             $width  = $meta['width'];
             $height = $meta['height'];
+            $fireRating = $codeFireRating[$code] ?? '';
 
             // Show width under the side that actually has a count
             $leaf1Width = $l1Count > 0 ? $width : '';
@@ -243,6 +252,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $summaryRows[] = [
                 $code,           // Summary (Product Code)
+                $fireRating,             // Fire Rating
                 $leaf1Width, $l1Count,   // Leaf 1 | Count
                 $leaf2Width, $l2Count,   // Leaf 2 | Count
                 $height,                // Height
@@ -251,7 +261,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         // Header row for summary
-        $summaryHeader = ['Summary','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+        $summaryHeader = ['Summary','Fire Rating','Leaf 1','Count','Leaf 2','Count','Height','GT'];
 
         if($this->section != 'Summary'){
             // Merge: main rows + blank separator + summary header + summary rows
