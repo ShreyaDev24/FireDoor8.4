@@ -9835,21 +9835,21 @@ class DoorScheduleController extends Controller
             $IronmongaryPrice = 0;
             if(!empty($door->IronmongeryID)){
                 $AI = AddIronmongery::select('discountprice')->where('id',$door->IronmongeryID)->first();
-                $userIds = CompanyUsers();
-                $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-                $marginDiscount = discountQuotationValue($door->QuotationId,$door->VersionId);
-                if($marginDiscount != 0){
-                    $margin += $marginDiscount;
-                }
-                $marginwithcal = 100 - $margin;
-                $testvar = $marginwithcal/100;
-                $totalcost = $AI->discountprice / $testvar;
-                $IronmongaryPrice = round(($totalcost),2);
+                // $userIds = CompanyUsers();
+                // $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+                // $marginDiscount = discountQuotationValue($door->QuotationId,$door->VersionId);
+                // if($marginDiscount != 0){
+                //     $margin += $marginDiscount;
+                // }
+                // $marginwithcal = 100 - $margin;
+                // $testvar = $marginwithcal/100;
+                // $totalcost = $AI->discountprice / $testvar;
+                // $IronmongaryPrice = round(($totalcost),2);
                 if($IronmongaryPrice != $door->IronmongaryPrice){
                     DB::table('items')
                         ->where('itemId', $door->itemId)
                         ->update([
-                            'IronmongaryPrice' => $IronmongaryPrice,
+                            'IronmongaryPrice' => $AI->discountprice,
                         ]);
                 }
             }
