@@ -232,4 +232,58 @@ class AccousticController extends Controller
             'MMM'             => $request->has('MMM') ? 9 : null,
         ];
     }
+
+    public function exportSelected(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $auth = auth()->user();
+
+        $items = Accoustics::leftJoin('selected_accoustics as sa', function ($join) use ($auth) {
+                $join->on('accoustics.id', '=', 'sa.accousticsId')
+                     ->where('sa.userId', $auth->id);
+            })
+            ->whereIn('accoustics.id', $ids)
+            ->select(
+                'accoustics.*',
+                'sa.id as selectedId',
+                'sa.selectedPrice'
+            )
+            ->orderBy('accoustics.Accoustics')
+            ->get();
+
+        $filename = 'accoustics_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Accoustics', 'Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'Price Per m²']);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->Accoustics,
+                    $item->Streboard ? 'Yes' : 'No',
+                    $item->Halspan ? 'Yes' : 'No',
+                    $item->Flamebreak ? 'Yes' : 'No',
+                    $item->Stredor ? 'Yes' : 'No',
+                    $item->VicaimaDoorCore ? 'Yes' : 'No',
+                    $item->Seadec ? 'Yes' : 'No',
+                    $item->Deanta ? 'Yes' : 'No',
+                    $item->MMM ? 'Yes' : 'No',
+                    number_format($item->selectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
 }

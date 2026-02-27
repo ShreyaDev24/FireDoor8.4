@@ -81,6 +81,8 @@ Auth::routes();
 
 Route::middleware(['auth', 'user.type'])->group(function () {
 
+    Route::post('options/door-leaf-facing/export-selected', [DoorLeafFacingController::class, 'exportSelected'])
+    ->name('door-leaf-facing.exportSelected');
     Route::resource('options/door-leaf-facing', DoorLeafFacingController::class)->middleware('auth');
     Route::post(
         'options/door-leaf-facing/update-selected',
@@ -93,9 +95,13 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
 
 
+    Route::post('options/accoustics/export-selected', [AccousticController::class, 'exportSelected'])
+    ->name('accoustics.exportSelected');
     Route::resource('options/accoustics', AccousticController::class);
     Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('accoustics.updateSelected');
 
+    Route::post('options/Architrave-Type/export-selected', [ArchitraveTypeController::class, 'exportSelected'])
+    ->name('Architrave-Type.exportSelected');
     Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
     Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
 
