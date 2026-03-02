@@ -4275,6 +4275,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpecies)->get()->first();
 
         $door_core_size = getDoorDimensionData($userIds,$request->issingleconfiguration,$fireRatingVal);
+        dd($door_core_size);
 
         $minCost = null;
         $minCostLeafAndAHalf = null;
