@@ -135,6 +135,8 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::get('Glazing-System/edit/standard/{id}', [GlazingSystemController::class, 'editStandard'])
         ->name('Glazing-System.editStandard');
 
+    Route::post('options/Intumescent-Seal-Arrangement/export-selected', [IntumescentSealArrangementController::class, 'exportSelected'])
+    ->name('Intumescent-Seal-Arrangement.exportSelected');
     Route::resource('options/Intumescent-Seal-Arrangement', IntumescentSealArrangementController::class);
     Route::post('options/Intumescent-Seal-Arrangement/update-selected', [IntumescentSealArrangementController::class, 'updateSelected'])->name('Intumescent-Seal-Arrangement.updateSelected');
     Route::get('/Intumescent-Seal-Arrangement/create/standard', [IntumescentSealArrangementController::class, 'createStandard'])->name('Intumescent-Seal-Arrangement.createStandard');

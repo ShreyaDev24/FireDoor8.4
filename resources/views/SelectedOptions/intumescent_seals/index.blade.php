@@ -58,9 +58,13 @@
         </div>
 
         @if($auth->id != 1)
-        <div class="mb-3">
-            <button id="updateSelected" class="btn btn-success">
+        <div class="mb-3 d-flex gap-2">
+            <button id="updateSelected" class="btn btn-success  mr-2">
                 <i class="fa fa-save"></i> Update Selected
+            </button>
+
+            <button id="exportSelected" class="btn btn-info">
+                <i class="fa fa-download"></i> Export Selected
             </button>
         </div>
         @endif
@@ -380,6 +384,51 @@ $(document).ready(function () {
         });
     });
 
+    $('#exportSelected').on('click', function (e) {
+        e.preventDefault();
+
+        let ids = [];
+
+        standardTable.rows().every(function () {
+            let checkbox = $('input.rowStandardCheck', this.node());
+            if (checkbox.length && checkbox.prop('checked')) {
+                ids.push(checkbox.val());
+            }
+        });
+        customTable.rows().every(function () {
+            let checkbox = $('input.rowCustomCheck', this.node());
+            if (checkbox.length && checkbox.prop('checked')) {
+                ids.push(checkbox.val());
+            }
+        });
+
+        if (!ids.length) {
+            alert('Please select at least one record to export.');
+            return;
+        }
+
+        let form = document.createElement('form');
+        form.method = 'POST';
+        form.action = "{{ route('Intumescent-Seal-Arrangement.exportSelected') }}";
+
+        let token = document.createElement('input');
+        token.type = 'hidden';
+        token.name = '_token';
+        token.value = "{{ csrf_token() }}";
+        form.appendChild(token);
+
+        ids.forEach(id => {
+            let input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'ids[]';
+            input.value = id;
+            form.appendChild(input);
+        });
+
+        document.body.appendChild(form);
+        form.submit();
+        form.remove();
+    });
 
     /* ============================
        UPDATE SELECTED BUTTON
