@@ -105,9 +105,13 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
     Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
 
+    Route::post('options/Screen-Glass-Type/export-selected', [ScreenGlassTypeController::class, 'exportSelected'])
+    ->name('Screen-Glass-Type.exportSelected');
     Route::resource('options/Screen-Glass-Type', ScreenGlassTypeController::class);
     Route::post('options/Screen-Glass-Type/update-selected', [ScreenGlassTypeController::class, 'updateSelected'])->name('Screen-Glass-Type.updateSelected');
 
+    Route::post('options/Screen-Glazing-Type/export-selected', [ScreenGlazingTypeController::class, 'exportSelected'])
+    ->name('Screen-Glazing-Type.exportSelected');
     Route::resource('options/Screen-Glazing-Type', ScreenGlazingTypeController::class);
     Route::post('options/Screen-Glazing-Type/update-selected', [ScreenGlazingTypeController::class, 'updateSelected'])->name('Screen-Glazing-Type.updateSelected');
 
