@@ -4289,7 +4289,6 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
                 // For leafWidth1 and leafHeightNoOP
                 if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
-                    dd($door_core);
                     if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                         $minWidth1 = $door_core->selected_mm_width;
                         $minHeight1 = $door_core->selected_mm_height;
