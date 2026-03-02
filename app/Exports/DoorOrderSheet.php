@@ -136,6 +136,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->SpeciesName,
                 str_replace('_', ' ', $value->LippingType),
                 $value->IntumescentLeapingSealType,
+                $value->rWdBRating,
                 ''
             );
 
@@ -172,7 +173,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->SpeciesName,
                     str_replace('_', ' ', $value->LippingType),
                     $value->IntumescentLeapingSealType,
-                    $value->rWdBRating ? $value->rWdBRating : '',
+                    $value->rWdBRating,
                     ''
                 );
 
@@ -202,7 +203,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $codeFireRating = []; // store fire rating per code
 
         foreach ($item as $itemValue) {
-            $c1 = $itemValue->DoorDimensionsCode.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
+            $c1 = $itemValue->DoorDimensionsCode.'x'.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
             if ($c1 && !isset($codeFireRating[$c1])) {
                 $codeFireRating[$c1] = $itemValue->FireRating ?? '';
             }
@@ -301,7 +302,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'Lipping Mat',
                 'Exposed or Concealed',
                 'Intumescent Seal Type',
-                'rW dB Rating',
+                'DB Rating',
                 'Notes'
             ];
         }
@@ -323,8 +324,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $cellRange1 = 'A1:V1'; // main merged header
                     $cellRange2 = 'A2:V2'; // column headings row
                 }else{
-                    $cellRange1 = 'A1:G1'; // main merged header
-                    $cellRange2 = 'A2:G2'; // column headings row
+                    $cellRange1 = 'A1:H1'; // main merged header
+                    $cellRange2 = 'A2:H2'; // column headings row
                 }
 
                 $styleArray = [
@@ -369,7 +370,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 if ($summaryHeaderRow) {
                     // Make the summary header bold, centered, with light gray fill
-                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':G' . $summaryHeaderRow)->applyFromArray([
+                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':H' . $summaryHeaderRow)->applyFromArray([
                         'font' => ['bold' => true],
                         'alignment' => [
                             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,

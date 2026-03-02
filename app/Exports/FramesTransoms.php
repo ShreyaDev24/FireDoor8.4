@@ -99,7 +99,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Undercut',
             'Transom',
             'Mullion',
-            'rW dB Rating',
+            'DB Rating',
             'Notes'
         ];
 

@@ -117,7 +117,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
             "IFC/Certifire No/Q mark Plug",
             "Door Number",
             "Door Type",
-            'rW dB Rating',
+            'DB Rating',
             "Architrave Size",
             "Architrave Type",
             "Architrave Material",
