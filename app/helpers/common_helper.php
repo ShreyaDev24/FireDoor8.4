@@ -4316,7 +4316,6 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                 }
             }
         }
-        dd($minCost);
         $door_core1 = $minCost;
         $door_core2 = $minCostLeafAndAHalf;
         $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
