@@ -123,12 +123,16 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::resource('options/Door-Dimension', DoorDimensionStandardController::class);
     Route::post('options/Door-Dimension/update-selected', [DoorDimensionStandardController::class, 'updateSelected'])->name('Door-Dimension.updateSelected');
 
+    Route::post('options/Glass-type/export-selected', [GlassTypeController::class, 'exportSelected'])
+    ->name('Glass-type.exportSelected');
     Route::resource('options/Glass-type', GlassTypeController::class);
     Route::post('options/Glass-type/update-selected', [GlassTypeController::class, 'updateSelected'])->name('Glass-type.updateSelected');
     Route::get('/glass-type/create/standard', [GlassTypeController::class, 'createStandard'])->name('Glass-type.createStandard');
     Route::get('glass-type/edit/standard/{id}', [GlassTypeController::class, 'editStandard'])
         ->name('Glass-type.editStandard');
 
+    Route::post('options/Glazing-System/export-selected', [GlazingSystemController::class, 'exportSelected'])
+    ->name('Glazing-System.exportSelected');
     Route::resource('options/Glazing-System', GlazingSystemController::class);
     Route::post('options/Glazing-System/update-selected', [GlazingSystemController::class, 'updateSelected'])->name('Glazing-System.updateSelected');
     Route::get('/Glazing-System/create/standard', [GlazingSystemController::class, 'createStandard'])->name('Glazing-System.createStandard');

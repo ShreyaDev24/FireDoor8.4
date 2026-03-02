@@ -272,4 +272,69 @@ class GlazingSystemController extends Controller
         ];
     }
 
+    public function exportSelected(Request $request)
+    {
+        $ids = $request->has('ids')
+            ? (is_array($request->ids) ? $request->ids : json_decode($request->ids, true))
+            : [];
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $auth = auth()->user();
+
+        $items = GlazingSystem::leftJoin('selected_glazing_system as sg', function ($join) use ($auth) {
+
+                $join->on('glazing_system.id', '=', 'sg.glazingId')
+                     ->where('sg.userId', $auth->id);
+
+            })
+            ->whereIn('glazing_system.editBy', [$auth->id, 1])
+            ->whereIn('glazing_system.id', $ids)
+            ->select(
+                'glazing_system.*',
+                'sg.id as selectedId',
+                'sg.selectedPrice'
+            )
+            ->orderBy('glazing_system.GlazingSystem')
+            ->get();
+
+        $filename = 'Glazing_System_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'NFR','FD30','FD60','Glazing Type','Glazing Thickness','GlazingBead FixingDetail','Vp Area Size', 'Price Per m²']);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->Streboard ? 'Yes' : 'No',
+                    $item->Halspan ? 'Yes' : 'No',
+                    $item->Flamebreak ? 'Yes' : 'No',
+                    $item->Stredor ? 'Yes' : 'No',
+                    $item->VicaimaDoorCore ? 'Yes' : 'No',
+                    $item->Seadec ? 'Yes' : 'No',
+                    $item->Deanta ? 'Yes' : 'No',
+                    $item->MMM ? 'Yes' : 'No',
+                    $item->NFR ?? '-',
+                    $item->FD30 ?? '-',
+                    $item->FD60 ?? '-',
+                    $item->GlazingSystem,
+                    $item->GlazingThickness,
+                    $item->GlazingBeadFixingDetail,
+                    $item->VPAreaSize,
+                    number_format($item->selectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
+
 }
