@@ -4289,6 +4289,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
                 // For leafWidth1 and leafHeightNoOP
                 if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
+                    dd($door_core);
                     if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                         $minWidth1 = $door_core->selected_mm_width;
                         $minHeight1 = $door_core->selected_mm_height;
@@ -4316,7 +4317,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                 }
             }
         }
-
+        dd($minCost);
         $door_core1 = $minCost;
         $door_core2 = $minCostLeafAndAHalf;
         $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
@@ -4392,6 +4393,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
+
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
