@@ -93,13 +93,13 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
 
         $a = [
             'S.No',
-            'Door Type ','rW dB Rating',
+            'Door Type ','DB Rating',
             'Perimeter Seal 1',
             'Perimeter Seal 2',
          //   'Threshold Seal 1',
@@ -124,7 +124,7 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
@@ -179,7 +179,7 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
     {
         return 'Acoustics';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [

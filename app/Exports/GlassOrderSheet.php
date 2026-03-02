@@ -361,7 +361,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'QTY',
                 'VP5 H',
                 'QTY',
-                'rW dB Rating'
+                'DB Rating'
             ];
         }
 
