@@ -87,6 +87,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                     $value->certification_no,
                     $value->doorNumber,
                     $value->DoorType,
+                    $value->rWdBRating ? $value->rWdBRating : '',
                     $value->ArchitraveWidth . 'x' . $value->ArchitraveHeight,
                     $value->ArchitraveType,
                     $SpeciesName,
@@ -116,6 +117,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
             "IFC/Certifire No/Q mark Plug",
             "Door Number",
             "Door Type",
+            'DB Rating',
             "Architrave Size",
             "Architrave Type",
             "Architrave Material",
@@ -134,8 +136,8 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:L1';
-                $cellRange = 'A2:L2';
+                $cellRange1 = 'A1:M1';
+                $cellRange = 'A2:M2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -168,6 +170,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $event->sheet->getColumnDimension('J')->setAutoSize(true);
                 $event->sheet->getColumnDimension('K')->setAutoSize(true);
                 $event->sheet->getColumnDimension('L')->setAutoSize(true);
+                $event->sheet->getColumnDimension('M')->setAutoSize(true);
 
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);

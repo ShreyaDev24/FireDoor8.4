@@ -2673,6 +2673,7 @@ class OMMAnualController extends Controller
             'DoorType' => $item->DoorType ?? '-',
             'DoorNo' => $item->doorNumber ?? '-',
             'Ironmongery' => $Setname,
+            'rWdBRating' => $item->rWdBRating ?? '-',
         ];
     }
 
