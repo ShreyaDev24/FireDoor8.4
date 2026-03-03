@@ -863,7 +863,7 @@ function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThic
         $GlassTypeForDoorDetailsTable = $SelectedGlassTypeForDoorDetailsTable->GlassType;
     }
 
-    if(!empty($GlassThickness) && $SelectedGlassTypeForDoorDetailsTable->GlassThickness != null){
+    if(!empty($GlassThickness) && $SelectedGlassTypeForDoorDetailsTable != null && $SelectedGlassTypeForDoorDetailsTable->GlassThickness !== null){
         $GlassTypeForDoorDetailsTable .= " + ".$SelectedGlassTypeForDoorDetailsTable->GlassThickness;
     }
 
