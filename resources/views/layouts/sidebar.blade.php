@@ -478,41 +478,15 @@
             </li> --}}
             </ul>
             </li>
-            {{-- <li>
-                                <a href="{{route('door-dimension-list',1)}}">
-            <i class="metismenu-icon">
-                <i class="fa fa-table"></i>
-            </i>
-            Door Dimension
-            <i class="metismenu-state-icon">
-                <i class="fa fa-caret-down"></i>
-            </i>
-            </a>
-            <ul>
-                <li>
-                    <a href="{{route('door-dimension-add')}}">
-                        <i class="metismenu-icon"></i>
-                        Add New
-                    </a>
-                </li>
-                <li>
-                    <a href="{{route('door-dimension-list',1)}}">
-                        <i class="metismenu-icon"></i>
-                        List
-                    </a>
-                </li>
-            </ul>
-            </li> --}}
+
             {{-- Door Dimension --}}
-            <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
-                <a href="{{ route('Door-Dimension.index') }}">Door Dimension</a>
+            <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
+                <a href="{{ route('Door-Dimension-Custom.index') }}">Door Dimension Custom</a>
             </li>
 
-            <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_dimension_custome') ? 'active' : ''}}">
-                <a href="{{route('options/selected',['door_dimension_custome'])}}">
-                    <i class="metismenu-icon"></i>
-                    Door Dimension Custom
-                </a>
+            {{-- Door Dimension --}}
+            <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
+                <a href="{{ route('Door-Dimension.index') }}">Door Dimension Standard</a>
             </li>
             </ul>
             </li>
@@ -811,13 +785,13 @@
                     </li>
 
                     {{-- Door Dimension --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
-                        <a href="{{ route('Door-Dimension.index') }}">Door Dimension</a>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
+                        <a href="{{ route('Door-Dimension-Custom.index') }}">Door Dimension Custom</a>
                     </li>
 
-                    {{-- Door Dimension Custom --}}
-                    <li class="submm-{{ (Request::segment(2) == 'selected' && Request::segment(3) == 'door_dimension_custome') ? 'active' : ''}}">
-                        <a href="{{route('options/selected',['door_dimension_custome'])}}">Door Dimension Custom</a>
+                    {{-- Door Dimension --}}
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
+                        <a href="{{ route('Door-Dimension.index') }}">Door Dimension Standard</a>
                     </li>
 
                     {{-- Door Leaf Facing Value --}}

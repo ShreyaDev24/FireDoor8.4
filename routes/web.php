@@ -8,6 +8,7 @@ use App\Http\Controllers\DoorLeafFacingController;
 use App\Http\Controllers\LeafTypeController;
 use App\Http\Controllers\AccousticController;
 use App\Http\Controllers\ArchitraveTypeController;
+use App\Http\Controllers\DoorDimensionCustomController;
 use App\Http\Controllers\DoorDimensionStandardController;
 use App\Http\Controllers\IntumescentSealColorController;
 use App\Http\Controllers\GlassTypeController;
@@ -127,6 +128,12 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
 
     Route::resource('options/Glass-Glazing-System', GlassGlazingController::class);
+
+    Route::post('options/Door-Dimension-Custom/export-selected', [DoorDimensionCustomController::class, 'exportSelected'])
+    ->name('Door-Dimension-Custom.exportSelected');
+    Route::resource('options/Door-Dimension-Custom', DoorDimensionCustomController::class);
+    Route::post('options/Door-Dimension-Custom/update-selected', [DoorDimensionCustomController::class, 'updateSelected'])->name('Door-Dimension-Custom.updateSelected');
+    Route::post('options/Door-Dimension-Custom/update-selected-cost', [DoorDimensionCustomController::class,'updateSelectOptionCostCustome'])->name('Door-Dimension-Custom.updateSelectedCost');
 
     Route::post('options/Door-Dimension/export-selected', [DoorDimensionStandardController::class, 'exportSelected'])
     ->name('Door-Dimension.exportSelected');
