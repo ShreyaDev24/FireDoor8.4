@@ -16,6 +16,7 @@ use App\Http\Controllers\GlassGlazingController;
 use App\Http\Controllers\ScreenGlassTypeController;
 use App\Http\Controllers\ScreenGlazingTypeController;
 use App\Http\Controllers\IntumescentSealArrangementController;
+use App\Http\Controllers\OverpanelGlassGlazingType;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -94,6 +95,11 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::resource('options/leaf-type', LeafTypeController::class);
     Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
 
+
+    Route::post('options/Overpanel-Glass-Type/export-selected', [OverpanelGlassGlazingType::class, 'exportSelected'])
+    ->name('Overpanel-Glass-Type.exportSelected');
+    Route::resource('options/Overpanel-Glass-Type', OverpanelGlassGlazingType::class);
+    Route::post('options/Overpanel-Glass-Type/update-selected', [OverpanelGlassGlazingType::class, 'updateSelected'])->name('Overpanel-Glass-Type.updateSelected');
 
     Route::post('options/accoustics/export-selected', [AccousticController::class, 'exportSelected'])
     ->name('accoustics.exportSelected');
