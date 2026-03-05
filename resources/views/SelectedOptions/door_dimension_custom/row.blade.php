@@ -54,7 +54,7 @@ $inch = $item->inch_width .' x '.$item->inch_height;
     }
     @endphp
 
-    @if($auth->id != 1)
+    @if($auth->id != 1 && $item->selectedPrice?->id)
 
     @php
     $costs = $item->selectedPrice->custome_door_selected_cost ?? [];

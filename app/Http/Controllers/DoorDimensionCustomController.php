@@ -207,35 +207,24 @@ class DoorDimensionCustomController extends Controller
             return back()->with('error', 'Invalid export data.');
         }
 
-        $items = DoorDimension::leftJoin('selected_doordimension as sd', function ($join) use ($auth) {
-                $join->on('door_dimension.id', '=', 'sd.doordimension_id')
-                    ->where('sd.doordimension_user_id', $auth->id);
-            })
+        $items = DoorDimension::with([
+                'leafTypes',
+                'selectedPrice' => function ($q) use ($auth) {
+                    $q->where('doordimension_user_id', $auth->id);
+                }
+            ])
             ->whereIn('door_dimension.id', $ids)
-            ->whereIn('door_dimension.configurableitems', [1,2,7,8])
-            ->whereIn('door_dimension.editBy', [$auth->id, 1])
-            ->select(
-                'door_dimension.code',
-                'door_dimension.mm_height',
-                'door_dimension.mm_width',
-                'door_dimension.fire_rating',
-                'door_dimension.configurableitems',
-                'door_dimension.inch_height',
-                'door_dimension.inch_width',
-                'door_dimension.door_leaf_facing',
-                'door_dimension.leaf_type',
-                'sd.selected_sellingprice',
-                'sd.selected_cost'
-            )
+            ->whereIn('editBy', [$auth->id, 1])
+            ->whereIn('configurableitems', [1,2,7,8])
             ->orderBy('door_dimension.configurableitems')
-            ->orderBy('door_dimension.mm_height')
-            ->orderBy('door_dimension.mm_width')
+            ->orderBy('mm_height')
+            ->orderBy('mm_width')
             ->get();
 
-        $filename = 'door_dimensions_selected_' . now()->format('Ymd_His') . '.csv';
+        $filename = 'door_dimensions_Custom_selected_' . now()->format('Ymd_His') . '.csv';
 
         $headers = [
-            "Content-Type"        => "text/csv",
+            "Content-Type" => "text/csv",
             "Content-Disposition" => "attachment; filename=$filename",
         ];
 
@@ -243,25 +232,46 @@ class DoorDimensionCustomController extends Controller
 
             $file = fopen('php://output', 'w');
 
-            fputcsv($file, [
+            $leafTypes = IntumescentSealLeafType::where('status',1)->get();
+
+            $headerRow = [
                 'Height (mm)',
                 'Width (mm)',
                 'Fire Rating',
                 'Configurable Item',
-                'Cost Price'
-            ]);
+            ];
+
+
+            foreach ($leafTypes as $leaf) {
+                $headerRow[] = $leaf->leaf_type_key .' '.configurationDoor($leaf->configurableitems) . ' Cost';
+            }
+            fputcsv($file, $headerRow);
 
             foreach ($items as $item) {
-                fputcsv($file, [
+
+                $row = [
                     $item->mm_height,
                     $item->mm_width,
                     $item->fire_rating,
                     configurationDoor($item->configurableitems),
-                    number_format($item->selected_cost ?? 0, 2),
-                ]);
+                ];
+
+                $costs = $item->selectedPrice->custome_door_selected_cost ?? [];
+
+                foreach ($leafTypes as $leaf) {
+
+                    $value = $costs[$leaf->id] ?? '';
+
+                    $row[] = is_numeric($value)
+                        ? number_format((float)$value, 2)
+                        : 0;
+                }
+
+                fputcsv($file, $row);
             }
 
             fclose($file);
+
         }, 200, $headers);
     }
 
