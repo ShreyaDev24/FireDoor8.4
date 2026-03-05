@@ -4277,7 +4277,7 @@ class DoorScheduleController extends Controller
             $TotalIronmongeryPrice = $totals->totalIron ?? 0;
 
             $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $Id,'side_screen_items.VersionId' => $vId])
-                ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
+                ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid','side_screen_items.ScreenAdjustPrice');
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, $userIds, '', true);
@@ -9407,6 +9407,38 @@ class DoorScheduleController extends Controller
             if (!empty($item)) {
                 $updateDetails['AdjustPrice'] = $request->AdjustPrice;
                 Item::where('itemId', $request->itemId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Price updated successfully!'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'something went wrong!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    public function adjustSideScreenPriceUrl(Request $request)
+    {
+        if (!empty($request->adjustSideScreenPriceId) && !empty($request->quotationId)) {
+            $item = SideScreenItem::where(['id' => $request->adjustSideScreenPriceId, 'QuotationId' => $request->quotationId])->first();
+            if (!empty($item)) {
+                $updateDetails['ScreenAdjustPrice'] = $request->adjustScreenPrice;
+                SideScreenItem::where('id', $request->adjustSideScreenPriceId)->update($updateDetails);
                 $response = [
                     'status' => true,
                     'msg' => 'Price updated successfully!'
