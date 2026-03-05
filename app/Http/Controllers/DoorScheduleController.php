@@ -4281,7 +4281,7 @@ class DoorScheduleController extends Controller
 
             $TotalDoorSetPrice = itemAdjustCount($Id, $vId);
             $nonConfigDataPrice = nonConfigurableItem($Id, $vId, $userIds, '', true);
-            $screenDataprice = $SideScreenData->sum('side_screen_items.ScreenPrice');
+            $screenDataprice = $SideScreenData->sum(\DB::raw('IF(side_screen_items.ScreenAdjustPrice IS NOT NULL AND side_screen_items.ScreenAdjustPrice != 0, side_screen_items.ScreenAdjustPrice, side_screen_items.ScreenPrice)'));
             $total_price = $TotalDoorSetPrice +  $TotalIronmongeryPrice + $nonConfigDataPrice + $screenDataprice;
 
             $versions = QuotationVersion::where('quotation_id', $Id)->select('id', 'version')->get();
