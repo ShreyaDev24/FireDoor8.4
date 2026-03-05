@@ -354,7 +354,10 @@
                                                         <td>{{ $row->SOWidth }}</td>
                                                         <td>{{ $row->SOHeight }}</td>
                                                         <td>{{ $row->SODepth }}</td>
-                                                        <td>{{ $row->ScreenPrice }}</td>
+                                                        <td>{{ number_format(
+                                                                        ($row->ScreenAdjustPrice ?? floatval($row->ScreenPrice)),
+                                                                        2
+                                                                    ) }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="dropdown">
@@ -368,6 +371,14 @@
                                                                     <li><a
                                                                             href="{{ url('quotation/edit-side-screen-item/'.$row->id.'/'.$version_id) }}">Edit Screen</a>
                                                                     </li>
+                                                                    <li> <a onclick="adjustSideScreenPrice(
+                                                                                    {{ $row->id }},
+                                                                                    {{ $row->screenMasterid }},
+                                                                                    {{ $row->ScreenPrice }}
+                                                                                )" href="javascript:void(0);">
+                                                                                    Adjust Price
+                                                                                </a>
+                                                                            </li>
                                                                     <li><a href="javascript:void(0);"
                                                                         onClick="CopyDoorSetScreen({{ $quotationId }},'{{ $row->screenMasterid }}');">Copy Screen</a>
                                                                     <li><a onclick="remove_item_screen('{{ $row->screenMasterid }}')"  href="#">Remove Screen</a></li>
@@ -1155,6 +1166,7 @@
         <input type="hidden" id="favoriteItem" value="{{ url('/quotation/favoriteItem') }}" />
         <input type="hidden" id="favoriteItemShow" value="{{ url('/quotation/favoriteItemShow') }}" />
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
+        <input type="hidden" id="adjustSideScreenPriceUrl" value="{{ url('/quotation/adjustSideScreenPriceUrl') }}" />
         <input type="hidden" id="FloorNoChangeUrl" value="{{ url('/quotation/FloorNoChangeUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
         <input type="hidden" id="favoriteDeleteItem" value="{{ url('/quotation/favoriteDeleteItem') }}" />
@@ -1430,7 +1442,6 @@
                 var itemMasterId = $('#adjustPriceitemMasterId').val();
                 var AdjustPrice = $('#AdjustPrice').val();
                 var totalPrice = $('#totalPrice').val();
-                //if (parseFloat(AdjustPrice) < parseFloat(totalPrice)) {
                     $.ajax({
                         url: $("#adjustPriceUrl").val(),
                         method: "POST",
@@ -1455,13 +1466,41 @@
                             }
                         }
                     });
-                //} else {
-                //    $('.loader').empty().css({
-                  //      'display': 'none'
-                    //});
-                   // alert("Adjust price can't be greater than total price!");
-                   // return false;
-               // }
+            }
+             function adjustSideScreenPriceAjax() {
+                $('.loader').empty().css({
+                    'display': 'block'
+                });
+                var versionId = $('#versionId').val();
+                var quotationId = $('#quotationId').val();
+                var adjustSideScreenPriceId = $('#adjustSideScreenPriceId').val();
+                var adjustSideScreenPriceitemMasterId = $('#adjustSideScreenPriceitemMasterId').val();
+                var adjustScreenPrice = $('#adjustScreenPrice').val();
+                var totalSideScreenPrice = $('#totalSideScreenPrice').val();
+                    $.ajax({
+                        url: $("#adjustSideScreenPriceUrl").val(),
+                        method: "POST",
+                        data: {
+                            _token: $("#_token").val(),
+                            quotationId: quotationId,
+                            versionId: versionId,
+                            adjustSideScreenPriceId: adjustSideScreenPriceId,
+                            adjustSideScreenPriceitemMasterId: adjustSideScreenPriceitemMasterId,
+                            adjustScreenPrice: adjustScreenPrice,
+                        },
+                        dataType: "Json",
+                        success: function(data) {
+                            if (data.status == true) {
+                                swal('success', data.msg, 'success').then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                swal('error', data.msg, 'error').then(function() {
+                                    location.reload();
+                                });
+                            }
+                        }
+                    });
             }
             function favorite() {
                 $('.loader').empty().css({
@@ -3593,6 +3632,12 @@
                 $('#totalPrice').val(totalPrice);
                 $("#adjust-price-modal").modal("show");
             }
+            function adjustSideScreenPrice(itemId, id, totalPrice) {
+                $('#adjustSideScreenPriceId').val(itemId);
+                $('#adjustSideScreenPriceitemMasterId').val(id);
+                $('#totalSideScreenPrice').val(totalPrice);
+                $("#adjust-side-screen-price-modal").modal("show");
+            }
             function FloorNoChange(id,DoorType,DoorNumber) {
                 $('#FloorNoDoorType').val(DoorType);
                 $('#FloorNoDoorNumber').val(DoorNumber);
@@ -3687,6 +3732,45 @@
             </div>
         </div>
     </div>
+
+    {{--  //adjust side screen price modal  --}}
+
+     <div id="adjust-side-screen-price-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adjust Price</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Total Price</label>
+                            <input type="number" class="form-control" id="totalSideScreenPrice" readonly>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Adjust Price</label>
+                            <input type="number" class="form-control" id="adjustScreenPrice"
+                                pattern="[0-9]+([\.,][0-9]+)?" placeholder="Enter Adjust Price" required=""
+                                step="0.01">
+                            <input type="hidden" class="form-control" id="adjustSideScreenPriceId">
+                            <input type="hidden" class="form-control" id="adjustSideScreenPriceitemMasterId">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="adjustSideScreenPriceAjax()" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {{--  //end adjust side screen price modal  --}}
+
     {{--  //Favorite modal  --}}
     <div id="Favorite-modal" class="modal fade" role="dialog">
         <div class="modal-dialog">

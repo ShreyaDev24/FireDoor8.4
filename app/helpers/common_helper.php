@@ -864,7 +864,7 @@ function GlassTypeThickness($configurableitems,$FireRating,$GlassType,$GlassThic
         $GlassTypeForDoorDetailsTable = $SelectedGlassTypeForDoorDetailsTable->GlassType;
     }
 
-    if(!empty($GlassThickness) && $SelectedGlassTypeForDoorDetailsTable->GlassThickness != null){
+    if(!empty($GlassThickness) && $SelectedGlassTypeForDoorDetailsTable != null && $SelectedGlassTypeForDoorDetailsTable->GlassThickness !== null){
         $GlassTypeForDoorDetailsTable .= " + ".$SelectedGlassTypeForDoorDetailsTable->GlassThickness;
     }
 
@@ -4440,7 +4440,6 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                 }
             }
         }
-
         $door_core1 = $minCost;
         $door_core2 = $minCostLeafAndAHalf;
         $unitcost1 = (empty($unitcost))?0:$unitcost->selected_price;
@@ -4516,6 +4515,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         if($request->doorsetType == 'leaf_and_a_half'){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
+
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }

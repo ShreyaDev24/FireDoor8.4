@@ -406,6 +406,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
     Route::post('/favoriteItemShow', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemShow'])->name('quotation/favoriteItemShow');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
+    Route::post('/adjustSideScreenPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustSideScreenPriceUrl'])->name('quotation/adjustSideScreenPriceUrl');
     Route::post('/FloorNoChangeUrl', [App\Http\Controllers\DoorScheduleController::class,'FloorNoChangeUrl'])->name('quotation/FloorNoChangeUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');
     Route::post('/favoriteDeleteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteDeleteItem'])->name('quotation/favoriteDeleteItem');
