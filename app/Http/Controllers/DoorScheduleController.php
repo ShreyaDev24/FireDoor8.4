@@ -9502,6 +9502,38 @@ class DoorScheduleController extends Controller
         );
     }
 
+    public function adjustSideScreenPriceUrl(Request $request)
+    {
+        if (!empty($request->adjustSideScreenPriceId) && !empty($request->quotationId)) {
+            $item = SideScreenItem::where(['id' => $request->adjustSideScreenPriceId, 'QuotationId' => $request->quotationId])->first();
+            if (!empty($item)) {
+                $updateDetails['ScreenAdjustPrice'] = $request->adjustScreenPrice;
+                SideScreenItem::where('id', $request->adjustSideScreenPriceId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Price updated successfully!'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'something went wrong!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
     public function userparent(Request $request): void{
         $user = User::where('UserType',2)->get();
 
