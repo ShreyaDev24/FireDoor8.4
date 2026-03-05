@@ -286,22 +286,6 @@
                         </a>
                 </li> --}}
 
-                {{-- <li class="mm-{{ (Request::segment(1) == 'colors') ? 'active' : ''}}">
-                <a href="#" aria-expanded="true">
-                    Colour
-                    <i class="metismenu-state-icon">
-                        <i class="fa fa-caret-down"></i>
-                    </i>
-                </a>
-                <ul>
-                    <li class="submm-{{ (Request::segment(2) == 'create-color') ? 'active' : ''}}">
-                        <a href="{{route('create-color')}}">Add Colour</a>
-                    </li>
-                    <li class="submm-{{ (Request::segment(2) == 'color-list') ? 'active' : ''}}">
-                        <a href="{{route('color-list')}}">Colour List</a>
-                    </li>
-                </ul>
-                </li> --}}
                 {{-- <li class="mm-{{ (Request::segment(1) == 'options') ? 'active' : ''}}">
                 <a href="#" aria-expanded="true">
                     Field Option
@@ -372,49 +356,10 @@
                         Intumescent Seal Arrangement
                     </a>
                 </li>
-                <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list')) ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-check"></i>
-                        </i>
-                        Colour List
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                            <a href="{{route('options/selected1',['color_list','Kraft_Paper'])}}">
-                                <i class="metismenu-icon"></i>
-                                Kraft Paper
-                            </a>
-                        </li>
-                        <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                            <a href="{{route('options/selected1',['color_list','Laminate'])}}">
-                                <i class="metismenu-icon"></i>
-                                Laminate
-                            </a>
-                        </li>
-                        <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                            <a href="{{route('options/selected1',['color_list','PVC'])}}">
-                                <i class="metismenu-icon"></i>
-                                PVC
-                            </a>
-                        </li>
-                        {{-- <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                        <a href="{{route('options/selected1',['color_list','Veneer'])}}">
-                            <i class="metismenu-icon"></i>
-                            Veneer
-                        </a>
+                {{-- Colour List --}}
+                <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
+                    <a href="{{ route('Colour-List.index') }}">Colour List</a>
                 </li>
-                <li class="submm-{{ (Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                    <a href="{{route('options/selected1',['color_list','Painted'])}}">
-                        <i class="metismenu-icon"></i>
-                        Painted
-                    </a>
-                </li> --}}
-            </ul>
-            </li>
             <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected')) ? 'active' : ''}}">
                 <a href="#">
                     <i class="metismenu-icon">
@@ -766,22 +711,8 @@
                     </li>
 
                     {{-- Colour List --}}
-                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'selected1' && Request::segment(3) == 'color_list') ? 'active' : ''}}">
-                        <a href="#">
-                            Colour List
-                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{route('options/selected1',['color_list','Kraft_Paper'])}}">Kraft Paper</a>
-                            </li>
-                            <li>
-                                <a href="{{route('options/selected1',['color_list','Laminate'])}}">Laminate</a>
-                            </li>
-                            <li>
-                                <a href="{{route('options/selected1',['color_list','PVC'])}}">PVC</a>
-                            </li>
-                        </ul>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
+                        <a href="{{ route('Colour-List.index') }}">Colour List</a>
                     </li>
 
                     {{-- Door Dimension --}}
