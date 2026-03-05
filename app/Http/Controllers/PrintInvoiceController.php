@@ -206,7 +206,7 @@ class PrintInvoiceController extends Controller
         $SideScreenData = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where(['side_screen_items.QuotationId' => $quatationId,'side_screen_items.VersionId' => $versionID])
                     ->select('side_screen_items.FireRating','side_screen_items.VersionId', 'side_screen_items.ScreenType' ,'side_screen_items.SOWidth', 'side_screen_items.SOHeight', 'side_screen_items.SODepth','side_screen_items.GlazingType', 'side_screen_items.ScreenPrice', 'side_screen_items.id', 'side_screen_item_master.screenNumber', 'side_screen_item_master.floor', 'side_screen_item_master.id as screenMasterid');
 
-        $screenData = $SideScreenData->sum('side_screen_items.ScreenPrice');
+        $screenData = $SideScreenData->sum(\DB::raw('IF(side_screen_items.ScreenAdjustPrice IS NOT NULL AND side_screen_items.ScreenAdjustPrice != 0, side_screen_items.ScreenAdjustPrice, side_screen_items.ScreenPrice)'));
         $ScreenSetQty = $SideScreenData->count();
 
         $screenDataprice = round(floatval($screenData),2);
