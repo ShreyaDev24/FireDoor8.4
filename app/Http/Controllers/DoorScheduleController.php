@@ -4307,18 +4307,24 @@ class DoorScheduleController extends Controller
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
 
 
-            $nonconfigdata = NonConfigurableItemStore::select(
-                            'non_configurable_items.*',
-                            'non_configurable_item_store.nonConfigurableId',
-                            'non_configurable_item_store.quantity',
-                            'non_configurable_item_store.total_price',
-                            'non_configurable_item_store.price as storePrice',
-                            'non_configurable_item_store.userId'
-                        )
-                        ->join('non_configurable_items', 'non_configurable_item_store.nonConfigurableId', '=', 'non_configurable_items.id')
-                        ->whereIn('non_configurable_item_store.userId', $userIds)
-                        ->orderBy('non_configurable_item_store.id', 'desc')
-                        ->get();
+            $nonconfigdata = NonConfigurableItemStore::join(
+                        'non_configurable_items',
+                        'non_configurable_item_store.nonConfigurableId',
+                        '=',
+                        'non_configurable_items.id'
+                    )
+                    ->where('non_configurable_item_store.quotationId', $Id)
+                    ->where('non_configurable_item_store.versionId', $vId)
+                    ->whereIn('non_configurable_item_store.userId', $userIds)
+                    ->select(
+                        'non_configurable_items.*',
+                        'non_configurable_item_store.id as NonConfigId',
+                        'non_configurable_item_store.quantity',
+                        'non_configurable_item_store.total_price',
+                        'non_configurable_item_store.price as storePrice'
+                    )
+                    ->orderBy('non_configurable_item_store.id', 'desc')
+                    ->get();
 
             $selectQV = ['selectVersionID' => 0, 'selectVersion' => 0, 'discountQuotation' => 0];
             $additem = 0;
