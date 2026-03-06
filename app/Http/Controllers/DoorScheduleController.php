@@ -4307,7 +4307,7 @@ class DoorScheduleController extends Controller
                 ->where('customers.UserId', $Quotation->MainContractorId)->first();
 
 
-            $nonconfigdata = NonConfigurableItemStore::join(
+            $nonconfigData = NonConfigurableItemStore::join(
                         'non_configurable_items',
                         'non_configurable_item_store.nonConfigurableId',
                         '=',
@@ -4325,6 +4325,8 @@ class DoorScheduleController extends Controller
                     )
                     ->orderBy('non_configurable_item_store.id', 'desc')
                     ->get();
+
+            $nonconfigdata = NonConfigurableItems::wherein('userId', CompanyUsers())->orderBy('id', 'desc')->get();
 
             $selectQV = ['selectVersionID' => 0, 'selectVersion' => 0, 'discountQuotation' => 0];
             $additem = 0;
@@ -4445,6 +4447,7 @@ class DoorScheduleController extends Controller
                 'Favorite' => $Favorite,
                 'ProjectsAddress' => $ProjectsAddress,
                 'nonconfigdata' => $nonconfigdata,
+                'nonconfigData' => $nonconfigData,
                 'ProjectId' => $Quotation->ProjectId,
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
                 'floor' => $floor,
