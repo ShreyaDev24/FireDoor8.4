@@ -830,10 +830,10 @@
                                             </tr>
                                         </thead>
                                         <tbody id="versionData">
-                                            @if (!empty($nonConfigData) && count($nonConfigData) > 0)
+                                            @if (!empty($nonconfigdata) && count($nonconfigdata) > 0)
                                                 <?php
                                                 $SI = 1; ?>
-                                                @foreach ($nonConfigData as $value)
+                                                @foreach ($nonconfigdata as $value)
                                                     <tr>
                                                         <td>{{ $SI++; }}</td>
                                                         <td>{{ $value->name }}</td>
