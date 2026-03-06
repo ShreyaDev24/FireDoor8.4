@@ -19,6 +19,7 @@ use App\Http\Controllers\ScreenGlazingTypeController;
 use App\Http\Controllers\IntumescentSealArrangementController;
 use App\Http\Controllers\OverpanelGlassGlazingType;
 use App\Http\Controllers\ColourListController;
+use App\Http\Controllers\FinishCostController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -161,6 +162,11 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     ->name('Colour-List.exportSelected');
     Route::resource('options/Colour-List', ColourListController::class);
     Route::post('options/Colour-List/update-selected', [ColourListController::class, 'updateSelected'])->name('Colour-List.updateSelected');
+
+    Route::post('options/Finish-Cost/export-selected', [FinishCostController::class, 'exportSelected'])
+    ->name('Finish-Cost.exportSelected');
+    Route::resource('options/Finish-Cost', FinishCostController::class);
+    Route::post('options/Finish-Cost/update-selected', [FinishCostController::class, 'updateSelected'])->name('Finish-Cost.updateSelected');
 
     Route::post('options/Intumescent-Seal-Arrangement/export-selected', [IntumescentSealArrangementController::class, 'exportSelected'])
     ->name('Intumescent-Seal-Arrangement.exportSelected');
