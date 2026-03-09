@@ -943,7 +943,7 @@ class PrintInvoiceController extends Controller
             <td>' . $show->ScreenType . '</td>
             <td>' . $show->screenNumber . '</td>
             <td>' . $show->GlazingType . '</td>
-            <td>' . $show->ScreenAdjustPrice ?? $show->ScreenPrice . '</td>
+            <td>' . ($show->ScreenAdjustPrice > 0 ? $show->ScreenAdjustPrice : $show->ScreenPrice) . '</td>
             </tr>';
             $i++;
         }
@@ -4784,7 +4784,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             <td>' . $show->ScreenType . '</td>
             <td>' . $show->screenNumber . '</td>
             <td>' . $show->GlazingType . '</td>
-            <td>' . $show->ScreenAdjustPrice ?? $show->ScreenPrice . '</td>
+            <td>' . ($show->ScreenAdjustPrice > 0 ? $show->ScreenAdjustPrice : $show->ScreenPrice) . '</td>
             </tr>';
             $i++;
         }

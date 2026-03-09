@@ -354,10 +354,14 @@
                                                         <td>{{ $row->SOWidth }}</td>
                                                         <td>{{ $row->SOHeight }}</td>
                                                         <td>{{ $row->SODepth }}</td>
-                                                        <td>{{ number_format(
-                                                                        ($row->ScreenAdjustPrice ?? floatval($row->ScreenPrice)),
-                                                                        2
-                                                                    ) }}</td>
+                                                        <td>{{
+                                                            number_format(
+                                                                (!empty($row->ScreenAdjustPrice) && $row->ScreenAdjustPrice != 0)
+                                                                    ? $row->ScreenAdjustPrice
+                                                                    : $row->ScreenPrice,
+                                                                2
+                                                            )
+                                                        }}</td>
                                                         </td>
                                                         <td class="text-center">
                                                             <div class="dropdown">
