@@ -186,6 +186,12 @@ class HalspanController extends Controller
                 Log::info($checkpoint['label'] . ': ' . round($checkpoint['duration'] * 1000, 2) . 'ms');
             }
         }
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        } else {
+            $ids = Auth::user()->id;
+        }
 
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
         $totalTime = microtime(true) - $startTime;
