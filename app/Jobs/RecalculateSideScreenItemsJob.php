@@ -45,10 +45,16 @@ class RecalculateSideScreenItemsJob implements ShouldQueue
                     $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
                     $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
                 }
-
-                SideScreenItem::where('id', $id)->update([
-                    'ScreenPrice' => $GTSellPriceTotal
-                ]);
+                if($data->ScreenAdjustPrice  != 0 || $data->ScreenAdjustPrice  != null){
+                    SideScreenItem::where('id', $id)->update([
+                        'ScreenPrice' => $GTSellPriceTotal,
+                        'ScreenAdjustPrice' => $GTSellPriceTotal,
+                    ]);
+                } else{
+                    SideScreenItem::where('id', $id)->update([
+                        'ScreenPrice' => $GTSellPriceTotal
+                    ]);
+                }
             }
         }
     }

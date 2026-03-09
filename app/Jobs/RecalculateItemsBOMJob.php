@@ -50,12 +50,16 @@ class RecalculateItemsBOMJob implements ShouldQueue
                 $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
-
-                Item::where('itemId', $itemid)->update([
-                    'DoorsetPrice' => $GTSellPriceTotal,
-                ]);
-
-
+                if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
+                    Item::where('itemId', $itemid)->update([
+                        'DoorsetPrice' => $GTSellPriceTotal,
+                        'AdjustPrice' => $GTSellPriceTotal,
+                    ]);
+                } else{
+                    Item::where('itemId', $itemid)->update([
+                        'DoorsetPrice' => $GTSellPriceTotal,
+                    ]);
+                }
             }
         }
 
