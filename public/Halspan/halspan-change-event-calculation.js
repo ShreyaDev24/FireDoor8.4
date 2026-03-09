@@ -30,6 +30,7 @@ $(".change-event-calulation").change(function(){
     var frameFinish ='';
     var Ext_Liner ='No';
     var UnderCutAdditionalNumber_a = 3;
+    var OpBeadThickness = 0;
     var thisvalue = document.getElementsByClassName("change-event-calulation");
     for (var i = 0; i < thisvalue.length; i++) {
         //get value of tollerance from field
