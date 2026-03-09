@@ -113,6 +113,150 @@ class VicaimaController extends Controller
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
         // Log::info('ConfigurableDoorFormula time', ['ms' => (microtime(true) - $start) * 1000]);
 
+        $configurationDoor = configurationDoor(4);
+        $UserId = Auth::user()->id;
+        $UserType = Auth::user()->UserType;
+        if(in_array($UserType,[1,4])){
+            $SelectedOptionsData = $OptionsData;
+            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 4 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
+            $ArchitraveType = ArchitraveType::where([$configurationDoor => 4 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
+            $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+        }else{
+            $UserId = CompanyUsers();
+            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 4 ,'options.is_deleted' => 0], "join");
+            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 4 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
+            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 4 ,'architrave_type.Status' => 1], "join","architrave_type");
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 4], "join", "intumescentSealArrangement");
+
+            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
+
+        }
+
+        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
+        $tooltip = Tooltip::first();
+        $quotation = Quotation::where('id',$id)->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
+
+        if (Auth::user()->UserType == 1) {
+            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+        }else{
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        }
+        $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Process the data and merge
+        // foreach ($setIronmongery as $ironmongery) {
+        //     $additionalInfo = []; // Temporary array to hold additional info
+
+        //     foreach ($IronmongeryInfoSet as $valIronmongery) {
+        //         // Check if the property exists and is not empty
+        //         if (!empty($ironmongery->$valIronmongery)) {
+        //             $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+        //                 ->where('UserId', Auth::user()->id)
+        //                 ->first();
+
+        //             if (!empty($SelectedIronmongery)) {
+        //                 $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+        //                         ->first();
+        //                 if(empty($IronmongeryInfoModel)){
+        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+        //                 }
+
+        //                 if (!empty($IronmongeryInfoModel)) {
+        //                     $additionalInfo[] = $IronmongeryInfoModel;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     // Dynamically add the additional_info attribute
+        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
+        // }
+
+        $qtyFieldOverrides = [
+            'DoorSinage' => 'doorSignageQty',
+            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
+            'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
+        ];
+
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = [];
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
+
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
+
+                    foreach ($ids as $index => $itemId) {
+                        $itemId = trim($itemId);
+                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
+
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if ($SelectedIronmongery) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
+                                ->where('UserId', Auth::user()->id)
+                                ->first();
+
+                            if (!$IronmongeryInfoModel) {
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if ($IronmongeryInfoModel) {
+                                for ($i = 0; $i < $qty; $i++) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
+                        }
+                    }
+                }
         /* ================= LIPPING SPECIES (CACHED) ================= */
         $start = microtime(true);
         $LippingSpeciesData = Cache::remember(
