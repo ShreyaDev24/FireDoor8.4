@@ -20,65 +20,12 @@ class lippingSpeciesController extends Controller
         }else{
             $UserId = ['1'];
         }
-        
+
         $ls = LippingSpecies::with('lipping_species_items')->wherein('editBy',$UserId)->where('Status',1)->orderBy('id','desc')->orderBy('id','desc')->get();
-        $i = 1;
-        $tbl = '';
-        foreach($ls as $tt){
-            if ($tt->editBy != 1 || Auth::user()->UserType == 1){
-                $action = '<td>
-                <span style="display: flex;">
-                    <form action="'.route('updlippingSpecies').'" method="post">
-                        <input type="hidden" name="_token" value="'.csrf_token().'">
-                        <button type="submit" name="upd" value="'.$tt->id.'" class="btn btn-success">
-                            <i class="fa fa-edit"></i>
-                        </button>
-                    </form>
-                    <form action="'.route('deletelippingSpecies').'" method="post">
-                        <input type="hidden" name="_token" value="'.csrf_token().'">
-                        <button type="submit" name="delete" value="'.$tt->id.'" onClick="return confirm(\'Are you sure, you want to delete?\')" class="btn btn-danger" style="margin-left: 5px;">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </form>
-                </span>
-            </td>';
-            }else{
-                $action = '<td></td>';
-            }
-            
-            if(!empty($tt->file)){
-                $img = '<img src="'.url('/').'/uploads/Options/'.$tt->file.'" style="width:50px;height:50px;">';
-            } else {
-                $img = 'No Image';
-            }
-            
-            // $lipping_species_items_html = '';
-            // foreach($tt->lipping_species_items as $lipping_species_items){
-            //     $lipping_species_items_html.= '<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">'.$lipping_species_items->thickness.'</button>
-            //     <div id="demo" class="collapse">'.$lipping_species_items->price.'</div>';
 
-            // }
-            // <td>'.@$tt->lipping_species_items[0]->thickness.'</td>
-            // <td>'.join(", ",array_column($tt->lipping_species_items->toArray(), 'price')).'</td>
-
-            $tbl .=
-            '
-                <tr>
-                    <td>'.$i.'</td>
-                    <td>'.$tt->SpeciesName.'</td>
-                    <td>'.$tt->MinValue.'</td>
-                    <td>'.$tt->MaxValues.'</td>
-
-                    <td>'.$img.'</td>
-                    '.$action.'
-                </tr>
-            ';
-            $i++;
-        }
-        
-        return view('Setting.lippingSpecies',['tbl' => $tbl]);
+        return view('Setting.lippingSpecies',['ls' => $ls]);
     }
-    
+
     public function sublippingSpecies(Request $request)
     {
 
@@ -98,7 +45,7 @@ class lippingSpeciesController extends Controller
             $a = new LippingSpecies;
             $a->created_at = date('Y-m-d H:i:s');
         }
-        
+
         $image = $request->file;
         if(!empty($image)){
             $valid = $request->validate([
@@ -108,7 +55,7 @@ class lippingSpeciesController extends Controller
             $a->file = $imageName;
             $image->move(public_path('uploads/Options'), $imageName);
         }
-        
+
         $a->SpeciesName = $request->SpeciesName;
         $a->MinValue = $request->MinValue;
         $a->MaxValues = $request->MaxValues;

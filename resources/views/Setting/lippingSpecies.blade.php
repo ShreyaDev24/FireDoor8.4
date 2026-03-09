@@ -1,6 +1,3 @@
-@php
-//    dd(session()->get('upd')->toArray());
-@endphp
 @extends("layouts.Master")
 @section('main_section')
 
@@ -174,45 +171,118 @@
                                 <div class="col-md-12">
                                     <hr>
                                 </div>
-                                <div class="col-md-12">
-                                    <button type="submit" id="submit" class="btn-wide btn btn-success"
-                                        style="float: right;">
-                                        @if (session()->has('upd')) {{ 'Update' }} @else {{ 'Submit' }} @endif
+                                <div class="col-md-12 d-flex justify-content-end gap-2">
+
+                                    <a href="{{ route('Lipping-Species.index') }}" class="btn btn-secondary mr-2">
+                                        Cancel
+                                    </a>
+
+                                    <button type="submit" id="submit" class="btn btn-success btn-wide">
+                                        {{ session()->has('upd') ? 'Update' : 'Submit' }}
                                     </button>
+
                                 </div>
                             </div>
                         </form>
                     </div>
                 </div>
 
-                <div class="main-card mb-3 card">
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <table style="width: 100%;" id="example"
-                                    class="table table-hover table-striped table-bordered">
-                                    <thead class="text-uppercase table-header-bg">
-                                        <tr class="text-white">
-                                            <th>S.No.</th>
-                                            <th>Species Name</th>
-                                            <th>Min Value</th>
-                                            <th>Max Value</th>
-                                            {{-- <th>Thickness</th>
-                                            <th>Prices</th> --}}
-                                            <th>File</th>
-                                            <th>Manage
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {!! $tbl !!}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+
             </div>
+        </div>
+    </div>
+
+    <div class="app-main__outer">
+        <div class="app-main__inner">
+            <table class="table table-bordered table-hover" style="table-layout:auto;" id="timberSpeciesTable">
+                <thead>
+                    <tr>
+                        <th>S.No.</th>
+                        <th>Species Name</th>
+                        <th>Min Value</th>
+                        <th>Max Value</th>
+                        {{-- <th>Thickness</th>
+                        <th>Prices</th> --}}
+                        <th>File</th>
+                        <th>Manage
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @php $i = 1; @endphp
+
+                    @foreach($ls as $tt)
+
+                    <tr>
+
+                        <td>{{ $i }}</td>
+
+                        <td>{{ $tt->SpeciesName }}</td>
+
+                        <td>{{ $tt->MinValue }}</td>
+
+                        <td>{{ $tt->MaxValues }}</td>
+
+                        <td>
+                            @if(!empty($tt->file))
+                                <img src="{{ url('/') }}/uploads/Options/{{ $tt->file }}" style="width:50px;height:50px;">
+                            @else
+                                No Image
+                            @endif
+                        </td>
+
+                        <td>
+
+                            @if($tt->editBy != 1 || Auth::user()->UserType == 1)
+
+                            <span style="display:flex">
+
+                                <form action="{{ route('updlippingSpecies') }}" method="post">
+
+                                    @csrf
+
+                                    <button type="submit"
+                                            name="upd"
+                                            value="{{ $tt->id }}"
+                                            class="btn btn-success">
+
+                                        <i class="fa fa-edit"></i>
+
+                                    </button>
+
+                                </form>
+
+                                <form action="{{ route('deletelippingSpecies') }}"
+                                    method="post"
+                                    style="margin-left:5px">
+
+                                    @csrf
+
+                                    <button type="submit"
+                                            name="delete"
+                                            value="{{ $tt->id }}"
+                                            onclick="return confirm('Are you sure, you want to delete?')"
+                                            class="btn btn-danger">
+
+                                        <i class="fa fa-trash"></i>
+
+                                    </button>
+
+                                </form>
+
+                            </span>
+
+                            @endif
+
+                        </td>
+
+                    </tr>
+
+                    @php $i++; @endphp
+
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 @endsection
@@ -225,6 +295,19 @@
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
+        });
+
+        $(document).ready(function() {
+
+            let timberSpeciesTable = $('#timberSpeciesTable').DataTable({
+                pageLength: 10,
+                lengthMenu: [10, 25, 50, 100],
+                ordering: true,
+                searching: true,
+                responsive: true,
+                columnDefs: [{ orderable: false, targets: [0, -1] }]
+            });
+
         });
         $(document).on('click', '.addfields', function(e) {
             e.preventDefault()

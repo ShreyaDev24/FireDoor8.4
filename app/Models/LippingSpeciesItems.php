@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 class LippingSpeciesItems extends Model {
-    
+
     protected $fillable = [];
 
     public function lipping_species()
@@ -16,7 +16,7 @@ class LippingSpeciesItems extends Model {
     public function selected_lipping_species_items()
     {
         return $this->hasMany(SelectedLippingSpeciesItems::class, 'selected_lipping_species_items_id', 'id');
-    
+
     }
-   
+
 }

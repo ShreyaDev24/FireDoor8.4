@@ -20,6 +20,7 @@ use App\Http\Controllers\IntumescentSealArrangementController;
 use App\Http\Controllers\OverpanelGlassGlazingType;
 use App\Http\Controllers\ColourListController;
 use App\Http\Controllers\FinishCostController;
+use App\Http\Controllers\LippingSpeciesController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -175,6 +176,13 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::get('/Intumescent-Seal-Arrangement/create/standard', [IntumescentSealArrangementController::class, 'createStandard'])->name('Intumescent-Seal-Arrangement.createStandard');
     Route::get('Intumescent-Seal-Arrangement/edit/standard/{id}', [IntumescentSealArrangementController::class, 'editStandard'])
         ->name('Intumescent-Seal-Arrangement.editStandard');
+
+    Route::post('options/Lipping-Species/export-selected', [LippingSpeciesController::class, 'exportSelected'])
+    ->name('Lipping-Species.exportSelected');
+    Route::resource('options/Lipping-Species', LippingSpeciesController::class);
+    Route::post('options/Lipping-Species/update-selected', [LippingSpeciesController::class, 'updateSelected'])->name('Lipping-Species.updateSelected');
+
+
 });
 
 

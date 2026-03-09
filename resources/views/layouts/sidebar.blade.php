@@ -385,11 +385,9 @@
                         </li>
 
                         {{-- Timber Species --}}
-                        <li class="submm-{{ (Request::segment(2) == 'select' && Request::segment(4) == 'lippingSpecies') ? 'active' : ''}}">
-                            <a href="{{route('options/select',[1,'lippingSpecies'])}}">Timber Species</a>
+                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
+                            <a href="{{ route('Lipping-Species.index') }}">Timber Species</a>
                         </li>
-
-
                     </ul>
                 </li>
 
@@ -744,10 +742,9 @@
                     </li>
 
                     {{-- Timber Species --}}
-                    <li class="submm-{{ (Request::segment(2) == 'select' && Request::segment(4) == 'lippingSpecies') ? 'active' : ''}}">
-                        <a href="{{route('options/select',[1,'lippingSpecies'])}}">Timber Species</a>
+                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
+                        <a href="{{ route('Lipping-Species.index') }}">Timber Species</a>
                     </li>
-
                 </ul>
             </li>
 
