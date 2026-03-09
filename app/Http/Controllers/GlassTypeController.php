@@ -217,4 +217,67 @@ class GlassTypeController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function exportSelected(Request $request)
+    {
+        $ids = $request->has('ids')
+            ? (is_array($request->ids) ? $request->ids : json_decode($request->ids, true))
+            : [];
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $auth = auth()->user();
+
+        $items = GlassType::leftJoin('selected_glass_type as sg', function ($join) use ($auth) {
+                $join->on('glass_type.id', '=', 'sg.glass_id')
+                     ->where('sg.editBy', $auth->id);
+            })
+            ->whereIn('glass_type.EditBy', [$auth->id, 1])
+            ->whereIn('glass_type.id', $ids)
+            ->select(
+                'glass_type.*',
+                'sg.id as selectedId',
+                'sg.selectedPrice'
+            )
+            ->orderBy('glass_type.GlassType')
+            ->get();
+
+        $filename = 'Glass_Type_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'NFR','FD30','FD60','Glass Integrity', 'Glass Type','Glass Thickness','Vp Area Size', 'Price Per m²']);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->Streboard ? 'Yes' : 'No',
+                    $item->Halspan ? 'Yes' : 'No',
+                    $item->Flamebreak ? 'Yes' : 'No',
+                    $item->Stredor ? 'Yes' : 'No',
+                    $item->VicaimaDoorCore ? 'Yes' : 'No',
+                    $item->Seadec ? 'Yes' : 'No',
+                    $item->Deanta ? 'Yes' : 'No',
+                    $item->MMM ? 'Yes' : 'No',
+                    $item->NFR ?? '-',
+                    $item->FD30 ?? '-',
+                    $item->FD60 ?? '-',
+                    str_replace('_', ' ', $item->GlassIntegrity),
+                    $item->GlassType,
+                    $item->GlassThickness,
+                    $item->VpAreaSize,
+                    number_format($item->selectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
 }

@@ -223,4 +223,72 @@ class ScreenGlazingTypeController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function exportSelected(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $auth = auth()->user();
+
+        $items = ScreenGlazingType::with('glassType')
+            ->leftJoin('selected_screen_glazing as sg', function ($join) use ($auth) {
+
+                $join->on('screen_glazing_type.id', '=', 'sg.glazing_id')
+                     ->where('sg.editBy', $auth->id);
+
+            })
+            ->whereIn('screen_glazing_type.EditBy', [$auth->id, 1])
+            ->whereIn('screen_glazing_type.id', $ids)
+            ->select(
+                'screen_glazing_type.*',
+                'sg.id as selectedId',
+                'sg.glazingSelectedPrice'
+            )
+            ->whereNotNull('screen_glazing_type.GlazingSystem')
+            ->orderBy('screen_glazing_type.GlazingSystem', 'ASC')
+            ->get();
+
+        $filename = 'Screen_Glazing_System_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, [
+                'Fire Rating',
+                'Screen Glass',
+                'Glazing System',
+                'Glazing Thickness',
+                'Beading',
+                'Beading Height',
+                'Beading Width',
+                'Fixing Details',
+                'Price Per L/M',
+            ]);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->FireRating,
+                    $item->glassType?->GlassType ?? '-',
+                    $item->GlazingSystem,
+                    $item->GlazingThickness,
+                    $item->Beading,
+                    $item->BeadingHeight,
+                    $item->BeadingWidth,
+                    $item->FixingDetails,
+                    number_format($item->glazingSelectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
 }

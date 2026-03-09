@@ -50,9 +50,13 @@
             </a>
         </div>
         @if($auth->id != 1)
-        <div class="mb-3">
-            <button id="updateSelected" class="btn btn-success">
+        <div class="mb-3 d-flex gap-2">
+            <button id="updateSelected" class="btn btn-success  mr-2">
                 <i class="fa fa-save"></i> Update Selected
+            </button>
+
+            <button id="exportSelected" class="btn btn-info">
+                <i class="fa fa-download"></i> Export Selected
             </button>
         </div>
         @endif
@@ -261,6 +265,47 @@ function chooseOptionCost(input) {
         }
     });
 }
+
+$('#exportSelected').on('click', function () {
+
+    let ids = [];
+    let table = $('#screen_Glazing_typeTable').DataTable();
+
+    table.rows().every(function () {
+        let row = $(this.node());
+        let checkbox = row.find('.rowCheck');
+
+        if (checkbox.length && checkbox.prop('checked')) {
+            ids.push(checkbox.val());
+        }
+    });
+
+    if (!ids.length) {
+        alert('Please select at least one record to export.');
+        return;
+    }
+
+    // Create a hidden form and submit (browser will download CSV)
+    let form = document.createElement('form');
+    form.method = 'POST';
+    form.action = "{{ route('Screen-Glazing-Type.exportSelected') }}";
+
+    let token = document.createElement('input');
+    token.type = 'hidden';
+    token.name = '_token';
+    token.value = "{{ csrf_token() }}";
+    form.appendChild(token);
+
+    let idsInput = document.createElement('input');
+    idsInput.type = 'hidden';
+    idsInput.name = 'ids';
+    idsInput.value = JSON.stringify(ids);
+    form.appendChild(idsInput);
+
+    document.body.appendChild(form);
+    form.submit();
+    form.remove();
+});
 </script>
 
 

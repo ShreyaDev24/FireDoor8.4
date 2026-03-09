@@ -198,4 +198,61 @@ class IntumescentSealColorController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function exportSelected(Request $request)
+    {
+        $ids = json_decode($request->ids, true);
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $auth = auth()->user();
+
+        $items = IntumescentSealColor::leftJoin(
+                'selected_intumescent_seal_color as s',
+                function ($join) use ($auth) {
+                    $join->on('intumescent_seal_color.id', '=', 's.intumescentSealColorId')
+                         ->where('s.userId', $auth->id);
+                }
+            )
+            ->whereIn('intumescent_seal_color.id', $ids)
+            ->select(
+                'intumescent_seal_color.*',
+                's.id as selectedId',
+                's.selectedPrice'
+            )
+            ->orderBy('intumescent_seal_color.IntumescentSealColor')
+            ->get();
+
+        $filename = 'IntumescentSealColor_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type" => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+            fputcsv($file, ['Intumescent Seal Color', 'Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'Price Per m²']);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    $item->IntumescentSealColor,
+                    $item->Streboard ? 'Yes' : 'No',
+                    $item->Halspan ? 'Yes' : 'No',
+                    $item->Flamebreak ? 'Yes' : 'No',
+                    $item->Stredor ? 'Yes' : 'No',
+                    $item->VicaimaDoorCore ? 'Yes' : 'No',
+                    $item->Seadec ? 'Yes' : 'No',
+                    $item->Deanta ? 'Yes' : 'No',
+                    $item->MMM ? 'Yes' : 'No',
+                    number_format($item->selectedPrice ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
 }

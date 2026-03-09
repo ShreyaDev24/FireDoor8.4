@@ -8,6 +8,10 @@ class SelectedDoordimension extends Model
 {
     protected $table = 'selected_doordimension';
 
+    protected $casts = [
+        'custome_door_selected_cost' => 'array',
+    ];
+
     protected $fillable = [
 
         'doordimension_id',
@@ -19,6 +23,7 @@ class SelectedDoordimension extends Model
         'selected_mm_width',
         'selected_sellingprice',
         'selected_cost',
+        'custome_door_selected_cost'
     ];
 
     public function dimension()

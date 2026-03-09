@@ -32,5 +32,13 @@ class DoorDimension extends Model
         return $this->hasOne(SelectedDoordimension::class, 'doordimension_id');
     }
 
+    public function leafTypes()
+    {
+        return $this->hasMany(
+            IntumescentSealLeafType::class,
+            'configurableitems',   // foreign key on leaf type table
+            'configurableitems'    // local key on door_dimension table
+        );
+    }
 
 }

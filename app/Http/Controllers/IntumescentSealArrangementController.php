@@ -294,4 +294,93 @@ class IntumescentSealArrangementController extends Controller
         SettingIntumescentSeals2::where('id', $id)->delete();
         return back()->with('success', 'Deleted successfully');
     }
+
+    public function exportSelected(Request $request)
+    {
+        $auth = auth()->user();
+
+        $ids = $request->has('ids')
+            ? (is_array($request->ids) ? $request->ids : json_decode($request->ids, true))
+            : [];
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'Invalid export data.');
+        }
+
+        $items = SettingIntumescentSeals2::leftJoin('selected_intumescentseals2 as s', function ($join) use ($auth) {
+                $join->on('setting_intumescentseals2.id', '=', 's.intumescentseals2_id')
+                     ->where('s.selected_intumescentseals2_user_id', $auth->id);
+            })
+            ->whereIn('setting_intumescentseals2.editBy', [$auth->id, 1])
+            ->whereIn('setting_intumescentseals2.id', $ids)
+            ->select(
+                'setting_intumescentseals2.*',
+                's.id as selectedId',
+                's.selected_cost'
+            )
+            ->orderBy('setting_intumescentseals2.configurableitems', 'ASC')
+            ->orderBy('setting_intumescentseals2.firerating', 'ASC')
+            ->orderBy('setting_intumescentseals2.brand', 'ASC')
+            ->orderBy('setting_intumescentseals2.intumescentSeals', 'ASC')
+            ->get();
+
+        $items = $items->map(function ($item) {
+            $leafTypeIds = explode(',', (string) $item->customeleafTypes);
+
+            $leafTypes = DB::table('intumescent_seal_leaf_type')
+                ->whereIn('id', $leafTypeIds)
+                ->pluck('leaf_type_key')
+                ->toArray();
+
+            $item->leaf_type_keys = implode(', ', $leafTypes);
+
+            return $item;
+        });
+
+        $filename = 'Intumescent_Seal_Arrangement_selected_' . now()->format('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-Type"        => "text/csv",
+            "Content-Disposition" => "attachment; filename=$filename",
+        ];
+
+        return response()->stream(function () use ($items) {
+
+            $file = fopen('php://output', 'w');
+
+            fputcsv($file, [
+                'Configurable Item',
+                'FireDoor',
+                'Configuration',
+                'Height1',
+                'Height2',
+                'Width1',
+                'Width2',
+                'intumescent Seal',
+                'BRAND',
+                'FireOnly Type',
+                'Leaf Type',
+                'Cost Price'
+            ]);
+
+            foreach ($items as $item) {
+                fputcsv($file, [
+                    configurationDoor($item->configurableitems),
+                    $item->firerating,
+                    $item->configuration,
+                    $item->Point1height,
+                    $item->Point2height,
+                    $item->Point1width,
+                    $item->Point2width,
+                    $item->intumescentSeals,
+                    $item->brand,
+                    $item->FireOnly,
+                    $item->leaf_type_keys,
+                    number_format($item->selected_cost ?? 0, 2),
+                ]);
+            }
+
+            fclose($file);
+        }, 200, $headers);
+    }
 }
