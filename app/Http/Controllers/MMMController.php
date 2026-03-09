@@ -77,6 +77,8 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use Illuminate\Http\JsonResponse;
 use App\Models\DoorFrameConstruction;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 
 
 class MMMController extends Controller
@@ -86,32 +88,85 @@ class MMMController extends Controller
         $this->middleware('auth');
     }
 
-    public function add_MMM_door_core($id,$vid = null,$itemId = null){
+    public function add_MMM_door_core($id, $vid = null, $itemId = null)
+    {
+        $__totalStart = microtime(true);
+        // Log::info('add_MMM_door_core START', ['QuotationId' => $id]);
 
-        if(auth()->user()->UserType == 2){
-            $userId = [1,auth()->user()->id];
-            }elseif(auth()->user()->UserType == 3){
-                $userId = [1,auth()->user()->CreatedBy];
-            }else{
-                $userId = [];
-            }
+        /* ================= USER IDS ================= */
+        $start = microtime(true);
+        if (auth()->user()->UserType == 2) {
+            $userId = [1, auth()->user()->id];
+        } elseif (auth()->user()->UserType == 3) {
+            $userId = [1, auth()->user()->CreatedBy];
+        } else {
+            $userId = [];
+        }
+        // Log::info('UserId resolve time', ['ms' => (microtime(true) - $start) * 1000]);
 
         $item = [];
+        $start = microtime(true);
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        // Log::info('CompanyUsers time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= CONFIG FORMULA ================= */
+        $start = microtime(true);
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+        // Log::info('ConfigurableDoorFormula time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= LIPPING SPECIES ================= */
+        $start = microtime(true);
+        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        // Log::info('LippingSpecies time', [
+        //     'count' => is_countable($LippingSpeciesData) ? count($LippingSpeciesData) : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 9], "", "intumescentSealArrangement");
+        /* ================= OPTIONS ================= */
+        $start = microtime(true);
+        $OptionsData = Option::where([
+                'configurableitems' => 9,
+                'is_deleted' => 0
+            ])
+            ->whereIn('editBy', $UserIds)
+            ->get();
 
+        // Log::info('OptionsData time', [
+        //     'count' => is_countable($OptionsData) ? $OptionsData->count() : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
+
+        /* ================= INTUMESCENT ARRANGEMENT ================= */
+        $start = microtime(true);
+        $intumescentSealArrangement = GetOptions(
+            ['setting_intumescentseals2.configurableitems' => 9],
+            "",
+            "intumescentSealArrangement"
+        );
+        // Log::info('Intumescent arrangement time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= USER TYPE CONDITIONAL ================= */
+        $start = microtime(true);
         $configurationDoor = configurationDoor(9);
-        $UserId = Auth::user()->id;
         $UserType = Auth::user()->UserType;
-        if(in_array($UserType,[1,4])){
+
+        if (in_array($UserType, [1, 4])) {
             $SelectedOptionsData = $OptionsData;
-            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
-            $ArchitraveType = ArchitraveType::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
+            $intumescentSealColor = IntumescentSealColor::where([
+                    $configurationDoor => 9,
+                    'Status' => 1
+                ])
+                ->whereIn('editBy', $UserIds)
+                ->get();
+
+            $ArchitraveType = ArchitraveType::where([
+                    $configurationDoor => 9,
+                    'Status' => 1
+                ])
+                ->whereIn('editBy', $UserIds)
+                ->get();
+
             $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
@@ -243,11 +298,97 @@ class MMMController extends Controller
             // Access the first default item if it exists
             $defaultItemsstandard = $defaultItems['default_items'][0] ?? [];
         } else {
-            $defaultItemsstandard = [];
+            $SelectedOptionsData = GetOptions(
+                ['options.configurableitems' => 9, 'options.is_deleted' => 0],
+                "join"
+            );
+
+            $intumescentSealColor = GetOptions(
+                ['intumescent_seal_color.' . $configurationDoor => 9, 'intumescent_seal_color.Status' => 1],
+                "join",
+                "intumescent_seal_color"
+            );
+
+            $ArchitraveType = GetOptions(
+                ['architrave_type.' . $configurationDoor => 9, 'architrave_type.Status' => 1],
+                "join",
+                "architrave_type"
+            );
+
+            $SelectedIntumescentSealArrangement = GetOptions(
+                ['selected_intumescentseals2.selected_configurableitems' => 9],
+                "join",
+                "intumescentSealArrangement"
+            );
         }
 
-        $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-        return view('Items/MMM/MMMConfigurableItem',[
+        // Log::info('UserType conditional block time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= COLORS ================= */
+        $start = microtime(true);
+        $ColorData = Color::where('Status', 1)
+            ->whereIn('editBy', $UserIds)
+            ->get();
+        // Log::info('Color query time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= COMPANY ================= */
+        $start = microtime(true);
+        $company_data = Company::join('users', 'users.id', 'companies.UserId')
+            ->select('users.*')
+            ->get();
+        // Log::info('Company join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= TOOLTIP ================= */
+        $start = microtime(true);
+        $tooltip = Tooltip::first();
+        // Log::info('Tooltip query time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= QUOTATION ================= */
+        $start = microtime(true);
+        $quotation = Quotation::where('id', $id)->first();
+        // Log::info('Quotation query time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= FOLDERS ================= */
+        $start = microtime(true);
+        $folders = DB::table('folders')
+            ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+            ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+            ->where('folders.user_id', Auth::user()->id)
+            ->get()
+            ->groupBy('folder_id');
+
+        // Log::info('Folders join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= IRONMONGERY ================= */
+        $start = microtime(true);
+        $setIronmongery = AddIronmongery::whereIn('UserId', $userId)
+            ->orderBy('Setname', 'ASC')
+            ->get();
+
+        // Log::info('SetIronmongery fetch time', [
+        //     'count' => is_countable($setIronmongery) ? $setIronmongery->count() : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
+
+        /* ================= SPECIES ================= */
+        $start = microtime(true);
+        $species = GetOptions(
+            ['leaf_type.MMM' => 9, 'leaf_type.Status' => 1],
+            "join",
+            "leaf_type"
+        );
+        // Log::info('Species time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= BOM SETTING ================= */
+        $start = microtime(true);
+        $BOMSetting = BOMSetting::where('id', 1)->first();
+        // Log::info('BOMSetting time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        // Log::info('add_MMM_door_core END', [
+        //     'total_ms' => (microtime(true) - $__totalStart) * 1000
+        // ]);
+
+        return view('Items/MMM/MMMConfigurableItem', [
             "QuotationId" => $id,
             'Item' => $item,
             'option_data' => $OptionsData,
@@ -268,137 +409,184 @@ class MMMController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'species' => $species,
-            'default' => $defaultItemsstandard,
-            'hinge_location' => $hinge_location,
             'folders' => $folders
         ]);
     }
 
-    public function edit_MMM_door_core($id,$vid = null,$itemId = null){
-       if(auth()->user()->UserType == 2){
-        $userId = [1,auth()->user()->id];
-        }elseif(auth()->user()->UserType == 3){
-            $userId = [1,auth()->user()->CreatedBy];
-        }else{
+
+    public function edit_MMM_door_core($id, $vid = null, $itemId = null)
+    {
+        $__totalStart = microtime(true);
+       // Log::info('edit_MMM_door_core START', ['ItemId' => $id]);
+
+        /* ================= USER IDS ================= */
+        $start = microtime(true);
+        if (auth()->user()->UserType == 2) {
+            $userId = [1, auth()->user()->id];
+        } elseif (auth()->user()->UserType == 3) {
+            $userId = [1, auth()->user()->CreatedBy];
+        } else {
             $userId = [];
         }
+        Log::info('UserId resolve time', ['ms' => (microtime(true) - $start) * 1000]);
 
-       $UserIds = CompanyUsers();
-       $item = Item::where('itemId',$id)->first();
-       if($item === null){
-           return abort(404);
-       }
+        /* ================= ITEM ================= */
+        $start = microtime(true);
+        $item = Item::where('itemId', $id)->first();
+        if (!$item) {
+            return abort(404);
+        }
+        $item = $item->toArray();
+        Log::info('Item fetch time', ['ms' => (microtime(true) - $start) * 1000]);
 
-       $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
-        $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 9], "", "intumescentSealArrangement");
-       // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
-        $configurationDoor = configurationDoor(9);
-        $UserId = Auth::user()->id;
-        $UserType = Auth::user()->UserType;
-        if(in_array($UserType,[1,4])){
-            $SelectedOptionsData = $OptionsData;
-            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
-            $ArchitraveType = ArchitraveType::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
-            $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
-            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+        /* ================= CONFIG FORMULA ================= */
+        $start = microtime(true);
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+        Log::info('ConfigurableDoorFormula time', ['ms' => (microtime(true) - $start) * 1000]);
 
-        }else{
-            $UserId = CompanyUsers();
-            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 9 ,'options.is_deleted' => 0], "join");
-            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 9 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
-            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 9 ,'architrave_type.Status' => 1], "join","architrave_type");
-
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 9], "join", "intumescentSealArrangement");
-
-            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
-
-        }
-
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
-        $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
-        $IronmongeryInfoSet = [
-            'Hinges',
-            'FloorSpring',
-            'LocksAndLatches',
-            'FlushBolts',
-            'ConcealedOverheadCloser',
-            'PullHandles',
-            'PushHandles',
-            'KickPlates',
-            'DoorSelectors',
-            'PanicHardware',
-            'Doorsecurityviewer',
-            'Morticeddropdownseals',
-            'Facefixeddropseals',
-            'ThresholdSeal',
-            'AirTransferGrill',
-            'Letterplates',
-            'CableWays',
-            'SafeHinge',
-            'LeverHandle',
-            'DoorSinage',
-            'FaceFixedDoorCloser',
-            'Thumbturn',
-            'KeyholeEscutchen',
-            'DoorStops',
-            'Cylinders'
-        ];
-
-        // Process the data and merge
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = []; // Temporary array to hold additional info
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                // Check if the property exists and is not empty
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                        ->where('UserId', Auth::user()->id)
-                        ->first();
-
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
-                    }
-                }
+        /* ================= LIPPING SPECIES (CACHED) ================= */
+        $start = microtime(true);
+        $LippingSpeciesData = Cache::remember(
+            'mmm_lipping_species_v1',
+            now()->addHours(6),
+            function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             }
+        );
+        $SelectedLippingSpeciesData = $LippingSpeciesData;
+        Log::info('LippingSpecies time (cached)', [
+            'count' => is_countable($LippingSpeciesData) ? count($LippingSpeciesData) : 0,
+            'ms' => (microtime(true) - $start) * 1000
+        ]);
 
-            // Dynamically add the additional_info attribute
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        /* ================= OPTIONS ================= */
+        $start = microtime(true);
+        $OptionsData = Option::where(['configurableitems' => 9, 'is_deleted' => 0])
+            ->whereIn('editBy', $UserIds)
+            ->get();
+        Log::info('OptionsData time', [
+            'count' => is_countable($OptionsData) ? count($OptionsData) : 0,
+            'ms' => (microtime(true) - $start) * 1000
+        ]);
 
-        $species = DB::table('leaf_type')->where('MMM', 9)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        /* ================= INTUMESCENT ARRANGEMENT ================= */
+        $start = microtime(true);
+        $intumescentSealArrangement = GetOptions(
+            ['setting_intumescentseals2.configurableitems' => 9],
+            "",
+            "intumescentSealArrangement"
+        );
+        Log::info('Intumescent arrangement time', ['ms' => (microtime(true) - $start) * 1000]);
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-        return view('Items/MMM/MMMConfigurableItem',[
+        /* ================= USER TYPE BLOCK (CACHED) ================= */
+        $start = microtime(true);
+        $configurationDoor = configurationDoor(9);
+        $UserType = Auth::user()->UserType;
+        $cacheKey = 'mmm_userblock_' . $UserType . '_door9';
+
+        $userBlock = Cache::remember(
+            $cacheKey,
+            now()->addHours(4),
+            function () use ($UserType, $configurationDoor, $UserIds, $OptionsData, $intumescentSealArrangement) {
+                if (in_array($UserType, [1, 4])) {
+                    return [
+                        'SelectedOptionsData' => $OptionsData,
+                        'intumescentSealColor' => IntumescentSealColor::where([$configurationDoor => 9, 'Status' => 1])
+                            ->whereIn('editBy', $UserIds)->get(),
+                        'ArchitraveType' => ArchitraveType::where([$configurationDoor => 9, 'Status' => 1])
+                            ->whereIn('editBy', $UserIds)->get(),
+                        'SelectedIntumescentSealArrangement' => $intumescentSealArrangement
+                    ];
+                }
+
+                return [
+                    'SelectedOptionsData' => GetOptions(['options.configurableitems' => 9, 'options.is_deleted' => 0], "join"),
+                    'intumescentSealColor' => GetOptions(
+                        ['intumescent_seal_color.' . $configurationDoor => 9, 'intumescent_seal_color.Status' => 1],
+                        "join",
+                        "intumescent_seal_color"
+                    ),
+                    'ArchitraveType' => GetOptions(
+                        ['architrave_type.' . $configurationDoor => 9, 'architrave_type.Status' => 1],
+                        "join",
+                        "architrave_type"
+                    ),
+                    'SelectedIntumescentSealArrangement' => GetOptions(
+                        ['selected_intumescentseals2.selected_configurableitems' => 9],
+                        "join",
+                        "intumescentSealArrangement"
+                    )
+                ];
+            }
+        );
+
+        $SelectedOptionsData = $userBlock['SelectedOptionsData'];
+        $intumescentSealColor = $userBlock['intumescentSealColor'];
+        $ArchitraveType = $userBlock['ArchitraveType'];
+        $SelectedIntumescentSealArrangement = $userBlock['SelectedIntumescentSealArrangement'];
+
+        Log::info('UserType conditional block time (cached)', [
+            'ms' => (microtime(true) - $start) * 1000,
+            'cached' => Cache::has($cacheKey)
+        ]);
+
+        /* ================= COLORS ================= */
+        $start = microtime(true);
+        $ColorData = Color::where('Status', 1)->whereIn('editBy', $UserIds)->get();
+        Log::info('Color query time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= COMPANY ================= */
+        $start = microtime(true);
+        $company_data = Company::join('users', 'users.id', 'companies.UserId')
+            ->select('users.*')
+            ->get();
+        Log::info('Company join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= TOOLTIP ================= */
+        $tooltip = Tooltip::first();
+
+        /* ================= QUOTATION ================= */
+        $quotation = Quotation::where('id', $item['QuotationId'])->first();
+
+        /* ================= FOLDERS ================= */
+        $start = microtime(true);
+        $folders = DB::table('folders')
+            ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+            ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+            ->where('folders.user_id', Auth::user()->id)
+            ->get()
+            ->groupBy('folder_id');
+        Log::info('Folders join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= IRONMONGERY ================= */
+        $start = microtime(true);
+        $setIronmongery = AddIronmongery::whereIn('UserId', [Auth::user()->id])
+            ->orderBy('Setname', 'ASC')
+            ->get();
+        Log::info('SetIronmongery fetch time', [
+            'count' => is_countable($setIronmongery) ? count($setIronmongery) : 0,
+            'ms' => (microtime(true) - $start) * 1000
+        ]);
+
+        /* ================= SPECIES ================= */
+        $start = microtime(true);
+        $species = DB::table('leaf_type')
+            ->where('MMM', 9)
+            ->where('Status', 1)
+            ->whereIn('EditBy', $userId)
+            ->get();
+        Log::info('Species time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= BOM ================= */
+        $BOMSetting = BOMSetting::where('id', 1)->first();
+
+        Log::info('edit_MMM_door_core END', [
+            'total_ms' => (microtime(true) - $__totalStart) * 1000
+        ]);
+
+        return view('Items/MMM/MMMConfigurableItem', [
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
             'option_data' => $OptionsData,
@@ -422,5 +610,6 @@ class MMMController extends Controller
             'folders' => $folders
         ]);
     }
+
 
 }

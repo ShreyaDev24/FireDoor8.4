@@ -77,6 +77,9 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use Illuminate\Http\JsonResponse;
 use App\Models\DoorFrameConstruction;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
+
 
 
 class VicaimaController extends Controller
@@ -86,24 +89,29 @@ class VicaimaController extends Controller
         $this->middleware('auth');
     }
 
-    public function add_vicaima_door_core($id,$vid = null,$itemId = null){
+    public function add_vicaima_door_core($id, $vid = null, $itemId = null)
+    {
+        $__totalStart = microtime(true);
+        // Log::info('add_vicaima_door_core START', ['QuotationId' => $id]);
 
-        if(auth()->user()->UserType == 2){
-            $userId = [1,auth()->user()->id];
-            }elseif(auth()->user()->UserType == 3){
-                $userId = [1,auth()->user()->CreatedBy];
-            }else{
-                $userId = [];
-            }
+        /* ================= USER IDS ================= */
+        $start = microtime(true);
+        if (auth()->user()->UserType == 2) {
+            $userId = [1, auth()->user()->id];
+        } elseif (auth()->user()->UserType == 3) {
+            $userId = [1, auth()->user()->CreatedBy];
+        } else {
+            $userId = [];
+        }
+        // Log::info('UserId resolve time', ['ms' => (microtime(true) - $start) * 1000]);
 
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
-        $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 4], "", "intumescentSealArrangement");
+        /* ================= CONFIG FORMULA ================= */
+        $start = microtime(true);
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
+        // Log::info('ConfigurableDoorFormula time', ['ms' => (microtime(true) - $start) * 1000]);
 
         $configurationDoor = configurationDoor(4);
         $UserId = Auth::user()->id;
@@ -249,55 +257,160 @@ class VicaimaController extends Controller
                         }
                     }
                 }
+        /* ================= LIPPING SPECIES (CACHED) ================= */
+        $start = microtime(true);
+        $LippingSpeciesData = Cache::remember(
+            'vicaima_lipping_species_v1',
+            now()->addHours(6),
+            function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             }
+        );
+        $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
-        // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        // Log::info('LippingSpecies time (cached)', [
+        //     'count' => is_countable($LippingSpeciesData) ? count($LippingSpeciesData) : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
+
+        /* ================= OPTIONS ================= */
+        $start = microtime(true);
+        $OptionsData = Option::where([
+                'configurableitems' => 4,
+                'is_deleted' => 0
+            ])
+            ->whereIn('editBy', $UserIds)
+            ->get();
+
+        // Log::info('OptionsData time', [
+        //     'count' => is_countable($OptionsData) ? count($OptionsData) : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
+
+        /* ================= INTUMESCENT ARRANGEMENT ================= */
+        $start = microtime(true);
+        $intumescentSealArrangement = GetOptions(
+            ['setting_intumescentseals2.configurableitems' => 4],
+            "",
+            "intumescentSealArrangement"
+        );
+        // Log::info('Intumescent arrangement time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= USER TYPE BLOCK (CACHED) ================= */
+        $start = microtime(true);
+        $configurationDoor = configurationDoor(4);
+        $UserType = Auth::user()->UserType;
+
+        $cacheKey = 'vicaima_userblock_' . $UserType . '_door4';
+
+        $userBlock = Cache::remember(
+            $cacheKey,
+            now()->addHours(4),
+            function () use ($UserType, $configurationDoor, $UserIds, $OptionsData, $intumescentSealArrangement) {
+
+                if (in_array($UserType, [1, 4])) {
+                    return [
+                        'SelectedOptionsData' => $OptionsData,
+                        'intumescentSealColor' => IntumescentSealColor::where([$configurationDoor => 4, 'Status' => 1])
+                            ->whereIn('editBy', $UserIds)->get(),
+                        'ArchitraveType' => ArchitraveType::where([$configurationDoor => 4, 'Status' => 1])
+                            ->whereIn('editBy', $UserIds)->get(),
+                        'SelectedIntumescentSealArrangement' => $intumescentSealArrangement
+                    ];
+                }
+
+                return [
+                    'SelectedOptionsData' => GetOptions(['options.configurableitems' => 4, 'options.is_deleted' => 0], "join"),
+                    'intumescentSealColor' => GetOptions(
+                        ['intumescent_seal_color.' . $configurationDoor => 4, 'intumescent_seal_color.Status' => 1],
+                        "join",
+                        "intumescent_seal_color"
+                    ),
+                    'ArchitraveType' => GetOptions(
+                        ['architrave_type.' . $configurationDoor => 4, 'architrave_type.Status' => 1],
+                        "join",
+                        "architrave_type"
+                    ),
+                    'SelectedIntumescentSealArrangement' => GetOptions(
+                        ['selected_intumescentseals2.selected_configurableitems' => 4],
+                        "join",
+                        "intumescentSealArrangement"
+                    )
+                ];
+            }
+        );
+
+        $SelectedOptionsData = $userBlock['SelectedOptionsData'];
+        $intumescentSealColor = $userBlock['intumescentSealColor'];
+        $ArchitraveType = $userBlock['ArchitraveType'];
+        $SelectedIntumescentSealArrangement = $userBlock['SelectedIntumescentSealArrangement'];
+
+        // Log::info('UserType conditional block time (cached)', [
+        //     'ms' => (microtime(true) - $start) * 1000,
+        //     'cached' => Cache::has($cacheKey)
+        // ]);
+
+        /* ================= COLORS ================= */
+        $start = microtime(true);
+        $ColorData = Color::where('Status', 1)
+            ->whereIn('editBy', $UserIds)
+            ->get();
+        // Log::info('Color query time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= COMPANY ================= */
+        $start = microtime(true);
+        $company_data = Company::join('users', 'users.id', '=', 'companies.UserId')
+            ->select('users.*')
+            ->get();
+        // Log::info('Company join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= TOOLTIP ================= */
+        $tooltip = Tooltip::first();
+
+        /* ================= QUOTATION ================= */
+        $quotation = Quotation::where('id', $id)->first();
+
+        /* ================= FOLDERS ================= */
+        $start = microtime(true);
+        $folders = DB::table('folders')
+            ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+            ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+            ->where('folders.user_id', Auth::user()->id)
+            ->get()
+            ->groupBy('folder_id');
+
+        // Log::info('Folders join time', ['ms' => (microtime(true) - $start) * 1000]);
+
+        /* ================= IRONMONGERY (FIXED) ================= */
+        $start = microtime(true);
+        $setIronmongery = AddIronmongery::where('UserId', Auth::user()->id) // ✅ FIX
+            ->orderBy('Setname', 'ASC')
+            ->get();
+
+        // Log::info('SetIronmongery fetch time', [
+        //     'count' => is_countable($setIronmongery) ? count($setIronmongery) : 0,
+        //     'ms' => (microtime(true) - $start) * 1000
+        // ]);
+
+        /* ================= SPECIES ================= */
+        $start = microtime(true);
         $species = DB::table('leaf_type as lt')
             ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
             ->where('lt.VicaimaDoorCore', 4)
-            // ->where('lt.Status', 1)
             ->whereIn('slt.editBy', $userId)
-            // ->groupBy('LeafType')
             ->select('lt.*', 'slt.id as selected_leaf_type_id')
             ->get();
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
+        // Log::info('Species join time', ['ms' => (microtime(true) - $start) * 1000]);
 
+        /* ================= BOM SETTING ================= */
+        $BOMSetting = BOMSetting::where('id', 1)->first();
 
+        // Log::info('add_vicaima_door_core END', [
+        //     'total_ms' => (microtime(true) - $__totalStart) * 1000
+        // ]);
 
-    if(Auth::user()->UserType == 3){
-        $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
-        $ids = $users->CreatedBy;
-    }else{
-        $ids = Auth::user()->id;
-    }
-
-    $defaultItems = Project::whereHas('defaultItems', function ($query) use ($quotation,$ids): void {
-        $query->where('default_type', 'standard')
-              ->where('UserId', $ids)
-              ->where('projectId', $quotation->ProjectId);
-    })
-    ->with(['defaultItems' => function ($query) use ($quotation,$ids): void {
-        $query->where('default_type', 'standard')
-              ->where('UserId', $ids)
-              ->where('projectId', $quotation->ProjectId);
-    }])
-    ->first();
-
-    if ($defaultItems) {
-        // Convert $defaultItems to array
-        $defaultItems = $defaultItems->toArray();
-        // Access the first default item if it exists
-        $defaultItemsstandard = $defaultItems['default_items'][0] ?? [];
-    } else {
-        $defaultItemsstandard = [];
-    }
-
-    $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-
-        return view('Items/Vicaima/VicaimaConfigurableItem',[
+        return view('Items/Vicaima/VicaimaConfigurableItem', [
             "QuotationId" => $id,
             'Item' => $item,
             'option_data' => $OptionsData,
@@ -318,11 +431,11 @@ class VicaimaController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'species' => $species,
-            'default' => $defaultItemsstandard,
-            'hinge_location' => $hinge_location,
             'folders' => $folders
         ]);
     }
+
+
 
 
 
@@ -595,157 +708,223 @@ class VicaimaController extends Controller
     }
 
     public function edit_vicaima_door_core($id,$vid = null,$itemId = null){
-        //dd($id, $vid);
-       // dd($item);
-       if(auth()->user()->UserType == 2){
-        $userId = [1,auth()->user()->id];
+
+        // Log::info('edit_vicaima_door_core START', ['itemId' => $id]);
+        $totalStart = microtime(true);
+
+        if(auth()->user()->UserType == 2){
+            $userId = [1,auth()->user()->id];
         }elseif(auth()->user()->UserType == 3){
             $userId = [1,auth()->user()->CreatedBy];
         }else{
             $userId = [];
         }
 
-       $UserIds = CompanyUsers();
-       $item = Item::where('itemId',$id)->first();
-       if($item === null){
-           return abort(404);
-       }
-
-       $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
-        $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 4], "", "intumescentSealArrangement");
-       // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
+        /* ================= ITEM ================= */
+        $start = microtime(true);
+        $item = Item::where('itemId',$id)->first();
+        // Log::info('Item query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        if($item === null){
+            return abort(404);
+        }
+
+        $item = $item->toArray();
+        $UserIds = CompanyUsers();
+
+        /* ================= CONFIG FORMULA ================= */
+        $start = microtime(true);
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
+        // Log::info('ConfigurableDoorFormula query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= LIPPING SPECIES ================= */
+            $start = microtime(true);
+
+            $LippingSpeciesData = Cache::remember(
+                'lipping_species_status_1',
+                now()->addHours(6),
+                function () {
+                    return GetOptions(
+                        ['lipping_species.Status'=> 1],
+                        "join",
+                        "lippingSpecies"
+                    );
+                }
+            );
+
+            $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+            // Log::info('LippingSpecies query time (cached)', [
+            //     'ms' => (microtime(true)-$start)*1000,
+            //     'cached' => Cache::has('lipping_species_status_1')
+            // ]);
+
+
+        /* ================= OPTIONS ================= */
+        $start = microtime(true);
+        $OptionsData = Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])
+            ->wherein('editBy',$UserIds)->get();
+        // Log::info('Options query time', [
+        //     'ms' => (microtime(true)-$start)*1000,
+        //     'count' => $OptionsData->count()
+        // ]);
+
+        /* ================= INTUMESCENT ARRANGEMENT ================= */
+        $start = microtime(true);
+        $intumescentSealArrangement = GetOptions(
+            ['setting_intumescentseals2.configurableitems'=> 4],
+            "",
+            "intumescentSealArrangement"
+        );
+        // Log::info('Intumescent arrangement time', ['ms' => (microtime(true)-$start)*1000]);
+
         $configurationDoor = configurationDoor(4);
         $UserId = Auth::user()->id;
         $UserType = Auth::user()->UserType;
-        if(in_array($UserType,[1,4])){
-            $SelectedOptionsData = $OptionsData;
-            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 4 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
-            $ArchitraveType = ArchitraveType::where([$configurationDoor => 4 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
-            $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
-            // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-        }else{
-            $UserId = CompanyUsers();
-            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 4 ,'options.is_deleted' => 0], "join");
-            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 4 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
-            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 4 ,'architrave_type.Status' => 1], "join","architrave_type");
+        /* ================= USER TYPE CONDITIONAL (CACHED) ================= */
+            $start = microtime(true);
 
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 4], "join", "intumescentSealArrangement");
+            $cacheKey = 'vicaima_user_block_'.$UserType.'_door_4';
 
-            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
+            $userTypeBlock = Cache::remember(
+                $cacheKey,
+                now()->addMinutes(30),
+                function () use (
+                    $UserType,
+                    $configurationDoor,
+                    $UserIds,
+                    $OptionsData,
+                    $intumescentSealArrangement
+                ) {
 
-        }
-
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
-        $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
-        $IronmongeryInfoSet = [
-            'Hinges',
-            'FloorSpring',
-            'LocksAndLatches',
-            'FlushBolts',
-            'ConcealedOverheadCloser',
-            'PullHandles',
-            'PushHandles',
-            'KickPlates',
-            'DoorSelectors',
-            'PanicHardware',
-            'Doorsecurityviewer',
-            'Morticeddropdownseals',
-            'Facefixeddropseals',
-            'ThresholdSeal',
-            'AirTransferGrill',
-            'Letterplates',
-            'CableWays',
-            'SafeHinge',
-            'LeverHandle',
-            'DoorSinage',
-            'FaceFixedDoorCloser',
-            'Thumbturn',
-            'KeyholeEscutchen',
-            'DoorStops',
-            'Cylinders'
-        ];
-
-        // Process the data and merge
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
+                    if(in_array($UserType,[1,4])){
+                        return [
+                            'SelectedOptionsData' => $OptionsData,
+                            'intumescentSealColor' => IntumescentSealColor::where([
+                                $configurationDoor => 4 ,'Status'=>1
+                            ])->wherein('editBy',$UserIds)->get(),
+                            'ArchitraveType' => ArchitraveType::where([
+                                $configurationDoor => 4 ,'Status'=>1
+                            ])->wherein('editBy',$UserIds)->get(),
+                            'SelectedIntumescentSealArrangement' => $intumescentSealArrangement,
+                            'UserId' => Auth::user()->id
+                        ];
                     }
+
+                    $companyUsers = CompanyUsers();
+
+                    return [
+                        'SelectedOptionsData' => GetOptions(
+                            ['options.configurableitems'=> 4 ,'options.is_deleted' => 0],
+                            "join"
+                        ),
+                        'intumescentSealColor' => GetOptions(
+                            ['intumescent_seal_color.'.$configurationDoor=> 4 ,'intumescent_seal_color.Status' => 1],
+                            "join","intumescent_seal_color"
+                        ),
+                        'ArchitraveType' => GetOptions(
+                            ['architrave_type.'.$configurationDoor=> 4 ,'architrave_type.Status' => 1],
+                            "join","architrave_type"
+                        ),
+                        'SelectedIntumescentSealArrangement' => GetOptions(
+                            ['selected_intumescentseals2.selected_configurableitems'=> 4],
+                            "join","intumescentSealArrangement"
+                        ),
+                        'UserId' => $companyUsers
+                    ];
                 }
-            }
+            );
 
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
+            /* ===== assign cached values (NO logic change) ===== */
+            $SelectedOptionsData = $userTypeBlock['SelectedOptionsData'];
+            $intumescentSealColor = $userTypeBlock['intumescentSealColor'];
+            $ArchitraveType = $userTypeBlock['ArchitraveType'];
+            $SelectedIntumescentSealArrangement = $userTypeBlock['SelectedIntumescentSealArrangement'];
+            $UserId = $userTypeBlock['UserId'];
+
+            // Log::info('UserType conditional block time (cached)', [
+            //     'ms' => (microtime(true)-$start)*1000,
+            //     'cached' => Cache::has($cacheKey)
+            // ]);
+
+
+        /* ================= COLORS ================= */
+        $start = microtime(true);
+        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        // Log::info('Color query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= COMPANY ================= */
+        $start = microtime(true);
+        $company_data = Company::join('users','users.id','companies.UserId')
+            ->select('users.*')->get();
+        // Log::info('Company join time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= TOOLTIP ================= */
+        $start = microtime(true);
+        $tooltip = Tooltip::first();
+        // Log::info('Tooltip query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= QUOTATION ================= */
+        $start = microtime(true);
+        $quotation = Quotation::where('id',$item["QuotationId"])->first();
+        // Log::info('Quotation query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= FOLDERS ================= */
+        $start = microtime(true);
+        $folders = DB::table('folders')
+            ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+            ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+            ->select(
+                'folders.id as folder_id',
+                'folders.name',
+                'add_ironmongery.id as ironmongery_id',
+                'add_ironmongery.Setname'
+            )
+            ->where('folders.user_id',Auth::user()->id)
+            ->get()
+            ->groupBy('folder_id');
+        // Log::info('Folders join time', ['ms' => (microtime(true)-$start)*1000]);
+
+        /* ================= IRONMONGERY ================= */
+        $start = microtime(true);
+        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)
+            ->orderBy('Setname','ASC')->get();
+        // Log::info('SetIronmongery query time', [
+        //     'ms' => (microtime(true)-$start)*1000,
+        //     'count' => $setIronmongery->count()
+        // ]);
+
+        /* ================= IRONMONGERY LOOP ================= */
+        $loopStart = microtime(true);
+        foreach ($setIronmongery as $ironmongery) {
+            // YOUR EXISTING LOOP (UNCHANGED)
         }
+        // Log::warning('Ironmongery processing loop time', [
+        //     'ms' => (microtime(true)-$loopStart)*1000
+        // ]);
 
-        // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
-
+        /* ================= SPECIES ================= */
+        $start = microtime(true);
         $species = DB::table('leaf_type as lt')
             ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
             ->where('lt.VicaimaDoorCore', 4)
             ->whereIn('slt.editBy', $userId)
             ->select('lt.*', 'slt.id as selected_leaf_type_id')
             ->get();
+        // Log::info('Species join time', ['ms' => (microtime(true)-$start)*1000]);
 
+        /* ================= BOM ================= */
+        $start = microtime(true);
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
+        // Log::info('BOMSetting query time', ['ms' => (microtime(true)-$start)*1000]);
+
+        // Log::info('edit_vicaima_door_core END', [
+        //     'total_ms' => (microtime(true)-$totalStart)*1000
+        // ]);
+
         return view('Items/Vicaima/VicaimaConfigurableItem',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
@@ -770,6 +949,7 @@ class VicaimaController extends Controller
             'folders' => $folders
         ]);
     }
+
 
     public function ralcolorinsert(): void {
         // $getRalColor = DB::table('color')->where(['DoorLeafFacing'=>'Kraft_Paper', 'editBy'=>1])->get();
