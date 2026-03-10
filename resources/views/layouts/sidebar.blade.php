@@ -337,7 +337,7 @@
                         {{-- Door Leaf Facing Value --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
-                            <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
+                            <a href="{{ route('Finish-Cost.index') }}">Finish Cost</a>
                         </li>
 
                         {{-- Glass Type --}}
@@ -713,7 +713,7 @@
                         {{-- Door Leaf Facing Value --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
-                            <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
+                            <a href="{{ route('Finish-Cost.index') }}">Finish Cost</a>
                         </li>
 
                         {{-- Glass Type --}}
