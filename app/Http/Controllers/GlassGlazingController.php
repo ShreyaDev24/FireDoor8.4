@@ -30,9 +30,9 @@ class GlassGlazingController extends Controller
             // ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
             ->select(
                 'glazing_system.*',
-                'selected_glazing_system.selectedPrice',
-                'selected_glazing_system.id as selectedId',
-                'selected_glazing_system.userId as selectedUserId',
+                // 'selected_glazing_system.selectedPrice',
+                // 'selected_glazing_system.id as selectedId',
+                // 'selected_glazing_system.userId as selectedUserId',
 
                 'glass_glazing_system.GlassType',
                 'glass_glazing_system.GlazingSystem',
