@@ -169,6 +169,7 @@ class DoorScheduleController extends Controller
         $quotation->ExpiryDate = date('Y-m-d', strtotime($request->ExpiryDate));
         $quotation->FollowUpDate = date('Y-m-d', strtotime($request->FollowUpDate));
         $quotation->QuotationStatus = $request->QuotationStatus;
+        $quotation->RevisionDescription = $request->RevisionDescription;
         $quotation->editBy = Auth::user()->id;
         $quotation->QSCustomerContactId = $array_data[1];
         $quotation->updated_at = date('Y-m-d H:i:s');
