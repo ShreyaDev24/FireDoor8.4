@@ -4,6 +4,23 @@ use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\SupportTicketController;
+use App\Http\Controllers\DoorLeafFacingController;
+use App\Http\Controllers\LeafTypeController;
+use App\Http\Controllers\AccousticController;
+use App\Http\Controllers\ArchitraveTypeController;
+use App\Http\Controllers\DoorDimensionCustomController;
+use App\Http\Controllers\DoorDimensionStandardController;
+use App\Http\Controllers\IntumescentSealColorController;
+use App\Http\Controllers\GlassTypeController;
+use App\Http\Controllers\GlazingSystemController;
+use App\Http\Controllers\GlassGlazingController;
+use App\Http\Controllers\ScreenGlassTypeController;
+use App\Http\Controllers\ScreenGlazingTypeController;
+use App\Http\Controllers\IntumescentSealArrangementController;
+use App\Http\Controllers\OverpanelGlassGlazingType;
+use App\Http\Controllers\ColourListController;
+use App\Http\Controllers\FinishCostController;
+use App\Http\Controllers\LippingSpeciesController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -66,6 +83,108 @@ Route::middleware(['auth'])
 
 Route::post('custom-login', [App\Http\Controllers\Auth\LoginController::class,'customLogin'])->name('custom-login');
 Auth::routes();
+
+Route::middleware(['auth', 'user.type'])->group(function () {
+
+    Route::post('options/door-leaf-facing/export-selected', [DoorLeafFacingController::class, 'exportSelected'])
+    ->name('door-leaf-facing.exportSelected');
+    Route::resource('options/door-leaf-facing', DoorLeafFacingController::class)->middleware('auth');
+    Route::post(
+        'options/door-leaf-facing/update-selected',
+        [DoorLeafFacingController::class, 'updateSelected']
+    )->name('door-leaf-facing.updateSelected')->middleware('auth');
+
+    Route::post('options/leaf-type/export-selected', [LeafTypeController::class, 'exportSelected'])
+    ->name('leaf-type.exportSelected');
+    Route::resource('options/leaf-type', LeafTypeController::class);
+    Route::post('options/leaf-type/update-selected', [LeafTypeController::class, 'updateSelected'])->name('leaf-type.updateSelected');
+
+
+    Route::post('options/Overpanel-Glass-Type/export-selected', [OverpanelGlassGlazingType::class, 'exportSelected'])
+    ->name('Overpanel-Glass-Type.exportSelected');
+    Route::resource('options/Overpanel-Glass-Type', OverpanelGlassGlazingType::class);
+    Route::post('options/Overpanel-Glass-Type/update-selected', [OverpanelGlassGlazingType::class, 'updateSelected'])->name('Overpanel-Glass-Type.updateSelected');
+
+    Route::post('options/accoustics/export-selected', [AccousticController::class, 'exportSelected'])
+    ->name('accoustics.exportSelected');
+    Route::resource('options/accoustics', AccousticController::class);
+    Route::post('options/accoustics/update-selected', [AccousticController::class, 'updateSelected'])->name('accoustics.updateSelected');
+
+    Route::post('options/Architrave-Type/export-selected', [ArchitraveTypeController::class, 'exportSelected'])
+    ->name('Architrave-Type.exportSelected');
+    Route::resource('options/Architrave-Type', ArchitraveTypeController::class);
+    Route::post('options/Architrave-Type/update-selected', [ArchitraveTypeController::class, 'updateSelected'])->name('Architrave-Type.updateSelected');
+
+    Route::post('options/Screen-Glass-Type/export-selected', [ScreenGlassTypeController::class, 'exportSelected'])
+    ->name('Screen-Glass-Type.exportSelected');
+    Route::resource('options/Screen-Glass-Type', ScreenGlassTypeController::class);
+    Route::post('options/Screen-Glass-Type/update-selected', [ScreenGlassTypeController::class, 'updateSelected'])->name('Screen-Glass-Type.updateSelected');
+
+    Route::post('options/Screen-Glazing-Type/export-selected', [ScreenGlazingTypeController::class, 'exportSelected'])
+    ->name('Screen-Glazing-Type.exportSelected');
+    Route::resource('options/Screen-Glazing-Type', ScreenGlazingTypeController::class);
+    Route::post('options/Screen-Glazing-Type/update-selected', [ScreenGlazingTypeController::class, 'updateSelected'])->name('Screen-Glazing-Type.updateSelected');
+
+    Route::post('options/Intumescent-Seal-Color/export-selected', [IntumescentSealColorController::class, 'exportSelected'])
+    ->name('Intumescent-Seal-Color.exportSelected');
+    Route::resource('options/Intumescent-Seal-Color', IntumescentSealColorController::class);
+    Route::post('options/Intumescent-Seal-Color/update-selected', [IntumescentSealColorController::class, 'updateSelected'])->name('Intumescent-Seal-Color.updateSelected');
+
+    Route::resource('options/Glass-Glazing-System', GlassGlazingController::class);
+
+    Route::post('options/Door-Dimension-Custom/export-selected', [DoorDimensionCustomController::class, 'exportSelected'])
+    ->name('Door-Dimension-Custom.exportSelected');
+    Route::resource('options/Door-Dimension-Custom', DoorDimensionCustomController::class);
+    Route::post('options/Door-Dimension-Custom/update-selected', [DoorDimensionCustomController::class, 'updateSelected'])->name('Door-Dimension-Custom.updateSelected');
+    Route::post('options/Door-Dimension-Custom/update-selected-cost', [DoorDimensionCustomController::class,'updateSelectOptionCostCustome'])->name('Door-Dimension-Custom.updateSelectedCost');
+
+    Route::post('options/Door-Dimension/export-selected', [DoorDimensionStandardController::class, 'exportSelected'])
+    ->name('Door-Dimension.exportSelected');
+    Route::resource('options/Door-Dimension', DoorDimensionStandardController::class);
+    Route::post('options/Door-Dimension/update-selected', [DoorDimensionStandardController::class, 'updateSelected'])->name('Door-Dimension.updateSelected');
+
+    Route::post('options/Glass-type/export-selected', [GlassTypeController::class, 'exportSelected'])
+    ->name('Glass-type.exportSelected');
+    Route::resource('options/Glass-type', GlassTypeController::class);
+    Route::post('options/Glass-type/update-selected', [GlassTypeController::class, 'updateSelected'])->name('Glass-type.updateSelected');
+    Route::get('/glass-type/create/standard', [GlassTypeController::class, 'createStandard'])->name('Glass-type.createStandard');
+    Route::get('glass-type/edit/standard/{id}', [GlassTypeController::class, 'editStandard'])
+        ->name('Glass-type.editStandard');
+
+    Route::post('options/Glazing-System/export-selected', [GlazingSystemController::class, 'exportSelected'])
+    ->name('Glazing-System.exportSelected');
+    Route::resource('options/Glazing-System', GlazingSystemController::class);
+    Route::post('options/Glazing-System/update-selected', [GlazingSystemController::class, 'updateSelected'])->name('Glazing-System.updateSelected');
+    Route::get('/Glazing-System/create/standard', [GlazingSystemController::class, 'createStandard'])->name('Glazing-System.createStandard');
+    Route::get('Glazing-System/edit/standard/{id}', [GlazingSystemController::class, 'editStandard'])
+        ->name('Glazing-System.editStandard');
+
+    Route::post('options/Colour-List/export-selected', [ColourListController::class, 'exportSelected'])
+    ->name('Colour-List.exportSelected');
+    Route::resource('options/Colour-List', ColourListController::class);
+    Route::post('options/Colour-List/update-selected', [ColourListController::class, 'updateSelected'])->name('Colour-List.updateSelected');
+
+    Route::post('options/Finish-Cost/export-selected', [FinishCostController::class, 'exportSelected'])
+    ->name('Finish-Cost.exportSelected');
+    Route::resource('options/Finish-Cost', FinishCostController::class);
+    Route::post('options/Finish-Cost/update-selected', [FinishCostController::class, 'updateSelected'])->name('Finish-Cost.updateSelected');
+
+    Route::post('options/Intumescent-Seal-Arrangement/export-selected', [IntumescentSealArrangementController::class, 'exportSelected'])
+    ->name('Intumescent-Seal-Arrangement.exportSelected');
+    Route::resource('options/Intumescent-Seal-Arrangement', IntumescentSealArrangementController::class);
+    Route::post('options/Intumescent-Seal-Arrangement/update-selected', [IntumescentSealArrangementController::class, 'updateSelected'])->name('Intumescent-Seal-Arrangement.updateSelected');
+    Route::get('/Intumescent-Seal-Arrangement/create/standard', [IntumescentSealArrangementController::class, 'createStandard'])->name('Intumescent-Seal-Arrangement.createStandard');
+    Route::get('Intumescent-Seal-Arrangement/edit/standard/{id}', [IntumescentSealArrangementController::class, 'editStandard'])
+        ->name('Intumescent-Seal-Arrangement.editStandard');
+
+    Route::post('options/Lipping-Species/export-selected', [LippingSpeciesController::class, 'exportSelected'])
+    ->name('Lipping-Species.exportSelected');
+    Route::resource('options/Lipping-Species', LippingSpeciesController::class);
+    Route::post('options/Lipping-Species/update-selected', [LippingSpeciesController::class, 'updateSelected'])->name('Lipping-Species.updateSelected');
+
+
+});
+
 
 Route::get('project/floorPlanList/{id}',[App\Http\Controllers\ProjectController2::class,'floorPlanList'])->name('project/floorPlanList');
 Route::get('project/get-floor-plan-doors', [App\Http\Controllers\ProjectController2::class,'getFloorPlanDoors'])->name('project/get-floor-plan-doors');

@@ -9,4 +9,12 @@ class IntumescentSealLeafType extends Model
 {
     use HasFactory;
     protected $table = 'intumescent_seal_leaf_type';
+
+    public function doorDimensions()
+    {
+        return $this->hasMany(DoorDimension::class,
+            'configurableitems',
+            'configurableitems'
+        );
+    }
 }

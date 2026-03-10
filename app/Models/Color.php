@@ -17,9 +17,18 @@ class Color extends Authenticatable
      * @var array
      */
     protected $table = 'color';
-    
+
     protected $fillable = [
-        'ColorName','RGB','Hex','EnglishName','status','UserId'
+        'ColorName',
+        'RGB',
+        'Hex',
+        'EnglishName',
+        'DoorLeafFacing',
+        'doorConfiguration',
+        'DoorLeafFacingValue',
+        'ColorCost',
+        'Status',
+        'editBy'
     ];
 
     /**
@@ -27,5 +36,10 @@ class Color extends Authenticatable
      *
      * @var array
      */
-    
+
+    public function selectedPrice()
+    {
+        return $this->hasOne(SelectedColor::class,'SelectedColorId','id');
+    }
+
 }
