@@ -256,8 +256,7 @@
                         </li>
                     </ul>
                 </li>
-                <li
-                    class="mm-{{ (Request::segment(1) == 'notification') ? 'active' : ''}}">
+                <li class="mm-{{ (Request::segment(1) == 'notification') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
                             <i class="fa fa-table"></i>
@@ -319,72 +318,86 @@
                         </li>
 
                         {{-- Accoustics --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
                             <a href="{{ route('accoustics.index') }}">Accoustics</a>
                         </li>
 
                         {{-- Architrave Type --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Architrave-Type') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Architrave-Type') ? 'active' : '' }}">
                             <a href="{{ route('Architrave-Type.index') }}">Architrave Type</a>
                         </li>
 
                         {{-- Colour List --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
                             <a href="{{ route('Colour-List.index') }}">Colour List</a>
                         </li>
 
                         {{-- Door Dimension --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
                             <a href="{{ route('Door-Dimension-Custom.index') }}">Door Dimension Custom</a>
                         </li>
 
                         {{-- Door Dimension --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
                             <a href="{{ route('Door-Dimension.index') }}">Door Dimension Standard</a>
                         </li>
 
                         {{-- Door Leaf Facing Value --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
                             <a href="{{ route('door-leaf-facing.index') }}">Door Leaf Facing Value</a>
                         </li>
 
                         {{-- Door Leaf Facing Value --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
                             <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
                         </li>
 
                         {{-- Glass Type --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
                             <a href="{{ route('Glass-type.index') }}">Glass Type</a>
                         </li>
 
                         {{-- Glazing System --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
                             <a href="{{ route('Glazing-System.index') }}">Glazing System</a>
                         </li>
 
                         {{-- Glass Glazing System --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-Glazing-System') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-Glazing-System') ? 'active' : '' }}">
                             <a href="{{ route('Glass-Glazing-System.index') }}">Glass Glazing System</a>
                         </li>
 
                         {{-- Intumescent Seal Arrangement --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
                             <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">Intumescent Seal Arrangement</a>
                         </li>
 
                         {{-- Intumescent Seal Color --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
                             <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Colour</a>
                         </li>
 
                         {{-- Leaf Type --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
                             <a href="{{ route('leaf-type.index') }}">Leaf Type</a>
                         </li>
 
                         {{-- Side Screen --}}
-                        <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'Screen-Glass-Type') ? 'active' : ''}}">
+                        <li
+                            class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'Screen-Glass-Type') ? 'active' : ''}}">
                             <a href="#">
                                 Side Screen
                                 <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
@@ -400,12 +413,14 @@
                         </li>
 
                         {{-- Side Light / Fanlight --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Overpanel-Glass-Type') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Overpanel-Glass-Type') ? 'active' : '' }}">
                             <a href="{{ route('Overpanel-Glass-Type.index') }}">Side Light / Fanlight</a>
                         </li>
 
                         {{-- Timber Species --}}
-                        <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
                             <a href="{{ route('Lipping-Species.index') }}">Timber Species</a>
                         </li>
                     </ul>
@@ -668,107 +683,124 @@
                     </ul>
                 </li>
 
-            <li class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
-                <a href="#">
-                    <i class="metismenu-icon"><i class="fa fa-check"></i></i>
-                    Selected Option
-                    <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
-                </a>
+                <li
+                    class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
+                    <a href="#">
+                        <i class="metismenu-icon"><i class="fa fa-check"></i></i>
+                        Selected Option
+                        <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
+                    </a>
 
-                <ul>
+                    <ul>
 
-                    {{-- Accoustics --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
-                        <a href="{{ route('accoustics.index') }}">Accoustics</a>
-                    </li>
+                        {{-- Accoustics --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
+                            <a href="{{ route('accoustics.index') }}">Accoustics</a>
+                        </li>
 
-                    {{-- Architrave Type --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Architrave-Type') ? 'active' : '' }}">
-                        <a href="{{ route('Architrave-Type.index') }}">Architrave Type</a>
-                    </li>
+                        {{-- Architrave Type --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Architrave-Type') ? 'active' : '' }}">
+                            <a href="{{ route('Architrave-Type.index') }}">Architrave Type</a>
+                        </li>
 
-                    {{-- Colour List --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
-                        <a href="{{ route('Colour-List.index') }}">Colour List</a>
-                    </li>
+                        {{-- Colour List --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
+                            <a href="{{ route('Colour-List.index') }}">Colour List</a>
+                        </li>
 
-                    {{-- Door Dimension --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
-                        <a href="{{ route('Door-Dimension-Custom.index') }}">Door Dimension Custom</a>
-                    </li>
+                        {{-- Door Dimension --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
+                            <a href="{{ route('Door-Dimension-Custom.index') }}">Door Dimension Custom</a>
+                        </li>
 
-                    {{-- Door Dimension --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
-                        <a href="{{ route('Door-Dimension.index') }}">Door Dimension Standard</a>
-                    </li>
+                        {{-- Door Dimension --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension') ? 'active' : '' }}">
+                            <a href="{{ route('Door-Dimension.index') }}">Door Dimension Standard</a>
+                        </li>
 
-                    {{-- Door Leaf Facing Value --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
-                        <a href="{{ route('door-leaf-facing.index') }}">Door Leaf Facing Value</a>
-                    </li>
+                        {{-- Door Leaf Facing Value --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'door-leaf-facing') ? 'active' : '' }}">
+                            <a href="{{ route('door-leaf-facing.index') }}">Door Leaf Facing Value</a>
+                        </li>
 
-                    {{-- Door Leaf Facing Value --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
-                        <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
-                    </li>
+                        {{-- Door Leaf Facing Value --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
+                            <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
+                        </li>
 
-                    {{-- Glass Type --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
-                        <a href="{{ route('Glass-type.index') }}">Glass Type</a>
-                    </li>
+                        {{-- Glass Type --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-type') ? 'active' : '' }}">
+                            <a href="{{ route('Glass-type.index') }}">Glass Type</a>
+                        </li>
 
-                    {{-- Glazing System --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
-                        <a href="{{ route('Glazing-System.index') }}">Glazing System</a>
-                    </li>
+                        {{-- Glazing System --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glazing-System') ? 'active' : '' }}">
+                            <a href="{{ route('Glazing-System.index') }}">Glazing System</a>
+                        </li>
 
-                    {{-- Glass Glazing System --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-Glazing-System') ? 'active' : '' }}">
-                        <a href="{{ route('Glass-Glazing-System.index') }}">Glass Glazing System</a>
-                    </li>
+                        {{-- Glass Glazing System --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Glass-Glazing-System') ? 'active' : '' }}">
+                            <a href="{{ route('Glass-Glazing-System.index') }}">Glass Glazing System</a>
+                        </li>
 
-                    {{-- Intumescent Seal Arrangement --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
-                        <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">Intumescent Seal Arrangement</a>
-                    </li>
+                        {{-- Intumescent Seal Arrangement --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Arrangement') ? 'active' : '' }}">
+                            <a href="{{ route('Intumescent-Seal-Arrangement.index') }}">Intumescent Seal Arrangement</a>
+                        </li>
 
-                    {{-- Intumescent Seal Color --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
-                        <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Colour</a>
-                    </li>
+                        {{-- Intumescent Seal Color --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Intumescent-Seal-Color') ? 'active' : '' }}">
+                            <a href="{{ route('Intumescent-Seal-Color.index') }}">Intumescent Seal Colour</a>
+                        </li>
 
-                    {{-- Leaf Type --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
-                        <a href="{{ route('leaf-type.index') }}">Leaf Type</a>
-                    </li>
+                        {{-- Leaf Type --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'leaf-type') ? 'active' : '' }}">
+                            <a href="{{ route('leaf-type.index') }}">Leaf Type</a>
+                        </li>
 
-                    {{-- Side Screen --}}
-                    <li class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'Screen-Glass-Type') ? 'active' : ''}}">
-                        <a href="#">
-                            Side Screen
-                            <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
-                        </a>
-                        <ul>
-                            <li>
-                                <a href="{{ route('Screen-Glass-Type.index') }}">Glass Type</a>
-                            </li>
-                            <li>
-                                <a href="{{ route('Screen-Glazing-Type.index') }}">Glazing System</a>
-                            </li>
-                        </ul>
-                    </li>
+                        {{-- Side Screen --}}
+                        <li
+                            class="mm-{{ (Request::segment(1) == 'options' && Request::segment(2) == 'Screen-Glass-Type') ? 'active' : ''}}">
+                            <a href="#">
+                                Side Screen
+                                <i class="metismenu-state-icon"><i class="fa fa-caret-down"></i></i>
+                            </a>
+                            <ul>
+                                <li>
+                                    <a href="{{ route('Screen-Glass-Type.index') }}">Glass Type</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('Screen-Glazing-Type.index') }}">Glazing System</a>
+                                </li>
+                            </ul>
+                        </li>
 
-                    {{-- Side Light / Fanlight --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Overpanel-Glass-Type') ? 'active' : '' }}">
-                        <a href="{{ route('Overpanel-Glass-Type.index') }}">Side Light / Fanlight</a>
-                    </li>
+                        {{-- Side Light / Fanlight --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Overpanel-Glass-Type') ? 'active' : '' }}">
+                            <a href="{{ route('Overpanel-Glass-Type.index') }}">Side Light / Fanlight</a>
+                        </li>
 
-                    {{-- Timber Species --}}
-                    <li class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
-                        <a href="{{ route('Lipping-Species.index') }}">Timber Species</a>
-                    </li>
-                </ul>
-            </li>
+                        {{-- Timber Species --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lipping-Species') ? 'active' : '' }}">
+                            <a href="{{ route('Lipping-Species.index') }}">Timber Species</a>
+                        </li>
+                    </ul>
+                </li>
 
                 <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">
                     <a href="#">
