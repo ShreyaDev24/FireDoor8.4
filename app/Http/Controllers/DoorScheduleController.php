@@ -4254,13 +4254,16 @@ class DoorScheduleController extends Controller
                     'version_id'       => $item->VersionId,
 
                     // 🔥 ALL master rows
-                    'doors' => $item->masters->map(function ($m) {
-                        return [
-                            'id'         => $m->id,
-                            'doorNumber' => $m->doorNumber,
-                            'floor'      => $m->floor,
-                        ];
-                    }),
+                    'doors' => $item->masters
+                        ->sortBy('doorNumber') // 🔥 important
+                        ->map(function ($m) {
+                            return [
+                                'id'         => $m->id,
+                                'doorNumber' => $m->doorNumber,
+                                'floor'      => $m->floor,
+                            ];
+                        })
+                        ->values()
                 ];
             });
 
