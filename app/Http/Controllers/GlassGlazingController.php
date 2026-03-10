@@ -21,12 +21,13 @@ class GlassGlazingController extends Controller
     {
         $auth = auth()->user();
 
-        $items = GlazingSystem::leftJoin('selected_glazing_system', function ($join) use ($auth) {
-                $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
-                    ->where('selected_glazing_system.userId', $auth->id);
-            })
-            ->join('glass_glazing_system', 'glass_glazing_system.glazing_system', '=', 'glazing_system.id')
-            ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
+        $items = GlazingSystem::
+        // leftJoin('selected_glazing_system', function ($join) use ($auth) {
+        //         $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
+        //             ->where('selected_glazing_system.userId', $auth->id);
+        //     })
+            join('glass_glazing_system', 'glass_glazing_system.glazing_system', '=', 'glazing_system.id')
+            // ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
             ->select(
                 'glazing_system.*',
                 'selected_glazing_system.selectedPrice',
@@ -42,17 +43,17 @@ class GlassGlazingController extends Controller
             ->orderBy('glass_glazing_system.GlassType', 'ASC')
             ->orderBy('glass_glazing_system.GlazingSystem', 'ASC')
             ->get();
-            // DB::transaction(function () use ($items) {
+            DB::transaction(function () use ($items) {
 
-            //     foreach ($items as $val) {
+                foreach ($items as $val) {
 
 
-            //         // if ($fire) {
-            //             GlassGlazingSystem::where('id', $val->mainId)
-            //                 ->update(['NFR' => $val->NFR,'FD30' => $val->FD30,'FD60' => $val->FD60]);
-            //         // }
-            //     }
-            // });
+                    // if ($fire) {
+                        GlassGlazingSystem::where('id', $val->mainId)
+                            ->update(['NFR' => $val->NFR,'FD30' => $val->FD30,'FD60' => $val->FD60]);
+                    // }
+                }
+            });
 
 
         return view('SelectedOptions.glass_glazing_system.index', compact('items'));
