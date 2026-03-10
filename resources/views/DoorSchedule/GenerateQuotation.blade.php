@@ -660,12 +660,12 @@
                                         <thead class="table-header-bg">
                                             <tr class="text-white">
                                                 <th>Line</th>
-                                                <th>Door Qty</th>
                                                 <th>Fire Rating</th>
                                                 <th>Door Type</th>
                                                 <th>Door No.</th>
                                                 <th>Floor</th>
                                                 <th>Item</th>
+                                                <th>Handing</th>
                                                 <th>S.O. Width</th>
                                                 <th>S.O. Height</th>
                                                 <th>S.O. Depth</th>
@@ -701,12 +701,12 @@
                                                                     <input type="hidden" class="doors_{{ $index }}" value="{{ $door['id'] }}">
                                                                 </td>
 
-                                                                <td>{{ $row['DoorQuantity'] }}</td>
                                                                 <td>{{ $row['FireRating'] }}</td>
                                                                 <td>{{ $row['DoorType'] }}</td>
                                                                 <td>{{ $door['doorNumber'] }}</td>
                                                                 <td>{{ $door['floor'] }}</td>
                                                                 <td>{{ $row['DoorsetType'] }}</td>
+                                                                <td>{{ $row['Handing'] }}</td>
                                                                 <td>{{ $row['SOWidth'] }}</td>
                                                                 <td>{{ $row['SOHeight'] }}</td>
                                                                 <td>{{ $row['SOWallThick'] }}</td>
