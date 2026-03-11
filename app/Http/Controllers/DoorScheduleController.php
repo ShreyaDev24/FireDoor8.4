@@ -9701,7 +9701,7 @@ class DoorScheduleController extends Controller
                 $marginwithcal = 100 - $margin;
                 $testvar = $marginwithcal/100;
                 if($AI->discountprice != null || $AI->discountprice != 0){
-                    $totalcost = $AI->discountprice / $testvar;
+                    $totalcost = $AI->discountprice;
                 } else{
                     $totalcost = $AI->totalprice / $testvar;
                 }
