@@ -9694,7 +9694,11 @@ class DoorScheduleController extends Controller
                 }
                 $marginwithcal = 100 - $margin;
                 $testvar = $marginwithcal/100;
-                $totalcost = $AI->discountprice / $testvar;
+                if($AI->discountprice != null || $AI->discountprice != 0){
+                    $totalcost = $AI->discountprice / $testvar;
+                } else{
+                    $totalcost = $AI->totalprice / $testvar;
+                }
                 $IronmongaryPrice = round(($totalcost),2);
                 if($IronmongaryPrice != $door->IronmongaryPrice){
                     DB::table('items')

@@ -1014,7 +1014,7 @@ class ItemListController extends Controller
 
         $IronmongaryPrice = 0;
         if(!empty($request->IronmongeryID)){
-            $AI = AddIronmongery::select('discountprice')->where('id',$request->IronmongeryID)->first();
+            $AI = AddIronmongery::select('discountprice','totalprice')->where('id',$request->IronmongeryID)->first();
             // old code
             // $IronmongaryPrice = $AI->discountprice;
             //end old code
@@ -1029,7 +1029,12 @@ class ItemListController extends Controller
 
             $marginwithcal = 100 - $margin;
             $testvar = $marginwithcal/100;
-            $totalcost = $AI->discountprice / $testvar;
+            if($AI->discountprice != null || $AI->discountprice != 0){
+                $totalcost = $AI->discountprice / $testvar;
+            } else{
+                $totalcost = $AI->totalprice / $testvar;
+            }
+
             $IronmongaryPrice = round(($totalcost),2);
             //end
         }
