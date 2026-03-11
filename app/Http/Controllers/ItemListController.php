@@ -1022,23 +1022,28 @@ class ItemListController extends Controller
 
         $IronmongaryPrice = 0;
         if(!empty($request->IronmongeryID)){
-            $AI = AddIronmongery::select('discountprice')->where('id',$request->IronmongeryID)->first();
+            $AI = AddIronmongery::select('discountprice','totalprice')->where('id',$request->IronmongeryID)->first();
             // old code
-            $IronmongaryPrice = $AI->discountprice;
+            // $IronmongaryPrice = $AI->discountprice;
             //end old code
 
             //new code for add margin in ironmongary prices
-            // $userIds = CompanyUsers();
-            // $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
-            // $marginDiscount = discountQuotationValue($request->QuotationId,$request->version_id);
-            // if($marginDiscount != 0){
-            //     $margin += $marginDiscount;
-            // }
+            $userIds = CompanyUsers();
+            $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
+            $marginDiscount = discountQuotationValue($request->QuotationId,$request->version_id);
+            if($marginDiscount != 0){
+                $margin += $marginDiscount;
+            }
 
-            // $marginwithcal = 100 - $margin;
-            // $testvar = $marginwithcal/100;
-            // $totalcost = $AI->discountprice / $testvar;
-            // $IronmongaryPrice = round(($totalcost),2);
+            $marginwithcal = 100 - $margin;
+            $testvar = $marginwithcal/100;
+            if($AI->discountprice != null || $AI->discountprice != 0){
+                $totalcost = $AI->discountprice / $testvar;
+            } else{
+                $totalcost = $AI->totalprice / $testvar;
+            }
+
+            $IronmongaryPrice = round(($totalcost),2);
             //end
         }
 
