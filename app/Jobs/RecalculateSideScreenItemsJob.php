@@ -18,7 +18,7 @@ class RecalculateSideScreenItemsJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId)
+    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId,public $upcomingCurrency)
     {
         //
     }
@@ -45,10 +45,26 @@ class RecalculateSideScreenItemsJob implements ShouldQueue
                     $ItemMaster = SideScreenItemMaster::where('ScreenId',$id)->get()->count();
                     $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
                 }
+                if($data->ScreenAdjustPrice  != 0 || $data->ScreenAdjustPrice  != null){
+                    if($this->upcomingCurrency == '€_EURO'){
+                        SideScreenItem::where('id', $id)->update([
+                        'ScreenPrice' => $GTSellPriceTotal,
+                        'ScreenAdjustPrice' => $GTSellPriceTotal,
+                        'changeadjustprice' => $data->ScreenAdjustPrice,
+                        ]);
+                    } else{
+                        SideScreenItem::where('id', $id)->update([
+                        'ScreenPrice' => $GTSellPriceTotal,
+                        'ScreenAdjustPrice' => $data->changeadjustprice,
+                        'changeadjustprice' => 0,
+                        ]);
+                    }
 
-                SideScreenItem::where('id', $id)->update([
-                    'ScreenPrice' => $GTSellPriceTotal
-                ]);
+                } else{
+                    SideScreenItem::where('id', $id)->update([
+                        'ScreenPrice' => $GTSellPriceTotal
+                    ]);
+                }
             }
         }
     }
