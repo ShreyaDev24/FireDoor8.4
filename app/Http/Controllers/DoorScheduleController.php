@@ -9685,7 +9685,7 @@ class DoorScheduleController extends Controller
             // Ironmongary packets updates
             $IronmongaryPrice = 0;
             if(!empty($door->IronmongeryID)){
-                $AI = AddIronmongery::select('discountprice')->where('id',$door->IronmongeryID)->first();
+                $AI = AddIronmongery::select('discountprice','totalprice')->where('id',$door->IronmongeryID)->first();
                 $userIds = CompanyUsers();
                 $margin = BOMSetting::wherein('UserId',$userIds)->value('margin_for_material');
                 $marginDiscount = discountQuotationValue($door->QuotationId,$door->VersionId);
