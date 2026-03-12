@@ -519,7 +519,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -767,7 +767,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GL1'; // All headers
+                $cellRange = 'A1:GR1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -789,7 +789,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GL1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GR1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
