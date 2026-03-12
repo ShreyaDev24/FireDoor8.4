@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\ScreenGlassType;
 use App\Models\SelectedScreenGlass;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class ScreenGlassTypeController extends Controller
@@ -235,49 +239,77 @@ class ScreenGlassTypeController extends Controller
             ->orderBy('screen_glass_type.GlassType')
             ->get();
 
-        $filename = 'Screen_Glass_Type_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headings
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Fire Rating',
+            'DF Rating',
+            'Glass Name',
+            'Width Point 1 (far right)',
+            'Height Point 1 (Lowest)',
+            'Width Point 2 (Closest)',
+            'Height Point 2 (Highest)',
+            'MIN Transom Thickness',
+            'MIN Transom Depth',
+            'MAX Area m²',
+            'Frame Density',
+            'Price Per L/M'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, [
-                'Fire Rating',
-                'DFRating',
-                'Glass Name',
-                'Width Point 1 (far right)',
-                'Height Point 1 (Lowest)',
-                'Width Point 2 (Cloest)',
-                'Height Point 2 (Higest)',
-                'MIN Transom Thickness',
-                'MIN Transom Depth',
-                'MAX Area m2',
-                'Frame Density',
-                'Price Per L/M',
-            ]);
+        // Bold headings
+        $sheet->getStyle('A1:L1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->FireRating,
-                    $item->DFRating,
-                    $item->GlassType,
-                    $item->WidthPoint1,
-                    $item->HeightPoint1,
-                    $item->WidthPoint2,
-                    $item->HeightPoint2,
-                    $item->TransomThickness,
-                    $item->TransomDepth,
-                    $item->AreaSize,
-                    $item->FrameDensity,
-                    number_format($item->glassSelectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column width
+        $sheet->getColumnDimension('A')->setWidth(12);
+        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->getColumnDimension('C')->setWidth(30);
+        $sheet->getColumnDimension('D')->setWidth(20);
+        $sheet->getColumnDimension('E')->setWidth(20);
+        $sheet->getColumnDimension('F')->setWidth(20);
+        $sheet->getColumnDimension('G')->setWidth(20);
+        $sheet->getColumnDimension('H')->setWidth(22);
+        $sheet->getColumnDimension('I')->setWidth(20);
+        $sheet->getColumnDimension('J')->setWidth(15);
+        $sheet->getColumnDimension('K')->setWidth(15);
+        $sheet->getColumnDimension('L')->setWidth(18);
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->FireRating);
+            $sheet->setCellValue('B'.$row, $item->DFRating);
+            $sheet->setCellValue('C'.$row, $item->GlassType);
+            $sheet->setCellValue('D'.$row, $item->WidthPoint1);
+            $sheet->setCellValue('E'.$row, $item->HeightPoint1);
+            $sheet->setCellValue('F'.$row, $item->WidthPoint2);
+            $sheet->setCellValue('G'.$row, $item->HeightPoint2);
+            $sheet->setCellValue('H'.$row, $item->TransomThickness);
+            $sheet->setCellValue('I'.$row, $item->TransomDepth);
+            $sheet->setCellValue('J'.$row, $item->AreaSize);
+            $sheet->setCellValue('K'.$row, $item->FrameDensity);
+            $sheet->setCellValue('L'.$row, number_format($item->glassSelectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:L'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Screen_Glass_Type_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }

@@ -9,6 +9,9 @@ use App\Models\SelectedDoordimension;
 use Illuminate\Support\Str;
 use App\Exports\LeafTypeSelectedExport;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class DoorDimensionCustomController extends Controller
@@ -221,58 +224,82 @@ class DoorDimensionCustomController extends Controller
             ->orderBy('mm_width')
             ->get();
 
-        $filename = 'door_dimensions_Custom_selected_' . now()->format('Ymd_His') . '.csv';
+        $leafTypes = IntumescentSealLeafType::where('status',1)->get();
 
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Height (mm)',
+            'Width (mm)',
+            'Fire Rating',
+            'Configurable Item',
         ];
 
-        return response()->stream(function () use ($items) {
+        foreach ($leafTypes as $leaf) {
+            $headers[] = $leaf->leaf_type_key . ' ' . configurationDoor($leaf->configurableitems) . ' Cost';
+        }
 
-            $file = fopen('php://output', 'w');
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $leafTypes = IntumescentSealLeafType::where('status',1)->get();
+        // Bold Header
+        $lastColumn = $sheet->getHighestColumn();
+        $sheet->getStyle('A1:' . $lastColumn . '1')->getFont()->setBold(true);
 
-            $headerRow = [
-                'Height (mm)',
-                'Width (mm)',
-                'Fire Rating',
-                'Configurable Item',
+        // Column Width
+        $sheet->getColumnDimension('A')->setWidth(15);
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(20);
+
+        $colIndex = 5;
+        foreach ($leafTypes as $leaf) {
+            $sheet->getColumnDimensionByColumn($colIndex)->setWidth(22);
+            $colIndex++;
+        }
+
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $data = [
+                $item->mm_height,
+                $item->mm_width,
+                $item->fire_rating,
+                configurationDoor($item->configurableitems),
             ];
 
+            $costs = $item->selectedPrice->custome_door_selected_cost ?? [];
 
             foreach ($leafTypes as $leaf) {
-                $headerRow[] = $leaf->leaf_type_key .' '.configurationDoor($leaf->configurableitems) . ' Cost';
-            }
-            fputcsv($file, $headerRow);
 
-            foreach ($items as $item) {
+                $value = $costs[$leaf->id] ?? 0;
 
-                $row = [
-                    $item->mm_height,
-                    $item->mm_width,
-                    $item->fire_rating,
-                    configurationDoor($item->configurableitems),
-                ];
-
-                $costs = $item->selectedPrice->custome_door_selected_cost ?? [];
-
-                foreach ($leafTypes as $leaf) {
-
-                    $value = $costs[$leaf->id] ?? '';
-
-                    $row[] = is_numeric($value)
-                        ? number_format((float)$value, 2)
-                        : 0;
-                }
-
-                fputcsv($file, $row);
+                $data[] = is_numeric($value)
+                    ? number_format((float)$value, 2)
+                    : 0;
             }
 
-            fclose($file);
+            $sheet->fromArray($data, NULL, 'A' . $row);
 
-        }, 200, $headers);
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:' . $lastColumn . $lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'door_dimensions_Custom_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 
    public function updateSelectOptionCostCustome(Request $request)
