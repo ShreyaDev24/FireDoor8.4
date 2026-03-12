@@ -49,10 +49,10 @@
             <td>{{$value->LMPerDoorType}}</td>
             <td>{{$value->QuantityOfDoorTypes}}</td>
             <td>{{$value->Unit}}</td>
-            <td>{{ $currency }}{{$value->UnitCost}}</td>
-            <td >{{ $currency }}{{$value->TotalCost}}</td>
-            <td >{{ $currency }}{{$value->UnitPriceSell}}</td>
-            <td>{{ $currency }}{{$value->GTSellPrice}}</td>
+            <td>{{ $currency }}{{round($value->UnitCost, 2) }}</td>
+            <td >{{ $currency }}{{round($value->TotalCost, 2) }}</td>
+            <td >{{ $currency }}{{round($value->UnitPriceSell, 2) }}</td>
+            <td>{{ $currency }}{{round($value->GTSellPrice, 2) }}</td>
             <td>{{$value->Margin}}%</td>
         </tr>
 

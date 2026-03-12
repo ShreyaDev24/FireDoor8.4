@@ -62,10 +62,10 @@
             <td> {{ isset($words[5]) ? round($words[5], 2) : '' }} </td>
             <td>{{ $value->QuantityOfDoorTypes }}</td>
             <td>{{$value->Unit}}</td>
-            <td>{{ $currency }}{{$value->UnitCost}}</td>
+            <td>{{ $currency }}{{round($value->UnitCost, 2)}}</td>
             <td>{{ $currency }}{{ round($value->UnitCost * $value->QuantityOfDoorTypes,2) }}</td>
-            <td>{{ $currency }}{{$value->UnitPriceSell}}</td>
-            <td>{{ $currency }}{{$value->GTSellPrice}}</td>
+            <td>{{ $currency }}{{round($value->UnitPriceSell, 2)}}</td>
+            <td>{{ $currency }}{{round($value->GTSellPrice, 2)}}</td>
             <td>{{$value->Margin}}%</td>
         </tr>
 

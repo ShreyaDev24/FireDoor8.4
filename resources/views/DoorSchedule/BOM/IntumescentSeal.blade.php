@@ -86,10 +86,10 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
             <td>{{$value->LMPerDoorType}}</td>
             <td>{{$value->QuantityOfDoorTypes}}</td>
             <td>{{$value->Unit}}</td>
-            <td>{{$value->UnitCost}}</td>
+            <td>{{round($value->UnitCost, 2) }}</td>
             <td>{{ round($value->TotalCost,2) }}</td>
-            <td>{{$value->UnitPriceSell}}</td>
-            <td>{{$value->GTSellPrice}}</td>
+            <td>{{round($value->UnitPriceSell, 2) }}</td>
+            <td>{{round($value->GTSellPrice, 2) }}</td>
             <td>{{$value->Margin}}%</td>
         </tr>
         @php
