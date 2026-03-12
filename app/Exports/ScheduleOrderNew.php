@@ -174,6 +174,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $GlazingSystems = $item[$i]->GlazingSystems;
             $GlazingSystemThickness = $item[$i]->GlazingSystemThickness;
             $GlazingBeads = $item[$i]->GlazingBeads;
+            $GlazingBeadsThickness = $item[$i]->GlazingBeadsThickness;
             $glazingBeadsWidth = $item[$i]->glazingBeadsHeight;
             $glazingBeadsHeight = $item[$i]->GlazingBeadsThickness;
             $glazingBeadsFixingDetail = $item[$i]->glazingBeadsFixingDetail;
@@ -389,6 +390,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $GlazingSystems,
                 $GlazingSystemThickness,
                 $GlazingBeads,
+                $GlazingBeadsThickness,
                 $glazingBeadsWidth,
                 $glazingBeadsHeight,
                 $glazingBeadsFixingDetail,
@@ -517,7 +519,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -620,6 +622,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Glazing Systems ',
             'Glazing System Thickness ',
             'Glazing Beads ',
+            'Glazing Beads Thickness ',
             'glazing Beads Width ',
             'glazing Beads Height ',
             'glazing Beads Fixing Detail ',
@@ -764,7 +767,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GK1'; // All headers
+                $cellRange = 'A1:GL1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -786,7 +789,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GK1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GL1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
