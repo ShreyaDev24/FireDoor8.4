@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\SettingIntumescentSeals2;
 use App\Models\SelectedIntumescentSeals2;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class IntumescentSealArrangementController extends Controller
@@ -337,50 +341,67 @@ class IntumescentSealArrangementController extends Controller
             return $item;
         });
 
-        $filename = 'Intumescent_Seal_Arrangement_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
         $headers = [
-            "Content-Type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Configurable Item',
+            'FireDoor',
+            'Configuration',
+            'Height1',
+            'Height2',
+            'Width1',
+            'Width2',
+            'Intumescent Seal',
+            'Brand',
+            'FireOnly Type',
+            'Leaf Type',
+            'Cost Price'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
+        // Bold Header
+        $sheet->getStyle('A1:L1')->getFont()->setBold(true);
 
-            fputcsv($file, [
-                'Configurable Item',
-                'FireDoor',
-                'Configuration',
-                'Height1',
-                'Height2',
-                'Width1',
-                'Width2',
-                'intumescent Seal',
-                'BRAND',
-                'FireOnly Type',
-                'Leaf Type',
-                'Cost Price'
-            ]);
+        // Column Width
+        foreach (range('A','L') as $col) {
+            $sheet->getColumnDimension($col)->setWidth(23);
+        }
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    configurationDoor($item->configurableitems),
-                    $item->firerating,
-                    $item->configuration,
-                    $item->Point1height,
-                    $item->Point2height,
-                    $item->Point1width,
-                    $item->Point2width,
-                    $item->intumescentSeals,
-                    $item->brand,
-                    $item->FireOnly,
-                    $item->leaf_type_keys,
-                    number_format($item->selected_cost ?? 0, 2),
-                ]);
-            }
+        $row = 2;
 
-            fclose($file);
-        }, 200, $headers);
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, configurationDoor($item->configurableitems));
+            $sheet->setCellValue('B'.$row, $item->firerating);
+            $sheet->setCellValue('C'.$row, $item->configuration);
+            $sheet->setCellValue('D'.$row, $item->Point1height);
+            $sheet->setCellValue('E'.$row, $item->Point2height);
+            $sheet->setCellValue('F'.$row, $item->Point1width);
+            $sheet->setCellValue('G'.$row, $item->Point2width);
+            $sheet->setCellValue('H'.$row, $item->intumescentSeals);
+            $sheet->setCellValue('I'.$row, $item->brand);
+            $sheet->setCellValue('J'.$row, $item->FireOnly);
+            $sheet->setCellValue('K'.$row, $item->leaf_type_keys);
+            $sheet->setCellValue('L'.$row, number_format($item->selected_cost ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Border
+        $sheet->getStyle('A1:L'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Intumescent_Seal_Arrangement_selected_'.now()->format('Ymd_His').'.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }

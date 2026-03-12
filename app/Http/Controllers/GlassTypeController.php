@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\GlassType;
 use App\Models\SelectedGlassType;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class GlassTypeController extends Controller
@@ -244,40 +248,77 @@ class GlassTypeController extends Controller
             ->orderBy('glass_type.GlassType')
             ->get();
 
-        $filename = 'Glass_Type_selected_' . now()->format('Ymd_His') . '.csv';
 
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Headers
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Streboard',
+            'Halspan',
+            'Flamebreak',
+            'Stredor',
+            'Vicaima',
+            'Seadec',
+            'Deanta',
+            'MMM',
+            'NFR',
+            'FD30',
+            'FD60',
+            'Glass Integrity',
+            'Glass Type',
+            'Glass Thickness',
+            'Vp Area Size',
+            'Price Per m²'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'NFR','FD30','FD60','Glass Integrity', 'Glass Type','Glass Thickness','Vp Area Size', 'Price Per m²']);
+        // Bold header
+        $sheet->getStyle('A1:P1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->Streboard ? 'Yes' : 'No',
-                    $item->Halspan ? 'Yes' : 'No',
-                    $item->Flamebreak ? 'Yes' : 'No',
-                    $item->Stredor ? 'Yes' : 'No',
-                    $item->VicaimaDoorCore ? 'Yes' : 'No',
-                    $item->Seadec ? 'Yes' : 'No',
-                    $item->Deanta ? 'Yes' : 'No',
-                    $item->MMM ? 'Yes' : 'No',
-                    $item->NFR ?? '-',
-                    $item->FD30 ?? '-',
-                    $item->FD60 ?? '-',
-                    str_replace('_', ' ', $item->GlassIntegrity),
-                    $item->GlassType,
-                    $item->GlassThickness,
-                    $item->VpAreaSize,
-                    number_format($item->selectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column width
+        foreach (range('A', 'P') as $column) {
+            $sheet->getColumnDimension($column)->setWidth(18);
+        }
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->Streboard ? 'Yes' : 'No');
+            $sheet->setCellValue('B'.$row, $item->Halspan ? 'Yes' : 'No');
+            $sheet->setCellValue('C'.$row, $item->Flamebreak ? 'Yes' : 'No');
+            $sheet->setCellValue('D'.$row, $item->Stredor ? 'Yes' : 'No');
+            $sheet->setCellValue('E'.$row, $item->VicaimaDoorCore ? 'Yes' : 'No');
+            $sheet->setCellValue('F'.$row, $item->Seadec ? 'Yes' : 'No');
+            $sheet->setCellValue('G'.$row, $item->Deanta ? 'Yes' : 'No');
+            $sheet->setCellValue('H'.$row, $item->MMM ? 'Yes' : 'No');
+            $sheet->setCellValue('I'.$row, $item->NFR ?? '-');
+            $sheet->setCellValue('J'.$row, $item->FD30 ?? '-');
+            $sheet->setCellValue('K'.$row, $item->FD60 ?? '-');
+            $sheet->setCellValue('L'.$row, str_replace('_', ' ', $item->GlassIntegrity));
+            $sheet->setCellValue('M'.$row, $item->GlassType);
+            $sheet->setCellValue('N'.$row, $item->GlassThickness);
+            $sheet->setCellValue('O'.$row, $item->VpAreaSize);
+            $sheet->setCellValue('P'.$row, number_format($item->selectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:P' . $lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Glass_Type_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }

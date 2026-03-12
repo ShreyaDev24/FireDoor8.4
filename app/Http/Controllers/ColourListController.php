@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Color;
 use App\Models\SelectedColor;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class ColourListController extends Controller
@@ -265,19 +269,11 @@ class ColourListController extends Controller
             ->orderBy('color.ColorName')
             ->get();
 
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-        $filename = 'Color_selected_' . now()->format('Ymd_His') . '.csv';
-
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-        ];
-
-        return response()->stream(function () use ($items) {
-
-            $file = fopen('php://output', 'w');
-
-            fputcsv($file, [
+            // Headings
+            $headers = [
                 'Color Name',
                 'Hex',
                 'English Name',
@@ -285,26 +281,51 @@ class ColourListController extends Controller
                 'Door Configuration',
                 'Door Leaf Facing Value',
                 'Price'
-            ]);
+            ];
+
+            $sheet->fromArray($headers, NULL, 'A1');
+
+            // Bold headings
+            $sheet->getStyle('A1:G1')->getFont()->setBold(true);
+
+            // Column width
+            $sheet->getColumnDimension('A')->setWidth(30);
+            $sheet->getColumnDimension('B')->setWidth(15);
+            $sheet->getColumnDimension('C')->setWidth(25);
+            $sheet->getColumnDimension('D')->setWidth(20);
+            $sheet->getColumnDimension('E')->setWidth(22);
+            $sheet->getColumnDimension('F')->setWidth(20);
+            $sheet->getColumnDimension('G')->setWidth(15);
+
+            $row = 2;
 
             foreach ($items as $item) {
 
-                fputcsv($file, [
+                $sheet->setCellValue('A'.$row, $item->ColorName);
+                $sheet->setCellValue('B'.$row, $item->Hex);
+                $sheet->setCellValue('C'.$row, $item->EnglishName);
+                $sheet->setCellValue('D'.$row, $item->DoorLeafFacing);
+                $sheet->setCellValue('E'.$row, $item->doorConfiguration);
+                $sheet->setCellValue('F'.$row, $item->DoorLeafFacingValue);
+                $sheet->setCellValue('G'.$row, number_format($item->SelectedPrice ?? 0, 2));
 
-                    $item->ColorName,
-                    $item->Hex,
-                    $item->EnglishName,
-                    $item->DoorLeafFacing,
-                    $item->doorConfiguration,
-                    $item->DoorLeafFacingValue,
-                    number_format($item->SelectedPrice ?? 0, 2),
-
-                ]);
+                $row++;
             }
 
-            fclose($file);
+            $lastRow = $row - 1;
 
-        }, 200, $headers);
+            $sheet->getStyle('A1:G' . $lastRow)
+                ->getBorders()
+                ->getAllBorders()
+                ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'Color_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+            return response()->streamDownload(function () use ($writer) {
+                $writer->save('php://output');
+            }, $filename);
     }
 
 }

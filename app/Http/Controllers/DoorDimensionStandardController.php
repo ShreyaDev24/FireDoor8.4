@@ -9,6 +9,9 @@ use App\Models\SelectedDoordimension;
 use Illuminate\Support\Str;
 use App\Exports\LeafTypeSelectedExport;
 use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class DoorDimensionStandardController extends Controller
@@ -274,46 +277,72 @@ class DoorDimensionStandardController extends Controller
             ->orderBy('door_dimension.mm_width')
             ->get();
 
-        $filename = 'door_dimensions_selected_' . now()->format('Ymd_His') . '.csv';
 
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Headings
         $headers = [
-            "Content-Type"        => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Code',
+            'Height (mm)',
+            'Width (mm)',
+            'Height (inch)',
+            'Width (inch)',
+            'Fire Rating',
+            'Leaf Type',
+            'Door Leaf Facing',
+            'Configurable Item',
+            'Cost Price'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
+        // Bold heading
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
 
-            fputcsv($file, [
-                'Code',
-                'Height (mm)',
-                'Width (mm)',
-                'Height (inch)',
-                'Width (inch)',
-                'Fire Rating',
-                'Leaf Type',
-                'Door Leaf Facing',
-                'Configurable Item',
-                'Cost Price'
-            ]);
+        // Column widths
+        $sheet->getColumnDimension('A')->setWidth(20);
+        $sheet->getColumnDimension('B')->setWidth(15);
+        $sheet->getColumnDimension('C')->setWidth(15);
+        $sheet->getColumnDimension('D')->setWidth(15);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(20);
+        $sheet->getColumnDimension('H')->setWidth(20);
+        $sheet->getColumnDimension('I')->setWidth(22);
+        $sheet->getColumnDimension('J')->setWidth(18);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->code,
-                    $item->mm_height,
-                    $item->mm_width,
-                    $item->inch_height,
-                    $item->inch_width,
-                    $item->fire_rating,
-                    $item->leaf_type,
-                    $item->door_leaf_facing,
-                    configurationDoor($item->configurableitems),
-                    number_format($item->selected_cost ?? 0, 2),
-                ]);
-            }
+        $row = 2;
 
-            fclose($file);
-        }, 200, $headers);
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->code);
+            $sheet->setCellValue('B'.$row, $item->mm_height);
+            $sheet->setCellValue('C'.$row, $item->mm_width);
+            $sheet->setCellValue('D'.$row, $item->inch_height);
+            $sheet->setCellValue('E'.$row, $item->inch_width);
+            $sheet->setCellValue('F'.$row, $item->fire_rating);
+            $sheet->setCellValue('G'.$row, $item->leaf_type);
+            $sheet->setCellValue('H'.$row, $item->door_leaf_facing);
+            $sheet->setCellValue('I'.$row, configurationDoor($item->configurableitems));
+            $sheet->setCellValue('J'.$row, number_format($item->selected_cost ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:J'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'door_dimensions_selected_'.now()->format('Ymd_His').'.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }
