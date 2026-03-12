@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\ScreenGlassType;
 use App\Models\ScreenGlazingType;
 use App\Models\SelectedScreenGlazing;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class ScreenGlazingTypeController extends Controller
@@ -252,43 +256,68 @@ class ScreenGlazingTypeController extends Controller
             ->orderBy('screen_glazing_type.GlazingSystem', 'ASC')
             ->get();
 
-        $filename = 'Screen_Glazing_System_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headings
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Fire Rating',
+            'Screen Glass',
+            'Glazing System',
+            'Glazing Thickness',
+            'Beading',
+            'Beading Height',
+            'Beading Width',
+            'Fixing Details',
+            'Price Per L/M'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, [
-                'Fire Rating',
-                'Screen Glass',
-                'Glazing System',
-                'Glazing Thickness',
-                'Beading',
-                'Beading Height',
-                'Beading Width',
-                'Fixing Details',
-                'Price Per L/M',
-            ]);
+        // Bold headings
+        $sheet->getStyle('A1:I1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->FireRating,
-                    $item->glassType?->GlassType ?? '-',
-                    $item->GlazingSystem,
-                    $item->GlazingThickness,
-                    $item->Beading,
-                    $item->BeadingHeight,
-                    $item->BeadingWidth,
-                    $item->FixingDetails,
-                    number_format($item->glazingSelectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column width
+        $sheet->getColumnDimension('A')->setWidth(15);
+        $sheet->getColumnDimension('B')->setWidth(25);
+        $sheet->getColumnDimension('C')->setWidth(25);
+        $sheet->getColumnDimension('D')->setWidth(20);
+        $sheet->getColumnDimension('E')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(18);
+        $sheet->getColumnDimension('G')->setWidth(18);
+        $sheet->getColumnDimension('H')->setWidth(25);
+        $sheet->getColumnDimension('I')->setWidth(18);
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->FireRating);
+            $sheet->setCellValue('B'.$row, $item->glassType?->GlassType ?? '-');
+            $sheet->setCellValue('C'.$row, $item->GlazingSystem);
+            $sheet->setCellValue('D'.$row, $item->GlazingThickness);
+            $sheet->setCellValue('E'.$row, $item->Beading);
+            $sheet->setCellValue('F'.$row, $item->BeadingHeight);
+            $sheet->setCellValue('G'.$row, $item->BeadingWidth);
+            $sheet->setCellValue('H'.$row, $item->FixingDetails);
+            $sheet->setCellValue('I'.$row, number_format($item->glazingSelectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Add borders
+        $sheet->getStyle('A1:I'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Screen_Glazing_System_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }
