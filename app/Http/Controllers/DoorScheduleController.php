@@ -4236,33 +4236,32 @@ class DoorScheduleController extends Controller
             ->where('QuotationId', $Id)
             ->where('VersionId', $vId)
             ->get()
-            ->map(function ($item) {
+            ->flatMap(function ($item) {
 
-                return [
-                    'FireRating'       => $item->FireRating,
-                    'SvgImage'         => $item->SvgImage,
-                    'DoorType'         => $item->DoorType,
-                    'DoorQuantity'     => $item->DoorQuantity,
-                    'DoorsetType'      => $item->DoorsetType,
-                    'SOWidth'          => $item->SOWidth,
-                    'SOHeight'         => $item->SOHeight,
-                    'SOWallThick'      => $item->SOWallThick,
-                    'AdjustPrice'      => $item->AdjustPrice,
-                    'DoorsetPrice'     => $item->DoorsetPrice,
-                    'IronmongaryPrice' => $item->IronmongaryPrice,
-                    'itemId'           => $item->itemId,
-                    'version_id'       => $item->VersionId,
+                return $item->masters->map(function ($m) use ($item) {
+                    return [
+                        'FireRating'       => $item->FireRating,
+                        'SvgImage'         => $item->SvgImage,
+                        'DoorType'         => $item->DoorType,
+                        'DoorQuantity'     => $item->DoorQuantity,
+                        'DoorsetType'      => $item->DoorsetType,
+                        'SOWidth'          => $item->SOWidth,
+                        'SOHeight'         => $item->SOHeight,
+                        'SOWallThick'      => $item->SOWallThick,
+                        'AdjustPrice'      => $item->AdjustPrice,
+                        'DoorsetPrice'     => $item->DoorsetPrice,
+                        'IronmongaryPrice' => $item->IronmongaryPrice,
+                        'itemId'           => $item->itemId,
+                        'version_id'       => $item->VersionId,
 
-                    // 🔥 ALL master rows
-                    'doors' => $item->masters->map(function ($m) {
-                        return [
-                            'id'         => $m->id,
-                            'doorNumber' => $m->doorNumber,
-                            'floor'      => $m->floor,
-                        ];
-                    }),
-                ];
-            });
+                        'id'         => $m->id,
+                        'doorNumber' => $m->doorNumber,
+                        'floor'      => $m->floor,
+                    ];
+                });
+            })
+            ->sortBy('doorNumber') // 🔥 full result doorNumber se sort
+            ->values();
 
             /* Totals */
             $totals = Item::join('item_master', 'item_master.itemID', '=', 'items.itemId')
