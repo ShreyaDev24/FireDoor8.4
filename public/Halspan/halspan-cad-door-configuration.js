@@ -327,6 +327,8 @@ const render = (CustomElement = null) => {
                 console.log(
                 `LeafWidth1 Rebated DD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) / 2 = ${LeafWidth1}`
                 );
+                FrameThickness = FrameThickness - RebatedHeight;
+                console.log(FrameThickness)
             }
         } else if (DoorSetType == "SD" && withoutFrameId != 1) {
             LeafWidth1 = SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap);
@@ -341,6 +343,8 @@ const render = (CustomElement = null) => {
                 console.log(
                 `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 2) + (${RebatedHeight} * 2) = ${LeafWidth1}`
                 );
+                FrameThickness = FrameThickness - RebatedHeight;
+                console.log(FrameThickness)
             }
         } else if (DoorSetType == "leaf_and_a_half") {
             if (withoutFrameId != 1) {
@@ -354,6 +358,8 @@ const render = (CustomElement = null) => {
                     console.log(
                     `LeafWidth1 Rebated SD= (${SOWidth}) - (${Tollerance} * 2) - (${FrameThickness} * 2 ) - (${Gap} * 3) + (${RebatedHeight} * 2) - ${LeafWidth1}= ${LeafWidth2}`
                     );
+                    FrameThickness = FrameThickness - RebatedHeight;
+                    console.log(FrameThickness)
                 }
             }
             DoorSetType = "DD";

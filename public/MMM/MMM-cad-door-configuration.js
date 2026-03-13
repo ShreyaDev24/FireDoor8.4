@@ -347,6 +347,11 @@ var frameHeightnew = $('input[name="frameHeight"]').val();
      var LeafWidth2 = 0;
      var LeafWidth1ForMap = 0;
      var LeafWidth2ForMap = 0;
+     var RebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0 ;
+        if($("#frameType").val() == 'Rebated_Frame'){
+            FrameThickness = FrameThickness - RebatedHeight;
+            console.log(FrameThickness,'test')
+        }
 
     //  if (DoorSetType == "DD" && withoutFrameId != 1) {
     //      LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap)) / 2;

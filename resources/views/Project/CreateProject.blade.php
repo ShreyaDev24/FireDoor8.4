@@ -764,10 +764,10 @@ $(document).ready(function() {
             $('.floorCount').removeAttr('required');
         }else{
             $('.house').hide();
-            $('.commercial').hide();
+            $('.commercial').show();
+            $('.floorCount1').attr('required', true);
             $('.houseType').removeAttr('required');
             $('.floorCount').removeAttr('required');
-            $('.floorCount1').removeAttr('required');
         }
     });
 
