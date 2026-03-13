@@ -4279,6 +4279,7 @@ class DoorScheduleController extends Controller
                         'SvgImage'         => $item->SvgImage,
                         'DoorType'         => $item->DoorType,
                         'DoorQuantity'     => $item->DoorQuantity,
+                    'Handing'          => $item->Handing,
                         'DoorsetType'      => $item->DoorsetType,
                         'SOWidth'          => $item->SOWidth,
                         'SOHeight'         => $item->SOHeight,
