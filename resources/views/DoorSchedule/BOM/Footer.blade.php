@@ -99,7 +99,7 @@ $failed = array();
 
     <tr style="border-bottom:1px solid #000;">
     <td>Any Prices OverRidden</td>
-    <td>0</td>
+    <td>{{ $itemPriceOverRidden }}</td>
     </tr>
     </tbody>
 </table>
