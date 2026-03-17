@@ -1071,22 +1071,30 @@ function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGene
             $CompanyQuotationCounter = new CompanyQuotationCounter();
             $CompanyQuotationCounter->UserId = Auth::user()->main_id ?? Auth::user()->id;
             $CompanyQuotationCounter->quotation_prefix = $quotation_prefix;
-            $CompanyQuotationCounter->quotation_counter = 100001;
+            $CompanyQuotationCounter->quotation_counter = 1; // ✅ start from 1
             $CompanyQuotationCounter->save();
 
             $QuotationCounterId = $CompanyQuotationCounter->id;
-            $NewQuotationCounter = 100001;
+            $NewQuotationCounter = 1;
 
         } else {
 
             $quotation_prefix = $QuotationCounter["quotation_prefix"];
-            $NewQuotationCounter = $QuotationCounter["quotation_counter"] + 1;
+
+            $lastCounter = $QuotationCounter["quotation_counter"];
+
+            // 🔥 normalize old large values (like 100001)
+            if ($lastCounter > 99) {
+                $lastCounter = 0;
+            }
+
+            $NewQuotationCounter = $lastCounter + 1;
             $QuotationCounterId = $QuotationCounter["id"];
         }
 
         // 🔒 LOOP UNTIL UNIQUE QUOTATION NUMBER FOUND
         do {
-            $QuotationGenerationId = '#'.$quotation_prefix.$userId.$NewQuotationCounter;
+            $QuotationGenerationId = $quotation_prefix . str_pad($NewQuotationCounter, 2, '0', STR_PAD_LEFT);
             $exists = Quotation::where('QuotationGenerationId', $QuotationGenerationId)->exists();
             if ($exists) {
                 $NewQuotationCounter++;
