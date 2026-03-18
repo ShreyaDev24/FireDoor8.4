@@ -70,7 +70,7 @@ class CoreCertificateController extends Controller
             ],
             'test_certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
-            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
+            'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:15360',
         ]);
 
         $path = null;
