@@ -61,38 +61,51 @@ class CoreCertificateController extends Controller
     {
         $request->validate([
             'brand_of_core' => 'required|string|max:255',
-            'fire_rating' => [
-            'required',
-                Rule::unique('core_certificates')->where(function ($query) use ($request) {
-                    return $query->where('user_id', auth()->id())
-                         ->where('brand_of_core', $request->brand_of_core);
-                }),
-            ],
+            'fire_rating' => 'required',
             'test_certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
             'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:15360',
         ]);
 
         $path = null;
+
         if ($request->hasFile('document')) {
             $filename = time().'_'.$request->file('document')->getClientOriginalName();
             $request->file('document')->move(public_path('certificates'), $filename);
-
-            // Store only relative path
             $path = 'certificates/' . $filename;
         }
 
-        CoreCertificate::create([
-            'user_id' => Auth::id(),
-            'brand_of_core' => $request->brand_of_core,
-            'fire_rating' => $request->fire_rating,
-            'test_certificate_reference' => $request->test_certificate_reference,
-            'expiry_date' => $request->expiry_date,
-            'document_path' => $path,
-            'status' => 1,
-        ]);
+        // 🔥 CHECK EXISTING RECORD
+        $existing = CoreCertificate::where('user_id', Auth::id())
+            ->where('brand_of_core', $request->brand_of_core)
+            ->where('fire_rating', $request->fire_rating)
+            ->first();
 
-        return redirect()->route('core_certificates.index')->with('success', 'Certificate added successfully');
+        if ($existing) {
+            // ✅ UPDATE (Supersede)
+            $existing->update([
+                'test_certificate_reference' => $request->test_certificate_reference,
+                'expiry_date' => $request->expiry_date,
+                'document_path' => $path ?? $existing->document_path,
+            ]);
+
+            return redirect()->route('core_certificates.index')
+                ->with('success', 'Certificate updated (superseded) successfully');
+        } else {
+            // ✅ CREATE NEW
+            CoreCertificate::create([
+                'user_id' => Auth::id(),
+                'brand_of_core' => $request->brand_of_core,
+                'fire_rating' => $request->fire_rating,
+                'test_certificate_reference' => $request->test_certificate_reference,
+                'expiry_date' => $request->expiry_date,
+                'document_path' => $path,
+                'status' => 1,
+            ]);
+
+            return redirect()->route('core_certificates.index')
+                ->with('success', 'Certificate added successfully');
+        }
     }
 
     public function edit(CoreCertificate $coreCertificate)
