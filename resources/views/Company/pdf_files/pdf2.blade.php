@@ -216,7 +216,7 @@
                 <th class="page2_2"><p> COC Type </p></th>
                 <th class="page2_2"><p> Special Feature Refs </p></th>
                 @if($HideCosts == 0)
-                <th class="page2_2 tbl_last"><p> Doorset Price </p></th>
+                <th class="page2_2 tbl_last"><p> Doorset Price {{ $HideCosts }} </p></th>
                 <th class="page2_2 tbl_last"><p> Ironmongery Price </p></th>
                 @endif
                 <th class="page2_2 tbl_last"><p> Total Price Per Doorset </p></th>
