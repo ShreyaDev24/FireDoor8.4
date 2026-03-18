@@ -293,6 +293,23 @@
                                 Tooltip
                             </a>
                         </li>
+                        <li
+                            class="mm-{{ (Request::segment(2) == 'core_certificates' || Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
+                            <a href="#" aria-expanded="true">
+                                Certificates
+                                <i class="metismenu-state-icon">
+                                    <i class="fa fa-caret-down"></i>
+                                </i>
+                            </a>
+                            <ul>
+                                <li class="submm-{{ (Request::segment(2) == 'core_certificates') ? 'active' : ''}}">
+                                    <a href="{{ route('core_certificates.index') }}">Core Certificates</a>
+                                </li>
+                                <li class="submm-{{ (Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
+                                    <a href="{{ route('glass-certificates.index') }}">Glass Certificates</a>
+                                </li>
+                            </ul>
+                        </li>
                         <li class="submm-{{ (Request::segment(1) == 'non-configural-items') ? 'active' : ''}}">
                             <a href="{{route('non-configural-items/list')}}">
                                 <i class="metismenu-icon"></i>

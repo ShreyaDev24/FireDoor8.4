@@ -14,7 +14,11 @@ class CoreCertificateController extends Controller
 {
     public function index()
     {
-        $certificates = CoreCertificate::join('configurableitems','configurableitems.id','core_certificates.brand_of_core')->where('core_certificates.user_id', Auth::id())->select('core_certificates.*','configurableitems.name')->get();
+        if (Auth::user()->UserType=='1') {
+           $certificates = CoreCertificate::join('configurableitems','configurableitems.id','core_certificates.brand_of_core')->select('core_certificates.*','configurableitems.name')->orderBy('configurableitems.name', 'ASC')->get();
+        } else {
+            $certificates = CoreCertificate::join('configurableitems','configurableitems.id','core_certificates.brand_of_core')->where('core_certificates.user_id', Auth::id())->select('core_certificates.*','configurableitems.name')->orderBy('configurableitems.name', 'ASC')->get();
+        }
         return view('core_certificates.index', compact('certificates'));
     }
 
@@ -60,7 +64,7 @@ class CoreCertificateController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'brand_of_core' => 'required|string|max:255',
+            'brand_of_core' => 'required',
             'fire_rating' => 'required',
             'test_certificate_reference' => 'required|string|max:255',
             'expiry_date' => 'nullable|date',
@@ -75,36 +79,66 @@ class CoreCertificateController extends Controller
             $path = 'certificates/' . $filename;
         }
 
-        // 🔥 CHECK EXISTING RECORD
-        $existing = CoreCertificate::where('user_id', Auth::id())
-            ->where('brand_of_core', $request->brand_of_core)
-            ->where('fire_rating', $request->fire_rating)
-            ->first();
+        $isAdmin = Auth::user()->UserType == 1; // 🔥 adjust if needed
 
-        if ($existing) {
-            // ✅ UPDATE (Supersede)
-            $existing->update([
-                'test_certificate_reference' => $request->test_certificate_reference,
-                'expiry_date' => $request->expiry_date,
-                'document_path' => $path ?? $existing->document_path,
-            ]);
+        // 🔥 ADMIN LOGIC (GLOBAL OVERRIDE)
+        if ($isAdmin) {
+
+            $existing = CoreCertificate::whereNull('user_id') // GLOBAL
+                ->where('brand_of_core', $request->brand_of_core)
+                ->where('fire_rating', $request->fire_rating)
+                ->first();
+
+            if ($existing) {
+                $existing->update([
+                    'test_certificate_reference' => $request->test_certificate_reference,
+                    'expiry_date' => $request->expiry_date,
+                    'document_path' => $path ?? $existing->document_path,
+                ]);
+            } else {
+                CoreCertificate::create([
+                    'user_id' => null, // 🌍 GLOBAL
+                    'brand_of_core' => $request->brand_of_core,
+                    'fire_rating' => $request->fire_rating,
+                    'test_certificate_reference' => $request->test_certificate_reference,
+                    'expiry_date' => $request->expiry_date,
+                    'document_path' => $path,
+                    'status' => 1,
+                ]);
+            }
 
             return redirect()->route('core_certificates.index')
-                ->with('success', 'Certificate updated (superseded) successfully');
-        } else {
-            // ✅ CREATE NEW
-            CoreCertificate::create([
-                'user_id' => Auth::id(),
-                'brand_of_core' => $request->brand_of_core,
-                'fire_rating' => $request->fire_rating,
-                'test_certificate_reference' => $request->test_certificate_reference,
-                'expiry_date' => $request->expiry_date,
-                'document_path' => $path,
-                'status' => 1,
-            ]);
+                ->with('success', 'Global certificate updated for all users');
+        }
+
+        // 👤 USER LOGIC (PERSONAL OVERRIDE)
+        else {
+
+            $existing = CoreCertificate::where('user_id', Auth::id())
+                ->where('brand_of_core', $request->brand_of_core)
+                ->where('fire_rating', $request->fire_rating)
+                ->first();
+
+            if ($existing) {
+                $existing->update([
+                    'test_certificate_reference' => $request->test_certificate_reference,
+                    'expiry_date' => $request->expiry_date,
+                    'document_path' => $path ?? $existing->document_path,
+                ]);
+            } else {
+                CoreCertificate::create([
+                    'user_id' => Auth::id(),
+                    'brand_of_core' => $request->brand_of_core,
+                    'fire_rating' => $request->fire_rating,
+                    'test_certificate_reference' => $request->test_certificate_reference,
+                    'expiry_date' => $request->expiry_date,
+                    'document_path' => $path,
+                    'status' => 1,
+                ]);
+            }
 
             return redirect()->route('core_certificates.index')
-                ->with('success', 'Certificate added successfully');
+                ->with('success', 'Certificate updated for your account');
         }
     }
 
