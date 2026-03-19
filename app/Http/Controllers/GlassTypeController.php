@@ -55,7 +55,7 @@ class GlassTypeController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            $slug = Str::slug($request->GlassType, '_');
+            $slug = str_replace(' ', '_', $request->GlassType);
 
             $glass = GlassType::create([
                 'Key'           => $slug,
@@ -118,7 +118,7 @@ class GlassTypeController extends Controller
 
         DB::transaction(function () use ($request, $glass) {
 
-            $slug = Str::slug($request->GlassType, '_');
+            $slug = str_replace(' ', '_',$request->GlassType);
 
             $glass->update([
                 'Key'           => $slug,

@@ -79,7 +79,7 @@ class OverpanelGlassGlazingType extends Controller
 
         DB::transaction(function () use ($request, $validated) {
 
-            $slug = Str::slug($validated['GlassType'], '_');
+            $slug = str_replace(' ', '_', $validated['GlassType']);
 
             $item = OverpanelGlassGlazing::create([
                 'Key'              => $slug,
@@ -170,7 +170,7 @@ class OverpanelGlassGlazingType extends Controller
 
         DB::transaction(function () use ($item, $validated, $request) {
 
-            $slug = Str::slug($validated['GlassType'], '_');
+            $slug = str_replace(' ', '_', $validated['GlassType']);
 
             $item->update([
                 'Key'              => $slug,
