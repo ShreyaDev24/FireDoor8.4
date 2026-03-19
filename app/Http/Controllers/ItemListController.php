@@ -2529,7 +2529,10 @@ class ItemListController extends Controller
                         ->where('selected_glazing_system.userId', $auth->id);
                 })
                 ->join('glass_glazing_system', 'glass_glazing_system.glazing_system', '=', 'glazing_system.id')
+                ->join('glass_type', 'glass_type.GlassType', '=', 'glass_glazing_system.GlassType')
+                ->where('glass_glazing_system.GlassType', str_replace('_', ' ', $glassType))
                 ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
+                ->where('glazing_system.' . $configurationDoor, $pageId)
                 ->select(
                     'glazing_system.*',
                     'selected_glazing_system.selectedPrice',
