@@ -56,7 +56,7 @@ class IntumescentSealColorController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            $slug = Str::slug($request->IntumescentSealColor, '_');
+            $slug = str_replace(' ', '_', $request->IntumescentSealColor);
 
             $seal = IntumescentSealColor::create([
                 'Key' => $slug,
@@ -107,7 +107,7 @@ class IntumescentSealColorController extends Controller
 
         DB::transaction(function () use ($request, $seal) {
 
-            $slug = Str::slug($request->IntumescentSealColor, '_');
+            $slug = str_replace(' ', '_', $request->IntumescentSealColor);
 
             $seal->update([
                 'Key' => $slug,

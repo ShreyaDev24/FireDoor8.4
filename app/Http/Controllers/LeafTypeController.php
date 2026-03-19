@@ -64,7 +64,7 @@ class LeafTypeController extends Controller
         ]);
 
         DB::transaction(function () use ($request) {
-        $str = Str::slug($request->LeafType, '_');
+        $str = str_replace(' ', '_', $request->LeafType);
             $leaf = LeafType::create([
                 'Key'            => $str,
                 'LeafType'       => $request->LeafType,
@@ -108,7 +108,7 @@ class LeafTypeController extends Controller
         DB::transaction(function () use ($request, $id) {
 
             $leaf = LeafType::findOrFail($id);
-            $str = Str::slug($request->LeafType, '_');
+            $str = str_replace(' ', '_', $request->LeafType);
             $leaf->update([
                 'Key'            => $str,
                 'LeafType'       => $request->LeafType,

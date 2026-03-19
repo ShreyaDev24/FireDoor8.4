@@ -56,7 +56,7 @@ class GlazingSystemController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            $slug = Str::slug($request->GlazingSystem, '_');
+            $slug = str_replace(' ', '_', $request->GlazingSystem);
 
             $glazing = GlazingSystem::create([
 
@@ -130,7 +130,7 @@ class GlazingSystemController extends Controller
 
         DB::transaction(function () use ($request, $glazing) {
 
-            $slug = Str::slug($request->GlazingSystem, '_');
+            $slug = str_replace(' ', '_', $request->GlazingSystem);
 
             $glazing->update([
 

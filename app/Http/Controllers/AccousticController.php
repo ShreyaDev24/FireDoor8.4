@@ -63,7 +63,7 @@ class AccousticController extends Controller
 
         DB::transaction(function () use ($request, $imageName) {
 
-            $slug = Str::slug($request->Accoustics, '_');
+            $slug = str_replace(' ', '_',$request->Accoustics);
 
             $accoustic = Accoustics::create([
                 'Key'            => $slug,
@@ -135,7 +135,7 @@ class AccousticController extends Controller
 
         DB::transaction(function () use ($request, $accoustic, $imageName) {
 
-            $slug = Str::slug($request->Accoustics, '_');
+            $slug = str_replace(' ', '_',$request->Accoustics);
 
             $accoustic->update([
                 'Key'            => $slug,

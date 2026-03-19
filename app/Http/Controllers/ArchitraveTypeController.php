@@ -53,7 +53,7 @@ class ArchitraveTypeController extends Controller
 
         DB::transaction(function () use ($request) {
 
-            $slug = Str::slug($request->ArchitraveType, '_');
+            $slug = str_replace(' ', '_', $request->ArchitraveType);
 
             $architrave = ArchitraveType::create([
                 'Key'             => $slug,
@@ -103,7 +103,7 @@ class ArchitraveTypeController extends Controller
 
         DB::transaction(function () use ($request, $architrave) {
 
-            $slug = Str::slug($request->ArchitraveType, '_');
+            $slug = str_replace(' ', '_', $request->ArchitraveType);
 
             $architrave->update([
                 'Key'            => $slug,

@@ -78,7 +78,7 @@ class DoorLeafFacingController extends Controller
         DB::transaction(function () use ($request) {
 
             $door = DoorLeafFacing::create([
-                'Key'                 => Str::slug($request->doorLeafFacingValue, '_'),
+                'Key'                 => str_replace(' ', '_', $request->doorLeafFacingValue),
                 'doorLeafFacing'      => $request->DoorLeafOption,
                 'doorLeafFacingValue' => $request->doorLeafFacingValue,
                 'editBy'              => auth()->id(),
@@ -176,7 +176,7 @@ class DoorLeafFacingController extends Controller
             $door = DoorLeafFacing::findOrFail($id);
 
             $door->update([
-                'Key'                 => Str::slug($request->doorLeafFacingValue, '_'),
+                'Key'                 => str_replace(' ', '_', $request->doorLeafFacingValue),
                 'doorLeafFacing'      => $request->DoorLeafOption,
                 'doorLeafFacingValue' => $request->doorLeafFacingValue,
                 'editBy'              => auth()->id(),
