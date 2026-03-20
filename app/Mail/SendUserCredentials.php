@@ -14,29 +14,23 @@ class SendUserCredentials extends Mailable
     use Queueable, SerializesModels;
     public $username;
     public $password;
+    public $fullname;
 
     /**
      * Create a new message instance.
      */
-    public function __construct($username, $password)
+    public function __construct($username, $password, $fullname)
     {
         $this->username = $username;
         $this->password = $password;
+        $this->fullname = $fullname;
     }
 
      public function build()
     {
-        return $this->subject('Your Firedoor Project Login Credentials')
-                    ->view('emails.credentials');
+        return $this->from('noreply@jfds.co.uk', 'Firedoor')
+                ->subject('Your Firedoor Project Login Credentials')
+                ->view('emails.credentials');
     }
 
-    /**
-     * Get the message envelope.
-     */
-    public function envelope(): Envelope
-    {
-        return new Envelope(
-            subject: 'Send User Credentials',
-        );
-    }
 }
