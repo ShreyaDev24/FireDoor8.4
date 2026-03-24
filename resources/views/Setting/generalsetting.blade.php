@@ -78,7 +78,18 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-3">
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="SetCurrencyRate">Set Company Code (Door Plug) <span class="text-danger">*</span></label>
+                                        <div class="input-group">
+                                            <input name="companyCode" id="companyCode" placeholder="Set Company Code"
+                                                type="text" class="form-control"
+                                                value="@if(!empty($currency->companyCode)){{$currency->companyCode}}@endif">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-12">
                                     <div class="position-relative form-group" style="margin-left: auto; float: right;">
                                         <button type="submit" id="submit" class="btn-wide btn btn-success"
                                             style="margin-top: 28px;"> SET PREFIX </button>

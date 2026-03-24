@@ -79,7 +79,13 @@ class PrintInvoiceController extends Controller
         ->where('UserType', 5)
         ->value('FirstName') ?? '';
 
-        $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
+        $settings = SettingCurrency::where('UserId', $id)
+            ->select('HideCosts', 'companyCode')
+            ->first();
+
+        $HideCosts = $settings->HideCosts ?? null;
+        $companyCode = $settings->companyCode ?? null;
+
         $currency = QuotationCurrency($quotaion->Currency);
 
         // $configurationItem = 1;
@@ -3275,9 +3281,39 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
 
             if($isActive == true){
+
+            $rating = 60;     // example
+            $status = 'green';  // example
+
+            // Outer color (fire rating)
+            switch ($rating) {
+                case 30: $outerColor = '#f4d23c'; break; // Yellow
+                case 60: $outerColor = '#1f3a93'; break; // Blue
+                case 90: $outerColor = '#6b3e26'; break; // Brown
+                case 120: $outerColor = '#000000'; break; // Black
+                default: $outerColor = '#cccccc';
+            }
+
+            // Inner color (status)
+            switch ($status) {
+                case 'red': $innerColor = '#ef2b2d'; break;
+                case 'green': $innerColor = '#2ecc71'; break;
+                case 'orange': $innerColor = '#f39c12'; break;
+                case 'silver': $innerColor = '#bdc3c7'; break;
+                case 'gold': $innerColor = '#f1c40f'; break;
+                default: $innerColor = '#999999';
+            }
+
+            if($tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+                $outerColor = '#f4d23c'; //yellow
+                $innerColor = '#2ecc71'; //green
+
+            }
+
                 $elevTbl .= ' <div class="tbl_prn">
                 <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
                 <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
+
                     <table id="NoBorder" style="margin-top:1rem;margin-bottom: 15px;" class="mt-4">
                         <tr>
                             <td colspan="2">
@@ -3322,8 +3358,60 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     <div style="text-align:center; margin-bottom: 20px;">
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>
-                                <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
-                                <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                                <td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                    <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                        <!-- Outer Circle -->
+                                        <div style="
+                                            width:90px;
+                                            height:90px;
+                                            background:' . $outerColor . ';
+                                            border-radius:50%;
+                                            position:absolute;
+                                        "></div>
+
+                                        <!-- Triangle -->
+                                        <div style="
+                                            width:0;
+                                            height:0;
+                                            border-left:26px solid transparent;
+                                            border-right:26px solid transparent;
+                                            border-bottom:40px solid ' . $innerColor . ';
+                                            position:absolute;
+                                            top:18px;
+                                            left:19px;
+                                        "></div>
+
+                                        <!-- Trunk -->
+                                        <div style="
+                                            width:12px;
+                                            height:22px;
+                                            background:' . $innerColor . ';
+                                            position:absolute;
+                                            top:52px;
+                                            left:39px;
+                                        "></div>
+
+                                        <!-- Number -->
+                                        <div style="
+                                            position:absolute;
+                                            top:35px;
+                                            width:100%;
+                                            text-align:center;
+                                            color:#fff;
+                                            font-size:14px;
+                                            font-weight:bold;
+                                        ">
+                                            ' . htmlspecialchars($companyCode) . '
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                                <td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
+                                <td style="padding:8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
                             </tr>
                         </table>
                     </div>
