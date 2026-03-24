@@ -11,6 +11,8 @@ use App\Models\User;
 use URL;
 use Hash;
 use Session;
+use Mail;
+use App\Mail\SendUserCredentials;
 
 class UserController extends Controller
 {
@@ -141,7 +143,11 @@ class UserController extends Controller
         $user->parent_id = Auth::user()->parent_id ?: Auth::user()->CreatedBy;
 
         $user->save();
+        $fullname = Auth::user()->FirstName.' '.Auth::user()->LastName;
         //sending_mail_credential($user->UserEmail, $request->password);
+        Mail::to($user->UserEmail)->send(
+            new SendUserCredentials($user->UserEmail, $request->password,$fullname)
+        );
         $request->session()->flash($flash, 'data');
 
         if(Auth::user()->UserType=='3'){
