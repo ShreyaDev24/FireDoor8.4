@@ -1306,7 +1306,7 @@ if (IsOverPanelActive != "" && IsOverPanelActive != "No") {
           .attr("font-size", 10)
           .attr("x", ix + (FrameWidthForMap / 2))         // set x position of left side of text
           .attr("y", iy - 65)         // set y position of bottom of text
-          .text(framewidthToShow);   // define the text to display
+          .text(FrameWidth);   // define the text to display // only to show its working or not
       //Text of Width of Outer frame of door
 
       svg.append('line') //measurement line from top right
