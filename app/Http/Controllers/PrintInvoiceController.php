@@ -3304,10 +3304,53 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 default: $innerColor = '#999999';
             }
 
-            if($tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+            $outerColor = '';
+            $innerColor = '';
+
+            $outerColor2 = '';
+            $innerColor2 = '';
+
+            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
                 $outerColor = '#f4d23c'; //yellow
                 $innerColor = '#2ecc71'; //green
 
+            }
+
+            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
+                $outerColor = '#f4d23c'; //yellow
+                $innerColor = '#2ecc71'; //green
+
+                $outerColor2 = '#f4d23c'; //yellow
+                $innerColor2 = '#f39c12'; //orange
+            }
+
+            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+                $outerColor = '#f4d23c'; //yellow
+                $innerColor = '#bdc3c7'; //silver
+
+                $outerColor2 = '#f4d23c'; //yellow
+                $innerColor2 = '#f39c12'; //orange
+            }
+
+            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
+                $outerColor = '#1f3a93'; //Blue
+                $innerColor = '#2ecc71'; //green
+            }
+
+            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
+                $outerColor = '#1f3a93'; //Blue
+                $innerColor = '#2ecc71'; //green
+
+                $outerColor2 = '#1f3a93'; //Blue
+                $innerColor2 = '#f39c12'; //orange
+            }
+
+            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+                $outerColor = '#1f3a93'; //Blue
+                $innerColor = '#bdc3c7'; //silver
+
+                $outerColor2 = '#1f3a93'; //Blue
+                $innerColor2 = '#f39c12'; //orange
             }
 
                 $elevTbl .= ' <div class="tbl_prn">
@@ -3356,38 +3399,98 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <div class="fr_d_tbl" style=" margin: 0 auto;">
 
                     <div style="text-align:center; margin-bottom: 20px;">
+
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
-                            <tr>
-                                <td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+                            <tr>';
+
+                           if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $tt->FireRating !== 'NFR') {
+                                $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                                <!-- Outer Circle -->
+                                                <div style="
+                                                  width: 100px;
+                                                  height: 100px;
+                                                  background:' . $outerColor . ';
+                                                  border-radius: 50%;
+                                                  position: absolute;
+                                                  top: -6px;
+                                                "></div>
+
+                                                <!-- Triangle -->
+                                                <div style="
+                                                  width: 0;
+                                                  height: 0;
+                                                  border-left: 40px solid transparent;
+                                                  border-right: 40px solid transparent;
+                                                  border-bottom: 54px solid ' . $innerColor . ';
+                                                  position: absolute;
+                                                  top: 4px;
+                                                  left: 9px;
+                                                "></div>
+
+                                                <!-- Trunk -->
+                                                <div style="
+                                                    width:20px;
+                                                    height:26px;
+                                                    background:' . $innerColor . ';
+                                                    position:absolute;
+                                                    top:52px;
+                                                    left:39px;
+                                                "></div>
+
+                                                <!-- Number -->
+                                                <div style="
+                                                position: absolute;
+                                                left: 4px;
+                                                top: 38px;
+                                                width: 100%;
+                                                text-align: center;
+                                                color: #050505;
+                                                font-size: 13px;
+                                                font-weight: bold;
+                                                ">
+                                                    ' . htmlspecialchars($companyCode) . '
+                                                </div>
+
+                                            </div>
+
+                                        </td>';
+                            }
+
+                           if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $tt->FireRating !== 'NFR') {
+                                $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                     <div style="width:90px; height:90px; margin:auto; position:relative;">
 
                                         <!-- Outer Circle -->
                                         <div style="
-                                            width:90px;
-                                            height:90px;
-                                            background:' . $outerColor . ';
-                                            border-radius:50%;
-                                            position:absolute;
+                                            width: 100px;
+                                            height: 100px;
+                                            background:' . $outerColor2 . ';
+                                            border-radius: 50%;
+                                            position: absolute;
+                                            top: -6px;
                                         "></div>
 
                                         <!-- Triangle -->
                                         <div style="
-                                            width:0;
-                                            height:0;
-                                            border-left:26px solid transparent;
-                                            border-right:26px solid transparent;
-                                            border-bottom:40px solid ' . $innerColor . ';
-                                            position:absolute;
-                                            top:18px;
-                                            left:19px;
+                                            width: 0;
+                                            height: 0;
+                                            border-left: 40px solid transparent;
+                                            border-right: 40px solid transparent;
+                                            border-bottom: 54px solid ' . $innerColor2 . ';
+                                            position: absolute;
+                                            top: 4px;
+                                            left: 9px;
                                         "></div>
 
                                         <!-- Trunk -->
                                         <div style="
-                                            width:12px;
-                                            height:22px;
-                                            background:' . $innerColor . ';
+                                            width:20px;
+                                            height:26px;
+                                            background:' . $innerColor2 . ';
                                             position:absolute;
                                             top:52px;
                                             left:39px;
@@ -3395,22 +3498,24 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                                         <!-- Number -->
                                         <div style="
-                                            position:absolute;
-                                            top:35px;
-                                            width:100%;
-                                            text-align:center;
-                                            color:#fff;
-                                            font-size:14px;
-                                            font-weight:bold;
+                                        position: absolute;
+                                        left: 4px;
+                                        top: 38px;
+                                        width: 100%;
+                                        text-align: center;
+                                        color: #050505;
+                                        font-size: 13px;
+                                        font-weight: bold;
                                         ">
                                             ' . htmlspecialchars($companyCode) . '
                                         </div>
 
                                     </div>
 
-                                </td>
+                                </td>';
+                            }
 
-                                <td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
+                            $elevTbl .= '<td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
                                 <td style="padding:8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
                             </tr>
                         </table>
@@ -3454,8 +3559,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     $elevTbl .= '<div class="page-break"></div>';
                 }
 
+
                 $PageBreakCounts++;
             }
+
         }
 
         // return $elevTbl;
