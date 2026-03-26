@@ -387,6 +387,7 @@ class GeneralSettingController extends Controller
                     $currency->UserId = Auth::user()->id;
                     $currency->currency = $request->currency;
                     $currency->HideCosts = $request->HideCosts ?? 0;
+                    $currency->companyCode = $request->companyCode ?? '';
                     $currency->SetCurrencyRate = $request->SetCurrencyRate;
                     $currency->updated_at = date('Y-m-d H:i:s');
                     $currency->update();
