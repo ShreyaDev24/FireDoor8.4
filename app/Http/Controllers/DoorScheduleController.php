@@ -246,11 +246,11 @@ class DoorScheduleController extends Controller
         $quoteShipInfo->PaymentMethod = $request->PaymentMethod;
         $quoteShipInfo->PaymentTerms = $request->PaymentTerms;
         $quoteShipInfo->updated_at = date('Y-m-d H:i:s');
-        $quoteShipInfo->save();
-
+        // $quoteShipInfo->save();
         if($existCurrency !== $request->Currency && !empty($quotationId)){
             $userLoginId = auth()->user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
-            dispatch(new RecalculateItemsBOMJob($quotationId, $selectVersionID,$userLoginId));
+            dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId,$request->Currency));
+            dispatch(new RecalculateItemsBOMJob($quotationId, $selectVersionID,$userLoginId,$existCurrency));
             dispatch(new RecalculateNonConfigurableItemsJob($quotationId, $selectVersionID,$userLoginId));
             dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId,$request->Currency));
         }

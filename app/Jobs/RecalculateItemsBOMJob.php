@@ -19,7 +19,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId)
+    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId,public $existCurrency)
     {
         //
     }
@@ -51,6 +51,12 @@ class RecalculateItemsBOMJob implements ShouldQueue
 
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
+                    if($this->existCurrency == null){
+                            Item::where('itemId', $itemid)->update([
+                            'DoorsetPrice' => $GTSellPriceTotal,
+                            'AdjustPrice' => $data->AdjustPrice,
+                        ]);
+                    }
                     Item::where('itemId', $itemid)->update([
                         'DoorsetPrice' => $GTSellPriceTotal,
                         'AdjustPrice' => $GTSellPriceTotal,
