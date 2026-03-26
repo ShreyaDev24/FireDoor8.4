@@ -249,7 +249,6 @@ class DoorScheduleController extends Controller
         $quoteShipInfo->save();
 
         if($existCurrency !== $request->Currency && !empty($quotationId)){
-            dd('jiii');
             $userLoginId = auth()->user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
             dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId,$request->Currency));
             dispatch(new RecalculateItemsBOMJob($quotationId, $selectVersionID,$userLoginId,$existCurrency));
