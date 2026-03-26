@@ -3282,76 +3282,54 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             if($isActive == true){
 
-            $rating = 60;     // example
-            $status = 'green';  // example
+                $outerColor = '';
+                $innerColor = '';
 
-            // Outer color (fire rating)
-            switch ($rating) {
-                case 30: $outerColor = '#f4d23c'; break; // Yellow
-                case 60: $outerColor = '#1f3a93'; break; // Blue
-                case 90: $outerColor = '#6b3e26'; break; // Brown
-                case 120: $outerColor = '#000000'; break; // Black
-                default: $outerColor = '#cccccc';
-            }
+                $outerColor2 = '';
+                $innerColor2 = '';
 
-            // Inner color (status)
-            switch ($status) {
-                case 'red': $innerColor = '#ef2b2d'; break;
-                case 'green': $innerColor = '#2ecc71'; break;
-                case 'orange': $innerColor = '#f39c12'; break;
-                case 'silver': $innerColor = '#bdc3c7'; break;
-                case 'gold': $innerColor = '#f1c40f'; break;
-                default: $innerColor = '#999999';
-            }
+                if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
+                    $outerColor = '#f4d23c'; //yellow
+                    $innerColor = '#2ecc71'; //green
 
-            $outerColor = '';
-            $innerColor = '';
+                }
 
-            $outerColor2 = '';
-            $innerColor2 = '';
+                if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
+                    $outerColor = '#f4d23c'; //yellow
+                    $innerColor = '#2ecc71'; //green
 
-            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
-                $outerColor = '#f4d23c'; //yellow
-                $innerColor = '#2ecc71'; //green
+                    $outerColor2 = '#f4d23c'; //yellow
+                    $innerColor2 = '#f39c12'; //orange
+                }
 
-            }
+                if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+                    $outerColor = '#f4d23c'; //yellow
+                    $innerColor = '#bdc3c7'; //silver
 
-            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
-                $outerColor = '#f4d23c'; //yellow
-                $innerColor = '#2ecc71'; //green
+                    $outerColor2 = '#f4d23c'; //yellow
+                    $innerColor2 = '#f39c12'; //orange
+                }
 
-                $outerColor2 = '#f4d23c'; //yellow
-                $innerColor2 = '#f39c12'; //orange
-            }
+                if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
+                    $outerColor = '#1f3a93'; //Blue
+                    $innerColor = '#2ecc71'; //green
+                }
 
-            if(($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
-                $outerColor = '#f4d23c'; //yellow
-                $innerColor = '#bdc3c7'; //silver
+                if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
+                    $outerColor = '#1f3a93'; //Blue
+                    $innerColor = '#2ecc71'; //green
 
-                $outerColor2 = '#f4d23c'; //yellow
-                $innerColor2 = '#f39c12'; //orange
-            }
+                    $outerColor2 = '#1f3a93'; //Blue
+                    $innerColor2 = '#f39c12'; //orange
+                }
 
-            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'No'){
-                $outerColor = '#1f3a93'; //Blue
-                $innerColor = '#2ecc71'; //green
-            }
+                if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
+                    $outerColor = '#1f3a93'; //Blue
+                    $innerColor = '#bdc3c7'; //silver
 
-            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'No' && $tt->Leaf1VisionPanel == 'Yes'){
-                $outerColor = '#1f3a93'; //Blue
-                $innerColor = '#2ecc71'; //green
-
-                $outerColor2 = '#1f3a93'; //Blue
-                $innerColor2 = '#f39c12'; //orange
-            }
-
-            if(($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') && $tt->IronmongerySet == 'Yes' && $tt->Leaf1VisionPanel == 'Yes'){
-                $outerColor = '#1f3a93'; //Blue
-                $innerColor = '#bdc3c7'; //silver
-
-                $outerColor2 = '#1f3a93'; //Blue
-                $innerColor2 = '#f39c12'; //orange
-            }
+                    $outerColor2 = '#1f3a93'; //Blue
+                    $innerColor2 = '#f39c12'; //orange
+                }
 
                 $elevTbl .= ' <div class="tbl_prn">
                 <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
