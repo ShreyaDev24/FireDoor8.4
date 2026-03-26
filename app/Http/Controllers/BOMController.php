@@ -3430,6 +3430,7 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Glass Thickness Check</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glass Stamp Check</th>
                                 <th style="border: 1px solid black; padding: 5px;">Notes,Please note any non conformiance or quantity issues.</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -3441,6 +3442,25 @@ class BOMController extends Controller
 
                 foreach ($data as $value) {
                     if ($value->Category == 'Glass') {
+
+                        $outerColor = '';
+                        $innerColor = '';
+
+                        $outerColor2 = '';
+                        $innerColor2 = '';
+
+                        if($value->FireRating == 'FD30' || $value->FireRating == 'FD30s'){
+                            $outerColor = '#f4d23c'; //yellow
+                            $innerColor = '#f39c12'; //orange'
+
+                        }
+
+                        if($value->FireRating == 'FD60' || $value->FireRating == 'FD60s'){
+                            $outerColor = '#1f3a93'; //Blue
+                            $innerColor = '#f39c12'; //orange
+                        }
+
+
                         $words = explode("|", (string) $value->Description);
                         $PageBreakCount++;
                         $glassTbl .= '<tr>
@@ -3458,8 +3478,65 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                        </tr>';
+                            <td style="border: 1px solid black; padding: 5px;"></td>';
+                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
+                                $glassTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                                <!-- Outer Circle -->
+                                                <div style="
+                                                    width: 100px;
+                                                    height: 100px;
+                                                    background:' . $outerColor . ';
+                                                    border-radius: 50%;
+                                                    position: absolute;
+                                                    top: -6px;
+                                                "></div>
+
+                                                <!-- Triangle -->
+                                                <div style="
+                                                    width: 0;
+                                                    height: 0;
+                                                    border-left: 40px solid transparent;
+                                                    border-right: 40px solid transparent;
+                                                    border-bottom: 54px solid ' . $innerColor . ';
+                                                    position: absolute;
+                                                    top: 4px;
+                                                    left: 9px;
+                                                "></div>
+
+                                                <!-- Trunk -->
+                                                <div style="
+                                                    width:20px;
+                                                    height:26px;
+                                                    background:' . $innerColor . ';
+                                                    position:absolute;
+                                                    top:52px;
+                                                    left:39px;
+                                                "></div>
+
+                                                <!-- Number -->
+                                                <div style="
+                                                position: absolute;
+                                                left: 4px;
+                                                top: 38px;
+                                                width: 100%;
+                                                text-align: center;
+                                                color: #050505;
+                                                font-size: 13px;
+                                                font-weight: bold;
+                                                ">
+                                                    ' . htmlspecialchars($companyCode) . '
+                                                </div>
+
+                                            </div>
+
+                                        </td>';
+                            }else{
+                                $glassTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                            }
+                         $glassTbl .= '</tr>';
                     }
                 }
 
