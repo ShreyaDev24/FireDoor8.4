@@ -10,6 +10,7 @@ use DB;
 use App\Models\DoorFrameConstruction;
 use App\Models\Quotation;
 use App\Models\QuotationVersion;
+use App\Models\SettingCurrency;
 use App\Models\Project;
 use App\Models\User;
 use App\Models\Company;
@@ -2409,6 +2410,12 @@ class BOMController extends Controller
             $id = Auth::user()->id;
         }
 
+        $settings = SettingCurrency::where('UserId', $id)
+            ->select('HideCosts', 'companyCode')
+            ->first();
+
+        $companyCode = $settings->companyCode ?? null;
+
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
@@ -2483,9 +2490,9 @@ class BOMController extends Controller
             $bomVersion = BOMCalculation::where('QuotationId',$quatationId)->get()->first();
 
             if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }else{
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }
             $elevTbl = '';
             $elevTbl  = '
@@ -2555,6 +2562,8 @@ class BOMController extends Controller
                     <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                     <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
                     <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
+                    <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                    <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
                 </tr>
             </thead>
             <tbody>';
@@ -2565,9 +2574,60 @@ class BOMController extends Controller
     $ItemsPerPage = 20;
 
     foreach ($data as $value) {
+
+        $outerColor = '';
+        $innerColor = '';
+
+        $outerColor2 = '';
+        $innerColor2 = '';
+
+        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
+            $outerColor = '#f4d23c'; //yellow
+            $innerColor = '#2ecc71'; //green
+
+        }
+
+        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
+            $outerColor = '#f4d23c'; //yellow
+            $innerColor = '#2ecc71'; //green
+
+            $outerColor2 = '#f4d23c'; //yellow
+            $innerColor2 = '#f39c12'; //orange
+        }
+
+        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
+            $outerColor = '#f4d23c'; //yellow
+            $innerColor = '#bdc3c7'; //silver
+
+            $outerColor2 = '#f4d23c'; //yellow
+            $innerColor2 = '#f39c12'; //orange
+        }
+
+        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
+            $outerColor = '#1f3a93'; //Blue
+            $innerColor = '#2ecc71'; //green
+        }
+
+        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
+            $outerColor = '#1f3a93'; //Blue
+            $innerColor = '#2ecc71'; //green
+
+            $outerColor2 = '#1f3a93'; //Blue
+            $innerColor2 = '#f39c12'; //orange
+        }
+
+        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
+            $outerColor = '#1f3a93'; //Blue
+            $innerColor = '#bdc3c7'; //silver
+
+            $outerColor2 = '#1f3a93'; //Blue
+            $innerColor2 = '#f39c12'; //orange
+        }
+
         if ($value->Category == 'Frame') {
             $words = explode("|", (string) $value->Description);
             $PageBreakCount++;
+
             $elevTbl .= '<tr>
                 <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                 <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
@@ -2586,8 +2646,124 @@ class BOMController extends Controller
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>
-                <td style="border: 1px solid black; padding: 5px;"></td>
-            </tr>';
+                <td style="border: 1px solid black; padding: 5px;"></td>';
+
+                if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                    $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                    <!-- Outer Circle -->
+                                    <div style="
+                                        width: 100px;
+                                        height: 100px;
+                                        background:' . $outerColor . ';
+                                        border-radius: 50%;
+                                        position: absolute;
+                                        top: -6px;
+                                    "></div>
+
+                                    <!-- Triangle -->
+                                    <div style="
+                                        width: 0;
+                                        height: 0;
+                                        border-left: 40px solid transparent;
+                                        border-right: 40px solid transparent;
+                                        border-bottom: 54px solid ' . $innerColor . ';
+                                        position: absolute;
+                                        top: 4px;
+                                        left: 9px;
+                                    "></div>
+
+                                    <!-- Trunk -->
+                                    <div style="
+                                        width:20px;
+                                        height:26px;
+                                        background:' . $innerColor . ';
+                                        position:absolute;
+                                        top:52px;
+                                        left:39px;
+                                    "></div>
+
+                                    <!-- Number -->
+                                    <div style="
+                                    position: absolute;
+                                    left: 4px;
+                                    top: 38px;
+                                    width: 100%;
+                                    text-align: center;
+                                    color: #050505;
+                                    font-size: 13px;
+                                    font-weight: bold;
+                                    ">
+                                        ' . htmlspecialchars($companyCode) . '
+                                    </div>
+
+                                </div>
+
+                            </td>';
+                }else{
+                    $elevTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                }
+
+                if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                    $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                        <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                            <!-- Outer Circle -->
+                            <div style="
+                                width: 100px;
+                                height: 100px;
+                                background:' . $outerColor2 . ';
+                                border-radius: 50%;
+                                position: absolute;
+                                top: -6px;
+                            "></div>
+
+                            <!-- Triangle -->
+                            <div style="
+                                width: 0;
+                                height: 0;
+                                border-left: 40px solid transparent;
+                                border-right: 40px solid transparent;
+                                border-bottom: 54px solid ' . $innerColor2 . ';
+                                position: absolute;
+                                top: 4px;
+                                left: 9px;
+                            "></div>
+
+                            <!-- Trunk -->
+                            <div style="
+                                width:20px;
+                                height:26px;
+                                background:' . $innerColor2 . ';
+                                position:absolute;
+                                top:52px;
+                                left:39px;
+                            "></div>
+
+                            <!-- Number -->
+                            <div style="
+                            position: absolute;
+                            left: 4px;
+                            top: 38px;
+                            width: 100%;
+                            text-align: center;
+                            color: #050505;
+                            font-size: 13px;
+                            font-weight: bold;
+                            ">
+                                ' . htmlspecialchars($companyCode) . '
+                            </div>
+
+                        </div>
+
+                    </td>';
+                }else{
+                    $elevTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                }
+            $elevTbl .= '</tr>';
         }
     }
 
@@ -2820,6 +2996,8 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -2834,10 +3012,59 @@ class BOMController extends Controller
                 foreach ($data as $value) {
                     if ($value->Category == 'LeafSetBesPoke') {
 
+                        $outerColor = '';
+                        $innerColor = '';
+
+                        $outerColor2 = '';
+                        $innerColor2 = '';
+
+                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
+                            $outerColor = '#f4d23c'; //yellow
+                            $innerColor = '#2ecc71'; //green
+
+                        }
+
+                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
+                            $outerColor = '#f4d23c'; //yellow
+                            $innerColor = '#2ecc71'; //green
+
+                            $outerColor2 = '#f4d23c'; //yellow
+                            $innerColor2 = '#f39c12'; //orange
+                        }
+
+                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
+                            $outerColor = '#f4d23c'; //yellow
+                            $innerColor = '#bdc3c7'; //silver
+
+                            $outerColor2 = '#f4d23c'; //yellow
+                            $innerColor2 = '#f39c12'; //orange
+                        }
+
+                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
+                            $outerColor = '#1f3a93'; //Blue
+                            $innerColor = '#2ecc71'; //green
+                        }
+
+                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
+                            $outerColor = '#1f3a93'; //Blue
+                            $innerColor = '#2ecc71'; //green
+
+                            $outerColor2 = '#1f3a93'; //Blue
+                            $innerColor2 = '#f39c12'; //orange
+                        }
+
+                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
+                            $outerColor = '#1f3a93'; //Blue
+                            $innerColor = '#bdc3c7'; //silver
+
+                            $outerColor2 = '#1f3a93'; //Blue
+                            $innerColor2 = '#f39c12'; //orange
+                        }
+
                         $words = explode("|", (string) $value->Description);
                         // dd($words);
                         $PageBreakCount++;
-                        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5){
+                        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
                             $lipingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
@@ -2858,8 +3085,124 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
+                            <td style="border: 1px solid black; padding: 5px;"></td>';
+                            if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
-                        </tr>';
+                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                                <!-- Outer Circle -->
+                                                <div style="
+                                                    width: 100px;
+                                                    height: 100px;
+                                                    background:' . $outerColor . ';
+                                                    border-radius: 50%;
+                                                    position: absolute;
+                                                    top: -6px;
+                                                "></div>
+
+                                                <!-- Triangle -->
+                                                <div style="
+                                                    width: 0;
+                                                    height: 0;
+                                                    border-left: 40px solid transparent;
+                                                    border-right: 40px solid transparent;
+                                                    border-bottom: 54px solid ' . $innerColor . ';
+                                                    position: absolute;
+                                                    top: 4px;
+                                                    left: 9px;
+                                                "></div>
+
+                                                <!-- Trunk -->
+                                                <div style="
+                                                    width:20px;
+                                                    height:26px;
+                                                    background:' . $innerColor . ';
+                                                    position:absolute;
+                                                    top:52px;
+                                                    left:39px;
+                                                "></div>
+
+                                                <!-- Number -->
+                                                <div style="
+                                                position: absolute;
+                                                left: 4px;
+                                                top: 38px;
+                                                width: 100%;
+                                                text-align: center;
+                                                color: #050505;
+                                                font-size: 13px;
+                                                font-weight: bold;
+                                                ">
+                                                    ' . htmlspecialchars($companyCode) . '
+                                                </div>
+
+                                            </div>
+
+                                        </td>';
+                            }else{
+                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                            }
+
+                            if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                    <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                        <!-- Outer Circle -->
+                                        <div style="
+                                            width: 100px;
+                                            height: 100px;
+                                            background:' . $outerColor2 . ';
+                                            border-radius: 50%;
+                                            position: absolute;
+                                            top: -6px;
+                                        "></div>
+
+                                        <!-- Triangle -->
+                                        <div style="
+                                            width: 0;
+                                            height: 0;
+                                            border-left: 40px solid transparent;
+                                            border-right: 40px solid transparent;
+                                            border-bottom: 54px solid ' . $innerColor2 . ';
+                                            position: absolute;
+                                            top: 4px;
+                                            left: 9px;
+                                        "></div>
+
+                                        <!-- Trunk -->
+                                        <div style="
+                                            width:20px;
+                                            height:26px;
+                                            background:' . $innerColor2 . ';
+                                            position:absolute;
+                                            top:52px;
+                                            left:39px;
+                                        "></div>
+
+                                        <!-- Number -->
+                                        <div style="
+                                        position: absolute;
+                                        left: 4px;
+                                        top: 38px;
+                                        width: 100%;
+                                        text-align: center;
+                                        color: #050505;
+                                        font-size: 13px;
+                                        font-weight: bold;
+                                        ">
+                                            ' . htmlspecialchars($companyCode) . '
+                                        </div>
+
+                                    </div>
+
+                                </td>';
+                            }else{
+                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                            }
+
+                        $lipingTbl .= '</tr>';
                         }
                         else{
                             $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
@@ -2883,9 +3226,124 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
+                            <td style="border: 1px solid black; padding: 5px;"></td>';
+                            if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
-                        </tr>';
+                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                                <!-- Outer Circle -->
+                                                <div style="
+                                                    width: 100px;
+                                                    height: 100px;
+                                                    background:' . $outerColor . ';
+                                                    border-radius: 50%;
+                                                    position: absolute;
+                                                    top: -6px;
+                                                "></div>
+
+                                                <!-- Triangle -->
+                                                <div style="
+                                                    width: 0;
+                                                    height: 0;
+                                                    border-left: 40px solid transparent;
+                                                    border-right: 40px solid transparent;
+                                                    border-bottom: 54px solid ' . $innerColor . ';
+                                                    position: absolute;
+                                                    top: 4px;
+                                                    left: 9px;
+                                                "></div>
+
+                                                <!-- Trunk -->
+                                                <div style="
+                                                    width:20px;
+                                                    height:26px;
+                                                    background:' . $innerColor . ';
+                                                    position:absolute;
+                                                    top:52px;
+                                                    left:39px;
+                                                "></div>
+
+                                                <!-- Number -->
+                                                <div style="
+                                                position: absolute;
+                                                left: 4px;
+                                                top: 38px;
+                                                width: 100%;
+                                                text-align: center;
+                                                color: #050505;
+                                                font-size: 13px;
+                                                font-weight: bold;
+                                                ">
+                                                    ' . htmlspecialchars($companyCode) . '
+                                                </div>
+
+                                            </div>
+
+                                        </td>';
+                            }else{
+                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                            }
+
+                            if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+
+                                    <div style="width:90px; height:90px; margin:auto; position:relative;">
+
+                                        <!-- Outer Circle -->
+                                        <div style="
+                                            width: 100px;
+                                            height: 100px;
+                                            background:' . $outerColor2 . ';
+                                            border-radius: 50%;
+                                            position: absolute;
+                                            top: -6px;
+                                        "></div>
+
+                                        <!-- Triangle -->
+                                        <div style="
+                                            width: 0;
+                                            height: 0;
+                                            border-left: 40px solid transparent;
+                                            border-right: 40px solid transparent;
+                                            border-bottom: 54px solid ' . $innerColor2 . ';
+                                            position: absolute;
+                                            top: 4px;
+                                            left: 9px;
+                                        "></div>
+
+                                        <!-- Trunk -->
+                                        <div style="
+                                            width:20px;
+                                            height:26px;
+                                            background:' . $innerColor2 . ';
+                                            position:absolute;
+                                            top:52px;
+                                            left:39px;
+                                        "></div>
+
+                                        <!-- Number -->
+                                        <div style="
+                                        position: absolute;
+                                        left: 4px;
+                                        top: 38px;
+                                        width: 100%;
+                                        text-align: center;
+                                        color: #050505;
+                                        font-size: 13px;
+                                        font-weight: bold;
+                                        ">
+                                            ' . htmlspecialchars($companyCode) . '
+                                        </div>
+
+                                    </div>
+
+                                </td>';
+                            }else{
+                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                            }
+
+                            $lipingTbl .= '</tr>';
                         }
 
                     }
@@ -3079,7 +3537,7 @@ class BOMController extends Controller
                                                 $leafType =  $value->LeafConstruction;;
                                             } else {
                                                 $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
-                                                $leafType = $getLeaf->leaf_type_key;
+                                                $leafType = $getLeaf->leaf_type_key ?? '';
                                             }
 
                                             $doorLeafFacing = $value->DoorLeafFacing;
@@ -3159,6 +3617,8 @@ class BOMController extends Controller
         $fileName5 = $id . '5' . '.' . 'pdf';
         $pdf5->save($path5 . '/' . $fileName5);
         // end
+
+
 
         $PDFfilename = public_path() . '/qualitycontrolallpdf' . '/' . $quotaion->QuotationGenerationId . '_' . $versionID . '.pdf';
         $pdfFiles = [
