@@ -29,6 +29,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
      */
     public function handle(): void
     {
+        dd('kk');
         $Items = Item::where(['items.QuotationId' => $this->quotationId, 'items.VersionId' => $this->selectVersionID])
         ->distinct('itemId')->get();
 
