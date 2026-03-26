@@ -433,21 +433,11 @@ class ProjectController2 extends Controller
 
         // 3. Get quotation data joined with companies (optimized to select only needed columns)
         $t1 = microtime(true);
-        $data = DB::table('quotation')
-            ->leftJoin('companies', 'companies.id', '=', 'quotation.CompanyId')
-            ->leftJoin('project', 'project.id', '=', 'quotation.ProjectId')
-            ->select(
-                'quotation.*',
-                'quotation.id as QuotationId',
-                'companies.CompanyName',
-                'companies.id as CompanyId',
-                'project.ProjectImage',
-                'project.ProjectName',
-                'project.customerId',
-                'project.AddressLine1',
-                'project.GeneratedKey'
-            )
-            ->where('project.GeneratedKey', $id)
+         $data = Project::leftJoin('quotation','quotation.ProjectId','project.id')
+        ->leftJoin('companies','companies.id','quotation.CompanyId')
+        ->select('quotation.*', 'quotation.id as QuotationId', 'companies.CompanyName', 'project.*')
+
+            ->where('project.GeneratedKey',$id)
             ->get();
         $timing['quotationData'] = round((microtime(true) - $t1) * 1000, 2);
 
