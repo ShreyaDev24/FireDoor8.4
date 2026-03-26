@@ -2648,7 +2648,7 @@ class BOMController extends Controller
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
                     $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                 <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -2706,7 +2706,7 @@ class BOMController extends Controller
                     $elevTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
                 }
 
-                if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
                     $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                         <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -2943,7 +2943,7 @@ class BOMController extends Controller
                                     </td>
                                 </tr>
                             </table>';
-                if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5){
+                if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
                     $lipingTbl .= '
                     <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 10px; border: 1px solid black;">
                         <thead>
@@ -2967,6 +2967,8 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -3084,9 +3086,8 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
                                 $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                             <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -3144,7 +3145,7 @@ class BOMController extends Controller
                                 $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
                             }
 
-                            if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                            if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
                                 $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                     <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -3227,7 +3228,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
                                 $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                             <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -3285,7 +3286,7 @@ class BOMController extends Controller
                                 $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
                             }
 
-                            if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $value->FireRating !== 'NFR') {
+                            if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
                                 $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                     <div style="width:90px; height:90px; margin:auto; position:relative;">

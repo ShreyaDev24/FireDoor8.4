@@ -3381,7 +3381,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>';
 
-                           if (!empty($outerColor) && !empty($innerColor) && !empty($companyCode) && $tt->FireRating !== 'NFR') {
+                           if (!empty($outerColor) && !empty($innerColor) && $tt->FireRating !== 'NFR') {
                                 $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                             <div style="width:90px; height:90px; margin:auto; position:relative;">
@@ -3437,7 +3437,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                         </td>';
                             }
 
-                           if (!empty($outerColor2) && !empty($innerColor2) && !empty($companyCode) && $tt->FireRating !== 'NFR') {
+                           if (!empty($outerColor2) && !empty($innerColor2) && $tt->FireRating !== 'NFR') {
                                 $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
                                     <div style="width:90px; height:90px; margin:auto; position:relative;">
