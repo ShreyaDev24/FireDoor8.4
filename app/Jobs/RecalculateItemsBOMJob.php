@@ -29,7 +29,6 @@ class RecalculateItemsBOMJob implements ShouldQueue
      */
     public function handle(): void
     {
-        dd('kk');
         $Items = Item::where(['items.QuotationId' => $this->quotationId, 'items.VersionId' => $this->selectVersionID])
         ->distinct('itemId')->get();
 
@@ -53,6 +52,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
                     if($this->existCurrency == null){
+                         dd('gfhh',$data->AdjustPrice,$this->existCurrency,$Items);
                             Item::where('itemId', $itemid)->update([
                             'DoorsetPrice' => $GTSellPriceTotal,
                             'AdjustPrice' => $data->AdjustPrice,
