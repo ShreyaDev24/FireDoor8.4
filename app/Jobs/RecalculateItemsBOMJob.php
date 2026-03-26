@@ -56,11 +56,12 @@ class RecalculateItemsBOMJob implements ShouldQueue
                             'AdjustPrice' => $data->AdjustPrice,
                             'DoorsetPrice' => $GTSellPriceTotal,
                         ]);
+                    } else {
+                         Item::where('itemId', $itemid)->update([
+                            'DoorsetPrice' => $GTSellPriceTotal,
+                            'AdjustPrice' => $GTSellPriceTotal,
+                        ]);
                     }
-                    Item::where('itemId', $itemid)->update([
-                        'DoorsetPrice' => $GTSellPriceTotal,
-                        'AdjustPrice' => $GTSellPriceTotal,
-                    ]);
                 } else{
                     dd($data->AdjustPrice,$this->existCurrency,$Items);
                     if($this->existCurrency == null){
