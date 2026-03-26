@@ -247,7 +247,6 @@ class DoorScheduleController extends Controller
         $quoteShipInfo->PaymentTerms = $request->PaymentTerms;
         $quoteShipInfo->updated_at = date('Y-m-d H:i:s');
         $quoteShipInfo->save();
-        dd($existCurrency,$request->Currency,$quotationId);
 
         if($existCurrency !== $request->Currency && !empty($quotationId)){
             dd('jiii');
