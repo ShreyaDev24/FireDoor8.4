@@ -53,8 +53,8 @@ class RecalculateItemsBOMJob implements ShouldQueue
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
                     if($this->existCurrency == null){
                             Item::where('itemId', $itemid)->update([
-                            'DoorsetPrice' => $GTSellPriceTotal,
                             'AdjustPrice' => $data->AdjustPrice,
+                            'DoorsetPrice' => $GTSellPriceTotal,
                         ]);
                     }
                     Item::where('itemId', $itemid)->update([
