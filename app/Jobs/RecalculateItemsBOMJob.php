@@ -51,6 +51,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
 
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
+                    dd($data->AdjustPrice,$this->existCurrency,$Items);
                     if($this->existCurrency == null){
                             Item::where('itemId', $itemid)->update([
                             'DoorsetPrice' => $GTSellPriceTotal,
