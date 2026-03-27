@@ -466,18 +466,17 @@ class PrintInvoiceController extends Controller
             $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
             $IronmongaryPrice = 0;
             if (!empty($show->IronmongeryID)) {
-                $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
+                $AI = AddIronmongery::select('discountprice','totalprice')->where('id', $show->IronmongeryID)->first();
                 if(!empty($AI->discountprice)){
                     $IronmongaryPrice = $AI->discountprice;
                 } else{
                     $marginwithcal = 100 - $margin;
                     $testvar = $marginwithcal/100;
-                    $totalcost = $AI->discountprice / $testvar;
+                    $totalcost = $AI->totalprice / $testvar;
                     $IronmongaryPrice = $totalcost;
                 }
             }
 
-            // dd( $IronmongaryPrice);
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
 
