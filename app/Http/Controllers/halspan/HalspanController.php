@@ -134,9 +134,85 @@ class HalspanController extends Controller
 
         // Process ironmongery data
         $time12 = microtime(true);
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)
-            ->orderBy('Setname', 'ASC')
-            ->get();
+        if (Auth::user()->UserType == 1) {
+            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+        }else{
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        }
+        $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        $qtyFieldOverrides = [
+            'DoorSinage' => 'doorSignageQty',
+            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
+            'DoorStops' => 'DoorStopsQty',
+            'AirTransferGrill' => 'airtransfergrillsQty',
+        ];
+
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = [];
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
+
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $ids = explode(',', $ironmongery->$valIronmongery);
+                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
+
+                    foreach ($ids as $index => $itemId) {
+                        $itemId = trim($itemId);
+                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
+
+                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
+                            ->where('UserId', Auth::user()->id)
+                            ->first();
+
+                        if ($SelectedIronmongery) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
+                                ->where('UserId', Auth::user()->id)
+                                ->first();
+
+                            if (!$IronmongeryInfoModel) {
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if ($IronmongeryInfoModel) {
+                                for ($i = 0; $i < $qty; $i++) {
+                                    $additionalInfo[] = $IronmongeryInfoModel;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $ironmongery->setAttribute('additional_info', $additionalInfo);
+        }
         $checkpoints['SetIronmongery'] = ['time' => microtime(true), 'duration' => microtime(true) - $time12, 'label' => 'SetIronmongery Query'];
 
         $time13 = microtime(true);
