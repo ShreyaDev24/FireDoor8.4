@@ -2401,7 +2401,10 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
             </div>
 
         </td>';
+    }else{
+        $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
     }
+
 
     if (!empty($outerColor2) && !empty($innerColor2) && $FireRating !== 'NFR') {
         $Tbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
@@ -2460,6 +2463,8 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
             </div>
 
         </td>';
+    }else{
+        $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
     }
 
     return $Tbl;

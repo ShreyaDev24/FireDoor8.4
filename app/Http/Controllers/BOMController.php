@@ -2575,55 +2575,6 @@ class BOMController extends Controller
 
     foreach ($data as $value) {
 
-        $outerColor = '';
-        $innerColor = '';
-
-        $outerColor2 = '';
-        $innerColor2 = '';
-
-        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
-            $outerColor = '#f4d23c'; //yellow
-            $innerColor = '#2ecc71'; //green
-
-        }
-
-        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
-            $outerColor = '#f4d23c'; //yellow
-            $innerColor = '#2ecc71'; //green
-
-            $outerColor2 = '#f4d23c'; //yellow
-            $innerColor2 = '#f39c12'; //orange
-        }
-
-        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
-            $outerColor = '#f4d23c'; //yellow
-            $innerColor = '#bdc3c7'; //silver
-
-            $outerColor2 = '#f4d23c'; //yellow
-            $innerColor2 = '#f39c12'; //orange
-        }
-
-        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
-            $outerColor = '#1f3a93'; //Blue
-            $innerColor = '#2ecc71'; //green
-        }
-
-        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
-            $outerColor = '#1f3a93'; //Blue
-            $innerColor = '#2ecc71'; //green
-
-            $outerColor2 = '#1f3a93'; //Blue
-            $innerColor2 = '#f39c12'; //orange
-        }
-
-        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
-            $outerColor = '#1f3a93'; //Blue
-            $innerColor = '#bdc3c7'; //silver
-
-            $outerColor2 = '#1f3a93'; //Blue
-            $innerColor2 = '#f39c12'; //orange
-        }
-
         if ($value->Category == 'Frame') {
             $words = explode("|", (string) $value->Description);
             $PageBreakCount++;
@@ -2648,121 +2599,8 @@ class BOMController extends Controller
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
-                    $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+                $elevTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
 
-                                <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                    <!-- Outer Circle -->
-                                    <div style="
-                                        width: 100px;
-                                        height: 100px;
-                                        background:' . $outerColor . ';
-                                        border-radius: 50%;
-                                        position: absolute;
-                                        top: -6px;
-                                    "></div>
-
-                                    <!-- Triangle -->
-                                    <div style="
-                                        width: 0;
-                                        height: 0;
-                                        border-left: 40px solid transparent;
-                                        border-right: 40px solid transparent;
-                                        border-bottom: 54px solid ' . $innerColor . ';
-                                        position: absolute;
-                                        top: 4px;
-                                        left: 9px;
-                                    "></div>
-
-                                    <!-- Trunk -->
-                                    <div style="
-                                        width:20px;
-                                        height:26px;
-                                        background:' . $innerColor . ';
-                                        position:absolute;
-                                        top:52px;
-                                        left:39px;
-                                    "></div>
-
-                                    <!-- Number -->
-                                    <div style="
-                                    position: absolute;
-                                    left: 4px;
-                                    top: 38px;
-                                    width: 100%;
-                                    text-align: center;
-                                    color: #050505;
-                                    font-size: 13px;
-                                    font-weight: bold;
-                                    ">
-                                        ' . htmlspecialchars($companyCode) . '
-                                    </div>
-
-                                </div>
-
-                            </td>';
-                }else{
-                    $elevTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                }
-
-                if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
-                    $elevTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
-
-                        <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                            <!-- Outer Circle -->
-                            <div style="
-                                width: 100px;
-                                height: 100px;
-                                background:' . $outerColor2 . ';
-                                border-radius: 50%;
-                                position: absolute;
-                                top: -6px;
-                            "></div>
-
-                            <!-- Triangle -->
-                            <div style="
-                                width: 0;
-                                height: 0;
-                                border-left: 40px solid transparent;
-                                border-right: 40px solid transparent;
-                                border-bottom: 54px solid ' . $innerColor2 . ';
-                                position: absolute;
-                                top: 4px;
-                                left: 9px;
-                            "></div>
-
-                            <!-- Trunk -->
-                            <div style="
-                                width:20px;
-                                height:26px;
-                                background:' . $innerColor2 . ';
-                                position:absolute;
-                                top:52px;
-                                left:39px;
-                            "></div>
-
-                            <!-- Number -->
-                            <div style="
-                            position: absolute;
-                            left: 4px;
-                            top: 38px;
-                            width: 100%;
-                            text-align: center;
-                            color: #050505;
-                            font-size: 13px;
-                            font-weight: bold;
-                            ">
-                                ' . htmlspecialchars($companyCode) . '
-                            </div>
-
-                        </div>
-
-                    </td>';
-                }else{
-                    $elevTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                }
             $elevTbl .= '</tr>';
         }
     }
@@ -3014,55 +2852,6 @@ class BOMController extends Controller
                 foreach ($data as $value) {
                     if ($value->Category == 'LeafSetBesPoke') {
 
-                        $outerColor = '';
-                        $innerColor = '';
-
-                        $outerColor2 = '';
-                        $innerColor2 = '';
-
-                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
-                            $outerColor = '#f4d23c'; //yellow
-                            $innerColor = '#2ecc71'; //green
-
-                        }
-
-                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
-                            $outerColor = '#f4d23c'; //yellow
-                            $innerColor = '#2ecc71'; //green
-
-                            $outerColor2 = '#f4d23c'; //yellow
-                            $innerColor2 = '#f39c12'; //orange
-                        }
-
-                        if(($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
-                            $outerColor = '#f4d23c'; //yellow
-                            $innerColor = '#bdc3c7'; //silver
-
-                            $outerColor2 = '#f4d23c'; //yellow
-                            $innerColor2 = '#f39c12'; //orange
-                        }
-
-                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'No'){
-                            $outerColor = '#1f3a93'; //Blue
-                            $innerColor = '#2ecc71'; //green
-                        }
-
-                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'No' && $value->Leaf1VisionPanel == 'Yes'){
-                            $outerColor = '#1f3a93'; //Blue
-                            $innerColor = '#2ecc71'; //green
-
-                            $outerColor2 = '#1f3a93'; //Blue
-                            $innerColor2 = '#f39c12'; //orange
-                        }
-
-                        if(($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') && $value->IronmongerySet == 'Yes' && $value->Leaf1VisionPanel == 'Yes'){
-                            $outerColor = '#1f3a93'; //Blue
-                            $innerColor = '#bdc3c7'; //silver
-
-                            $outerColor2 = '#1f3a93'; //Blue
-                            $innerColor2 = '#f39c12'; //orange
-                        }
-
                         $words = explode("|", (string) $value->Description);
                         // dd($words);
                         $PageBreakCount++;
@@ -3087,121 +2876,8 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
-                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
 
-                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                                <!-- Outer Circle -->
-                                                <div style="
-                                                    width: 100px;
-                                                    height: 100px;
-                                                    background:' . $outerColor . ';
-                                                    border-radius: 50%;
-                                                    position: absolute;
-                                                    top: -6px;
-                                                "></div>
-
-                                                <!-- Triangle -->
-                                                <div style="
-                                                    width: 0;
-                                                    height: 0;
-                                                    border-left: 40px solid transparent;
-                                                    border-right: 40px solid transparent;
-                                                    border-bottom: 54px solid ' . $innerColor . ';
-                                                    position: absolute;
-                                                    top: 4px;
-                                                    left: 9px;
-                                                "></div>
-
-                                                <!-- Trunk -->
-                                                <div style="
-                                                    width:20px;
-                                                    height:26px;
-                                                    background:' . $innerColor . ';
-                                                    position:absolute;
-                                                    top:52px;
-                                                    left:39px;
-                                                "></div>
-
-                                                <!-- Number -->
-                                                <div style="
-                                                position: absolute;
-                                                left: 4px;
-                                                top: 38px;
-                                                width: 100%;
-                                                text-align: center;
-                                                color: #050505;
-                                                font-size: 13px;
-                                                font-weight: bold;
-                                                ">
-                                                    ' . htmlspecialchars($companyCode) . '
-                                                </div>
-
-                                            </div>
-
-                                        </td>';
-                            }else{
-                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                            }
-
-                            if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
-                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
-
-                                    <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                        <!-- Outer Circle -->
-                                        <div style="
-                                            width: 100px;
-                                            height: 100px;
-                                            background:' . $outerColor2 . ';
-                                            border-radius: 50%;
-                                            position: absolute;
-                                            top: -6px;
-                                        "></div>
-
-                                        <!-- Triangle -->
-                                        <div style="
-                                            width: 0;
-                                            height: 0;
-                                            border-left: 40px solid transparent;
-                                            border-right: 40px solid transparent;
-                                            border-bottom: 54px solid ' . $innerColor2 . ';
-                                            position: absolute;
-                                            top: 4px;
-                                            left: 9px;
-                                        "></div>
-
-                                        <!-- Trunk -->
-                                        <div style="
-                                            width:20px;
-                                            height:26px;
-                                            background:' . $innerColor2 . ';
-                                            position:absolute;
-                                            top:52px;
-                                            left:39px;
-                                        "></div>
-
-                                        <!-- Number -->
-                                        <div style="
-                                        position: absolute;
-                                        left: 4px;
-                                        top: 38px;
-                                        width: 100%;
-                                        text-align: center;
-                                        color: #050505;
-                                        font-size: 13px;
-                                        font-weight: bold;
-                                        ">
-                                            ' . htmlspecialchars($companyCode) . '
-                                        </div>
-
-                                    </div>
-
-                                </td>';
-                            }else{
-                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                            }
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
 
                         $lipingTbl .= '</tr>';
                         }
@@ -3228,121 +2904,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
-                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
-
-                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                                <!-- Outer Circle -->
-                                                <div style="
-                                                    width: 100px;
-                                                    height: 100px;
-                                                    background:' . $outerColor . ';
-                                                    border-radius: 50%;
-                                                    position: absolute;
-                                                    top: -6px;
-                                                "></div>
-
-                                                <!-- Triangle -->
-                                                <div style="
-                                                    width: 0;
-                                                    height: 0;
-                                                    border-left: 40px solid transparent;
-                                                    border-right: 40px solid transparent;
-                                                    border-bottom: 54px solid ' . $innerColor . ';
-                                                    position: absolute;
-                                                    top: 4px;
-                                                    left: 9px;
-                                                "></div>
-
-                                                <!-- Trunk -->
-                                                <div style="
-                                                    width:20px;
-                                                    height:26px;
-                                                    background:' . $innerColor . ';
-                                                    position:absolute;
-                                                    top:52px;
-                                                    left:39px;
-                                                "></div>
-
-                                                <!-- Number -->
-                                                <div style="
-                                                position: absolute;
-                                                left: 4px;
-                                                top: 38px;
-                                                width: 100%;
-                                                text-align: center;
-                                                color: #050505;
-                                                font-size: 13px;
-                                                font-weight: bold;
-                                                ">
-                                                    ' . htmlspecialchars($companyCode) . '
-                                                </div>
-
-                                            </div>
-
-                                        </td>';
-                            }else{
-                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                            }
-
-                            if (!empty($outerColor2) && !empty($innerColor2)  && $value->FireRating !== 'NFR') {
-                                $lipingTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
-
-                                    <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                        <!-- Outer Circle -->
-                                        <div style="
-                                            width: 100px;
-                                            height: 100px;
-                                            background:' . $outerColor2 . ';
-                                            border-radius: 50%;
-                                            position: absolute;
-                                            top: -6px;
-                                        "></div>
-
-                                        <!-- Triangle -->
-                                        <div style="
-                                            width: 0;
-                                            height: 0;
-                                            border-left: 40px solid transparent;
-                                            border-right: 40px solid transparent;
-                                            border-bottom: 54px solid ' . $innerColor2 . ';
-                                            position: absolute;
-                                            top: 4px;
-                                            left: 9px;
-                                        "></div>
-
-                                        <!-- Trunk -->
-                                        <div style="
-                                            width:20px;
-                                            height:26px;
-                                            background:' . $innerColor2 . ';
-                                            position:absolute;
-                                            top:52px;
-                                            left:39px;
-                                        "></div>
-
-                                        <!-- Number -->
-                                        <div style="
-                                        position: absolute;
-                                        left: 4px;
-                                        top: 38px;
-                                        width: 100%;
-                                        text-align: center;
-                                        color: #050505;
-                                        font-size: 13px;
-                                        font-weight: bold;
-                                        ">
-                                            ' . htmlspecialchars($companyCode) . '
-                                        </div>
-
-                                    </div>
-
-                                </td>';
-                            }else{
-                                $lipingTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
-                            }
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
 
                             $lipingTbl .= '</tr>';
                         }
@@ -3446,9 +3008,6 @@ class BOMController extends Controller
                         $outerColor = '';
                         $innerColor = '';
 
-                        $outerColor2 = '';
-                        $innerColor2 = '';
-
                         if($value->FireRating == 'FD30' || $value->FireRating == 'FD30s'){
                             $outerColor = '#f4d23c'; //yellow
                             $innerColor = '#f39c12'; //orange'
@@ -3480,59 +3039,62 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
                             if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
-                                $glassTbl .= '<td style="border:1px solid #000; padding:10px; text-align:center; width:120px;">
+                                $glassTbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
+                                    <div style="width: 90px;
+                                                height: 90px;
+                                                margin: auto;
+                                                position: relative;
+                                                top: 14px;">
 
-                                            <div style="width:90px; height:90px; margin:auto; position:relative;">
-
-                                                <!-- Outer Circle -->
-                                                <div style="
-                                                    width: 100px;
-                                                    height: 100px;
-                                                    background:' . $outerColor . ';
-                                                    border-radius: 50%;
-                                                    position: absolute;
-                                                    top: -6px;
-                                                "></div>
-
-                                                <!-- Triangle -->
-                                                <div style="
-                                                    width: 0;
-                                                    height: 0;
-                                                    border-left: 40px solid transparent;
-                                                    border-right: 40px solid transparent;
-                                                    border-bottom: 54px solid ' . $innerColor . ';
-                                                    position: absolute;
-                                                    top: 4px;
-                                                    left: 9px;
-                                                "></div>
-
-                                                <!-- Trunk -->
-                                                <div style="
-                                                    width:20px;
-                                                    height:26px;
-                                                    background:' . $innerColor . ';
-                                                    position:absolute;
-                                                    top:52px;
-                                                    left:39px;
-                                                "></div>
-
-                                                <!-- Number -->
-                                                <div style="
+                                        <!-- Outer Circle -->
+                                        <div style="
+                                                width: 70px;
+                                                height: 70px;
+                                                background: ' . $outerColor . ';
+                                                border-radius: 50%;
                                                 position: absolute;
-                                                left: 4px;
-                                                top: 38px;
-                                                width: 100%;
-                                                text-align: center;
-                                                color: #050505;
-                                                font-size: 13px;
-                                                font-weight: bold;
-                                                ">
-                                                    ' . htmlspecialchars($companyCode) . '
-                                                </div>
+                                                top: -6px;
+                                        "></div>
 
-                                            </div>
+                                        <!-- Triangle -->
+                                        <div style="
+                                                width: 0;
+                                                height: 0;
+                                                border-left: 30px solid transparent;
+                                                border-right: 30px solid transparent;
+                                                border-bottom: 36px solid ' . $innerColor . ';
+                                                position: absolute;
+                                                top: 4px;
+                                                left: 7px;
+                                        "></div>
 
-                                        </td>';
+                                        <!-- Trunk -->
+                                        <div style="
+                                            width: 10px;
+                                            height: 16px;
+                                            background: ' . $innerColor . ';
+                                            position: absolute;
+                                            top: 37px;
+                                            left: 32px;
+                                        "></div>
+
+                                        <!-- Number -->
+                                        <div style="
+                                        position: absolute;
+                                        left: -8px;
+                                        top: 26px;
+                                        width: 100%;
+                                        text-align: center;
+                                        color: #fff;
+                                        font-size: 10px;
+                                        font-weight: bold;
+                                        ">
+                                            ' . htmlspecialchars($companyCode) . '
+                                        </div>
+
+                                    </div>
+
+                                </td>';
                             }else{
                                 $glassTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
                             }
