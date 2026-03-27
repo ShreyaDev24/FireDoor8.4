@@ -831,11 +831,11 @@ class PrintInvoiceController extends Controller
                             <td>' . $fireRate . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                                $a .= '<td class="tbl_last">' . number_format($DoorsetPrice, 2) . '</td>
+                                <td class="tbl_last">' . number_format($IronmongaryPrice, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
+                            $a .= '<td class="tbl_last">' . number_format($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }else{
@@ -894,11 +894,11 @@ class PrintInvoiceController extends Controller
                             <td>' . $COC . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                                $a .= '<td class="tbl_last">' . number_format($DoorsetPrice, 2) . '</td>
+                                <td class="tbl_last">' . number_format($IronmongaryPrice, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
+                            $a .= '<td class="tbl_last">' . number_format($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }
@@ -916,11 +916,11 @@ class PrintInvoiceController extends Controller
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
                         <td class="tbl_bottom" colspan="39"></td>';
                         if($HideCosts == 0){
-                            $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
-                            <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
+                            $a .= '<td class="tbl_bottom">' .$currency. number_format($SumDoorsetPrice, 2) . '</td>
+                            <td class="tbl_bottom">' . $currency.number_format($SumIronmongaryPrice, 2) . '</td>';
                         }
 
-                        $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
+                        $a .= '<td class="tbl_bottom">' .$currency. number_format($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
 
