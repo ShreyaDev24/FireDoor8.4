@@ -2288,7 +2288,7 @@ function discountQuote($quotationId,$versionId): bool{
     return true;
 }
 
-function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
+function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder=false){
     $outerColor = '';
     $innerColor = '';
 
@@ -2402,7 +2402,9 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
 
         </td>';
     }else{
-        $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+        if($isBorder == true){
+            $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+        }
     }
 
 
@@ -2464,7 +2466,9 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
 
         </td>';
     }else{
-        $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+        if($isBorder == true){
+            $Tbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+        }
     }
 
     return $Tbl;

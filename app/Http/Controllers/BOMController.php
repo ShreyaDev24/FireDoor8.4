@@ -2599,7 +2599,7 @@ class BOMController extends Controller
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                $elevTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
+                $elevTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
 
             $elevTbl .= '</tr>';
         }
@@ -2877,7 +2877,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
 
                         $lipingTbl .= '</tr>';
                         }
@@ -2904,7 +2904,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id);
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
 
                             $lipingTbl .= '</tr>';
                         }
