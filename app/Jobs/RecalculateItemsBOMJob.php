@@ -63,17 +63,18 @@ class RecalculateItemsBOMJob implements ShouldQueue
                         ]);
                     }
                 } else{
-                    dd($data->AdjustPrice,$this->existCurrency,$Items);
                     if($this->existCurrency == null){
                             Item::where('itemId', $itemid)->update([
+                                'DoorsetPrice' => $GTSellPriceTotal,
+                                'AdjustPrice' => $data->AdjustPrice,
+                            ]);
+                    } else{
+                        Item::where('itemId', $itemid)->update([
                             'DoorsetPrice' => $GTSellPriceTotal,
-                            'AdjustPrice' => $data->AdjustPrice,
+                            'AdjustPrice' => $Items->AdjustPrice,
                         ]);
                     }
-                    Item::where('itemId', $itemid)->update([
-                        'DoorsetPrice' => $GTSellPriceTotal,
-                        'AdjustPrice' => $Items->AdjustPrice,
-                    ]);
+
                 }
             }
         }
