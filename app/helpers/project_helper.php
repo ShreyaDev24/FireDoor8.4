@@ -2287,3 +2287,180 @@ function discountQuote($quotationId,$versionId): bool{
 
     return true;
 }
+
+function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id){
+    $outerColor = '';
+    $innerColor = '';
+
+    $outerColor2 = '';
+    $innerColor2 = '';
+
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
+        $outerColor = '#f4d23c'; //yellow
+        $innerColor = '#2ecc71'; //green
+
+    }
+
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'Yes'){
+        $outerColor = '#f4d23c'; //yellow
+        $innerColor = '#2ecc71'; //green
+
+        $outerColor2 = '#f4d23c'; //yellow
+        $innerColor2 = '#f39c12'; //orange
+    }
+
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'Yes'){
+        $outerColor = '#f4d23c'; //yellow
+        $innerColor = '#bdc3c7'; //silver
+
+        $outerColor2 = '#f4d23c'; //yellow
+        $innerColor2 = '#f39c12'; //orange
+    }
+
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
+        $outerColor = '#1f3a93'; //Blue
+        $innerColor = '#2ecc71'; //green
+    }
+
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'Yes'){
+        $outerColor = '#1f3a93'; //Blue
+        $innerColor = '#2ecc71'; //green
+
+        $outerColor2 = '#1f3a93'; //Blue
+        $innerColor2 = '#f39c12'; //orange
+    }
+
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'Yes'){
+        $outerColor = '#1f3a93'; //Blue
+        $innerColor = '#bdc3c7'; //silver
+
+        $outerColor2 = '#1f3a93'; //Blue
+        $innerColor2 = '#f39c12'; //orange
+    }
+    $Tbl = '';
+    $settings = SettingCurrency::where('UserId', $id)
+        ->select('HideCosts', 'companyCode')
+        ->first();
+
+    $companyCode = $settings->companyCode ?? null;
+
+    if (!empty($outerColor) && !empty($innerColor) && $FireRating !== 'NFR') {
+        $Tbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
+            <div style="width: 90px;
+                        height: 90px;
+                        margin: auto;
+                        position: relative;
+                        top: 14px;">
+
+                <!-- Outer Circle -->
+                <div style="
+                        width: 70px;
+                        height: 70px;
+                        background: ' . $outerColor . ';
+                        border-radius: 50%;
+                        position: absolute;
+                        top: -6px;
+                "></div>
+
+                <!-- Triangle -->
+                <div style="
+                        width: 0;
+                        height: 0;
+                        border-left: 30px solid transparent;
+                        border-right: 30px solid transparent;
+                        border-bottom: 36px solid ' . $innerColor . ';
+                        position: absolute;
+                        top: 4px;
+                        left: 7px;
+                "></div>
+
+                <!-- Trunk -->
+                <div style="
+                    width: 10px;
+                    height: 16px;
+                    background: ' . $innerColor . ';
+                    position: absolute;
+                    top: 37px;
+                    left: 32px;
+                "></div>
+
+                <!-- Number -->
+                <div style="
+                position: absolute;
+                left: -8px;
+                top: 26px;
+                width: 100%;
+                text-align: center;
+                color: #fff;
+                font-size: 10px;
+                font-weight: bold;
+                ">
+                    ' . htmlspecialchars($companyCode) . '
+                </div>
+
+            </div>
+
+        </td>';
+    }
+
+    if (!empty($outerColor2) && !empty($innerColor2) && $FireRating !== 'NFR') {
+        $Tbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
+            <div style="width: 90px;
+                        height: 90px;
+                        margin: auto;
+                        position: relative;
+                        top: 14px;">
+
+                <!-- Outer Circle -->
+                <div style="
+                        width: 70px;
+                        height: 70px;
+                        background: ' . $outerColor2 . ';
+                        border-radius: 50%;
+                        position: absolute;
+                        top: -6px;
+                "></div>
+
+                <!-- Triangle -->
+                <div style="
+                        width: 0;
+                        height: 0;
+                        border-left: 30px solid transparent;
+                        border-right: 30px solid transparent;
+                        border-bottom: 36px solid ' . $innerColor2 . ';
+                        position: absolute;
+                        top: 4px;
+                        left: 7px;
+                "></div>
+
+                <!-- Trunk -->
+                <div style="
+                    width: 10px;
+                    height: 16px;
+                    background: ' . $innerColor2 . ';
+                    position: absolute;
+                    top: 37px;
+                    left: 32px;
+                "></div>
+
+                <!-- Number -->
+                <div style="
+                position: absolute;
+                left: -8px;
+                top: 26px;
+                width: 100%;
+                text-align: center;
+                color: #fff;
+                font-size: 10px;
+                font-weight: bold;
+                ">
+                    ' . htmlspecialchars($companyCode) . '
+                </div>
+
+            </div>
+
+        </td>';
+    }
+
+    return $Tbl;
+}
