@@ -2411,10 +2411,11 @@ class BOMController extends Controller
         }
 
         $settings = SettingCurrency::where('UserId', $id)
-            ->select('HideCosts', 'companyCode')
+            ->select('HideCosts', 'companyCode', 'doorPlugActivated')
             ->first();
 
         $companyCode = $settings->companyCode ?? null;
+        $doorPlugActivated = $settings->doorPlugActivated;
 
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
@@ -2561,10 +2562,12 @@ class BOMController extends Controller
                     <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
                     <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                     <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
-                    <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
-                    <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
-                </tr>
+                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                    if($doorPlugActivated == 1){
+                    $elevTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                    <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
+                    }
+                $elevTbl .= '</tr>
             </thead>
             <tbody>';
 
@@ -2804,10 +2807,12 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
-                            </tr>
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                if($doorPlugActivated == 1){
+                                $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
+                                }
+                            $lipingTbl .= '</tr>
                         </thead>
                         <tbody>';
                 }
@@ -2835,10 +2840,12 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>
-                            </tr>
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                if($doorPlugActivated == 1){
+                                $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
+                                }
+                            $lipingTbl .= '</tr>
                         </thead>
                         <tbody>';
                 }
@@ -2991,8 +2998,11 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Glass Height Check</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glass Thickness Check</th>
                                 <th style="border: 1px solid black; padding: 5px;">Glass Stamp Check</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please note any non conformiance or quantity issues.</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug</th>
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please note any non conformiance or quantity issues.</th>';
+                                if($doorPlugActivated == 1){
+                                $glassTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug</th>';
+                                }
+                            $glassTbl .= '</tr>
                             </tr>
                         </thead>
                         <tbody>';
@@ -3038,65 +3048,67 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
-                                $glassTbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
-                                    <div style="width: 90px;
-                                                height: 90px;
-                                                margin: auto;
-                                                position: relative;
-                                                top: 14px;">
+                            if($doorPlugActivated == 1){
+                                if (!empty($outerColor) && !empty($innerColor)  && $value->FireRating !== 'NFR') {
+                                    $glassTbl .= '<td style="border:1px solid #000; padding:5px; text-align:center; width:80px;">
+                                        <div style="width: 90px;
+                                                    height: 90px;
+                                                    margin: auto;
+                                                    position: relative;
+                                                    top: 14px;">
 
-                                        <!-- Outer Circle -->
-                                        <div style="
-                                                width: 70px;
-                                                height: 70px;
-                                                background: ' . $outerColor . ';
-                                                border-radius: 50%;
+                                            <!-- Outer Circle -->
+                                            <div style="
+                                                    width: 70px;
+                                                    height: 70px;
+                                                    background: ' . $outerColor . ';
+                                                    border-radius: 50%;
+                                                    position: absolute;
+                                                    top: -6px;
+                                            "></div>
+
+                                            <!-- Triangle -->
+                                            <div style="
+                                                    width: 0;
+                                                    height: 0;
+                                                    border-left: 30px solid transparent;
+                                                    border-right: 30px solid transparent;
+                                                    border-bottom: 36px solid ' . $innerColor . ';
+                                                    position: absolute;
+                                                    top: 4px;
+                                                    left: 7px;
+                                            "></div>
+
+                                            <!-- Trunk -->
+                                            <div style="
+                                                width: 10px;
+                                                height: 16px;
+                                                background: ' . $innerColor . ';
                                                 position: absolute;
-                                                top: -6px;
-                                        "></div>
+                                                top: 37px;
+                                                left: 32px;
+                                            "></div>
 
-                                        <!-- Triangle -->
-                                        <div style="
-                                                width: 0;
-                                                height: 0;
-                                                border-left: 30px solid transparent;
-                                                border-right: 30px solid transparent;
-                                                border-bottom: 36px solid ' . $innerColor . ';
-                                                position: absolute;
-                                                top: 4px;
-                                                left: 7px;
-                                        "></div>
-
-                                        <!-- Trunk -->
-                                        <div style="
-                                            width: 10px;
-                                            height: 16px;
-                                            background: ' . $innerColor . ';
+                                            <!-- Number -->
+                                            <div style="
                                             position: absolute;
-                                            top: 37px;
-                                            left: 32px;
-                                        "></div>
+                                            left: -8px;
+                                            top: 26px;
+                                            width: 100%;
+                                            text-align: center;
+                                            color: #fff;
+                                            font-size: 10px;
+                                            font-weight: bold;
+                                            ">
+                                                ' . htmlspecialchars($companyCode) . '
+                                            </div>
 
-                                        <!-- Number -->
-                                        <div style="
-                                        position: absolute;
-                                        left: -8px;
-                                        top: 26px;
-                                        width: 100%;
-                                        text-align: center;
-                                        color: #fff;
-                                        font-size: 10px;
-                                        font-weight: bold;
-                                        ">
-                                            ' . htmlspecialchars($companyCode) . '
                                         </div>
 
-                                    </div>
-
-                                </td>';
-                            }else{
-                                $glassTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                                    </td>';
+                                }else{
+                                    $glassTbl .= '<td style="border: 1px solid black; padding: 5px;"></td>';
+                                }
                             }
                          $glassTbl .= '</tr>';
                     }
