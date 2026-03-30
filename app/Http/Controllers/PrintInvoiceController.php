@@ -79,7 +79,12 @@ class PrintInvoiceController extends Controller
         ->where('UserType', 5)
         ->value('FirstName') ?? '';
 
-        $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
+        $settings = SettingCurrency::where('UserId', $id)
+            ->select('HideCosts', 'companyCode')
+            ->first();
+
+        $HideCosts = $settings->HideCosts ?? null;
+
         $currency = QuotationCurrency($quotaion->Currency);
 
         // $configurationItem = 1;
@@ -3266,9 +3271,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
 
             if($isActive == true){
+
                 $elevTbl .= ' <div class="tbl_prn">
                 <div style="margin:0 auto;"><h3 style="text-align:center;">Quality Control </h3></div>
                 <div class="fr_d_tbl doorImgBox" style="display:flex; justify-content:center;">
+
                     <table id="NoBorder" style="margin-top:1rem;margin-bottom: 15px;" class="mt-4">
                         <tr>
                             <td colspan="2">
@@ -3311,10 +3318,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 <div class="fr_d_tbl" style=" margin: 0 auto;">
 
                     <div style="text-align:center; margin-bottom: 20px;">
+
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
-                            <tr>
-                                <td style="background: #f2f2f2; padding: 8px;">SELECT<br>Door Type</td>
-                                <td style="padding: 8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
+                            <tr>';
+                            $elevTbl .= doorPlug1_2($tt->FireRating, $tt->IronmongerySet, $tt->Leaf1VisionPanel, $id);
+
+                            $elevTbl .= '<td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
+                                <td style="padding:8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
                             </tr>
                         </table>
                     </div>
@@ -3357,8 +3367,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     $elevTbl .= '<div class="page-break"></div>';
                 }
 
+
                 $PageBreakCounts++;
             }
+
         }
 
         // return $elevTbl;
