@@ -77,22 +77,44 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
 
+                            <div class="form-row">
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="SetCurrencyRate">Set Company Code (Door Plug) <span class="text-danger">*</span></label>
-                                        <div class="input-group">
-                                            <input name="companyCode" id="companyCode" placeholder="Set Company Code"
-                                                type="text" class="form-control"
-                                                value="@if(!empty($currency->companyCode)){{$currency->companyCode}}@endif">
+
+                                        <label for="SetCurrencyRate">
+                                            Set Company Code (Door Plug)
+                                            <span class="text-danger">*</span>
+                                        </label>
+
+                                        <!-- Checkbox -->
+                                        <div class="mb-2">
+                                            <input type="checkbox"
+                                                id="toggleCompanyCode"
+                                                name="doorPlugActivated"
+                                                value="1"
+                                                {{ ($currency->doorPlugActivated == 1) ? 'checked' : '' }}>
+
+                                            <label for="toggleCompanyCode">Enable Door Plug</label>
                                         </div>
+
+                                        <!-- Input Field -->
+                                        <div class="input-group">
+                                            <input name="companyCode" id="companyCode"
+                                                placeholder="Set Company Code"
+                                                type="text"
+                                                class="form-control"
+                                                value="{{ $currency->companyCode ?? '' }}">
+                                        </div>
+
                                     </div>
                                 </div>
 
                                 <div class="col-md-12">
-                                    <div class="position-relative form-group" style="margin-left: auto; float: right;">
+                                    <div class="position-relative form-group">
                                         <button type="submit" id="submit" class="btn-wide btn btn-success"
-                                            style="margin-top: 28px;"> SET PREFIX </button>
+                                            style="margin-top: 28px;"> Submit </button>
                                     </div>
                                 </div>
                                 <!-- <div class="col-md-6">
@@ -220,5 +242,25 @@
                 $('#SetCurrencyRateText').text('€1 = £');
             }
         }
+
+        $(document).ready(function () {
+
+            function toggleCompanyCode() {
+                if ($('#toggleCompanyCode').is(':checked')) {
+                    $('#companyCode').prop('disabled', false);
+                } else {
+                    $('#companyCode').prop('disabled', true).val('');
+                }
+            }
+
+            // Initial check on page load
+            toggleCompanyCode();
+
+            // On checkbox change
+            $('#toggleCompanyCode').change(function () {
+                toggleCompanyCode();
+            });
+
+        });
     </script>
 @endsection
