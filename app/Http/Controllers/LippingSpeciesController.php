@@ -7,6 +7,10 @@ use App\Models\LippingSpecies;
 use App\Models\LippingSpeciesItems;
 use App\Models\SelectedLippingSpeciesItems;
 use Illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 
 class LippingSpeciesController extends Controller
 {
@@ -105,50 +109,65 @@ class LippingSpeciesController extends Controller
         ->orderBy('SpeciesName', 'ASC')
         ->get();
 
-        $filename = 'Timber_Species_Selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headings
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Species',
+            'Inch',
+            'MM',
+            'Status',
+            'Price / M3'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
+        // Bold Heading
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
 
-            // CSV Heading
-            fputcsv($file, [
-                'Species',
-                'Inch',
-                'MM',
-                'Status',
-                'Price / M3'
-            ]);
+        // Column width
+        $sheet->getColumnDimension('A')->setWidth(35);
+        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->getColumnDimension('C')->setWidth(12);
+        $sheet->getColumnDimension('D')->setWidth(15);
+        $sheet->getColumnDimension('E')->setWidth(18);
 
-            foreach ($items as $row) {
+        $row = 2;
 
-                foreach ($row->lipping_species_items as $item) {
+        foreach ($items as $species) {
 
-                    $selected = $item->selected_lipping_species_items->first();
+            foreach ($species->lipping_species_items as $item) {
 
-                    if ($selected) {
+                $selected = $item->selected_lipping_species_items->first();
 
-                        fputcsv($file, [
-                            $row->SpeciesName,
-                            $item->thickness,
-                            number_format($item->thickness * 25.4, 1),
-                            $item->status ? 'Active' : 'Inactive',
-                            $selected->selected_price ?? 0
-                        ]);
+                if ($selected) {
 
-                    }
+                    $sheet->setCellValue('A'.$row, $species->SpeciesName);
+                    $sheet->setCellValue('B'.$row, $item->thickness);
+                    $sheet->setCellValue('C'.$row, number_format($item->thickness * 25.4, 1));
+                    $sheet->setCellValue('D'.$row, $item->status ? 'Active' : 'Inactive');
+                    $sheet->setCellValue('E'.$row, number_format($selected->selected_price ?? 0, 2));
 
+                    $row++;
                 }
-
             }
+        }
 
-            fclose($file);
+        $lastRow = $row - 1;
 
-        }, 200, $headers);
+        // Borders
+        $sheet->getStyle('A1:E'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'Timber_Species_Selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }

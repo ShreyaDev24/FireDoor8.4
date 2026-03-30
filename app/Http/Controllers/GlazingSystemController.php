@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\GlazingSystem;
 use App\Models\SelectedGlazingSystem;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class GlazingSystemController extends Controller
@@ -300,41 +304,77 @@ class GlazingSystemController extends Controller
             ->orderBy('glazing_system.GlazingSystem')
             ->get();
 
-        $filename = 'Glazing_System_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headers
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Streboard',
+            'Halspan',
+            'Flamebreak',
+            'Stredor',
+            'Vicaima',
+            'Seadec',
+            'Deanta',
+            'MMM',
+            'NFR',
+            'FD30',
+            'FD60',
+            'Glazing Type',
+            'Glazing Thickness',
+            'GlazingBead FixingDetail',
+            'Vp Area Size',
+            'Price Per m²'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'NFR','FD30','FD60','Glazing Type','Glazing Thickness','GlazingBead FixingDetail','Vp Area Size', 'Price Per m²']);
+        // Bold Header
+        $sheet->getStyle('A1:P1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->Streboard ? 'Yes' : 'No',
-                    $item->Halspan ? 'Yes' : 'No',
-                    $item->Flamebreak ? 'Yes' : 'No',
-                    $item->Stredor ? 'Yes' : 'No',
-                    $item->VicaimaDoorCore ? 'Yes' : 'No',
-                    $item->Seadec ? 'Yes' : 'No',
-                    $item->Deanta ? 'Yes' : 'No',
-                    $item->MMM ? 'Yes' : 'No',
-                    $item->NFR ?? '-',
-                    $item->FD30 ?? '-',
-                    $item->FD60 ?? '-',
-                    $item->GlazingSystem,
-                    $item->GlazingThickness,
-                    $item->GlazingBeadFixingDetail,
-                    $item->VPAreaSize,
-                    number_format($item->selectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column widths
+        foreach (range('A', 'P') as $col) {
+            $sheet->getColumnDimension($col)->setWidth(18);
+        }
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->Streboard ? 'Yes' : 'No');
+            $sheet->setCellValue('B'.$row, $item->Halspan ? 'Yes' : 'No');
+            $sheet->setCellValue('C'.$row, $item->Flamebreak ? 'Yes' : 'No');
+            $sheet->setCellValue('D'.$row, $item->Stredor ? 'Yes' : 'No');
+            $sheet->setCellValue('E'.$row, $item->VicaimaDoorCore ? 'Yes' : 'No');
+            $sheet->setCellValue('F'.$row, $item->Seadec ? 'Yes' : 'No');
+            $sheet->setCellValue('G'.$row, $item->Deanta ? 'Yes' : 'No');
+            $sheet->setCellValue('H'.$row, $item->MMM ? 'Yes' : 'No');
+            $sheet->setCellValue('I'.$row, $item->NFR ?? '-');
+            $sheet->setCellValue('J'.$row, $item->FD30 ?? '-');
+            $sheet->setCellValue('K'.$row, $item->FD60 ?? '-');
+            $sheet->setCellValue('L'.$row, $item->GlazingSystem);
+            $sheet->setCellValue('M'.$row, $item->GlazingThickness);
+            $sheet->setCellValue('N'.$row, $item->GlazingBeadFixingDetail);
+            $sheet->setCellValue('O'.$row, $item->VPAreaSize);
+            $sheet->setCellValue('P'.$row, number_format($item->selectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Border
+        $sheet->getStyle('A1:P' . $lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Glazing_System_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 
 }

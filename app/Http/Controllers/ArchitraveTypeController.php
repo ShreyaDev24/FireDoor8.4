@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\ArchitraveType;
 use App\Models\SelectedArchitraveType;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class ArchitraveTypeController extends Controller
@@ -219,34 +223,70 @@ class ArchitraveTypeController extends Controller
             ->orderBy('architrave_type.ArchitraveType')
             ->get();
 
-        $filename = 'Architrave_Type_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headings
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Architrave Type',
+            'Streboard',
+            'Halspan',
+            'Flamebreak',
+            'Stredor',
+            'Vicaima',
+            'Seadec',
+            'Deanta',
+            'MMM',
+            'Price Per m²'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['Architrave Type', 'Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'Price Per m²']);
+        // Bold headings
+        $sheet->getStyle('A1:J1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->ArchitraveType,
-                    $item->Streboard ? 'Yes' : 'No',
-                    $item->Halspan ? 'Yes' : 'No',
-                    $item->Flamebreak ? 'Yes' : 'No',
-                    $item->Stredor ? 'Yes' : 'No',
-                    $item->VicaimaDoorCore ? 'Yes' : 'No',
-                    $item->Seadec ? 'Yes' : 'No',
-                    $item->Deanta ? 'Yes' : 'No',
-                    $item->MMM ? 'Yes' : 'No',
-                    number_format($item->selectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column widths
+        $sheet->getColumnDimension('A')->setWidth(35);
+        $sheet->getColumnDimension('B')->setWidth(12);
+        $sheet->getColumnDimension('C')->setWidth(12);
+        $sheet->getColumnDimension('D')->setWidth(12);
+        $sheet->getColumnDimension('E')->setWidth(12);
+        $sheet->getColumnDimension('F')->setWidth(12);
+        $sheet->getColumnDimension('G')->setWidth(12);
+        $sheet->getColumnDimension('H')->setWidth(12);
+        $sheet->getColumnDimension('I')->setWidth(12);
+        $sheet->getColumnDimension('J')->setWidth(18);
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+            $sheet->setCellValue('A'.$row, $item->ArchitraveType);
+            $sheet->setCellValue('B'.$row, $item->Streboard ? 'Yes' : 'No');
+            $sheet->setCellValue('C'.$row, $item->Halspan ? 'Yes' : 'No');
+            $sheet->setCellValue('D'.$row, $item->Flamebreak ? 'Yes' : 'No');
+            $sheet->setCellValue('E'.$row, $item->Stredor ? 'Yes' : 'No');
+            $sheet->setCellValue('F'.$row, $item->VicaimaDoorCore ? 'Yes' : 'No');
+            $sheet->setCellValue('G'.$row, $item->Seadec ? 'Yes' : 'No');
+            $sheet->setCellValue('H'.$row, $item->Deanta ? 'Yes' : 'No');
+            $sheet->setCellValue('I'.$row, $item->MMM ? 'Yes' : 'No');
+            $sheet->setCellValue('J'.$row, number_format($item->selectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:J' . $lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'architrave_types_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 }

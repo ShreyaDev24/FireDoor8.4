@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\OverpanelGlassGlazing;
 use App\Models\SelectedOverpanelGlassGlazing;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class OverpanelGlassGlazingType extends Controller
@@ -291,37 +295,34 @@ class OverpanelGlassGlazingType extends Controller
             ->orderBy('overpanel_glass_glazing.GlassType')
             ->get();
 
-        $filename = 'Glass_Glazing_System_selected_' . now()->format('Ymd_His') . '.csv';
+            $spreadsheet = new Spreadsheet();
+            $sheet = $spreadsheet->getActiveSheet();
 
-        $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
-        ];
+            $headers = [
+                'Streboard','Halspan','Flamebreak','Stredor','NFR','FD30','FD60','Integrity',
+                'Glass Name','Glass Thickness','Max Width(FL)','Max Height(FL)',
+                'Side Screen Width','Side Screen Height',
+                'MIN Fan Light/Over Panel Frame Thickness',
+                'MIN Fan Light/Over Panel Frame Depth',
+                'Glazing System','Glazing Thickness',
+                'Beading','Beading Height','Beading Width',
+                'Glazing Bead Fixing Detail',
+                'Glass Price Per m²','Glazing Price Per L/M'
+            ];
 
-        return response()->stream(function () use ($items) {
+            $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'NFR','FD30','FD60',
-            'Integrity',
-            'Glass Name',
-            'Glass Thickness',
-            'Max Width(FL)',
-            'Max Height(Fl)',
-            'Side Sceen Width',
-            'Side Sceen Height',
-            'MIN Fan Light/ Over Panel Frame Thickness',
-            'MIN Fan Light/ Over Panel Frame Depth',
-            'Glazing System',
-            'Glazing Thickness',
-            'Beading',
-            'Beading Height',
-            'Beading Width',
-            'Glazing Bead Fixing Detail',
-            'Glass Price Per m²',
-            'Glazing Price Per L/M']);
+            $sheet->getStyle('A1:X1')->getFont()->setBold(true);
+
+            foreach(range('A','X') as $col) {
+                $sheet->getColumnDimension($col)->setWidth(20);
+            }
+
+            $row = 2;
 
             foreach ($items as $item) {
-                fputcsv($file, [
+
+                $sheet->fromArray([
                     $item->Streboard ? 'Yes' : 'No',
                     $item->Halspan ? 'Yes' : 'No',
                     $item->Flamebreak ? 'Yes' : 'No',
@@ -329,7 +330,7 @@ class OverpanelGlassGlazingType extends Controller
                     $item->NFR ?? '-',
                     $item->FD30 ?? '-',
                     $item->FD60 ?? '-',
-                    str_replace('_', ' ', $item->GlassIntegrity),
+                    str_replace('_',' ',$item->GlassIntegrity),
                     $item->GlassType,
                     $item->GlassThickness,
                     $item->FanLightWidth,
@@ -344,13 +345,25 @@ class OverpanelGlassGlazingType extends Controller
                     $item->BeadingHeight,
                     $item->BeadingWidth,
                     $item->FixingDetails,
+                    number_format($item->glassSelectedPrice ?? 0,2),
+                    number_format($item->glazingSelectedPrice ?? 0,2)
+                ], NULL, 'A'.$row);
 
-                    number_format($item->glassSelectedPrice ?? 0, 2),
-                    number_format($item->glazingSelectedPrice ?? 0, 2),
-                ]);
+                $row++;
             }
 
-            fclose($file);
-        }, 200, $headers);
-    }
+            $lastRow = $row - 1;
+
+            $sheet->getStyle('A1:X'.$lastRow)
+                ->getBorders()
+                ->getAllBorders()
+                ->setBorderStyle(Border::BORDER_THIN);
+
+            $writer = new Xlsx($spreadsheet);
+            $filename = 'Glass_Glazing_System_selected_'.now()->format('Ymd_His').'.xlsx';
+
+            return response()->streamDownload(function () use ($writer) {
+                $writer->save('php://output');
+            }, $filename);
+        }
 }

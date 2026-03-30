@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Option;
 use App\Models\SelectedOption;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 class FinishCostController extends Controller
@@ -119,40 +123,58 @@ class FinishCostController extends Controller
         ->orderBy('options.OptionValue')
         ->get();
 
-        $filename = 'Options_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headers
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Configurable Items',
+            'Door Leaf Name',
+            'Under Attribute',
+            'Door Leaf',
+            'Price'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
+        // Bold header
+        $sheet->getStyle('A1:E1')->getFont()->setBold(true);
 
-            fputcsv($file, [
-                'configurableitems',
-                'Door Leaf Name',
-                'Under Attribute',
-                'Door Leaf',
-                'Price'
-            ]);
+        // Column widths
+        $sheet->getColumnDimension('A')->setWidth(25);
+        $sheet->getColumnDimension('B')->setWidth(25);
+        $sheet->getColumnDimension('C')->setWidth(25);
+        $sheet->getColumnDimension('D')->setWidth(30);
+        $sheet->getColumnDimension('E')->setWidth(15);
 
-            foreach ($items as $item) {
+        $row = 2;
 
-                fputcsv($file, [
-                    configurationDoor($item->configurableitems),
-                    str_replace('_', ' ',$item->OptionSlug),
-                    str_replace('_', ' ',$item->UnderAttribute),
-                    $item->OptionValue,
-                    number_format($item->SelectedOptionCost ?? 0, 2)
+        foreach ($items as $item) {
 
-                ]);
-            }
+            $sheet->setCellValue('A'.$row, configurationDoor($item->configurableitems));
+            $sheet->setCellValue('B'.$row, str_replace('_',' ',$item->OptionSlug));
+            $sheet->setCellValue('C'.$row, str_replace('_',' ',$item->UnderAttribute));
+            $sheet->setCellValue('D'.$row, $item->OptionValue);
+            $sheet->setCellValue('E'.$row, number_format($item->SelectedOptionCost ?? 0, 2));
 
-            fclose($file);
+            $row++;
+        }
 
-        }, 200, $headers);
+        $lastRow = $row - 1;
+
+        // Border
+        $sheet->getStyle('A1:E'.$lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(\PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+
+        $filename = 'Options_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
     }
 
 }

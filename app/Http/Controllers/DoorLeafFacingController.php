@@ -7,6 +7,10 @@ use App\Models\DoorLeafFacing;
 use App\Models\SelectedDoorLeafFacing;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Style\Border;
 use DB;
 
 
@@ -277,35 +281,75 @@ class DoorLeafFacingController extends Controller
             ->get();
 
 
-        $filename = 'Door_Leaf_Facing_selected_' . now()->format('Ymd_His') . '.csv';
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
 
+        // Headings
         $headers = [
-            "Content-Type" => "text/csv",
-            "Content-Disposition" => "attachment; filename=$filename",
+            'Option',
+            'Name',
+            'Streboard',
+            'Halspan',
+            'Flamebreak',
+            'Stredor',
+            'Vicaima',
+            'Seadec',
+            'Deanta',
+            'MMM',
+            'Price Per m²'
         ];
 
-        return response()->stream(function () use ($items) {
+        $sheet->fromArray($headers, NULL, 'A1');
 
-            $file = fopen('php://output', 'w');
-            fputcsv($file, ['Option', 'Name', 'Streboard', 'Halspan', 'Flamebreak', 'Stredor', 'Vicaima', 'Seadec', 'Deanta', 'MMM', 'Price Per m²']);
+        // Bold header
+        $sheet->getStyle('A1:K1')->getFont()->setBold(true);
 
-            foreach ($items as $item) {
-                fputcsv($file, [
-                    $item->doorLeafFacing,
-                    $item->doorLeafFacingValue,
-                    $item->Streboard ? 'Yes' : 'No',
-                    $item->Halspan ? 'Yes' : 'No',
-                    $item->Flamebreak ? 'Yes' : 'No',
-                    $item->Stredor ? 'Yes' : 'No',
-                    $item->VicaimaDoorCore ? 'Yes' : 'No',
-                    $item->Seadec ? 'Yes' : 'No',
-                    $item->Deanta ? 'Yes' : 'No',
-                    $item->MMM ? 'Yes' : 'No',
-                    number_format($item->selectedPrice ?? 0, 2),
-                ]);
-            }
+        // Column widths
+        $sheet->getColumnDimension('A')->setWidth(25);
+        $sheet->getColumnDimension('B')->setWidth(35);
+        $sheet->getColumnDimension('C')->setWidth(12);
+        $sheet->getColumnDimension('D')->setWidth(12);
+        $sheet->getColumnDimension('E')->setWidth(12);
+        $sheet->getColumnDimension('F')->setWidth(12);
+        $sheet->getColumnDimension('G')->setWidth(12);
+        $sheet->getColumnDimension('H')->setWidth(12);
+        $sheet->getColumnDimension('I')->setWidth(12);
+        $sheet->getColumnDimension('J')->setWidth(12);
+        $sheet->getColumnDimension('K')->setWidth(18);
 
-            fclose($file);
-        }, 200, $headers);
+        $row = 2;
+
+        foreach ($items as $item) {
+
+            $sheet->setCellValue('A'.$row, $item->doorLeafFacing);
+            $sheet->setCellValue('B'.$row, $item->doorLeafFacingValue);
+            $sheet->setCellValue('C'.$row, $item->Streboard ? 'Yes' : 'No');
+            $sheet->setCellValue('D'.$row, $item->Halspan ? 'Yes' : 'No');
+            $sheet->setCellValue('E'.$row, $item->Flamebreak ? 'Yes' : 'No');
+            $sheet->setCellValue('F'.$row, $item->Stredor ? 'Yes' : 'No');
+            $sheet->setCellValue('G'.$row, $item->VicaimaDoorCore ? 'Yes' : 'No');
+            $sheet->setCellValue('H'.$row, $item->Seadec ? 'Yes' : 'No');
+            $sheet->setCellValue('I'.$row, $item->Deanta ? 'Yes' : 'No');
+            $sheet->setCellValue('J'.$row, $item->MMM ? 'Yes' : 'No');
+            $sheet->setCellValue('K'.$row, number_format($item->selectedPrice ?? 0, 2));
+
+            $row++;
+        }
+
+        $lastRow = $row - 1;
+
+        // Borders
+        $sheet->getStyle('A1:K' . $lastRow)
+            ->getBorders()
+            ->getAllBorders()
+            ->setBorderStyle(Border::BORDER_THIN);
+
+        $writer = new Xlsx($spreadsheet);
+        $filename = 'Door_Leaf_Facing_selected_' . now()->format('Ymd_His') . '.xlsx';
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename);
+
     }
 }
