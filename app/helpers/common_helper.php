@@ -928,113 +928,233 @@ function date2Formate($datetime): string{
 }
 
 
-function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGenerationId=null){
+// function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGenerationId=null){
+//     $userIds = CompanyUsers();
+//     if(Auth::user()->UserType == 3){
+//         $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+//         $userId = $users->CreatedBy;
+//     }else{
+//         $userId = Auth::user()->id;
+//     }
+
+//     //if counter exist will true when the company id wil have the record
+//     $QuotationCounter = CompanyQuotationCounter::wherein('UserId',$userIds)->first();
+//     $IsCounterExist = false;
+//     if($QuotationCounter !== null){
+//         $QuotationCounter = $QuotationCounter->toArray();
+//         if(!empty($QuotationCounter) && !empty($QuotationCounter["quotation_counter"])){
+//             $IsCounterExist = true;
+//         }
+//     }
+
+
+
+
+//     if(Auth::user()->UserType == 2 || Auth::user()->UserType == 3){
+
+//         if ($IsCounterExist==false) {
+//             $quotation_prefix = empty($QuotationCounter->quotation_prefix) ? "QTR" : $QuotationCounter->quotation_prefix;
+//             $CompanyQuotationCounter = new CompanyQuotationCounter();
+//             $CompanyQuotationCounter->UserId = Auth::user()->main_id ?? Auth::user()->id;
+//             $CompanyQuotationCounter->quotation_prefix = $quotation_prefix;
+//             $CompanyQuotationCounter->quotation_counter = 100001;
+//             $CompanyQuotationCounter->save();
+//             $QuotationCounterNew = CompanyQuotationCounter::wherein('UserId',$userIds)->first();
+//             $NewQuotationCounter = 100001;
+//             $QuotationGenerationId = '#'.$quotation_prefix.$userId.$NewQuotationCounter;
+//             $QuotationCounterId = $QuotationCounterNew->id;
+//         } else{
+
+//             $NewQuotationCounter = $QuotationCounter["quotation_counter"] + 1;
+//             $QuotationGenerationId = '#'.$QuotationCounter["quotation_prefix"].$userId.$NewQuotationCounter;
+//             $QuotationCounterId = $QuotationCounter["id"];
+//         }
+
+
+//     }
+//     else{
+
+//             $QuotationGenerationId = 'ARC'.random_int(111111,999999);
+//     }
+
+//     //for the new generate quotation.
+//     if($ArchitectGenerationId==null){
+//         $Quotation = new Quotation();
+//         $Quotation->ProjectId = $projectId;
+//     }
+//     else{
+//         //if the project has been created by architect. fetching quotation based on architect generation id.
+//          $Quotation = Quotation::where('ArchitectGenerationId',$ArchitectGenerationId)->first();
+//     }
+
+
+//     if(Auth::user()->UserType == 2 || Auth::user()->UserType == 3){
+//         $Quotation->QuotationGenerationId = $QuotationGenerationId;
+//         $company_profile_id = get_company_id($userId)->id;
+//         if(Auth::user()->UserType == 2){
+//             $Quotation->CompanyId = $company_profile_id;
+//         }
+
+//         //when the quotation generated from the project
+//         if($Quotation->ProjectId!=null){
+//             $project = Project::where('id',$Quotation->ProjectId)->first();
+//             $project->ProjectStatus = 'Accepted';
+//             $project->save();
+//         }
+//     }
+//     elseif(Auth::user()->UserType==4){
+//     $Quotation->ArchitectGenerationId = $QuotationGenerationId;
+//     $architect_profile_id = get_architect_id($userId)->id;
+//     $Quotation->ArchitectId = $architect_profile_id;
+//     }
+
+//     $Quotation->UserId = Auth::user()->main_id ?? Auth::user()->id;
+
+
+//     //when we have projectid and usertype company then it will fetch the customer id
+//     if ($Quotation->ProjectId != null && (Auth::user()->UserType == 2 || Auth::user()->UserType == 3) && $customerId) {
+//         $customer_profile_id = get_customer_id($customerId)->id;
+//         $Quotation->CustomerId = $customer_profile_id;
+//     }
+
+
+//     $Quotation->QuotationStatus = "Open";
+//     if($Quotation->save()){
+//         if((Auth::user()->UserType == 2 || Auth::user()->UserType == 3) && $IsCounterExist){
+//         $UpdateQuotationCounter = CompanyQuotationCounter::where('id', $QuotationCounterId)
+//             ->update(['quotation_counter' => $NewQuotationCounter]);
+//     }
+
+//         return $Quotation->id;
+//         // return redirect()->route('quotation/generate/',[$Quotation->id,0]);
+//     } else {
+//         return abort(404);
+//     }
+
+// }
+
+function GenerateQuotationFirstTime($projectId,$customerId = null,$ArchitectGenerationId=null)
+{
     $userIds = CompanyUsers();
+
     if(Auth::user()->UserType == 3){
-        $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+        $users = User::where('UserType',3)
+            ->where('id',Auth::user()->id)
+            ->first();
         $userId = $users->CreatedBy;
     }else{
         $userId = Auth::user()->id;
     }
 
-    //if counter exist will true when the company id wil have the record
-    $QuotationCounter = CompanyQuotationCounter::wherein('UserId',$userIds)->first();
+    // fetch counter
+    $QuotationCounter = CompanyQuotationCounter::whereIn('UserId',$userIds)->first();
     $IsCounterExist = false;
+
     if($QuotationCounter !== null){
         $QuotationCounter = $QuotationCounter->toArray();
-        if(!empty($QuotationCounter) && !empty($QuotationCounter["quotation_counter"])){
+        if(!empty($QuotationCounter["quotation_counter"])){
             $IsCounterExist = true;
         }
     }
 
-
-
-
     if(Auth::user()->UserType == 2 || Auth::user()->UserType == 3){
 
-        if ($IsCounterExist==false) {
-            $quotation_prefix = empty($QuotationCounter->quotation_prefix) ? "QTR" : $QuotationCounter->quotation_prefix;
+        if ($IsCounterExist == false) {
+
+            $quotation_prefix = "QTR";
+
             $CompanyQuotationCounter = new CompanyQuotationCounter();
             $CompanyQuotationCounter->UserId = Auth::user()->main_id ?? Auth::user()->id;
             $CompanyQuotationCounter->quotation_prefix = $quotation_prefix;
-            $CompanyQuotationCounter->quotation_counter = 100001;
+            $CompanyQuotationCounter->quotation_counter = 1; // ✅ start from 1
             $CompanyQuotationCounter->save();
-            $QuotationCounterNew = CompanyQuotationCounter::wherein('UserId',$userIds)->first();
-            $NewQuotationCounter = 100001;
-            $QuotationGenerationId = '#'.$quotation_prefix.$userId.$NewQuotationCounter;
-            $QuotationCounterId = $QuotationCounterNew->id;
-        } else{
 
-            $NewQuotationCounter = $QuotationCounter["quotation_counter"] + 1;
-            $QuotationGenerationId = '#'.$QuotationCounter["quotation_prefix"].$userId.$NewQuotationCounter;
+            $QuotationCounterId = $CompanyQuotationCounter->id;
+            $NewQuotationCounter = 1;
+
+        } else {
+
+            $quotation_prefix = $QuotationCounter["quotation_prefix"];
+
+            $lastCounter = $QuotationCounter["quotation_counter"];
+
+            // 🔥 normalize old large values (like 100001)
+            if ($lastCounter > 99) {
+                $lastCounter = 0;
+            }
+
+            $NewQuotationCounter = $lastCounter + 1;
             $QuotationCounterId = $QuotationCounter["id"];
         }
 
+        // 🔒 LOOP UNTIL UNIQUE QUOTATION NUMBER FOUND
+        do {
+            $QuotationGenerationId = $quotation_prefix . str_pad($NewQuotationCounter, 2, '0', STR_PAD_LEFT);
+            $exists = Quotation::where('QuotationGenerationId', $QuotationGenerationId)->exists();
+            if ($exists) {
+                $NewQuotationCounter++;
+            }
+        } while ($exists);
 
+    } else {
+        $QuotationGenerationId = 'ARC'.random_int(111111,999999);
     }
-    else{
 
-            $QuotationGenerationId = 'ARC'.random_int(111111,999999);
-    }
-
-    //for the new generate quotation.
-    if($ArchitectGenerationId==null){
+    // create quotation
+    if($ArchitectGenerationId == null){
         $Quotation = new Quotation();
         $Quotation->ProjectId = $projectId;
+    } else {
+        $Quotation = Quotation::where('ArchitectGenerationId',$ArchitectGenerationId)->first();
     }
-    else{
-        //if the project has been created by architect. fetching quotation based on architect generation id.
-         $Quotation = Quotation::where('ArchitectGenerationId',$ArchitectGenerationId)->first();
-    }
-
 
     if(Auth::user()->UserType == 2 || Auth::user()->UserType == 3){
+
         $Quotation->QuotationGenerationId = $QuotationGenerationId;
+
         $company_profile_id = get_company_id($userId)->id;
         if(Auth::user()->UserType == 2){
             $Quotation->CompanyId = $company_profile_id;
         }
 
-        //when the quotation generated from the project
-        if($Quotation->ProjectId!=null){
+        if($Quotation->ProjectId != null){
             $project = Project::where('id',$Quotation->ProjectId)->first();
             $project->ProjectStatus = 'Accepted';
             $project->save();
         }
-    }
-    elseif(Auth::user()->UserType==4){
-    $Quotation->ArchitectGenerationId = $QuotationGenerationId;
-    $architect_profile_id = get_architect_id($userId)->id;
-    $Quotation->ArchitectId = $architect_profile_id;
+
+    } elseif(Auth::user()->UserType == 4){
+
+        $Quotation->ArchitectGenerationId = $QuotationGenerationId;
+        $architect_profile_id = get_architect_id($userId)->id;
+        $Quotation->ArchitectId = $architect_profile_id;
     }
 
     $Quotation->UserId = Auth::user()->main_id ?? Auth::user()->id;
 
+    if ($Quotation->ProjectId != null &&
+        (Auth::user()->UserType == 2 || Auth::user()->UserType == 3) &&
+        $customerId) {
 
-    //when we have projectid and usertype company then it will fetch the customer id
-    if ($Quotation->ProjectId != null && (Auth::user()->UserType == 2 || Auth::user()->UserType == 3) && $customerId) {
         $customer_profile_id = get_customer_id($customerId)->id;
         $Quotation->CustomerId = $customer_profile_id;
     }
 
-
     $Quotation->QuotationStatus = "Open";
+
     if($Quotation->save()){
-        if((Auth::user()->UserType == 2 || Auth::user()->UserType == 3) && $IsCounterExist){
-        $UpdateQuotationCounter = CompanyQuotationCounter::where('id', $QuotationCounterId)
-            ->update(['quotation_counter' => $NewQuotationCounter]);
-    }
+
+        // ✅ ALWAYS UPDATE COUNTER
+        if(Auth::user()->UserType == 2 || Auth::user()->UserType == 3){
+            CompanyQuotationCounter::where('id', $QuotationCounterId)
+                ->update(['quotation_counter' => $NewQuotationCounter]);
+        }
 
         return $Quotation->id;
-        // return redirect()->route('quotation/generate/',[$Quotation->id,0]);
-    } else {
-        return abort(404);
     }
 
+    return abort(404);
 }
-
-
-
 
 function ConfigurationURL($configurableitems,string $itemId,string $version_id){
     if($configurableitems != ''){
