@@ -758,12 +758,30 @@
                                                                    {{-- <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name')"
                                                                             href="javascript:void(0);">Name
                                                                             Configuration</a></li> --}}
-                                                                            @php
+                                                                            {{-- @php
                                                                               $doorsSetPrice = number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2);
                                                                             @endphp
                                                                     <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name','{{ $doorsSetPrice }}','{{ $row->IronmongaryPrice }}')"
                                                                             href="javascript:void(0);">Name
-                                                                            Configuration</a></li>
+                                                                            Configuration</a></li> --}}
+
+                                                                            @php
+                                                                        $doorsSetPrice = number_format(
+                                                                            (
+                                                                                (isset($row['AdjustPrice']) && $row['AdjustPrice'])
+                                                                                    ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'])
+                                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])
+                                                                            ),
+                                                                            2
+                                                                        );
+                                                                        @endphp
+
+                                                                        <li>
+                                                                            <a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $row['id'] }}','Door','Configurable Favorite Item','Configurable Type Name','{{ $doorsSetPrice }}','{{ $row['IronmongaryPrice'] }}')"
+                                                                            href="javascript:void(0);">
+                                                                                Name Configuration
+                                                                            </a>
+                                                                        </li>
 
                                                                     <li>
                                                                         <a onclick="adjustPrice(
