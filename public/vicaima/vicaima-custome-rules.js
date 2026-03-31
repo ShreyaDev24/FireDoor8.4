@@ -831,6 +831,7 @@ $("#AreVPsEqualSizesForLeaf2").change(function () {
 $("#lazingIntegrityOrInsulationIntegrity").on('change', function () {
     glassTypeFilter(false);
     glazingSystemFIlter($("#fireRating").val());
+    glass_glazing_system();
 });
 
 $("#glassType").change(function () {
@@ -1950,6 +1951,7 @@ function FireRatingChange() {
         rebatedLippingThickness($("#fireRating").val());
         visionPanelChange();
         rebatedWidth();
+        glass_glazing_system();
         doorDimensionCalculation();
     }
     IntumescentSeals();
@@ -6758,3 +6760,55 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+
+function glass_glazing_system(isstatus = false){
+    let pageId = pageIdentity();
+    var fireRating =$("#fireRating").val();
+    var integrity =  $("#lazingIntegrityOrInsulationIntegrity").val();
+    var GlassIntegrityValue = document.getElementById('GlassIntegrity-value');
+
+    if(GlassIntegrityValue != null  && isstatus == true){
+        GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
+        if(GlassIntegrityValue != ""){
+            integrity = GlassIntegrityValue;
+        }
+    }
+    var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
+    leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+
+    $.ajax({
+        url: $("#glass-glazing-filter").html(),
+        method:"POST",
+        dataType:"Json",
+        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value},
+        success: function(result){
+            var glassTypeInnerHtml = "";
+            if(result.status=="ok"){
+                var data = result.data;
+                var length = result.data.length;
+
+                var GlassTypeValue = $("#glassValueId").val();
+                glassTypeInnerHtml+='<option value="">Select Glass Type</option>';
+                for(var i =0; i<length;i++){
+
+                    if (GlassTypeValue != null) {
+                        GlassTypeValue = $("#glassValueId").val();
+                        var GlassTypeSelected = "";
+                        if(GlassTypeValue == data[i].Key){
+                            GlassTypeSelected = "selected";
+                            GlassTypeChange(GlassTypeValue, '');
+                        }
+                        glassTypeInnerHtml+='<option value="'+data[i].Key+'" '+ GlassTypeSelected +'>'+data[i].GlassType+'</option>';
+                    }else{
+                        glassTypeInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlassType +'</option>';
+                    }
+                }
+
+            } else {
+                glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
+            }
+            $("#glassType").empty().append(glassTypeInnerHtml);
+            $("#glassThickness").val(0);
+        }
+    });
+}
