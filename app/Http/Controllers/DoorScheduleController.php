@@ -770,10 +770,12 @@ class DoorScheduleController extends Controller
                 $itemCount = ItemMaster::where('itemID', $itemid)->count();
                 $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
+
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
 
-                Item::where('itemId', $itemid)->update([
+                $Item = Item::where('itemId', $itemid)->update([
                     'DoorsetPrice' => $GTSellPriceTotal,
+                    'AdjustPrice' => $data->DoorsetPrice
                 ]);
             }
         }else if ($doorMode === 'range' || $doorMode === 'multiple') {
@@ -846,10 +848,12 @@ class DoorScheduleController extends Controller
                     $itemCount = ItemMaster::where('itemID', $itemid)->count();
                     $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
+
                     $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
 
-                    Item::where('itemId', $itemid)->update([
+                    $Item = Item::where('itemId', $itemid)->update([
                         'DoorsetPrice' => $GTSellPriceTotal,
+                        'AdjustPrice' => $data->DoorsetPrice
                     ]);
                 }
             }
@@ -8844,6 +8848,8 @@ class DoorScheduleController extends Controller
                 $FavoriteItem->quotationId = $request->quotationId;
                 $FavoriteItem->versionId = $request->versionId;
                 $FavoriteItem->DoorType = $request->doorTypeName;
+                $FavoriteItem->DoorsetPrice = $request->doorSetPrice;
+                $FavoriteItem->IronmongaryPrice = $request->IronmongaryPrice;
                 $FavoriteItem->userId = Auth::user()->id;
                 $FavoriteItem->save();
 
@@ -8985,6 +8991,8 @@ class DoorScheduleController extends Controller
                                 $NewItemInformation->itemId = Item::max('itemId') + 1;
                                 $NewItemInformation->QuotationId = $request->qId;
                                 $NewItemInformation->VersionId = $request->vId;
+                                $NewItemInformation->DoorsetPrice = $NewItemInformation->DoorsetPrice;
+                                $NewItemInformation->DoorsetPrice = $Favorite->AdjustPrice;
                                 $NewItemInformation->save();
 
                                 //adding configurableitems like streboard etc to quotation table
@@ -9368,6 +9376,39 @@ class DoorScheduleController extends Controller
             if (!empty($item)) {
                 $updateDetails['AdjustPrice'] = $request->AdjustPrice;
                 Item::where('itemId', $request->itemId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Price updated successfully!'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'something went wrong!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
+    public function favadjustPriceUrl(Request $request)
+    {
+
+        if (!empty($request->favId) && !empty($request->quotationId)) {
+            $item = FavoriteItem::where(['id' => $request->favId, 'quotationId' => $request->quotationId])->first();
+            if (!empty($item)) {
+                $updateDetails['AdjustPrice'] = $request->AdjustPrice;
+                FavoriteItem::where('id', $request->favId)->update($updateDetails);
                 $response = [
                     'status' => true,
                     'msg' => 'Price updated successfully!'

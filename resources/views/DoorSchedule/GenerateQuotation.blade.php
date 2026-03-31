@@ -755,11 +755,15 @@
                                                                         </a>
                                                                     </li>
 
-                                                                    <li>
-                                                                        <a href="{{ url('quotation/add-new-doors') }}/{{ $quotationId }}/{{ $version_id }}/{{ $row['itemId'] }}">
-                                                                            Add New
-                                                                        </a>
-                                                                    </li>
+                                                                   {{-- <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name')"
+                                                                            href="javascript:void(0);">Name
+                                                                            Configuration</a></li> --}}
+                                                                            @php
+                                                                              $doorsSetPrice = number_format((($row->AdjustPrice)?floatval($row->AdjustPrice) + floatval($row->IronmongaryPrice):floatval($row->DoorsetPrice) + floatval($row->IronmongaryPrice)),2);
+                                                                            @endphp
+                                                                    <li><a onclick="favoriteItem('{{ $row->itemId }}','{{ $row->id }}','Door','Configurable Favorite Item','Configurable Type Name','{{ $doorsSetPrice }}','{{ $row->IronmongaryPrice }}')"
+                                                                            href="javascript:void(0);">Name
+                                                                            Configuration</a></li>
 
                                                                     <li>
                                                                         <a onclick="adjustPrice(
@@ -1520,6 +1524,8 @@
                 var itemMasterId = $('#itemMasterId').val();
                 var doorTypeName = $('#doorTypeName').val();
                 var favType = $('#favType').val();
+                var doorSetPrice = $('#doorSetPrice').val();
+                var IronmongaryPrice = $('#IronmongaryPrice').val();
                 $.ajax({
                     url: $("#favoriteItem").val(),
                     method: "POST",
@@ -1531,7 +1537,9 @@
                         itemId: itemId,
                         itemMasterId: itemMasterId,
                         favType: favType,
-                        doorTypeName: doorTypeName
+                        doorTypeName: doorTypeName,
+                        doorSetPrice: doorSetPrice,
+                        IronmongaryPrice: IronmongaryPrice,
                     },
                     dataType: "Json",
                     success: function(data) {
@@ -1792,7 +1800,6 @@
                         return;
                     }
                 }
-
                 setTimeout(function() {
                     ValidatesFrame();
                 }, 2000);
@@ -3602,12 +3609,14 @@
                 } else {
                 }
             }
-            function favoriteItem(itemId, id,favType,title,name) {
+            function favoriteItem(itemId, id,favType,title,name,doorSetPrice=null,IronmongaryPrice=null) {
                 $('#itemId').val(itemId);
                 $('#itemMasterId').val(id);
                 $('#favType').val(favType);
+                $('#doorSetPrice').val(doorSetPrice);
                 $('#title').text(title);
                 $('#FavTypeName').text(name);
+                $('#IronmongaryPrice').text(IronmongaryPrice);
                 $("#Favorite-modal").modal("show");
             }
             function adjustPrice(itemId, id, totalPrice) {
@@ -3785,6 +3794,8 @@
                             <input type="hidden" class="form-control" id="itemId">
                             <input type="hidden" class="form-control" id="itemMasterId">
                             <input type="hidden" class="form-control" id="favType">
+                            <input type="hidden" class="form-control" id="doorSetPrice">
+                            <input type="hidden" class="form-control" id="IronmongaryPrice">
                         </div>
                     </div>
                 </div>
@@ -3839,6 +3850,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
+
                     <button class="btn btn-success" onclick="ApplyVersionFilters()">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
