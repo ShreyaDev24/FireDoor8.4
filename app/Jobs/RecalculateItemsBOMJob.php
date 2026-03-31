@@ -19,7 +19,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId)
+    public function __construct(public int $quotationId,public int $selectVersionID,public int $userLoginId,public $existCurrency)
     {
         //
     }
@@ -50,15 +50,32 @@ class RecalculateItemsBOMJob implements ShouldQueue
                 $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
+                $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
-                    Item::where('itemId', $itemid)->update([
-                        'DoorsetPrice' => $GTSellPriceTotal,
-                        'AdjustPrice' => $GTSellPriceTotal,
-                    ]);
+                    if($this->existCurrency == null){
+                            Item::where('itemId', $itemid)->update([
+                            'AdjustPrice' => $data->AdjustPrice,
+                            'DoorsetPrice' => $GTSellPriceTotal,
+                        ]);
+                    } else {
+                         Item::where('itemId', $itemid)->update([
+                            'DoorsetPrice' => $GTSellPriceTotal,
+                            'AdjustPrice' => $GTSellPriceTotal,
+                        ]);
+                    }
                 } else{
-                    Item::where('itemId', $itemid)->update([
-                        'DoorsetPrice' => $GTSellPriceTotal,
-                    ]);
+                    if($this->existCurrency == null){
+                            Item::where('itemId', $itemid)->update([
+                                'DoorsetPrice' => $GTSellPriceTotal,
+                                'AdjustPrice' => $data->AdjustPrice,
+                            ]);
+                    } else{
+                        Item::where('itemId', $itemid)->update([
+                            'DoorsetPrice' => $GTSellPriceTotal,
+                            'AdjustPrice' => $Items->AdjustPrice,
+                        ]);
+                    }
+
                 }
             }
         }

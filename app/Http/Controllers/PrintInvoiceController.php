@@ -820,11 +820,11 @@ class PrintInvoiceController extends Controller
                             <td>' . $fireRate . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                                $a .= '<td class="tbl_last">' . number_format($DoorsetPrice, 2) . '</td>
+                                <td class="tbl_last">' . number_format($IronmongaryPrice, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
+                            $a .= '<td class="tbl_last">' . number_format($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }else{
@@ -883,11 +883,11 @@ class PrintInvoiceController extends Controller
                             <td>' . $COC . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                                $a .= '<td class="tbl_last">' . number_format($DoorsetPrice, 2) . '</td>
+                                <td class="tbl_last">' . number_format($IronmongaryPrice, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
+                            $a .= '<td class="tbl_last">' . number_format($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }
@@ -4274,9 +4274,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($show->IronmongeryID)) {
                 $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
                 if(!empty($AI->discountprice)){
+                    $IronmongaryPrice = $AI->discountprice;
+                } else{
                     $marginwithcal = 100 - $margin;
                     $testvar = $marginwithcal/100;
-                    $totalcost = $AI->discountprice / $testvar;
+                    $totalcost = $AI->totalprice / $testvar;
                     $IronmongaryPrice = $totalcost;
                 }
             }
