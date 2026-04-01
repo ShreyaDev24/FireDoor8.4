@@ -33,6 +33,7 @@ class GlassGlazingController extends Controller
                 'selected_glazing_system.id as selectedId',
                 'selected_glazing_system.userId as selectedUserId',
 
+                'glass_glazing_system.Configurableitems',
                 'glass_glazing_system.GlassType',
                 'glass_glazing_system.GlazingSystem',
                 'glass_glazing_system.VPAreaSize',
@@ -42,17 +43,6 @@ class GlassGlazingController extends Controller
             ->orderBy('glass_glazing_system.GlassType', 'ASC')
             ->orderBy('glass_glazing_system.GlazingSystem', 'ASC')
             ->get();
-            // DB::transaction(function () use ($items) {
-
-            //     foreach ($items as $val) {
-
-
-            //         // if ($fire) {
-            //             GlassGlazingSystem::where('id', $val->mainId)
-            //                 ->update(['NFR' => $val->NFR,'FD30' => $val->FD30,'FD60' => $val->FD60]);
-            //         // }
-            //     }
-            // });
 
 
         return view('SelectedOptions.glass_glazing_system.index', compact('items'));
