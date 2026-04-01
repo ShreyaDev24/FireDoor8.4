@@ -15,6 +15,10 @@
                         ['name' => 'Halspan',    'value' => 2, 'label' => 'Halspan'],
                         ['name' => 'Flamebreak', 'value' => 7, 'label' => 'Flamebreak'],
                         ['name' => 'Stredor',    'value' => 8, 'label' => 'Stredor'],
+                        ['name' => 'Vicaima',    'value' => 4, 'label' => 'Vicaima'],
+                        ['name' => 'Seadec',    'value' => 5, 'label' => 'Seadec'],
+                        ['name' => 'Deanta',    'value' => 6, 'label' => 'Deanta'],
+                        ['name' => 'MMM',    'value' => 9, 'label' => 'MMM'],
                     ];
 
                     $selectedCore = old('core', $item->Configurableitems ?? null);

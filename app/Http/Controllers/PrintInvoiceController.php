@@ -463,18 +463,7 @@ class PrintInvoiceController extends Controller
             $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
             $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
             $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
-            $IronmongaryPrice = 0;
-            if (!empty($show->IronmongeryID)) {
-                $AI = AddIronmongery::select('discountprice','totalprice')->where('id', $show->IronmongeryID)->first();
-                if(!empty($AI->discountprice)){
-                    $IronmongaryPrice = $AI->discountprice;
-                } else{
-                    $marginwithcal = 100 - $margin;
-                    $testvar = $marginwithcal/100;
-                    $totalcost = $AI->totalprice / $testvar;
-                    $IronmongaryPrice = $totalcost;
-                }
-            }
+            $IronmongaryPrice = $show->IronmongaryPrice;
 
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
