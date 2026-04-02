@@ -759,12 +759,16 @@ $("#AreVPsEqualSizesForLeaf2").change(function () {
 });
 
 $("#lazingIntegrityOrInsulationIntegrity").on('change', function () {
-    glassTypeFilter(false);
+    // glassTypeFilter(false);
     glazingSystemFIlter($("#fireRating").val());
+    glass_glazing_system();
 });
 
 $("#glassType").change(function () {
+    let selectedValue = $(this).val(); // Get the value of the #glassType element
+    $('#GlassType-value').attr('data-value', selectedValue);
     GlassTypeChange();
+    glazing_system();
 });
 
 $("#opGlassType").change(function(){
@@ -1841,6 +1845,7 @@ function FireRatingChange() {
         flatLippingThickness($("#fireRating").val());
         rebatedLippingThickness($("#fireRating").val());
         visionPanelChange();
+        glass_glazing_system();
     }
     IntumescentSeals();
 }
@@ -6235,3 +6240,166 @@ $(document).ready(function () {
         $('#ironmongeryWrapper').hide();
     }
 });
+
+function glass_glazing_system(isstatus = false){
+    let pageId = pageIdentity();
+    var fireRating =$("#fireRating").val();
+    var integrity =  $("#lazingIntegrityOrInsulationIntegrity").val();
+    var GlassIntegrityValue = document.getElementById('GlassIntegrity-value');
+
+    if(GlassIntegrityValue != null  && isstatus == true){
+        GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
+        if(GlassIntegrityValue != ""){
+            integrity = GlassIntegrityValue;
+        }
+    }
+    var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
+    leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+
+    $.ajax({
+        url: $("#glass-glazing-filter").html(),
+        method:"POST",
+        dataType:"Json",
+        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value},
+        success: function(result){
+            var glassTypeInnerHtml = "";
+            if(result.status=="ok"){
+                var data = result.data;
+                var length = result.data.length;
+
+                var GlassTypeValue = $("#glassValueId").val();
+                glassTypeInnerHtml+='<option value="">Select Glass Type</option>';
+                for(var i =0; i<length;i++){
+
+                    if (GlassTypeValue != null) {
+                        GlassTypeValue = $("#glassValueId").val();
+                        var GlassTypeSelected = "";
+                        if(GlassTypeValue == data[i].Key){
+                            GlassTypeSelected = "selected";
+                            GlassTypeChange(GlassTypeValue, '');
+                        }
+                        glassTypeInnerHtml+='<option value="'+data[i].Key+'" '+ GlassTypeSelected +'>'+data[i].GlassType+'</option>';
+                    }else{
+                        glassTypeInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlassType +'</option>';
+                    }
+                }
+
+            } else {
+                glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
+            }
+            $("#glassType").empty().append(glassTypeInnerHtml);
+            $("#glassThickness").val(0);
+        }
+    });
+}
+
+function glazing_system(isIntegrity,isstatus = false){
+    let pageId = pageIdentity();
+    var fireRating =$("#fireRating").val();
+    if(isIntegrity){
+        var fireRating = isIntegrity;
+    }
+    var integrity =  $("#lazingIntegrityOrInsulationIntegrity").val();
+    var glassType =  $("#glassType").val();
+    var GlassTypeValue = $("#GlassType-value").attr("data-value");
+
+    if (GlassTypeValue) {
+        glassType =  GlassTypeValue;
+    }
+    var GlassIntegrityValue = document.getElementById('GlassIntegrity-value');
+    if(GlassIntegrityValue){
+        GlassIntegrityValue = $("#GlassIntegrity-value").data("value");
+        if(GlassIntegrityValue != ""){
+            integrity = GlassIntegrityValue;
+        }
+    }
+    var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
+    leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+    $.ajax({
+        url: $("#glazing-filter").html(),
+        method:"POST",
+        dataType:"Json",
+        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value,glassType:glassType},
+        success: function(result){
+            var glazingSystemInnerHtml = "";
+            if(result.status=="ok"){
+                var data = result.data;
+                var length = result.data.length;
+
+                var GlazingSystemsValue = document.getElementById('GlazingSystems-value');
+
+                glazingSystemInnerHtml+='<option value="">Select Glazing Systems</option>';
+
+                for(var i =0; i<length;i++){
+                    if (GlazingSystemsValue != null) {
+                        GlazingSystemsValue = $("#GlazingSystems-value").data("value");
+                        var GlazingSystemSelected = "";
+                        if(GlazingSystemsValue == data[i].Key){
+                            GlazingSystemSelected = "selected";
+                            GlazingSystemsChange(GlazingSystemsValue,'');
+                        }
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected +'>'+data[i].GlazingSystem+'</option>';
+                    }else{
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlazingSystem +'</option>';
+                    }
+                }
+            } else {
+                glazingSystemInnerHtml += '<option value="">No Glazing Systems Found</option>';
+            }
+            $("#glazingSystems").empty().append(glazingSystemInnerHtml);
+
+            var decodedBeads = JSON.parse(result.GlazingBeads);
+
+            // Remove duplicates + trim
+            var uniqueBeads = [...new Set(decodedBeads.map(b => b.trim()))];
+
+            // Select elements
+            var selectElement = $("#glazingBeads").empty();
+            var selectElement1 = $("#opGlazingBeads").empty();
+            var selectElement2 = $("#SideLight1BeadingType").empty();
+            var selectElement3 = $("#SideLight2BeadingType").empty();
+
+            // Saved values
+            var savedValue = $("#GlazingBeads-value").data("value");
+            var savedValue1 = $("#opGlazingBeads-value").data("value");
+
+            // Default options
+            selectElement.append('<option value="">Select Glazing Beads</option>');
+            selectElement1.append('<option value="">Select Glazing Beads</option>');
+            selectElement2.append('<option value="">Select Beading Type</option>');
+            selectElement3.append('<option value="">Select Beading Type</option>');
+
+            // Function to append options
+            function appendOptions(selectBox) {
+                uniqueBeads.forEach(function(bead) {
+                    var valueWithUnderscores = bead.replace(/ /g, '_');
+
+                    var option = $('<option></option>')
+                        .val(valueWithUnderscores)
+                        .text(bead);
+
+                    selectBox.append(option);
+                });
+            }
+
+            // Apply to all selects
+            appendOptions(selectElement);
+            appendOptions(selectElement1);
+            appendOptions(selectElement2);
+            appendOptions(selectElement3);
+
+            // Set selected values
+            if (isstatus === true) {
+                if (savedValue) {
+                    selectElement.val(savedValue);
+                    selectElement2.val(savedValue);
+                    selectElement3.val(savedValue);
+                }
+
+                if (savedValue1) {
+                    selectElement1.val(savedValue1);
+                }
+            }
+        }
+    });
+}
