@@ -298,13 +298,6 @@
                             </ul>
                         </li>
 
-                        <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
-                            <a href="{{route('folders.index')}}">
-                                <i class="metismenu-icon"></i>
-                                Ironmongery Folder
-                            </a>
-                        </li>
-
                         {{-- Accoustics --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
@@ -670,7 +663,7 @@
                         </li>
                     </ul>
                 </li>
-                @if(Auth::user()->UserType=='1')
+
                 <li
                     class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
                     <a href="#">
@@ -789,8 +782,7 @@
                         </li>
                     </ul>
                 </li>
-                @endif
-                @if(Auth::user()->UserType=='1')
+
                 <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -866,11 +858,40 @@
                             </a>
                         </li> --}}
 
+                        <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
+                            <a href="{{route('folders.index')}}">
+                                <i class="metismenu-icon"></i>
+                                Ironmongery Folder
+                            </a>
+                        </li>
 
+                        <li class="mm-{{ (Request::segment(2) == 'ironmongery-info') ? 'active' : ''}}">
+                            <a href="#" aria-expanded="true">
+                                Ironmongery Info
+                                <i class="metismenu-state-icon">
+                                    <i class="fa fa-caret-down"></i>
+                                </i>
+                            </a>
+                            <ul>
+                                <li class="submm-{{ (Request::segment(3) == 'create') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/create')}}">Create</a>
+                                </li>
+                                <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/records',[0])}}">List</a>
+                                </li>
+                                {{-- <li
+                                    class="submm-{{ (Request::segment(3) == 'add-miscellaneous') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/add-miscellaneous')}}">Add Miscellaneous</a>
+                                </li>
+                                <li class="submm-{{ (Request::segment(3) == 'records-miscellaneous') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/records-miscellaneous',[0])}}">List
+                                        Miscellaneous</a>
+                                </li> --}}
+                            </ul>
+                        </li>
 
                     </ul>
                 </li>
-                 @endif
                 @endif
                 <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
                     <a href="#">
@@ -890,29 +911,6 @@
                             </a>
                         </li>
                     </ul>
-                </li>
-                 <li class="mm-{{ (Request::segment(2) == 'ironmongery-info') ? 'active' : ''}}">
-                            <a href="#" aria-expanded="true">
-                                Ironmongery Info
-                                <i class="metismenu-state-icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </i>
-                            </a>
-                            <ul>
-                                <li class="submm-{{ (Request::segment(3) == 'create') ? 'active' : ''}}">
-                                    <a href="{{route('ironmongery-info/create')}}">Create</a>
-                                </li>
-                                <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
-                                    <a href="{{route('ironmongery-info/records',[0])}}">List</a>
-                                </li>
-
-                            </ul>
-                </li>
-                <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
-                            <a href="{{route('folders.index')}}">
-                                <i class="metismenu-icon"></i>
-                                Ironmongery Folder
-                            </a>
                 </li>
                 <li class="{{ request()->routeIs('help.center') ? 'mm-active' : '' }}">
                     <a href="{{ route('help.center') }}">

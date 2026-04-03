@@ -238,16 +238,6 @@ Route::prefix('admins')->group(function (): void {
     Route::post('/delete', [App\Http\Controllers\AdminController::class,'delete'])->name('admins/delete');
 
 });
-Route::prefix('superadmins')->group(function (): void {
-    Route::get('/add',[App\Http\Controllers\SuperAdminController::class,'add'])->name('superadmins/add');
-    Route::get('/list', [App\Http\Controllers\SuperAdminController::class,'list'])->name('superadmins/list');
-    Route::get('/details/{id}', [App\Http\Controllers\SuperAdminController::class,'details'])->name('superadmins/details');
-    Route::get('/profile', [App\Http\Controllers\SuperAdminController::class,'profile'])->name('superadmins/profile');
-    Route::get('/edit/{id}', [App\Http\Controllers\SuperAdminController::class,'edit'])->name('superadmins/edit');
-    Route::post('/store', [App\Http\Controllers\SuperAdminController::class,'store'])->name('superadmins/store');
-    Route::post('/delete', [App\Http\Controllers\SuperAdminController::class,'delete'])->name('superadmins/delete');
-
-});
 
   ///architect
  Route::prefix('Architect')->group(function (): void {
