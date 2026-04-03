@@ -4,7 +4,7 @@
 <style>
     .dropdown-div{
     left: -48px !important;
-    
+
     }
     .dropdown-menu {
         min-width: 6rem !important;
@@ -66,7 +66,7 @@
                                 </thead>
                                 <tbody>
                                 @foreach($data as $row)
-                                
+
                                 <tr>
                                     @if(Auth::user()->UserType=='1')
                                     <td><a href="{{url('company/details/'.$row->comId)}}">{{$row->CompanyName}}</a></td>
@@ -79,6 +79,8 @@
                                       Admin
                                       @elseif($row->UserType=="3")
                                       User
+                                      @elseif($row->UserType=="1")
+                                      Super Admin
                                       @endif
 
                                     </td>
@@ -100,7 +102,7 @@
                                         <a class="user_delete" data-id="{{ $row->id }}"><i
                                             class="fa fa-trash fa-lg" style="color: red"></i></a>
                                       @endif
-                                        
+
                                     </td>
 
                                     @endif
