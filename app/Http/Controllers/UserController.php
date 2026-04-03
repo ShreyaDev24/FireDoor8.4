@@ -28,7 +28,16 @@ class UserController extends Controller
         if (Auth::user()->UserType=='2') {
             // $data = User::whereIn('UserType',[2,3])->where('CreatedBy',Auth::user()->id)->orderBy('id','desc')->get();
             $myCreatedUser = myCreatedUser();
-            $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
+            $data = User::where(function($query) {
+                        $query->where(function($q) {
+                                $q->where('UserType', 1)
+                                ->where('is_superadmin', 1);
+                            })
+                            ->orWhereIn('UserType', [2,3]);
+                    })
+                    ->whereIn('CreatedBy', $myCreatedUser)
+                    ->orderBy('id','desc')
+                    ->get();
             return view('Users.UserList',['data' => $data]);
         } elseif (Auth::user()->UserType=='1') {
             $data = User::join('companies','companies.UserId','users.CreatedBy')->where('users.UserType',3)->orderBy('users.id','desc')->select('users.*','companies.CompanyName','companies.id as comId')->get();

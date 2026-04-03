@@ -79,6 +79,8 @@
                                       Admin
                                       @elseif($row->UserType=="3")
                                       User
+                                      @elseif($row->UserType=="1")
+                                      Super Admin
                                       @endif
 
                                     </td>
