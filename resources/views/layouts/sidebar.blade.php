@@ -659,6 +659,11 @@
                                     class="submm-{{ (Request::segment(1) == 'user' && Request::segment(2) == 'add') ? 'active' : ''}}">
                                     <a href="{{route('user/add')}}">Add User</a>
                                 </li>
+
+                                <li
+                                    class="submm-{{ (Request::segment(1) == 'superadmins' && Request::segment(2) == 'add') ? 'active' : ''}}">
+                                    <a href="{{route('superadmins/add')}}">Add Super Admin</a>
+                                </li>
                             </ul>
                         </li>
 
