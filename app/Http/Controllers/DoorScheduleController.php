@@ -775,7 +775,7 @@ class DoorScheduleController extends Controller
 
                 $Item = Item::where('itemId', $itemid)->update([
                     'DoorsetPrice' => $GTSellPriceTotal,
-                    'AdjustPrice' => $data->DoorsetPrice
+                    'AdjustPrice' => 0
                 ]);
             }
         }else if ($doorMode === 'range' || $doorMode === 'multiple') {
@@ -853,7 +853,7 @@ class DoorScheduleController extends Controller
 
                     $Item = Item::where('itemId', $itemid)->update([
                         'DoorsetPrice' => $GTSellPriceTotal,
-                        'AdjustPrice' => $data->DoorsetPrice
+                        'AdjustPrice' => 0
                     ]);
                 }
             }
