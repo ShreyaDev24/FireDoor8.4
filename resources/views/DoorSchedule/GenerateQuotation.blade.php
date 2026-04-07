@@ -656,7 +656,7 @@
                             </div>
                             <div class="main-card mb-3" id="quotation-item-list">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped">
+                                    <table class="table table-bordered table-striped" id="itemTable">
                                         <thead class="table-header-bg">
                                             <tr class="text-white">
                                                 <th>Line</th>
@@ -1194,6 +1194,25 @@
 
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
+            $(document).ready(function () {
+
+                let table = $('#itemTable').DataTable({
+                    paging: false,
+                    ordering: true,
+                    searching: false,
+                    info: false,
+                    responsive: true,
+                    scrollX: false,
+                    autoWidth: false,
+
+                    order: [], // ✅ VERY IMPORTANT (removes default sorting)
+
+                    columnDefs: [
+                        { orderable: false, targets: [0, -1] } // disable sorting for first & last column
+                    ]
+                });
+
+            });
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
