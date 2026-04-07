@@ -1196,18 +1196,22 @@
         <script>
             $(document).ready(function () {
 
-               let table = $('#itemTable').DataTable({
-                    paging: false,        // ❌ remove pagination
+                let table = $('#itemTable').DataTable({
+                    paging: false,
                     ordering: true,
                     searching: false,
-                    info: false,          // ❌ remove "Showing X entries"
+                    info: false,
                     responsive: true,
-                    scrollX: false,       // ❌ disable horizontal scroll
-                    autoWidth: false,     // ✅ prevent forced width
+                    scrollX: false,
+                    autoWidth: false,
+
+                    order: [], // ✅ VERY IMPORTANT (removes default sorting)
+
                     columnDefs: [
-                        { orderable: false, targets: [0, -1] }
+                        { orderable: false, targets: [0, -1] } // disable sorting for first & last column
                     ]
                 });
+
             });
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
             $("#ManualQuotationStatus").click(function(e) {
