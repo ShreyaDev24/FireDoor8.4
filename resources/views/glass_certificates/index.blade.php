@@ -30,6 +30,7 @@
                             <th>Glass Thickness</th>
                             <th>Reference</th>
                             <th>Fire Rating</th>
+                            <th>Document</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -43,6 +44,24 @@
                             <td>{{ $certificate->certificate_reference }}</td>
                             <td>{{ $certificate->fire_rating }}</td>
                             <td>
+                                @if(!empty($certificate->document_path))
+                                    <div class="d-flex align-items-center mb-2 p-2 border rounded bg-light">
+                                        <i class="fa fa-file-pdf-o text-danger fs-4 me-2"></i>
+
+                                        <div class="flex-grow-1">
+                                            <strong>PDF</strong>
+                                        </div>
+
+                                        <a href="{{ asset($certificate->document_path) }}"
+                                        target="_blank"
+                                        class="btn btn-sm btn-outline-primary">
+                                            View
+                                        </a>
+                                    </div>
+                                @endif
+                            </td>
+                            <td>
+                                @if($certificate->user_id != 1)
                                 <a href="{{ route('glass-certificates.edit', $certificate) }}" class="btn btn-sm btn-warning">Edit</a>
 
                                 <form action="{{ route('glass-certificates.destroy', $certificate) }}"
@@ -53,7 +72,9 @@
                                         Delete
                                     </button>
                                 </form>
+                                @endif
                             </td>
+
                         </tr>
                         @endforeach
                     </tbody>
