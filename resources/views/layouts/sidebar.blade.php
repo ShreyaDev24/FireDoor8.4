@@ -711,7 +711,6 @@
                         </li>
                     </ul>
                 </li>
-                @if(Auth::user()->UserType=='1')
                 <li
                     class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
                     <a href="#">
@@ -830,7 +829,7 @@
                         </li>
                     </ul>
                 </li>
-                @endif
+
                 @if(Auth::user()->UserType=='1')
                 <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">
                     <a href="#">
