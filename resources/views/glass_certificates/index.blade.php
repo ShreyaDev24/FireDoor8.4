@@ -25,10 +25,11 @@
                     <thead>
                         <tr>
                             <th>#</th>
+                            <th>Brand Of Core</th>
                             <th>Glass Type</th>
+                            <th>Glass Thickness</th>
                             <th>Reference</th>
                             <th>Fire Rating</th>
-                            <th>Expiry</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
@@ -36,10 +37,11 @@
                         @foreach($certificates as $certificate)
                         <tr>
                             <td>{{ $loop->iteration }}</td>
+                            <td>{{ configurationDoor($certificate->brand_of_core) }}</td>
                             <td>{{ $certificate->glassType->GlassType ?? '-' }}</td>
+                            <td>{{ $certificate->glass_thickness }}</td>
                             <td>{{ $certificate->certificate_reference }}</td>
                             <td>{{ $certificate->fire_rating }}</td>
-                            <td>{{ $certificate->expiry_date }}</td>
                             <td>
                                 <a href="{{ route('glass-certificates.edit', $certificate) }}" class="btn btn-sm btn-warning">Edit</a>
 

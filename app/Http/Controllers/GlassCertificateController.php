@@ -72,6 +72,7 @@ class GlassCertificateController extends Controller
         $request->validate([
             'brand_of_core' => 'required|integer',
             'fire_rating' => 'required',
+            'glass_thickness' => 'required',
             'glass_type_id' => 'required|exists:glass_type,id',
             'expiry_date' => 'nullable|date',
             'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
@@ -88,6 +89,7 @@ class GlassCertificateController extends Controller
         GlassCertificate::create([
             'user_id' => auth()->id(),
             'glass_type_id' => $request->glass_type_id,
+            'glass_thickness' => $request->glass_thickness,
             'brand_of_core' => $request->brand_of_core,
             'fire_rating' => $request->fire_rating,
             'certificate_reference' => $request->certificate_reference,

@@ -321,6 +321,47 @@ class ItemListController extends Controller
     }
 
 
+    public function glassTypeFilterId(Request $request): void{
+        $userIds = CompanyUsers();
+        $pageId = $request->pageId;
+        $glassType = $request->glassType;
+        $userType = Auth::user()->UserType;
+        $fireRating = $request->fireRating;
+        if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
+            $request->fireRating = 'FD30';
+        }elseif($request->fireRating == 'FD60' || $request->fireRating == 'FD60s'){
+            $request->fireRating = 'FD60';
+        }
+
+        $configurationDoor = configurationDoor($pageId);
+        $fireRatingDoor = fireRatingDoor($request->fireRating);
+        if ($userType=="1" ||$userType=="4") {
+            $glassThikness = GlassType::where($configurationDoor,$pageId)->where('id',$glassType)->where($fireRatingDoor,$request->fireRating)->where('glass_type.EditBy',1)->get();
+        } elseif ($request->fireRating == 'NFR') {
+            $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
+            ->where('glass_type.id',$glassType)
+            ->wherein('glass_type.EditBy',$userIds)
+            // ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
+            ->groupBy('glass_type.Key')
+            ->get(['glass_type.*']);
+        } else{
+
+
+            $glassThikness = GlassType::where('glass_type.'.$configurationDoor,$pageId)
+            ->where('glass_type.id',$glassType)
+            ->wherein('glass_type.EditBy',$userIds)
+            ->where('glass_type.'.$fireRatingDoor,$request->fireRating)
+            ->get(['glass_type.*']);
+        }
+
+        if(!empty($glassThikness) && count( $glassThikness)){
+            echo json_encode(['status'=>'ok','data'=> $glassThikness]);
+        } else {
+            echo json_encode(['status'=>'error','data'=> '']);
+        }
+    }
+
+
 
     // public function fileterGlazingSystem(Request $request){
     //     $pageId = $request->pageId;

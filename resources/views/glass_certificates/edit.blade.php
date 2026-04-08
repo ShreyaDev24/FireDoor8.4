@@ -72,6 +72,33 @@
         // 🔥 IMPORTANT: auto-load on edit page
         loadGlassTypes();
 
+        function loadGlassThickness(id = null,type=""){
+            let glassType =  $("#glass_type").val();
+
+            if(glassType != ''){
+                let pageId = $("#brand_of_core").val();
+                let fireRating = $("#fire_rating").val();
+                $.ajax({
+                    url:  $("#glass-type-filter").html(),
+                    method:"POST",
+                    dataType:"Json",
+                    data:{pageId:pageId,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
+                    success: function(result){
+                        if(result.status=="ok"){
+                            var innerHtml ='';
+                            var data = result.data;
+                            var length = result.data.length;
+
+                            $("#glass_thickness").val(data[0].GlassThickness);
+                        }else{
+                            $("#glass_thickness").val(0);
+                        }
+                    }
+                });
+            }
+        }
+
+        $('#glass_type').on('change', loadGlassThickness);
     });
 </script>
 @endsection

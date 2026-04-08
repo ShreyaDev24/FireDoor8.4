@@ -38,17 +38,19 @@
 </div>
 
 <div class="mb-3">
-    <label>Certificate Reference</label>
-    <input type="text" name="certificate_reference" id="certificate_reference"
+    <label>Glass Thickness</label>
+    <input type="number" name="glass_thickness" id="glass_thickness"
            class="form-control"
-           value="{{ old('certificate_reference', $glassCertificate->certificate_reference ?? '') }}">
+           value="{{ old('glass_thickness', $glassCertificate->glass_thickness ?? '') }}" readonly>
+    <div hidden id="glass-type-filter">{{route('items/glass-type-filter-ID')}}</div>
+    <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
 </div>
 
 <div class="mb-3">
-    <label>Expiry Date</label>
-    <input type="date" name="expiry_date"
+    <label>Manufacturer</label>
+    <input type="text" name="certificate_reference" id="certificate_reference"
            class="form-control"
-           value="{{ old('expiry_date', $glassCertificate->expiry_date ?? '') }}">
+           value="{{ old('certificate_reference', $glassCertificate->certificate_reference ?? '') }}">
 </div>
 
 <div class="mb-3">
