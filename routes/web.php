@@ -326,6 +326,7 @@ Route::prefix('items')->group(function (): void {
     Route::post('/glazing-filter',[App\Http\Controllers\ItemListController::class,'GlazingFilter'])->name('items/glazing-filter');
     Route::post('filter-glazing-system',[App\Http\Controllers\ItemListController::class,'filter'])->name('items/filter-glazing-system');
     Route::post('/glass-type-filter',[App\Http\Controllers\ItemListController::class,'glassTypeFilter'])->name('items/glass-type-filter');
+    Route::post('/glass-type-filter-ID',[App\Http\Controllers\ItemListController::class,'glassTypeFilterId'])->name('items/glass-type-filter-ID');
     Route::post('/overpanel-glass-type-filter',[App\Http\Controllers\ItemListController::class,'overpanelglassTypeFilter'])->name('items/overpanel-glass-type-filter');
     Route::post('/glazing-system-filter',[App\Http\Controllers\ItemListController::class,'fileterGlazingSystem'])->name('items/glazing-system-filter');
     Route::post('/liping-glazing-system-filter',[App\Http\Controllers\ItemListController::class,'LipingGlazingSystem'])->name('items/liping-glazing-system-filter');

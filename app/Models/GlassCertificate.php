@@ -14,6 +14,7 @@ class GlassCertificate extends Model
     protected $fillable = [
         'user_id',
         'glass_type_id',
+        'glass_thickness',
         'brand_of_core',
         'fire_rating',
         'certificate_reference',

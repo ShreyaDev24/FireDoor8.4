@@ -13,7 +13,10 @@ class GlassCertificateController extends Controller
 {
     public function index()
     {
+        $auth = auth()->user();
+
         $certificates = GlassCertificate::with(['glassType', 'user'])
+            ->whereIn('user_id', [$auth->id, 1])
             ->latest()
             ->paginate(10);
 
@@ -72,6 +75,7 @@ class GlassCertificateController extends Controller
         $request->validate([
             'brand_of_core' => 'required|integer',
             'fire_rating' => 'required',
+            'glass_thickness' => 'required',
             'glass_type_id' => 'required|exists:glass_type,id',
             'expiry_date' => 'nullable|date',
             'document' => 'nullable|file|mimes:pdf,jpg,jpeg,png,doc,docx|max:10240',
@@ -88,6 +92,7 @@ class GlassCertificateController extends Controller
         GlassCertificate::create([
             'user_id' => auth()->id(),
             'glass_type_id' => $request->glass_type_id,
+            'glass_thickness' => $request->glass_thickness,
             'brand_of_core' => $request->brand_of_core,
             'fire_rating' => $request->fire_rating,
             'certificate_reference' => $request->certificate_reference,
@@ -202,12 +207,14 @@ class GlassCertificateController extends Controller
             $query->whereNotNull('FD60');
         }
 
-        $glassTypes = $query
-            ->Join('selected_glass_type', function($join): void {
-                    $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                })
+        $auth = auth()->user();
+
+        $glassTypes = $query->leftJoin('selected_glass_type as slt', function ($join) use ($auth) {
+                $join->on('glass_type.id', '=', 'slt.glass_id')
+                    ->where('slt.editBy', $auth->id);   // use userId (recommended)
+            })
+            ->whereIn('glass_type.EditBy', [$auth->id, 1])
             ->select('glass_type.id', 'glass_type.GlassType', 'glass_type.GlassThickness')
-            ->where('selected_glass_type.editBy',Auth::user()->id)
             ->orderBy('glass_type.GlassType')
             ->get();
 
