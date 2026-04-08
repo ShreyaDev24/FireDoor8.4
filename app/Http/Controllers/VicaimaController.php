@@ -239,6 +239,13 @@ class VicaimaController extends Controller
 
         /* ================= IRONMONGERY (FIXED) ================= */
         $start = microtime(true);
+        if(auth()->user()->UserType == 2){
+            $UserId = [1,auth()->user()->id];
+        }elseif(auth()->user()->UserType == 3){
+                $UserId = [1,auth()->user()->CreatedBy];
+        }else{
+                $UserId = [];
+        }
         if (Auth::user()->UserType == 1) {
             $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
         }else{
