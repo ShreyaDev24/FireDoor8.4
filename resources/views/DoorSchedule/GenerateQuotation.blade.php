@@ -65,6 +65,16 @@
             text-transform: uppercase;
             text-align: center;
         }
+        #itemTable {
+            width: 100% !important;
+            table-layout: fixed;
+        }
+
+        #itemTable th,
+        #itemTable td {
+            white-space: normal !important;
+            word-wrap: break-word;
+        }
     </style>
     <div class="app-main__outer">
         <div class="app-main__inner p-0">
@@ -1201,14 +1211,13 @@
                     ordering: true,
                     searching: false,
                     info: false,
-                    responsive: true,
+                    responsive: false, // ❌ disable
                     scrollX: false,
                     autoWidth: false,
-
-                    order: [], // ✅ VERY IMPORTANT (removes default sorting)
+                    order: [],
 
                     columnDefs: [
-                        { orderable: false, targets: [0, -1] } // disable sorting for first & last column
+                        { orderable: false, targets: [0, -1] }
                     ]
                 });
 
