@@ -61,7 +61,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if($certificate->user_id != 1)
+                                @if($certificate->user_id != 1 || Auth::user()->UserType == 1)
                                 <a href="{{ route('glass-certificates.edit', $certificate) }}" class="btn btn-sm btn-warning">Edit</a>
 
                                 <form action="{{ route('glass-certificates.destroy', $certificate) }}"
