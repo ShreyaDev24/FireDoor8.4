@@ -21,7 +21,7 @@
                     <div class="alert alert-success">{{ session('success') }}</div>
                 @endif
 
-                <table class="table table-bordered">
+                <table class="table table-bordered" id="certificateTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -83,5 +83,16 @@
         </div>
     </div>
 </div>
-{{ $certificates->links() }}
+@endsection
+@section('js')
+<script>
+    $(document).ready(function () {
+        $('#certificateTable').DataTable({
+            "pageLength": 10,
+            "ordering": true,
+            "searching": true,
+            "lengthChange": true
+        });
+    });
+</script>
 @endsection
