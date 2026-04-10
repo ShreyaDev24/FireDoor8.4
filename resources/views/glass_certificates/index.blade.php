@@ -87,12 +87,18 @@
 @section('js')
 <script>
     $(document).ready(function () {
-        $('#certificateTable').DataTable({
-            "pageLength": 10,
-            "ordering": true,
-            "searching": true,
-            "lengthMenu": [ [10, 25, 50, -1], [10, 25, 50, "All"] ]
+
+        let table = $('#certificateTable').DataTable({
+            pageLength: 10,
+            lengthMenu: [10, 25, 50, 100],
+            ordering: true,
+            searching: true,
+            responsive: true,
+            columnDefs: [
+                { orderable: false, targets: [0, -1] }
+            ]
         });
+
     });
 </script>
 @endsection

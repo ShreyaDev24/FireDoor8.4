@@ -17,8 +17,7 @@ class GlassCertificateController extends Controller
 
         $certificates = GlassCertificate::with(['glassType', 'user'])
             ->whereIn('user_id', [$auth->id, 1])
-            ->latest()
-            ->paginate(10);
+            ->get();
 
         return view('glass_certificates.index', compact('certificates'));
     }
