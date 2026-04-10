@@ -3040,6 +3040,18 @@ class OptionController extends Controller
                 if($configurable === '8'){
                     $data->Stredor = 8;
                 }
+                if($configurable === '4'){
+                    $data->VicaimaDoorCore = 4;
+                }
+                if($configurable === '5'){
+                    $data->Seadec = 5;
+                }
+                if($configurable === '6'){
+                    $data->Deanta = 6;
+                }
+                if($configurable === '9'){
+                    $data->MMM = 9;
+                }
 
                 $data->NFR = NULL;
 
