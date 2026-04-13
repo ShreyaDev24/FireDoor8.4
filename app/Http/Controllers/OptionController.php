@@ -41,6 +41,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\ConfigurableItems;
 use Illuminate\Support\Facades\DB;
 use App\Models\{ScreenGlassType, ScreenGlazingType, OverpanelGlassGlazing,SelectedOverpanelGlassGlazing, SelectedScreenGlass, SelectedScreenGlazing};
+use App\Imports\IntumescentSealsImport;
 
 class OptionController extends Controller
 {
@@ -4834,5 +4835,16 @@ class OptionController extends Controller
         $firerating = fireRatingDoor($request->fireRating);
         $data = Option::where('configurableitems',$configurationDoor)->where('firerating',$firerating)->where('OptionSlug','side_light_glazing_beads')->get();
         return json_encode(['status'=>'ok','data'=> $data]);
+    }
+
+    public function importIntumescent(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|mimes:xlsx,xls,csv'
+        ]);
+
+        Excel::import(new IntumescentSealsImport, $request->file('file'));
+
+        return back()->with('success', 'Data Imported Successfully');
     }
 }

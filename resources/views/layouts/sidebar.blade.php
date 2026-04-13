@@ -54,18 +54,21 @@
             </button>
         </span>
     </div>
+    @php
+    $restrictedModules = ['dashboard', 'selected_option', 'setting'];
+    $isOwnCompany = Auth::id() == (session('active_company_user_id') ?? Auth::id());
+    @endphp
     <div class="scrollbar-sidebar">
         <div class="app-sidebar__inner">
             <ul class="vertical-nav-menu">
-
-                <li class="submm-{{ (Request::segment(2) == '') ? 'active' : ''}}">
-                    <a href="{{route('Dashboard')}}">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-dashboard"></i>
-                        </i>
-                        Dashboards
-                    </a>
-                </li>
+               @if($isOwnCompany || in_array('dashboard', $modules))
+                    <li class="mm-{{ Request::segment(1) == 'dashboard' ? 'active' : '' }}">
+                        <a href="{{ url('dashboard') }}">
+                            <i class="metismenu-icon"><i class="fa fa-dashboard"></i></i>
+                            Dashboard
+                        </a>
+                    </li>
+                @endif
 
 
 
@@ -256,25 +259,6 @@
                         </li>
                     </ul>
                 </li>
-                <li class="mm-{{ (Request::segment(1) == 'notification') ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-table"></i>
-                        </i>
-                        Notification
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'index') ? 'active' : ''}}">
-                            <a href="{{route('admin.notifications.index')}}">
-                                <i class="metismenu-icon"></i>
-                                Send Notification
-                            </a>
-                        </li>
-                    </ul>
-                </li>
                 <li
                     class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}{{ (Request::segment(1) == 'options') ? 'active' : ''}}{{ (Request::segment(1) == 'non-configural-items') ? 'active' : ''}}">
                     <a href="#">
@@ -292,23 +276,6 @@
                                 <i class="metismenu-icon"></i>
                                 Tooltip
                             </a>
-                        </li>
-                        <li
-                            class="mm-{{ (Request::segment(2) == 'core_certificates' || Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
-                            <a href="#" aria-expanded="true">
-                                Certificates
-                                <i class="metismenu-state-icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </i>
-                            </a>
-                            <ul>
-                                <li class="submm-{{ (Request::segment(2) == 'core_certificates') ? 'active' : ''}}">
-                                    <a href="{{ route('core_certificates.index') }}">Core Certificates</a>
-                                </li>
-                                <li class="submm-{{ (Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
-                                    <a href="{{ route('glass-certificates.index') }}">Glass Certificates</a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="submm-{{ (Request::segment(1) == 'non-configural-items') ? 'active' : ''}}">
                             <a href="{{route('non-configural-items/list')}}">
@@ -332,13 +299,6 @@
                                 </li>
 
                             </ul>
-                        </li>
-
-                        <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
-                            <a href="{{route('folders.index')}}">
-                                <i class="metismenu-icon"></i>
-                                Ironmongery Folder
-                            </a>
                         </li>
 
                         {{-- Accoustics --}}
@@ -380,7 +340,7 @@
                         {{-- Door Leaf Facing Value --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
-                            <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
+                            <a href="{{ route('Finish-Cost.index') }}">Finish Cost</a>
                         </li>
 
                         {{-- Glass Type --}}
@@ -464,64 +424,7 @@
 
 
                 @if($loginUser->UserType=='2' || $loginUser->UserType=='3')
-
-                {{-- @if($loginUser->UserType=='2')
-                <li class="mm-{{ (Request::segment(1) == 'items') ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-table"></i>
-                        </i>
-                        Architect
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li>
-                            <a href="{{route('Architect/add')}}">
-                                <i class="metismenu-icon"></i>
-                                Add Architect
-                            </a>
-                        </li>
-                        <li>
-                            <a href="{{route('Architect/list')}}">
-                                <i class="metismenu-icon"></i>
-                                Architect List
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-                @endif --}}
-
-                {{-- @if(Auth::user()->UserType=='2')
-                <li class="mm-{{ (Request::segment(1) == 'admins') ? 'active' : ''}}">
-                    <a href="#">
-                        <i class="metismenu-icon">
-                            <i class="fa fa-building"></i>
-                        </i>
-                        Admin
-                        <i class="metismenu-state-icon">
-                            <i class="fa fa-caret-down"></i>
-                        </i>
-                    </a>
-                    <ul>
-                        <li class="submm-{{ (Request::segment(2) == 'add') ? 'active' : ''}}">
-                            <a href="{{route('admins/add')}}">
-                                <i class="metismenu-icon"></i>
-                                Add Admin
-                            </a>
-                        </li>
-
-                        <li class="submm-{{ (Request::segment(2) == 'list') ? 'active' : ''}}">
-                            <a href="{{route('admins/list')}}">
-                                <i class="metismenu-icon"></i>
-                                Admin List
-                            </a>
-                        </li>
-                    </ul>
-                </li>
-
-                @endif --}}
+                @if($isOwnCompany || in_array('main_contractors', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'customer') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -547,7 +450,8 @@
                         </li>
                     </ul>
                 </li>
-
+                @endif
+                @if($isOwnCompany || in_array('projects', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'project') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -583,6 +487,8 @@
                         </li> --}}
                     </ul>
                 </li>
+                @endif
+                @if($isOwnCompany || in_array('quotation', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'quotation') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -609,7 +515,8 @@
                         </li>
                     </ul>
                 </li>
-
+                @endif
+                @if($isOwnCompany || in_array('favorites', $modules))
                 <li class="mm-{{ Request::segment(1) == 'favorites' ? 'active' : '' }}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -629,11 +536,12 @@
                         </li>
                     </ul>
                 </li>
-
+                @endif
 
 
                 @if(Auth::user()->UserType=='2')
 
+                @if($isOwnCompany || in_array('survey', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'survey') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -659,7 +567,8 @@
                         </li>
                     </ul>
                 </li>
-
+                @endif
+                @if($isOwnCompany || in_array('user', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'user' ||Request::segment(1) == 'admins') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -695,11 +604,6 @@
                                     class="submm-{{ (Request::segment(1) == 'user' && Request::segment(2) == 'add') ? 'active' : ''}}">
                                     <a href="{{route('user/add')}}">Add User</a>
                                 </li>
-
-                                <li
-                                    class="submm-{{ (Request::segment(1) == 'superadmins' && Request::segment(2) == 'add') ? 'active' : ''}}">
-                                    <a href="{{route('superadmins/add')}}">Add Super Admin</a>
-                                </li>
                             </ul>
                         </li>
 
@@ -711,6 +615,9 @@
                         </li>
                     </ul>
                 </li>
+                @endif
+
+                @if($isOwnCompany || in_array('selected_option', $modules))
                 <li
                     class="mm-{{ (Request::segment(1) == 'options' && (Request::segment(2) == 'selected' || Request::segment(2) == 'select' || Request::segment(2) == 'selected1') || Request::segment(1) == 'options') ? 'active' : ''}}">
                     <a href="#">
@@ -760,7 +667,7 @@
                         {{-- Door Leaf Facing Value --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Finish-Cost') ? 'active' : '' }}">
-                            <a href="{{ route('Finish-Cost.index') }}">Finish Coste</a>
+                            <a href="{{ route('Finish-Cost.index') }}">Finish Cost</a>
                         </li>
 
                         {{-- Glass Type --}}
@@ -829,8 +736,8 @@
                         </li>
                     </ul>
                 </li>
-
-                @if(Auth::user()->UserType=='1')
+                @endif
+                @if($isOwnCompany || in_array('setting', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'setting') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -847,23 +754,6 @@
                                 <i class="metismenu-icon"></i>
                                 General
                             </a>
-                        </li>
-                        <li
-                            class="mm-{{ (Request::segment(2) == 'core_certificates' || Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
-                            <a href="#" aria-expanded="true">
-                                Certificates
-                                <i class="metismenu-state-icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </i>
-                            </a>
-                            <ul>
-                                <li class="submm-{{ (Request::segment(2) == 'core_certificates') ? 'active' : ''}}">
-                                    <a href="{{ route('core_certificates.index') }}">Core Certificates</a>
-                                </li>
-                                <li class="submm-{{ (Request::segment(2) == 'glass-certificates') ? 'active' : ''}}">
-                                    <a href="{{ route('glass-certificates.index') }}">Glass Certificates</a>
-                                </li>
-                            </ul>
                         </li>
                         <li class="submm-{{ (Request::segment(2) == 'mail-Format') ? 'active' : ''}}">
                             <a href="{{route('settingpdf')}}">
@@ -923,12 +813,42 @@
                             </a>
                         </li> --}}
 
+                        <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
+                            <a href="{{route('folders.index')}}">
+                                <i class="metismenu-icon"></i>
+                                Ironmongery Folder
+                            </a>
+                        </li>
 
+                        <li class="mm-{{ (Request::segment(2) == 'ironmongery-info') ? 'active' : ''}}">
+                            <a href="#" aria-expanded="true">
+                                Ironmongery Info
+                                <i class="metismenu-state-icon">
+                                    <i class="fa fa-caret-down"></i>
+                                </i>
+                            </a>
+                            <ul>
+                                <li class="submm-{{ (Request::segment(3) == 'create') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/create')}}">Create</a>
+                                </li>
+                                <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/records',[0])}}">List</a>
+                                </li>
+                                {{-- <li
+                                    class="submm-{{ (Request::segment(3) == 'add-miscellaneous') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/add-miscellaneous')}}">Add Miscellaneous</a>
+                                </li>
+                                <li class="submm-{{ (Request::segment(3) == 'records-miscellaneous') ? 'active' : ''}}">
+                                    <a href="{{route('ironmongery-info/records-miscellaneous',[0])}}">List
+                                        Miscellaneous</a>
+                                </li> --}}
+                            </ul>
+                        </li>
 
                     </ul>
                 </li>
-                 @endif
                 @endif
+                @if($isOwnCompany || in_array('order', $modules))
                 <li class="mm-{{ (Request::segment(1) == 'order') ? 'active' : ''}}">
                     <a href="#">
                         <i class="metismenu-icon">
@@ -948,29 +868,8 @@
                         </li>
                     </ul>
                 </li>
-                 <li class="mm-{{ (Request::segment(2) == 'ironmongery-info') ? 'active' : ''}}">
-                            <a href="#" aria-expanded="true">
-                                Ironmongery Info
-                                <i class="metismenu-state-icon">
-                                    <i class="fa fa-caret-down"></i>
-                                </i>
-                            </a>
-                            <ul>
-                                <li class="submm-{{ (Request::segment(3) == 'create') ? 'active' : ''}}">
-                                    <a href="{{route('ironmongery-info/create')}}">Create</a>
-                                </li>
-                                <li class="submm-{{ (Request::segment(3) == 'records') ? 'active' : ''}}">
-                                    <a href="{{route('ironmongery-info/records',[0])}}">List</a>
-                                </li>
-
-                            </ul>
-                </li>
-                <li class="mm-{{ (Request::segment(2) == 'folders.index') ? 'active' : ''}}">
-                            <a href="{{route('folders.index')}}">
-                                <i class="metismenu-icon"></i>
-                                Ironmongery Folder
-                            </a>
-                </li>
+                @endif
+                @if($isOwnCompany || in_array('help', $modules))
                 <li class="{{ request()->routeIs('help.center') ? 'mm-active' : '' }}">
                     <a href="{{ route('help.center') }}">
                         <i class="metismenu-icon">
@@ -979,6 +878,8 @@
                         Help Center
                     </a>
                 </li>
+                @endif
+                @endif
                 @endif
 
                 @if($loginUser->UserType=='4')

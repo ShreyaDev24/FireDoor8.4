@@ -274,13 +274,31 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="widget-content-left  ml-3 header-user-info">
+                                <div class="widget-content-left ml-3 header-user-info">
+
+                                    <!-- 👤 User Info -->
                                     <div class="widget-heading" style="color:white">
-                                        {{Auth::user()->FirstName}}
+                                        {{ $activeUser->FirstName ?? Auth::user()->FirstName }}
                                     </div>
+
                                     <div class="widget-subheading" style="color:white">
-                                        {{Auth::user()->UserEmail}}
+                                        {{ $activeUser->UserEmail ?? Auth::user()->UserEmail }}
                                     </div>
+
+                                    <!-- 🔽 Company Dropdown -->
+                                    @if (Auth::user()->UserType == '2' && Auth::user()->CreatedBy != ''))
+                                    <div class="mt-2">
+                                        <select id="company_switch" class="form-control form-control-sm">
+                                            @foreach($companies as $company)
+                                                <option value="{{ $company->id }}"
+                                                    {{ session('active_company_id') == $company->id ? 'selected' : '' }}>
+                                                    {{ $company->CompanyName }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @endif
+
                                 </div>
 
                             </div>
@@ -480,6 +498,26 @@
         }
         getNotification();
         // document.querySelector('.app-container').addEventListener('click', getNotification);
+    });
+
+    $('#company_switch').change(function(){
+
+        var companyId = $(this).val();
+
+        $.ajax({
+            url: '/admins/switch-company', // ✅ MUST MATCH ROUTE
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content'),
+                company_id: companyId
+            },
+            success: function(res){
+                if(res.status){
+                    location.reload();
+                }
+            }
+        });
+
     });
 </script>
 
