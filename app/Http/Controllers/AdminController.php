@@ -207,4 +207,85 @@ class AdminController extends Controller
             return redirect()->route('user/list');
         }
     }
+
+    public function edit_superadmin($id)
+    {
+        $user = DB::table('users')->where('id', $id)->first();
+
+        $assignedCompanyIds = DB::table('user_company_map')
+            ->where('user_id', $id)
+            ->pluck('company_id');
+
+        $assignedModules = DB::table('user_module_access')
+            ->where('user_id', $id)
+            ->pluck('module_name')
+            ->unique()
+            ->values();
+
+        return response()->json([
+            'status' => true,
+            'user' => $user,
+            'assigned_company_ids' => $assignedCompanyIds,
+            'assigned_modules' => $assignedModules
+        ]);
+    }
+
+    public function update_superadmin_access(Request $request, $id)
+    {
+        $request->validate([
+            'company_ids' => 'required|array|min:1',
+            'modules' => 'required|array|min:1'
+        ]);
+
+        DB::table('user_company_map')->where('user_id', $id)->delete();
+
+        foreach ($request->company_ids as $companyId) {
+            DB::table('user_company_map')->insert([
+                'user_id' => $id,
+                'company_id' => $companyId,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+        }
+
+        DB::table('user_module_access')->where('user_id', $id)->delete();
+
+        foreach ($request->company_ids as $companyId) {
+            foreach ($request->modules as $module) {
+                DB::table('user_module_access')->insert([
+                    'user_id' => $id,
+                    'company_id' => $companyId,
+                    'module_name' => $module,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+        }
+
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Access updated successfully'
+        ]);
+    }
+    public function switch_company(Request $request)
+    {
+        $company = DB::table('companies')->where('id', $request->company_id)->first();
+
+        if (!$company) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Company not found'
+            ]);
+        }
+
+        session([
+            'active_company_id' => $company->id,
+            'active_company_user_id' => $company->UserId,
+        ]);
+
+        return response()->json([
+            'status' => true
+        ]);
+    }
 }
