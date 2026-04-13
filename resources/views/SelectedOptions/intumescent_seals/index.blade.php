@@ -69,7 +69,7 @@
         </div>
         @endif
 
-        @if($auth->id != 1)
+        @if($auth->id == 1)
         <form action="{{ route('option/import-intumescent') }}" method="POST" enctype="multipart/form-data">
             @csrf
             <input type="file" name="file" required>
