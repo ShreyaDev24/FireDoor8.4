@@ -2980,12 +2980,12 @@ class OptionController extends Controller
                 $VPWidth = trim((string) $row[$j++]);
                 $configurationDoor = configurationDoor($Configurableitems);
                 if($vpareasize !== "N/A"){
-                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD60',$FireRating)->where('Streboard',$Configurableitems)->first();
-                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('FD60',$FireRating)->where('status',1)->where('Streboard',$Configurableitems)->first();
-
+                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('VicaimaDoorCore',4)->first();
+                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('VicaimaDoorCore',4)->first();
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
-                        $data->Configurableitems = intval(1);
+                        $data->Configurableitems = intval(4);
+                        $data->FD30 = 'FD30';
                         $data->glass_id = $GlassType->id;
                         $data->glazing_system = $GlazingSystem->id;
                         $data->GlassType = $GlassType->GlassType;
@@ -3048,6 +3048,18 @@ class OptionController extends Controller
 
                 if($configurable === '8'){
                     $data->Stredor = 8;
+                }
+                if($configurable === '4'){
+                    $data->VicaimaDoorCore = 4;
+                }
+                if($configurable === '5'){
+                    $data->Seadec = 5;
+                }
+                if($configurable === '6'){
+                    $data->Deanta = 6;
+                }
+                if($configurable === '9'){
+                    $data->MMM = 9;
                 }
 
                 $data->NFR = NULL;
@@ -3115,6 +3127,19 @@ class OptionController extends Controller
 
                 if($configurable === '8'){
                     $data->Stredor = 8;
+                }
+
+                if($configurable === '4'){
+                    $data->VicaimaDoorCore = 4;
+                }
+                if($configurable === '5'){
+                    $data->Seadec = 5;
+                }
+                if($configurable === '6'){
+                    $data->Deanta = 6;
+                }
+                if($configurable === '9'){
+                    $data->MMM = 9;
                 }
 
                 $data->NFR = NULL;

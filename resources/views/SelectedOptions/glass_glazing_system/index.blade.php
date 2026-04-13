@@ -53,6 +53,35 @@
             </div>
         </div>
 
+        @if(Auth::user()->UserType == 1)
+        <div class="card-body">
+            <div class="tab-content">
+                <form method="post" action="{{ route('option/import-glassglazing') }}" enctype="multipart/form-data">
+                {{--  <form method="post" action="{{ route('option/import-glazing') }}" enctype="multipart/form-data">  --}}
+                    {{csrf_field()}}
+                    <div class="card-body">
+                        <div class="form-row">
+                        <div class="col-md-3">
+                            <div class="position-relative form-group">
+                                <label for="file">Excel File</label>
+                                <input name="ExcelFile" id="ExcelFile" type="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" required class="form-control">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
+                            <input type="hidden" id="base_url" value="{{url('/')}}">
+                            <div class="position-relative form-group">
+                                <label for="file" class=""></label>
+                                <input type="submit" value="Submit" class="btn btn-success" style="margin-top: 25px;">
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        @endif
+
         @php
         $tabs = [
             ['id' => 'StreBoard', 'field' => 'Streboard', 'value' => 1, 'class' => 'streBoardTable', 'title' => 'StreBoard'],

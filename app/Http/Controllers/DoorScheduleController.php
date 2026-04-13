@@ -250,7 +250,6 @@ class DoorScheduleController extends Controller
 
         if($existCurrency !== $request->Currency && !empty($quotationId)){
             $userLoginId = auth()->user()->UserType == 3 ? auth()->user()->CreatedBy : auth()->user()->id;
-            dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId,$request->Currency));
             dispatch(new RecalculateItemsBOMJob($quotationId, $selectVersionID,$userLoginId,$existCurrency));
             dispatch(new RecalculateNonConfigurableItemsJob($quotationId, $selectVersionID,$userLoginId));
             dispatch(new RecalculateSideScreenItemsJob($quotationId, $selectVersionID,$userLoginId,$request->Currency));
@@ -773,11 +772,12 @@ class DoorScheduleController extends Controller
                 $itemCount = ItemMaster::where('itemID', $itemid)->count();
                 $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
+
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
 
-                Item::where('itemId', $itemid)->update([
+                $Item = Item::where('itemId', $itemid)->update([
                     'DoorsetPrice' => $GTSellPriceTotal,
-                    'AdjustPrice' => $data->DoorsetPrice
+                    'AdjustPrice' => 0
                 ]);
             }
         }else if ($doorMode === 'range' || $doorMode === 'multiple') {
@@ -850,11 +850,12 @@ class DoorScheduleController extends Controller
                     $itemCount = ItemMaster::where('itemID', $itemid)->count();
                     $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
+
                     $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
 
-                    Item::where('itemId', $itemid)->update([
+                    $Item = Item::where('itemId', $itemid)->update([
                         'DoorsetPrice' => $GTSellPriceTotal,
-                        'AdjustPrice' => $data->DoorsetPrice
+                        'AdjustPrice' => 0
                     ]);
                 }
             }
@@ -9383,7 +9384,7 @@ class DoorScheduleController extends Controller
         );
     }
 
-     public function favadjustPriceUrl(Request $request)
+    public function favadjustPriceUrl(Request $request)
     {
 
         if (!empty($request->favId) && !empty($request->quotationId)) {

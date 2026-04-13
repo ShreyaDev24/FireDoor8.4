@@ -4305,9 +4305,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($show->IronmongeryID)) {
                 $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
                 if(!empty($AI->discountprice)){
+                    $IronmongaryPrice = $AI->discountprice;
+                } else{
                     $marginwithcal = 100 - $margin;
                     $testvar = $marginwithcal/100;
-                    $totalcost = $AI->discountprice / $testvar;
+                    $totalcost = $AI->totalprice / $testvar;
                     $IronmongaryPrice = $totalcost;
                 }
             }
