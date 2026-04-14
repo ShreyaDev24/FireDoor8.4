@@ -53,11 +53,10 @@
             </div>
         </div>
 
-        @if(Auth::user()->UserType == 1)
+        {{--  @if(Auth::user()->UserType == 1)
         <div class="card-body">
             <div class="tab-content">
                 <form method="post" action="{{ route('option/import-glassglazing') }}" enctype="multipart/form-data">
-                {{--  <form method="post" action="{{ route('option/import-glazing') }}" enctype="multipart/form-data">  --}}
                     {{csrf_field()}}
                     <div class="card-body">
                         <div class="form-row">
@@ -80,7 +79,7 @@
                 </form>
             </div>
         </div>
-        @endif
+        @endif  --}}
 
         <ul class="nav nav-tabs mb-3" id="glazingSystemTabs" role="tablist">
             <li class="nav-item">
