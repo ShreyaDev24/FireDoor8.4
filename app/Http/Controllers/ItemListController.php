@@ -1963,39 +1963,26 @@ class ItemListController extends Controller
                     $sqlGetConditions = array_merge($sqlGetConditions, [['selected_intumescentseals2.selected_firerating', $fireRatingValue],['selected_intumescentseals2.selected_tag', $fireRatingValue], [ 'selected_intumescentseals2.selected_Point2height', '>=', $leafHeightNoOPValue], [ 'selected_intumescentseals2.selected_Point2width', '>=', $leafWidth1Value]]);
 
                 }
-                if(!empty($intumescentSealType)){
-                    $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
-                    })
-                    ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)->where($getConditions)
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->where('setting_intumescentseals2.FireOnly', $intumescentSealType)
-                    ->orderBy('setting_intumescentseals2.brand','ASC')->get();
-                    // ->where($getConditions)->orderBy('setting_intumescentseals2.brand','ASC')->get();
-
-                    $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
-                    })
-                    ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->where($sqlGetConditions)->toSQL();
-                } else {
-                        $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
-                    })
-                    ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)->where($getConditions)
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->orderBy('setting_intumescentseals2.brand','ASC')->get();
-                    // ->where($getConditions)->orderBy('setting_intumescentseals2.brand','ASC')->get();
-
-                    $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
-                    })
-                    ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->where($sqlGetConditions)->toSQL();
+                if (!empty($request->leafWidth1Value) && !empty($request->leafHeightNoOPValue) && !empty($request->intumescentSealType)) {
+                    $getConditions = array_merge($getConditions, [
+                        ['setting_intumescentseals2.FireOnly', $request->intumescentSealType]
+                    ]);
                 }
 
+                $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
+                    $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
+                })
+                ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)->where($getConditions)
+                ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
+                ->orderBy('setting_intumescentseals2.brand','ASC')->get();
+                // ->where($getConditions)->orderBy('setting_intumescentseals2.brand','ASC')->get();
+
+                $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'selected_intumescentseals2.id as selected_intumescentseals2_id','selected_intumescentseals2.*')->Join('selected_intumescentseals2', function($join): void {
+                    $join->on('setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id');
+                })
+                ->wherein('selected_intumescentseals2.selected_intumescentseals2_user_id',$UserId)
+                ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
+                ->where($sqlGetConditions)->toSQL();
                 // ->where($sqlGetConditions)->toSQL();
 
 
@@ -2028,7 +2015,7 @@ class ItemListController extends Controller
                     }
                 }
 
-                
+
 
                 if($data !== ''){
                     $IS = '<option value="">Select Intumescent Seal Arrangement</option>'.$data;
