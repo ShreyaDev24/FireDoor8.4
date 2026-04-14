@@ -2972,29 +2972,31 @@ class OptionController extends Controller
                 }
 
                 $j = 0;
-                $Configurableitems = trim((string) $row[$j++]);
-                $FireRating = trim((string) $row[$j++]);
                 $glasstype = trim((string) $row[$j++]);
                 $glazing = trim((string) $row[$j++]);
                 $vpareasize = trim((string) $row[$j++]);
-                $VPHeight = trim((string) $row[$j++]);
-                $VPWidth = trim((string) $row[$j++]);
-                $configurationDoor = configurationDoor($Configurableitems);
+                $FireRating = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
                     $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('VicaimaDoorCore',4)->first();
                     $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('VicaimaDoorCore',4)->first();
+
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
+                        $data->NFR = NULL;
+
+                        if($FireRating === 'FD30'){
+                            $data->FD30 = 'FD30';
+                        }
+
+                        if($FireRating === 'FD60'){
+                            $data->FD60 = 'FD60';
+                        }
                         $data->Configurableitems = intval(4);
-                        $data->FD30 = 'FD30';
                         $data->glass_id = $GlassType->id;
                         $data->glazing_system = $GlazingSystem->id;
                         $data->GlassType = $GlassType->GlassType;
                         $data->GlazingSystem = $GlazingSystem->GlazingSystem;
                         $data->VPAreaSize = $vpareasize;
-                        $data->VPHeight = $VPHeight;
-                        $data->VPWidth = $VPWidth;
-                        $data->FireRating = $FireRating;
                         $data->UserId = Auth::user()->id;
                         $data->save();
                     }
