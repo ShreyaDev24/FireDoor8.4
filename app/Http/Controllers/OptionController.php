@@ -3029,7 +3029,7 @@ class OptionController extends Controller
                 $FireRating = trim((string) $row[$j++]);
                 $glazingBead = trim((string) $row[$j++]);
 
-                $implode = json_encode(explode(',',$glazingBead));
+                $explode = array_map('trim', explode(',', $glazingBead));
 
                 $key = str_replace(' ', '_', $glasstype);
 
@@ -3079,7 +3079,7 @@ class OptionController extends Controller
                 $data->GlassThickness = $thickness;
                 $data->VpAreaSize = $vpareasize;
                 $data->GlassIntegrity = $integrity;
-                $data->GlazingBeads = $implode;
+                $data->GlazingBeads = json_encode($explode);
                 $data->EditBy = Auth::user()->id;
                 $data->save();
             }
