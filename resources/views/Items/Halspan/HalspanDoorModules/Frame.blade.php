@@ -36,7 +36,7 @@
                                                         @endif
                                                     </label>
                                                     <input type="number" id="frameThickness" name="frameThickness"
-                                                        value="@if (isset($Item['FrameThickness'])) {{ $Item['FrameThickness'] }}@else{{ '' }} @endif"
+                                                        value="@if(isset($Item['FrameThickness'])){{$Item['FrameThickness']}}@else{{''}} @endif"
                                                         class="form-control change-event-calulation door-configuration" required
                                                         maxlength="5"
                                                         oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
@@ -340,6 +340,7 @@
                                             <!-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="extLinerSize">Ext-Liner Size
+                                                        
                                                     @if(!empty($tooltip->extLinerSize))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->extLinerSize}}'));
