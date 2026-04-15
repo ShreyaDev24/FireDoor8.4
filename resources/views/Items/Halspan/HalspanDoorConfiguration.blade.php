@@ -75,6 +75,11 @@
         height: 15px;
         width: 15px;
     }
+.disabled-section {
+    pointer-events: none;   /* disables clicks */
+    opacity: 0.5;           /* grey look */
+    filter: grayscale(40%);
+}
 </style>
 
 <div class="app-main__outer">
@@ -364,6 +369,40 @@
 
 @section("js")
 <script>
+    $(document).ready(function () {
+
+        function toggleOverPanel() {
+            let value = $('#OPFLTurnOnOff').val();
+
+            if (value === 'No') {
+                $('#over-panel-section').addClass('disabled-section');
+
+                // Optional: update tooltip dynamically
+                $('#OPFLTurnOnOff').attr('title', "Overpanel section is disabled because 'No' is selected.");
+            } else {
+                $('#over-panel-section').removeClass('disabled-section');
+
+                $('#OPFLTurnOnOff').attr('title', "Overpanel section is enabled.");
+            }
+        }
+
+        // Run on page load
+        toggleOverPanel();
+
+        // Run on change
+        $('#OPFLTurnOnOff').on('change', function () {
+            toggleOverPanel();
+        });
+
+    });
+
+    {{--  $('a[href="#over-panel-section"]').on('click', function (e) {
+        if ($('#OPFLTurnOnOff').val() === 'No') {
+            e.preventDefault();
+            alert("Enable Overpanel/Fan Light to access this section.");
+        }
+    });  --}}
+
     $(document).on('click', '#default', function(e) {
         defaultimport();
     });
