@@ -254,18 +254,18 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="ironmongerySet">Overpanel/Fan light
+                            <label for="ironmongerySet">Overpanel/Fan light Turn Off
                                 <script type="text/javascript">
-                                    document.write(Tooltip("This section is enabled. Set 'Overpanel/Fan Light' to No to disable it."));
+                                    document.write(Tooltip("Set 'Overpanel/Fan Light' to Yes to disable it."));
                                 </script>
                             </label>
                             <select name="OPFLTurnOnOff" id="OPFLTurnOnOff" class="form-control">
                                 <option value="Yes"
-                                    @if (isset($Item['OPFLTurnOnOff'])) @if ($Item['OPFLTurnOnOff'] == 'Yes') {{ 'selected' }} @else {{ 'selected' }} @endif
+                                    @if (isset($Item['OPFLTurnOnOff'])) @if ($Item['OPFLTurnOnOff'] == 'Yes') {{ 'selected' }} @endif
                                     @endif>Yes</option>
                                 <option value="No"
                                     @if (isset($Item['OPFLTurnOnOff'])) @if ($Item['OPFLTurnOnOff'] == 'No')
-                                     {{ 'selected' }} @endif
+                                     {{ 'selected' }} @else {{ 'selected' }} @endif
                                 @endif>No</option>
                             </select>
                         </div>
@@ -323,7 +323,7 @@
                                 required>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="ironmongerySet">Ironmongery Set

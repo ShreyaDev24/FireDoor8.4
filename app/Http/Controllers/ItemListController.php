@@ -1087,6 +1087,7 @@ class ItemListController extends Controller
                         'Handing'                               => $request->Handing,
                         'OpensInwards'                          => $request->OpensInwards,
                         'COC'                                   => $request->COC,
+                        'OPFLTurnOnOff'                         => $request->OPFLTurnOnOff,
                         'Tollerance'                            => $request->tollerance,
                         'Dropseal'                              => $request->Dropseal,
                         'Undercut'                              => $request->undercut,
@@ -1385,6 +1386,7 @@ class ItemListController extends Controller
                         $item->Handing = $request->Handing;
                         $item->OpensInwards = $request->OpensInwards;
                         $item->COC = $request->COC;
+                        $item->OPFLTurnOnOff = $request->OPFLTurnOnOff;
                         $item->Tollerance = $request->tollerance;
                         $item->Dropseal = $request->Dropseal;
                         $item->Undercut = $request->undercut;
