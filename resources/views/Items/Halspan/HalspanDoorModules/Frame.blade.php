@@ -26,6 +26,22 @@
                                                 </div>
 
                                             </div>
+                                            <div class="col-md-6 framehideshow">
+                                                <div class="position-relative form-group">
+                                                    <label for="frameThickness">Frame Thickness
+                                                        @if (!empty($tooltip->frameThickness))
+                                                            <script type="text/javascript">
+                                                                document.write(Tooltip('{{ $tooltip->frameThickness }}'));
+                                                            </script>
+                                                        @endif
+                                                    </label>
+                                                    <input type="number" id="frameThickness" name="frameThickness"
+                                                        value="@if(isset($Item['FrameThickness'])){{$Item['FrameThickness']}}@else{{''}} @endif"
+                                                        class="form-control change-event-calulation door-configuration" required
+                                                        maxlength="5"
+                                                        oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                                                </div>
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="frameType">Frame Type
@@ -377,6 +393,7 @@
                                             <!-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="extLinerSize">Ext-Liner Size
+
                                                     @if(!empty($tooltip->extLinerSize))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->extLinerSize}}'));
@@ -451,7 +468,24 @@
                                                         <option value="Under_Frame" @if(isset($Item['saddleLocation'])) @if($Item['saddleLocation'] == 'Under_Frame') {{'selected'}} @endif @endif>Under Frame</option>
                                                     </select>
                                                 </div>
-                                            </div>
+                                            </div> -->
+                                            <!-- <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="intumescentSealSize">Intumescent Seal Size
+                                                    @if(!empty($tooltip->intumescentSealSize))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->intumescentSealSize}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <select name="intumescentSealSize" id="intumescentSealSize"
+                                                        class="form-control">
+                                                        <option value="10x4mm" @if(isset($Item['IntumescentSealSize'])) @if($Item['IntumescentSealSize'] == "10x4mm") {{'selected'}} @endif @endif>10x4mm</option>
+                                                    </select>
+                                                </div>
+                                            </div> -->
+
+
 
                                         </div>
                                     </div>
