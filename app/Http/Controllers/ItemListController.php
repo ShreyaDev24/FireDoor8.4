@@ -569,8 +569,9 @@ class ItemListController extends Controller
         $pageId = $request->pageId;
         $foursided = $request->framesided;
         $fireRating = fireRatingDoor($request->fireRating);
+        $swingType = $request->swingType;
 
-        $lippingSpecies = filterTimberSpecies("Frame",$pageId,$fireRating,$foursided);
+        $lippingSpecies = filterTimberSpecies("Frame",$pageId,$fireRating,$swingType,$foursided);
 
         echo json_encode(['status'=>'ok','data'=> '','leepingSpecies'=>$lippingSpecies]);
     }
@@ -2236,6 +2237,7 @@ class ItemListController extends Controller
         $userIds = CompanyUsers();
         $pageId = $request->pageId;
         $glassType = $request->glassType;
+        $swingType = $request->swingType;
         $userType = Auth::user()->UserType;
         $fireRating = $request->fireRating;
         if($request->fireRating == 'FD30' || $request->fireRating == 'FD30s'){
@@ -2281,6 +2283,13 @@ class ItemListController extends Controller
 
         }else{
             $lippingSpecies = $lippingSpecies->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
+        }
+
+        // 🚫 Remove MDF when Double Acting (DA)
+        if ($swingType == "DA") {
+            $lippingSpecies = $lippingSpecies->filter(function ($item) {
+                return stripos($item->SpeciesName, 'MDF') === false;
+            })->values();
         }
 
         if(!empty($OverpanelGlassGlazing)){

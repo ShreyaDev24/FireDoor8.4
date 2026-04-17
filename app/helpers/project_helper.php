@@ -173,7 +173,7 @@ function countTotalPrice($Id,$vId,$itemId=0, $type=null): array{
 }
 
 
-function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursided=""){
+function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingType="",$foursided=""){
     $UserId = CompanyUsers();
     $authdata = Auth::user();
     $lippingSpecies=[];
@@ -253,6 +253,13 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$foursid
     } elseif (is_array($lippingSpecies)) {
         // If it's an array, convert it to a collection
         $lippingSpecies = collect($lippingSpecies);
+    }
+
+    // 🚫 Remove MDF when Double Acting (DA)
+    if ($swingType == "DA") {
+        $lippingSpecies = $lippingSpecies->filter(function ($item) {
+            return stripos($item->SpeciesName, 'MDF') === false;
+        })->values();
     }
 
     if(in_array($authdata->UserType, [1,4])){
