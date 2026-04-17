@@ -91,6 +91,7 @@ function pageIdentity(){
     $("#swingType").change(function(){
         DoorSetTypeChange();
         frameThicknessChange();
+        frameMaterialFilter($("#fireRating").val());
     });
 
    function frameThicknessChange(){
@@ -2246,12 +2247,13 @@ function copyOfSideLite1Change(isstatus = false){
     function glazingSystemFIlter(fireRating){
         let pageId = pageIdentity();
         var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
+        var swingType = $('#swingType').val();
         leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
         $.ajax({
             url: $("#glazing-system-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val(), leaf1VpAreaSizeM2Value : leaf1VpAreaSizeM2Value},
+            data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val(), leaf1VpAreaSizeM2Value : leaf1VpAreaSizeM2Value,swingType : swingType},
             success: function(result){
                 var innerHtml1='';
                 if(result.status=="ok"){
@@ -2570,11 +2572,12 @@ function copyOfSideLite1Change(isstatus = false){
     }
     function frameMaterialFilter(fireRating){
         let pageId = pageIdentity();
+        var swingType = $('#swingType').val();
         $.ajax({
             url: $("#frame-material-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val()},
+            data:{pageId:pageId,swingType:swingType,fireRating:fireRating,_token:$("#_token").val()},
             success: function(result){
                 if(result.status=="ok"){
                     var innerHtml ='';
@@ -5051,11 +5054,12 @@ $("#OPLippingThickness,#frameDepth").on("keyup",function(){
 function architrave(isModal=0) {
     var architraveMaterialNew = $('#architraveMaterialNew').val();
     var url = $("#architrave-system-filter").html();
+    var swingType = $('#swingType').val();
     $.ajax({
         url: url,
         method: "POST",
         dataType: "Json",
-        data: {  _token: $("#_token").val(), pageId: 1 },
+        data: {  _token: $("#_token").val(), pageId: 1, swingType: swingType },
         success: function (result) {
             var innerHtml = '';
             if (result.status == "ok") {
@@ -5472,6 +5476,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
     }
     if(glassType != ''){
         let pageId = pageIdentity();
+        var swingType = $('#swingType').val();
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
         if(fireRatingValue != null && isstatus){
@@ -5485,7 +5490,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
             url:  $("#overpanel-glass-type-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
+            data:{pageId:pageId,glassType:glassType,fireRating:fireRating,swingType:swingType,_token:$("#_token").val()},
             success: function(result){
                 var innerHtml1='';
                 if(result.status=="ok"){
@@ -5952,11 +5957,12 @@ function onlyLipingSpecies(fireRating){
     let pageId = pageIdentity();
         var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
         leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+        var swingType = $('#swingType').val();
         $.ajax({
             url: $("#liping-glazing-system-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val(), leaf1VpAreaSizeM2Value : leaf1VpAreaSizeM2Value},
+            data:{pageId:pageId,swingType :swingType,fireRating:fireRating,_token:$("#_token").val(), leaf1VpAreaSizeM2Value : leaf1VpAreaSizeM2Value},
             success: function(result){
                 var innerHtml1='';
                 if(result.status=="ok"){

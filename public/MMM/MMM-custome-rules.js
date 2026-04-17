@@ -75,6 +75,7 @@ $(".combination_of").change(function () {
 
 $("#swingType").change(function () {
     DoorSetTypeChange();
+    frameMaterialFilter($("#fireRating").val());
 });
 
 $(document).on('change', '#latchType', function (e) {
@@ -2431,11 +2432,12 @@ function glazingBeadsFilter(fireRating) {
 }
 function frameMaterialFilter(fireRating){
     let pageId = pageIdentity();
+    var swingType = $('#swingType').val();
     $.ajax({
         url: $("#frame-material-filter").html(),
         method:"POST",
         dataType:"Json",
-        data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val()},
+        data:{pageId:pageId,swingType:swingType,fireRating:fireRating,_token:$("#_token").val()},
         success: function(result){
             if(result.status=="ok"){
                 var innerHtml ='';
