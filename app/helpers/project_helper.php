@@ -2325,12 +2325,6 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
     $outerColor2 = '';
     $innerColor2 = '';
 
-    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
-        $outerColor = '#f4d23c'; //yellow
-        $innerColor = '#2ecc71'; //green
-
-    }
-
     if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'Yes'){
         $outerColor = '#f4d23c'; //yellow
         $innerColor = '#2ecc71'; //green
@@ -2347,9 +2341,10 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
         $innerColor2 = '#f39c12'; //orange
     }
 
-    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
-        $outerColor = '#1f3a93'; //Blue
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && (($IronmongerySet == 'No' && $Leaf1VisionPanel == 'No') || ($IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'))){
+        $outerColor = '#f4d23c'; //yellow
         $innerColor = '#2ecc71'; //green
+
     }
 
     if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'Yes'){
@@ -2367,6 +2362,12 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
         $outerColor2 = '#1f3a93'; //Blue
         $innerColor2 = '#f39c12'; //orange
     }
+
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && (($IronmongerySet == 'No' && $Leaf1VisionPanel == 'No') || ($IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'))){
+        $outerColor = '#1f3a93'; //Blue
+        $innerColor = '#2ecc71'; //green
+    }
+
     $Tbl = '';
     $settings = SettingCurrency::where('UserId', $id)
         ->select('HideCosts', 'companyCode', 'doorPlugActivated')
