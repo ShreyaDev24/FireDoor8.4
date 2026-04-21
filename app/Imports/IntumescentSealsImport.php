@@ -13,7 +13,7 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
     {
         // 🔥 Mapping array
         $configurableMap = [
-            'streboard'    => 1,
+            'strebord'    => 1,
             'halspan'   => 2,
             'flamebreak' => 7,
             'stredoor'   => 8,
