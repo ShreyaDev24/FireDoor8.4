@@ -73,6 +73,16 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
                 '3' => 9,
             ];
         }
+        if ($configurable === 'strebord') {
+            $map = [
+                '1' => 1,
+                '2' => 2,
+                '3A' => 3,
+                '3B' => 4,
+                '4A' => 5,
+                '4B' => 6,
+            ];
+        }
 
         // Convert numbers → mapped values
         $result = [];
