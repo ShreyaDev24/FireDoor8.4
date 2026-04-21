@@ -598,27 +598,49 @@ if(!function_exists('myCreatedUser')){
 
 
 // Intumscent Seal
-    function checkValid($h, $w, array $data): bool {
-        $point1height = $data["Point1height"];
-        $point2height = $data["Point2height"];
-        $point1width  = $data["Point1width"];
-        $point2width  = $data["Point2width"];
+    // function checkValid($h, $w, array $data): bool {
+    //     $point1height = $data["Point1height"];
+    //     $point2height = $data["Point2height"];
+    //     $point1width  = $data["Point1width"];
+    //     $point2width  = $data["Point2width"];
+    //     dd($data,$h,$w);
 
-        if ($h >= $point1height && $h <= $point2height && $w >= $point2width && $w <= $point1width) {
+    //     if ($h >= $point1height && $h <= $point2height && $w >= $point2width && $w <= $point1width) {
 
-            $y = ($point2height - $point1height) / ($point1width - $point2width) * ($w - $point2width) + $point1height;
+    //         $y = ($point2height - $point1height) / ($point1width - $point2width) * ($w - $point2width) + $point1height;
 
-            if ($h > $y) {
-                return false;
-            } else {
-                return  true;
-            }
-        } elseif ($h > $point2height || $w > $point1width) {
-            return false;
+    //         if ($h > $y) {
+    //             return false;
+    //         } else {
+    //             return  true;
+    //         }
+    //     } elseif ($h > $point2height || $w > $point1width) {
+    //         return false;
 
-        } else {
-            return false; // ✅ ONLY CHANGE (was true)
+    //     } else {
+    //         return false; // ✅ ONLY CHANGE (was true)
+    //     }
+    // }
+
+    function checkValid($h, $w, array $data): bool
+    {
+        $point1height = (float) $data["Point1height"];
+        $point2height = (float) $data["Point2height"];
+        $point1width  = (float) $data["Point1width"];
+        $point2width  = (float) $data["Point2width"];
+
+        // Valid pair 1: H1 with W1
+        if ($h <= $point1height && $w <= $point1width) {
+            return true;
         }
+
+        // Valid pair 2: H2 with W2
+        if ($h <= $point2height && $w <= $point2width) {
+            return true;
+        }
+
+        // Anything else is invalid
+        return false;
     }
 
     function checkValidScreen($h, $w, array $data): bool {
