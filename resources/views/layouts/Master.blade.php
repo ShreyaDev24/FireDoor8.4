@@ -165,7 +165,7 @@
             </div>
             <div class="app-header__content">
                 <div class="app-header-right">
-                    @if(Auth::user()->UserType==2 || Auth::user()->UserType==3)
+                    {{-- @if(Auth::user()->UserType==2 || Auth::user()->UserType==3)
                         <div class="mx-2  dropdown notification-box position-relative">
                             <div class="notification-count position-absolute" id="notificationCountNumber"></div>
                             <button class="notification-btn" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -179,12 +179,10 @@
                                 <div class="headeing">
                                     <h6>Direct</h6>
                                 </div>
-                            {{-- <a class="dropdown-item" href="#">Another action</a>
-                            <a class="dropdown-item" href="#">Something else here</a> --}}
                                 <div id="notificationContainer"></div>
                             </div>
                         </div>
-                    @endif
+                    @endif --}}
                     <div>
                         @if(Auth::user()->UserType==1)
                         Super Admin
