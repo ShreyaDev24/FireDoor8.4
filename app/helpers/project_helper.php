@@ -2341,7 +2341,12 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
         $innerColor2 = '#f39c12'; //orange
     }
 
-    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && (($IronmongerySet == 'No' && $Leaf1VisionPanel == 'No') || ($IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'))){
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'){
+        $outerColor = '#f4d23c'; //yellow
+        $innerColor = '#bdc3c7'; //silver
+    }
+
+    if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
         $outerColor = '#f4d23c'; //yellow
         $innerColor = '#2ecc71'; //green
 
@@ -2363,7 +2368,12 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
         $innerColor2 = '#f39c12'; //orange
     }
 
-    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && (($IronmongerySet == 'No' && $Leaf1VisionPanel == 'No') || ($IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'))){
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'Yes' && $Leaf1VisionPanel == 'No'){
+        $outerColor = '#1f3a93'; //Blue
+        $innerColor = '#bdc3c7'; //silver
+    }
+
+    if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
         $outerColor = '#1f3a93'; //Blue
         $innerColor = '#2ecc71'; //green
     }
