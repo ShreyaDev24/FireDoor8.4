@@ -418,6 +418,38 @@
                         Help Center
                     </a>
                 </li>
+               <li class="mm-{{ (Request::segment(1) == 'core_certificates') ? 'active' : ''}}{{ (Request::segment(1) == 'glass-certificates') ? 'active' : ''}}">
+
+                    <a href="#">
+                        <i class="metismenu-icon">
+                            <i class="fa fa-certificate"></i>
+                        </i>
+                        Certificates
+                        <i class="metismenu-state-icon">
+                            <i class="fa fa-caret-down"></i>
+                        </i>
+                    </a>
+
+                    <ul>
+
+                        {{-- Core Certificate --}}
+                        <li class="submm-{{ (Request::segment(1) == 'core_certificates') ? 'active' : ''}}">
+                            <a href="{{ route('core_certificates.index') }}">
+                                <i class="metismenu-icon"></i>
+                                Core Certificate
+                            </a>
+                        </li>
+
+                        {{-- Glass Certificate --}}
+                        <li class="submm-{{ (Request::segment(1) == 'glass-certificates') ? 'active' : ''}}">
+                            <a href="{{ route('glass-certificates.index') }}">
+                                <i class="metismenu-icon"></i>
+                                Glass Certificate
+                            </a>
+                        </li>
+
+                    </ul>
+                </li>
 
                 @endif
 
