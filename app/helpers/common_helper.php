@@ -599,10 +599,15 @@ if(!function_exists('myCreatedUser')){
 
 // Intumscent Seal
     function checkValid($h, $w, array $data): bool {
-        $point1height = $data["Point1height"];  $point2height = $data["Point2height"];
-        $point1width = $data["Point1width"];   $point2width = $data["Point2width"];
+        $point1height = $data["Point1height"];
+        $point2height = $data["Point2height"];
+        $point1width  = $data["Point1width"];
+        $point2width  = $data["Point2width"];
+
         if ($h >= $point1height && $h <= $point2height && $w >= $point2width && $w <= $point1width) {
-            $y = ($point2height-$point1height)/($point1width-$point2width)*($w-$point2width)+$point1height;
+
+            $y = ($point2height - $point1height) / ($point1width - $point2width) * ($w - $point2width) + $point1height;
+
             if ($h > $y) {
                 return false;
             } else {
@@ -610,8 +615,9 @@ if(!function_exists('myCreatedUser')){
             }
         } elseif ($h > $point2height || $w > $point1width) {
             return false;
+
         } else {
-            return true;
+            return false; // ✅ ONLY CHANGE (was true)
         }
     }
 
