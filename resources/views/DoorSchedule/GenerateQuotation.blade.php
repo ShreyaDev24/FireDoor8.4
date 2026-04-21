@@ -75,6 +75,9 @@
             white-space: normal !important;
             word-wrap: break-word;
         }
+        .dt-container div.dt-layout-cell{
+            overflow-x: inherit !important;
+        }
     </style>
     <div class="app-main__outer">
         <div class="app-main__inner p-0">
