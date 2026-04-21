@@ -2580,7 +2580,7 @@ class ItemListController extends Controller
         ->join('glass_type', 'glass_type.id', 'glass_glazing_system.glass_id')
         ->leftJoin('selected_glass_type', 'selected_glass_type.glass_id', 'glass_glazing_system.glass_id')
         ->where('glass_type.GlassIntegrity', $integrity)
-        ->where('glass_glazing_system.Configurableitems', $pageId)
+        ->where('glass_type.' . $configurationDoor, $pageId)
         ->whereIn('glass_type.EditBy', $userIds)
         ->where('selected_glass_type.editBy', Auth::user()->id);
 
