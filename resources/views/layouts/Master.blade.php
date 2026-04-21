@@ -286,7 +286,7 @@
                                     </div>
 
                                     <!-- 🔽 Company Dropdown -->
-                                    @if (Auth::user()->UserType == '2' && Auth::user()->CreatedBy != ''))
+                                    @if (Auth::user()->UserType == '2' && Auth::user()->CreatedBy != '')
                                     <div class="mt-2">
                                         <select id="company_switch" class="form-control form-control-sm">
                                             @foreach($companies as $company)
