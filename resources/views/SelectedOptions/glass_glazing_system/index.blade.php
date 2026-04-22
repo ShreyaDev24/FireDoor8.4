@@ -57,8 +57,8 @@
         $tabs = [
             ['id' => 'StreBoard', 'field' => 'Streboard', 'value' => 1, 'class' => 'streBoardTable', 'title' => 'StreBoard'],
             ['id' => 'Halspan', 'field' => 'Halspan', 'value' => 2, 'class' => 'halspanTable', 'title' => 'Halspan'],
-            ['id' => 'FlameBreak', 'field' => 'Flamebreak', 'value' => 7, 'class' => 'flameBreakTable', 'title' => 'FlameBreak'],
-            ['id' => 'Stredoor', 'field' => 'Stredor', 'value' => 8, 'class' => 'stredoorTable', 'title' => 'Stredoor'],
+            ['id' => 'Flamebreak', 'field' => 'Flamebreak', 'value' => 7, 'class' => 'flameBreakTable', 'title' => 'FlameBreak'],
+            ['id' => 'Stredor', 'field' => 'Stredor', 'value' => 8, 'class' => 'stredoorTable', 'title' => 'Stredoor'],
             ['id' => 'VicaimaDoorCore', 'field' => 'VicaimaDoorCore', 'value' => 4, 'class' => 'VicaimaTable', 'title' => 'VicaimaDoorCore'],
             ['id' => 'Seadec', 'field' => 'Seadec', 'value' => 5, 'class' => 'SeadecTable', 'title' => 'Seadec'],
             ['id' => 'Deanta', 'field' => 'Deanta', 'value' => 6, 'class' => 'DeantaTable', 'title' => 'Deanta'],
@@ -96,7 +96,7 @@
 
                         <tbody>
                             @foreach($items as $item)
-                                @if($item->Configurableitems == $tab['value'])
+                                @if($item->{$tab['field']} == $tab['value'])
                                     @include('SelectedOptions.glass_glazing_system.row', ['item' => $item])
                                 @endif
                             @endforeach
