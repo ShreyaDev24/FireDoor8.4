@@ -109,6 +109,8 @@
                                             @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoice();"
                                                     id="">Generate Quote</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ShortQuote();"
+                                                    id="">Short Quote</a></li>
                                             <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
                                                     id="">Generate Elevation Drawing</a></li>
                                             @if($quotation->QuotationStatus == 'Accept')
@@ -1098,6 +1100,7 @@
     <!-- <input type="hidden" name="addItemUrl"  value="{{ url('/quotation/singleconfigurationitem') }}" /> -->
     <input type="hidden" name="addItemUrl2" id="addItemUrl2" value="{{ url('/quotation/request') }}" />
     <input type="hidden" name="printInvoiceUrl" id="printInvoiceUrl" value="{{ url('/quotation/printinvoice') }}" />
+    <input type="hidden" name="shortQuoteUrl" id="shortQuoteUrl" value="{{ url('/quotation/shortquote') }}" />
     <input type="hidden" name="printInvoiceExcelUrl" id="printInvoiceExcelUrl"
         value="{{ url('/quotation/printinvoiceinexcel') }}" />
     <input type="hidden" id="sendToClientUrl" value="{{ route('sendToClientUrl') }}" />
