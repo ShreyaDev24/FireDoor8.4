@@ -21,19 +21,14 @@ class GlassGlazingController extends Controller
     {
         $auth = auth()->user();
 
-        $items = GlazingSystem::leftJoin('selected_glazing_system', function ($join) use ($auth) {
-                $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
-                    ->where('selected_glazing_system.userId', $auth->id);
+        $items = GlassGlazingSystem::Join('selected_glass_type', function ($join) use ($auth) {
+                $join->on('glass_glazing_system.glass_id', '=', 'selected_glass_type.glass_id')
+                    ->where('selected_glass_type.editBy', $auth->id);
             })
-            ->join('glass_glazing_system', 'glass_glazing_system.glazing_system', '=', 'glazing_system.id')
+            ->join('glass_type', 'glass_type.id', 'glass_glazing_system.glass_id')
             ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
             ->select(
-                'glazing_system.*',
-                'selected_glazing_system.selectedPrice',
-                'selected_glazing_system.id as selectedId',
-                'selected_glazing_system.userId as selectedUserId',
-
-                'glass_glazing_system.Configurableitems',
+                'glass_type.*',
                 'glass_glazing_system.GlassType',
                 'glass_glazing_system.GlazingSystem',
                 'glass_glazing_system.VPAreaSize',
