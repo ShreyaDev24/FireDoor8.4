@@ -78,6 +78,12 @@
         .dt-container div.dt-layout-cell{
             overflow-x: inherit !important;
         }
+
+        #itemTable thead th {
+            font-size: 10px;
+            padding: 4px 6px;
+            white-space: nowrap; /* prevents wrapping */
+        }
     </style>
     <div class="app-main__outer">
         <div class="app-main__inner p-0">
@@ -1219,8 +1225,12 @@
                     autoWidth: false,
                     order: [],
 
+
                     columnDefs: [
-                        { orderable: false, targets: [0, -1] }
+                        { orderable: false, targets: [0, -1] },
+
+                        { width: "50px", targets: 0 },  // Line column
+                        { width: "50px", targets: 5 }   // Floor column (adjust index if needed)
                     ]
                 });
 
