@@ -314,11 +314,11 @@
                     </tr>
                 </table>
             @endif
-            @if (isset($quotaion->RevisionDescription) && $quotaion->RevisionDescription != NULL)
+            @if (isset($qv->RevisionDescription) && $qv->RevisionDescription != NULL)
                 <table class="table table-bordered">
                     <tr>
                         <td class="tbl_color"><span>Revision Difference Description:</span></td>
-                        <td colspan="3">{{ !empty($quotaion->RevisionDescription) ? $quotaion->RevisionDescription : '' }}</td>
+                        <td colspan="3">{{ !empty($qv->RevisionDescription) ? $qv->RevisionDescription : '' }}</td>
                     </tr>
                 </table>
             @endif

@@ -169,11 +169,16 @@ class DoorScheduleController extends Controller
         $quotation->ExpiryDate = date('Y-m-d', strtotime($request->ExpiryDate));
         $quotation->FollowUpDate = date('Y-m-d', strtotime($request->FollowUpDate));
         $quotation->QuotationStatus = $request->QuotationStatus;
-        $quotation->RevisionDescription = $request->RevisionDescription;
         $quotation->editBy = Auth::user()->id;
         $quotation->QSCustomerContactId = $array_data[1];
         $quotation->updated_at = date('Y-m-d H:i:s');
         $quotation->save();
+
+        if($selectVersionID > 0){
+            $QuotationVersion = QuotationVersion::find($selectVersionID);
+            $QuotationVersion->RevisionDescription = $request->RevisionDescription;
+            $QuotationVersion->save();
+        }
 
         // Site Contact Information
         $quoteContactInfoCount = QuotationContactInformation::where('QuotationId', $request->quotationId)->count();
@@ -4371,7 +4376,7 @@ class DoorScheduleController extends Controller
             $additem = 0;
             if ($vId > 0) {
                 $QV = QuotationVersion::where('id', $vId)->first();
-                $selectQV = ['selectVersionID' => $QV->id, 'selectVersion' => $QV->version, 'discountQuotation' => $QV->discountQuotation];
+                $selectQV = ['selectVersionID' => $QV->id, 'selectVersion' => $QV->version, 'discountQuotation' => $QV->discountQuotation, 'RevisionDescription' => $QV->RevisionDescription ];
             }
 
             // Configurable Items
