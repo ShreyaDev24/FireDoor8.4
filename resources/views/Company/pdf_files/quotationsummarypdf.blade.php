@@ -314,6 +314,14 @@
                     </tr>
                 </table>
             @endif
+            @if (isset($qv->version) && $qv->version != NULL)
+                <table class="table table-bordered">
+                    <tr>
+                        <td class="tbl_color"><span>Revision Number:</span></td>
+                        <td colspan="3">{{ !empty($qv->version) ? $qv->version : '' }}</td>
+                    </tr>
+                </table>
+            @endif
             @if (isset($qv->RevisionDescription) && $qv->RevisionDescription != NULL)
                 <table class="table table-bordered">
                     <tr>
