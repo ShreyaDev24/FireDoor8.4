@@ -755,7 +755,7 @@
                                                                     </li>
 
                                                                     <li>
-                                                                        <a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $row['id'] }}','Door','Configurable Favorite Item','Configurable Type Name','{{ $doorsSetPrice }}','{{ $row['IronmongaryPrice'] }}')"
+                                                                        <a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $row['id'] }}','Door','Configurable Favorite Item','Configurable Type Name')"
                                                                             href="javascript:void(0);">
                                                                                 Name Configuration
                                                                         </a>
