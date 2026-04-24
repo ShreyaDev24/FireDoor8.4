@@ -27,6 +27,7 @@ class ShortQuoteController extends Controller
 
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
+        $qv = QuotationVersion::where('id', $versionID)->first();
 
         $contractorName = DB::table('users')
         ->where('id', $quotaion->MainContractorId)
@@ -174,7 +175,7 @@ class ShortQuoteController extends Controller
         }
         $nettot = itemAdjustCount($quatationId, $versionID) + (float) $totIronmongaryPrice + (float) $nonConfigDataPrice + (float) $screenDataprice + (float) $transportationCost;
 
-        $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice, 'currency' => $currency, 'transportationCost' => $transportationCost]);
+        $pdf2 = PDF::loadView('Company.pdf_files.quotationsummarypdf', ['comapnyDetail' => $comapnyDetail, 'project' => $project, 'quotaion' => $quotaion, 'pdf2' => $pdf2, 'pdf_footer' => $pdf_footer, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'totDoorsetPrice' => $totDoorsetPrice, 'totIronmongaryPrice' => $totIronmongaryPrice, 'nonConfigDataPrice' => $nonConfigDataPrice, 'nettot' => $nettot, 'QSTI' => $QSTI, 'customerContact' => $customerContact, 'customer' => $customer, 'user' => $user, 'nonConfigDataCount' => $nonConfigDataCount, 'contractorName' => $contractorName, 'ScreenSetQty' => $ScreenSetQty, 'screenDataprice' => $screenDataprice, 'currency' => $currency, 'transportationCost' => $transportationCost, 'qv' => $qv]);
 
         // return $pdf2->download('file2.pdf');
         $path2 = public_path() . '/allpdfFile';
@@ -230,7 +231,7 @@ class ShortQuoteController extends Controller
 
 
         // Details Door List PDF
-        $qv = QuotationVersion::where('id', $versionID)->first();
+
         $version = $qv->version;
 
         if($project->QualificationsStatus == 1){
