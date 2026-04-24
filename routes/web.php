@@ -441,6 +441,8 @@ Route::prefix('quotation')->group(function (): void {
     Route::post('/favoriteItem', [App\Http\Controllers\DoorScheduleController::class,'favoriteItem'])->name('quotation/favoriteItem');
     Route::post('/favoriteItemShow', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemShow'])->name('quotation/favoriteItemShow');
     Route::post('/adjustPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustPriceUrl'])->name('quotation/adjustPriceUrl');
+    Route::post('/adjustleafPriceUrl', [App\Http\Controllers\DoorScheduleController::class, 'adjustleafPriceUrl'])->name('quotation/adjustleafPriceUrl');
+    Route::post('/adjustFinalLeafPrice', [App\Http\Controllers\DoorScheduleController::class, 'adjustFinalLeafPrice'])->name('quotation/adjustFinalLeafPrice');
     Route::post('/adjustSideScreenPriceUrl', [App\Http\Controllers\DoorScheduleController::class,'adjustSideScreenPriceUrl'])->name('quotation/adjustSideScreenPriceUrl');
     Route::post('/FloorNoChangeUrl', [App\Http\Controllers\DoorScheduleController::class,'FloorNoChangeUrl'])->name('quotation/FloorNoChangeUrl');
     Route::post('/favoriteItemAdd', [App\Http\Controllers\DoorScheduleController::class,'favoriteItemAdd'])->name('quotation/favoriteItemAdd');

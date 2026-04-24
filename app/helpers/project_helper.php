@@ -90,9 +90,19 @@ function itemAdjustCount($Id,$vId): float|int{
         ->where(['items.VersionId'=>$vId,'items.QuotationId' => $Id])->get();
 
     $TotalDoorSetPrice = 0;
-    if(!empty($Schedule)){
-        foreach($Schedule as $row){
-            $TotalDoorSetPrice += (($row->AdjustPrice)?floatval($row->AdjustPrice):floatval($row->DoorsetPrice));
+
+    if (!empty($Schedule)) {
+        foreach ($Schedule as $row) {
+
+            $basePrice = floatval($row->DoorsetPrice);
+            $leafDelta = floatval($row->leaf_price_delta ?? 0);
+
+            // 🔥 Final calculation
+            $finalPrice = ($row->AdjustPrice)
+                ? floatval($row->AdjustPrice) + $leafDelta   // override
+                : $basePrice + $leafDelta;     // base + leaf adjustment
+
+            $TotalDoorSetPrice += $finalPrice;
         }
     }
 

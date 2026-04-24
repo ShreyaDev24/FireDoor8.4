@@ -721,10 +721,11 @@
                                                         <td>{{ $row['SOWidth'] }}</td>
                                                         <td>{{ $row['SOHeight'] }}</td>
                                                         <td>{{ $row['SOWallThick'] }}</td>
-
                                                         <td>
                                                             {{ number_format(
-                                                                ($row['AdjustPrice'] ? floatval($row['AdjustPrice']) : floatval($row['DoorsetPrice'])),
+                                                                $row['AdjustPrice']
+                                                                    ? floatval($row['AdjustPrice']) + floatval($row['leafpricedelta'] ?? 0)
+                                                                    : floatval($row['DoorsetPrice']) + floatval($row['leafpricedelta'] ?? 0),
                                                                 2
                                                             ) }}
                                                         </td>
@@ -733,9 +734,11 @@
 
                                                         <td>
                                                             {{ number_format(
-                                                                ($row['AdjustPrice']
-                                                                    ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'])
-                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'])),
+                                                                (
+                                                                    $row['AdjustPrice']
+                                                                        ? floatval($row['AdjustPrice']) + floatval($row['leaf_price_delta'] ?? 0)
+                                                                        : floatval($row['DoorsetPrice']) + floatval($row['leaf_price_delta'] ?? 0)
+                                                                ) + floatval($row['IronmongaryPrice']),
                                                                 2
                                                             ) }}
                                                         </td>
@@ -803,6 +806,16 @@
                                                                             {{ floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) }}
                                                                         )" href="javascript:void(0);">
                                                                             Adjust Price
+                                                                        </a>
+                                                                    </li>
+
+                                                                    <li>
+                                                                        <<a onclick="adjustLeafType(
+                                                                            {{ $row['itemId'] }},
+                                                                            {{ $row['id'] }},
+                                                                            '{{ $row['leafType'] }}'
+                                                                        )" href="javascript:void(0);">
+                                                                            Door Leaf Adjust Price
                                                                         </a>
                                                                     </li>
 
@@ -1210,6 +1223,8 @@
         <input type="hidden" id="updateNonConfigUrl" value="{{ route('non-configural-items/nonConfigUpdate') }}" />
         <input type="hidden" id="updateManualAcceptQuote" value="{{ url('/quotation/updateManualAcceptQuote') }}" />
         <input type="hidden" id="adjustPriceDiscountUrl" value="{{ url('/quotation/adjustPriceDiscountUrl') }}" />
+        <input type="hidden" id="adjustleafPriceUrl" value="{{ url('/quotation/adjustleafPriceUrl') }}" />
+        <input type="hidden" id="adjustFinalLeafPrice" value="{{ url('/quotation/adjustFinalLeafPrice') }}" />
     @endsection
     @section('js')
         <script>
@@ -2577,6 +2592,42 @@
                 $('#nonConfig').removeClass('activeNC');
             }
 
+            function adjustLeafPriceAjax() {
+                $('.loader').empty().css({
+                    'display': 'block'
+                });
+                var versionId = $('#versionId').val();
+                var quotationId = $('#quotationId').val();
+                var itemId = $('#adjustLeafPriceitemId').val();
+                var itemMasterId = $('#adjustLeafPriceitemMasterId').val();
+                var AdjustPrice = $('#AdjustLeafPrice').val();
+                var totalPrice = $('#totalLeafPrice').val();
+                    $.ajax({
+                        url: $("#adjustFinalLeafPrice").val(),
+                        method: "POST",
+                        data: {
+                            _token: $("#_token").val(),
+                            quotationId: quotationId,
+                            versionId: versionId,
+                            itemId: itemId,
+                            itemMasterId: itemMasterId,
+                            AdjustPrice: AdjustPrice
+                        },
+                        dataType: "Json",
+                        success: function(data) {
+                            if (data.status == true) {
+                                swal('success', data.msg, 'success').then(function() {
+                                    location.reload();
+                                });
+                            } else {
+                                swal('error', data.msg, 'error').then(function() {
+                                    location.reload();
+                                });
+                            }
+                        }
+                    });
+            }
+
             $(document).on("click", ".SideScreen_btn", function(e) {
                 var quotationId = $("#quotationId").val();
                 var currentVersion = $("#currentVersion").val();
@@ -3674,6 +3725,26 @@
                 $('#totalPrice').val(totalPrice);
                 $("#adjust-price-modal").modal("show");
             }
+            function adjustLeafType(itemId, id, leafTypeKey) {
+                $.ajax({
+                    url: $("#adjustleafPriceUrl").val(),
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        leafType: leafTypeKey
+                    },
+                    success: function (res) {
+                        if(res.status) {
+                            $('#adjustLeafPriceitemId').val(itemId);
+                            $('#adjustLeafPriceitemMasterId').val(id);
+                            $("#totalLeafPrice").val(res.price); // show in modal
+                            $("#adjust-leaf-modal").modal("show");
+                        } else {
+                            alert("Price not found");
+                        }
+                    }
+                });
+            }
             function adjustSideScreenPrice(itemId, id, totalPrice) {
                 $('#adjustSideScreenPriceId').val(itemId);
                 $('#adjustSideScreenPriceitemMasterId').val(id);
@@ -3774,6 +3845,45 @@
             </div>
         </div>
     </div>
+
+    {{--  //adjust leaf price modal  --}}
+
+     <div id="adjust-leaf-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Adjust Price</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Total Price</label>
+                            <input type="number" class="form-control" id="totalLeafPrice" readonly>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Adjust Price</label>
+                            <input type="number" class="form-control" id="AdjustLeafPrice"
+                                pattern="[0-9]+([\.,][0-9]+)?" placeholder="Enter Adjust Price" required=""
+                                step="0.01">
+                            <input type="hidden" class="form-control" id="adjustLeafPriceitemId">
+                            <input type="hidden" class="form-control" id="adjustLeafPriceitemMasterId">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="adjustLeafPriceAjax()" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {{--  //end --}}
 
     {{--  //adjust side screen price modal  --}}
 
