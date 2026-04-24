@@ -4288,7 +4288,7 @@ class DoorScheduleController extends Controller
                         'SvgImage'         => $item->SvgImage,
                         'DoorType'         => $item->DoorType,
                         'DoorQuantity'     => $item->DoorQuantity,
-                    'Handing'          => $item->Handing,
+                        'Handing'          => $item->Handing,
                         'DoorsetType'      => $item->DoorsetType,
                         'SOWidth'          => $item->SOWidth,
                         'SOHeight'         => $item->SOHeight,
@@ -4299,9 +4299,11 @@ class DoorScheduleController extends Controller
                         'itemId'           => $item->itemId,
                         'version_id'       => $item->VersionId,
 
-                        'id'         => $m->id,
-                        'doorNumber' => $m->doorNumber,
-                        'floor'      => $m->floor,
+                        'id'               => $m->id,
+                        'doorNumber'       => $m->doorNumber,
+                        'floor'            => $m->floor,
+                        'leafType'         => $item->LeafConstruction,
+                        'leafpricedelta'         => $item->leaf_price_delta,
                     ];
                 });
             })
@@ -10064,4 +10066,65 @@ private function getQuotationGrandTotal($quotationId, $versionId)
     return (float) $itemsTotal + (float) $nonConfigTotal + (float) $sideScreenTotal;
 }
 
+    public function adjustleafPriceUrl(Request $request)
+    {
+        $leafTypeKey = $request->leafType;
+
+        // Step 1: Get leaf_type ID
+        $leaf = DB::table('leaf_type')
+            ->where('Key', $leafTypeKey)
+            ->first();
+
+        if (!$leaf) {
+            return response()->json(['status' => false]);
+        }
+
+        // Step 2: Get selected price
+        $priceRow = DB::table('selected_leaf_type')
+            ->where('leaf_id', $leaf->id)
+            ->where(function($q){
+                $q->where('editBy', 1)
+                ->orWhere('editBy', auth()->id());
+            })
+            ->orderByRaw("editBy = ".auth()->id()." DESC") // prioritize user
+            ->first();
+
+        return response()->json([
+            'status' => true,
+            'price' => $priceRow->selectedPrice ?? 0
+        ]);
+    }
+
+
+    public function adjustFinalLeafPrice(Request $request)
+    {
+        if (!empty($request->itemId) && !empty($request->quotationId)) {
+            $item = Item::where(['itemId' => $request->itemId, 'QuotationId' => $request->quotationId])->first();
+            if (!empty($item)) {
+                $updateDetails['leaf_price_delta'] = $request->AdjustPrice;
+                Item::where('itemId', $request->itemId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Price updated successfully!'
+                ];
+            } else {
+                $response = [
+                    'status' => false,
+                    'msg' => 'something went wrong!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
 }
