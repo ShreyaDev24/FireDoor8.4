@@ -810,7 +810,7 @@
                                                                     </li>
 
                                                                     <li>
-                                                                        <<a onclick="adjustLeafType(
+                                                                        <a onclick="adjustLeafType(
                                                                             {{ $row['itemId'] }},
                                                                             {{ $row['id'] }},
                                                                             '{{ $row['leafType'] }}'
