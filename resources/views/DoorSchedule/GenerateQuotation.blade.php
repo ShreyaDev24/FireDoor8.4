@@ -741,13 +741,11 @@
                                                         <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
 
                                                         <td>
-                                                            {{ number_format(
-                                                                (
-                                                                    $row['AdjustPrice']
-                                                                        ? floatval($row['AdjustPrice']) + floatval($row['leaf_price_delta'] ?? 0)
-                                                                        : floatval($row['DoorsetPrice']) + floatval($row['leaf_price_delta'] ?? 0)
-                                                                ) + floatval($row['IronmongaryPrice']),
-                                                                2
+                                                             {{ number_format(
+                                                                ($row['AdjustPrice']
+                                                                    ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] + floatval($row['leafpricedelta'] ?? 0))
+                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) + floatval($row['leafpricedelta'] ?? 0)),
+                                                                    2
                                                             ) }}
                                                         </td>
 
