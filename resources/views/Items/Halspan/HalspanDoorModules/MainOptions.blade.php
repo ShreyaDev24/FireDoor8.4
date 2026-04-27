@@ -244,12 +244,12 @@
                             </label>
                             <select name="OPFLTurnOnOff" id="OPFLTurnOnOff" class="form-control">
                                 <option value="Yes"
-                                    {{ (isset($Item['OPFLTurnOnOff']) && $Item['OPFLTurnOnOff'] == 'Yes') ? 'selected' : '' }}>
+                                    {{ (!isset($Item['OPFLTurnOnOff']) || $Item['OPFLTurnOnOff'] == 'Yes') ? 'selected' : '' }}>
                                     Yes
                                 </option>
 
                                 <option value="No"
-                                    {{ (!isset($Item['OPFLTurnOnOff']) || $Item['OPFLTurnOnOff'] == 'No') ? 'selected' : '' }}>
+                                    {{ (isset($Item['OPFLTurnOnOff']) && $Item['OPFLTurnOnOff'] == 'No') ? 'selected' : '' }}>
                                     No
                                 </option>
                             </select>
