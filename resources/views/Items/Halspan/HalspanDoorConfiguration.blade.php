@@ -375,11 +375,11 @@
         function toggleOverPanel() {
             let value = $('#OPFLTurnOnOff').val();
 
-            if (value === 'Yes') {
+            if (value === 'No') {
                 $('#over-panel-section').addClass('disabled-section');
 
                 // Optional: update tooltip dynamically
-                $('#OPFLTurnOnOff').attr('title', "Overpanel/FanLight section is disabled because 'Yes' is selected.");
+                $('#OPFLTurnOnOff').attr('title', "Overpanel/FanLight section is disabled because 'No' is selected.");
             } else {
                 $('#over-panel-section').removeClass('disabled-section');
 
