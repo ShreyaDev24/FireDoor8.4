@@ -797,7 +797,7 @@
                                                                         <a onclick="adjustLeafType(
                                                                             {{ $row['itemId'] }},
                                                                             {{ $row['id'] }},
-                                                                            '{{ $row['leafType'] }}'
+                                                                            '{{ $row['DoorDimensions'] }}'
                                                                         )" href="javascript:void(0);">
                                                                             Door Leaf Adjust Price
                                                                         </a>
@@ -2602,6 +2602,7 @@
                 var itemMasterId = $('#adjustLeafPriceitemMasterId').val();
                 var AdjustPrice = $('#AdjustLeafPrice').val();
                 var totalPrice = $('#totalLeafPrice').val();
+                var adjustdoordimension_id = $('#adjustdoordimension_id').val();
                     $.ajax({
                         url: $("#adjustFinalLeafPrice").val(),
                         method: "POST",
@@ -2611,7 +2612,8 @@
                             versionId: versionId,
                             itemId: itemId,
                             itemMasterId: itemMasterId,
-                            AdjustPrice: AdjustPrice
+                            AdjustPrice: AdjustPrice,
+                            adjustdoordimension_id: adjustdoordimension_id
                         },
                         dataType: "Json",
                         success: function(data) {
@@ -3738,6 +3740,7 @@
                             $('#adjustLeafPriceitemId').val(itemId);
                             $('#adjustLeafPriceitemMasterId').val(id);
                             $("#totalLeafPrice").val(res.price); // show in modal
+                            $("#adjustdoordimension_id").val(res.doordimension_id); // show in modal
                             $("#adjust-leaf-modal").modal("show");
                         } else {
                             alert("Price not found");
@@ -3869,7 +3872,8 @@
                                 pattern="[0-9]+([\.,][0-9]+)?" placeholder="Enter Adjust Price" required=""
                                 step="0.01">
                             <input type="hidden" class="form-control" id="adjustLeafPriceitemId">
-                            <input type="hidden" class="form-control" id="adjustLeafPriceitemMasterId">
+                            <input type="hidden" class="form-control" id="adjustLeafPriceitemId">
+                            <input type="hidden" class="form-control" id="adjustdoordimension_id">
                         </div>
                     </div>
                 </div>

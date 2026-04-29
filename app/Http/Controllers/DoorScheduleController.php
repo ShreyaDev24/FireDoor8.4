@@ -4304,6 +4304,7 @@ class DoorScheduleController extends Controller
                         'floor'            => $m->floor,
                         'leafType'         => $item->LeafConstruction,
                         'leafpricedelta'         => $item->leaf_price_delta,
+                        'DoorDimensions'         => $item->DoorDimensions,
                     ];
                 });
             })
@@ -10070,61 +10071,124 @@ private function getQuotationGrandTotal($quotationId, $versionId)
     {
         $leafTypeKey = $request->leafType;
 
-        // Step 1: Get leaf_type ID
-        $leaf = DB::table('leaf_type')
-            ->where('Key', $leafTypeKey)
-            ->first();
-
-        if (!$leaf) {
-            return response()->json(['status' => false]);
-        }
-
         // Step 2: Get selected price
-        $priceRow = DB::table('selected_leaf_type')
-            ->where('leaf_id', $leaf->id)
+        $priceRow = DB::table('selected_doordimension')
+            ->where('doordimension_id', $leafTypeKey)
             ->where(function($q){
-                $q->where('editBy', 1)
-                ->orWhere('editBy', auth()->id());
+                $q->where('doordimension_user_id', auth()->id());
             })
-            ->orderByRaw("editBy = ".auth()->id()." DESC") // prioritize user
             ->first();
 
         return response()->json([
             'status' => true,
-            'price' => $priceRow->selectedPrice ?? 0
+            'price' => $priceRow->selected_cost ?? 0,
+            'doordimension_id' => $leafTypeKey ?? null,
         ]);
     }
 
 
     public function adjustFinalLeafPrice(Request $request)
     {
-        if (!empty($request->itemId) && !empty($request->quotationId)) {
-            $item = Item::where(['itemId' => $request->itemId, 'QuotationId' => $request->quotationId])->first();
-            if (!empty($item)) {
-                $updateDetails['leaf_price_delta'] = $request->AdjustPrice;
-                Item::where('itemId', $request->itemId)->update($updateDetails);
-                $response = [
-                    'status' => true,
-                    'msg' => 'Price updated successfully!'
-                ];
-            } else {
-                $response = [
-                    'status' => false,
-                    'msg' => 'something went wrong!'
-                ];
-            }
-        } else {
-            $response = [
+        // dd($request->all());
+
+        // 🔹 Validate required inputs
+        if (empty($request->adjustdoordimension_id) || empty($request->quotationId)) {
+            return response()->json([
                 'status' => false,
                 'msg' => 'something went wrong!'
-            ];
+            ], 200);
         }
 
-        return response()->json(
-            $response,
-            200,
-            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-            JSON_UNESCAPED_UNICODE
-        );
+        // 🔹 Fetch selected door dimension
+        $item = DB::table('selected_doordimension')
+            ->where('doordimension_id', $request->adjustdoordimension_id)
+            ->where('doordimension_user_id', auth()->id())
+            ->first();
+
+        if (empty($item)) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ], 200);
+        }
+
+        // 🔹 Price calculation
+        // $originalcost = floatval($item->selected_cost ?? 0);
+        // $newcost      = floatval($request->AdjustPrice ?? 0);
+
+        // 🔹 Calculate delta
+        $delta = $request->AdjustPrice;
+
+        // 🔹 Update selected cost
+        $updateDetails['selected_cost'] = $delta;
+        SelectedDoordimension::where('id', $item->id)->update($updateDetails);
+
+        // 🔹 Get quotation & currency
+        $quotation     = Quotation::findOrFail($request->quotationId);
+        $currencyPrice = getCurrencyRate($request->quotationId, $quotation->UserId);
+
+        // 🔹 Item count
+        $ItemMaster = ItemMaster::where('itemID', $request->itemId)->count();
+
+
+        // 🔹 Unit cost
+        $unit_cost = $delta;
+
+        // 🔹 Quantity calculation
+        if ($request->doorsetType == 'DD') {
+            $quantity_of_door_type = 2 * $ItemMaster;
+            $qtyOfD = 2 * $ItemMaster;
+        } else {
+            $quantity_of_door_type = 1 * $ItemMaster;
+            $qtyOfD = 1 * $ItemMaster;
+        }
+
+        // 🔹 Total cost
+        $isTotalCounted = true;
+        $total_cost = $unit_cost * $qtyOfD;
+
+        // 🔹 Margin calculation
+        $marginData = BOMSetting::where('UserId', auth()->id())->first();
+
+        $margin = 0;
+        if ($marginData) {
+            $isMargin = ($marginData->MarginMarkup == 'Margin');
+            $margin = $isMargin
+                ? $marginData->margin_for_material
+                : $marginData->markup_for_material;
+        } else {
+            $marginData->MarginMarkup = 'Margin';
+        }
+
+        // 🔹 Fetch BOM calculation
+        $version = DB::table('quotation_versions')->where('id', $request->versionId)
+            ->first();
+        $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
+            ->where('VersionId', $version->version)
+            ->where('itemId', $request->itemId)
+            ->where('Category', 'LeafSetBesPoke')
+            ->first();
+
+        // 🔹 Final total calculation
+        $total = $isTotalCounted
+            ? $total_cost
+            : ($bom_calculation->LMPerDoorType * $unit_cost * $quantity_of_door_type);
+
+        // 🔹 Update BOM values
+
+        $bom_calculation->UnitCost      = round(($unit_cost * $currencyPrice), 2);
+        $bom_calculation->TotalCost     = round(($total * $currencyPrice), 2);
+        $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / (1 - ($margin / 100))), 2);
+        $bom_calculation->GTSellPrice   = round((($total * $currencyPrice) / (1 - ($margin / 100))), 2);
+        $bom_calculation->update();
+
+        // 🔹 Response
+        return response()->json([
+            'status' => true,
+            'msg' => 'Price updated successfully!'
+        ], 200, [
+            'Content-Type' => 'application/json;charset=UTF-8',
+            'Charset' => 'utf-8'
+        ], JSON_UNESCAPED_UNICODE);
     }
 }
