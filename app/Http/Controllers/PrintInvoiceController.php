@@ -2910,7 +2910,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Open Inwards</td>
+                                    <td class="dicription_grey">Pull Towards</td>
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
                 if($tt->FrameOnOff != 1){
@@ -6735,7 +6735,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Open Inwards</td>
+                                    <td class="dicription_grey">Pull Towards</td>
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
                 if($tt->FrameOnOff != 1){
