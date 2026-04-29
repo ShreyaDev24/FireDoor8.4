@@ -2313,7 +2313,7 @@ class OMMAnualController extends Controller
                                         <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
                                     </tr>
                                     <tr>
-                                        <td class="dicription_grey">Open Inwards</td>
+                                        <td class="dicription_grey">Pull Towards</td>
                                         <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                     </tr>
                                     <tr>

@@ -72,7 +72,7 @@ class ArchitectPdfGenerateController extends Controller
         }
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
-        
+
         $pdf_footer = SettingPDFfooter::where('UserId',$id)->first();
 
         $SalesContact = 'N/A';
@@ -136,7 +136,7 @@ class ArchitectPdfGenerateController extends Controller
                             $DoorFrameImage = Base64Image('FD30DoubleDoorsetwithVP');
                             break;
                     }
-                    
+
                     break;
                 case "FD60":
                     switch($tt->DoorsetType){
@@ -149,7 +149,7 @@ class ArchitectPdfGenerateController extends Controller
                             $DoorFrameImage = Base64Image('FD60DoubleDoorsetwithVP');
                             break;
                     }
-                    
+
                     break;
             }
 
@@ -229,21 +229,21 @@ class ArchitectPdfGenerateController extends Controller
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
 
             }
-            
+
             $ProjectName = null;
             if(!empty($project->ProjectName)){
                 $ProjectName = $project->ProjectName;
             }
-            
+
             if(!empty($version)) {
                 $version = $version;
             }
-            
+
             $CompanyAddressLine1 = null;
             if(!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
-            
+
             $Username = null;
             if(!empty($user->FirstName) && !empty($user->LastName)){
                 $Username = $user->FirstName.' '.$user->LastName;
@@ -434,7 +434,7 @@ class ArchitectPdfGenerateController extends Controller
             if(!empty($tt->ExtLinerValue)){
                 $ExtLinerValue = $tt->ExtLinerValue;
             }
-            
+
             $ExtLinerThickness = '';
             if(!empty($tt->ExtLinerThickness)){
                 $ExtLinerThickness = $tt->ExtLinerThickness."mm";
@@ -509,12 +509,12 @@ class ArchitectPdfGenerateController extends Controller
             if(!empty($tt->GlassType)){
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem,$tt->FireRating,$tt->GlassType,$tt->GlassThickness);
             }
-            
+
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if(!empty($tt->OPGlassType)){
                 $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem,$tt->FireRating,$tt->OPGlassType);
             }
-            
+
             $ArchitraveFinishForDoorDetailsTable = "N/A";
             if(!empty($tt->ArchitraveFinish)){
                 $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem,$tt->ArchitraveFinish,$tt->FrameFinishColor);
@@ -529,7 +529,7 @@ class ArchitectPdfGenerateController extends Controller
                 ->where("OptionKey",$tt->GlassIntegrity)->first();
                 $GlassIntegrity = $gi->OptionValue;
             }
-            
+
             $OPGlazingBeads = 'N/A';
             if(!empty($tt->OPGlazingBeads)){
                 $opgb = Option::where("configurableitems",$configurationItem)
@@ -538,7 +538,7 @@ class ArchitectPdfGenerateController extends Controller
                 ->where("OptionKey",$tt->OPGlazingBeads)->first();
                 $OPGlazingBeads = $opgb->OptionValue;
             }
-            
+
             $SLBeadingType = 'N/A';
             if(!empty($tt->BeadingType)){
                 $bt = Option::where("configurableitems",$configurationItem)
@@ -554,7 +554,7 @@ class ArchitectPdfGenerateController extends Controller
                 ->where('OptionSlug','leaf1_glazing_systems')->first();
                 $glazingSystems = $gs->OptionValue;
             }
-            
+
             if($tt->SwingType==''){
             if ($tt->SwingType == 'SA') {
                 $SwingType = 'Single Acting';
@@ -598,7 +598,7 @@ class ArchitectPdfGenerateController extends Controller
             } else {
                 $IronmongerySet = 'N/A';
             }
-            
+
             $rWdBRating = 'N/A';
             if(!empty($tt->rWdBRating)){
                 $rWdBRating = $tt->rWdBRating;
@@ -626,22 +626,22 @@ class ArchitectPdfGenerateController extends Controller
                     $ArchitraveMaterial = $ls->SpeciesName;
                 }
             }
-            
+
             $ArchitraveSetQty = 'N/A';
             if(!empty($tt->ArchitraveSetQty)){
                 $ArchitraveSetQty = $tt->ArchitraveSetQty;
             }
-            
+
             $ArchitraveWidth = 'N/A';
             if(!empty($tt->ArchitraveWidth)){
                 $ArchitraveWidth = $tt->ArchitraveWidth;
             }
-            
+
             $ArchitraveDepth = 'N/A';
             if(!empty($tt->ArchitraveDepth)){
                 $ArchitraveDepth = $tt->ArchitraveDepth;
             }
-            
+
             $ArchitraveHeight = 'N/A';
             if(!empty($tt->ArchitraveHeight)){
                 $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -708,7 +708,7 @@ class ArchitectPdfGenerateController extends Controller
                                     <td class="dicription_blank">'.$SwingType .' '. $tt->SwingType.'</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Open Inwards</td>
+                                    <td class="dicription_grey">Pull Towards</td>
                                     <td class="dicription_blank">'.$tt->OpensInwards.'</td>
                                 </tr>
                                 <tr>

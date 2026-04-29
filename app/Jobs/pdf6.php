@@ -48,7 +48,7 @@ class pdf6 implements ShouldQueue
         }else{
             $id = Auth::user()->id;
         }
-        
+
         $comapnyDetail = Company::where('UserId', $id)->first();
         $quotaion = Quotation::where('id', $quatationId)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
@@ -95,7 +95,7 @@ class pdf6 implements ShouldQueue
             }else{
                 $FireRatingActualValue  =  $tt->FireRating;
             }
-            
+
            // sidelight
             if($tt->FireRating == 'FD30s'){
                 $tt->FireRating = 'FD30';
@@ -149,7 +149,7 @@ class pdf6 implements ShouldQueue
             foreach ($DoorNumber as $bb) {
                 $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
             }
-            
+
             $species = LippingSpecies::where('id', $tt->FrameMaterial)->first();
             if ($species != '') {
                 $frameMaterial = $species->SpeciesName;
@@ -250,7 +250,7 @@ class pdf6 implements ShouldQueue
                 $FrameImageStructureLeft = $RemainingSpaceBlock;
                 $FrameImageStructureRight = $RemainingSpaceBlock;
             }
-            
+
             $leaf1RemainingWidth = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
 
             if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
@@ -567,7 +567,7 @@ class pdf6 implements ShouldQueue
                                         margin-top: 57px;"></div>';
                         }
                     }
-                    
+
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
@@ -1010,7 +1010,7 @@ class pdf6 implements ShouldQueue
                     if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
-                    
+
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
@@ -1097,26 +1097,26 @@ class pdf6 implements ShouldQueue
             if (!empty($quotaion->QuotationGenerationId)) {
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
             }
-            
+
             $configurationItem = $quotaion->configurableitems;
             if (!empty($quotaion->configurableitems)) {
                 $configurationItem = $quotaion->configurableitems;
             }
-            
+
             $ProjectName = null;
             if (!empty($project->ProjectName)) {
                 $ProjectName = $project->ProjectName;
             }
-            
+
             if (!empty($version)) {
                 $version = $version;
             }
-            
+
             $CompanyAddressLine1 = null;
             if (!empty($comapnyDetail->CompanyAddressLine1)) {
                 $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
             }
-            
+
             $Username = null;
             if (!empty($user->FirstName) && !empty($user->LastName)) {
                 $Username = $user->FirstName . ' ' . $user->LastName;
@@ -1138,7 +1138,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $svgFile = URL('/') . '/uploads/files/no_image_prod.jpg';
             }
-            
+
             $elevTbl .=
                 '
                 <div id="headText">
@@ -1160,7 +1160,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -1198,7 +1198,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .=
                 '</span>
                                                 </td>
@@ -1324,7 +1324,7 @@ class pdf6 implements ShouldQueue
                                     <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
-                        
+
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
                                         <p class="frame_sd_t1">-' . $FrameMaterial . '</p>
                                         <div class="arrow-strat"></div>
@@ -1355,7 +1355,7 @@ class pdf6 implements ShouldQueue
                                     <p class="frame_dd_t4 frame_dd_t4_' . $tt->FrameType . ' '.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
                                     <p class="frame_dd_t5 frame_dd_t5_' . $tt->FrameType . ' '.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
-                        
+
                         $elevTbl .= '<!-- <div class="arrow-strat"></div>  <p class="frame_sd_t1">' . $tt->FrameDepth . '</p>
                                         <p class="frame_sd_t2">' . $tt->FrameThickness . '</p>
                                         <p class="frame_dd_t1">-' . $FrameMaterial . '</p>
@@ -1379,7 +1379,7 @@ class pdf6 implements ShouldQueue
                         break;
                 }
             endif;
-            
+
             // }
 
 
@@ -1389,7 +1389,7 @@ class pdf6 implements ShouldQueue
             if (!empty($tt->ExtLinerValue)) {
                 $ExtLinerValue = $tt->ExtLinerValue;
             }
-            
+
             $ExtLinerThickness = '';
             if (!empty($tt->ExtLinerThickness)) {
                 $ExtLinerThickness = $tt->ExtLinerThickness . "mm";
@@ -1410,7 +1410,7 @@ class pdf6 implements ShouldQueue
                 $ls = LippingSpecies::where('id', $tt->LippingSpecies)->first();
                 $SpeciesName = $ls->SpeciesName;
             }
-            
+
             $intumescentSealType = 'N/A';
             if (!empty($tt->IntumescentLeapingSealType)) {
                 $intumescentSealType = IntumescentSealType($configurationItem, $tt->IntumescentLeapingSealType);
@@ -1421,12 +1421,12 @@ class pdf6 implements ShouldQueue
                 $dlf = DoorLeafFinish($configurationItem, $tt->DoorLeafFinish);
                 $DoorLeafFinish = empty($tt->SheenLevel) ? $dlf : $dlf . ' - ' . $tt->SheenLevel . ' Sheen';
             }
-            
+
             $DoorLeafFinishColor = '';
             if (!empty($tt->DoorLeafFinishColor)) {
                 $DoorLeafFinishColor = ' + ' . $tt->DoorLeafFinishColor;
             }
-            
+
             $DoorLeafFacing = "N/A";
             if (!empty($tt->DoorLeafFacing)) {
                 $DoorLeafFacing = DoorLeafFacing($configurationItem, $tt->DoorLeafFacing, $tt->DoorLeafFacingValue);
@@ -1457,12 +1457,12 @@ class pdf6 implements ShouldQueue
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
-            
+
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
                 $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem, $FireRatingActualValue, $tt->OPGlassType);
             }
-            
+
             $ArchitraveFinishForDoorDetailsTable = "N/A";
             if (!empty($tt->ArchitraveFinish)) {
                 $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem, $tt->ArchitraveFinish, $tt->FrameFinishColor);
@@ -1481,10 +1481,10 @@ class pdf6 implements ShouldQueue
                     ->where("OptionSlug", "Glass_Integrity")
                     ->where("OptionKey", $tt->GlassIntegrity)->first();
                 }
-                
+
                 $GlassIntegrity = $gi->OptionValue;
             }
-            
+
             $OPGlazingBeads = 'N/A';
             if (!empty($tt->OPGlazingBeads)) {
                 $opgb = Option::where("configurableitems", $configurationItem)
@@ -1572,22 +1572,22 @@ class pdf6 implements ShouldQueue
                     $ArchitraveMaterial = $ls->SpeciesName;
                 }
             }
-            
+
             $ArchitraveSetQty = 'N/A';
             if (!empty($tt->ArchitraveSetQty)) {
                 $ArchitraveSetQty = $tt->ArchitraveSetQty;
             }
-            
+
             $ArchitraveWidth = 'N/A';
             if (!empty($tt->ArchitraveWidth)) {
                 $ArchitraveWidth = $tt->ArchitraveWidth;
             }
-            
+
             $ArchitraveDepth = 'N/A';
             if (!empty($tt->ArchitraveDepth)) {
                 $ArchitraveDepth = $tt->ArchitraveDepth;
             }
-            
+
             $ArchitraveHeight = 'N/A';
             if (!empty($tt->ArchitraveHeight)) {
                 $ArchitraveHeight = $tt->ArchitraveHeight;
@@ -1654,7 +1654,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Open Inwards</td>
+                                    <td class="dicription_grey">Pull Towards</td>
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
                 if($tt->FrameOnOff != 1){
@@ -1697,7 +1697,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_blank">' . $tt->SOWallThick . '</td>
                                 </tr>';
             }
-            
+
             $elevTbl .=  '  <tr>
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
@@ -1725,7 +1725,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
-        
+
             $elevTbl .=         '
                                 <tr>
                                     <td class="dicription_grey">Door Leaf Width 1</td>
@@ -1786,7 +1786,7 @@ class pdf6 implements ShouldQueue
                                 </tbody>
                             </table>';
             }
-            
+
             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -1908,7 +1908,7 @@ class pdf6 implements ShouldQueue
                             </tbody>
                         </table>';
                         }
-                
+
                         $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -1933,7 +1933,7 @@ class pdf6 implements ShouldQueue
                             </tbody>
                         </table>';
                         }
-                        
+
                         $elevTbl .=  '</div></div>
                     <div id="footer">
                         <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
@@ -1964,7 +1964,7 @@ class pdf6 implements ShouldQueue
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
-            
+
             $elevTbl .= '</span>
                                     </td>
                                     <td class="tbl_color"><span>Ref</span></td>
@@ -2036,7 +2036,7 @@ class pdf6 implements ShouldQueue
                         <td></td>
                     </tr>';
                 }
-                
+
                 $elevTbl .= '</tbody>
             </table>
             </div>
@@ -2048,7 +2048,7 @@ class pdf6 implements ShouldQueue
             $PageBreakCounts++;
 
         }
-        
+
         // return $elevTbl;
         // return view('Company.pdf_files.elevationDrawing', compact('elevTbl'));
         $pdf6 = PDF::loadView('Company.pdf_files.elevationDrawing', ['elevTbl' => $elevTbl]);
