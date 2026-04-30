@@ -526,7 +526,7 @@ class ShortQuoteController extends Controller
                 'doorType' => 'vicaima'
             ]);
         }else{
-            $pdf4 = PDF::loadView('Company.pdf_files.short_quote_files.pdf2', [
+            $pdf4 = PDF::loadView('Company.short_quote_files.pdf2', [
                 'doorRows' => $doorRows,
                 'comapnyDetail' => $comapnyDetail,
                 'project' => $project,
