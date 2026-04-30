@@ -10102,13 +10102,22 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         }
 
         // 🔹 Fetch BOM calculation
-        $version = DB::table('quotation_versions')->where('id', $request->versionId)
+        if($request->versionId == 0){
+            $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
+            ->where('VersionId', 0)
+            ->where('itemId', $request->itemId)
+            ->where('Category', 'LeafSetBesPoke')
+            ->first();
+        } else {
+            $version = DB::table('quotation_versions')->where('id', $request->versionId)
             ->first();
         $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
             ->where('VersionId', $version->version)
             ->where('itemId', $request->itemId)
             ->where('Category', 'LeafSetBesPoke')
             ->first();
+        }
+
 
         // 🔹 Final total calculation
         $total = $isTotalCounted
@@ -10122,6 +10131,27 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / (1 - ($margin / 100))), 2);
         $bom_calculation->GTSellPrice   = round((($total * $currencyPrice) / (1 - ($margin / 100))), 2);
         $bom_calculation->update();
+
+        $itemval = Item::where('itemId', $request->itemId)->first();
+         $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$request->quotationId)->where('DoorType',$itemval->DoorType)->where('itemId',$request->itemId)->get();
+        //  dd($BOMCalculation);
+            $GTSellPrice = 0;
+            $GTSellPriceTotal = 0;
+            if(!empty($BOMCalculation)){
+                foreach($BOMCalculation as $value){
+                    if($value->Category != 'Ironmongery&MachiningCosts'){
+                        $GTSellPrice += $value->GTSellPrice;
+                    }
+                }
+
+                $ItemMaster = ItemMaster::where('itemID',$request->itemId)->get()->count();
+                $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+            }
+
+
+            $Item = Item::where('itemId', $request->itemId)->update([
+                'DoorsetPrice' => $GTSellPriceTotal
+             ]);
 
         // 🔹 Response
         return response()->json([
