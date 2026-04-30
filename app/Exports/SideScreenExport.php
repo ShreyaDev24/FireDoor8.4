@@ -36,7 +36,7 @@ class SideScreenExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
-            'Screen Glass' => new ScreenGlass($this->id,$this->vid,$this->result),
+            'Screen Glass' => new ScreenGlass($this->id,$this->vid,$this->result,null),
             'Screen Frame' => new ScreenFrame($this->id,$this->vid,$this->result),
             'Screen Glazing Beads' => new ScreenGlazingBeads($this->id,$this->vid,$this->result),
         ];
