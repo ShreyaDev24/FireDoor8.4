@@ -18,6 +18,7 @@ $("#fireRating").change(function () {
 
 $("#doorsetType").change(function () {
     DoorSetTypeChange();
+    intumescentSealMeetingEdgesChange();
 });
 
 $("#vP1Width, #vP1Height1").on("keyup", function () {
@@ -28,12 +29,12 @@ $("#vP1Width, #vP1Height1").on("keyup", function () {
 });
 
 $("#intumescentSealArrangement").change(function () {
+    intumescentSealMeetingEdgesChange();
+});
 
-    // var intumescentSealArrangementText = $(this).text();
-    // var intumescentSealArrangementText = $(this).text().split('-');
+function intumescentSealMeetingEdgesChange()
+{
     var intumescentSealArrangementText = $(this).find(":selected").text().split('-');
-    // alert(intumescentSealArrangementText[1]);
-    // console.log(intumescentSealArrangementText);
 
     if ($("#doorsetType").val() == "DD") {
         $('.intumescentSealMeetingEdgesDiv').show();
@@ -42,8 +43,7 @@ $("#intumescentSealArrangement").change(function () {
         $('.intumescentSealMeetingEdgesDiv').hide();
         $('#intumescentSealMeetingEdges').val("");
     }
-
-});
+}
 
 $(".combination_of").change(function () {
     var doorsetType = '';

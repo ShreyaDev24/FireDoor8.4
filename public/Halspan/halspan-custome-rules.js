@@ -19,6 +19,7 @@ function pageIdentity(){
 
     $("#doorsetType").change(function(){
         DoorSetTypeChange();
+        intumescentSealMeetingEdgesChange();
     });
 
     $("#vP1Width, #vP1Height1").on("keyup",function(){
@@ -28,23 +29,22 @@ function pageIdentity(){
         $('#glassThickness').val(0);
     });
 
-    $("#intumescentSealArrangement").change(function(){
+    $("#intumescentSealArrangement").change(function () {
+        intumescentSealMeetingEdgesChange();
+    });
 
-        // var intumescentSealArrangementText = $(this).text();
-        // var intumescentSealArrangementText = $(this).text().split('-');
+    function intumescentSealMeetingEdgesChange()
+    {
         var intumescentSealArrangementText = $(this).find(":selected").text().split('-');
-        // alert(intumescentSealArrangementText[1]);
-        // console.log(intumescentSealArrangementText);
 
-        if($("#doorsetType").val()=="DD"){
+        if ($("#doorsetType").val() == "DD") {
             $('.intumescentSealMeetingEdgesDiv').show();
-            $('#intumescentSealMeetingEdges').val("2NO. "+intumescentSealArrangementText[1]);
-        }else{
+            $('#intumescentSealMeetingEdges').val("2NO. " + intumescentSealArrangementText[1]);
+        } else {
             $('.intumescentSealMeetingEdgesDiv').hide();
             $('#intumescentSealMeetingEdges').val("");
         }
-
-    });
+    }
 
     $(".combination_of").change(function(){
         var doorsetType = '';
