@@ -610,6 +610,7 @@ $(".change-event-calulation").change(function(){
                 }
                 // alert(vpArea);
                 $("#leaf1VpAreaSizeM2").val(vpArea.toFixed(2));
+                glass_glazing_system();
                 // Sadique Code
                 //    $('#lazingIntegrityOrInsulationIntegrity').val("");
                 //    $('#glassType').val("");

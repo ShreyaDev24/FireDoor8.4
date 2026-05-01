@@ -2454,7 +2454,6 @@ function glassTypeFilter(isIntegrity) {
                 var data = result.data;
                 var length = result.data.length;
 
-                var GlassTypeValue = document.getElementById('GlassType-value');
                 var OPGlassTypeValue = document.getElementById('OPGlassType-value');
                 var SideLight1GlassTypeValue = document.getElementById('SideLight1GlassType-value');
                 var SideLight2GlassTypeValue = document.getElementById('SideLight2GlassType-value');
@@ -2465,17 +2464,6 @@ function glassTypeFilter(isIntegrity) {
                 sideLight2GlassTypeInnerHtml += '<option value="">Select Glass Type</option>';
 
                 for (var i = 0; i < length; i++) {
-
-                    if (GlassTypeValue != null) {
-                        GlassTypeValue = $("#GlassType-value").data("value");
-                        var GlassTypeSelected = "";
-                        if (GlassTypeValue == data[i].Key) {
-                            GlassTypeSelected = "selected";
-                        }
-                        glassTypeInnerHtml += '<option value="' + data[i].Key + '" ' + GlassTypeSelected + '>' + data[i].GlassType + '</option>';
-                    } else {
-                        glassTypeInnerHtml += '<option value="' + data[i].Key + '">' + data[i].GlassType + '</option>';
-                    }
 
                     if (OPGlassTypeValue != null) {
                         OPGlassTypeValue = $("#OPGlassType-value").data("value");
@@ -2510,16 +2498,13 @@ function glassTypeFilter(isIntegrity) {
                         sideLight2GlassTypeInnerHtml += '<option value="' + data[i].Key + '">' + data[i].GlassType + '</option>';
                     }
                 }
-                $("#glassType").empty().append(glassTypeInnerHtml);
                 // $("#opGlassType").empty().append( );
                 $("#sideLight1GlassType").empty().append(sideLight1GlassTypeInnerHtml);
                 $("#sideLight2GlassType").empty().append(sideLight2GlassTypeInnerHtml);
             } else {
-                glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
                 OPGlassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
                 sideLight1GlassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
                 sideLight2GlassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
-                $("#glassType").empty().append(glassTypeInnerHtml);
                 // $("#opGlassType").empty().append(OPGlassTypeInnerHtml);
                 $("#sideLight1GlassType").empty().append(sideLight1GlassTypeInnerHtml);
                 $("#sideLight2GlassType").empty().append(sideLight2GlassTypeInnerHtml);
