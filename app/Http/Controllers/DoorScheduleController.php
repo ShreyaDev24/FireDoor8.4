@@ -10031,7 +10031,7 @@ private function getQuotationGrandTotal($quotationId, $versionId)
     public function adjustFinalLeafPrice(Request $request)
     {
         // 🔹 Validate required inputs
-        if (empty($request->adjustdoordimension_id) || empty($request->quotationId)) {
+        if (empty($request->quotationId)) {
             return response()->json([
                 'status' => false,
                 'msg' => 'something went wrong!'
