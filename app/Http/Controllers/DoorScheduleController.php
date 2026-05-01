@@ -10039,17 +10039,17 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         }
 
         // 🔹 Fetch selected door dimension
-        $item = DB::table('selected_doordimension')
-            ->where('doordimension_id', $request->adjustdoordimension_id)
-            ->where('doordimension_user_id', auth()->id())
-            ->first();
+        // $item = DB::table('selected_doordimension')
+        //     ->where('doordimension_id', $request->adjustdoordimension_id)
+        //     ->where('doordimension_user_id', auth()->id())
+        //     ->first();
 
-        if (empty($item)) {
-            return response()->json([
-                'status' => false,
-                'msg' => 'something went wrong!'
-            ], 200);
-        }
+        // if (empty($item)) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'msg' => 'something went wrong!'
+        //     ], 200);
+        // }
 
         // 🔹 User input (no logic change, just naming)
         $adjustValue = floatval($request->AdjustPrice ?? 0);
