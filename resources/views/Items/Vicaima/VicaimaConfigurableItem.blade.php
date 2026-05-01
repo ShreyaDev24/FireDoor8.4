@@ -1143,6 +1143,7 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item['GlassIntegrity']))
     glassTypeFilter(true);
+    glass_glazing_system(true);
     doorThicknessFilter("{{$Item['FireRating']}}");
     glazingSystemFIlter("{{$Item['FireRating']}}");
     @endif
