@@ -10089,8 +10089,6 @@ private function getQuotationGrandTotal($quotationId, $versionId)
 
     public function adjustFinalLeafPrice(Request $request)
     {
-        // dd($request->all());
-
         // 🔹 Validate required inputs
         if (empty($request->adjustdoordimension_id) || empty($request->quotationId)) {
             return response()->json([
@@ -10112,27 +10110,23 @@ private function getQuotationGrandTotal($quotationId, $versionId)
             ], 200);
         }
 
-        // 🔹 Price calculation
-        // $originalcost = floatval($item->selected_cost ?? 0);
-        // $newcost      = floatval($request->AdjustPrice ?? 0);
+        // 🔹 User input (no logic change, just naming)
+        $adjustValue = floatval($request->AdjustPrice ?? 0);
 
-        // 🔹 Calculate delta
-        $delta = $request->AdjustPrice;
-
-        // 🔹 Update selected cost
-        $updateDetails['selected_cost'] = $delta;
-        SelectedDoordimension::where('id', $item->id)->update($updateDetails);
+        // 🔹 Store user input separately (per door)
+        Item::where('itemId', $request->itemId)->update([
+            'leaf_price_delta_adjust' => $adjustValue
+        ]);
 
         // 🔹 Get quotation & currency
         $quotation     = Quotation::findOrFail($request->quotationId);
         $currencyPrice = getCurrencyRate($request->quotationId, $quotation->UserId);
 
-        // 🔹 Item count
+        // 🔹 Item count (optimized)
         $ItemMaster = ItemMaster::where('itemID', $request->itemId)->count();
 
-
-        // 🔹 Unit cost
-        $unit_cost = $delta;
+        // 🔹 Unit cost (same logic)
+        $unit_cost = $adjustValue;
 
         // 🔹 Quantity calculation
         if ($request->doorsetType == 'DD') {
@@ -10147,7 +10141,7 @@ private function getQuotationGrandTotal($quotationId, $versionId)
         $isTotalCounted = true;
         $total_cost = $unit_cost * $qtyOfD;
 
-        // 🔹 Margin calculation
+        // 🔹 Margin calculation (fixed)
         $marginData = BOMSetting::where('UserId', auth()->id())->first();
 
         $margin = 0;
@@ -10157,60 +10151,82 @@ private function getQuotationGrandTotal($quotationId, $versionId)
                 ? $marginData->margin_for_material
                 : $marginData->markup_for_material;
         } else {
-            $marginData->MarginMarkup = 'Margin';
+            $margin = 0; // safe fallback
         }
 
         // 🔹 Fetch BOM calculation
-        if($request->versionId == 0){
+        if ($request->versionId == 0) {
             $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
-            ->where('VersionId', 0)
-            ->where('itemId', $request->itemId)
-            ->where('Category', 'LeafSetBesPoke')
-            ->first();
+                ->where('VersionId', 0)
+                ->where('itemId', $request->itemId)
+                ->where('Category', 'LeafSetBesPoke')
+                ->first();
         } else {
-            $version = DB::table('quotation_versions')->where('id', $request->versionId)
-            ->first();
-        $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
-            ->where('VersionId', $version->version)
-            ->where('itemId', $request->itemId)
-            ->where('Category', 'LeafSetBesPoke')
-            ->first();
+            $version = DB::table('quotation_versions')
+                ->where('id', $request->versionId)
+                ->first();
+
+            $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
+                ->where('VersionId', $version->version)
+                ->where('itemId', $request->itemId)
+                ->where('Category', 'LeafSetBesPoke')
+                ->first();
         }
 
+        // 🔥 Safety check (important)
+        if (!$bom_calculation) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'BOM calculation not found!'
+            ]);
+        }
 
         // 🔹 Final total calculation
         $total = $isTotalCounted
             ? $total_cost
             : ($bom_calculation->LMPerDoorType * $unit_cost * $quantity_of_door_type);
 
-        // 🔹 Update BOM values
+        // 🔹 Safe denominator (avoid divide by zero)
+        $denominator = (1 - ($margin / 100));
+        $denominator = $denominator == 0 ? 1 : $denominator;
 
+        // 🔹 Update BOM values
         $bom_calculation->UnitCost      = round(($unit_cost * $currencyPrice), 2);
         $bom_calculation->TotalCost     = round(($total * $currencyPrice), 2);
-        $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / (1 - ($margin / 100))), 2);
-        $bom_calculation->GTSellPrice   = round((($total * $currencyPrice) / (1 - ($margin / 100))), 2);
+        $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / $denominator), 2);
+        $bom_calculation->GTSellPrice   = round((($total * $currencyPrice) / $denominator), 2);
         $bom_calculation->update();
 
+        // 🔹 Recalculate final leaf impact (LeafSetBesPoke only)
         $itemval = Item::where('itemId', $request->itemId)->first();
-         $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$request->quotationId)->where('DoorType',$itemval->DoorType)->where('itemId',$request->itemId)->get();
-        //  dd($BOMCalculation);
-            $GTSellPrice = 0;
-            $GTSellPriceTotal = 0;
-            if(!empty($BOMCalculation)){
-                foreach($BOMCalculation as $value){
-                    if($value->Category != 'Ironmongery&MachiningCosts'){
-                        $GTSellPrice += $value->GTSellPrice;
-                    }
-                }
 
-                $ItemMaster = ItemMaster::where('itemID',$request->itemId)->get()->count();
-                $GTSellPriceTotal = round(($GTSellPrice/$ItemMaster),2);
+        $BOMCalculation = BOMCalculation::where('QuotationId', $request->quotationId)
+            ->where('DoorType', $itemval->DoorType)
+            ->where('itemId', $request->itemId)
+            ->get();
+
+        $GTSellPrice = 0;
+        $GTSellPriceTotal = 0;
+
+        if (!empty($BOMCalculation)) {
+            foreach ($BOMCalculation as $value) {
+                if ($value->Category == 'LeafSetBesPoke') {
+                    $GTSellPrice += $value->GTSellPrice;
+                }
             }
 
+            // optimized
+            $ItemMaster = ItemMaster::where('itemID', $request->itemId)->count();
 
-            $Item = Item::where('itemId', $request->itemId)->update([
-                'DoorsetPrice' => $GTSellPriceTotal
-             ]);
+            if ($ItemMaster > 0) {
+                $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
+            }
+        }
+
+        // 🔹 Store calculated impact separately
+        Item::where('itemId', $request->itemId)->update([
+            'leaf_price_delta' => $GTSellPriceTotal
+        ]);
 
         // 🔹 Response
         return response()->json([
