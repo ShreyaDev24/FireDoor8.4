@@ -707,6 +707,14 @@
                                                 @foreach ($data as $row)
 
                                                     @php
+                                                        if($row['DoorsetType'] == 'leaf_and_a_half'){
+                                                            $row['DoorsetType'] = 'LAH';
+                                                            if($row['Handing'] == 'Left_Hand_Master_Right_Hand_Slave'){
+                                                                $row['Handing'] = 'Left';
+                                                            }else{
+                                                                $row['Handing'] = 'Right';
+                                                            }
+                                                        }
                                                         $version_id = $row['version_id'] ?? 0;
                                                         $SvgImage = empty($row['SvgImage']) ? 'color_red' : '';
                                                     @endphp
