@@ -226,7 +226,7 @@
 
         <tbody>
             @foreach($doorRows as $door)
-                @include('Company.pdf_files.partials.door-row', ['hideCosts' => $HideCosts, 'doorType' => $doorType ?? 'default'])
+                @include('Company.short_quote_files.door-row', ['hideCosts' => $HideCosts, 'doorType' => $doorType ?? 'default'])
             @endforeach
 
             <tr>
