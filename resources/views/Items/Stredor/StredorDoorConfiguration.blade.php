@@ -519,6 +519,7 @@ $(document).ready(function() {
     labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
+    doorThicknessFilter("{{$Item['FireRating']}}");
     @endif
 
     @if(isset($Item['FireRating']) &&  $Item['FireRating'] == 'NFR')

@@ -1175,6 +1175,7 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
+    doorThicknessFilter("{{$Item['FireRating']}}");
     @endif
 
     @if(isset($Item['FireRating']) &&  $Item['FireRating'] == 'NFR')
