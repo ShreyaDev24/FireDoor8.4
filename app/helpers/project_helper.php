@@ -99,8 +99,12 @@ function itemAdjustCount($Id,$vId): float|int{
 
             // 🔥 Final calculation
             $finalPrice = ($row->AdjustPrice)
-                ? floatval($row->AdjustPrice) + $leafDelta   // override
-                : $basePrice + $leafDelta;     // base + leaf adjustment
+                ? floatval($row->AdjustPrice)
+                : (
+                    $leafDelta
+                        ? $leafDelta
+                        : $basePrice
+                );
 
             $TotalDoorSetPrice += $finalPrice;
         }

@@ -10210,7 +10210,7 @@ private function getQuotationGrandTotal($quotationId, $versionId)
 
         if (!empty($BOMCalculation)) {
             foreach ($BOMCalculation as $value) {
-                if ($value->Category == 'LeafSetBesPoke') {
+                if ($value->Category != 'Ironmongery&MachiningCosts') {
                     $GTSellPrice += $value->GTSellPrice;
                 }
             }
