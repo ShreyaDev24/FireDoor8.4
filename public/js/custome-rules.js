@@ -841,7 +841,7 @@ $(document).ready(function() {
             $("#rebatedWidth").removeAttr('min', '35');
             $("#rebatedWidth").removeAttr('min', '44');
             $("#rebatedWidth").removeAttr('min', '54');
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#ScallopedWidth").removeAttr('min', '32');
@@ -881,7 +881,7 @@ $(document).ready(function() {
             $("#rebatedWidth").removeAttr('min', '35');
             $("#rebatedWidth").removeAttr('min', '44');
             $("#rebatedWidth").removeAttr('min', '54');
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
             if($("#ScallopedWidth").val() == 0 || $("#ScallopedHeight").val() == 0){
@@ -908,7 +908,7 @@ $(document).ready(function() {
                 newMin = 54;
             }
             $("#rebatedWidthLabel").text(`Rebated Width (min ${newMin})`);
-            $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': false, 'required': true });
             $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
 
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -932,7 +932,7 @@ $(document).ready(function() {
             // frameprice('Rebated_Frame');
             framewidth();
         }else {
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
