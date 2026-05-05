@@ -812,7 +812,7 @@ $(document).ready(function() {
             $("#plantonStopHeight").attr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").attr({ 'readonly': false, 'required': true });
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -829,7 +829,7 @@ $(document).ready(function() {
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#plantonStopHeight").attr({ 'readonly': true, 'required': false }).val(0);
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
 
             $("#frameTypeDimensions").val('').attr('readonly', false);
@@ -837,7 +837,7 @@ $(document).ready(function() {
             $("#rebatedWidth-section,#rebatedHeight-section,#plantonStopWidth-section,#plantonStopHeight-section").addClass("table_row_hide");
         } else if (framTypeValue == "Rebated_Frame") {
             $("#rebatedHeight").attr('min', '12');
-            $("#rebatedWidth").attr({ 'readonly': false, 'required': true });
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': false, 'required': true });
             $("#rebatedHeight").attr({ 'readonly': false, 'required': true });
             $("#plantonStopHeight").removeAttr('min', '12');
             $("#plantonStopWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -853,7 +853,7 @@ $(document).ready(function() {
             // frameprice('Rebated_Frame');
         } else {
 
-            $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
+            $("#rebatedWidth,#RebatedHeadDepth,#RebatedBottomDepth").attr({ 'readonly': true, 'required': false }).val(0);
             $("#rebatedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedHeight").attr({ 'readonly': true, 'required': false }).val(0);
             $("#ScallopedWidth").attr({ 'readonly': true, 'required': false }).val(0);
