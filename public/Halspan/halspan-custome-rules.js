@@ -77,6 +77,7 @@ function pageIdentity(){
     $("#swingType").change(function(){
         DoorSetTypeChange();
         frameThicknessChange();
+        frameMaterialFilter($("#fireRating").val());
     });
 
     function frameThicknessChange(){
@@ -2526,11 +2527,12 @@ $(document).ready(function() {
     }
     function frameMaterialFilter(fireRating){
         let pageId = pageIdentity();
+        var swingType = $('#swingType').val();
         $.ajax({
             url: $("#frame-material-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,fireRating:fireRating,_token:$("#_token").val()},
+            data:{pageId:pageId,swingType:swingType,fireRating:fireRating,_token:$("#_token").val()},
             success: function(result){
                 if(result.status=="ok"){
                     var innerHtml ='';
@@ -5362,6 +5364,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
     console.log(glassType,id,type,isstatus);
     if(glassType != ''){
         let pageId = pageIdentity();
+        var swingType = $('#swingType').val();
         let fireRating =$("#fireRating").val();
         var fireRatingValue = document.getElementById('FireRating-value');
         if(fireRatingValue != null){
@@ -5374,7 +5377,7 @@ function OverpanelGlassTypeChange(id = null,type="",isstatus = false){
             url:  $("#overpanel-glass-type-filter").html(),
             method:"POST",
             dataType:"Json",
-            data:{pageId:pageId,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
+            data:{pageId:pageId,swingType:swingType,glassType:glassType,fireRating:fireRating,_token:$("#_token").val()},
             success: function(result){
                 var innerHtml1='';
                 if(result.status=="ok"){
