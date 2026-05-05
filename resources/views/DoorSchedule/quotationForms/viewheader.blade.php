@@ -157,6 +157,22 @@
                                 required>
                         </div>
                     </div>
+                    <div class="col-md-12">
+                        <div class="position-relative form-group">
+                            <label for="RevisionDescription">
+                                Revision Difference Description
+                            </label>
+                            <textarea
+                                name="RevisionDescription"
+                                id="RevisionDescription"
+                                class="form-control"
+                                rows="3" readonly
+                                placeholder="Describe the differences between this revision and the previous revision...">@if(!empty($quotation->RevisionDescription)){{$quotation->RevisionDescription}}@endif</textarea>
+                            <small class="text-muted">
+                                Add notes describing what has changed in this revision.
+                            </small>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="col-sm-6">
