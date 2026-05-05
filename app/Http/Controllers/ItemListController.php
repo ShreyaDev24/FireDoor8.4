@@ -178,20 +178,20 @@ class ItemListController extends Controller
         } else {
             $UserId = CompanyUsers();
             if ($fireRating=="NFR") {
-                if((string)$request->isIntegrity === "true"){
-                    $glassType = GlassType::Join('selected_glass_type', function($join): void {
-                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
-                    })
-                        ->where('glass_type.'.$configurationDoor, $pageId)
-                        // ->where('glass_type.'.$fireRatingDoor, $fireRating)
-                        ->where('glass_type.GlassIntegrity',$integrity)
-                        ->wherein('selected_glass_type.editBy',$UserId)
-                        ->wherein('glass_type.EditBy',$userIds)
-                        ->distinct('glass_type.id')
-                        ->groupBy('glass_type.Key')
-                        ->get(['glass_type.*']);
+                // if((string)$request->isIntegrity === "true"){
+                //     $glassType = GlassType::Join('selected_glass_type', function($join): void {
+                //         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
+                //     })
+                //         ->where('glass_type.'.$configurationDoor, $pageId)
+                //         // ->where('glass_type.'.$fireRatingDoor, $fireRating)
+                //         ->where('glass_type.GlassIntegrity',$integrity)
+                //         ->wherein('selected_glass_type.editBy',$UserId)
+                //         ->wherein('glass_type.EditBy',$userIds)
+                //         ->distinct('glass_type.id')
+                //         ->groupBy('glass_type.Key')
+                //         ->get(['glass_type.*']);
 
-                }else{
+                // }else{
                     $glassType = GlassType::Join('selected_glass_type', function($join): void {
                         $join->on('glass_type.id', '=', 'selected_glass_type.glass_id');
                     })
@@ -202,7 +202,7 @@ class ItemListController extends Controller
                         ->distinct('glass_type.id')
                         ->groupBy('glass_type.Key')
                         ->get(['glass_type.*']);
-                }
+                // }
             } elseif ((string)$request->isIntegrity === "true") {
                 if($leaf1VpAreaSizeM2Value != ''){
                     $glassType = GlassType::Join('selected_glass_type', function($join): void {

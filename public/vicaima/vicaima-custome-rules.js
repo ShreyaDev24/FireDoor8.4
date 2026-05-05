@@ -581,13 +581,6 @@ function visionPanelChange(){
         $("#distanceFromTopOfDoor").attr('readonly', false);
         $("#distanceFromTheEdgeOfDoor").attr({ 'required': true, 'readonly': false });
         $('#glazingSystems').attr('required', true);
-        if ($('#fireRating').val() != 'NFR') {
-            $('#lazingIntegrityOrInsulationIntegrity').attr('required', true);
-            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', false);
-        } else {
-            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
-            $('#lazingIntegrityOrInsulationIntegrity').attr('required', false);
-        }
         $('#glassType').attr('required', true);
         $('#glassThickness').attr('required', true);
         $('#glazingBeads').attr('required', true);
@@ -1971,8 +1964,8 @@ function FireRatingChange() {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='35'>35</option> <option value='44' selected>44</option><option value='54'>54</option></select>")
             }
 
-            $("#lazingIntegrityOrInsulationIntegrity").prop('required', false);
-            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
+            // $("#lazingIntegrityOrInsulationIntegrity").prop('required', false);
+            // $('#lazingIntegrityOrInsulationIntegrity').attr('disabled', true);
             $("#SL1Width").removeAttr('max');
             $("#SL2Width").removeAttr('max');
             $("#opglazingBeadsHeight").attr('min',20);
@@ -2189,30 +2182,11 @@ function doorThicknessFilter(fireRating,opGlassIntegrityVal="",SL1GlassIntegrity
 
                 }
                 // console.log(GlassIntegrityValue)
-                if(innerHtml !=''){
-                    var intigrity ='<option value="">Select Glass Intrigrity</option>';
-                    if($('#leaf1VisionPanel').val() == 'Yes'){
-                        if($('#fireRating').val() != 'NFR'){
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',false);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
-                        }else{
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
-                        }
-                    }
-                    //$("#lazingIntegrityOrInsulationIntegrity").attr('disabled',false).val();
-                }else{
-                    var intigrity='';
-                    innerHtml1+='<option value="">No Glass Intrigrity Found</option>';
-                    if($('#leaf1VisionPanel').val() == 'Yes'){
-                        if($('#fireRating').val() != 'NFR'){
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',false);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',true);
-                        }else{
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('disabled',true);
-                            $('#lazingIntegrityOrInsulationIntegrity').attr('required',false);
-                        }
-                    }
+                if (innerHtml != '') {
+                    var intigrity = '<option value="">Select Glass Intrigrity</option>';
+                } else {
+                    var intigrity = '';
+                    innerHtml1 += '<option value="">No Glass Intrigrity Found</option>';
                 }
 
                 if(innerHtml1 != ''){
