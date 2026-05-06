@@ -34,7 +34,7 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="17">Glass Order Sheet BOM</th>
+                <th colspan="17">Glass Order Sheet</th>
             </tr>
             <tr>
                 <th colspan="1">Ref</th>
