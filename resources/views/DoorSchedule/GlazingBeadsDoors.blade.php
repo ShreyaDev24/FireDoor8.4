@@ -34,7 +34,7 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="21">Glazing Beads for Doors BOM</th>
+                <th colspan="21">Glazing Beads for Doors</th>
             </tr>
             <tr>
                 <th colspan="3">Ref</th>
@@ -76,17 +76,17 @@
                         <th>Finish on Bead</th>
                         <th>Glazing Bead Height</th>
                         <th>Glazing Bead Depth</th>
-                        <th>VP1 W</th>
+                        <th>GB1 W</th>
                         <th>QTY</th>
-                        <th>VP1 H</th>
+                        <th>GB1 H</th>
                         <th>QTY</th>
-                        <th>VP2 H</th>
+                        <th>GB2 H</th>
                         <th>QTY</th>
-                        <th>VP3 H</th>
+                        <th>GB3 H</th>
                         <th>QTY</th>
-                        <th>VP4 H</th>
+                        <th>GB4 H</th>
                         <th>QTY</th>
-                        <th>VP5 H</th>
+                        <th>GB5 H</th>
                         <th>QTY</th>
                     </tr>
 

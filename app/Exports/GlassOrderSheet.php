@@ -280,14 +280,30 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             }
 
             // fill data
+            // foreach ($vpIndexes as $vp => $ix) {
+            //     $height = $row[$ix['H']] ?? 'N/A';
+            //     $width  = $row[$ix['W']] ?? 'N/A';
+            //     $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
+
+            //     if ($height != '' && $height != 'N/A') $summary[$glassType][$vp]['H'] = $height;
+            //     if ($width  != '' && $width  != 'N/A') $summary[$glassType][$vp]['W'] = $width;
+            //     $summary[$glassType][$vp]['Q'] += $qty;
+            // }
+            // fill data
             foreach ($vpIndexes as $vp => $ix) {
-                $height = $row[$ix['H']] ?? 'N/A';
-                $width  = $row[$ix['W']] ?? 'N/A';
+                $height = $row[$ix['H']] ?? '';
+                $width  = $row[$ix['W']] ?? '';
                 $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
 
-                if ($height != '' && $height != 'N/A') $summary[$glassType][$vp]['H'] = $height;
-                if ($width  != '' && $width  != 'N/A') $summary[$glassType][$vp]['W'] = $width;
-                $summary[$glassType][$vp]['Q'] += $qty;
+                if ($height != '' && $height != 'N/A') {
+                    $summary[$glassType][$vp]['H'] = $height;
+
+                    if ($width != '' && $width != 'N/A') {
+                        $summary[$glassType][$vp]['W'] = $width;
+                    }
+
+                    $summary[$glassType][$vp]['Q'] += $qty;
+                }
             }
         }
 
@@ -297,11 +313,11 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             $data[] = [
                 'Glass Type',
-                'VP 1 Height', 'VP 1 Width', 'Qty',
-                'VP 2 Height', 'VP 2 Width', 'Qty',
-                'VP 3 Height', 'VP 3 Width', 'Qty',
-                'VP 4 Height', 'VP 4 Width', 'Qty',
-                'VP 5 Height', 'VP 5 Width', 'Qty',
+                'AP 1 Height', 'AP 1 Width', 'Qty',
+                'AP 2 Height', 'AP 2 Width', 'Qty',
+                'AP 3 Height', 'AP 3 Width', 'Qty',
+                'AP 4 Height', 'AP 4 Width', 'Qty',
+                'AP 5 Height', 'AP 5 Width', 'Qty',
                 'Grand Total Qty' // ✅ NEW COLUMN
             ];
         }else{
@@ -310,11 +326,11 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             $data[] = [
                 'Glass Type',
-                'VP 1 Height', 'VP 1 Width', 'Qty',
-                'VP 2 Height', 'VP 2 Width', 'Qty',
-                'VP 3 Height', 'VP 3 Width', 'Qty',
-                'VP 4 Height', 'VP 4 Width', 'Qty',
-                'VP 5 Height', 'VP 5 Width', 'Qty',
+                'AP 1 Height', 'AP 1 Width', 'Qty',
+                'AP 2 Height', 'AP 2 Width', 'Qty',
+                'AP 3 Height', 'AP 3 Width', 'Qty',
+                'AP 4 Height', 'AP 4 Width', 'Qty',
+                'AP 5 Height', 'AP 5 Width', 'Qty',
                 'Grand Total Qty' // ✅ NEW COLUMN
             ];
         }
@@ -350,22 +366,22 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'IFC/Certifire No/Q mark Plug',
                 'Glass Thickness in mm',
                 'Glass Type',
-                'VP1 H',
-                'VP W',
+                'AP1 H',
+                'AP W',
                 'QTY',
-                'VP2 H',
+                'AP2 H',
                 'QTY',
-                'VP3 H',
+                'AP3 H',
                 'QTY',
-                'VP4 H',
+                'AP4 H',
                 'QTY',
-                'VP5 H',
+                'AP5 H',
                 'QTY',
                 'DB Rating'
             ];
         }
 
-        $b = ['Glass Order Sheet'];
+        $b = ['Glass Aperture Only'];
 
         $d = [$b,$a];
         return $d;
@@ -495,6 +511,6 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
     public function title(): string
     {
-        return 'Glass Order Sheet';
+        return 'Glass Aperture Only';
     }
 }
