@@ -319,8 +319,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
             $a = [
             'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
             'Glazing Bead Height', 'Glazing Bead Depth',
-            'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
-            'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY','rW dB Rating'
+            'GB1 W', 'QTY', 'GB1 H', 'QTY', 'GB2 H', 'QTY',
+            'GB3 H', 'QTY', 'GB4 H', 'QTY', 'GB5 H', 'QTY','rW dB Rating'
             ];
         }
 
