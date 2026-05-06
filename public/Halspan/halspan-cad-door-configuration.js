@@ -312,6 +312,71 @@ const render = (CustomElement = null) => {
         var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
         var RebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0 ;
 
+        var LeafHeightNoOPForMap = 0;
+        var LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - UnderCut - Gap;
+         console.log(
+        `${SOHeight} - ${Tollerance} - ${FrameThickness} - ${UnderCut} - ${Gap} = LeafHeightCAD ${LeafHeightNoOP}`
+        );
+
+
+            if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType == 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'no foursided , sd')
+                }
+                else if (DoorSetType == 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - FrameThickness  - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'no foursided , DD')
+                }
+                else if (DoorSetType == 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                   console.log(LeafHeightNoOP,'no foursided , Leaf and half')
+                }
+            }
+        let foursidedframe = document.getElementById("foursidedframe");
+        if (foursidedframe.checked) {
+            LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
+            if($("#frameType").val() == 'Rebated_Frame'){
+                if (DoorSetType === 'SD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'sd')
+                }
+                else if (DoorSetType === 'DD') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'dd')
+                }
+                else if (DoorSetType === 'leaf_and_a_half') {
+                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
+                    $("#leafHeightNoOP").val(LeafHeightNoOP);
+                    console.log(LeafHeightNoOP,'leafandhalf')
+                }
+            }
+        }
+        if (LeafHeightNoOP == "") {
+            LeafHeightNoOP = 0;
+        } else {
+            //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
+            LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
+        }
+
+        if(withoutFrameId == 1){
+            $("#leafHeightNoOP").attr('readonly',false);
+        }else{
+            $("#leafHeightNoOP").val(LeafHeightNoOP).attr({'readonly':true, "required": true });
+        }
+
+        if (LeafHeightNoOP > 0) {
+            $("#leafHeightNoOP-selected").empty().text(LeafHeightNoOP);
+            $("#leafHeightNoOP-price").empty().text("£0.00");
+            $("#leafHeightNoOP-section").removeClass("table_row_hide");
+            $("#leafHeightNoOP-section").addClass("table_row_show");
+        }
+
         if (DoorSetType == "DD" && withoutFrameId != 1) {
             LeafWidth1 = LeafWidth2 = (SOWidth - (Tollerance * TolleranceAdditionalNumber) - (FrameThickness * FrameThicknessAdditionalNumber) - (GapAdditionalNumber * Gap)) / 2;
 
@@ -420,70 +485,7 @@ const render = (CustomElement = null) => {
             }
         }
 
-        var LeafHeightNoOPForMap = 0;
-        var LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - UnderCut - Gap;
-         console.log(
-        `${SOHeight} - ${Tollerance} - ${FrameThickness} - ${UnderCut} - ${Gap} = LeafHeightCAD ${LeafHeightNoOP}`
-        );
 
-
-            if($("#frameType").val() == 'Rebated_Frame'){
-                if (DoorSetType == 'SD') {
-                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'no foursided , sd')
-                }
-                else if (DoorSetType == 'DD') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - FrameThickness  - Gap - UnderCut + RebatedHeight;
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'no foursided , DD')
-                }
-                else if (DoorSetType == 'leaf_and_a_half') {
-                    LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut + RebatedHeight;
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                   console.log(LeafHeightNoOP,'no foursided , Leaf and half')
-                }
-            }
-        let foursidedframe = document.getElementById("foursidedframe");
-        if (foursidedframe.checked) {
-            LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
-            if($("#frameType").val() == 'Rebated_Frame'){
-                if (DoorSetType === 'SD') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'sd')
-                }
-                else if (DoorSetType === 'DD') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'dd')
-                }
-                else if (DoorSetType === 'leaf_and_a_half') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'leafandhalf')
-                }
-            }
-        }
-        if (LeafHeightNoOP == "") {
-            LeafHeightNoOP = 0;
-        } else {
-            //LeafHeightNoOPForMap = NumberChanger(LeafHeightNoOP);
-            LeafHeightNoOPForMap = (parseInt(LeafHeightNoOP) + parseInt(UnderCut || 0)) / 5;
-        }
-
-        if(withoutFrameId == 1){
-            $("#leafHeightNoOP").attr('readonly',false);
-        }else{
-            $("#leafHeightNoOP").val(LeafHeightNoOP).attr({'readonly':true, "required": true });
-        }
-
-        if (LeafHeightNoOP > 0) {
-            $("#leafHeightNoOP-selected").empty().text(LeafHeightNoOP);
-            $("#leafHeightNoOP-price").empty().text("£0.00");
-            $("#leafHeightNoOP-section").removeClass("table_row_hide");
-            $("#leafHeightNoOP-section").addClass("table_row_show");
-        }
 
         var LeftGapForLeaf1 = 0, RightGapForLeaf1 = 0, LeftGapForLeaf2 = 0, RightGapForLeaf2 = 0, UpperAndLowerGap = 0;
         //UpperAndLowerGap  = NumberChanger(Tollerance + FrameThickness + UnderCut + Gap);
