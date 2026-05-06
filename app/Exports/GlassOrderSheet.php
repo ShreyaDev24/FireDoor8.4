@@ -381,7 +381,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             ];
         }
 
-        $b = ['Glass Order Sheet'];
+        $b = ['Glass Aperture Only'];
 
         $d = [$b,$a];
         return $d;
