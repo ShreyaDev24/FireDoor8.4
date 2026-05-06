@@ -511,16 +511,16 @@ $(".change-event-calulation").change(function(){
         }
 
     }
-    var calculationOfLeafHeight = soHeight-tollerance-framethikness-undercut-gap;
-    let foursidedframe = document.getElementById("foursidedframe");
-    if (foursidedframe.checked) {
-        calculationOfLeafHeight = soHeight - (tollerance *2) - (framethikness * 2) - (gap * 2);
-    }
-    if(withoutFrameId == 1){
-        $("#leafHeightNoOP").attr('readonly',false);
-    }else{
-        $("#leafHeightNoOP").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
-    }
+    // var calculationOfLeafHeight = soHeight-tollerance-framethikness-undercut-gap;
+    // let foursidedframe = document.getElementById("foursidedframe");
+    // if (foursidedframe.checked) {
+    //     calculationOfLeafHeight = soHeight - (tollerance *2) - (framethikness * 2) - (gap * 2);
+    // }
+    // if(withoutFrameId == 1){
+    //     $("#leafHeightNoOP").attr('readonly',false);
+    // }else{
+    //     $("#leafHeightNoOP").val(calculationOfLeafHeight).attr({'readonly':true, "required": true });
+    // }
     // leaf height clculation and hide show OP leaping thickness , OP height, OP transom, and Transom thickness acording to Over panel
     if(overPanel=="Fan_Light"){
 
