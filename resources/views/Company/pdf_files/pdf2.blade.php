@@ -215,7 +215,7 @@
                 <th class="page2_2"><p> Fire Rating </p></th>
                 <th class="page2_2"><p> COC Type </p></th>
                 <th class="page2_2"><p> Special Feature Refs </p></th>
-                @if($HideCosts == 0)
+                @if($HideCosts == 0 && $HideCosts != 5 && $HideCosts != 1 )
                 <th class="page2_2 tbl_last"><p> Doorset Price </p></th>
                 <th class="page2_2 tbl_last"><p> Ironmongery Price </p></th>
                 @endif
