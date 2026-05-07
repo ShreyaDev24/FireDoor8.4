@@ -5060,7 +5060,7 @@ $("#glazingBeads").on('change',function(){
     if($("#fireRating").val()=="FD30"){
         let glazingBeads = $(this).val();
           console.log(glazingBeads)
-        if (glazingBeads == 'Square_Bolection' || glazingBeads == 'Square_Flush') {
+        if (glazingBeads == 'Square_Bolection' || glazingBeads == 'Square_Flush' || glazingBeads == 'Square_Boleaction') {
             $("#glazingBeadsThickness").attr('min', 15);
         } else {
             $("#glazingBeadsThickness").attr('min', 19);
