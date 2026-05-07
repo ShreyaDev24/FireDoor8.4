@@ -5056,6 +5056,17 @@ $("#doorsetType").on('change',function(){
     visionPanel2Off($(this).val());
     localStorage.setItem('doorsetType',doorsetType);
 });
+$("#glazingBeads").on('change',function(){
+    if($("#fireRating").val()=="FD30"){
+        let glazingBeads = $(this).val();
+          console.log(glazingBeads)
+        if (glazingBeads == 'Square_Bolection' || glazingBeads == 'Square_Flush') {
+            $("#glazingBeadsThickness").attr('min', 15);
+        } else {
+            $("#glazingBeadsThickness").attr('min', 19);
+        }
+    }
+});
 // $.when(doorLeafFacingPrice()).done(function(){
 //     $('.loader').css({'display':'none'});
 // });
