@@ -2047,16 +2047,8 @@ class BOMController extends Controller
                     . '<td>' . $value->certification_no . '</td>'
                     . '<td>' . $value->GlassThickness . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->GlassType) . '</td>'
-                    . '<td>' . (
-                        $fireRatingFD60
-                            ? (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightFD60)
-                            : (($value->Leaf1VPHeight1 ?: $value->Leaf2VPHeight1) + $VisionPanelHeightNFR)
-                    ) . '</td>'
-                    . '<td>' . (
-                        $fireRatingNFR
-                            ? (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthNFR)
-                            : (($value->Leaf1VPWidth ?: $value->Leaf2VPWidth) + $VisionPanelWidthFD60)
-                    ) . '</td>'
+                    . '<td>' . $value->Leaf1VPHeight1 . '</td>'
+                    . '<td>' . $value->Leaf1VPWidth . '</td>'
                     . '<td>' . $qty . '</td>';
 
                 // Loop for VP 2–5
