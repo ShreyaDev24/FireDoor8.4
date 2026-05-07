@@ -667,6 +667,19 @@ Route::prefix('form')->group(function (): void {
 
 });
 
+Route::prefix('notify')->group(function (): void {
+    Route::get('/notifications', [App\Http\Controllers\NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/read/{id}', [App\Http\Controllers\NotificationController::class, 'markAsRead'])->name('notifications.read');
+
+});
+
+Route::prefix('admin')->group(function (): void {
+   Route::get('/notifications/index', [App\Http\Controllers\AdminNotificationController::class, 'index'])->name('admin.notifications.index');
+   Route::get('/notifications/create', [App\Http\Controllers\AdminNotificationController::class, 'create'])->name('admin.notifications.create');
+    Route::post('/notifications/store', [App\Http\Controllers\AdminNotificationController::class, 'store'])->name('admin.notifications.store');
+
+});
+
 Route::prefix('project')->group(function (): void {
     Route::get('/create', [App\Http\Controllers\ProjectController::class,'index'])->name('project/create');
     Route::get('/update/{id}', [App\Http\Controllers\ProjectController::class,'index'])->name('project/update/');
