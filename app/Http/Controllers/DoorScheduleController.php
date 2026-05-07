@@ -4254,7 +4254,7 @@ class DoorScheduleController extends Controller
                         'SvgImage'         => $item->SvgImage,
                         'DoorType'         => $item->DoorType,
                         'DoorQuantity'     => $item->DoorQuantity,
-                    'Handing'          => $item->Handing,
+                        'Handing'          => $item->Handing,
                         'DoorsetType'      => $item->DoorsetType,
                         'SOWidth'          => $item->SOWidth,
                         'SOHeight'         => $item->SOHeight,
@@ -4265,9 +4265,12 @@ class DoorScheduleController extends Controller
                         'itemId'           => $item->itemId,
                         'version_id'       => $item->VersionId,
 
-                        'id'         => $m->id,
-                        'doorNumber' => $m->doorNumber,
-                        'floor'      => $m->floor,
+                        'id'               => $m->id,
+                        'doorNumber'       => $m->doorNumber,
+                        'floor'            => $m->floor,
+                        'leafType'         => $item->LeafConstruction,
+                        'leafpricedelta'         => $item->leaf_price_delta,
+                        'DoorDimensions'         => $item->DoorDimensions,
                     ];
                 });
             })
@@ -10011,4 +10014,174 @@ private function getQuotationGrandTotal($quotationId, $versionId)
     return (float) $itemsTotal + (float) $nonConfigTotal + (float) $sideScreenTotal;
 }
 
+    public function adjustleafPriceUrl(Request $request)
+    {
+        $leafTypeKey = $request->leafType;
+
+        // Step 2: Get selected price
+        $priceRow = DB::table('selected_doordimension')
+            ->where('doordimension_id', $leafTypeKey)
+            ->where(function($q){
+                $q->where('doordimension_user_id', auth()->id());
+            })
+            ->first();
+
+        return response()->json([
+            'status' => true,
+            'price' => $priceRow->selected_cost ?? 0,
+            'doordimension_id' => $leafTypeKey ?? null,
+        ]);
+    }
+
+
+    public function adjustFinalLeafPrice(Request $request)
+    {
+        // 🔹 Validate required inputs
+        if (empty($request->quotationId)) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ], 200);
+        }
+
+        // 🔹 Fetch selected door dimension
+        // $item = DB::table('selected_doordimension')
+        //     ->where('doordimension_id', $request->adjustdoordimension_id)
+        //     ->where('doordimension_user_id', auth()->id())
+        //     ->first();
+
+        // if (empty($item)) {
+        //     return response()->json([
+        //         'status' => false,
+        //         'msg' => 'something went wrong!'
+        //     ], 200);
+        // }
+
+        // 🔹 User input (no logic change, just naming)
+        $adjustValue = floatval($request->AdjustPrice ?? 0);
+
+        // 🔹 Store user input separately (per door)
+        Item::where('itemId', $request->itemId)->update([
+            'leaf_price_delta_adjust' => $adjustValue
+        ]);
+
+        // 🔹 Get quotation & currency
+        $quotation     = Quotation::findOrFail($request->quotationId);
+        $currencyPrice = getCurrencyRate($request->quotationId, $quotation->UserId);
+
+        // 🔹 Item count (optimized)
+        $ItemMaster = ItemMaster::where('itemID', $request->itemId)->count();
+
+        // 🔹 Unit cost (same logic)
+        $unit_cost = $adjustValue;
+
+        // 🔹 Quantity calculation
+        if ($request->doorsetType == 'DD') {
+            $quantity_of_door_type = 2 * $ItemMaster;
+            $qtyOfD = 2 * $ItemMaster;
+        } else {
+            $quantity_of_door_type = 1 * $ItemMaster;
+            $qtyOfD = 1 * $ItemMaster;
+        }
+
+        // 🔹 Total cost
+        $isTotalCounted = true;
+        $total_cost = $unit_cost * $qtyOfD;
+
+        // 🔹 Margin calculation (fixed)
+        $marginData = BOMSetting::where('UserId', auth()->id())->first();
+
+        $margin = 0;
+        if ($marginData) {
+            $isMargin = ($marginData->MarginMarkup == 'Margin');
+            $margin = $isMargin
+                ? $marginData->margin_for_material
+                : $marginData->markup_for_material;
+        } else {
+            $margin = 0; // safe fallback
+        }
+
+        // 🔹 Fetch BOM calculation
+        if ($request->versionId == 0) {
+            $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
+                ->where('VersionId', 0)
+                ->where('itemId', $request->itemId)
+                ->where('Category', 'LeafSetBesPoke')
+                ->first();
+        } else {
+            $version = DB::table('quotation_versions')
+                ->where('id', $request->versionId)
+                ->first();
+
+            $bom_calculation = BOMCalculation::where('QuotationId', $request->quotationId)
+                ->where('VersionId', $version->version)
+                ->where('itemId', $request->itemId)
+                ->where('Category', 'LeafSetBesPoke')
+                ->first();
+        }
+
+        // 🔥 Safety check (important)
+        if (!$bom_calculation) {
+            return response()->json([
+                'status' => false,
+                'msg' => 'BOM calculation not found!'
+            ]);
+        }
+
+        // 🔹 Final total calculation
+        $total = $isTotalCounted
+            ? $total_cost
+            : ($bom_calculation->LMPerDoorType * $unit_cost * $quantity_of_door_type);
+
+        // 🔹 Safe denominator (avoid divide by zero)
+        $denominator = (1 - ($margin / 100));
+        $denominator = $denominator == 0 ? 1 : $denominator;
+
+        // 🔹 Update BOM values
+        $bom_calculation->UnitCost      = round(($unit_cost * $currencyPrice), 2);
+        $bom_calculation->TotalCost     = round(($total * $currencyPrice), 2);
+        $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / $denominator), 2);
+        $bom_calculation->GTSellPrice   = round((($total * $currencyPrice) / $denominator), 2);
+        $bom_calculation->update();
+
+        // 🔹 Recalculate final leaf impact (LeafSetBesPoke only)
+        $itemval = Item::where('itemId', $request->itemId)->first();
+
+        $BOMCalculation = BOMCalculation::where('QuotationId', $request->quotationId)
+            ->where('DoorType', $itemval->DoorType)
+            ->where('itemId', $request->itemId)
+            ->get();
+
+        $GTSellPrice = 0;
+        $GTSellPriceTotal = 0;
+
+        if (!empty($BOMCalculation)) {
+            foreach ($BOMCalculation as $value) {
+                if ($value->Category != 'Ironmongery&MachiningCosts') {
+                    $GTSellPrice += $value->GTSellPrice;
+                }
+            }
+
+            // optimized
+            $ItemMaster = ItemMaster::where('itemID', $request->itemId)->count();
+
+            if ($ItemMaster > 0) {
+                $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
+            }
+        }
+
+        // 🔹 Store calculated impact separately
+        Item::where('itemId', $request->itemId)->update([
+            'leaf_price_delta' => $GTSellPriceTotal
+        ]);
+
+        // 🔹 Response
+        return response()->json([
+            'status' => true,
+            'msg' => 'Price updated successfully!'
+        ], 200, [
+            'Content-Type' => 'application/json;charset=UTF-8',
+            'Charset' => 'utf-8'
+        ], JSON_UNESCAPED_UNICODE);
+    }
 }

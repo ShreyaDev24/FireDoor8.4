@@ -380,10 +380,21 @@ class PrintInvoiceController extends Controller
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
 
+            $basePrice = floatval($show->DoorsetPrice ?? 0);
+            $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
-            $doorPrice = $show->AdjustPrice
-                            ? floatval($show->AdjustPrice)
-                            : floatval($show->DoorsetPrice);
+            if ($show->AdjustPrice) {
+                $doorPrice = floatval($show->AdjustPrice);
+            } elseif ($leafDelta) {
+                $doorPrice = $leafDelta;
+            } else {
+                $doorPrice = $basePrice;
+            }
+
+
+            // $doorPrice = $show->AdjustPrice
+            //                 ? floatval($show->AdjustPrice)
+            //                 : floatval($show->DoorsetPrice);
 
             $ironPrice = floatval($show->IronmongaryPrice);
 
@@ -462,7 +473,16 @@ class PrintInvoiceController extends Controller
 
             $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
             $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
-            $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
+            $basePrice = floatval($show->DoorsetPrice);
+            $leafDelta = floatval($show->leaf_price_delta ?? 0);
+
+            $DoorsetPrice = ($show->AdjustPrice)
+                        ? floatval($show->AdjustPrice)
+                        : (
+                            $leafDelta
+                                ? $leafDelta
+                                : $basePrice
+                        );
             $IronmongaryPrice = $show->IronmongaryPrice;
 
             // dd( $IronmongaryPrice);
