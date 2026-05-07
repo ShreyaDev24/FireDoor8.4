@@ -407,6 +407,26 @@
                     </ul>
                 </li>
 
+                 <li class="mm-{{ (Request::segment(1) == 'notification') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="metismenu-icon">
+                                <i class="fa fa-table"></i>
+                            </i>
+                            Notification
+                            <i class="metismenu-state-icon">
+                                <i class="fa fa-caret-down"></i>
+                            </i>
+                        </a>
+                        <ul>
+                            <li class="submm-{{ (Request::segment(2) == 'index') ? 'active' : ''}}">
+                                <a href="{{route('admin.notifications.index')}}">
+                                    <i class="metismenu-icon"></i>
+                                    Send Notification
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                 <li class="{{ request()->is('admin/support*') ? 'mm-active' : '' }}">
                     <a href="{{ route('admin.support.index') }}">
                         <i class="metismenu-icon">
