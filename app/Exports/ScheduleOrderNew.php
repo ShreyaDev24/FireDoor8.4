@@ -190,6 +190,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $RebatedHeight = $item[$i]->RebatedHeight;
             $FrameWidth = $item[$i]->FrameWidth;
             $FrameHeight = $item[$i]->FrameHeight;
+            $HeadFrameThickness = $item[$i]->HeadFrameThickness ?? $item[$i]->FrameThickness;
+            $BottomFrameThickness  = $item[$i]->BottomFrameThickness ?? $item[$i]->FrameThickness;
             $FrameDepth = $item[$i]->FrameDepth;
             $FrameFinish = $item[$i]->FrameFinish;
             $FrameFinishColor = $item[$i]->FrameFinishColor;
@@ -399,6 +401,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $RebatedHeight,
                 $FrameWidth,
                 $FrameHeight,
+                $HeadFrameThickness ,
+                $BottomFrameThickness ,
                 $FrameDepth,
                 $FrameFinish,
                 $FrameFinishColor,
@@ -626,6 +630,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Rebated Depth  ',
             'Frame Width ',
             'Frame Height ',
+            'Head Frame Thickness ',
+            'Bottom Frame Thickness ',
             'Frame Depth ',
             'Frame Finish ',
             'Frame Finish Color ',

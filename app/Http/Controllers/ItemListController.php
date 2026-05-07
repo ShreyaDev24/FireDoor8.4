@@ -1201,6 +1201,8 @@ class ItemListController extends Controller
                         'ScallopedHeight'                 => $request->ScallopedHeight,
                         'FrameWidth'                            => $request->frameWidth,
                         'FrameHeight'                           => $request->frameHeight,
+                        'HeadFrameThickness'                    => $request->headframeThickness,
+                        'BottomFrameThickness'                  => $request->bottomframeThickness,
                         'FrameDepth'                            => $request->frameDepth,
                         'FrameFinish'                           => $request->frameFinish,
                         'FrameFinishColor'                      => $request->framefinishColor,
@@ -1498,6 +1500,8 @@ class ItemListController extends Controller
                         $item->ScallopedHeight = $request->ScallopedHeight;
                         $item->FrameWidth = $request->frameWidth;
                         $item->FrameHeight = $request->frameHeight;
+                        $item->HeadFrameThickness = $request->headframeThickness;
+                        $item->BottomFrameThickness = $request->bottomframeThickness;
                         $item->FrameDepth = $request->frameDepth;
                         $item->FrameFinish = $request->frameFinish;
                         $item->FrameFinishColor = $request->framefinishColor;

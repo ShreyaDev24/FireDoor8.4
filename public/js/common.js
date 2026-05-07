@@ -396,3 +396,13 @@ document.getElementById("doorThickness").addEventListener("blur", validateFrameD
 document.getElementById("plantonStopWidth").addEventListener("blur", validateFrameDepth);
 document.getElementById("frameDepth").addEventListener("blur", validateFrameDepth);
 
+$(document).on('keyup', "#frameThickness", function(){
+    frameThicknessHeadBottom();
+});
+
+function frameThicknessHeadBottom(){
+    var frameThickness = $('#frameThickness').val();
+    $('#headframeThickness').val(frameThickness);
+    $('#bottomframeThickness').val(frameThickness);
+}
+
