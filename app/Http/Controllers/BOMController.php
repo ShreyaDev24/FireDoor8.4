@@ -1254,6 +1254,7 @@ class BOMController extends Controller
 
         $version = $bomVersion->VersionId;
         $item_details = Item::join('item_master','items.itemId','item_master.itemID')->select('items.*','item_master.*')->where(['QuotationId'=>$id])->get();
+        $itemPriceOverRidden = Item::join('item_master','items.itemId','item_master.itemID')->select('items.*','item_master.*')->where(['QuotationId'=>$id])->where('items.AdjustPrice', '!=', 0)->whereNotNull('items.AdjustPrice')->count();
 
         $GTSellPriceSum = 0;
         foreach($data as $value){
@@ -1262,7 +1263,7 @@ class BOMController extends Controller
             }
         }
 
-        $pdf = PDF::loadView('DoorSchedule.BOM.BOM_pdf',['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'laborCost' => $laborCost, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum]);
+        $pdf = PDF::loadView('DoorSchedule.BOM.BOM_pdf',['data' => $data, 'quotation' => $quotation, 'currency' => $currency, 'laborCost' => $laborCost, 'today' => $today, 'userName' => $userName, 'version' => $version, 'totDoorsetType' => $totDoorsetType, 'totIronmongerySet' => $totIronmongerySet, 'item_details' => $item_details, 'GTSellPriceSum' => $GTSellPriceSum,'itemPriceOverRidden' => $itemPriceOverRidden]);
 
 
         return $pdf->download("BOM ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.".pdf");
