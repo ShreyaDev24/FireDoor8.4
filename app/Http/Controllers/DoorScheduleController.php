@@ -9625,6 +9625,19 @@ class DoorScheduleController extends Controller
                 $rules['GAP'] = 'required'; // NFR → GAP not required
             }
 
+            if ($door->FrameOnOff == 1) {
+                unset(
+                    $rules['Tollerance'],
+                    $rules['Undercut'],
+                    $rules['FloorFinish'],
+                    $rules['FrameThickness'],
+                    $rules['SOWidth'],
+                    $rules['SOHeight'],
+                    $rules['SOWallThick'],
+                    $rules['GAP']
+                );
+            }
+
         // Optional Section: Vision Panel
         if($door['visionPanelWidth'] == "Yes"){
             $rules['Leaf1VisionPanelShape'] = 'required';
