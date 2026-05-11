@@ -9606,22 +9606,35 @@ class DoorScheduleController extends Controller
                 $rules['GAP'] = 'required'; // NFR → GAP not required
             }
 
-            // Optional Section: Vision Panel
-            if($door['visionPanelWidth'] == "Yes"){
-                $rules['Leaf1VisionPanelShape'] = 'required';
-                $rules['VisionPanelQuantity'] = 'required';
-                $rules['DistanceFromTheEdgeOfDoor'] = 'required';
-                $rules['Leaf1VPWidth'] = 'required';
-                $rules['Leaf1VPHeight1'] = 'required';
-                $rules['GlassThickness'] = 'required';
-                $rules['GlazingBeadsThickness'] = 'required';
-                $rules['glazingBeadsHeight'] = 'required';
-                $rules['glazingBeadsFixingDetail'] = 'required';
-                $rules['GlazingSystems'] = 'required';
-                $rules['GlassIntegrity'] = 'required';
-                $rules['GlassType'] = 'required';
-                $rules['GlazingBeads'] = 'required';
+            if ($door->FrameOnOff == 1) {
+                unset(
+                    $rules['Tollerance'],
+                    $rules['Undercut'],
+                    $rules['FloorFinish'],
+                    $rules['FrameThickness'],
+                    $rules['SOWidth'],
+                    $rules['SOHeight'],
+                    $rules['SOWallThick'],
+                    $rules['GAP']
+                );
             }
+
+        // Optional Section: Vision Panel
+        if($door['visionPanelWidth'] == "Yes"){
+            $rules['Leaf1VisionPanelShape'] = 'required';
+            $rules['VisionPanelQuantity'] = 'required';
+            $rules['DistanceFromTheEdgeOfDoor'] = 'required';
+            $rules['Leaf1VPWidth'] = 'required';
+            $rules['Leaf1VPHeight1'] = 'required';
+            $rules['GlassThickness'] = 'required';
+            $rules['GlazingBeadsThickness'] = 'required';
+            $rules['glazingBeadsHeight'] = 'required';
+            $rules['glazingBeadsFixingDetail'] = 'required';
+            $rules['GlazingSystems'] = 'required';
+            $rules['GlassIntegrity'] = 'required';
+            $rules['GlassType'] = 'required';
+            $rules['GlazingBeads'] = 'required';
+        }
 
             // Optional Section: Frame
             if (!empty($door['FrameMaterial'])) {
