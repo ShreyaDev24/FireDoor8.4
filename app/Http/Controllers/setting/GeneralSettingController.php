@@ -141,6 +141,16 @@ class GeneralSettingController extends Controller
                     'height' => $request->input('vpHeightFD60'),
                 ],
             ],
+             'GlassOrderVisionPanel' => [
+                'NRF' => [
+                    'width' => $request->input('vpGlassOrderWidthNRF'),
+                    'height' => $request->input('vpGlassOrderHeightNRF'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('vpGlassOrderWidthFD60'),
+                    'height' => $request->input('vpGlassOrderHeightFD60'),
+                ],
+            ],
 
             // Side Lights
             'SideLightFD' => [
