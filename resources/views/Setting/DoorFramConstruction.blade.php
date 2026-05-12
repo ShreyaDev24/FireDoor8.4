@@ -329,38 +329,75 @@
                             </div>
 
                             <div class="row">
-                             <!-- VP GLASS SIZE ADJUSTMENT -->
+                             <!-- VP GLASS APERTURE SIZE ADJUSTMENT -->
                                 <div class="h6 col-12 mt-4  font-weight-bold">
-                                    VP GLASS SIZE ADJUSTMENT
+                                    VP GLASS APERTURE SIZE ADJUSTMENT
                                 </div>
 
                                 <!-- NFR or FD30 -->
-                                <div class="col-12 font-weight-bold">VP GLASS SIZE (NFR or FD30)</div>
+                                <div class="col-12 font-weight-bold">VP GLASS APERTURE SIZE (NFR or FD30)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpWidthNRF">VP GLASS WIDTH NFR OR FD30 </label>
+                                        <label for="vpWidthNRF">VP GLASS APERTURE WIDTH NFR OR FD30 </label>
                                         <input type="number" name="vpWidthNRF" id="vpWidthNRF" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VisionPanel.NRF'])){{$allSettings['VisionPanel.NRF']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpHeightNRF">VP GLASS HEIGHT NFR OR FD30 </label>
+                                        <label for="vpHeightNRF">VP GLASS APERTURE HEIGHT NFR OR FD30 </label>
                                         <input type="number" name="vpHeightNRF" id="vpHeightNRF" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VisionPanel.NRF'])){{$allSettings['VisionPanel.NRF']->Height}}@endif">
                                     </div>
                                 </div>
 
                                 <!-- FD60 -->
-                                <div class="col-12 font-weight-bold">VP GLASS SIZE (FD60)</div>
+                                <div class="col-12 font-weight-bold">VP GLASS APERTURE SIZE (FD60)</div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpWidthFD60">VP GLASS WIDTH FD60 </label>
+                                        <label for="vpWidthFD60">VP GLASS APERTURE WIDTH FD60 </label>
                                         <input type="number" name="vpWidthFD60" id="vpWidthFD60" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['VisionPanel.FD60'])){{$allSettings['VisionPanel.FD60']->Width}}@endif">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="vpHeightFD60">VP GLASS HEIGHT FD60 </label>
+                                        <label for="vpHeightFD60">VP GLASS APERTURE HEIGHT FD60 </label>
                                         <input type="number" name="vpHeightFD60" id="vpHeightFD60" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['VisionPanel.FD60'])){{$allSettings['VisionPanel.FD60']->Height}}@endif">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                             <!-- VP GLASS ORDER SIZE ADJUSTMENT -->
+                                <div class="h6 col-12 mt-4  font-weight-bold">
+                                    VP GLASS ORDER SIZE ADJUSTMENT
+                                </div>
+
+                                <!-- NFR or FD30 -->
+                                <div class="col-12 font-weight-bold">VP GLASS ORDER SIZE (NFR or FD30)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpGlassOrderWidthNRF">VP GLASS ORDER WIDTH NFR OR FD30 </label>
+                                        <input type="number" name="vpGlassOrderWidthNRF" id="vpGlassOrderWidthNRF" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['GlassOrderVisionPanel.NRF'])){{$allSettings['GlassOrderVisionPanel.NRF']->Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpHeightNRF">VP GLASS ORDER HEIGHT NFR OR FD30 </label>
+                                        <input type="number" name="vpGlassOrderHeightNRF" id="vpGlassOrderHeightNRF" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['GlassOrderVisionPanel.NRF'])){{$allSettings['GlassOrderVisionPanel.NRF']->Height}}@endif">
+                                    </div>
+                                </div>
+
+                                <!-- FD60 -->
+                                <div class="col-12 font-weight-bold">VP GLASS ORDER SIZE (FD60)</div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpWidthFD60">VP GLASS ORDER WIDTH FD60 </label>
+                                        <input type="number" name="vpGlassOrderWidthFD60" id="vpGlassOrderWidthFD60" class="form-control" placeholder="Enter Width" value="@if(!empty($allSettings['GlassOrderVisionPanel.FD60'])){{$allSettings['GlassOrderVisionPanel.FD60']->Width}}@endif">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="position-relative form-group">
+                                        <label for="vpHeightFD60">VP GLASS ORDER HEIGHT FD60 </label>
+                                        <input type="number" name="vpGlassOrderHeightFD60" id="vpGlassOrderHeightFD60" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['GlassOrderVisionPanel.FD60'])){{$allSettings['GlassOrderVisionPanel.FD60']->Height}}@endif">
                                     </div>
                                 </div>
                             </div>

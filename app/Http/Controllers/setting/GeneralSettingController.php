@@ -141,6 +141,16 @@ class GeneralSettingController extends Controller
                     'height' => $request->input('vpHeightFD60'),
                 ],
             ],
+             'GlassOrderVisionPanel' => [
+                'NRF' => [
+                    'width' => $request->input('vpGlassOrderWidthNRF'),
+                    'height' => $request->input('vpGlassOrderHeightNRF'),
+                ],
+                'FD60' => [
+                    'width' => $request->input('vpGlassOrderWidthFD60'),
+                    'height' => $request->input('vpGlassOrderHeightFD60'),
+                ],
+            ],
 
             // Side Lights
             'SideLightFD' => [
@@ -254,7 +264,7 @@ class GeneralSettingController extends Controller
 
                     if ($doorFrameConst) {
                         $doorFrameConst->update([
-                            'Width' => $dimensions['width'],
+                            'Width' => $dimensions['width'] ?? 0,
                             'Height' => $dimensions['height'] ?? 0
                         ]);
                     } else {
@@ -301,14 +311,14 @@ class GeneralSettingController extends Controller
 
                 if ($doorFrameConst) {
                     $doorFrameConst->update([
-                        'Width' => $values['width'],
+                        'Width' => $values['width'] ?? 0,
                         'Height' => $values['height'] ?? 0
                     ]);
                 } else {
                     DoorFrameConstruction::create([
                         'UserId' => $userId,
                         'DoorFrameConstruction' => $mainKey,
-                        'Width' => $values['width'],
+                        'Width' => $values['width'] ?? 0,
                         'Height' => $values['height'] ?? 0
                     ]);
                 }
