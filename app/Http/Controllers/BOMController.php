@@ -2021,11 +2021,11 @@ class BOMController extends Controller
             }
 
             if (in_array($value->FireRating, ['FD60s', 'FD60'])) {
-                $glassHeight = $GlassOrderVisionPanelHeightFD60;
-                $glassWidth = $GlassOrderVisionPanelWidthFD60;
+                $glassHeight = $GlassOrderVisionPanelHeightFD60 ?? 0;
+                $glassWidth = $GlassOrderVisionPanelWidthFD60 ?? 0;
             } else {
-                $glassHeight = $GlassOrderVisionPanelHeightNFR;
-                $glassWidth = $GlassOrderVisionPanelWidthNFR;
+                $glassHeight = $GlassOrderVisionPanelHeightNFR ?? 0;
+                $glassWidth = $GlassOrderVisionPanelWidthNFR ?? 0;
             }
 
             if ($value->GlassType != '' && $value->GlassThickness != '' &&
