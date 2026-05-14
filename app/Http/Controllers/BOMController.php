@@ -2007,7 +2007,7 @@ class BOMController extends Controller
             $ids = Auth::user()->id;
         }
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
-
+dd($allSettings);
        $data = [];
         foreach ($item as $value) {
             // 🔹 Vision Panels
