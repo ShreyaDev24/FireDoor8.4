@@ -2059,9 +2059,9 @@ class BOMController extends Controller
                 $fireRatingFD60 = ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60');
                 $fireRatingNFR = ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30');
 
-                $height = (!is_null($glassHeight) && $glassHeight !== '' && (float)$glassHeight > 0) ? ($value->Leaf1VPHeight1 - $glassHeight) : $value->Leaf1VPHeight1;
+                $height = (!is_null($glassHeight) && $glassHeight !== '' && (float)$glassHeight > 0) ? ($value->Leaf1VPHeight1 + $glassHeight) : $value->Leaf1VPHeight1;
 
-                $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? ($value->Leaf1VPWidth - $glassWidth) : $value->Leaf1VPWidth;
+                $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? ($value->Leaf1VPWidth + $glassWidth) : $value->Leaf1VPWidth;
 
                 $row = '<tr>'
                     . '<td>' . $value->DoorType . '</td>'
