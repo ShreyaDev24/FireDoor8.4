@@ -124,6 +124,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->LeafThickness,
                 $configurableitems,
                 str_replace('_', ' ', $value->DoorLeafFacing),
+                str_replace('_', ' ', $value->DoorLeafFinish),
                 $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
                 $DoorDimensionsCode2,
                 IronmongerySetName($value->IronmongeryID),
@@ -161,6 +162,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->LeafThickness,
                     $configurableitems,
                     str_replace('_', ' ', $value->DoorLeafFacing),
+                    str_replace('_', ' ', $value->DoorLeafFinish),
                     $DoorDimensionsCode.$value->LeafWidth1.'x'.$value->LeafHeight.'x'.$value->LeafThickness,
                     $DoorDimensionsCode2,
                     IronmongerySetName($value->IronmongeryID),
@@ -289,7 +291,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'Door Type',
                 'Door Thickness',
                 'Door Mat',
-                'Door Finish',
+                'Door Leaf Facing',
+                'Door Leaf Finish',
                 'PRODUCT CODE LEAF 1 ',
                 'PRODUCT CODE LEAF 2',
                 'Ironmongery Ref',
@@ -321,8 +324,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 // 🔹 Existing header styling
                 // ----------------------------
                 if($this->section != 'Summary'){
-                    $cellRange1 = 'A1:V1'; // main merged header
-                    $cellRange2 = 'A2:V2'; // column headings row
+                    $cellRange1 = 'A1:W1'; // main merged header
+                    $cellRange2 = 'A2:W2'; // column headings row
                 }else{
                     $cellRange1 = 'A1:H1'; // main merged header
                     $cellRange2 = 'A2:H2'; // column headings row
@@ -349,7 +352,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
 
                 // Auto size all columns A–V
-                foreach (range('A', 'V') as $col) {
+                foreach (range('A', 'W') as $col) {
                     $event->sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 
