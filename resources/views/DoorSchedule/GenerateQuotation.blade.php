@@ -805,6 +805,16 @@
                                                                     </li>
 
                                                                     <li>
+                                                                        <a onclick="DoorNoChange(
+                                                                            '{{ $row['id'] }}',
+                                                                            '{{ $row['DoorType'] }}',
+                                                                            '{{ $row['doorNumber'] }}'
+                                                                        )" href="javascript:void(0);">
+                                                                            Edit Door No.
+                                                                        </a>
+                                                                    </li>
+
+                                                                    <li>
                                                                         <a onclick="adjustPrice(
                                                                             {{ $row['itemId'] }},
                                                                             {{ $row['id'] }},
@@ -1222,6 +1232,7 @@
         <input type="hidden" id="adjustPriceUrl" value="{{ url('/quotation/adjustPriceUrl') }}" />
         <input type="hidden" id="adjustSideScreenPriceUrl" value="{{ url('/quotation/adjustSideScreenPriceUrl') }}" />
         <input type="hidden" id="FloorNoChangeUrl" value="{{ url('/quotation/FloorNoChangeUrl') }}" />
+        <input type="hidden" id="DoorNoChangeUrl" value="{{ url('/quotation/DoorNoChangeUrl') }}" />
         <input type="hidden" id="favoriteItemAdd" value="{{ url('/quotation/favoriteItemAdd') }}" />
         <input type="hidden" id="favoriteDeleteItem" value="{{ url('/quotation/favoriteDeleteItem') }}" />
         <input type="hidden" id="ProjectId1" value="{{ !empty($ProjectId) ? $ProjectId : 0 }}" />
@@ -1495,6 +1506,38 @@
                         _token: $("#_token").val(),
                         itemMasterId: itemMasterId,
                         floor: floor
+                    },
+                    dataType: "Json",
+                    success: function(data) {
+                        if (data.status == true) {
+                            swal('success', data.msg, 'success').then(function() {
+                                location.reload();
+                            });
+                        } else {
+                            swal('error', data.msg, 'error').then(function() {
+                                location.reload();
+                            });
+                        }
+                    }
+                });
+            }
+            function DoorNoChangeAjax() {
+                $('.loader').empty().css({
+                    'display': 'block'
+                });
+                var NewDoorNoDoorNumber = $('#NewDoorNoDoorNumber').val();
+                var itemMasterId = $('#DoorNoitemMasterId').val();
+                var versionId = $('#versionId').val();
+                var QuotationId = $('#quotationId').val();
+                $.ajax({
+                    url: $("#DoorNoChangeUrl").val(),
+                    method: "POST",
+                    data: {
+                        _token: $("#_token").val(),
+                        itemMasterId: itemMasterId,
+                        NewDoorNoDoorNumber: NewDoorNoDoorNumber,
+                        versionId: versionId,
+                        QuotationId: QuotationId,
                     },
                     dataType: "Json",
                     success: function(data) {
@@ -3781,6 +3824,12 @@
                 $('#FloorNoitemMasterId').val(id);
                 $("#FloorNo-modal").modal("show");
             }
+            function DoorNoChange(id,DoorType,DoorNumber) {
+                $('#DoorNoDoorType').val(DoorType);
+                $('#DoorNoDoorNumber').val(DoorNumber);
+                $('#DoorNoitemMasterId').val(id);
+                $("#DoorNo-modal").modal("show");
+            }
         </script>
     @endsection
     {{--  //adjust price modal  --}}
@@ -3830,6 +3879,43 @@
                 </div>
                 <div class="modal-footer">
                     <button onclick="FloorNoChangeAjax()" class="btn btn-success">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="DoorNo-modal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Door No Change</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Door Type</label>
+                            <input type="text" class="form-control" id="DoorNoDoorType" readonly>
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <label for="doorTypeName">Door Number</label>
+                            <input type="text" class="form-control" id="DoorNoDoorNumber" readonly>
+                            <input type="hidden" class="form-control" id="DoorNoitemMasterId">
+                        </div>
+                        <div class="col-sm-12 mb-2">
+                            <div class="position-relative form-group">
+                                <label for="Door">New Door Number</label>
+                                <input type="text" class="form-control" id="NewDoorNoDoorNumber">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button onclick="DoorNoChangeAjax()" class="btn btn-success">Submit</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 </div>
             </div>

@@ -9360,6 +9360,40 @@ class DoorScheduleController extends Controller
         );
     }
 
+    public function DoorNoChangeUrl(Request $request)
+    {
+        if (isset($request->itemMasterId, $request->NewDoorNoDoorNumber,$request->versionId,$request->QuotationId)) {
+            $NewDoorNoDoorNumber = $request->NewDoorNoDoorNumber;
+            $mm = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $request->QuotationId, 'item_master.doorNumber' => $NewDoorNoDoorNumber, 'items.VersionId' => $request->versionId])->count();
+
+            if ($mm > 0) {
+                $response = [
+                    'status' => false,
+                    'msg' => 'Door Number ' . $NewDoorNoDoorNumber . ' is already exist for these quotation.'
+                ];
+            } else {
+                $updateDetails['doorNumber'] = $request->NewDoorNoDoorNumber;
+                ItemMaster::where('id', $request->itemMasterId)->update($updateDetails);
+                $response = [
+                    'status' => true,
+                    'msg' => 'Door Number updated successfully!'
+                ];
+            }
+        } else {
+            $response = [
+                'status' => false,
+                'msg' => 'something went wrong!'
+            ];
+        }
+
+        return response()->json(
+            $response,
+            200,
+            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+            JSON_UNESCAPED_UNICODE
+        );
+    }
+
     public function adjustPriceUrl(Request $request)
     {
         if (!empty($request->itemId) && !empty($request->quotationId)) {
