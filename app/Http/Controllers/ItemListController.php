@@ -1079,6 +1079,7 @@ class ItemListController extends Controller
                 //item (update)
                     //Main Options
                         'IntumescentLeafType'                   => $request->intumescentLeafType,
+                        'configurableitems'                   => $request->pageIdentity,
                         'LeafConstruction'                      => $request->leafConstruction,
                         'DoorType'                              => $doorType,
                         'FireRating'                            => $request->fireRating,
@@ -1371,6 +1372,7 @@ class ItemListController extends Controller
                 return response()->json(['status'=>'error','errors'=>$errorlist]);
             } else {
                 // item (insert)
+                    $item->configurableitems = $request->pageIdentity;
                     $item->QuotationId = $request->QuotationId;
                     $item->VersionId = $versionId;
                     $item->UserId = Auth::user()->id;

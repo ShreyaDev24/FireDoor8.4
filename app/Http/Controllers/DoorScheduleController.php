@@ -2111,6 +2111,19 @@ class DoorScheduleController extends Controller
         return null;
     }
 
+    public function storeConfigurableITEM(Request $request){
+        $QuotationIdData = Quotation::get();
+
+        foreach($QuotationIdData as $quotation){
+            $item = Item::where(['QuotationId' => $quotation->id])->get();
+            foreach($item as $data){
+                Item::where('itemId', $data->itemId)->update([
+                    'configurableitems' => $quotation->configurableitems
+                ]);
+            }
+        }
+    }
+
     public function nonconfigstorexcel(Request $request)
     {
         $quotationId = $request->quotationId;
@@ -4264,6 +4277,7 @@ class DoorScheduleController extends Controller
                         'IronmongaryPrice' => $item->IronmongaryPrice,
                         'itemId'           => $item->itemId,
                         'version_id'       => $item->VersionId,
+                        'configurableitems'       => $item->configurableitems,
 
                         'id'               => $m->id,
                         'doorNumber'       => $m->doorNumber,

@@ -142,6 +142,7 @@
                                             <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors</a></li>
                                             <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                            {{--  <li><a href="{{route('quotation/storeConfigurableITEM')}}">Store Configurable Item</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="ExportFrameExcel();">Frame Excel</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
                                             <li><a
@@ -475,10 +476,10 @@
                                                             @foreach ($configurableItem as $ci)
 
                                                             {{-- BUTTON LOGIC --}}
-                                                            @php
+                                                            {{--  @php
                                                                 $showButtons = empty($quotation_data->configurableitems)
                                                                     || $quotation_data->configurableitems == $ci->id;
-                                                            @endphp
+                                                            @endphp  --}}
 
                                                             <div class="col-sm-6 p-0 pr-1">
 
@@ -506,7 +507,7 @@
                                                                     @endif
 
                                                                     {{-- BUTTONS --}}
-                                                                    @if ($showButtons)
+                                                                    {{--  @if ($showButtons)  --}}
 
                                                                         <a href="javascript:void(0);"
                                                                         data-type="{{ $ci->id }}"
@@ -520,11 +521,11 @@
                                                                             Add Additional <br> Door Set
                                                                         </a>
 
-                                                                    @else
+                                                                    {{--  @else
                                                                         <p class="configure_btn">
                                                                             Another Door is selected for these quotation
                                                                         </p>
-                                                                    @endif
+                                                                    @endif  --}}
 
                                                                 </div>
                                                             </div>
@@ -681,6 +682,7 @@
                                         <thead class="table-header-bg">
                                             <tr class="text-white">
                                                 <th>Line</th>
+                                                <th>Door Core</th>
                                                 <th>Fire Rating</th>
                                                 <th>Door Type</th>
                                                 <th>Door No.</th>
@@ -728,6 +730,7 @@
                                                             <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
                                                         </td>
 
+                                                        <td>{{ doorcorename($row['configurableitems']) }}</td>
                                                         <td>{{ $row['FireRating'] }}</td>
                                                         <td>{{ $row['DoorType'] }}</td>
                                                         <td>{{ $row['doorNumber'] }}</td>
@@ -776,7 +779,7 @@
                                                                 <ul class="dropdown-menu drop_style">
 
                                                                     <li>
-                                                                        <a href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">
+                                                                        <a href="{{ ConfigurationURL($row['configurableitems'], $row['itemId'], $version_id) }}">
                                                                             Edit
                                                                         </a>
                                                                     </li>

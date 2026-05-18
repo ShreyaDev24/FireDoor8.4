@@ -430,6 +430,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/add-new-screens/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'getupdatedScreens'])->name('quotation/add-new-screens');
     Route::post('/store-new-door', [App\Http\Controllers\DoorScheduleController::class,'newdoorsstore'])->name('quotation/store-new-door');
     Route::post('/store-new-screen', [App\Http\Controllers\DoorScheduleController::class,'newScreenStore'])->name('quotation/store-new-screen');
+    Route::get('/storeConfigurableITEM', [App\Http\Controllers\DoorScheduleController::class,'storeConfigurableITEM'])->name('quotation/storeConfigurableITEM');
     Route::get('/add-door/{id}', [App\Http\Controllers\DoorScheduleController::class,'adddoor'])->name('quotation/add-door');
     Route::get('/excel-upload/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelupload'])->name('quotation/excel-upload');
     Route::post('/store-door', [App\Http\Controllers\DoorScheduleController::class,'storedoor'])->name('quotation/store-door');
