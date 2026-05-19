@@ -266,9 +266,16 @@ class ShortQuoteController extends Controller
                 $DoorDescription = DoorDescription($show->DoorsetType);
             }
 
-            $doorPrice = $show->AdjustPrice
-                            ? floatval($show->AdjustPrice)
-                            : floatval($show->DoorsetPrice);
+            $basePrice = floatval($show->DoorsetPrice);
+            $leafDelta = floatval($show->leaf_price_delta ?? 0);
+
+            $doorPrice = ($show->AdjustPrice)
+                        ? floatval($show->AdjustPrice)
+                        : (
+                            $leafDelta
+                                ? $leafDelta
+                                : $basePrice
+                        );
 
             $ironPrice = floatval($show->IronmongaryPrice);
             $doorPriceTotal = round($doorPrice, 2);
@@ -313,7 +320,16 @@ class ShortQuoteController extends Controller
                 $show->FireRating = 'FD60';
             }
 
-            $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
+            $basePrice = floatval($show->DoorsetPrice);
+            $leafDelta = floatval($show->leaf_price_delta ?? 0);
+
+            $DoorsetPrice = ($show->AdjustPrice)
+                        ? floatval($show->AdjustPrice)
+                        : (
+                            $leafDelta
+                                ? $leafDelta
+                                : $basePrice
+                        );
             $IronmongaryPrice = $show->IronmongaryPrice;
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
             $SumDoorsetPrice += $DoorsetPrice;
