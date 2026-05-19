@@ -9139,6 +9139,7 @@ class DoorScheduleController extends Controller
                     <td>' . $row->SOWidth . '</td>
                     <td>' . $row->SOHeight . '</td>
                     <td>' . $row->DoorLeafFacing . '</td>
+                    <td>' . $row->leaf_price_delta_adjust . '</td>
                     ' . $delete . '
                 </tr>';
                 $i++;

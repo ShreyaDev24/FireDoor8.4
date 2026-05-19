@@ -34,6 +34,7 @@
                             <th>SOWidth</th>
                             <th>SOHeight</th>
                             <th>Door Finish</th>
+                            <th>Adjusted Leaf Price</th>
                             <th>Action</th>
                         </tr>
                     </thead>
