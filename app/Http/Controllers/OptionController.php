@@ -2976,8 +2976,8 @@ class OptionController extends Controller
                 $vpareasize = trim((string) $row[$j++]);
                 $FireRating = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
-                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD30','FD30')->where('VicaimaDoorCore',4)->first();
-                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('FD30','FD30')->where('VicaimaDoorCore',4)->first();
+                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD60','FD60')->where('VicaimaDoorCore',4)->first();
+                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('FD60','FD60')->where('VicaimaDoorCore',4)->first();
 
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
