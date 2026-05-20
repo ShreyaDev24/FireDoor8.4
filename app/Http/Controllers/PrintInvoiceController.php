@@ -89,15 +89,7 @@ class PrintInvoiceController extends Controller
         $currency = QuotationCurrency($quotaion->Currency);
 
         // $configurationItem = 1;
-        $configurationItem = $quotaion->configurableitems;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
 
-        $configurationItemName = configurationDoor($configurationItem);
-        if($configurationItemName === 'Halspan'){
-            $configurationItemName = 'Halspan Optima';
-        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -492,6 +484,8 @@ class PrintInvoiceController extends Controller
             $SumDoorsetPrice += $DoorsetPrice;
             $SumIronmongaryPrice += $IronmongaryPrice;
 
+            $configurationItem = $show->configurableitems;
+
             $DoorLeafFinish = "N/A";
             if (!empty($show->DoorLeafFinish)) {
                 $dlf = DoorLeafFinish($configurationItem, $show->DoorLeafFinish);
@@ -785,12 +779,12 @@ class PrintInvoiceController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+            if($quotaion->show == 4 || $quotaion->show == 5 || $quotaion->show == 6 || $quotaion->show == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -934,7 +928,7 @@ class PrintInvoiceController extends Controller
                 ';
 
 
-        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+        if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
             $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }else{
             $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
@@ -987,6 +981,8 @@ class PrintInvoiceController extends Controller
         $PageBreakCounts = 1;
 
         foreach ($ed as $tt) {
+            $configurationItem = $tt->configurableitems;
+
             $getLeaf = IntumescentSealLeafType::where('id',$tt->IntumescentLeafType)->select('id','leaf_type_key','door_thickness')->first();
             if($getLeaf){
                 $fire = $tt->FireRating . ' - ' . $getLeaf->leaf_type_key . ' (' . $getLeaf->door_thickness . 'mm)';
@@ -2880,6 +2876,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
                 $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
                 $ElevSL2Height = $SLight2Height - $SideLight2FrameThickness - $SideLight2FrameThickness;
+            }
+
+            $configurationItemName = configurationDoor($configurationItem);
+            if($configurationItemName === 'Halspan'){
+                $configurationItemName = 'Halspan Optima';
             }
 
             $elevTbl .= '</table>
