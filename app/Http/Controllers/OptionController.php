@@ -2974,12 +2974,23 @@ class OptionController extends Controller
                 $glasstype = trim((string) $row[$j++]);
                 $glazing = trim((string) $row[$j++]);
                 $vpareasize = trim((string) $row[$j++]);
+                $FireRating = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
-                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('Flamebreak',7)->first();
-                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('Flamebreak',7)->first();
+                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('VicaimaDoorCore',4)->first();
+                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('VicaimaDoorCore',4)->first();
+
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
-                        $data->Configurableitems = intval(7);
+                        $data->NFR = NULL;
+
+                        if($FireRating === 'FD30'){
+                            $data->FD30 = 'FD30';
+                        }
+
+                        if($FireRating === 'FD60'){
+                            $data->FD60 = 'FD60';
+                        }
+                        $data->Configurableitems = intval(4);
                         $data->glass_id = $GlassType->id;
                         $data->glazing_system = $GlazingSystem->id;
                         $data->GlassType = $GlassType->GlassType;
@@ -3018,7 +3029,7 @@ class OptionController extends Controller
                 $FireRating = trim((string) $row[$j++]);
                 $glazingBead = trim((string) $row[$j++]);
 
-                $implode = json_encode(explode(',',$glazingBead));
+                $explode = array_map('trim', explode(',', $glazingBead));
 
                 $key = str_replace(' ', '_', $glasstype);
 
@@ -3040,6 +3051,18 @@ class OptionController extends Controller
                 if($configurable === '8'){
                     $data->Stredor = 8;
                 }
+                if($configurable === '4'){
+                    $data->VicaimaDoorCore = 4;
+                }
+                if($configurable === '5'){
+                    $data->Seadec = 5;
+                }
+                if($configurable === '6'){
+                    $data->Deanta = 6;
+                }
+                if($configurable === '9'){
+                    $data->MMM = 9;
+                }
 
                 $data->NFR = NULL;
 
@@ -3056,7 +3079,7 @@ class OptionController extends Controller
                 $data->GlassThickness = $thickness;
                 $data->VpAreaSize = $vpareasize;
                 $data->GlassIntegrity = $integrity;
-                $data->GlazingBeads = $implode;
+                $data->GlazingBeads = json_encode($explode);
                 $data->EditBy = Auth::user()->id;
                 $data->save();
             }
@@ -3106,6 +3129,19 @@ class OptionController extends Controller
 
                 if($configurable === '8'){
                     $data->Stredor = 8;
+                }
+
+                if($configurable === '4'){
+                    $data->VicaimaDoorCore = 4;
+                }
+                if($configurable === '5'){
+                    $data->Seadec = 5;
+                }
+                if($configurable === '6'){
+                    $data->Deanta = 6;
+                }
+                if($configurable === '9'){
+                    $data->MMM = 9;
                 }
 
                 $data->NFR = NULL;
