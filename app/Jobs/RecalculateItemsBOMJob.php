@@ -72,7 +72,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
                     } else{
                         Item::where('itemId', $itemid)->update([
                             'DoorsetPrice' => $GTSellPriceTotal,
-                            'AdjustPrice' => $Items->AdjustPrice,
+                            'AdjustPrice' => $data->AdjustPrice,
                         ]);
                     }
 
