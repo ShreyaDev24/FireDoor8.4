@@ -21,18 +21,14 @@ class GlassGlazingController extends Controller
     {
         $auth = auth()->user();
 
-        $items = GlazingSystem::leftJoin('selected_glazing_system', function ($join) use ($auth) {
-                $join->on('glazing_system.id', '=', 'selected_glazing_system.glazingId')
-                    ->where('selected_glazing_system.userId', $auth->id);
+        $items = GlassGlazingSystem::leftJoin('selected_glass_type as sg', function ($join) use ($auth) {
+                $join->on('glass_glazing_system.glass_id', '=', 'sg.glass_id')
+                     ->where('sg.editBy', $auth->id);
             })
-            ->join('glass_glazing_system', 'glass_glazing_system.glazing_system', '=', 'glazing_system.id')
+            ->join('glass_type', 'glass_type.id', 'glass_glazing_system.glass_id')
             ->whereIn('glass_glazing_system.UserId', [$auth->id, 1])
             ->select(
-                'glazing_system.*',
-                'selected_glazing_system.selectedPrice',
-                'selected_glazing_system.id as selectedId',
-                'selected_glazing_system.userId as selectedUserId',
-
+                'glass_type.*',
                 'glass_glazing_system.GlassType',
                 'glass_glazing_system.GlazingSystem',
                 'glass_glazing_system.VPAreaSize',
@@ -42,17 +38,6 @@ class GlassGlazingController extends Controller
             ->orderBy('glass_glazing_system.GlassType', 'ASC')
             ->orderBy('glass_glazing_system.GlazingSystem', 'ASC')
             ->get();
-            // DB::transaction(function () use ($items) {
-
-            //     foreach ($items as $val) {
-
-
-            //         // if ($fire) {
-            //             GlassGlazingSystem::where('id', $val->mainId)
-            //                 ->update(['NFR' => $val->NFR,'FD30' => $val->FD30,'FD60' => $val->FD60]);
-            //         // }
-            //     }
-            // });
 
 
         return view('SelectedOptions.glass_glazing_system.index', compact('items'));

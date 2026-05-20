@@ -149,6 +149,8 @@
 
 
                     <div hidden id="glazing-system-filter">{{route('items/glazing-system-filter')}}</div>
+                    <div hidden id="glazing-filter">{{route('items/glazing-filter')}}</div>
+                    <div hidden id="glass-glazing-filter">{{route('items/glass-glazing-filter')}}</div>
                     <div hidden id="architrave-system-filter">{{route('items/architrave-system-filter')}}</div>
                     <div hidden id="fire-rating-filter">{{route('items/fire-rating-filter')}}</div>
                     <div hidden id="glazing-beads-filter">{{route('items/glazing-beads-filter')}}</div>
@@ -1141,6 +1143,7 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item['GlassIntegrity']))
     glassTypeFilter(true);
+    glass_glazing_system(true);
     doorThicknessFilter("{{$Item['FireRating']}}");
     glazingSystemFIlter("{{$Item['FireRating']}}");
     @endif
@@ -1169,6 +1172,9 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item["GlassType"]))
     GlassTypeChange("{{$Item['GlassType']}}");
+    @endif
+    @if(isset($Item["GlazingSystems"]))
+    glazing_system("{{$Item['FireRating']}}",true)
     @endif
 
     @if(isset($Item["opGlazingSystems"]))
