@@ -676,6 +676,7 @@
                                     </table>
                                 </div>
                             </div>
+                            
                             <div class="main-card mb-3" id="quotation-item-list">
                                 <div class="card-body">
                                     <table class="table table-bordered table-striped" id="itemTable">

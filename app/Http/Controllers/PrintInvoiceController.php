@@ -779,7 +779,7 @@ class PrintInvoiceController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->show == 4 || $quotaion->show == 5 || $quotaion->show == 6 || $quotaion->show == 9){
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
@@ -847,7 +847,7 @@ class PrintInvoiceController extends Controller
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -973,7 +973,7 @@ class PrintInvoiceController extends Controller
         ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
         // ->where('items.itemId',2342) to see particular quote
-        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
 
         $TotalItems = count($ed->toArray());
 
@@ -2977,7 +2977,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
-            if($quotaion->configurableitems == 4){
+            if($tt->configurableitems == 4){
                     $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">Door leaf Finish</td>
