@@ -7119,14 +7119,15 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
 
 function doorcorename($doorCore): string {
     $doorCoreValue = match ($doorCore) {
-        1 => 'streboard',
-        2 => 'halspan',
-        3 => 'norma',
-        4 => 'vicaima',
-        5 => 'seadec',
+        1 => 'Streboard',
+        2 => 'Halspan',
+        3 => 'Norma',
+        4 => 'Vicaima',
+        5 => 'Seadec',
         6 => 'Deanta',
         7 => 'Flamebreak',
         8 => 'Stredor',
+        9 => 'MMM',
         default => 'Unknown', // ✅ Safe default
     };
 

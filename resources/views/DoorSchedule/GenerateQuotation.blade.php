@@ -65,13 +65,13 @@
             text-transform: uppercase;
             text-align: center;
         }
-        #itemTable {
+        .itemTable {
             width: 100% !important;
             table-layout: fixed;
         }
 
-        #itemTable th,
-        #itemTable td {
+        .itemTable th,
+        .itemTable td {
             white-space: normal !important;
             word-wrap: break-word;
         }
@@ -79,7 +79,7 @@
             overflow-x: inherit !important;
         }
 
-        #itemTable thead th {
+        .itemTable thead th {
             font-size: 10px;
             padding: 4px 6px;
             white-space: nowrap; /* prevents wrapping */
@@ -676,206 +676,92 @@
                                     </table>
                                 </div>
                             </div>
-                            
+
                             <div class="main-card mb-3" id="quotation-item-list">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped" id="itemTable">
-                                        <thead class="table-header-bg">
-                                            <tr class="text-white">
-                                                <th>Line</th>
-                                                <th>Door Core</th>
-                                                <th>Fire Rating</th>
-                                                <th>Door Type</th>
-                                                <th>Door No.</th>
-                                                <th>Floor</th>
-                                                <th>Item</th>
-                                                <th>Handing</th>
-                                                <th>S.O. Width</th>
-                                                <th>S.O. Height</th>
-                                                <th>S.O. Depth</th>
-                                                <th>Doorset Price</th>
-                                                <th>Ironmongery Price</th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="versionData">
-                                            @if (!empty($data) && count($data) > 0)
 
-                                                @php
-                                                    $index = 0;
-                                                    $SI = 1;
-                                                @endphp
+                                    <div class="container-fluid">
+                                        <div class="row">
 
-                                                @foreach ($data as $row)
+                                            {{-- Tabs --}}
+                                            <div class="col-sm-12 p-0">
 
-                                                    @php
-                                                        if($row['DoorsetType'] == 'leaf_and_a_half'){
-                                                            $row['DoorsetType'] = 'LAH';
-                                                            if($row['Handing'] == 'Left_Hand_Master_Right_Hand_Slave'){
-                                                                $row['Handing'] = 'Left';
-                                                            }else{
-                                                                $row['Handing'] = 'Right';
-                                                            }
-                                                        }
-                                                        $version_id = $row['version_id'] ?? 0;
-                                                        $SvgImage = empty($row['SvgImage']) ? 'color_red' : '';
-                                                    @endphp
+                                                <ul class="CustomTabs tabs inline_tab">
 
-                                                    {{-- 🔥 LOOP DOORS --}}
+                                                    {{-- ALL TAB --}}
+                                                    <li class="active">
+                                                        <a data-toggle="tab" href="#All">All</a>
+                                                    </li>
 
-                                                    <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
-                                                        <td>
-                                                            {{ $SI }}
-                                                            <input type="hidden" class="check" value="{{ $row['itemId'] }}">
-                                                            <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
-                                                        </td>
+                                                    {{-- DYNAMIC CONFIGURABLE ITEM TABS --}}
+                                                    @foreach($uniqueConfigurableItems as $key => $tab)
 
-                                                        <td>{{ doorcorename($row['configurableitems']) }}</td>
-                                                        <td>{{ $row['FireRating'] }}</td>
-                                                        <td>{{ $row['DoorType'] }}</td>
-                                                        <td>{{ $row['doorNumber'] }}</td>
-                                                        <td>{{ $row['floor'] }}</td>
-                                                        <td>{{ $row['DoorsetType'] }}</td>
-                                                        <td>{{ $row['Handing'] }}</td>
-                                                        <td>{{ $row['SOWidth'] }}</td>
-                                                        <td>{{ $row['SOHeight'] }}</td>
-                                                        <td>{{ $row['SOWallThick'] }}</td>
-                                                        <td>
-                                                            {{ number_format(
-                                                                $row['AdjustPrice']
-                                                                    ? floatval($row['AdjustPrice'])
-                                                                    : (
-                                                                        !empty($row['leafpricedelta'])
-                                                                            ? floatval($row['leafpricedelta'])
-                                                                            : floatval($row['DoorsetPrice'])
-                                                                    ),
-                                                                2
-                                                            ) }}
-                                                        </td>
+                                                        @php
+                                                            $tabName = doorcorename($tab);
+                                                            $tabId = \Illuminate\Support\Str::slug($tabName, '_');
+                                                        @endphp
 
-                                                        <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
+                                                        <li>
+                                                            <a data-toggle="tab" href="#{{ $tabId }}">
+                                                                {{ $tabName }}
+                                                            </a>
+                                                        </li>
 
-                                                        <td>
-                                                             {{ number_format(
-                                                                    (
-                                                                        $row['AdjustPrice']
-                                                                            ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            : (
-                                                                                !empty($row['leafpricedelta'])
-                                                                                    ? floatval($row['leafpricedelta']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            )
-                                                                    ),
-                                                                    2
-                                                            ) }}
-                                                        </td>
+                                                    @endforeach
 
-                                                        <td class="text-center">
-                                                            <div class="dropdown">
-                                                                <a class="dropdown-toggle btn btn-light" data-toggle="dropdown">
-                                                                    <i class="fa fa-ellipsis-h"></i>
-                                                                </a>
+                                                </ul>
 
-                                                                <ul class="dropdown-menu drop_style">
-
-                                                                    <li>
-                                                                        <a href="{{ ConfigurationURL($row['configurableitems'], $row['itemId'], $version_id) }}">
-                                                                            Edit
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $row['id'] }}','Door','Configurable Favorite Item','Configurable Type Name')"
-                                                                            href="javascript:void(0);">
-                                                                                Name Configuration
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="FloorNoChange(
-                                                                            '{{ $row['id'] }}',
-                                                                            '{{ $row['DoorType'] }}',
-                                                                            '{{ $row['doorNumber'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Edit Floor No.
-                                                                        </a>
-                                                                    </li>
-
-                                                                   <li>
-                                                                        <a href="{{ url('quotation/add-new-doors') }}/{{ $quotationId }}/{{ $version_id }}/{{ $row['itemId'] }}">
-                                                                            Add New
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="DoorNoChange(
-                                                                            '{{ $row['id'] }}',
-                                                                            '{{ $row['DoorType'] }}',
-                                                                            '{{ $row['doorNumber'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Edit Door No.
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="adjustPrice(
-                                                                            {{ $row['itemId'] }},
-                                                                            {{ $row['id'] }},
-                                                                            {{ floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) }}
-                                                                        )" href="javascript:void(0);">
-                                                                            Adjust Price
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="adjustLeafType(
-                                                                            {{ $row['itemId'] }},
-                                                                            {{ $row['id'] }},
-                                                                            '{{ $row['DoorDimensions'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Door Leaf Adjust Price
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="CopyDoorSet({{ $quotationId }}, {{ $row['id'] }})"
-                                                                        href="javascript:void(0);">
-                                                                            Copy
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="remove_item({{ $row['id'] }})" href="javascript:void(0);">
-                                                                            Remove
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="edit_image1({{ $row['itemId'] }})"
-                                                                        href="javascript:void(0);">
-                                                                            Validate
-                                                                        </a>
-                                                                    </li>
-
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    @php
-                                                        $index++;
-                                                        $SI++;
-                                                    @endphp
+                                            </div>
 
 
-                                                @endforeach
-                                            @endif
+                                            <div class="col-sm-12 mt-3">
 
-                                        </tbody>
-                                    </table>
+                                                <div class="CustomTabContent tab-content">
+
+                                                    {{-- ================= ALL TAB ================= --}}
+                                                    <div id="All" class="tab-pane active">
+
+                                                        @include('DoorSchedule.schedule-table', [
+                                                            'rows' => $data,
+                                                            'quotationId' => $quotationId
+                                                        ])
+
+                                                    </div>
+
+
+                                                    {{-- ================= DYNAMIC TABS ================= --}}
+                                                    @foreach($uniqueConfigurableItems as $key => $tab)
+
+                                                        @php
+                                                            $tabName = doorcorename($tab);
+                                                            $tabId = \Illuminate\Support\Str::slug($tabName, '_');
+
+                                                            $filteredRows = collect($data)->filter(function($row) use ($tab){
+                                                                return $row['configurableitems'] == $tab;
+                                                            });
+                                                        @endphp
+
+                                                        <div id="{{ $tabId }}" class="tab-pane fade">
+
+                                                            @include('DoorSchedule.schedule-table', [
+                                                                'rows' => $filteredRows,
+                                                                'quotationId' => $quotationId
+                                                            ])
+
+                                                        </div>
+
+                                                    @endforeach
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
+
                             <div class="main-card mb-3" id="NonConfig-item-list" style="display: none;">
                                 <div class="card-body">
                                     <table class="table table-bordered table-striped">
@@ -1267,7 +1153,7 @@
         <script>
             $(document).ready(function () {
 
-                let table = $('#itemTable').DataTable({
+                let table = $('.itemTable').DataTable({
                     paging: false,
                     ordering: true,
                     searching: false,
@@ -1282,6 +1168,7 @@
                         { orderable: false, targets: [0, -1] },
 
                         { width: "50px", targets: 0 },  // Line column
+                        { width: "50px", targets: 6 },   // Floor column (adjust index if needed)
                         { width: "50px", targets: 5 }   // Floor column (adjust index if needed)
                     ]
                 });

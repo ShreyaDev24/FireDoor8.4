@@ -4291,6 +4291,18 @@ class DoorScheduleController extends Controller
             ->sortBy('doorNumber') // 🔥 full result doorNumber se sort
             ->values();
 
+
+            // ✅ Unique configurableitems array
+            $uniqueConfigurableItems = $Schedule
+                ->pluck('configurableitems')
+                ->filter()
+                ->unique()
+                ->sortBy(function ($item) {
+                    return doorcorename($item);
+                })
+                ->values()
+                ->toArray();
+
             /* Totals */
             $totals = Item::join('item_master', 'item_master.itemID', '=', 'items.itemId')
                 ->where('items.VersionId', $vId)
@@ -4385,6 +4397,7 @@ class DoorScheduleController extends Controller
 
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
+                'uniqueConfigurableItems' => $uniqueConfigurableItems,
                 'favorites' => $favorites,
                 'SideScreenData' => $SideScreenData,
                 'quotation_data' => $quotation_data,
