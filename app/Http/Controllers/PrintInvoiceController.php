@@ -383,14 +383,13 @@ class PrintInvoiceController extends Controller
             $basePrice = floatval($show->DoorsetPrice ?? 0);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
-            if ($show->AdjustPrice) {
-                $doorPrice = floatval($show->AdjustPrice);
-            } elseif ($leafDelta) {
+            if ($leafDelta) {
                 $doorPrice = $leafDelta;
+            } elseif ($show->AdjustPrice) {
+                $doorPrice = floatval($show->AdjustPrice);
             } else {
                 $doorPrice = $basePrice;
             }
-
 
             // $doorPrice = $show->AdjustPrice
             //                 ? floatval($show->AdjustPrice)
@@ -476,13 +475,13 @@ class PrintInvoiceController extends Controller
             $basePrice = floatval($show->DoorsetPrice);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
-            $DoorsetPrice = ($show->AdjustPrice)
+           $DoorsetPrice = $leafDelta
+                ? $leafDelta
+                : (
+                    $show->AdjustPrice
                         ? floatval($show->AdjustPrice)
-                        : (
-                            $leafDelta
-                                ? $leafDelta
-                                : $basePrice
-                        );
+                        : $basePrice
+                );
             $IronmongaryPrice = $show->IronmongaryPrice;
 
             // dd( $IronmongaryPrice);

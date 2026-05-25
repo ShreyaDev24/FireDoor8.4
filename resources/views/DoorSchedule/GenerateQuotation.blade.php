@@ -754,15 +754,12 @@
 
                                                         <td>
                                                              {{ number_format(
-                                                                    (
-                                                                        $row['AdjustPrice']
-                                                                            ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            : (
-                                                                                !empty($row['leafpricedelta'])
-                                                                                    ? floatval($row['leafpricedelta']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            )
-                                                                    ),
+                                                                    !empty($row['leafpricedelta'])
+                                                                        ? floatval($row['leafpricedelta'])
+                                                                        : (!empty($row['AdjustPrice'])
+                                                                            ? floatval($row['AdjustPrice'])
+                                                                            : floatval($row['DoorsetPrice'])
+                                                                        ),
                                                                     2
                                                             ) }}
                                                         </td>
