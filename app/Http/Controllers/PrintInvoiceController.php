@@ -436,12 +436,17 @@ class PrintInvoiceController extends Controller
         //PDF 2
         $CompanyId = get_company_id($id)->id;
         $a = '';
+        $aCustom = '';
         $i = 1;
         $DoorQuantity = 0;
+        $DoorQuantityCustom = 0;
         $DoorsetPrice = 0;
+        $DoorsetPriceCustom = 0;
 
         $SumDoorsetPrice = 0;
+        $SumDoorsetPriceCustom = 0;
         $SumIronmongaryPrice = 0;
+        $SumIronmongaryPriceCustom = 0;
         // $quotation_version = QuotationVersionItems::where(['QuotationId' => $quatationId , 'Version' => $version ])->count();dd($quotation_version);
 
         foreach ($shows as $show) {
@@ -458,7 +463,7 @@ class PrintInvoiceController extends Controller
             //     $item = Item::where(['itemId' => $dt->itemID , 'CompanyID' => $CompanyId , 'QuotationId' => $quatationId ])->get();
             //     foreach($item as $show){
             // $totalpriceperdoorset = $show->DoorsetPrice + $show->IronmongaryPrice;
-            $DoorQuantity++;
+
             // $DoorsetPrice += $show->DoorsetPrice;
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
@@ -468,21 +473,43 @@ class PrintInvoiceController extends Controller
             $basePrice = floatval($show->DoorsetPrice);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
-            $DoorsetPrice = ($show->AdjustPrice)
-                        ? floatval($show->AdjustPrice)
-                        : (
-                            $leafDelta
-                                ? $leafDelta
-                                : $basePrice
-                        );
-            $IronmongaryPrice = $show->IronmongaryPrice;
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                $DoorsetPrice = ($show->AdjustPrice)
+                            ? floatval($show->AdjustPrice)
+                            : (
+                                $leafDelta
+                                    ? $leafDelta
+                                    : $basePrice
+                            );
+                $IronmongaryPrice = $show->IronmongaryPrice;
 
-            // dd( $IronmongaryPrice);
-            $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
+                // dd( $IronmongaryPrice);
+                $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
 
-            $SumDoorsetPrice += $DoorsetPrice;
-            $SumIronmongaryPrice += $IronmongaryPrice;
+                $SumDoorsetPrice += $DoorsetPrice;
+                $SumIronmongaryPrice += $IronmongaryPrice;
+
+                $DoorQuantity++;
+            }else{
+                $DoorsetPriceCustom = ($show->AdjustPrice)
+                            ? floatval($show->AdjustPrice)
+                            : (
+                                $leafDelta
+                                    ? $leafDelta
+                                    : $basePrice
+                            );
+                $IronmongaryPriceCustom = $show->IronmongaryPrice;
+
+                // dd( $IronmongaryPrice);
+                $totalpriceperdoorsetCustom = $DoorsetPriceCustom + $IronmongaryPriceCustom;
+
+
+                $SumDoorsetPriceCustom += $DoorsetPriceCustom;
+                $SumIronmongaryPriceCustom += $IronmongaryPriceCustom;
+
+                $DoorQuantityCustom++;
+            }
 
             $configurationItem = $show->configurableitems;
 
@@ -843,7 +870,7 @@ class PrintInvoiceController extends Controller
                             ';
             }else{
 
-                $a .= '<tr>
+                $aCustom .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
@@ -897,11 +924,11 @@ class PrintInvoiceController extends Controller
                             <td>' . $COC . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . number_format($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . number_format($IronmongaryPrice, 2) . '</td>';
+                                $aCustom .= '<td class="tbl_last">' . number_format($DoorsetPriceCustom, 2) . '</td>
+                                <td class="tbl_last">' . number_format($IronmongaryPriceCustom, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . number_format($totalpriceperdoorset, 2) . '</td>
+                            $aCustom .= '<td class="tbl_last">' . number_format($totalpriceperdoorsetCustom, 2) . '</td>
                             </tr>
                             ';
             }
@@ -912,7 +939,7 @@ class PrintInvoiceController extends Controller
         }
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
-
+        $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
         $a .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
@@ -927,17 +954,36 @@ class PrintInvoiceController extends Controller
                     </tr>
                 ';
 
+        $aCustom .= '
+                    <tr>
+                        <td class="tbl_bottom" colspan="4"></td>
+                        <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
+                        <td class="tbl_bottom" colspan="39"></td>';
+                        if($HideCosts == 0){
+                            $aCustom .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPriceCustom, 2) . '</td>
+                            <td class="tbl_bottom">' . $currency.round($SumIronmongaryPriceCustom, 2) . '</td>';
+                        }
 
-        if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                        $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
+                    </tr>
+                ';
+
+        if(isset($a)){
             $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
-        }else{
-            $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
 
         // return $pdf4->download('file4.pdf');
             $path4 = public_path() . '/allpdfFile';
             $fileName4 = $id . '4' . '.' . 'pdf';
             $pdf4->save($path4 . '/' . $fileName4);
+
+        if(isset($aCustom)){
+            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        }
+            $path4_custom = public_path() . '/allpdfFile';
+            $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
+            $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
+
         // side screen door list
 
         $s2 = '';
@@ -3775,6 +3821,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     public_path() . '/allpdfFile' . '/' . $fileName3,
                     public_path() . '/allpdfFile' . '/' . $fileName4_2,
                     public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
                     public_path() . '/allpdfFile' . '/' . $fileName9,
                     public_path() . '/allpdfFile' . '/' . $fileName6,
                     public_path() . '/allpdfFile' . '/' . $fileName8,
@@ -3790,6 +3837,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     public_path() . '/allpdfFile' . '/' . $fileName3,
                     public_path() . '/allpdfFile' . '/' . $fileName4_2,
                     public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
                     public_path() . '/allpdfFile' . '/' . $fileName9,
                     public_path() . '/allpdfFile' . '/' . $fileName6,
                     public_path() . '/allpdfFile' . '/' . $fileName8,
