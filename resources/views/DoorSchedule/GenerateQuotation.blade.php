@@ -739,11 +739,11 @@
                                                         <td>{{ $row['SOWallThick'] }}</td>
                                                         <td>
                                                             {{ number_format(
-                                                                $row['AdjustPrice']
-                                                                    ? floatval($row['AdjustPrice'])
+                                                                $row['leafpricedelta']
+                                                                    ? floatval($row['leafpricedelta'])
                                                                     : (
-                                                                        !empty($row['leafpricedelta'])
-                                                                            ? floatval($row['leafpricedelta'])
+                                                                        !empty($row['AdjustPrice'])
+                                                                            ? floatval($row['AdjustPrice'])
                                                                             : floatval($row['DoorsetPrice'])
                                                                     ),
                                                                 2
