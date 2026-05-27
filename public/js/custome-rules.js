@@ -3095,13 +3095,14 @@ function copyOfSideLite1Change(isstatus = false){
         const doorsetTypeValue = $('#doorsetType').val();   // SD,DD
         const fireRatingValue = $('#fireRating').val();     // FD30
         const overpanelValue2 = $('#overpanel').val();     // Yes
+        const OPFLTurnOnOff = $('#OPFLTurnOnOff').val();     // Yes
         const leafWidth1Value = $('#leafWidth1').val();
         const leafHeightNoOPValue = $('#leafHeightNoOP').val();
         var sOWidthValue = $('#sOWidth').val();
         var sOHeightValue = $('#sOHeight').val();
         const intumescentSealType = $('#intumescentSealType').val();
         let overpanel = '';
-        if(overpanelValue2 == 'Yes'){
+        if(overpanelValue2 == 'Yes' || OPFLTurnOnOff == 'Yes'){
             overpanel = 'OP';
         }
 

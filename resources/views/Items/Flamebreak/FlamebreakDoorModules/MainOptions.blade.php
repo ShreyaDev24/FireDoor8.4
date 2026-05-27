@@ -234,6 +234,26 @@
                                 class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration" required>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="ironmongerySet">Overpanel/Fan light Turn Off
+                                <script type="text/javascript">
+                                    document.write(Tooltip("Set 'Overpanel/Fan Light' to Yes to disable it."));
+                                </script>
+                            </label>
+                            <select name="OPFLTurnOnOff" id="OPFLTurnOnOff" class="form-control">
+                                <option value="Yes"
+                                    {{ (isset($Item['OPFLTurnOnOff']) && $Item['OPFLTurnOnOff'] == 'Yes') ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+
+                                <option value="No"
+                                    {{ (!isset($Item['OPFLTurnOnOff']) || $Item['OPFLTurnOnOff'] == 'No') ? 'selected' : '' }}>
+                                        No
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                         <div class="position-relative form-group d-flex">
                             <label for="Dropseal">Dropseal</label>

@@ -234,6 +234,26 @@
                                 class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration" required>
                         </div>
                     </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                             <label for="ironmongerySet">Overpanel/Fan light Turn Off
+                                <script type="text/javascript">
+                                    document.write(Tooltip("Set 'Overpanel/Fan Light' to Yes to disable it."));
+                                </script>
+                            </label>
+                            <select name="OPFLTurnOnOff" id="OPFLTurnOnOff" class="form-control">
+                                <option value="Yes"
+                                    {{ (isset($Item['OPFLTurnOnOff']) && $Item['OPFLTurnOnOff'] == 'Yes') ? 'selected' : '' }}>
+                                    Yes
+                                </option>
+
+                                <option value="No"
+                                    {{ (!isset($Item['OPFLTurnOnOff']) || $Item['OPFLTurnOnOff'] == 'No') ? 'selected' : '' }}>
+                                    No
+                                </option>
+                            </select>
+                        </div>
+                    </div>
                     <div class="col-md-12">
                          <div class="position-relative form-group d-flex">
                              <label for="Dropseal">Dropseal</label>
@@ -278,28 +298,6 @@
                             <label for="gap_NFR" style="display: none;">GAP</label>
                             <input type="number" min="2" max="4" id="gap" name="gap" value="@if(isset($Item["GAP"])){{$Item["GAP"]}}@else{{''}}@endif"
                                 class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration forcoreWidth1" required>
-                        </div>
-                    </div>
-                    <div class="col-md-6 framehideshow">
-                        <div class="position-relative form-group">
-                            <label for="frameThickness">Frame Thickness
-                                @if(!empty($tooltip->frameThickness))
-                                <script type="text/javascript">
-                                document.write(Tooltip('{{$tooltip->frameThickness}}'));
-                                </script>
-                                @endif
-                            </label>
-                            {{-- <select name="frameThickness"
-                                class="form-control change-event-calulation door-configuration" id="frameThickness" required>
-                                <option value="" @if(isset($Item["FrameThickness"])) @if($Item["FrameThickness"]==""
-                                    ) {{'selected'}} @endif @endif>Select Frame thickness</option>
-                                <option value="30" @if(isset($Item["FrameThickness"]))
-                                    @if($Item["FrameThickness"]=="30" ) {{'selected'}} @endif @endif>30</option>
-                                <option value="32" @if(isset($Item["FrameThickness"]))
-                                    @if($Item["FrameThickness"]=="32" ) {{'selected'}} @endif @endif>32</option>
-                            </select> --}}
-                            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($Item["FrameThickness"])){{$Item["FrameThickness"]}}@else{{''}}@endif"
-                                class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                         </div>
                     </div>
                     <div class="col-md-6">
