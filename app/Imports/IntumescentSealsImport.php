@@ -17,27 +17,47 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
             'halspan'   => 2,
             'flamebreak' => 7,
             'stredoor'   => 8,
+            'vicaima'   => 4,
         ];
 
         // Convert Excel value → lowercase (important)
         $configurableName = strtolower(trim($row['configurable_item'] ?? ''));
-        return new SettingIntumescentSeals2([
-            'configurableitems' => $configurableMap[$configurableName] ?? null,
-            'firerating'        => $row['firedoor'] ?? null,
-            'tag'               => $row['firedoor'] ?? null,
-            'configuration'     => $row['configuration'] ?? null,
-            'intumescentSeals'  => $row['intumescent_seal'] ?? null,
-            'brand'             => $row['brand'] ?? null,
-            'firetested'        => $row['fire_tested'] ?? null,
-            'Point1height'      => $row['height1'] ?? null,
-            'Point1width'       => $row['width1'] ?? null,
-            'Point2height'      => $row['height2'] ?? null,
-            'Point2width'       => $row['width2'] ?? null,
-            'FireOnly'          => $this->formatFireType($row['fireonly_type'] ?? null),
-            'customeleafTypes'  => $this->mapLeafTypes($row['leaf_type'] ?? null, $row['configurable_item'] ?? null),
-            'frameTypes'        => $this->extractNumbers($row['frame'] ?? null),
-            'editBy'            => Auth::user()->id ?? null,
-        ]);
+         if(!isset($configurableMap[$configurableName]) || $configurableMap[$configurableName] == 4) {
+             // Log or handle unknown configurable item
+                return new SettingIntumescentSeals2([
+                    'configurableitems' => $configurableMap[$configurableName] ?? null,
+                    'firerating'        => $row['firedoor'] ?? null,
+                    'tag'               => $row['firedoor'] ?? null,
+                    'configuration'     => $row['configuration'] ?? null,
+                    'intumescentSeals'  => $row['intumescent_seal'] ?? null,
+                    'brand'             => $row['brand'] ?? null,
+                    'firetested'        => $row['fire_tested'] ?? null,
+                    'Point1height'      => $row['height1'] ?? null,
+                    'Point1width'       => $row['width1'] ?? null,
+                    'Point2height'      => $row['height2'] ?? null,
+                    'Point2width'       => $row['width2'] ?? null,
+                    'FireOnly'          => $this->formatFireType($row['fireonly_type'] ?? null),
+                    'editBy'            => Auth::user()->id ?? null,
+                ]);
+         } else{
+                return new SettingIntumescentSeals2([
+                'configurableitems' => $configurableMap[$configurableName] ?? null,
+                'firerating'        => $row['firedoor'] ?? null,
+                'tag'               => $row['firedoor'] ?? null,
+                'configuration'     => $row['configuration'] ?? null,
+                'intumescentSeals'  => $row['intumescent_seal'] ?? null,
+                'brand'             => $row['brand'] ?? null,
+                'firetested'        => $row['fire_tested'] ?? null,
+                'Point1height'      => $row['height1'] ?? null,
+                'Point1width'       => $row['width1'] ?? null,
+                'Point2height'      => $row['height2'] ?? null,
+                'Point2width'       => $row['width2'] ?? null,
+                'FireOnly'          => $this->formatFireType($row['fireonly_type'] ?? null),
+                'customeleafTypes'  => $this->mapLeafTypes($row['leaf_type'] ?? null, $row['configurable_item'] ?? null),
+                'frameTypes'        => $this->extractNumbers($row['frame'] ?? null),
+                'editBy'            => Auth::user()->id ?? null,
+            ]);
+         }
     }
 
     private function extractNumbers($value)
