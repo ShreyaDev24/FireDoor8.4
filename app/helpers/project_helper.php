@@ -1468,9 +1468,9 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
     $item->architraveFinishcolor = $data->ArchitraveFinishColor;
     $item->architraveSetQty = $data->ArchitraveSetQty;
     $item->FrameOnOff = $data->FrameOnOff;
-    $item->issingleconfiguration = $configurableitems;
+    $item->issingleconfiguration = $data->configurableitems;
 
-    match ($configurableitems) {
+    match ($data->configurableitems) {
         4 => BomCalculationVicaima($item,$userLoginId),
         5 => BomCalculationSeadec($item,$userLoginId),
         6 => BomCalculationDeanta($item,$userLoginId),
