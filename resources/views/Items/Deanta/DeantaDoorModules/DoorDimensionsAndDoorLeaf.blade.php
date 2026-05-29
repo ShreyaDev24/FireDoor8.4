@@ -34,6 +34,7 @@
                             </label>
                             <i class="fa fa-info icon" id="doorLeafFinishColorIcon1"></i>
                             <input type="text" readonly name="doorLeafFinishColor1" id="doorLeafFinishColor1" class="form-control" value="">
+                        </div>
                     </div>
                     <!-- <div class="col-md-6">
                         <div class="position-relative form-group doorLeafFinishDiv">
@@ -316,10 +317,10 @@
                             </label>
                             <div id="hinge_location_div">
                                 @if(!empty($Item['hinge2Location']))
-                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge2Location'])){{$Item['hinge2Location']}}@endif" min="200">
-                                @else
-                                <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
-                                @endif
+                            <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($Item['hinge2Location'])){{$Item['hinge2Location']}}@endif" min="200">
+                            @else
+                            <input type="number" name="hinge2Location" id="hinge2Location" class="form-control change-event-calulation" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
+                            @endif
                             </div>
                         </div>
                     </div>
@@ -366,9 +367,6 @@
                             <input type="checkbox" name="fourthHinges" id="fourthHinges" class="form-control" style="margin: 2px -4px 10px 12px;border: 1px solid rgb(206, 212, 218);display: inline-block;height: 15px;width: 15px;" value="1" @if(!empty($Item['fourthHinges']) && $Item['fourthHinges'] == 1){{'checked'}}@endif>
                         </div>
                     </div>
-
-
-
                     {{-- <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="doorLeafFacing">Door Leaf Facing
@@ -584,7 +582,7 @@
                         </script>
                         @endif
                     </label>
-                     <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
+                   <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
                             @if(isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD'){{ 'disabled' }}@else{{ 'required' }} @endif>
                         <option value="">decorative Groove on leaf 2 Active? </option>
                         @foreach($option_data as $row)
