@@ -739,11 +739,11 @@
                                                         <td>{{ $row['SOWallThick'] }}</td>
                                                         <td>
                                                             {{ number_format(
-                                                                $row['AdjustPrice']
-                                                                    ? floatval($row['AdjustPrice'])
+                                                                $row['leafpricedelta']
+                                                                    ? floatval($row['leafpricedelta'])
                                                                     : (
-                                                                        !empty($row['leafpricedelta'])
-                                                                            ? floatval($row['leafpricedelta'])
+                                                                        !empty($row['AdjustPrice'])
+                                                                            ? floatval($row['AdjustPrice'])
                                                                             : floatval($row['DoorsetPrice'])
                                                                     ),
                                                                 2
@@ -753,13 +753,13 @@
                                                         <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
 
                                                         <td>
-                                                             {{ number_format(
+                                                               {{ number_format(
                                                                     (
-                                                                        $row['AdjustPrice']
-                                                                            ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
+                                                                        $row['leafpricedelta']
+                                                                            ? floatval($row['leafpricedelta']) + floatval($row['IronmongaryPrice'] ?? 0)
                                                                             : (
-                                                                                !empty($row['leafpricedelta'])
-                                                                                    ? floatval($row['leafpricedelta']) + floatval($row['IronmongaryPrice'] ?? 0)
+                                                                                !empty($row['AdjustPrice'])
+                                                                                    ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
                                                                                     : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
                                                                             )
                                                                     ),

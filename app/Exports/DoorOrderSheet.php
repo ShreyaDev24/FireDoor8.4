@@ -203,11 +203,24 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $leaf2Counts = [];
         $codeMeta    = []; // store width/height per code
         $codeFireRating = []; // store fire rating per code
+        $codeHandling = []; // store handling per code
+        $codeDoorSet = []; // store door set per code
+        $codeLockType = []; // store lock type per code
 
         foreach ($item as $itemValue) {
+            // dd($item);
             $c1 = $itemValue->DoorDimensionsCode.'x'.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
             if ($c1 && !isset($codeFireRating[$c1])) {
                 $codeFireRating[$c1] = $itemValue->FireRating ?? '';
+            }
+            if ($c1 && !isset($codeHandling[$c1])) {
+                $codeHandling[$c1] = $itemValue->Handing ?? '';
+            }
+            if ($c1 && !isset($codeDoorSet[$c1])) {
+                $codeDoorSet[$c1] = $itemValue->DoorType ?? '';
+            }
+            if ($c1 && !isset($codeLockType[$c1])) {
+                $codeLockType[$c1] = $itemValue->LockType ?? '';
             }
         }
 
@@ -239,6 +252,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         // Build summary rows
         $summaryRows = [];
         foreach ($allCodes as $code) {
+            // dd($allCodes);
             $l1Count = $leaf1Counts[$code] ?? 0;
             $l2Count = $leaf2Counts[$code] ?? 0;
 
@@ -246,6 +260,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             $width  = $meta['width'];
             $height = $meta['height'];
             $fireRating = $codeFireRating[$code] ?? '';
+            $fireRating = $codeFireRating[$code] ?? '';
+            $handling = $codeHandling[$code] ?? '';
+            $doorSet = $codeDoorSet[$code] ?? '';
+            $lockType = $codeLockType[$code] ?? '';
 
             // Show width under the side that actually has a count
             $leaf1Width = $l1Count > 0 ? $width : '';
@@ -255,16 +273,19 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $summaryRows[] = [
                 $code,           // Summary (Product Code)
-                $fireRating,             // Fire Rating
+                $fireRating,
+                $doorSet,
+                $handling,      // Fire Rating
                 $leaf1Width, $l1Count,   // Leaf 1 | Count
                 $leaf2Width, $l2Count,   // Leaf 2 | Count
                 $height,                // Height
-                $gt                     // GT
+                $lockType,
+                $gt,                    // GT
             ];
         }
 
         // Header row for summary
-        $summaryHeader = ['Summary','Fire Rating','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+        $summaryHeader = ['Summary','Fire Rating','Doorset Type','Handling','Leaf 1','Count','Leaf 2','Count','Height','Lock Type','GT'];
 
         if($this->section != 'Summary'){
             // Merge: main rows + blank separator + summary header + summary rows
@@ -373,7 +394,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 if ($summaryHeaderRow) {
                     // Make the summary header bold, centered, with light gray fill
-                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':H' . $summaryHeaderRow)->applyFromArray([
+                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':K' . $summaryHeaderRow)->applyFromArray([
                         'font' => ['bold' => true],
                         'alignment' => [
                             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,

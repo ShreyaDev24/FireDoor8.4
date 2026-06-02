@@ -1968,7 +1968,8 @@
                                     <input type='checkbox' class='check-btn'  id='PalletPackaging' name='PalletPackaging' @if(!empty($set->PalletPackaging) && $set->PalletPackaging== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Pallet & Packaging</span></h5>
+                                            {{-- Change the name to Doorset Assembly from Pallet & Packaging regarding ticket FC-09 --}}
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Doorset Assembly</span></h5>
                                         </div>
                                         <input type="hidden" class="PalletPackaging" name="type[]" value="PalletPackaging">
                                         <div class="col-md-6">
