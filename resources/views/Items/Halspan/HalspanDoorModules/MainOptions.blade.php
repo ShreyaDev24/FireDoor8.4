@@ -235,28 +235,6 @@
                                 class="form-control for_c_leaf_height  forleafHeightNoOP change-event-calulation door-configuration" required>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="latchType">Lock Type
-                                @if(!empty($tooltip->lockType))
-                                <script type="text/javascript">
-                                document.write(Tooltip('{{$tooltip->lockType}}'));
-                                </script>
-                                @endif
-                                <span class="dsl"></span>
-                            </label>
-                            <select name="lockType" id="lockType" class="form-control combination_of">
-                                <option value="">Select lock type</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='door_configuration_lock_type')
-                                <option value="{{$row->OptionKey}}" @if(!empty($Item['LockType']))
-                                    @if($Item['LockType']==$row->OptionKey) {{'selected'}} @endif @endif
-                                    >{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="col-md-12">
                         <div class="position-relative form-group d-flex">
                             <label for="Dropseal">Dropseal</label>
@@ -372,6 +350,28 @@
                          </select>
                      </div>
                 </div>
+                <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="latchType">Lock Type
+                                @if(!empty($tooltip->lockType))
+                                <script type="text/javascript">
+                                document.write(Tooltip('{{$tooltip->lockType}}'));
+                                </script>
+                                @endif
+                                <span class="dsl"></span>
+                            </label>
+                            <select name="lockType" id="lockType" class="form-control combination_of">
+                                <option value="">Select lock type</option>
+                                @foreach($option_data as $row)
+                                @if($row->OptionSlug=='door_configuration_lock_type')
+                                <option value="{{$row->OptionKey}}" @if(!empty($Item['LockType']))
+                                    @if($Item['LockType']==$row->OptionKey) {{'selected'}} @endif @endif
+                                    >{{$row->OptionValue}}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
