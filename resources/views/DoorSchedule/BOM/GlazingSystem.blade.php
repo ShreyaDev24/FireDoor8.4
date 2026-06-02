@@ -4,12 +4,13 @@
         @php $check =  1; @endphp
         @if($i++==0)
         <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
         <tr style="background:#00B0F0">
-            <td colspan="16"><b>Glazing System</b></td>
+            <td colspan="17"><b>Glazing System</b></td>
         </tr>
         <tr>
+            <th> Door Core</th>
             <th colspan="2">Door Type</th>
             <th  colspan="2">Glazing System</th>
             <th colspan="4">Glazing System Size</th>
@@ -34,6 +35,7 @@
                 $words = explode("|", $value->Description);
         @endphp
         <tr>
+            <td> {{ doorcorename($value->configurableitems) }} </td>
             <td colspan="2">{{ $value->DoorType }}</td>
             <td colspan="2">{{ isset($words[1]) ? str_replace('_', ' ',  $words[1]) : '' }}</td>
             <td colspan="4">{{ isset($words[2]) ? $words[2] : '' }}</td>
@@ -57,7 +59,7 @@ global $GlazingSystemstotalGTSell;
 @endphp
 @if($check==1)
 <tr style="background:gray">
-    <td colspan="8"><b>Total </b></td>
+    <td colspan="9"><b>Total </b></td>
     <td></td>
     <td></td>
     <td></td>

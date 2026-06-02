@@ -16,12 +16,13 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
 
 @if(count($IntumescentSealData) > 0 || count($IronmomngeryMaterialData) > 0)
 <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
 <tr style="background:#00B0F0">
-    <td colspan="16"><b>Intumescent Strip / Seals - Total Cost:</b></td>
+    <td colspan="17"><b>Intumescent Strip / Seals - Total Cost:</b></td>
 </tr>
 <tr>
+    <th>Door Core</th>
     <th>Door Type</th>
     <th>Intumescent Seal Type</th>
     <th>Intumescent Seal Location </th>
@@ -50,6 +51,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
         @php
                 $value = new stdClass();
                 // $value->Category = 'IntumescentSeal';
+                $value->configurableitems =  "";
                 $value->Description =  "";
                 $value->QuantityOfDoorTypes =  0;
                 $value->LMPerDoorType =  0;
@@ -61,6 +63,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
                 $value->Margin =  0;
 
                 foreach($IntumescentSealDataGroup as $IntumescentSealDataGroupRow){
+                    $value->configurableitems =  doorcorename($IntumescentSealDataGroupRow->configurableitems);
                     $value->Description =  $IntumescentSealDataGroupRow->Description;
                     $value->LMPerDoorType +=  $IntumescentSealDataGroupRow->LMPerDoorType;
                     $value->QuantityOfDoorTypes +=  $IntumescentSealDataGroupRow->QuantityOfDoorTypes;
@@ -77,6 +80,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
         {{-- @if($value->Category == 'IntumescentSeal') --}}
 
         <tr>
+            <td> {{ $value->configurableitems }} </td>
         <td>{{ isset($words[0]) ? $words[0] : '' }}</td>
         <td>{{ isset($words[1]) ? $words[1] : '' }}</td>
         <td>{{ isset($words[2]) ? $words[2] : '' }}</td>
@@ -108,7 +112,7 @@ $intumscentGTSell = $GTSellPrice;
 
 @if($check==1)
 <tr style="background:gray">
-    <td colspan="8"><b>Total</b></td>
+    <td colspan="9"><b>Total</b></td>
     <td></td>
     <td></td>
     <td></td>

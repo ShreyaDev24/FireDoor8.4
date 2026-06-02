@@ -5,12 +5,13 @@
         @php $check =  1; @endphp
         @if($i++==0)
         <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
         <tr style="background:#00B0F0">
-            <td colspan="16"><b>Architrave - Total Cost:</b></td>
+            <td colspan="17"><b>Architrave - Total Cost:</b></td>
         </tr>
         <tr style="margin-top:10px">
+            <th colspan="">Door Core</th>
             <th colspan="">Door Type</th>
             <th>Architrave Size</th>
             <th>Architrave Type </th>
@@ -39,6 +40,7 @@
         @endphp
 
         <tr>
+            <td> {{ doorcorename($value->configurableitems) }} </td>
             <td colspan="">{{$value->DoorType}}</td>
             <td> {{ isset($words[1]) ? $words[1] : '' }} </td>
             <td> {{ isset($words[2]) ? $words[2] : '' }} </td>
@@ -73,7 +75,7 @@
 
     @if($check==1)
        <tr style="background:gray">
-            <td colspan="8"><b>Total </b></td>
+            <td colspan="9"><b>Total </b></td>
             <td></td>
             <td></td>
             <td></td>
