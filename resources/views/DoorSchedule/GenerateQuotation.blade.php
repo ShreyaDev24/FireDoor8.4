@@ -491,7 +491,7 @@
                                                                     <a href="#">
                                                                         {{ $ci->name }}
                                                                         @if ($ci->name == 'Vicaima')
-                                                                            - FD60 Cert currently using Halspan - Chilt/A 13093 Rev A
+                                                                            - FD60 Cert curently using Halspan - Chilt/A12064 Part 1 Revision D
                                                                         @endif
                                                                     </a>
 
