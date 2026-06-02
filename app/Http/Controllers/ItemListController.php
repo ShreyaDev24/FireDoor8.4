@@ -1085,6 +1085,7 @@ class ItemListController extends Controller
                         'DoorsetType'                           => $request->doorsetType,
                         'SwingType'                             => $request->swingType,
                         'LatchType'                             => $request->latchType,
+                        'LockType'                             => $request->lockType,
                         'Handing'                               => $request->Handing,
                         'OpensInwards'                          => $request->OpensInwards,
                         'COC'                                   => $request->COC,
@@ -1383,6 +1384,7 @@ class ItemListController extends Controller
                         $item->DoorsetType = $request->doorsetType;
                         $item->SwingType = $request->swingType;
                         $item->LatchType = $request->latchType;
+                        $item->LockType = $request->lockType;
                         $item->Handing = $request->Handing;
                         $item->OpensInwards = $request->OpensInwards;
                         $item->COC = $request->COC;
