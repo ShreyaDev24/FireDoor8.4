@@ -46,23 +46,11 @@ class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithT
             }
 
             $data[] = [
-                $value->plot_ref_no ?? '',
-                $value->certification_no ?? '',
-                $value->doorNumber ?? '',
                 $value->DoorType ? str_replace('_', ' ', $value->DoorType) : '',
-                $value->LippingType ? str_replace('_', ' ', $value->LippingType) : '',
-                $value->LippingThickness ?? '',
-                $value->SpeciesName ?? '',
-                $value->CoreWidth1 ?? '',
-                $value->CoreWidth2 ?? '',
-                $value->CoreHeight ?? '',
-                $value->OPCoreWidth ?? '',
-                $value->OPCoreHeight ?? '',
                 $value->IntumescentLeapingSealType ?? '',
                 $value->IntumescentLeapingSealLocation ?? '',
                 $value->IntumescentLeapingSealColor ?? '',
                 $arrangementLabel,
-                $value->SpecialFeatureRefs ?? '',
             ];
         }
 
@@ -73,23 +61,11 @@ class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithT
     {
         $titleRow = ['Intumescent Seal'];
         $headerRow = [
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Door Number',
             'Door Type',
-            'Lipping Type',
-            'Lipping Thickness',
-            'Lipping Species',
-            'Core Width 1',
-            'Core Width 2',
-            'Core Height',
-            'OP Core Width',
-            'OP Core Height',
             'Intumescent Seal Type',
             'Intumescent Seal Location',
             'Intumescent Seal Colour',
             'Intumescent Seal Arrangement',
-            'Special Features Refs',
         ];
 
         return [$titleRow, $headerRow];
@@ -100,12 +76,12 @@ class IntumescentSeal implements FromCollection, WithHeadings, WithEvents, WithT
         return [
             AfterSheet::class => function (AfterSheet $event) {
                 $sheet = $event->sheet;
-                foreach (range('A', 'Q') as $col) {
+                foreach (range('A', 'E') as $col) {
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 
-                $cellRange1 = 'A1:Q1';
-                $cellRange2 = 'A2:Q2';
+                $cellRange1 = 'A1:E1';
+                $cellRange2 = 'A2:E2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
