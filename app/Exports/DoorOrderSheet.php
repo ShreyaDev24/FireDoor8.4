@@ -225,8 +225,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
         foreach ($data as $row) {
-            $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
-            $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+            $c1 = $row[9] ?? '';  // PRODUCT CODE LEAF 1
+            $c2 = $row[10] ?? '';  // PRODUCT CODE LEAF 2
             $opLeafExist = $row[4] ?? '';  // PRODUCT CODE LEAF 2
             $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
 
@@ -252,20 +252,33 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         // Build summary rows
         $summaryRows = [];
         foreach ($allCodes as $code) {
-            // dd($allCodes);
             $l1Count = $leaf1Counts[$code] ?? 0;
             $l2Count = $leaf2Counts[$code] ?? 0;
 
             $meta   = $codeMeta[$code] ?? $parseMeta($code);
             $width  = $meta['width'];
             $height = $meta['height'];
-            $fireRating = $codeFireRating[$code] ?? '';
-            $fireRating = $codeFireRating[$code] ?? '';
-            $handling = $codeHandling[$code] ?? '';
-            $doorSet = $codeDoorSet[$code] ?? '';
-            $lockType = $codeLockType[$code] ?? '';
 
-            // Show width under the side that actually has a count
+            $matchedItem = $item->first(function ($itemValue) use ($code) {
+                $leaf1Code = $itemValue->DoorDimensionsCode . 'x' . $itemValue->LeafWidth1 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                $leaf1CodeAlt = $itemValue->LeafWidth1 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+
+                $leaf2Code = '';
+                $leaf2CodeAlt = '';
+
+                if (!empty($itemValue->LeafWidth2)) {
+                    $leaf2Code = $itemValue->DoorDimensionsCode2 . 'x' . $itemValue->LeafWidth2 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                    $leaf2CodeAlt = $itemValue->LeafWidth2 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                }
+
+                return in_array($code, [$leaf1Code, $leaf1CodeAlt, $leaf2Code, $leaf2CodeAlt]);
+            });
+
+            $fireRating = $matchedItem->FireRating ?? '';
+            $handling   = $matchedItem->Handing ?? '';
+            $doorSet    = $matchedItem->DoorType ?? '';
+            $lockType   = $matchedItem->LockType ?? '';
+
             $leaf1Width = $l1Count > 0 ? $width : '';
             $leaf2Width = $l2Count > 0 ? $width : '';
 
@@ -275,10 +288,12 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $code,           // Summary (Product Code)
                 $fireRating,
                 $doorSet,
-                $handling,      // Fire Rating
-                $leaf1Width, $l1Count,   // Leaf 1 | Count
-                $leaf2Width, $l2Count,   // Leaf 2 | Count
-                $height,                // Height
+                $handling,
+                $leaf1Width,
+                $l1Count,
+                $leaf2Width,
+                $l2Count,
+                $height,
                 $lockType,
                 $gt,                    // GT
             ];
