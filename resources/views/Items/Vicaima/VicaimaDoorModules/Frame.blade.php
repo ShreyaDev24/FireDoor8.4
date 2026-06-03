@@ -218,6 +218,12 @@
                                                         class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                                                 </div>
                                             </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label class="d-block mb-1" for="concealedOverheadCloser">Concealed overhead closer</label>
+                                                    <input type="checkbox" id="concealedOverheadCloser" name="concealedOverheadCloser" value="1" @if(!empty($Item['ConcealedOverheadCloser']) && $Item['ConcealedOverheadCloser'] == 1) checked @endif>
+                                                </div>
+                                            </div>
                                             <div class="col-md-6 framehideshow">
                                                 <div class="position-relative form-group">
                                                     <label for="bottomframeThickness">bottom Frame Thickness
