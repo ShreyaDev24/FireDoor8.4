@@ -66,6 +66,7 @@ class Glass implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColu
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -86,18 +87,19 @@ class Glass implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColu
         }
 
         $footData = [
-            '','','','','','','','',$total ?? 0,'',$GTSell ?? 0 ,''
+            '','','','','','','','','',$total ?? 0,'',$GTSell ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
+            'Door Core',
             'Door Type',
             'Glass Type',
             'Vision Panel Size ',
@@ -119,15 +121,15 @@ class Glass implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColu
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:L1';
-                $cellRange = 'A2:L2';
+                $cellRange1 = 'A1:M1';
+                $cellRange = 'A2:M2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -174,7 +176,7 @@ class Glass implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColu
     {
         return 'Glass';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [
@@ -189,21 +191,21 @@ class Glass implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColu
 
         if ($currency == '$') {
             return [
-                'H' => $currencyFormats['$'],
+                'L' => $currencyFormats['$'],
                 'I' => $currencyFormats['$'],
                 'J' => $currencyFormats['$'],
                 'K' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'H' => $currencyFormats['£'],
+                'L' => $currencyFormats['£'],
                 'I' => $currencyFormats['£'],
                 'J' => $currencyFormats['£'],
                 'K' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'H' => $currencyFormats['€'],
+                'L' => $currencyFormats['€'],
                 'I' => $currencyFormats['€'],
                 'J' => $currencyFormats['€'],
                 'K' => $currencyFormats['€'],

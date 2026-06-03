@@ -66,6 +66,7 @@ class IntumescentStripSeals implements FromCollection,WithHeadings,WithEvents,Wi
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -86,18 +87,19 @@ class IntumescentStripSeals implements FromCollection,WithHeadings,WithEvents,Wi
         }
 
         $footData = [
-            '','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
+            '','','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
+            'Door Core',
             'Door Type',
             'Intumescent Seal Type',
             'Intumescent Seal Location',
@@ -122,15 +124,15 @@ class IntumescentStripSeals implements FromCollection,WithHeadings,WithEvents,Wi
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:O1';
-                $cellRange = 'A2:O2';
+                $cellRange1 = 'A1:P1';
+                $cellRange = 'A2:P2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -166,6 +168,7 @@ class IntumescentStripSeals implements FromCollection,WithHeadings,WithEvents,Wi
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
                 $event->sheet->getColumnDimension('N')->setAutoSize(true);
                 $event->sheet->getColumnDimension('O')->setAutoSize(true);
+                $event->sheet->getColumnDimension('P')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
@@ -195,21 +198,21 @@ class IntumescentStripSeals implements FromCollection,WithHeadings,WithEvents,Wi
         // Apply the appropriate format based on the currency
         if ($currency == '$') {
             return [
-                'K' => $currencyFormats['$'],
+                'O' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
                 'N' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'K' => $currencyFormats['£'],
+                'O' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
                 'N' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'K' => $currencyFormats['€'],
+                'O' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
                 'N' => $currencyFormats['€'],

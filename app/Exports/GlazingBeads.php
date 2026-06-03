@@ -67,6 +67,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -87,19 +88,19 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
         }
 
         $footData = [
-            '','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
+            '','','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
-            'Door Type ','Glazing Beads ',
+            'Door Core ','Door Type ','Glazing Beads ',
             'Glazing Bead Species',
             'Finish ',
             'Glazing Bead Dimensions',
@@ -122,15 +123,15 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:O1';
-                $cellRange = 'A2:O2';
+                $cellRange1 = 'A1:P1';
+                $cellRange = 'A2:P2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -167,6 +168,7 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
                 $event->sheet->getColumnDimension('N')->setAutoSize(true);
                 $event->sheet->getColumnDimension('O')->setAutoSize(true);
+                $event->sheet->getColumnDimension('P')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
@@ -193,21 +195,21 @@ class GlazingBeads implements FromCollection,WithHeadings,WithEvents,WithTitle,W
 
         if ($currency == '$') {
             return [
-                'K' => $currencyFormats['$'],
+                'O' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
                 'N' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'K' => $currencyFormats['£'],
+                'O' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
                 'N' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'K' => $currencyFormats['€'],
+                'O' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
                 'N' => $currencyFormats['€'],

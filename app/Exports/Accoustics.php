@@ -66,6 +66,7 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -86,7 +87,7 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         }
 
         $footData = [
-            '','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
+            '','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
@@ -99,7 +100,7 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
         $a = [
             'S.No',
-            'Door Type ','DB Rating',
+            'Door Core ','Door Type ','DB Rating',
             'Perimeter Seal 1',
             'Perimeter Seal 2',
          //   'Threshold Seal 1',
@@ -131,8 +132,8 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:O1';
-                $cellRange = 'A2:O2';
+                $cellRange1 = 'A1:N1';
+                $cellRange = 'A2:N2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -167,7 +168,6 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
                 $event->sheet->getColumnDimension('L')->setAutoSize(true);
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
                 $event->sheet->getColumnDimension('N')->setAutoSize(true);
-                $event->sheet->getColumnDimension('O')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
@@ -197,18 +197,18 @@ class Accoustics implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
                 'K' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
-                'N' => $currencyFormats['$'],
+                'J' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'K' => $currencyFormats['£'],
+                'O' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
                 'N' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'K' => $currencyFormats['€'],
+                'O' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
                 'N' => $currencyFormats['€'],

@@ -65,6 +65,7 @@ class IronmongeryMachiningCost implements FromCollection,WithHeadings,WithEvents
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -84,18 +85,19 @@ class IronmongeryMachiningCost implements FromCollection,WithHeadings,WithEvents
         }
 
         $footData = [
-            '','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0,''
+            '','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
+            'Door Core',
             'Door Type',
             'Code/Ironmongery Name',
             'MAN HOURS',
@@ -119,15 +121,15 @@ class IronmongeryMachiningCost implements FromCollection,WithHeadings,WithEvents
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:N1';
-                $cellRange = 'A2:N2';
+                $cellRange1 = 'A1:O1';
+                $cellRange = 'A2:O2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -192,33 +194,27 @@ class IronmongeryMachiningCost implements FromCollection,WithHeadings,WithEvents
                 'K' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
-                'J' => $currencyFormats['$'],
-                // 'D' => $currencyFormats['$'],
-                'E' => $currencyFormats['$'],
-                // 'F' => $currencyFormats['$'],
-                'G' => $currencyFormats['$'],
+                'N' => $currencyFormats['$'],
+                'F' => $currencyFormats['$'],
+                'H' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
                 'K' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
-                'J' => $currencyFormats['£'],
-                // 'D' => $currencyFormats['£'],
-                'E' => $currencyFormats['£'],
-                // 'F' => $currencyFormats['£'],
-                'G' => $currencyFormats['£'],
+                'N' => $currencyFormats['£'],
+                'F' => $currencyFormats['£'],
+                'H' => $currencyFormats['£'],
             ];
         } else {
             return [
                 'K' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
-                'J' => $currencyFormats['€'],
-                // 'D' => $currencyFormats['€'],
-                'E' => $currencyFormats['€'],
-                // 'F' => $currencyFormats['€'],
-                'G' => $currencyFormats['€'],
+                'N' => $currencyFormats['€'],
+                'F' => $currencyFormats['€'],
+                'H' => $currencyFormats['€'],
             ];
         }
 
