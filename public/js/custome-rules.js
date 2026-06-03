@@ -125,6 +125,24 @@ function pageIdentity(){
         // checkAndSetBOM("#frameThickness");
     }
 
+    function checkConcealedOverheadCloserWarning() {
+        var isChecked = $('#concealedOverheadCloser').is(':checked');
+        var headThicknessValue = parseFloat($('#headframeThickness').val());
+        if (isChecked && (!headThicknessValue || headThicknessValue < 44)) {
+            alert('Min Head thickness required is 44 means Head Frame Thickness this column min 44');
+        }
+    }
+
+    $(document).on('change', '#concealedOverheadCloser', function () {
+        checkConcealedOverheadCloserWarning();
+    });
+
+    $(document).on('change', '#headframeThickness', function () {
+        if ($('#concealedOverheadCloser').is(':checked')) {
+            checkConcealedOverheadCloserWarning();
+        }
+    });
+
     $(document).on('change','#latchType',function(e){
         e.preventDefault();
         IntumescentSeals();
