@@ -44,8 +44,19 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
         $GTSell = 0;
 
         $j = 1;
+        $k = 1;
         $data = [];
-        foreach($this->result['data'] as $value){
+        $dataStandard = [];
+
+        $customOrder = [1, 2, 7, 8, 4, 5, 6, 9];
+
+        $sortedData = collect($this->result['data'])->sortBy(function ($item) use ($customOrder) {
+            $position = array_search($item->configurableitems, $customOrder);
+
+            return $position !== false ? $position : PHP_INT_MAX;
+        });
+
+        foreach($sortedData as $value){
             if($value->Category=='LeafSetBesPoke'){
                 $total += $value->TotalCost;
                 $GTSell += $value->GTSellPrice;
@@ -64,96 +75,122 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $GTSellPrice = $value->GTSellPrice;
                 $Margin = $value->Margin.'%';
 
-                $data[] = [
-                    $j,
-                    $doortype,
-                    $words1,
-                    $words2,
-                    $words3,
-                    $words4,
-                    $words5,
-                    $QuantityOfDoorTypes,
-                    $Unit,
-                    $UnitCost,
-                    $TotalCost,
-                    $UnitPriceSell,
-                    $GTSellPrice,
-                    $Margin
-                ];
-                $j++;
+                if($value->configurableitems == 1 || $value->configurableitems == 2 || $value->configurableitems == 7 || $value->configurableitems == 9){
+                    $data[] = [
+                        $j,
+                        $doortype,
+                        $words1,
+                        $words2,
+                        $words3,
+                        $words4,
+                        $words5,
+                        $QuantityOfDoorTypes,
+                        $Unit,
+                        $UnitCost,
+                        $TotalCost,
+                        $UnitPriceSell,
+                        $GTSellPrice,
+                        $Margin
+                    ];
+                    $j++;
+                }else{
+                    $dataStandard[] = [
+                        $k,
+                        $doortype,
+                        $words1,
+                        $words2,
+                        $words3,
+                        $words4,
+                        $words5,
+                        $QuantityOfDoorTypes,
+                        $Unit,
+                        $UnitCost,
+                        $TotalCost,
+                        $UnitPriceSell,
+                        $GTSellPrice,
+                        $Margin
+                    ];
+                    $k++;
+                }
+
             }
         }
+
+        $a = [
+            'S.No',
+            'Door Type',
+            'Door Core',
+            'Lipping Type',
+            'Lipping Thickness/Lipping Species',
+            'Door Leaf Size',
+            'Door Dimensions Code',
+            'Total Quantity',
+            'Unit',
+            'Unit Cost',
+            'Total Cost',
+            'Unit Price Sell ',
+            'GT Sell Price',
+        ];
+
+        foreach($this->result['data'] as $value){
+            $MarginMarkup = $value->MarginMarkup;
+        }
+
+        $a[] = $MarginMarkup;
+
+        $merged = array_merge($data, [array_fill(0, 20, '')], [$a], $dataStandard);
 
         $footData = [
             '','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
-        $allData = [$data,$footData];
+        $allData = [$merged,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
-        if($this->result['quotation']->configurableitems == 4 || $this->result['quotation']->configurableitems == 5 || $this->result['quotation']->configurableitems == 6 || $this->result['quotation']->configurableitems == 5){
-            $a = [
-                'S.No',
-                'Door Type',
-                'Door Core',
-                'Lipping Type',
-                'Lipping Thickness/Lipping Species',
-                'Door Leaf Size',
-                'Door Dimensions Code',
-                'Total Quantity',
-                'Unit',
-                'Unit Cost',
-                'Total Cost',
-                'Unit Price Sell ',
-                'GT Sell Price',
-            ];
-        }else{
-            $a = [
-                'S.No',
-                'Door Type',
-                'Door Core',
-                'Lipping Type',
-                'Lipping Thickness',
-                'Lipping Species',
-                'Door Leaf Size',
-                'Total Quantity',
-                'Unit',
-                'Unit Cost',
-                'Total Cost',
-                'Unit Price Sell ',
-                'GT Sell Price',
-            ];
-        }
+        $a = [
+            'S.No',
+            'Door Type',
+            'Door Core',
+            'Lipping Type',
+            'Lipping Thickness',
+            'Lipping Species',
+            'Door Leaf Size',
+            'Total Quantity',
+            'Unit',
+            'Unit Cost',
+            'Total Cost',
+            'Unit Price Sell ',
+            'GT Sell Price',
+        ];
 
         foreach($this->result['data'] as $value){
             $MarginMarkup = $value->MarginMarkup;
         }
-        
+
+        $a[] = $MarginMarkup;
         $b  = ['Door Details'];
 
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
-
-
         return [
-            AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:N1';
-                $cellRange = 'A2:N2';
+            AfterSheet::class => function (AfterSheet $event) {
+                // ----------------------------
+                // 🔹 Existing header styling
+                // ----------------------------
+                $cellRange1 = 'A1:N1'; // main merged header
+                $cellRange2 = 'A2:N2'; // column headings row
+
+
                 $styleArray = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'background' => [
-                        'color'=> '#000000'
-                    ],
+                    'font' => ['bold' => true],
                     'alignment' => [
                         'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
                         'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
@@ -164,27 +201,55 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
                             'color' => ['argb' => 'FF0000'],
                         ],
                     ],
-
                 ];
+
+                // Merge and style top header
                 $event->sheet->mergeCells($cellRange1);
-                $event->sheet->getColumnDimension('A')->setAutoSize(true);
-                $event->sheet->getColumnDimension('B')->setAutoSize(true);
-                $event->sheet->getColumnDimension('C')->setAutoSize(true);
-                $event->sheet->getColumnDimension('D')->setAutoSize(true);
-                $event->sheet->getColumnDimension('E')->setAutoSize(true);
-                $event->sheet->getColumnDimension('F')->setAutoSize(true);
-                $event->sheet->getColumnDimension('G')->setAutoSize(true);
-                $event->sheet->getColumnDimension('H')->setAutoSize(true);
-                $event->sheet->getColumnDimension('I')->setAutoSize(true);
-                $event->sheet->getColumnDimension('J')->setAutoSize(true);
-                $event->sheet->getColumnDimension('K')->setAutoSize(true);
-                $event->sheet->getColumnDimension('L')->setAutoSize(true);
-                $event->sheet->getColumnDimension('M')->setAutoSize(true);
-                $event->sheet->getColumnDimension('N')->setAutoSize(true);
-                $event->sheet->getColumnDimension('O')->setAutoSize(true);
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange1)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->applyFromArray($styleArray);
+                $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
+
+                // Auto size all columns A–V
+                foreach (range('A', 'N') as $col) {
+                    $event->sheet->getColumnDimension($col)->setAutoSize(true);
+                }
+
+                // ----------------------------
+                // 🔹 New Summary Header Styling
+                // ----------------------------
+                $highestRow = $event->sheet->getHighestRow(); // last row on the sheet
+
+                // Find the row number of "Summary" header (by searching for text)
+                $summaryHeaderRow = null;
+                foreach (range(1, $highestRow) as $r) {
+                    $cellVal = trim((string)$event->sheet->getCell('G'.$r)->getValue());
+
+                    if ($cellVal === 'Door Dimensions Code') {
+                        $summaryHeaderRow = $r;
+                        break;
+                    }
+                }
+
+                if ($summaryHeaderRow) {
+                    // Make the summary header bold, centered, with light gray fill
+                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':N' . $summaryHeaderRow)->applyFromArray([
+                        'font' => ['bold' => true],
+                        'alignment' => [
+                            'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                            'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
+                        ],
+                        'fill' => [
+                            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                            'startColor' => ['argb' => 'FFD9D9D9'], // light gray background
+                        ],
+                        'borders' => [
+                            'allBorders' => [
+                                'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THIN,
+                                'color' => ['argb' => 'FF000000'],
+                            ],
+                        ],
+                    ]);
+                }
             },
         ];
     }
