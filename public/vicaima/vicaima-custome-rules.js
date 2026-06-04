@@ -30,6 +30,9 @@ $("#vP1Width, #vP1Height1").on("keyup", function () {
 
 $("#intumescentSealArrangement").change(function () {
     intumescentSealMeetingEdgesChange();
+    let selectedOption = $(this).find('option:selected');
+    let fireTested = selectedOption.attr('data-firetested');
+    $('#fireratedtestes').val(fireTested);
 });
 
 function intumescentSealMeetingEdgesChange()
