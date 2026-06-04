@@ -32,6 +32,9 @@ $("#intumescentSealArrangement").change(function () {
     // var intumescentSealArrangementText = $(this).text();
     // var intumescentSealArrangementText = $(this).text().split('-');
     var intumescentSealArrangementText = $(this).find(":selected").text().split('-');
+    let selectedOption = $(this).find(':selected');
+    let fireTested = selectedOption.data('firetested');
+    $('#fireratedtestes').val(fireTested || '');
     // alert(intumescentSealArrangementText[1]);
     // console.log(intumescentSealArrangementText);
 
