@@ -1536,7 +1536,7 @@ function IntumescentSealArrangementValue() {
 
                     let isSelected = item.intumescentseals2_id == IntumescentLeapingSealArrangement;
 
-                    html += `<option value="${item.intumescentseals2_id}" ${isSelected ? 'selected' : ''}>${item.intumescentSeals}</option>`;
+                    html += `<option data-firetested="${item.firetested}" value="${item.intumescentseals2_id}" ${isSelected ? 'selected' : ''}>${item.brand} - ${item.intumescentSeals}</option>`;
                 });
 
                 $('#intumescentSealArrangement').html(html);
