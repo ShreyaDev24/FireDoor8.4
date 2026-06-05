@@ -302,8 +302,11 @@ class ShortQuoteController extends Controller
         //PDF 2 - Prepare clean door data structure
         $CompanyId = get_company_id($id)->id;
         $doorRows = [];
+        $doorRowsCustom = [];
         $SumDoorsetPrice = 0;
+        $SumDoorsetPriceCustom = 0;
         $SumIronmongaryPrice = 0;
+        $SumIronmongaryPriceCustom = 0;
 
         foreach ($shows as $show) {
             $fireRate = $show->FireRating;
@@ -313,11 +316,34 @@ class ShortQuoteController extends Controller
                 $show->FireRating = 'FD60';
             }
 
-            $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
-            $IronmongaryPrice = $show->IronmongaryPrice;
-            $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
-            $SumDoorsetPrice += $DoorsetPrice;
-            $SumIronmongaryPrice += $IronmongaryPrice;
+            $basePrice = floatval($show->DoorsetPrice);
+            $leafDelta = floatval($show->leaf_price_delta ?? 0);
+
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                $DoorsetPrice = ($show->AdjustPrice)
+                            ? floatval($show->AdjustPrice)
+                            : (
+                                $leafDelta
+                                    ? $leafDelta
+                                    : $basePrice
+                            );
+                $IronmongaryPrice = $show->IronmongaryPrice;
+                $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
+                $SumDoorsetPrice += $DoorsetPrice;
+                $SumIronmongaryPrice += $IronmongaryPrice;
+            }else{
+                $DoorsetPriceCustom = ($show->AdjustPrice)
+                            ? floatval($show->AdjustPrice)
+                            : (
+                                $leafDelta
+                                    ? $leafDelta
+                                    : $basePrice
+                            );
+                $IronmongaryPriceCustom = $show->IronmongaryPrice;
+                $totalpriceperdoorsetCustom = $DoorsetPriceCustom + $IronmongaryPriceCustom;
+                $SumDoorsetPriceCustom += $DoorsetPriceCustom;
+                $SumIronmongaryPriceCustom += $IronmongaryPriceCustom;
+            }
 
             // Process Door Leaf Finish
             $DoorLeafFinish = "N/A";
@@ -453,63 +479,121 @@ class ShortQuoteController extends Controller
             $SideScreen2 = $this->formatSideScreen($show->SL2Width ?? '', $show->SL2Height ?? '');
 
             // Add door row data
-            $doorRows[] = [
-                'plot_ref_no' => $show->plot_ref_no,
-                'certification_no' => $show->certification_no,
-                'floor' => $show->floor,
-                'configuration' => configurationDoor($quotaion->configurableitems),
-                'doorNumber' => $show->doorNumber,
-                'DoorDescription' => $DoorDescription,
-                'SOHeight' => $show->SOHeight,
-                'SOWidth' => $show->SOWidth,
-                'SOWallThick' => $show->SOWallThick,
-                'DoorType' => $show->DoorType,
-                'LeafConstruction' => $show->LeafConstruction ?? '',
-                'DoorLeafFinish' => $DoorLeafFinish . $DoorLeafFinishColor,
-                'DoorLeafFacing' => $DoorLeafFacing,
-                'DoorDimensionsCode' => $show->DoorDimensionsCode ?? '',
-                'Lipping' => $Lipping,
-                'LeafWidth1' => $show->LeafWidth1,
-                'LeafWidth2' => $show->LeafWidth2,
-                'LeafHeight' => $show->LeafHeight,
-                'LeafThickness' => $show->LeafThickness,
-                'Undercut' => $show->Undercut,
-                'Handing' => $show->Handing,
-                'OpensInwards' => $show->OpensInwards,
-                'Leaf1VisionPanel' => $Leaf1VisionPanel,
-                'Leaf2VisionPanel' => $Leaf2VisionPanel,
-                'GlassType' => $GlassTypeForDoorDetailsTable,
-                'Overpanel' => $OverpanelForDoorDetailsTable,
-                'OPGlassType' => $OPGlassTypeForDoorDetailsTable,
-                'SideScreen1' => $SideScreen1,
-                'SideScreen2' => $SideScreen2,
-                'FrameMaterial' => $FrameMaterialForDoorDetailsTable,
-                'FrameType' => $FrameTypeForDoorDetailsTable,
-                'FrameSize' => $FrameSizeForDoorDetailsTable,
-                'FrameFinish' => $FrameFinishForDoorDetailsTable,
-                'ExtLiner' => $ExtLiner,
-                'ExtLinerSize' => $ExtLinerSizeForDoorDetailsTable,
-                'intumescentSeal' => $intumescentSeal,
-                'ArchitraveMaterial' => $ArchitraveMaterialForDoorDetailsTable,
-                'ArchitraveType' => $ArchitraveTypeForDoorDetailsTable,
-                'ArchitraveSize' => $ArchitraveSizeForDoorDetailsTable,
-                'ArchitraveFinish' => $ArchitraveFinishForDoorDetailsTable,
-                'ArchitraveSetQty' => $ArchitraveSetQty,
-                'IronmongerySet' => $IronmongerySet,
-                'rWdBRating' => $rWdBRating,
-                'fireRate' => $fireRate,
-                'COC' => $COC,
-                'SpecialFeatureRefs' => $SpecialFeatureRefs,
-                'DoorsetPrice' => $DoorsetPrice,
-                'IronmongaryPrice' => $IronmongaryPrice,
-                'totalPrice' => $totalpriceperdoorset,
-            ];
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                $doorRows[] = [
+                    'plot_ref_no' => $show->plot_ref_no,
+                    'certification_no' => $show->certification_no,
+                    'floor' => $show->floor,
+                    'configuration' => configurationDoor($show->configurableitems),
+                    'doorNumber' => $show->doorNumber,
+                    'DoorDescription' => $DoorDescription,
+                    'SOHeight' => $show->SOHeight,
+                    'SOWidth' => $show->SOWidth,
+                    'SOWallThick' => $show->SOWallThick,
+                    'DoorType' => $show->DoorType,
+                    'LeafConstruction' => $show->LeafConstruction ?? '',
+                    'DoorLeafFinish' => $DoorLeafFinish . $DoorLeafFinishColor,
+                    'DoorLeafFacing' => $DoorLeafFacing,
+                    'DoorDimensionsCode' => $show->DoorDimensionsCode ?? '',
+                    'Lipping' => $Lipping,
+                    'LeafWidth1' => $show->LeafWidth1,
+                    'LeafWidth2' => $show->LeafWidth2,
+                    'LeafHeight' => $show->LeafHeight,
+                    'LeafThickness' => $show->LeafThickness,
+                    'Undercut' => $show->Undercut,
+                    'Handing' => $show->Handing,
+                    'OpensInwards' => $show->OpensInwards,
+                    'Leaf1VisionPanel' => $Leaf1VisionPanel,
+                    'Leaf2VisionPanel' => $Leaf2VisionPanel,
+                    'GlassType' => $GlassTypeForDoorDetailsTable,
+                    'Overpanel' => $OverpanelForDoorDetailsTable,
+                    'OPGlassType' => $OPGlassTypeForDoorDetailsTable,
+                    'SideScreen1' => $SideScreen1,
+                    'SideScreen2' => $SideScreen2,
+                    'FrameMaterial' => $FrameMaterialForDoorDetailsTable,
+                    'FrameType' => $FrameTypeForDoorDetailsTable,
+                    'FrameSize' => $FrameSizeForDoorDetailsTable,
+                    'FrameFinish' => $FrameFinishForDoorDetailsTable,
+                    'ExtLiner' => $ExtLiner,
+                    'ExtLinerSize' => $ExtLinerSizeForDoorDetailsTable,
+                    'intumescentSeal' => $intumescentSeal,
+                    'ArchitraveMaterial' => $ArchitraveMaterialForDoorDetailsTable,
+                    'ArchitraveType' => $ArchitraveTypeForDoorDetailsTable,
+                    'ArchitraveSize' => $ArchitraveSizeForDoorDetailsTable,
+                    'ArchitraveFinish' => $ArchitraveFinishForDoorDetailsTable,
+                    'ArchitraveSetQty' => $ArchitraveSetQty,
+                    'IronmongerySet' => $IronmongerySet,
+                    'rWdBRating' => $rWdBRating,
+                    'fireRate' => $fireRate,
+                    'COC' => $COC,
+                    'SpecialFeatureRefs' => $SpecialFeatureRefs,
+                    'DoorsetPrice' => $DoorsetPrice,
+                    'IronmongaryPrice' => $IronmongaryPrice,
+                    'totalPrice' => $totalpriceperdoorset,
+                ];
+            }else{
+                $doorRowsCustom[] = [
+                    'plot_ref_no' => $show->plot_ref_no,
+                    'certification_no' => $show->certification_no,
+                    'floor' => $show->floor,
+                    'configuration' => configurationDoor($show->configurableitems),
+                    'doorNumber' => $show->doorNumber,
+                    'DoorDescription' => $DoorDescription,
+                    'SOHeight' => $show->SOHeight,
+                    'SOWidth' => $show->SOWidth,
+                    'SOWallThick' => $show->SOWallThick,
+                    'DoorType' => $show->DoorType,
+                    'LeafConstruction' => $show->LeafConstruction ?? '',
+                    'DoorLeafFinish' => $DoorLeafFinish . $DoorLeafFinishColor,
+                    'DoorLeafFacing' => $DoorLeafFacing,
+                    'DoorDimensionsCode' => $show->DoorDimensionsCode ?? '',
+                    'Lipping' => $Lipping,
+                    'LeafWidth1' => $show->LeafWidth1,
+                    'LeafWidth2' => $show->LeafWidth2,
+                    'LeafHeight' => $show->LeafHeight,
+                    'LeafThickness' => $show->LeafThickness,
+                    'Undercut' => $show->Undercut,
+                    'Handing' => $show->Handing,
+                    'OpensInwards' => $show->OpensInwards,
+                    'Leaf1VisionPanel' => $Leaf1VisionPanel,
+                    'Leaf2VisionPanel' => $Leaf2VisionPanel,
+                    'GlassType' => $GlassTypeForDoorDetailsTable,
+                    'Overpanel' => $OverpanelForDoorDetailsTable,
+                    'OPGlassType' => $OPGlassTypeForDoorDetailsTable,
+                    'SideScreen1' => $SideScreen1,
+                    'SideScreen2' => $SideScreen2,
+                    'FrameMaterial' => $FrameMaterialForDoorDetailsTable,
+                    'FrameType' => $FrameTypeForDoorDetailsTable,
+                    'FrameSize' => $FrameSizeForDoorDetailsTable,
+                    'FrameFinish' => $FrameFinishForDoorDetailsTable,
+                    'ExtLiner' => $ExtLiner,
+                    'ExtLinerSize' => $ExtLinerSizeForDoorDetailsTable,
+                    'intumescentSeal' => $intumescentSeal,
+                    'ArchitraveMaterial' => $ArchitraveMaterialForDoorDetailsTable,
+                    'ArchitraveType' => $ArchitraveTypeForDoorDetailsTable,
+                    'ArchitraveSize' => $ArchitraveSizeForDoorDetailsTable,
+                    'ArchitraveFinish' => $ArchitraveFinishForDoorDetailsTable,
+                    'ArchitraveSetQty' => $ArchitraveSetQty,
+                    'IronmongerySet' => $IronmongerySet,
+                    'rWdBRating' => $rWdBRating,
+                    'fireRate' => $fireRate,
+                    'COC' => $COC,
+                    'SpecialFeatureRefs' => $SpecialFeatureRefs,
+                    'DoorsetPrice' => $DoorsetPriceCustom,
+                    'IronmongaryPrice' => $IronmongaryPriceCustom,
+                    'totalPrice' => $totalpriceperdoorsetCustom,
+                ];
+            }
+
+
         }
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
+        $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
         $doorQuantity = count($doorRows);
+        $doorQuantityCustom = count($doorRowsCustom);
 
-        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+        if(isset($doorRows)){
             $pdf4 = PDF::loadView('Company.short_quote_files.vicimapdf2', [
                 'doorRows' => $doorRows,
                 'comapnyDetail' => $comapnyDetail,
@@ -525,33 +609,33 @@ class ShortQuoteController extends Controller
                 'currency' => $currency,
                 'doorType' => 'vicaima'
             ]);
-        }else{
-            $pdf4 = PDF::loadView('Company.short_quote_files.pdf2', [
-                'doorRows' => $doorRows,
+        }
+
+        $path4 = public_path() . '/allpdfFile';
+        $fileName4 = $id . '4' . '.' . 'pdf';
+        $pdf4->save($path4 . '/' . $fileName4);
+
+        if(isset($doorRowsCustom)){
+            $pdf4_custom = PDF::loadView('Company.short_quote_files.pdf2', [
+                'doorRows' => $doorRowsCustom,
                 'comapnyDetail' => $comapnyDetail,
                 'project' => $project,
                 'customerContact' => $customerContact,
                 'version' => $version,
                 'customer' => $customer,
                 'HideCosts' => $HideCosts,
-                'doorQuantity' => $doorQuantity,
-                'SumDoorsetPrice' => $SumDoorsetPrice,
-                'SumIronmongaryPrice' => $SumIronmongaryPrice,
-                'Alltotalpriceperdoorset' => $Alltotalpriceperdoorset,
+                'doorQuantity' => $doorQuantityCustom,
+                'SumDoorsetPrice' => $SumDoorsetPriceCustom,
+                'SumIronmongaryPrice' => $SumIronmongaryPriceCustom,
+                'Alltotalpriceperdoorset' => $AlltotalpriceperdoorsetCustom,
                 'currency' => $currency,
                 'doorType' => 'default'
             ]);
         }
 
-        // return $pdf4->download('file4.pdf');
-            $path4 = public_path() . '/allpdfFile';
-            $fileName4 = $id . '4' . '.' . 'pdf';
-            $pdf4->save($path4 . '/' . $fileName4);
-        // side screen door list
-
-
-
-
+        $path4_custom = public_path() . '/allpdfFile';
+        $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
+        $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
 
         // Document PDF
         $pdf_document = SettingPDFDocument::where('UserId', $id)->first();
@@ -571,6 +655,7 @@ class ShortQuoteController extends Controller
                     public_path() . '/allpdfFile' . '/' . $fileName2_1,
                     public_path() . '/allpdfFile' . '/' . $fileName3,
                     public_path() . '/allpdfFile' . '/' . $fileName4,
+                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
                 ];
 
 
