@@ -804,6 +804,7 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
     BOMCalculation::where('QuotationId', $id)->whereNull('itemId')->delete();
 
     $data = BOMCalculation::join('item_master', 'item_master.itemID', 'bom_calculations.itemId')
+        ->join('items', 'items.itemId', '=', 'bom_calculations.itemId')
         ->where([
             ['bom_calculations.QuotationId', $id],
             ['bom_calculations.VersionId', $vid],
@@ -811,17 +812,17 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
             ['bom_calculations.Category', $category]
         ])
         ->whereNotNull('bom_calculations.itemId')
-        ->select('bom_calculations.*')
+        ->select('bom_calculations.*','items.configurableitems')
         ->distinct('item_master.itemID')
         ->get();
 
     $result = [];
 
     $mapping = [
-        'Ironmongery&MachiningCosts' => [1, 2, 3, 4, 5, 'LMPerDoorType', 6],
-        'GeneralLabourCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'MachiningCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'default' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
+        'Ironmongery&MachiningCosts' => [ 1,'DoorCore', 2, 3, 4, 5, 'LMPerDoorType', 6],
+        'GeneralLabourCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'MachiningCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'default' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
     ];
 
     $fields = $mapping[$category] ?? $mapping['default'];
@@ -831,7 +832,15 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         $row = [];
 
         foreach ($fields as $field) {
-            if (is_int($field)) {
+            if ($field === 'DoorCore') {
+
+                $doorCoreName = '';
+                if (!empty($value->configurableitems)) {
+                    $doorCoreName = doorcorename($value->configurableitems); // your function
+                }
+
+                $row[] = $doorCoreName;
+            } elseif (is_int($field)) {
                 // Cache $words[$field] to avoid repetitive access
                 $wordValue = $words[$field] ?? '';
                 if (in_array($category, ['MachiningCosts', 'GeneralLabourCosts'])) {

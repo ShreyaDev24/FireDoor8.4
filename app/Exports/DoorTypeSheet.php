@@ -30,10 +30,10 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             foreach ($section['data'] as $dataRow) {
                 $rows[] = $dataRow; // Section content
             }
-            
+
             $rows[] = ['']; // Blank row for spacing
         }
-        
+
         return $rows;
     }
 
@@ -53,6 +53,8 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             'K' => 15, // Set width for column C
             'L' => 15, // Set width for column C
             'M' => 15, // Set width for column C
+            'N' => 15, // Set width for column C
+            'O' => 15, // Set width for column C
         ];
     }
 
@@ -75,7 +77,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                     $currentRow++;
 
                     // Bold the headings
-                    $event->sheet->getStyle(sprintf('A%s:O%s', $currentRow, $currentRow))->applyFromArray([
+                    $event->sheet->getStyle(sprintf('A%s:P%s', $currentRow, $currentRow))->applyFromArray([
                         'font' => [
                             'bold' => true,
                         ],
@@ -114,7 +116,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
 
         if ($currency === '$') {
             return [
-                'J' => $currencyFormats['$'],
+                'O' => $currencyFormats['$'],
                 'K' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
@@ -122,7 +124,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             ];
         } elseif ($currency === '£') {
             return [
-                'J' => $currencyFormats['£'],
+                'O' => $currencyFormats['£'],
                 'K' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
@@ -130,7 +132,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             ];
         } else {
             return [
-                'J' => $currencyFormats['€'],
+                'O' => $currencyFormats['€'],
                 'K' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
