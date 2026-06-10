@@ -86,6 +86,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 }
 
                 $data[] = array(
+                    doorcorename($value->configurableitems),
                     $value->DoorType,
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -137,6 +138,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 }
 
                 $data[] = array(
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' ' .$value->Overpanel,
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -182,6 +184,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
 
                 $data[] = array(
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 1',
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -225,6 +228,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 }
 
                 $data[] = array(
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 2',
                     $value->doorNumber,
                     $value->plot_ref_no,
@@ -360,6 +364,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         $a = [];
         if($this->section != 'Summary'){
             $a = [
+                'Door Core',
                 'Door Type',
                 'Door Number',
                 'Plot Number/Ref',
@@ -394,8 +399,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // --------------------------------------------
             // 🔹 1. GLASS ORDER SHEET HEADER STYLING
             // --------------------------------------------
-            $titleRange = 'A1:R1';
-            $headerRange = 'A2:R2';
+            $titleRange = 'A1:S1';
+            $headerRange = 'A2:S2';
 
             // Merge "Glass Order Sheet" title
             $event->sheet->mergeCells($titleRange);
@@ -441,7 +446,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             ]);
 
             // Auto-size all columns A–R
-            foreach (range('A', 'R') as $col) {
+            foreach (range('A', 'S') as $col) {
                 $event->sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
@@ -460,7 +465,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
             if ($summaryRow) {
                 // Summary title row styling (yellow bar)
-                $summaryTitle = "A{$summaryRow}:R{$summaryRow}";
+                $summaryTitle = "A{$summaryRow}:S{$summaryRow}";
                 $event->sheet->mergeCells($summaryTitle);
                 $event->sheet->getDelegate()->getStyle($summaryTitle)->applyFromArray([
                     'font' => [
@@ -485,7 +490,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 // Summary header row ("Glass Type", etc.)
                 $summaryHeader = $summaryRow + 1;
-                $summaryHeaderRange = "A{$summaryHeader}:R{$summaryHeader}";
+                $summaryHeaderRange = "A{$summaryHeader}:S{$summaryHeader}";
                 $event->sheet->getDelegate()->getStyle($summaryHeaderRange)->applyFromArray([
                     'font' => [
                         'bold' => true,

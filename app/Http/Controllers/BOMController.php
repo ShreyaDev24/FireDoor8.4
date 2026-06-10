@@ -1586,7 +1586,7 @@ class BOMController extends Controller
         $data = [];
         foreach ($item as $value) {
             // Handle main leaf dimensions
-            if (in_array($quotation->configurableitems, ['1', '2', '7', '8'])) {
+            if (in_array($value->configurableitems, ['1', '2', '7', '8'])) {
                 $cutSizeH = $value->LeafHeight - $value->LippingThickness - $value->LippingThickness;
                 $cutSizeW = $value->LeafWidth1 - $value->LippingThickness - $value->LippingThickness;
                 $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 !== null && $value->LeafWidth2 !== ''
@@ -1638,7 +1638,7 @@ class BOMController extends Controller
             // Configurable Items Text Mapping
             $DoorDimensionsCode = '';
             $DoorDimensionsCode2 = '';
-            $configurableitems = match ((string)$quotation->configurableitems) {
+            $configurableitems = match ((string)$value->configurableitems) {
                 '1' => 'Streboard',
                 '2' => 'Halspan',
                 '3' => 'Norma',
@@ -1652,7 +1652,7 @@ class BOMController extends Controller
             };
 
 
-            if ($quotation->configurableitems == '4') {
+            if ($value->configurableitems == '4') {
                 $DoorDimensionsCode = $value->DoorDimensionsCode;
                 if ($value->DoorsetType == 'leaf_and_a_half') {
                     $DoorDimensionsCode2 = $value->DoorDimensionsCode2;
@@ -1688,7 +1688,7 @@ class BOMController extends Controller
 
             // Overpanel Row
             if ($value->Overpanel == 'Overpanel') {
-                if (in_array($quotation->configurableitems, ['1', '2', '7', '8'])) {
+                if (in_array($value->configurableitems, ['1', '2', '7', '8'])) {
                     $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness - $value->LippingThickness;
                     $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness - $value->LippingThickness;
                 } else {
@@ -1804,7 +1804,7 @@ class BOMController extends Controller
             }
 
             $cutSizeH = 0;
-            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+            if($value->configurableitems == '1' || $value->configurableitems == '2' || $value->configurableitems == '7' || $value->configurableitems == '8'){
                 $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
             }else{
                 $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
@@ -1824,6 +1824,7 @@ class BOMController extends Controller
                 . '<td>' . $value->doorNumber . '</td>'
                 . '<td>' . $value->plot_ref_no . '</td>'
                 . '<td>' . $value->certification_no . '</td>'
+                . '<td>' . doorcorename($value->configurableitems) . '</td>'
                 . '<td>' . $value->DoorType . '</td>'
                 . '<td>' . IronmongerySetName($value->IronmongeryID) . '</td>'
                 . '<td>' . $value->FireRating . '</td>'
@@ -1880,6 +1881,7 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
                     . '<td>' . IronmongerySetName($value->IronmongeryID) . '</td>'
                     . '<td>' . $value->FireRating . '</td>'
@@ -1924,6 +1926,7 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 1' . '</td>'
                     . '<td>' . IronmongerySetName($value->IronmongeryID) . '</td>'
                     . '<td>' . $value->FireRating . '</td>'
@@ -1968,6 +1971,7 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 2' . '</td>'
                     . '<td>' . IronmongerySetName($value->IronmongeryID) . '</td>'
                     . '<td>' . $value->FireRating . '</td>'
@@ -2070,6 +2074,7 @@ class BOMController extends Controller
                 $width = $value->Leaf1VPWidth + $glassWidth;
 
                 $row = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . '</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2130,6 +2135,7 @@ class BOMController extends Controller
                     : (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthFD60));
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2172,6 +2178,7 @@ class BOMController extends Controller
                 $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? $glassWidth : (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $SLWidthFD60 : $SLWidthNFR);
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 1</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2212,6 +2219,7 @@ class BOMController extends Controller
                 $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? $glassWidth : $SLWidth ;
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 2</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2269,6 +2277,7 @@ class BOMController extends Controller
                 }
 
                 $row = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . '</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2317,6 +2326,7 @@ class BOMController extends Controller
                 }
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2366,6 +2376,7 @@ class BOMController extends Controller
                 }
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 1</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
@@ -2407,6 +2418,7 @@ class BOMController extends Controller
                 }
 
                 $data[] = '<tr>'
+                    . '<td>' . doorcorename($value->configurableitems) . '</td>'
                     . '<td>' . $value->DoorType . ' Side Light 2</td>'
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
