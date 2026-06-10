@@ -786,7 +786,11 @@ $(".change-event-calulation").change(function(){
         }
     }
 
-
+    // Validate VP dimensions against the selected glass+glazing certificate
+    // limits (max width / height / area). Defined in halspan-custome-rules.js.
+    if (typeof window.validateVpDimensions === 'function') {
+        window.validateVpDimensions();
+    }
 
 });
 

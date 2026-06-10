@@ -770,7 +770,19 @@ $(document).ready(function() {
     $("#glazingSystems").change(function(){
         GlazingSystemsChange();
         GlassGlazingSystemsVPChange();
+        updateVpLimitInfoBox();
+        validateVpDimensions();
     });
+
+    // Re-validate VP dimensions against the certificate limits whenever a
+    // width/height for either leaf changes.
+    $(document).on('change',
+        '#vP1Width, #vP1Height1, #vP1Height2, #vP1Height3, #vP1Height4, #vP1Height5, ' +
+        '#vP2Width, #vP2Height1, #vP2Height2, #vP2Height3, #vP2Height4, #vP2Height5',
+        function(){
+            validateVpDimensions();
+        }
+    );
     $("#opglazingSystems").change(function(){
         GlazingSystemsChange(null,"opglazingSystems");
     });
@@ -3349,7 +3361,155 @@ $(document).ready(function() {
     }
 
 
+    /*
+     |------------------------------------------------------------------
+     | Vision Panel certificate limits (Halspan Optima FD30, Chilt/A01204)
+     |------------------------------------------------------------------
+     | Two layers are enforced (see certificate Sections 6.2/6.3 and 6.1.1):
+     |
+     | Layer 1 - per individual aperture: each single VP (width × one height)
+     |   must stay within the limit for its specific Glass Type × Glazing
+     |   System. These come from the glass_glazing_system row and are attached
+     |   as data-* attributes on the #glazingSystems <option>:
+     |     data-vparea   -> Max single aperture area (m²)
+     |     data-vpwidth  -> Max aperture width (mm)
+     |     data-vpheight -> Max aperture height (mm)
+     |
+     | Layer 2 - per-leaf total assessed envelope (Section 6.1.1): the SUM of
+     |   all apertures on a leaf must stay within the leaf-type total, and each
+     |   aperture's height/width must stay within the leaf-type maxima.
+     |   Standard door leaves (Leaf 1 / Leaf 2 in this app) fall under the
+     |   "Leaf 1, 2 or 4" row. Leaf 3 is a special configuration not produced
+     |   by this screen, kept here for reference.
+     */
+    var VP_LEAF_TOTAL_LIMITS = {
+        'default': { area: 1.55, height: 2275, width: 867 }, // Leaf 1, 2 or 4
+        'leaf3':   { area: 0.91, height: 1800, width: 744 }
+    };
+
+    function getVpCertLimits(){
+        var $opt = $("#glazingSystems option:selected");
+        return {
+            area:   parseFloat($opt.attr('data-vparea'))   || 0, // m²
+            width:  parseFloat($opt.attr('data-vpwidth'))  || 0, // mm
+            height: parseFloat($opt.attr('data-vpheight')) || 0  // mm
+        };
+    }
+
+    // Guaranteed-visible warning popup (works whether the page uses
+    // SweetAlert2 `Swal`, the legacy `swal`, or neither).
+    function vpAlert(message){
+        try {
+            if (window.Swal && typeof window.Swal.fire === 'function') { window.Swal.fire('Vision Panel', message, 'warning'); return; }
+            if (typeof window.swal === 'function') { window.swal('Vision Panel', message); return; }
+            if (window.Sweetalert2 && typeof window.Sweetalert2.fire === 'function') { window.Sweetalert2.fire('Vision Panel', message); return; }
+        } catch (e) { console.error('[VP] popup error', e); }
+        alert(message);
+    }
+
+    function updateVpLimitInfoBox(){
+        var lim = getVpCertLimits();
+        if(lim.width || lim.height || lim.area){
+            $("#vpLimitWidth").text(lim.width || '-');
+            $("#vpLimitHeight").text(lim.height || '-');
+            $("#vpLimitArea").text(lim.area || '-');
+            $("#vpLimitInfoWrap").show();
+        } else {
+            $("#vpLimitInfoWrap").hide();
+        }
+    }
+    // Exposed so the glazing dropdown builder (top-level scope) can refresh
+    // the info box once the options are rendered on initial load.
+    window.updateVpLimitInfoBox = updateVpLimitInfoBox;
+    // Exposed so the VP-dimension change handler (in the calculation file,
+    // a separate scope) can run the certificate-limit validation directly.
+    window.validateVpDimensions = validateVpDimensions;
+
+    // Validate the entered VP dimensions for both leaves against BOTH layers:
+    //   Layer 1 - per-aperture limit of the selected glass + glazing system
+    //   Layer 2 - per-leaf total assessed envelope (leaf-type maxima)
+    // On exceed: warn the user and reset the offending field to 0. The
+    // per-leaf total is a sum (no single offending field) so it warns only.
+    function validateVpDimensions(){
+        // Run once a glazing system is chosen (the glass dropdown can be
+        // momentarily rebuilt/deselected by the area recalculation, but the
+        // selected glazing option carries the limits we need).
+        if($("#glazingSystems").val() == "") return;
+
+        var combo = getVpCertLimits();                       // per glass+glazing
+        var leafCap = VP_LEAF_TOTAL_LIMITS['default'];        // leaf-type envelope
+
+        // Effective single-aperture limits = tighter of combo vs leaf envelope.
+        // (Combo values fall back to the leaf envelope when not yet populated.)
+        var maxW        = combo.width  > 0 ? Math.min(combo.width,  leafCap.width)  : leafCap.width;
+        var maxH        = combo.height > 0 ? Math.min(combo.height, leafCap.height) : leafCap.height;
+        var maxAperArea = combo.area   > 0 ? combo.area : leafCap.area;  // m², single aperture
+        var maxTotalArea = leafCap.area;                                 // m², summed per leaf
+
+        var leaves = [
+            { label: 'Leaf 1', width: '#vP1Width',
+              heights: ['#vP1Height1','#vP1Height2','#vP1Height3','#vP1Height4','#vP1Height5'] },
+            { label: 'Leaf 2', width: '#vP2Width',
+              heights: ['#vP2Height1','#vP2Height2','#vP2Height3','#vP2Height4','#vP2Height5'] }
+        ];
+
+        var messages = [];
+
+        leaves.forEach(function(leaf){
+            var $w = $(leaf.width);
+            if($w.length === 0) return;
+            var width = parseFloat($w.val()) || 0;
+
+            // Layer 1/2 - max width
+            if(width > maxW){
+                messages.push(leaf.label + ' VP width (' + width + ' mm) exceeds the maximum permitted width of ' + maxW + ' mm. Please reduce the width.');
+                $w.val(0);
+                width = 0;
+            }
+
+            var totalArea = 0; // m², summed apertures for this leaf
+
+            leaf.heights.forEach(function(hSel){
+                var $h = $(hSel);
+                if($h.length === 0) return;
+                var height = parseFloat($h.val()) || 0;
+                if(height <= 0) return;
+
+                // Layer 1/2 - max height
+                if(height > maxH){
+                    messages.push(leaf.label + ' VP height (' + height + ' mm) exceeds the maximum permitted height of ' + maxH + ' mm. Please reduce the height.');
+                    $h.val(0);
+                    return;
+                }
+
+                if(width > 0){
+                    var aperArea = (width / 1000) * (height / 1000); // m²
+                    // Layer 1 - per-aperture area
+                    if(aperArea > maxAperArea){
+                        messages.push(leaf.label + ' vision panel area (' + aperArea.toFixed(2) + ' m²) exceeds the maximum permitted aperture area of ' + maxAperArea + ' m² for the selected glass and glazing system. Reduce either the width or the height.');
+                        $h.val(0);
+                        return;
+                    }
+                    totalArea += aperArea;
+                }
+            });
+
+            // Layer 2 - total assessed aperture area for the leaf
+            if(totalArea > maxTotalArea){
+                messages.push(leaf.label + ' total vision panel area (' + totalArea.toFixed(2) + ' m²) exceeds the maximum assessed leaf aperture area of ' + maxTotalArea + ' m². Reduce the size or number of vision panels.');
+            }
+        });
+
+        if(messages.length){
+            vpAlert(messages.join('\n\n'));
+        }
+    }
+
     function GlazingSystemsChange(id = null,type=""){
+        // Keep the hover info box in sync with the selected glazing system.
+        if(type == ""){
+            updateVpLimitInfoBox();
+        }
 
         var glazingSystems = (id == null)?$("#glazingSystems").val():id;
         if(type == "opglazingSystems"){
@@ -5409,6 +5569,12 @@ function glazing_system(isIntegrity,isstatus = false){
 
                 for(var i =0; i<length;i++){
 
+                    // VP certificate limits for this glass + glazing combination:
+                    // VPAreaSize is in m², VPWidth/VPHeight are in mm.
+                    var vpLimitAttrs = ' data-vparea="'+(data[i].VPAreaSize || 0)+'"'
+                        + ' data-vpwidth="'+(data[i].VPWidth || 0)+'"'
+                        + ' data-vpheight="'+(data[i].VPHeight || 0)+'"';
+
                     if (GlazingSystemsValue != null) {
                         GlazingSystemsValue = $("#GlazingSystems-value").data("value");
                         var GlazingSystemSelected = "";
@@ -5416,9 +5582,9 @@ function glazing_system(isIntegrity,isstatus = false){
                             GlazingSystemSelected = "selected";
                             GlazingSystemsChange(GlazingSystemsValue,'');
                         }
-                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected +'>'+data[i].GlazingSystem+'</option>';
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected + vpLimitAttrs +'>'+data[i].GlazingSystem+'</option>';
                     }else{
-                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlazingSystem +'</option>';
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'"'+ vpLimitAttrs +'>'+data[i].GlazingSystem +'</option>';
                     }
                     // $("#glassThickness").val(data[i].GlassThickness);
                 }
@@ -5426,6 +5592,12 @@ function glazing_system(isIntegrity,isstatus = false){
                 glazingSystemInnerHtml += '<option value="">No Glazing Systems Found</option>';
             }
             $("#glazingSystems").empty().append(glazingSystemInnerHtml);
+
+            // Refresh the VP limit info box now that the (possibly pre-selected)
+            // glazing options are rendered in the DOM.
+            if(typeof window.updateVpLimitInfoBox === 'function'){
+                window.updateVpLimitInfoBox();
+            }
 
             var decodedBeads = JSON.parse(result.GlazingBeads);
 

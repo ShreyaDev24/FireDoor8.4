@@ -2976,6 +2976,8 @@ class OptionController extends Controller
                 $glazing = trim((string) $row[$j++]);
                 $vpareasize = trim((string) $row[$j++]);
                 $FireRating = trim((string) $row[$j++]);
+                $height = trim((string) $row[$j++]);
+                $width = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
                     $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD60','FD60')->where('VicaimaDoorCore',4)->first();
                     $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('FD60','FD60')->where('VicaimaDoorCore',4)->first();
@@ -2997,6 +2999,8 @@ class OptionController extends Controller
                         $data->GlassType = $GlassType->GlassType;
                         $data->GlazingSystem = $GlazingSystem->GlazingSystem;
                         $data->VPAreaSize = $vpareasize;
+                        $data->VPHeight = $height;
+                        $data->VPWidth = $width;
                         $data->UserId = Auth::user()->id;
                         $data->save();
                     }

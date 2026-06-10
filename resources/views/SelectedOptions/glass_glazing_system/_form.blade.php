@@ -123,11 +123,25 @@
                 <input type="hidden" name="id" class="form-control">
             </div>
 
-            <div class="col-md-6 mb-3">
-                <label for="glasstype">VP Area Size<span class="text-danger">*</span></label>
-                <input type="number" min="0" name="vpareasize" step="0.1" placeholder="Enter VPAreaSize"
+            <div class="col-md-4 mb-3">
+                <label for="vpareasize">Max VP Area Size (m²)<span class="text-danger">*</span></label>
+                <input type="number" min="0" name="vpareasize" step="0.001" placeholder="e.g. 1.55"
                      class="form-control @error('VPAreaSize') is-invalid @enderror"
                     value="{{ old('VPAreaSize', $item->VPAreaSize ?? '') }}" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="vpwidth">Max VP Width (mm)<span class="text-danger">*</span></label>
+                <input type="number" min="0" name="vpwidth" step="1" placeholder="e.g. 867"
+                     class="form-control @error('VPWidth') is-invalid @enderror"
+                    value="{{ old('VPWidth', $item->VPWidth ?? '') }}" required>
+            </div>
+
+            <div class="col-md-4 mb-3">
+                <label for="vpheight">Max VP Height (mm)<span class="text-danger">*</span></label>
+                <input type="number" min="0" name="vpheight" step="1" placeholder="e.g. 2275"
+                     class="form-control @error('VPHeight') is-invalid @enderror"
+                    value="{{ old('VPHeight', $item->VPHeight ?? '') }}" required>
             </div>
             @if(isset($item))
                 <input type="hidden" id="savedGlassType" value="{{ $item->glass_id }}">

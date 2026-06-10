@@ -32,6 +32,8 @@ class GlassGlazingController extends Controller
                 'glass_glazing_system.GlassType',
                 'glass_glazing_system.GlazingSystem',
                 'glass_glazing_system.VPAreaSize',
+                'glass_glazing_system.VPWidth',
+                'glass_glazing_system.VPHeight',
                 'glass_glazing_system.UserId',
                 'glass_glazing_system.id as mainId'
             )
@@ -76,7 +78,9 @@ class GlassGlazingController extends Controller
             'firerating' => 'required',
             'GlassType' => 'required',
             'glazingSystem' => 'required',
-            'vpareasize' => 'required|numeric'
+            'vpareasize' => 'required|numeric',
+            'vpwidth' => 'required|numeric',
+            'vpheight' => 'required|numeric'
         ]);
 
         DB::transaction(function () use ($request) {
@@ -100,6 +104,10 @@ class GlassGlazingController extends Controller
                 'GlazingSystem' => $glazingSystem->GlazingSystem,
 
                 'VPAreaSize' => $request->vpareasize,
+
+                'VPWidth' => $request->vpwidth,
+
+                'VPHeight' => $request->vpheight,
 
                 'UserId' => auth()->id(),
 
@@ -150,7 +158,9 @@ class GlassGlazingController extends Controller
             'firerating' => 'required',
             'GlassType' => 'required',
             'glazingSystem' => 'required',
-            'vpareasize' => 'required|numeric'
+            'vpareasize' => 'required|numeric',
+            'vpwidth' => 'required|numeric',
+            'vpheight' => 'required|numeric'
         ]);
 
         DB::transaction(function () use ($request, $id) {
@@ -176,6 +186,10 @@ class GlassGlazingController extends Controller
                 'GlazingSystem' => $glazingSystem->GlazingSystem,
 
                 'VPAreaSize' => $request->vpareasize,
+
+                'VPWidth' => $request->vpwidth,
+
+                'VPHeight' => $request->vpheight,
 
                 'UserId' => auth()->id(),
 
