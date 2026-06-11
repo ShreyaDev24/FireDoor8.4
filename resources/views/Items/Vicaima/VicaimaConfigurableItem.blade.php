@@ -1510,10 +1510,27 @@ function IntumescentSealArrangementValue2() {
 
 function IntumescentSealArrangementValue() {
     let fireRating = $('#fireRating').val();
+    let doorsetType = $('#doorsetType').val();
+    let latchType = $('#latchType').val();
+    let swingType = $('#swingType').val();
     let intumescentSealType = $('#intumescentSealType').val();
+    const overpanelValue2 = $('#overpanel').val();
+    if(overpanelValue2 == 'Yes'){
+            overpanel = 'OP';
+    } else{
+        overpanel = '';
+    }
+    let aa = '';
     $('#intumescentSealArrangement').html('<option value="">Select Intumescent Seal Arrangement</option>');
-    if(!fireRating || !intumescentSealType){
+    if(!fireRating || !intumescentSealType || !doorsetType || !latchType || !swingType){
         return false;
+    } else{
+        if(doorsetType == 'leaf_and_a_half'){
+                    const dobledoor = 'SD';
+                    aa = latchType+swingType+dobledoor+overpanel; // LSASD
+                } else {
+                    aa = latchType+swingType+doorsetType+overpanel; // LSASD
+                }
     }
     $.ajax({
         type: "POST",
@@ -1522,6 +1539,7 @@ function IntumescentSealArrangementValue() {
         data: {
             fireRating: fireRating,
             intumescentSealType:intumescentSealType,
+            intumescentseals: aa,
             pageId:4,
             _token: '{{ csrf_token() }}'
         },
