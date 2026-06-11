@@ -241,7 +241,7 @@ public function collection()
     $rowNum++;
 
     $data[] = [
-        'Door Ref', 'Door Type', 'Timber', 'Profile',
+        'Door Core','Door Ref', 'Door Type', 'Timber', 'Profile',
         'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
         'VP1 W', 'QTY', 'VP1 H', 'QTY', 'VP2 H', 'QTY',
         'VP3 H', 'QTY', 'VP4 H', 'QTY', 'VP5 H', 'QTY',
@@ -259,6 +259,7 @@ public function collection()
             $LeafVPHeightQty = $value->VisionPanelQuantity * 4;
 
             $data[] = [
+                doorcorename($value->configurableitems),
                 $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
@@ -294,7 +295,7 @@ public function collection()
     $rowNum++;
 
     $data[] = [
-        'Door Ref', 'Door Type', 'Timber', 'Profile',
+        'Door Core', 'Door Ref', 'Door Type', 'Timber', 'Profile',
         'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
         'SL1 W', 'QTY', 'SL1 H', 'QTY', 'SL2 H', 'QTY'
     ];
@@ -304,6 +305,7 @@ public function collection()
     foreach ($item as $value) {
         if ($value->SideLight1 == 'Yes' || $value->SideLight2 == 'Yes') {
             $data[] = [
+                doorcorename($value->configurableitems),
                 $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
@@ -333,7 +335,7 @@ public function collection()
     $rowNum++;
 
     $data[] = [
-        'Door Ref', 'Door Type', 'Timber', 'Profile',
+        'Door Core', 'Door Ref', 'Door Type', 'Timber', 'Profile',
         'Glazing Bead Height', 'Glazing Bead Depth', 'Finish on Bead',
         'FL1 W', 'QTY', 'FL1 H', 'QTY'
     ];
@@ -343,6 +345,7 @@ public function collection()
     foreach ($item as $value) {
         if ($value->Overpanel == 'Fan_Light') {
             $data[] = [
+                doorcorename($value->configurableitems),
                 $value->doorNumber,
                 $value->DoorType,
                 $value->SpeciesName,
@@ -370,14 +373,14 @@ public function collection()
 
             // Dynamic title and heading row ranges
             $titles = [
-                "A{$pos['vp_title']}:S{$pos['vp_title']}",
-                "A{$pos['sl_title']}:M{$pos['sl_title']}",
+                "A{$pos['vp_title']}:T{$pos['vp_title']}",
+                "A{$pos['sl_title']}:N{$pos['sl_title']}",
                 "A{$pos['fl_title']}:L{$pos['fl_title']}",
             ];
 
             $headings = [
-                "A{$pos['vp_head']}:S{$pos['vp_head']}",
-                "A{$pos['sl_head']}:M{$pos['sl_head']}",
+                "A{$pos['vp_head']}:T{$pos['vp_head']}",
+                "A{$pos['sl_head']}:N{$pos['sl_head']}",
                 "A{$pos['fl_head']}:L{$pos['fl_head']}",
             ];
 
@@ -422,7 +425,7 @@ public function collection()
             }
 
             // Auto-size columns A to S
-            foreach (range('A', 'S') as $col) {
+            foreach (range('A', 'T') as $col) {
                 $event->sheet->getColumnDimension($col)->setAutoSize(true);
             }
         },

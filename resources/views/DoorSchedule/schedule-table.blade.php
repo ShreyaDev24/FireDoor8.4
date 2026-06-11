@@ -99,7 +99,7 @@
                                 <ul class="dropdown-menu drop_style">
 
                                     <li>
-                                        <a href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">
+                                        <a href="{{ ConfigurationURL($row['configurableitems'], $row['itemId'], $version_id) }}">
                                             Edit
                                         </a>
                                     </li>
