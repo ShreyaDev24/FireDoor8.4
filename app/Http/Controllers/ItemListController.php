@@ -2463,6 +2463,8 @@ class ItemListController extends Controller
         $fireRatingDoor = fireRatingDoor($fireRating);
 
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
+        $leaf1VpWidth  = $request->leaf1VpWidth;   // entered VP width (mm)
+        $leaf1VpHeight = $request->leaf1VpHeight;   // entered VP height (mm, tallest aperture)
 
         $userType = Auth::user()->UserType;
 
@@ -2481,12 +2483,19 @@ class ItemListController extends Controller
             $query->where('glass_type.' . $fireRatingDoor, $fireRating);
         }
 
-        // Halspan: the VP size limits are enforced by the on-screen warning
-        // (max width/height/area) instead of pre-filtering the glass list, so
-        // the user can pick any glass+glazing and then be warned. Other cores
-        // keep the legacy area pre-filter.
-        if ($configurationDoor != 'Halspan' && !empty($leaf1VpAreaSizeM2Value)) {
+        if (!empty($leaf1VpAreaSizeM2Value)) {
             $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?',[$leaf1VpAreaSizeM2Value]);
+        }
+
+        // Halspan: also filter by the cert max width & height (mm). Other cores
+        // have no width/height limits stored, so this is Halspan-only.
+        if ($configurationDoor == 'Halspan') {
+            if (!empty($leaf1VpWidth)) {
+                $query->where('glass_glazing_system.VPWidth', '>=', $leaf1VpWidth);
+            }
+            if (!empty($leaf1VpHeight)) {
+                $query->where('glass_glazing_system.VPHeight', '>=', $leaf1VpHeight);
+            }
         }
 
         $data = $query->groupBy('glass_glazing_system.glass_id')
@@ -2518,6 +2527,8 @@ class ItemListController extends Controller
         $fireRatingDoor = fireRatingDoor($fireRating);
 
         $leaf1VpAreaSizeM2Value = $request->leaf1VpAreaSizeM2Value;
+        $leaf1VpWidth  = $request->leaf1VpWidth;
+        $leaf1VpHeight = $request->leaf1VpHeight;
         $userType = Auth::user()->UserType;
 
         if(!empty($glassType)){
@@ -2564,8 +2575,12 @@ class ItemListController extends Controller
                 $query->where('glazing_system.' . $fireRatingDoor, $fireRating);
             }
 
-            if ($configurationDoor != 'Halspan' && !empty($leaf1VpAreaSizeM2Value)) {
+            if (!empty($leaf1VpAreaSizeM2Value)) {
                 $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?', [$leaf1VpAreaSizeM2Value]);
+            }
+            if ($configurationDoor == 'Halspan') {
+                if (!empty($leaf1VpWidth))  $query->where('glass_glazing_system.VPWidth',  '>=', $leaf1VpWidth);
+                if (!empty($leaf1VpHeight)) $query->where('glass_glazing_system.VPHeight', '>=', $leaf1VpHeight);
             }
 
             $GlazingData = $query->orderBy('glass_glazing_system.GlassType', 'ASC')
@@ -2636,8 +2651,12 @@ class ItemListController extends Controller
                     $query->where('glazing_system.' . $fireRatingDoor, $fireRating);
                 }
 
-                if ($configurationDoor != 'Halspan' && !empty($leaf1VpAreaSizeM2Value)) {
+                if (!empty($leaf1VpAreaSizeM2Value)) {
                     $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?', [$leaf1VpAreaSizeM2Value]);
+                }
+                if ($configurationDoor == 'Halspan') {
+                    if (!empty($leaf1VpWidth))  $query->where('glass_glazing_system.VPWidth',  '>=', $leaf1VpWidth);
+                    if (!empty($leaf1VpHeight)) $query->where('glass_glazing_system.VPHeight', '>=', $leaf1VpHeight);
                 }
 
                 $GlazingData = $query->orderBy('glass_glazing_system.GlassType', 'ASC')
