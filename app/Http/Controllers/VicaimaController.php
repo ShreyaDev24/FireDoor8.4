@@ -549,9 +549,9 @@ class VicaimaController extends Controller
             $res = json_encode(['status' => 'ok', 'intumescentSealArrangementValue' => $intumescentSealArrangementValue]);
             print_r($res); die;
 
-        }elseif($request->fireRating && $request->pageId && $request->intumescentSealType){
+        }elseif($request->fireRating && $request->pageId && $request->intumescentSealType && $request->intumescentseals){
             $fire = fireRatingDoor($request->fireRating);
-            $intumescentSealArrangementValue = DB::table('setting_intumescentseals2')->join('selected_intumescentseals2', 'setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id')->where(['setting_intumescentseals2.firerating'=>$fire, 'setting_intumescentseals2.configurableitems'=>$request->pageId, 'setting_intumescentseals2.FireOnly'=>$request->intumescentSealType, 'selected_intumescentseals2.selected_intumescentseals2_user_id'=> $userId])->get();
+            $intumescentSealArrangementValue = DB::table('setting_intumescentseals2')->join('selected_intumescentseals2', 'setting_intumescentseals2.id', '=', 'selected_intumescentseals2.intumescentseals2_id')->where(['setting_intumescentseals2.firerating'=>$fire, 'setting_intumescentseals2.configurableitems'=>$request->pageId, 'setting_intumescentseals2.FireOnly'=>$request->intumescentSealType,'setting_intumescentseals2.configuration'=>$request->intumescentseals, 'selected_intumescentseals2.selected_intumescentseals2_user_id'=> $userId])->get();
 
             $res = json_encode(['status' => 'ok', 'intumescentSealArrangementValue' => $intumescentSealArrangementValue]);
             print_r($res); die;
