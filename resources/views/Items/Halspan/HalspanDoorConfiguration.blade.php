@@ -335,8 +335,8 @@
 
 <script src="{{url('/')}}/Halspan/halspan-cad-door-configuration.js"></script>
 <script src="{{url('/')}}/Halspan/halspan-build-of-material-for-cad-door.js"></script>
-<script src="{{asset('Halspan/halspan-custome-rules.js')}}?v={{ filemtime(public_path('Halspan/halspan-custome-rules.js')) }}"></script>
-<script src="{{asset('Halspan/halspan-change-event-calculation.js')}}?v={{ filemtime(public_path('Halspan/halspan-change-event-calculation.js')) }}"></script>
+<script src="{{asset('Halspan/halspan-custome-rules.js')}}"></script>
+<script src="{{asset('Halspan/halspan-change-event-calculation.js')}}"></script>
 <script src="{{asset('js/common.js')}}"></script>
 
 @if(!empty($Item))
