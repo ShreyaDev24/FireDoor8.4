@@ -1522,7 +1522,7 @@ function IntumescentSealArrangementValue() {
     }
     let aa = '';
     $('#intumescentSealArrangement').html('<option value="">Select Intumescent Seal Arrangement</option>');
-    if(!fireRating || !intumescentSealType || !doorsetType || !latchType || !swingType){
+    if(!fireRating || !intumescentSealType || !doorsetType || !swingType || (doorsetType != 'DD' && !latchType)){
         return false;
     } else{
         if(doorsetType == 'leaf_and_a_half'){
