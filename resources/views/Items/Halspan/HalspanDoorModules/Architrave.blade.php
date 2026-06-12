@@ -19,8 +19,7 @@
                                                     </label>
                                                     <select name="Architrave" id="Architrave" class="form-control">
                                                         <option value="">Select Architrave</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Architrave')
+                                                        @foreach(($option_data_grouped['Architrave'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                             @if(isset($Item['Architrave']))
                                                                 @if($Item['Architrave'] == $row->OptionKey)
@@ -29,7 +28,6 @@
                                                             @elseif($row->OptionKey == "No")
                                                                 {{'selected'}}
                                                             @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -178,10 +176,8 @@
                                                         @endif
                                                         class="form-control">
                                                         <option value="">Select Architrave Finish</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Architrave_Finish')
+                                                        @foreach(($option_data_grouped['Architrave_Finish'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['ArchitraveFinish'])) @if($Item['ArchitraveFinish'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -221,10 +217,8 @@
                                                         @endif
                                                         class="form-control">
                                                         <option value="">Select Architrave Finish</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Architrave_Set_Qty')
+                                                        @foreach(($option_data_grouped['Architrave_Set_Qty'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['ArchitraveSetQty'])) @if($Item['ArchitraveSetQty'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>

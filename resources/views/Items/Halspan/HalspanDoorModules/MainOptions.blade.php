@@ -108,12 +108,10 @@
                             <select name="doorsetType" id="doorsetType"
                                 class="form-control combination_of change-event-calulation door-configuration" required>
                                 <option value="">Select door set type</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='door_configuration_doorset_type')
+                                @foreach(($option_data_grouped['door_configuration_doorset_type'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(isset($Item['DoorsetType']))
                                     @if($Item["DoorsetType"]==$row->OptionKey){{'selected'}} @endif @endif
                                     >{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -131,12 +129,10 @@
                             </label>
                             <select name="swingType" id="swingType" class="form-control combination_of" required>
                                 <option value="">Select swing type</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='door_configuration_swing_type')
+                                @foreach(($option_data_grouped['door_configuration_swing_type'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(isset($Item["SwingType"]))
                                     @if($Item["SwingType"]==$row->OptionKey) {{'selected'}} @endif @endif
                                     >{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -153,12 +149,10 @@
                             </label>
                             <select name="latchType" id="latchType" class="form-control combination_of">
                                 <option value="">Select latch type</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='door_configuration_latch_type')
+                                @foreach(($option_data_grouped['door_configuration_latch_type'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(!empty($Item['LatchType']))
                                     @if($Item['LatchType']==$row->OptionKey) {{'selected'}} @endif @endif
                                     >{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -188,12 +182,10 @@
                             </label>
                             <select required name="OpensInwards" id="OpensInwards" class="form-control">
                                 <option value="">Select Pull Towards</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Opens_Inwards')
+                                @foreach(($option_data_grouped['Opens_Inwards'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(!empty($Item['OpensInwards']))
                                     @if($Item['OpensInwards']==$row->OptionKey) {{'selected'}} @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>

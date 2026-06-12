@@ -1300,8 +1300,7 @@ $(document).on('click', '.optionItem', function() {
                 <div id="DoorFrameConstructionModalBody">
                     <div class="container">
                         <div class="row">
-                            @foreach($option_data as $row)
-                            @if($row->OptionSlug=='Door_Frame_Construction')
+                            @foreach(($option_data_grouped['Door_Frame_Construction'] ?? []) as $row)
                             <div class="col-md-2 col-sm-4 col-6 cursor-pointer"
                                 onclick="DoorFrameConstruction('#frameCostuction','{{$row->OptionKey}}','{{$row->OptionValue}}')">
                                 <div class="color_box">
@@ -1312,7 +1311,6 @@ $(document).on('click', '.optionItem', function() {
                                     <h4>{{$row->OptionValue}}</h4>
                                 </div>
                             </div>
-                            @endif
                             @endforeach
                         </div>
                     </div>
