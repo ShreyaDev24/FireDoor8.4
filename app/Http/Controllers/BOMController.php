@@ -2475,15 +2475,7 @@ class BOMController extends Controller
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
         $contractorName = $contractorName ?: '';
 
-        // $configurationItem = 1;
-        $configurationItem = $quotaion->configurableitems;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
-
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
-
-        $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
 
         $SalesContact = 'N/A';
         if (!empty($quotaion->SalesContact)) {
@@ -2508,48 +2500,39 @@ class BOMController extends Controller
         if($quotaion_contact_info->Contact){
             $contactid = explode(',',(string) $quotaion_contact_info->Contact);
             $contact_persion = CustomerContact::where('id',$contactid[0])->first();
-            $contactfirstandlastname = $contact_persion->FirstName . ' ' . $contact_persion->LastName;
-        }
-        else{
-            $contactfirstandlastname = '';
         }
 
         $QuotationGenerationId = null;
-            if (!empty($quotaion->QuotationGenerationId)) {
-                $QuotationGenerationId = $quotaion->QuotationGenerationId;
-            }
+        if (!empty($quotaion->QuotationGenerationId)) {
+            $QuotationGenerationId = $quotaion->QuotationGenerationId;
+        }
 
-            $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
+        $user = empty($quotaion->UserId) ? '' : User::where('id', $quotaion->CompanyUserId)->first();
 
         $ProjectName = null;
-            if (!empty($project->ProjectName)) {
-                $ProjectName = $project->ProjectName;
-            }
+        if (!empty($project->ProjectName)) {
+            $ProjectName = $project->ProjectName;
+        }
 
-            if (!empty($version)) {
-                $version = $version;
-            }
+        if (!empty($version)) {
+            $version = $version;
+        }
 
-            $CompanyAddressLine1 = null;
-            if (!empty($comapnyDetail->CompanyAddressLine1)) {
-                $CompanyAddressLine1 = $comapnyDetail->CompanyAddressLine1;
-            }
-
-            $Username = null;
-            if (!empty($user->FirstName) && !empty($user->LastName)) {
-                $Username = $user->FirstName . ' ' . $user->LastName;
-            }
+        $Username = null;
+        if (!empty($user->FirstName) && !empty($user->LastName)) {
+            $Username = $user->FirstName . ' ' . $user->LastName;
+        }
 
 
-            $bomVersion = BOMCalculation::where('QuotationId',$quatationId)->get()->first();
+        $bomVersion = BOMCalculation::where('QuotationId',$quatationId)->get()->first();
 
-            if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
-            }else{
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
-            }
-            $elevTbl = '';
-            $elevTbl  = '
+        if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
+            $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.configurableitems','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+        }else{
+            $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.configurableitems','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+        }
+        $elevTbl = '';
+        $elevTbl  = '
         <div id="headText" style="font-size:20px; text-align: center; font-weight: bold; margin-top:20px">
             <b>FRAMES</b>
         </div>
@@ -2915,7 +2898,7 @@ class BOMController extends Controller
                         $words = explode("|", (string) $value->Description);
                         // dd($words);
                         $PageBreakCount++;
-                        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+                        if($value->configurableitems == 4 || $value->configurableitems == 5 || $value->configurableitems == 6 || $value->configurableitems == 9){
                             $lipingTbl .= '<tr>
                             <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
                             <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
@@ -3238,7 +3221,7 @@ class BOMController extends Controller
                                         if ($value->Category == 'LeafSetBesPoke') {
                                             $parts = explode("|", (string) $value->Description);
                                             $doorCore = trim($parts[1]); // Door Core (e.g., Halspan)
-                                            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5){
+                                            if($value->configurableitems == 4 || $value->configurableitems == 5 || $value->configurableitems == 6 || $value->configurableitems == 9){
                                                 $leafType =  $value->LeafConstruction;;
                                             } else {
                                                 $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
