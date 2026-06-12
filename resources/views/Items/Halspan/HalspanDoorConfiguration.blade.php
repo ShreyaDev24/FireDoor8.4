@@ -246,6 +246,7 @@
                         <div hidden id="door-thickness-filter">{{route('items/door-thickness-filter')}}</div>
                         <div hidden id="door-leaf-face-value-filter">{{route('items/door-leaf-face-value-filter')}}
                         </div>
+                        <div hidden id="get-colors">{{route('ajax.get.colors')}}</div>
                         <div hidden id="ral-color-filter">{{route('items/ral-color-filter')}}</div>
                         <div hidden id="filter-iron-mongery-category">
                             {{route('ironmongery-info/filter-iron-mongery-category')}}
@@ -275,16 +276,6 @@
                         <li class="optionItem">
                             <a class="btn btn-primary active" data-toggle="tab" href="#door">
                                 <i class="fa fa-image" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#BuildOfMaterial">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#doorPrice" id="doorPriceCalculate">
-                                <i class="fa fa-gbp" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li>
@@ -323,15 +314,7 @@
                     <div id="door" class="tab-pane active">
                         <div id='container'></div>
                     </div>
-                    <div id="BuildOfMaterial" class="tab-pane table-responsive">
-                        {{--<table id="BuildOfMaterialDetails" class="table table-bordered table-striped"></table>--}}
-                        @include("Items.Halspan.HalspanBuildOfMaterialForCadDoor")
 
-                    </div>
-                    <div id="doorPrice" class="tab-pane table-responsive" >
-                        @include("Items.Halspan.HalspanDoorPriceForCadDoor")
-
-                    </div>
                 </div>
             </div>
         </div>
@@ -588,7 +571,6 @@
 
     $('#submit').attr({'disabled': true,"readonly":true });
 var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
 var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
 var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data); ?>);
 
@@ -615,7 +597,6 @@ $(document).ready(function() {
     });
 
     selectIronMongery();
-    labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
     doorThicknessFilter("{{$Item['FireRating']}}");
@@ -650,12 +631,6 @@ $(document).ready(function() {
 
     @if(isset($Item['DoorLeafFacing']))
     DoorLeafFacingChange(false,true);
-    doorLeafFacingPrice('doorLeafFacing',"@if (isset($Item['DoorLeafFacing'])){{ $Item['DoorLeafFacing'] }}@endif");
-    @endif
-
-    @if(isset($Item['DoorLeafFinish']))
-    doorLeafFacingPrice('doorLeafFinish',"{{$Item['DoorLeafFinish']}}");
-    doorLeafFacingPrice('doorLeafFinish1',"{{$Item['DoorLeafFinish']}}");
     @endif
 
     @if(isset($Item['IronmongerySet']) && $Item['IronmongerySet'] == 'Yes')
@@ -696,34 +671,12 @@ $(document).ready(function() {
     architrave(1);
     @endif
 
-    @if(isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('frameFinish');
-    @endif
-
     @if(isset($Item["DoorLeafFinishColor"]))
     doorLeafFinishChange();
     @endif
 
     @if(isset($Item['FireRating']))
     render($("#fireRating"));
-    @endif
-
-    @if(isset($Item['ExtLiner']) && $Item['ExtLiner'] == "Yes" && isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('extLinerFramefinish',"{{$Item['FrameFinish']}}")
-    @endif
-
-    @if(isset($Item["Leaf1VisionPanel"]) && $Item["Leaf1VisionPanel"] == 'Yes')
-    doorLeafFacingPrice('leaf1VisionPanel',"{{$Item['Leaf1VisionPanel']}}");
-    doorLeafFacingPrice('leaf1VisionPanel1',"{{$Item['Leaf1VisionPanel']}}");
-    @endif
-
-    @if(isset($Item['Leaf1VisionPanel']) && $Item['Leaf1VisionPanel'] == "Yes" && isset($Item["FireRating"]))
-    doorLeafFacingPrice('fireRating',"{{$Item['FireRating']}}");
-    doorLeafFacingPrice('fireRating1',"{{$Item['FireRating']}}");
-    @endif
-
-    @if(isset($Item['DecorativeGroves']) && $Item['DecorativeGroves'] == "Yes")
-    doorLeafFacingPrice('decorativeGroves',"{{$Item['DecorativeGroves']}}");
     @endif
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
@@ -738,34 +691,6 @@ $(document).ready(function() {
 
     @if(isset($Item['Overpanel']) && $Item['Overpanel'] == "Fan_Light")
     overpanelGlassType(true);
-    @endif
-
-    @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-    doorLeafFacingPrice('sideLight12',"{{$Item['SideLight2']}}");
-    @endif
-
-    @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
-    doorSize();
-    @endif
-
-    @if(isset($Item['DoorLeafFacing']) && isset($Item['DoorLeafFinish']) && isset($Item['LippingSpecies']))
-    doorLeafFacingPrice('LeafSet',"{{$Item['DoorLeafFinish']}}");
-    @endif
-
-    @if(isset($Item['IntumescentLeapingSealType']) && isset($Item['IntumescentLeapingSealLocation']) && isset($Item['IntumescentLeapingSealColor']) && isset($Item['IntumescentLeapingSealArrangement']))
-    doorLeafFacingPrice('intumescentSealArrangement',"{{$Item['IntumescentLeapingSealArrangement']}}");
-    @endif
-
-    @if(isset($Item['GlazingSystems']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingSystems',"{{$Item['GlazingSystems']}}");
-    @endif
-
-    @if(isset($Item['GlassType']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glassType',"{{$Item['GlassType']}}");
-    @endif
-
-    @if(isset($Item['GlazingBeads']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingBead',"{{$Item['GlazingBeads']}}");
     @endif
 
     validateFrameDepth();
@@ -1357,8 +1282,7 @@ $(document).on('click', '.optionItem', function() {
                 <div id="DoorFrameConstructionModalBody">
                     <div class="container">
                         <div class="row">
-                            @foreach($option_data as $row)
-                            @if($row->OptionSlug=='Door_Frame_Construction')
+                            @foreach(($option_data_grouped['Door_Frame_Construction'] ?? []) as $row)
                             <div class="col-md-2 col-sm-4 col-6 cursor-pointer"
                                 onclick="DoorFrameConstruction('#frameCostuction','{{$row->OptionKey}}','{{$row->OptionValue}}')">
                                 <div class="color_box">
@@ -1369,7 +1293,6 @@ $(document).on('click', '.optionItem', function() {
                                     <h4>{{$row->OptionValue}}</h4>
                                 </div>
                             </div>
-                            @endif
                             @endforeach
                         </div>
                     </div>

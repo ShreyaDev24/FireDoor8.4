@@ -205,14 +205,12 @@
                                 </option>
                                 @endif
                                 @endforeach
-                                @foreach($option_data as $row)
+                                @foreach(($option_data_grouped['Door_Leaf_Facing'] ?? []) as $row)
                                 @if($row->OptionKey != 'Kraft_Paper')
-                                @if($row->OptionSlug=='Door_Leaf_Facing')
                                 <option value="{{$row->OptionKey}}" @if(isset($Item["DoorLeafFacing"]))
                                     @if($Item["DoorLeafFacing"]==$row->OptionKey){{'selected'}} @endif
                                     @endif>{{$row->OptionValue}}
                                 </option>
-                                @endif
                                 @endif
                                 @endforeach
                             </select>
@@ -277,8 +275,7 @@
                             </label>
                             <select name="decorativeGroves" id="decorativeGroves" class="form-control" required>
                                 <option value="">Select Decorative Groves</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Decorative_Groves')
+                                @foreach(($option_data_grouped['Decorative_Groves'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['DecorativeGroves']))
                                         @if($Item['DecorativeGroves']==$row->OptionKey)
@@ -287,7 +284,6 @@
                                     @elseif($row->OptionKey == "No")
                                         {{'selected'}}
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -303,12 +299,10 @@
                             </label>
                             <select name="grooveLocation" id="grooveLocation" class="form-control">
                                 <option value="" selected>Select Groves Location</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Groove_Location')
+                                @foreach(($option_data_grouped['Groove_Location'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(isset($Item['GrooveLocation']))
                                     @if($Item['GrooveLocation']==$row->OptionKey) {{'selected'}} @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -412,8 +406,7 @@
                             <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
                             @if(isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD'){{ 'disabled' }}@else{{ 'required' }} @endif>
                                 <option value="">decorative Groove on leaf 2 Active? </option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Decorative_Groves_leaf2')
+                                @foreach(($option_data_grouped['Decorative_Groves_leaf2'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['DecorativeGrovesLeaf2']))
                                         @if($Item['DecorativeGrovesLeaf2']==$row->OptionKey)
@@ -422,7 +415,6 @@
                                     @elseif($row->OptionKey == "No")
                                     {{'selected'}}
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -438,8 +430,7 @@
                             </label>
                             <select name="IsSameAsDecorativeGroves1" id="IsSameAsDecorativeGroves1" class="form-control">
                                 <option value="">decorative Groove the same as leaf 1?</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='IsSameAsDecorativeGroves1')
+                                @foreach(($option_data_grouped['IsSameAsDecorativeGroves1'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['IsSameAsDecorativeGroves1']))
                                         @if($Item['IsSameAsDecorativeGroves1']==$row->OptionKey)
@@ -448,7 +439,6 @@
                                     @elseif($row->OptionKey == "No")
                                         {{'selected'}}
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -464,12 +454,10 @@
                             </label>
                             <select name="GrooveLocationLeaf2" id="GrooveLocationLeaf2" class="form-control">
                                 <option value="" selected>Select Groves Location</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Groove_Location_Leaf2')
+                                @foreach(($option_data_grouped['Groove_Location_Leaf2'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}" @if(isset($Item['GrooveLocationLeaf2']))
                                     @if($Item['GrooveLocationLeaf2']==$row->OptionKey) {{'selected'}} @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>

@@ -54,10 +54,8 @@
                                                     </label>
                                                     <select name="frameType" required id="frameType" class="form-control">
                                                         <option value="">Select Frame Type</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Frame_Type')
+                                                        @foreach(($option_data_grouped['Frame_Type'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['FrameType'])) @if($Item['FrameType'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -290,10 +288,8 @@
                                                     <select name="frameFinish" id="frameFinish"
                                                         class="form-control change-event-calulation" required>
                                                         <option value="">Select Frame finish</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Frame_Finish')
+                                                        @foreach(($option_data_grouped['Frame_Finish'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['FrameFinish'])) @if($Item['FrameFinish'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -331,8 +327,7 @@
                                                     </label>
                                                     <select name="extLiner" id="extLiner" class="form-control change-event-calulation">
                                                         <option value="">Select Ex-liner</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='Ext_Liner')
+                                                        @foreach(($option_data_grouped['Ext_Liner'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                             @if(isset($Item['ExtLiner']))
                                                                 @if($Item['ExtLiner'] == $row->OptionKey)
@@ -341,7 +336,6 @@
                                                             @elseif($row->OptionKey == 'No')
                                                                 {{'selected'}}
                                                             @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
 
@@ -366,11 +360,9 @@
                                                         @endforeach
                                                     </select> -->
                                                         @if(isset($Item['DoorFrameConstruction']) && $Item['DoorFrameConstruction'] != "")
-                                                            @foreach($option_data as $row)
-                                                                @if($row->OptionSlug=='Door_Frame_Construction')
-                                                                    @if($row->OptionKey == $Item['DoorFrameConstruction'])
-                                                                        <?php $DoorFrameConstruction = $row->OptionValue; ?>
-                                                                    @endif
+                                                            @foreach(($option_data_grouped['Door_Frame_Construction'] ?? []) as $row)
+                                                                @if($row->OptionKey == $Item['DoorFrameConstruction'])
+                                                                    <?php $DoorFrameConstruction = $row->OptionValue; ?>
                                                                 @endif
                                                             @endforeach
                                                         @endif

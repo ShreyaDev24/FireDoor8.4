@@ -41,8 +41,7 @@
                             <select required name="leaf1VisionPanel" id="leaf1VisionPanel"
                                 class="form-control change-event-calulation door-configuration">
                                 <option value=""> Is Vision Panel active? </option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1_vision_panel')
+                                @foreach(($option_data_grouped['leaf1_vision_panel'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item["Leaf1VisionPanel"]))
                                         @if($Item["Leaf1VisionPanel"] == $row->OptionKey)
@@ -53,7 +52,6 @@
                                     @endif
 
                                 >{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -70,15 +68,13 @@
                             <select required name="leaf1VisionPanelShape" id="leaf1VisionPanelShape"
                                 class="form-control change-event-calulation door-configuration">
                                 <option value="">select any shape </option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='Vision_panel_shape')
+                                @foreach(($option_data_grouped['Vision_panel_shape'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item["Leaf1VisionPanelShape"]))
                                         @if($Item["Leaf1VisionPanelShape"] == $row->OptionKey)
                                             {{'selected'}}
                                         @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -98,15 +94,13 @@
                                 class="form-control change-event-calulation door-configuration">
 
                                 <option value="">Select quantity</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1_vision_panel_Qty')
+                                @foreach(($option_data_grouped['leaf1_vision_panel_Qty'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['VisionPanelQuantity']))
                                         @if($Item['VisionPanelQuantity'] == $row->OptionKey)
                                             {{'selected'}}
                                         @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -125,15 +119,13 @@
                                 @if(empty($Item['AreVPsEqualSizesForLeaf1'])) {{'disabled'}} @endif
                                 class="form-control change-event-calulation door-configuration">
                                 <option value="">Are Visible panel equll size?</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1are_vps_equal_sizes')
+                                @foreach(($option_data_grouped['leaf1are_vps_equal_sizes'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['AreVPsEqualSizesForLeaf1']))
                                         @if($Item['AreVPsEqualSizesForLeaf1'] == $row->OptionKey)
                                             {{'selected'}}
                                         @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -346,8 +338,7 @@
                                 @if(!isset($Item['Leaf2VisionPanel'])) {{'disabled'}} @endif
                                 class="form-control door-configuration">
                                 <option value=""> Is Vision Panel fr leaf 2 active? </option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1_vision_panel')
+                                @foreach(($option_data_grouped['leaf1_vision_panel'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
 
 
@@ -360,7 +351,6 @@
                                     @endif
 
                                     >{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -379,15 +369,13 @@
                                 @if(!isset($Item['sVPSameAsLeaf1'])) {{'disabled'}} @endif
                                 class="form-control door-configuration">
                                 <option value="">Is VP same as Leaf 1?</option>
-                                @foreach($option_data as $row)
-                                    @if($row->OptionSlug=='leaf1are_vps_equal_sizes')
+                                @foreach(($option_data_grouped['leaf1are_vps_equal_sizes'] ?? []) as $row)
                                     <option value="{{$row->OptionKey}}"
                                         @if(isset($Item['sVPSameAsLeaf1']))
                                             @if($Item['sVPSameAsLeaf1'] == $row->OptionKey)
                                                 {{'selected'}}
                                             @endif
                                         @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -410,15 +398,13 @@
                                 @endif
                                 class="form-control door-configuration">
                                 <option value="">Select quantity</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1_vision_panel_Qty')
+                                @foreach(($option_data_grouped['leaf1_vision_panel_Qty'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['Leaf2VisionPanelQuantity']))
                                         @if($Item['Leaf2VisionPanelQuantity'] == $row->OptionKey)
                                             {{'selected'}}
                                         @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>
@@ -440,15 +426,13 @@
                                 @endif
                                 class="form-control door-configuration">
                                 <option value="">Are Visible panel equll size?</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='leaf1are_vps_equal_sizes')
+                                @foreach(($option_data_grouped['leaf1are_vps_equal_sizes'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['AreVPsEqualSizesForLeaf2']))
                                         @if($Item['AreVPsEqualSizesForLeaf2'] == $row->OptionKey)
                                             {{'selected'}}
                                         @endif
                                     @endif>{{$row->OptionValue}}</option>
-                                @endif
                                 @endforeach
                             </select>
                         </div>

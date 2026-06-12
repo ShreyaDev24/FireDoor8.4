@@ -18,8 +18,7 @@
                                                     </label>
                                                     <select name="sideLight1" id="sideLight1" class="form-control door-configuration SL1" required>
                                                         <option value=""> Is side light 1 is active?</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='SideLight1')
+                                                        @foreach(($option_data_grouped['SideLight1'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                             @if(isset($Item['SideLight1']))
                                                                 @if($Item['SideLight1'] == $row->OptionKey)
@@ -28,7 +27,6 @@
                                                             @elseif($row->OptionKey == "No")
                                                                 {{'selected'}}
                                                             @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -291,10 +289,8 @@
                                                     <select name="SL1Transom" @if(empty($Item['SL1Transom'])){{'disabled'}}@endif id="SL1Transom" class="form-control SL1" readonly>
                                                         <option value="">Select side light 1 transom</option>
                                                         <option value="No" @if(isset($Item['SL1Transom'])) @if($Item['SL1Transom'] == 'No') {{'selected'}} @endif @endif>No</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='SideLight1_transom')
+                                                        @foreach(($option_data_grouped['SideLight1_transom'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['SL1Transom'])) @if($Item['SL1Transom'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -337,8 +333,7 @@
                                                     </label>
                                                     <select name="sideLight2" id="sideLight2" class="form-control door-configuration change-event-calulation" required>
                                                         <option value=""> Is side light 2 is active?</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='SideLight2')
+                                                        @foreach(($option_data_grouped['SideLight2'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                             @if(isset($Item['SideLight2']))
                                                                 @if($Item['SideLight2'] == $row->OptionKey)
@@ -347,7 +342,6 @@
                                                             @elseif($row->OptionKey == "No")
                                                                 {{'selected'}}
                                                             @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -365,10 +359,8 @@
                                                     <select name="copyOfSideLite1" id="copyOfSideLite1" class="form-control door-configuration change-event-calulation"
                                                     @if(empty($Item['DoYouWantToCopySameAsSL1'])){{'disabled'}}@endif>
                                                         <option value=""> Do you want to copy Same as SL1?</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='copy_Same_as_SL1')
+                                                        @foreach(($option_data_grouped['copy_Same_as_SL1'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['DoYouWantToCopySameAsSL1'])) @if($Item['DoYouWantToCopySameAsSL1'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
 
                                                     </select>
@@ -658,10 +650,8 @@
                                                     id="SL2Transom" class="form-control">
                                                         <option value="">Select side light 2 transom</option>
                                                         <option value="No" @if(isset($Item['SL2Transom'])) @if($Item['SL2Transom'] == 'No') {{'selected'}} @endif @endif>No</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='SideLight2_transom')
+                                                        @foreach(($option_data_grouped['SideLight2_transom'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['SL2Transom'])) @if($Item['SL2Transom'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>

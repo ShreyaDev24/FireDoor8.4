@@ -51,15 +51,28 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use App\Models\IntumescentSealLeafType;
 use App\Models\DoorFrameConstruction;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
 
 class HalspanController extends Controller
 {
-    public function addHalspanItem($id, $vid = null, $itemId = null)
+    use BuildsIronmongeryAdditionalInfo;
+
+    public function addHalspanItem($id,$vid = null,$itemId = null)
     {
         $startTime = microtime(true);
         $item = [];
         $UserIds = CompanyUsers();
+        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
+        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        $SelectedLippingSpeciesData = $LippingSpeciesData;
+        $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        // Group options by slug once so each Blade dropdown iterates only its own
+        // options instead of re-scanning the full collection on every dropdown.
+        $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
+
+        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
+
+        $configurationDoor = configurationDoor(2);
         $UserId = Auth::user()->id;
         $UserType = Auth::user()->UserType;
         $configurationDoor = configurationDoor(2);
@@ -106,15 +119,8 @@ class HalspanController extends Controller
         }
         $checkpoints['UserTypeProcessing'] = ['time' => microtime(true), 'duration' => microtime(true) - $time5, 'label' => 'User Type & Related Data Processing'];
 
-        $time6 = microtime(true);
-        $ColorData = Color::where('Status', 1)->wherein('editBy', $UserIds)->get();
-        $checkpoints['ColorData'] = ['time' => microtime(true), 'duration' => microtime(true) - $time6, 'label' => 'ColorData Query'];
-
-        $time7 = microtime(true);
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $checkpoints['CompanyData'] = ['time' => microtime(true), 'duration' => microtime(true) - $time7, 'label' => 'Company Data Join Query'];
-
-        $time8 = microtime(true);
+        // $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $checkpoints['Tooltip'] = ['time' => microtime(true), 'duration' => microtime(true) - $time8, 'label' => 'Tooltip Query'];
 
@@ -167,53 +173,38 @@ class HalspanController extends Controller
             'Cylinders'
         ];
 
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
+        // Process the data and merge
+        // foreach ($setIronmongery as $ironmongery) {
+        //     $additionalInfo = []; // Temporary array to hold additional info
 
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
+        //     foreach ($IronmongeryInfoSet as $valIronmongery) {
+        //         // Check if the property exists and is not empty
+        //         if (!empty($ironmongery->$valIronmongery)) {
+        //             $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+        //                 ->where('UserId', Auth::user()->id)
+        //                 ->first();
 
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
+        //             if (!empty($SelectedIronmongery)) {
+        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+        //                         ->first();
+        //                     if(empty($IronmongeryInfoModel)){
+        //                         $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+        //                     }
 
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
+        //                     if (!empty($IronmongeryInfoModel)) {
+        //                         $additionalInfo[] = $IronmongeryInfoModel;
+        //                     }
+        //             }
+        //         }
+        //     }
 
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
-        $checkpoints['SetIronmongery'] = ['time' => microtime(true), 'duration' => microtime(true) - $time12, 'label' => 'SetIronmongery Query'];
+        //     // Dynamically add the additional_info attribute
+        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
+        // }
+        // Bulk-load SelectedIronmongery + IronmongeryInfoModel and attach additional_info
+        // in memory (no per-row DB queries). Output is identical to the previous
+        // nested-loop logic, including quantity duplication and ordering.
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
         $time13 = microtime(true);
         $this->processIronmongeryData($setIronmongery);
@@ -278,12 +269,12 @@ class HalspanController extends Controller
             "QuotationId" => $id,
             'Item' => $item,
             'option_data' => $OptionsData,
+            'option_data_grouped' => $OptionsDataGrouped,
             'selected_option_data' => $SelectedOptionsData,
             'intumescentSealColor' => $intumescentSealColor,
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $LippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -479,6 +470,9 @@ class HalspanController extends Controller
 
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
         $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted' => 0])->get();
+        // Group options by slug once so each Blade dropdown iterates only its own
+        // options instead of re-scanning the full collection on every dropdown.
+        $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
         $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
 
         $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
@@ -587,52 +581,10 @@ class HalspanController extends Controller
         //     // Dynamically add the additional_info attribute
         //     $ironmongery->setAttribute('additional_info', $additionalInfo);
         // }
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load SelectedIronmongery + IronmongeryInfoModel and attach additional_info
+        // in memory (no per-row DB queries). Output is identical to the previous
+        // nested-loop logic, including quantity duplication and ordering.
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
@@ -642,6 +594,7 @@ class HalspanController extends Controller
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
             'option_data' => $OptionsData,
+            'option_data_grouped' => $OptionsDataGrouped,
             'selected_option_data' => $SelectedOptionsData,
             'intumescentSealColor' => $intumescentSealColor,
             'ArchitraveType' => $ArchitraveType,
@@ -661,6 +614,27 @@ class HalspanController extends Controller
             'LippingName' => $LippingName,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,  // this line is for to send lipping name into edit form
             'folders' => $folders
+        ]);
+    }
+
+    public function getColors(Request $request)
+    {
+        $UserIds = CompanyUsers();
+
+        $colors = Color::where('Status', 1)
+            ->whereIn('editBy', $UserIds)
+            ->select(
+                'id',
+                'ColorName',
+                'Hex',
+                'ColorCost'
+            )
+            ->orderBy('ColorName')
+            ->get();
+
+        return response()->json([
+            'status' => 'ok',
+            'data' => $colors
         ]);
     }
 }

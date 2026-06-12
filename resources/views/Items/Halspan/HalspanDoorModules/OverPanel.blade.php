@@ -20,8 +20,7 @@
                                                     <select required name="overpanel" id="overpanel"
                                                         class="form-control change-event-calulation door-configuration forcoreWidth1">
                                                         <option value="">Is Over Panel Active?</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='door_configuration_overpanel')
+                                                        @foreach(($option_data_grouped['door_configuration_overpanel'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                         @if(isset($Item['Overpanel']))
                                                             @if($Item['Overpanel'] == $row->OptionKey)
@@ -34,7 +33,6 @@
                                                         @endif
 
                                                         >{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>

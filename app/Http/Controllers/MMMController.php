@@ -81,8 +81,12 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
 
 
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
+
 class MMMController extends Controller
 {
+    use BuildsIronmongeryAdditionalInfo;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -123,13 +127,87 @@ class MMMController extends Controller
         //     'ms' => (microtime(true) - $start) * 1000
         // ]);
 
-        /* ================= OPTIONS ================= */
-        $start = microtime(true);
-        $OptionsData = Option::where([
-                'configurableitems' => 9,
-                'is_deleted' => 0
-            ])
-            ->whereIn('editBy', $UserIds)
+        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 9], "", "intumescentSealArrangement");
+
+        $configurationDoor = configurationDoor(9);
+        $UserId = Auth::user()->id;
+        $UserType = Auth::user()->UserType;
+        if(in_array($UserType,[1,4])){
+            $SelectedOptionsData = $OptionsData;
+            $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
+            $ArchitraveType = ArchitraveType::where([$configurationDoor => 9 ,'Status'=>1])->wherein('editBy',$UserIds)->get();
+            $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
+            // $SelectedLippingSpeciesData = $LippingSpeciesData;
+
+        }else{
+            $UserId = CompanyUsers();
+            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 9 ,'options.is_deleted' => 0], "join");
+            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 9 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
+            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 9 ,'architrave_type.Status' => 1], "join","architrave_type");
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 9], "join", "intumescentSealArrangement");
+
+            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
+
+        }
+
+        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
+        $tooltip = Tooltip::first();
+        $quotation = Quotation::where('id',$id)->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
+        if (Auth::user()->UserType == 1) {
+            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+        } else{
+            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        }
+        $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        if(Auth::user()->UserType == 1){
+            $species = DB::table('leaf_type as lt')
+            ->where('lt.MMM', 9)
+            ->where('lt.EditBy', 1)
+            ->select('lt.*')
             ->get();
 
         // Log::info('OptionsData time', [
@@ -317,30 +395,66 @@ class MMMController extends Controller
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
         Log::info('ConfigurableDoorFormula time', ['ms' => (microtime(true) - $start) * 1000]);
 
-        /* ================= LIPPING SPECIES (CACHED) ================= */
-        $start = microtime(true);
-        $LippingSpeciesData = Cache::remember(
-            'mmm_lipping_species_v1',
-            now()->addHours(6),
-            function () {
-                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
-            }
-        );
-        $SelectedLippingSpeciesData = $LippingSpeciesData;
-        Log::info('LippingSpecies time (cached)', [
-            'count' => is_countable($LippingSpeciesData) ? count($LippingSpeciesData) : 0,
-            'ms' => (microtime(true) - $start) * 1000
-        ]);
+        }else{
+            $UserId = CompanyUsers();
+            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 9 ,'options.is_deleted' => 0], "join");
+            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 9 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
+            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 9 ,'architrave_type.Status' => 1], "join","architrave_type");
 
-        /* ================= OPTIONS ================= */
-        $start = microtime(true);
-        $OptionsData = Option::where(['configurableitems' => 9, 'is_deleted' => 0])
-            ->whereIn('editBy', $UserIds)
-            ->get();
-        Log::info('OptionsData time', [
-            'count' => is_countable($OptionsData) ? count($OptionsData) : 0,
-            'ms' => (microtime(true) - $start) * 1000
-        ]);
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 9], "join", "intumescentSealArrangement");
+
+            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
+
+        }
+
+        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
+        $tooltip = Tooltip::first();
+        $quotation = Quotation::where('id',$item["QuotationId"])->first();
+        $folders = DB::table('folders')
+                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                ->select(
+                    'folders.id as folder_id',
+                    'folders.name',
+                    'add_ironmongery.id as ironmongery_id',
+                    'add_ironmongery.Setname'
+                )
+                ->where('folders.user_id',Auth::user()->id)
+                ->get()
+                ->groupBy('folder_id');
+
+        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $IronmongeryInfoSet = [
+            'Hinges',
+            'FloorSpring',
+            'LocksAndLatches',
+            'FlushBolts',
+            'ConcealedOverheadCloser',
+            'PullHandles',
+            'PushHandles',
+            'KickPlates',
+            'DoorSelectors',
+            'PanicHardware',
+            'Doorsecurityviewer',
+            'Morticeddropdownseals',
+            'Facefixeddropseals',
+            'ThresholdSeal',
+            'AirTransferGrill',
+            'Letterplates',
+            'CableWays',
+            'SafeHinge',
+            'LeverHandle',
+            'DoorSinage',
+            'FaceFixedDoorCloser',
+            'Thumbturn',
+            'KeyholeEscutchen',
+            'DoorStops',
+            'Cylinders'
+        ];
+
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
 
         /* ================= INTUMESCENT ARRANGEMENT ================= */
         $start = microtime(true);
