@@ -51,9 +51,12 @@ use App\Models\SelectedArchitraveType;
 use App\Models\ArchitraveType;
 use App\Models\IntumescentSealLeafType;
 use App\Models\DoorFrameConstruction;
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
 
 class HalspanController extends Controller
 {
+    use BuildsIronmongeryAdditionalInfo;
+
     public function addHalspanItem($id,$vid = null,$itemId = null)
     {
         $item = [];
@@ -147,52 +150,10 @@ class HalspanController extends Controller
         //     // Dynamically add the additional_info attribute
         //     $ironmongery->setAttribute('additional_info', $additionalInfo);
         // }
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load SelectedIronmongery + IronmongeryInfoModel and attach additional_info
+        // in memory (no per-row DB queries). Output is identical to the previous
+        // nested-loop logic, including quantity duplication and ordering.
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
         $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
 
@@ -385,52 +346,10 @@ class HalspanController extends Controller
         //     // Dynamically add the additional_info attribute
         //     $ironmongery->setAttribute('additional_info', $additionalInfo);
         // }
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load SelectedIronmongery + IronmongeryInfoModel and attach additional_info
+        // in memory (no per-row DB queries). Output is identical to the previous
+        // nested-loop logic, including quantity duplication and ordering.
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
