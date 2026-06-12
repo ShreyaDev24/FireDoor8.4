@@ -1,4 +1,4 @@
-﻿// $(function(){
+// $(function(){
 //     $("#doorPriceCalculate").on("click",function(){
 //         $('.loader').css({'display':'block'});
 //     });
@@ -282,15 +282,8 @@ function pageIdentity(){
 
     $("#doorLeafFacing").change(function(){
         DoorLeafFacingChange();
-        // if($(this).val()=='Laminate'){
-        // $("#decorativeGroves").removeAttr('required')
-        // }
     });
 
-    // $("#doorLeafFinish").change(function(){
-        // doorLeafFinishChange();
-        // doorLeafFacingPrice('doorLeafFinish');
-    // });
 
 
     $(document).on('change','#doorLeafFacingValue',function(e){
@@ -357,7 +350,6 @@ function pageIdentity(){
                 $("#numberOfVerticalGroove").attr({'readonly':true,"required":false}).val('0');
                 $("#numberOfHorizontalGroove").attr({'readonly':true,"required":false}).val('0');
             }
-            doorLeafFacingPrice('decorativeGroves',"Yes");
         } else {
             $("#grooveLocation").attr({'disabled':true,"required":false}).val('');
             $("#grooveWidth").attr({'readonly':true,"required":false}).val('0');
@@ -450,8 +442,6 @@ function pageIdentity(){
             $('#glazingBeadsHeight').attr('required',true);
             $('#glazingBeadsFixingDetail').attr('required',true);
             $('#glazingBeadSpecies').attr('required',true);
-            doorLeafFacingPrice('leaf1VisionPanel','Yes');
-            doorLeafFacingPrice('leaf1VisionPanel1','Yes');
         } else {
             $("#visionPanelQuantity").val('').attr({'disabled':true,'required':false});
             $("#leaf1VisionPanelShape").val('').attr({'readonly':true,'required':false});
@@ -877,7 +867,6 @@ $(document).ready(function() {
 
     $("#frameFinish").change(function(){
         FrameFinishChange(true ,  'framefinish');
-        doorLeafFacingPrice('frameFinish');
     });
 
     $("#extLiner").change(function(){
@@ -892,7 +881,6 @@ $(document).ready(function() {
             {
                 $("#extLinerValue").val(parseInt(sODepth) - parseInt(frameDepth));
             }
-            doorLeafFacingPrice('extLiner');
         } else {
             $("#extLiner-section1").addClass("table_row_hide");
             $("#extLiner-section1").removeClass("table_row_show");
@@ -907,15 +895,6 @@ $(document).ready(function() {
     $("#frameFinish,#extLiner").on('change',function(){
         if($('#extLiner').val()=="Yes"){
             var value = $('#frameFinish').val();
-            doorLeafFacingPrice('extLinerFramefinish',value);
-        }
-    });
-
-    $("#leaf1VisionPanel,#fireRating").on('change',function(){
-        if($('#leaf1VisionPanel').val()=="Yes"){
-            var value = $('#fireRating').val();
-            doorLeafFacingPrice('fireRating',value);
-            doorLeafFacingPrice('fireRating1',value);
         }
     });
 
@@ -972,9 +951,6 @@ $(document).ready(function() {
             $("#OpBeadHeight").attr('min',95);
             $("#OpBeadThickness").attr('min',44);
             overpanelGlassType();
-            doorLeafFacingPrice('overpanel',"Fan_Light");
-            doorLeafFacingPrice('overpanel1',"Fan_Light");
-            doorLeafFacingPrice('overpanel2',"Fan_Light");
         }else{
             overpanelOPHeight();
             $("#OpBeadThickness").val(0).attr('readonly',true);
@@ -1230,7 +1206,6 @@ $(document).ready(function() {
                 $("#SL2Transom").attr({ 'disabled': false, "required": true });
             }
             updateTransomFields();
-            doorLeafFacingPrice('sideLight12',"Yes");
         } else {
             $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
             $("#SL2GlassIntegrity").attr({'readonly': true, "required": false });
@@ -3248,8 +3223,6 @@ $(document).ready(function() {
                 }
             }
         });
-        //doorLeafFacingPrice('doorLeafFacing');
-
     }
 
 
@@ -3453,14 +3426,7 @@ $(document).ready(function() {
                 }
             }
         }
-        doorLeafFacingPrice('frameFinish');
     }
-
-    $("#doorLeafFinish").change(function(){
-        var value = $("#doorLeafFinish").val();
-        doorLeafFacingPrice('doorLeafFinish',value);
-        doorLeafFacingPrice('doorLeafFinish1',value);
-    });
 
     function doorLeafFinishChange(){
 
@@ -3470,7 +3436,6 @@ $(document).ready(function() {
         // alert(doorLeafFinish);
         var ActualValue = $(changedFieldId+' :selected').val();
         var ElementValue = $(changedFieldId+' :selected').text();
-        doorLeafFacingPrice('LeafSet',ActualValue);
         $('#LeafSet-selected1').empty().text(ActualValue);
         if(ActualValue == ""){
 
@@ -4165,322 +4130,11 @@ $(document).ready(function() {
                     $("#vP2Height"+index).attr({'readonly':true,'required':false}).val('');
                 }
             }
-
-
-
-
-
-        }
-
-
-        // if($(this).val()=="Yes"){
-
-        //     if(vp2Quantity>1){
-        //         $("#distanceBetweenVPsforLeaf2").attr({'readonly':false,'required':true}).val('');
-        //         for(var index=2;index<=5;index++){
-        //             $("#vP2Height"+index).attr({'readonly':true,'required':false}).val('');
-        //         }
-        //     }else{
-        //         $("#distanceBetweenVPsforLeaf2").attr({'readonly':'disabled','required':false}).val('');
-        //         for(var index=2;index<=5;index++){
-        //             $("#vP2Height"+index).attr({'readonly':true,'required':false}).val('');
-        //         }
-        //     }
-
-        //     }else{
-
-
-        //     if(vp2Quantity>1){
-        //         $("#distanceBetweenVPsforLeaf2").attr({'readonly':false,'required':true}).val('');
-
-        //             for(var index=2;index<=vp2Quantity;index++){
-        //             $("#vP2Height"+index).attr({'readonly':false,'required':true}).val('');
-        //         }
-
-        //     }else{
-        //         $("#distanceBetweenVPsforLeaf2").attr({'readonly':'disabled','required':false}).val('');
-        //     }
-
-
-        //     }
-
-
-
-
-    })
-
-
-
-
-
-// $("#distanceBetweenVPs").change(function(){
-
-// if($(this).val()=="Yes"){
-// for(var i=2;i<=5;i++){
-// $("#vP1Height"+i).attr('readonly',true);
-// $("#vP1Height"+i).attr('required',false);
-// }
-// }else{
-
-
-
-
-// }
-
-
-// });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// url: "{{route('items/fire-rating-filter')}}",
-
-
-
-
-
-
-// url: "{{route('items/glazing-beads-filter')}}",
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Over Panel Code
-    // Start
-
-
-
-
-
-
-    // End
-
-// function cloneDoorType(QuotationId){
-//     $.ajax({
-//         url:  $("#getUpdatedDoors").html(),
-//         method:"POST",
-//         data:{quotationId:quotationId,_token:$("#_token").val()},
-//         dataType:"Json",
-//         success: function(result){
-//             if(result.status=="ok"){
-
-
-//             }else{
-
-//             }
-
-//         }
-//         });
-
-
-
-
-
-// }
-
-
-
-
-
-// $("#maxNumberOfGroove").change(function(){
-//     var maxNumberOfGroove =  $(this).val();
-//     $("#numberOfGroove").attr('max', maxNumberOfGroove);
-
-//     $("label[for='numberOfGroove']").text("Number of Grooves (Max "+maxNumberOfGroove+")");
-
-// });
-
-
-function BomCalculation(QuotationId){
-    let url = $("#bom_calculation").val();
-    $.ajax({
-        type:"POST",
-        url:url,
-        data:{QuotationId:QuotationId},
-        success:function(data){
-            // console.log(data);
         }
     })
-}
 
-function IronmongeryIDItemsPrice(){
-    $("#ironmongerySet-section2").addClass("table_row_show");
-    $("#ironmongerySet-section2").removeClass("table_row_hide");
-    const IronmongeryIDValue = $("#IronmongeryID").val();
-    var ironname = $("#IronmongeryID").find('option:selected').text();
-    $(".IronmongeryID-selected").empty().text(ironname);
-    $.ajax({
-        url:  $("#IronmongeryIDPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), IronmongeryIDValue:IronmongeryIDValue,optionType:'IronmongeryIDItems'},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#ironmongerySet1-price").empty().text("£" + result.IronmongeryInfo);
-            }
-        }
-    });
-}
 
-$("#sOWidth,#sOHeight").on("keyup",function(){
-    doorSize();
-});
-
-function doorSize(){
-    $("#doorsize-section").addClass("table_row_show");
-    $("#doorsize-section").removeClass("table_row_hide");
-    var LeafWidth1 = $("#leafWidth1").val();
-    var LeafHeightNoOP = $("#leafHeightNoOP").val();
-    var fireRating = $("#fireRating").val();
-    var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-
-    $.ajax({
-        url:  $("#doorStandardPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), LeafWidth1:LeafWidth1, LeafHeightNoOP:LeafHeightNoOP, fireRating:fireRating,issingleconfiguration:issingleconfiguration},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#doorsize-price").empty().text("£" + result.door_core);
-                $("#doorsize-LeafWidth1").empty().text(result.selected_mm_width+' x '+result.selected_mm_height);
-                // $("#doorsize-LeafHeight").empty().text(result.selected_mm_height);
-            }
-        }
-    });
-}
-function IronmongeryIDPrice(){
-    $("#ironmongerySet-section1").addClass("table_row_show");
-    $("#ironmongerySet-section1").removeClass("table_row_hide");
-    const IronmongeryIDValue = $("#IronmongeryID").val();
-    var ironname = $("#IronmongeryID").find('option:selected').text();
-    $(".IronmongeryID-selected").empty().text(ironname);
-    $.ajax({
-        url:  $("#IronmongeryIDPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), IronmongeryIDValue:IronmongeryIDValue,optionType:'IronmongeryIDPrice'},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#ironmongerySet-price").empty().text("£" + result.IronmongeryInfo);
-            }
-        }
-    });
-}
-
-$("#doorLeafFacing, #doorLeafFinish, #fireRating, #doorLeafFacingValue").on("change",function(){
-    doorLeafFacingPrice('LeafSet');
-});
-
-$("#lippingThickness, #leafWidth1,#leafHeightNoOP, #doorThickness").on("keyup",function(){
-    doorLeafFacingPrice('LeafSet');
-});
-
-$("#intumescentSealArrangement, #intumescentSealType, #intumescentSealLocation, #intumescentSealColor,#doorsetType").on("change",function(){
-    doorLeafFacingPrice('intumescentSealArrangement');
-});
-
-$("#glazingSystems, #visionPanelQuantity").on("change",function(){
-    doorLeafFacingPrice('glazingSystems');
-});
-
-$("#glassType, #visionPanelQuantity, #sideLight1, #sideLight2").on("change",function(){
-    doorLeafFacingPrice('glassType');
-});
-
-$("#glazingBeads, #visionPanelQuantity").on("change",function(){
-    doorLeafFacingPrice('glazingBead');
-    $("#glazingBead-selected1").empty().text($("#glazingBeads").val());
-});
-
-$("#vP1Width, #vP1Height1,#vP1Height2, #vP1Height3,#vP1Height4, #vP1Height5,#glazingBeadsThickness,#glazingBeadsHeight").on("keyup",function(){
-    doorLeafFacingPrice('glazingBead');
-    $("#glazingBead-selected1").empty().text($("#glazingBeads").val());
-    doorLeafFacingPrice('glazingSystems');
-});
-
-$("#SlBeadThickness, #SlBeadHeight,#SL2Width, #SL2Height").on("keyup",function(){
-    if($("#sideLight2").val()=="Yes"){
-        doorLeafFacingPrice('sideLight12','Yes');
-    }
-});
-
-$("#SlBeadThickness, #SlBeadHeight,#SL1Width, #SL1Height").on("keyup",function(){
-    if($("#sideLight1").val()=="Yes"){
-        doorLeafFacingPrice('sideLight2','Yes');
-    }
-});
-
-$("#oPWidth,#OpBeadThickness, #OpBeadHeight").on("keyup",function(){
-    if($("#overpanel").val()=="Fan_Light"){
-        doorLeafFacingPrice('overpanel2',"Fan_Light");
-    }
-});
 $("#oPHeigth").on("keyup",function(){
-    if($("#overpanel").val()=="Fan_Light"){
-        doorLeafFacingPrice('overpanel2',"Fan_Light");
-    }
     if($("#sideLight1").val() == 'Yes'){
         SideLightHeight('sideLight1');
     }
@@ -4489,24 +4143,6 @@ $("#oPHeigth").on("keyup",function(){
     }
 });
 
-function labourPrice(){
-    var doorsetType = localStorage.getItem('doorsetType');
-    $.ajax({
-        url:  $("#generalLabourCost").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), option:'common',doorsetType:doorsetType},
-        dataType:"Json",
-        success: function(result){
-            if(result.status == "ok"){
-                for(var i = 0; i <= 7; i++)
-                {
-                    $("#labour-price" + i).empty().text("£" + result.price[i]);
-                    $("#labour-description" + i).empty().text(result.description[i]);
-                }
-            }
-        }
-    });
-}
 
 function architrave(isModal=0) {
     var architraveMaterialNew = $('#architraveMaterialNew').val();
@@ -4575,9 +4211,7 @@ $("#glazingBeads").on('change',function(){
         }
     }
 });
-// $.when(doorLeafFacingPrice()).done(function(){
-//     $('.loader').css({'display':'none'});
-// });
+
 $(document).ready(function(){
     setTimeout(function(){
         var doorsetType = $('#doorsetType').val();
@@ -4671,7 +4305,6 @@ function intumescentLeafChange(leafTypeId) {
 
                 // Call the FireRatingChange function after options are populated
                 FireRatingChange();
-                doorSize();
 
                 // Additional function call based on the response
                 doorThicknessLeaf(response.leafType);
