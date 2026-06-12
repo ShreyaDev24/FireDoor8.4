@@ -508,6 +508,8 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/add-halspan-item/{id}', [App\Http\Controllers\halspan\HalspanController::class,'addHalspanItem'])->name('addHalspanItem');
     Route::get('/add-halspan-item/{id}/{vid}', [App\Http\Controllers\halspan\HalspanController::class,'addHalspanItem'])->name('addHalspanItem');
     Route::get('/edit-halspan-configuration-cad-item/{id}/{vid}', [App\Http\Controllers\halspan\HalspanController::class,'editHalspanConfigurationCadItem'])->name('quotation/edit-halspan-configuration-cad-item');
+    Route::post('/ajax/get-colors', [App\Http\Controllers\halspan\HalspanController::class, 'getColors'])
+    ->name('ajax.get.colors');
 
 
     //Norma

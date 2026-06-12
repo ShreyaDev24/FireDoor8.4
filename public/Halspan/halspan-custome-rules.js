@@ -3568,6 +3568,46 @@ $(document).ready(function() {
         $("#"+category+'Key').val(code+'-'+name);
         $("#iron").modal('hide');
     }
+    let loadedColors = {};
+    function loadColors(callback = null)
+    {
+        if (Object.keys(loadedColors).length > 0) {
+
+            if (callback) {
+                callback(loadedColors);
+            }
+
+            return;
+        }
+
+        $.ajax({
+            url:  $("#get-colors").html(),
+            type: 'POST',
+            data: {
+                _token: $('#_token').val()
+            },
+            success: function(response) {
+
+                if(response.status === 'ok') {
+
+                    response.data.forEach(function(color){
+
+                        loadedColors[color.id] = {
+                            id: color.id,
+                            ColorName: color.ColorName,
+                            Hex: color.Hex,
+                            ColorCost: color.ColorCost
+                        };
+
+                    });
+
+                    if(callback) {
+                        callback(loadedColors);
+                    }
+                }
+            }
+        });
+    }
     function SelectRalColor( typeinput,id,code,name,fieldname){
         var innerHtml ='';
         innerHtml+='<option value="'+code+'" style="background:'+code+'">'+name+'</option>'
@@ -3576,34 +3616,28 @@ $(document).ready(function() {
             $("#doorLeafFinishColorIcon").show();
             // $("#doorLeafFinishColor").val(code);
             $("#doorLeafFinishColor").val(name);
-            var Colors = JSON.parse(ColorsJson);
-            var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
-                }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
+            // var Colors = JSON.parse(ColorsJson);
+            // var price = 0.00;
+            // Colors.forEach(function(elem, index) {
+            //     if(id == elem.id){
+            //         price = elem.ColorCost;
+            //         // console.log("Color id is = ",index);
+            //     }
+            // });
+            var price = 0;
+
+            if (loadedColors[id]) {
+                price = loadedColors[id].ColorCost;
+            }
         }else if(fieldname=="Laminate" || fieldname=="PVC"){
             // $("#doorLeafFinishColor").empty().append(innerHtml);
             $("#doorLeafFinishIcon").show();
             $("#doorLeafFinish").val(name);
-            var Colors = JSON.parse(ColorsJson);
-            var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
-                }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
+            var price = 0;
+
+            if (loadedColors[id]) {
+                price = loadedColors[id].ColorCost;
+            }
         } else if(fieldname=="Painted_Finish"){
             if(typeinput == 'architraveFinish'){
                 // $("#architraveFinishcolor").empty().append('<option value="'+id+'">'+name+'</option>');
@@ -3613,25 +3647,15 @@ $(document).ready(function() {
                 $("#framefinishColor").empty().append('<option value="'+id+'">'+name+'</option>');
             }
 
-            var Colors = JSON.parse(ColorsJson);
-            var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
-                }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
+            var price = 0;
+            if (loadedColors[id]) {
+                price = loadedColors[id].ColorCost;
+            }
         } else {
             // $("#framefinishColor").empty().append(innerHtml);
             $("#doorLeafFinishIcon").hide();
             $("#doorLeafFinish").hide();
         }
-        // $("#"+category+'Value').val(id);
-        // $("#"+category+'Key').val(code+'-'+name);
         $("#ralColor").modal('hide');
     }
     function SelectValueFill(id, key, value, modalId, data = []){

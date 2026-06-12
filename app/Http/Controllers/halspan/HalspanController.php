@@ -86,7 +86,7 @@ class HalspanController extends Controller
             $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 2], "join", "intumescentSealArrangement");
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
+        // $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
@@ -251,7 +251,6 @@ class HalspanController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -473,6 +472,25 @@ class HalspanController extends Controller
             'LippingName' => $LippingName,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,  // this line is for to send lipping name into edit form
             'folders' => $folders
+        ]);
+    }
+
+    public function getColors(Request $request)
+    {
+        $colors = Color::where('Status', 1)
+            ->whereIn('editBy', Session::get('UserIds'))
+            ->select(
+                'id',
+                'ColorName',
+                'Hex',
+                'ColorCost'
+            )
+            ->orderBy('ColorName')
+            ->get();
+
+        return response()->json([
+            'status' => 'ok',
+            'data' => $colors
         ]);
     }
 }
