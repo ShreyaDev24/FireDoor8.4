@@ -19,10 +19,8 @@
                                                     </label>
                                                     <select name="lippingType" required id="lippingType" class="form-control forcoreWidth1">
                                                         <option value="">Select Lipping Types</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='lipping_type')
+                                                        @foreach(($option_data_grouped['lipping_type'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['LippingType'])) @if($Item['LippingType'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -40,10 +38,8 @@
                                                     <select name="lippingThickness" required id="lippingThickness"
                                                         class="form-control forcoreWidth1 door-configuration" onchange="$('#lippingSpecies').val('')">
                                                         <option value="">Select leaping thickness</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='lipping_thickness')
+                                                        @foreach(($option_data_grouped['lipping_thickness'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['LippingThickness'])) @if($Item['LippingThickness'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -85,8 +81,7 @@
                                                         @if(empty($Item['MeetingStyle'])){{'disabled'}}@endif
                                                         id="meetingStyle" class="form-control">
                                                         <option value="">Select Meeting Style</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='meeting_style')
+                                                        @foreach(($option_data_grouped['meeting_style'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}"
                                                             @if(isset($Item['MeetingStyle']))
                                                                 @if($Item['MeetingStyle'] == $row->OptionKey)
@@ -94,7 +89,6 @@
                                                                 @endif
                                                             @endif
                                                             >{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -230,10 +224,8 @@
                                                     <select name="intumescentSealType" id="intumescentSealType"
                                                         class="form-control">
                                                         <option value="">Select Intumescent seal type</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='intumescent_seal_type')
+                                                        @foreach(($option_data_grouped['intumescent_seal_type'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['IntumescentLeapingSealType'])) @if($Item['IntumescentLeapingSealType'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>
@@ -251,10 +243,8 @@
                                                     <select name="intumescentSealLocation" id="intumescentSealLocation"
                                                         class="form-control">
                                                         <option value="">Select Intumescent seal Location</option>
-                                                        @foreach($option_data as $row)
-                                                        @if($row->OptionSlug=='IntumescentSeal_location')
+                                                        @foreach(($option_data_grouped['IntumescentSeal_location'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['IntumescentLeapingSealLocation'])) @if($Item['IntumescentLeapingSealLocation'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
-                                                        @endif
                                                         @endforeach
                                                     </select>
                                                 </div>

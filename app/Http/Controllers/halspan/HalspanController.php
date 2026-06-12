@@ -62,6 +62,9 @@ class HalspanController extends Controller
         $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
         $SelectedLippingSpeciesData = $LippingSpeciesData;
         $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        // Group options by slug once so each Blade dropdown iterates only its own
+        // options instead of re-scanning the full collection on every dropdown.
+        $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
 
         $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
 
@@ -242,6 +245,7 @@ class HalspanController extends Controller
             "QuotationId" => $id,
             'Item' => $item,
             'option_data' => $OptionsData,
+            'option_data_grouped' => $OptionsDataGrouped,
             'selected_option_data' => $SelectedOptionsData,
             'intumescentSealColor' => $intumescentSealColor,
             'ArchitraveType' => $ArchitraveType,
@@ -282,6 +286,9 @@ class HalspanController extends Controller
 
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
         $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted' => 0])->get();
+        // Group options by slug once so each Blade dropdown iterates only its own
+        // options instead of re-scanning the full collection on every dropdown.
+        $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
         $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
 
         $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
@@ -446,6 +453,7 @@ class HalspanController extends Controller
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
             'option_data' => $OptionsData,
+            'option_data_grouped' => $OptionsDataGrouped,
             'selected_option_data' => $SelectedOptionsData,
             'intumescentSealColor' => $intumescentSealColor,
             'ArchitraveType' => $ArchitraveType,
