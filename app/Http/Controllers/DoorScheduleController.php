@@ -103,12 +103,9 @@ use App\Jobs\RecalculateItemsBOMJob;
 use App\Jobs\RecalculateNonConfigurableItemsJob;
 use App\Jobs\RecalculateSideScreenItemsJob;
 use Illuminate\Support\Facades\Cache;
-use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
 
 class DoorScheduleController extends Controller
 {
-    use BuildsIronmongeryAdditionalInfo;
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -5554,26 +5551,96 @@ class DoorScheduleController extends Controller
         $configurationDoor = configurationDoor(1);
         $UserType = Auth::user()->UserType;
 
-        //             if (!empty($SelectedIronmongery)) {
-        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-        //                         ->first();
-        //                     if(empty($IronmongeryInfoModel)){
-        //                         $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-        //                     }
+        $userBlock = Cache::remember(
+            'cad_userblock_'.$UserType.'_1_'.md5(json_encode($UserIds)),
+            now()->addHours(6),
+            function () use (
+                $UserType,$OptionsData,$UserIds,$configurationDoor,$intumescentSealArrangement
+            ) {
+                if (in_array($UserType,[1,4])) {
+                    return [
+                        'SelectedOptionsData' => $OptionsData,
+                        'intumescentSealColor' => IntumescentSealColor::where([$configurationDoor=>1,'Status'=>1])
+                            ->wherein('editBy',$UserIds)->get(),
+                        'ArchitraveType' => ArchitraveType::where([$configurationDoor=>1,'Status'=>1])
+                            ->wherein('editBy',$UserIds)->get(),
+                        'SelectedIntumescentSealArrangement' => $intumescentSealArrangement
+                    ];
+                }
 
-        //                     if (!empty($IronmongeryInfoModel)) {
-        //                         $additionalInfo[] = $IronmongeryInfoModel;
-        //                     }
-        //             }
-        //         }
-        //     }
+                return [
+                    'SelectedOptionsData' => GetOptions(['options.configurableitems'=>1,'options.is_deleted'=>0], "join"),
+                    'intumescentSealColor' => GetOptions(
+                        ['intumescent_seal_color.'.$configurationDoor=>1,'intumescent_seal_color.Status'=>1],
+                        "join","intumescent_seal_color"
+                    ),
+                    'ArchitraveType' => GetOptions(
+                        ['architrave_type.'.$configurationDoor=>1,'architrave_type.Status'=>1],
+                        "join","architrave_type"
+                    ),
+                    'SelectedIntumescentSealArrangement' => GetOptions(
+                        ['selected_intumescentseals2.selected_configurableitems'=>1],
+                        "join","intumescentSealArrangement"
+                    )
+                ];
+            }
+        );
 
-        //     // Dynamically add the additional_info attribute
-        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
-        // }
+        $SelectedOptionsData = $userBlock['SelectedOptionsData'];
+        $intumescentSealColor = $userBlock['intumescentSealColor'];
+        $ArchitraveType = $userBlock['ArchitraveType'];
+        $SelectedIntumescentSealArrangement = $userBlock['SelectedIntumescentSealArrangement'];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
+        // Log::info('UserType conditional block time (cached)', [
+        //     'ms' => (microtime(true)-$start)*1000
+        // ]);
+
+        /* ================= COLORS (CACHED) ================= */
+        $start = microtime(true);
+        $ColorData = Cache::remember(
+            'cad_colors_'.md5(json_encode($UserIds)),
+            now()->addHours(6),
+            fn () => Color::where('Status',1)->wherein('editBy',$UserIds)->get()
+        );
+        // Log::info('Color query time (cached)', [
+        //     'ms' => (microtime(true)-$start)*1000
+        // ]);
+
+        /* ================= COMPANY ================= */
+        $company_data = Company::join('users','users.id','companies.UserId')
+            ->select('users.*')
+            ->get();
+
+        /* ================= TOOLTIP ================= */
+        $tooltip = Tooltip::first();
+
+        /* ================= QUOTATION ================= */
+        $quotation = Quotation::where('id',$id)->first();
+
+        /* ================= FOLDERS ================= */
+        $folders = DB::table('folders')
+            ->join('folder_ironmongery_sets','folders.id','=','folder_ironmongery_sets.folder_id')
+            ->join('add_ironmongery','folder_ironmongery_sets.add_ironmongery_id','=','add_ironmongery.id')
+            ->where('folders.user_id',Auth::user()->id)
+            ->get()
+            ->groupBy('folder_id');
+
+        /* ================= IRONMONGERY (CACHED) ================= */
+        $setIronmongery = Cache::remember(
+            'cad_set_ironmongery_'.md5(json_encode($UserIds)),
+            now()->addHours(6),
+            fn () => AddIronmongery::wherein('UserId',$UserIds)
+                ->orderBy('Setname','ASC')
+                ->get()
+        );
+
+        /* ================= DEFAULT ITEMS ================= */
+        if(Auth::user()->UserType == 3){
+            $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
+            $ids = $users->CreatedBy;
+        } else {
+            $ids = Auth::user()->id;
+        }
 
         $defaultItems = Project::whereHas('defaultItems', function ($q) use ($quotation,$ids) {
                 $q->where('default_type','custom')
@@ -5803,79 +5870,9 @@ class DoorScheduleController extends Controller
             fn () => IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get()
         );
 
-        // if(!empty($quotation->ProjectId)){
-        //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
-        // } else {
-        //     $setIronmongery = null;
-        // }
-        // old code
-        // $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
-
-        // new code
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
-        $IronmongeryInfoSet = [
-            'Hinges',
-            'FloorSpring',
-            'LocksAndLatches',
-            'FlushBolts',
-            'ConcealedOverheadCloser',
-            'PullHandles',
-            'PushHandles',
-            'KickPlates',
-            'DoorSelectors',
-            'PanicHardware',
-            'Doorsecurityviewer',
-            'Morticeddropdownseals',
-            'Facefixeddropseals',
-            'ThresholdSeal',
-            'AirTransferGrill',
-            'Letterplates',
-            'CableWays',
-            'SafeHinge',
-            'LeverHandle',
-            'DoorSinage',
-            'FaceFixedDoorCloser',
-            'Thumbturn',
-            'KeyholeEscutchen',
-            'DoorStops',
-            'Cylinders'
-        ];
-
-        // Process the data and merge
-        // foreach ($setIronmongery as $ironmongery) {
-        //     $additionalInfo = []; // Temporary array to hold additional info
-
-        //     foreach ($IronmongeryInfoSet as $valIronmongery) {
-        //         // Check if the property exists and is not empty
-        //         if (!empty($ironmongery->$valIronmongery)) {
-        //             $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-        //                 ->where('UserId', Auth::user()->id)
-        //                 ->first();
-
-        //             if (!empty($SelectedIronmongery)) {
-        //                     $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-        //                         ->first();
-        //                     if(empty($IronmongeryInfoModel)){
-        //                         $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-        //                     }
-
-        //                     if (!empty($IronmongeryInfoModel)) {
-        //                         $additionalInfo[] = $IronmongeryInfoModel;
-        //                     }
-        //             }
-        //         }
-        //     }
-
-        //     // Dynamically add the additional_info attribute
-        //     $ironmongery->setAttribute('additional_info', $additionalInfo);
-        // }
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
-
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
-
-        // dd(\Config::get('constants.PossibleSelectedOptions'));
+        // Log::info('editConfigurationCadItem END', [
+        //     'total_ms' => (microtime(true)-$__totalStart)*1000
+        // ]);
 
         return view('Items/CadConfigurableItem', [
             "QuotationId" => $item["QuotationId"],
@@ -7762,8 +7759,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+            }
+
+            // Dynamically add the additional_info attribute
+            $ironmongery->setAttribute('additional_info', $additionalInfo);
+         }
 
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
             $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
@@ -7901,8 +7924,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+            }
+
+            // Dynamically add the additional_info attribute
+            $ironmongery->setAttribute('additional_info', $additionalInfo);
+         }
 
 
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
@@ -8043,8 +8092,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
 
 
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
@@ -8186,8 +8261,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
 
 
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
@@ -8307,8 +8408,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
             $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
             $returnHTML = view('Items/ValidateVicima/VicimaEditSvgImage', [
@@ -8423,8 +8550,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
             $species = DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
             $returnHTML = view('Items/ValidateSeadec/SeadecEditSvgImage', [
@@ -8539,8 +8692,34 @@ class DoorScheduleController extends Controller
             'Cylinders'
         ];
 
-        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
-        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
+        // Process the data and merge
+        foreach ($setIronmongery as $ironmongery) {
+            $additionalInfo = []; // Temporary array to hold additional info
+
+            foreach ($IronmongeryInfoSet as $valIronmongery) {
+                // Check if the property exists and is not empty
+                if (!empty($ironmongery->$valIronmongery)) {
+                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
+                        ->where('UserId', Auth::user()->id)
+                        ->first();
+
+                    if (!empty($SelectedIronmongery)) {
+                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
+                                ->first();
+                            if(empty($IronmongeryInfoModel)){
+                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
+                            }
+
+                            if (!empty($IronmongeryInfoModel)) {
+                                $additionalInfo[] = $IronmongeryInfoModel;
+                            }
+                    }
+                    }
+                }
+
+                // Dynamically add the additional_info attribute
+                $ironmongery->setAttribute('additional_info', $additionalInfo);
+            }
             $BOMSetting = BOMSetting::where("id", 1)->get()->first();
             $species = DB::table('leaf_type')->where('Deanta', 6)->where('Status',1)->whereIn('EditBy', $userId)->get();
             $returnHTML = view('Items/ValidateDeanta/DeantaEditSvgImage', [

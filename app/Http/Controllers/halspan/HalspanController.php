@@ -52,6 +52,7 @@ use App\Models\ArchitraveType;
 use App\Models\IntumescentSealLeafType;
 use App\Models\DoorFrameConstruction;
 use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
+use Illuminate\Support\Facades\Log;
 
 class HalspanController extends Controller
 {
@@ -121,6 +122,7 @@ class HalspanController extends Controller
 
         // $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
+        $time8 = microtime(true);
         $tooltip = Tooltip::first();
         $checkpoints['Tooltip'] = ['time' => microtime(true), 'duration' => microtime(true) - $time8, 'label' => 'Tooltip Query'];
 
@@ -204,11 +206,11 @@ class HalspanController extends Controller
         // Bulk-load SelectedIronmongery + IronmongeryInfoModel and attach additional_info
         // in memory (no per-row DB queries). Output is identical to the previous
         // nested-loop logic, including quantity duplication and ordering.
+        // NOTE: dev branch also added a processIronmongeryData() call here during the
+        // merge; it has been removed because the trait call above already builds
+        // additional_info in bulk AND slims it. Running both did the work twice and the
+        // (un-slimmed) dev version overwrote the slim output.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
-
-        $time13 = microtime(true);
-        $this->processIronmongeryData($setIronmongery);
-        $checkpoints['ProcessIronmongery'] = ['time' => microtime(true), 'duration' => microtime(true) - $time13, 'label' => 'Process Ironmongery Data'];
 
         // Get user ID for defaults
         $userId = Auth::user()->UserType == 3
