@@ -198,30 +198,7 @@
                             </select>
                         </div>
                     </div>
-                    {{-- NO NEED TO ADD COC --}}
-                    {{-- COMMENT DATE 29-11-2023  --}}
-                    {{-- <div class="col-md-6">
-                        <div class="position-relative form-group">
-                            <label for="COC">COC
-
-                                @if(!empty($tooltip->COC))
-                                <script type="text/javascript">
-                                document.write(Tooltip('{{$tooltip->COC}}'));
-                                </script>
-                                @endif
-                            </label>
-                            <select name="COC" id="COC" class="form-control" required>
-                                <option value="">Select COC</option>
-                                @foreach($option_data as $row)
-                                @if($row->OptionSlug=='COC')
-                                <option value="{{$row->OptionKey}}" @if(!empty($Item['COC']))
-                                    @if($Item['COC']==$row->OptionKey) {{'selected'}} @endif
-                                    @endif>{{$row->OptionValue}}</option>
-                                @endif
-                                @endforeach
-                            </select>
-                        </div>
-                    </div> --}}
+                    
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="tollerance">Tolerance

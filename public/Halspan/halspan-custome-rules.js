@@ -1,4 +1,4 @@
-// $(function(){
+﻿// $(function(){
 //     $("#doorPriceCalculate").on("click",function(){
 //         $('.loader').css({'display':'block'});
 //     });
@@ -753,11 +753,6 @@ $(document).ready(function() {
         GlazingSystemsChange(null,"sideLight2GlazingSystems");
     });
 
-// Frame
-    $("#plantonStopWidth,#plantonStopHeight,#frameThickness,#frameDepth").on("keyup",function(){
-        FramePrice('Plant_on_Stop');
-    });
-
     //dimention value using frame type
 
     $("#frameType").change(function () {
@@ -821,8 +816,6 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Plant_on_Stop');
-            // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
 
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
@@ -849,9 +842,7 @@ $(document).ready(function() {
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Rebated_Frame');
             framewidth();
-            // frameprice('Rebated_Frame');
         } else {
 
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -902,7 +893,6 @@ $(document).ready(function() {
                 $("#extLinerValue").val(parseInt(sODepth) - parseInt(frameDepth));
             }
             doorLeafFacingPrice('extLiner');
-            FramePrice('extLiner')
         } else {
             $("#extLiner-section1").addClass("table_row_hide");
             $("#extLiner-section1").removeClass("table_row_show");
@@ -985,8 +975,6 @@ $(document).ready(function() {
             doorLeafFacingPrice('overpanel',"Fan_Light");
             doorLeafFacingPrice('overpanel1',"Fan_Light");
             doorLeafFacingPrice('overpanel2',"Fan_Light");
-
-            FramePrice('overpanel3');
         }else{
             overpanelOPHeight();
             $("#OpBeadThickness").val(0).attr('readonly',true);
@@ -1159,10 +1147,6 @@ $(document).ready(function() {
 
             $("#SL1Depth,#SL1transomThickness,#SL1TransomDepth,#SL1GlassIntegrity,#sideLight1FrameThickness").attr({ 'readonly': false, "required": true });
             $("#SL1Transom").attr({ 'disabled': false, "required": true });
-            doorLeafFacingPrice('sideLight1',"Yes");
-            doorLeafFacingPrice('sideLight11',"Yes");
-            doorLeafFacingPrice('sideLight2',"Yes");
-            FramePrice('sideLight3');
             updateTransomFields();
         } else {
 
@@ -2886,7 +2870,6 @@ $(document).ready(function() {
         }
         filterHandling();
         IntumescentSeals();
-        DoorSetPrice();
     }
     function MeetingStyle(){
         // Lipping And Intumescent
@@ -3711,21 +3694,6 @@ $(document).ready(function() {
                 // $('#frameMaterialNew').empty().val(value);
                 IntumescentSeals();
             }
-            if($("#frameType").val() == 'Rebated_Frame'){
-                FramePrice('Rebated_Frame');
-            }else if($("#frameType").val() == 'Plant_on_Stop'){
-                FramePrice('Plant_on_Stop');
-            }
-
-            if($("#extLiner").val() == 'Yes'){
-                FramePrice('extLiner');
-            }
-            if($("#sideLight1").val() == 'Yes'){
-                FramePrice('sideLight3');
-            }
-            if($("#overpanel").val() == 'Fan_Light'){
-                FramePrice('overpanel3');
-            }
         }
     }
 
@@ -3803,42 +3771,12 @@ $(document).ready(function() {
             }
         });
 
-        // SetBuildOfMaterial($("#"+ inputId), cost);
-        // alert(inputId);
-
-
         $("#"+ inputId +"-selected").empty().text(value);
         $("#"+ inputId +"-price").empty().text("£" + cost);
         $("#"+ inputId +"-section").removeClass("table_row_hide");
         $("#"+ inputId +"-section").addClass("table_row_show");
-        doorLeafFacingPrice('LeafSet');
-        if($("#frameType").val() == 'Rebated_Frame'){
-            FramePrice('Rebated_Frame');
-        }else if($("#frameType").val() == 'Plant_on_Stop'){
-            FramePrice('Plant_on_Stop');
-        }
 
-        if($("#extLiner").val() == 'Yes'){
-            FramePrice('extLiner');
-        }
-        if($("#sideLight1").val() == 'Yes'){
-            FramePrice('sideLight3');
-        }
-        if($("#overpanel").val() == 'Fan_Light'){
-            FramePrice('overpanel3');
-        }
-
-        doorLeafFacingPrice('glazingBead');
         $("#glazingBead-selected1").empty().text($("#glazingBeads").val());
-        if($("#sideLight2").val()=="Yes"){
-            doorLeafFacingPrice('sideLight12','Yes');
-        }
-        if($("#sideLight1").val()=="Yes"){
-            doorLeafFacingPrice('sideLight2','Yes');
-        }
-        if($("#overpanel").val()=="Fan_Light"){
-            doorLeafFacingPrice('overpanel2',"Fan_Light");
-        }
     }
     function DoorFrameConstruction(id,OptionKey,OptionValue){
         $('input[id="frameCostuction"]').val(OptionValue);
@@ -4491,30 +4429,6 @@ function IronmongeryIDPrice(){
     });
 }
 
-function DoorSetPrice(){
-    // $("#doorsetType-section1").addClass("table_row_show");
-    // $("#doorsetType-section1").removeClass("table_row_hide");
-    // $("#doorsetType-section2").addClass("table_row_show");
-    // $("#doorsetType-section2").removeClass("table_row_hide");
-    // var doorset = $("#doorsetType").find('option:selected').text();
-    // $('.doorsetType-selected').empty().text(doorset);
-    // const doorsetType = $("#doorsetType").val();
-    // $.ajax({
-    //     url:  $("#generalLabourCost").html(),
-    //     method:"POST",
-    //     data:{_token:$("#_token").val(), doorsetType:doorsetType, option:'doorsetType'},
-    //     dataType:"Json",
-    //     success: function(result){
-    //         if(result.status == "ok"){
-    //             $("#doorsetType-price").empty().text("£" + result.price['0']);
-    //             $("#doorsetType-description").empty().text(result.description['0']);
-    //             $("#doorsetType-price1").empty().text("£" + result.price['1']);
-    //             $("#doorsetType-description1").empty().text(result.description['1']);
-    //         }
-    //     }
-    // });
-}
-
 $("#doorLeafFacing, #doorLeafFinish, #fireRating, #doorLeafFacingValue").on("change",function(){
     doorLeafFacingPrice('LeafSet');
 });
@@ -4592,412 +4506,6 @@ function labourPrice(){
             }
         }
     });
-}
-
-function doorLeafFacingPrice(option,value=""){
-
-}
-
-// function doorLeafFacingPrice(option,value=""){
-//     var doorsetType = localStorage.getItem('doorsetType');
-//     $("#" + option + "-section1").addClass("table_row_show");
-//     $("#" + option + "-section1").removeClass("table_row_hide");
-//     var doorset = $("#" + option).find('option:selected').text();
-
-//     $('#' + option + '-selected1').empty().text(doorset);
-//     if(value == ""){
-//         var optionname = $("#" + option).val();
-//     }else{
-//         var optionname = value;
-//         $('#' + option + '-selected1').empty().text(value);
-//     }
-//     if(option == 'LeafSet'){
-//         if(value == ''){
-//             value = $('.doorLeafFinishSelect').val();
-//         }else{
-//             value = value;
-//         }
-//         $('#LeafSet-selected1').empty().text(value);
-//         var doorLeafFacing = $("#doorLeafFacing").val();
-//         var doorLeafFinish = value;
-//         var lippingSpecies = $("#lippingSpeciesid").val();
-//         var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-//         var lippingThickness = $("#lippingThickness").val();
-//         var fireRating = $("#fireRating").val();
-//         var leafWidth1 = $("#leafWidth1").val();
-//         var leafHeightNoOP = $("#leafHeightNoOP").val();
-//         var doorThickness = $("#doorThickness").val();
-//         var doorLeafFacingValue = $("#doorLeafFacingValue").val();
-//         $('#LeafSet-DoorLeafFacing').empty().text(doorLeafFacing);
-//         if(doorLeafFacing == 'Laminate'){
-//             var doorLeafFinish = 'Painted';
-//         }else if(doorLeafFacing == 'PVC'){
-//             var doorLeafFinish = 'Painted';
-//         }
-//         // setTimeout(function(){
-//             $.ajax({
-//                 url:  $("#generalLabourCost").html(),
-//                 method:"POST",
-//                 data:{_token:$("#_token").val(), option:option, doorLeafFacing:doorLeafFacing,doorLeafFinish:doorLeafFinish, lippingSpecies:lippingSpecies,issingleconfiguration:issingleconfiguration,lippingThickness:lippingThickness,leafWidth1:leafWidth1,leafHeightNoOP:leafHeightNoOP,doorThickness:doorThickness,doorLeafFacingValue:doorLeafFacingValue,fireRating:fireRating},
-//                 dataType:"Json",
-//                 success: function(result){
-//                     if(result.status == "ok"){
-//                         $("#" + option + "-price1").empty().text("£" + result.price);
-//                     }
-//                 }
-//             });
-//         //   },10000);
-
-//     }else if(option == 'intumescentSealArrangement'){
-//         if(value == ''){
-//             value = $('#intumescentSealArrangement').val();
-//         }else{
-//             value = value;
-//         }
-//         var intumescentSealArrangement =value;
-//         var intumescentSealType =$('#intumescentSealType').val();
-//         var intumescentSealLocation =$('#intumescentSealLocation').val();
-//         var intumescentSealColor =$('#intumescentSealColor').val();
-//         var doorsetType =$('#doorsetType').val();
-//         var intumescentSealMeetingEdges =$('#intumescentSealMeetingEdges').val();
-//         $.ajax({
-//             url:  $("#generalLabourCost").html(),
-//             method:"POST",
-//             data:{_token:$("#_token").val(), option:option, intumescentSealArrangement:intumescentSealArrangement,intumescentSealType:intumescentSealType, intumescentSealLocation:intumescentSealLocation, intumescentSealColor:intumescentSealColor, doorsetType:doorsetType, intumescentSealMeetingEdges:intumescentSealMeetingEdges},
-//             dataType:"Json",
-//             success: function(result){
-//                 if(result.status == "ok"){
-//                     $("#" + option + "-price1").empty().text("£" + result.price);
-//                 }
-//             }
-//         });
-//     }else if(option == 'glazingSystems'){
-//         if(value == ''){
-//             value = $('#glazingSystems').val();
-//         }else{
-//             value = value;
-//         }
-//         var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-//         // var intumescentSealArrangement =value;
-//         var glazingSystems =value;
-//         var visionPanelQuantity =$('#visionPanelQuantity').val();
-//         var vP1Width =$('#vP1Width').val();
-//         var vP1Height1 =$('#vP1Height1').val();
-//         var vP1Height2 =$('#vP1Height2').val();
-//         var vP1Height3 =$('#vP1Height3').val();
-//         var vP1Height4 =$('#vP1Height4').val();
-//         var vP1Height5 =$('#vP1Height5').val();
-
-//         $.ajax({
-//             url:  $("#generalLabourCost").html(),
-//             method:"POST",
-//             data:{_token:$("#_token").val(), option:option, glazingSystems:glazingSystems,visionPanelQuantity:visionPanelQuantity, vP1Width:vP1Width, vP1Height1:vP1Height1,vP1Height2:vP1Height2,vP1Height3:vP1Height3,vP1Height4:vP1Height4,vP1Height5:vP1Height5,issingleconfiguration:issingleconfiguration},
-//             dataType:"Json",
-//             success: function(result){
-//                 if(result.status == "ok"){
-//                     $("#" + option + "-price1").empty().text("£" + result.price);
-//                 }
-//             }
-//         });
-//     }else if(option == 'glassType'){
-//         if(value == ''){
-//             value = $('#glassType').val();
-//         }else{
-//             value = value;
-//         }
-//         var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-//         // var intumescentSealArrangement =value;
-//         var glassType =value;
-//         var visionPanelQuantity =$('#visionPanelQuantity').val();
-//         var vP1Width =$('#vP1Width').val();
-//         var sideLight1 =$('#sideLight1').val();
-//         var sideLight2 =$('#sideLight2').val();
-//         var vP1Height3 =$('#vP1Height3').val();
-//         var vP1Height4 =$('#vP1Height4').val();
-//         var vP1Height5 =$('#vP1Height5').val();
-
-//         $.ajax({
-//             url:  $("#generalLabourCost").html(),
-//             method:"POST",
-//             data:{_token:$("#_token").val(), option:option, glassType:glassType,visionPanelQuantity:visionPanelQuantity, issingleconfiguration:issingleconfiguration},
-//             dataType:"Json",
-//             success: function(result){
-//                 if(result.status == "ok"){
-//                     $("#" + option + "-price1").empty().text("£" + result.price);
-//                     if(sideLight1 == 'Yes'){
-//                         $("#sidelight1-section1").addClass("table_row_show");
-//                         $("#sidelight1-section1").removeClass("table_row_hide");
-//                         $("#sidelight1-price1").empty().text("£" + result.price);
-//                     }else{
-//                         $("#sidelight1-section1").removeClass("table_row_show");
-//                         $("#sidelight1-section1").addClass("table_row_hide");
-//                     }
-//                     if(sideLight2 == 'Yes'){
-//                         $("#sidelight2-section1").addClass("table_row_show");
-//                         $("#sidelight2-section1").removeClass("table_row_hide");
-//                         $("#sidelight2-price1").empty().text("£" + result.price);
-//                     }else{
-//                         $("#sidelight2-section1").removeClass("table_row_show");
-//                         $("#sidelight2-section1").addClass("table_row_hide");
-//                     }
-//                 }
-//             }
-//         });
-
-//     }else if(option == 'glazingBead'){
-//         if(value == ''){
-//             value = $('#glazingBeads').val();
-//         }else{
-//             value = value;
-//         }
-//         var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-//         var glazingBeads =value;
-//         var visionPanelQuantity =$('#visionPanelQuantity').val();
-//         var vP1Width =$('#vP1Width').val();
-//         var vP1Height1 =$('#vP1Height1').val();
-//         var vP1Height2 =$('#vP1Height2').val();
-//         var vP1Height3 =$('#vP1Height3').val();
-//         var vP1Height4 =$('#vP1Height4').val();
-//         var vP1Height5 =$('#vP1Height5').val();
-//         var glazingBeadSpecies =$('#glazingBeadSpeciesid').val();
-//         var glazingBeadsThickness =$('#glazingBeadsThickness').val();
-//         var lippingSpecies =$('#lippingSpeciesid').val();
-//         var glazingBeadsHeight =$('#glazingBeadsHeight').val();
-
-//         $.ajax({
-//             url:  $("#generalLabourCost").html(),
-//             method:"POST",
-//             data:{_token:$("#_token").val(), option:option, glazingBeads:glazingBeads,visionPanelQuantity:visionPanelQuantity, vP1Width:vP1Width, vP1Height1:vP1Height1,vP1Height2:vP1Height2,vP1Height3:vP1Height3,vP1Height4:vP1Height4,vP1Height5:vP1Height5,issingleconfiguration:issingleconfiguration,glazingBeadSpecies:glazingBeadSpecies,glazingBeadsThickness:glazingBeadsThickness,lippingSpecies:lippingSpecies,glazingBeadsHeight:glazingBeadsHeight},
-//             dataType:"Json",
-//             success: function(result){
-//                 if(result.status == "ok"){
-//                     $("#" + option + "-price1").empty().text("£" + result.price);
-//                 }
-//             }
-//         });
-//     }else if(option == 'overpanel2'){
-//         if(value == ''){
-//             value = $('#overpanel').val();
-//         }else{
-//             value = value;
-//         }
-//         if(value == 'Fan_Light'){
-//             var overpanel = value;
-//             var oPHeigth =$('#oPHeigth').val();
-//             var oPWidth =$('#oPWidth').val();
-//             var OpBeadThickness =$('#OpBeadThickness').val();
-//             var opGlazingBeadSpecies =$('#opGlazingBeadSpeciesïd').val();
-//             var lippingSpecies =$('#lippingSpeciesid').val();
-//             var OpBeadHeight =$('#OpBeadHeight').val();
-
-//             $.ajax({
-//                 url:  $("#generalLabourCost").html(),
-//                 method:"POST",
-//                 data:{_token:$("#_token").val(), option:option, overpanel:overpanel,OpBeadThickness:OpBeadThickness, opGlazingBeadSpecies:opGlazingBeadSpecies, OpBeadHeight:OpBeadHeight, lippingSpecies:lippingSpecies, oPWidth:oPWidth, oPHeigth:oPHeigth},
-//                 dataType:"Json",
-//                 success: function(result){
-//                     if(result.status == "ok"){
-//                         $("#" + option + "-price1").empty().text("£" + result.price);
-//                     }
-//                 }
-//             });
-//         }
-//     }else if(option == 'sideLight2'){
-//         if(value == ''){
-//             value = $('#sideLight1').val();
-//         }else{
-//             value = value;
-//         }
-//         if(value == 'Yes'){
-//             var sideLight1 = value;
-//             var sideLight2 = $('#sideLight2').val();;
-//             var SlBeadThickness =$('#SlBeadThickness').val();
-//             var SlBeadHeight =$('#SlBeadHeight').val();
-//             var SL1Width =$('#SL1Width').val();
-//             var SL1Height =$('#SL1Height').val();
-//             var SideLight1GlazingBeadSpeciesid =$('#SideLight1GlazingBeadSpeciesid').val();
-//             $.ajax({
-//                 url:  $("#generalLabourCost").html(),
-//                 method:"POST",
-//                 data:{_token:$("#_token").val(), option:option, sideLight1:sideLight1,SlBeadThickness:SlBeadThickness, SlBeadHeight:SlBeadHeight, SL1Width:SL1Width, SideLight1GlazingBeadSpeciesid:SideLight1GlazingBeadSpeciesid, SL1Height:SL1Height,sideLight2:sideLight2},
-//                 dataType:"Json",
-//                 success: function(result){
-//                     if(result.status == "ok"){
-//                         $("#" + option + "-price1").empty().text("£" + result.price);
-//                     }
-//                 }
-//             });
-//         }
-//     }else if(option == 'sideLight12'){
-//         if(value == ''){
-//             value = $('#sideLight2').val();
-//         }else{
-//             value = value;
-//         }
-//         if(value == 'Yes'){
-//             var sideLight2 = value;
-//             var sideLight1 = $('#sideLight1').val();;
-//             var SlBeadThickness =$('#SlBeadThickness').val();
-//             var SlBeadHeight =$('#SlBeadHeight').val();
-//             var SL2Width =$('#SL2Width').val();
-//             var SL2Height =$('#SL2Height').val();
-//             var SideLight2GlazingBeadSpeciesid =$('#SideLight2GlazingBeadSpeciesid').val();
-//             $.ajax({
-//                 url:  $("#generalLabourCost").html(),
-//                 method:"POST",
-//                 data:{_token:$("#_token").val(), option:option, sideLight2:sideLight2,SlBeadThickness:SlBeadThickness, SlBeadHeight:SlBeadHeight, SL2Width:SL2Width, SideLight2GlazingBeadSpeciesid:SideLight2GlazingBeadSpeciesid, SL2Height:SL2Height,sideLight1:sideLight1},
-//                 dataType:"Json",
-//                 success: function(result){
-//                     if(result.status == "ok"){
-//                         $("#" + option + "-price1").empty().text("£" + result.price);
-//                     }
-//                 }
-//             });
-//         }
-//     }else{
-//         $.ajax({
-//             url:  $("#generalLabourCost").html(),
-//             method:"POST",
-//             data:{_token:$("#_token").val(), option:option, optionName:optionname},
-//             dataType:"Json",
-//             success: function(result){
-//                 if(result.status == "ok"){
-//                     $("#" + option + "-price1").empty().text("£" + result.price);
-//                     $("#" + option + "-description1").empty().text(result.description);
-//                 }
-//             }
-//         });
-//     }
-// }
-
-$("#extLinerThickness,#frameDepth").on("keyup",function(){
-    FramePrice('extLiner');
-});
-
-$("#frameThickness,#frameDepth,#SL1Height,#SL2Height").on("keyup",function(){
-    FramePrice('sideLight3');
-    FramePrice('Rebated_Frame');
-});
-
-$("#OPLippingThickness,#frameDepth").on("keyup",function(){
-    FramePrice('overpanel3');
-});
-
-function FramePrice(option,value=""){
-    var doorsetType = localStorage.getItem('doorsetType');
-    var frameType =$('#frameType').val();
-    var frameMaterial =$('#frameMaterialNew').val();
-    var lippingSpecies =$('#lippingSpeciesid').val();
-    if(option == 'Plant_on_Stop'){
-        $(".Plant_on_Stop_section").addClass("table_row_show");
-        $(".Plant_on_Stop_section").removeClass("table_row_hide");
-
-        var frameThickness =$('#frameThickness').val();
-        var plantonStopHeight =$('#plantonStopHeight').val();
-        var frameDepth =$('#frameDepth').val();
-        var plantonStopWidth =$('#plantonStopWidth').val();
-        var frameHeight =$('#frameHeight').val();
-
-        $.ajax({
-            url:  $("#FrameCost").html(),
-            method:"POST",
-            data:{_token:$("#_token").val(), option:option, frameType:frameType, frameMaterial:frameMaterial, lippingSpecies:lippingSpecies, frameThickness:frameThickness, plantonStopHeight:plantonStopHeight, frameDepth:frameDepth, plantonStopWidth:plantonStopWidth, frameHeight:frameHeight},
-            dataType:"Json",
-            success: function(result){
-                if(result.status == "ok"){
-                    $("#Plant_on_Stop1-price1").empty().text("£" + result.price1);
-                    $("#Plant_on_Stop2-price1").empty().text("£" + result.price2);
-                    $("#Plant_on_Stop3-price1").empty().text("£" + result.price3);
-                    $("#Plant_on_Stop4-price1").empty().text("£" + result.price4);
-
-                }
-            }
-        });
-    }else if(option == 'Rebated_Frame'){
-        $(".Rebated_Frame_section").addClass("table_row_show");
-        $(".Rebated_Frame_section").removeClass("table_row_hide");
-
-        var frameThickness =$('#frameThickness').val();
-        var plantonStopHeight =$('#plantonStopHeight').val();
-        var frameDepth =$('#frameDepth').val();
-        var plantonStopWidth =$('#plantonStopWidth').val();
-        var frameHeight =$('#frameHeight').val();
-
-        $.ajax({
-            url:  $("#FrameCost").html(),
-            method:"POST",
-            data:{_token:$("#_token").val(), option:option, frameType:frameType, frameMaterial:frameMaterial, lippingSpecies:lippingSpecies, frameThickness:frameThickness, plantonStopHeight:plantonStopHeight, frameDepth:frameDepth, plantonStopWidth:plantonStopWidth, frameHeight:frameHeight},
-            dataType:"Json",
-            success: function(result){
-                if(result.status == "ok"){
-                    $("#Rebated_Frame1-price1").empty().text("£" + result.price);
-                    $("#Rebated_Frame2-price1").empty().text("£" + result.price);
-                }
-            }
-        });
-    }else if(option == 'extLiner'){
-        $(".extLiner_section").addClass("table_row_show");
-        $(".extLiner_section").removeClass("table_row_hide");
-
-        var extLiner =$('#extLiner').val();
-        var extLinerThickness =$('#extLinerThickness').val();
-        var frameDepth =$('#frameDepth').val();
-
-        $.ajax({
-            url:  $("#FrameCost").html(),
-            method:"POST",
-            data:{_token:$("#_token").val(), option:option, frameType:frameType, frameMaterial:frameMaterial, lippingSpecies:lippingSpecies, extLiner:extLiner, extLinerThickness:extLinerThickness, frameDepth:frameDepth},
-            dataType:"Json",
-            success: function(result){
-                if(result.status == "ok"){
-                    $("#extLiner1-price1").empty().text("£" + result.price);
-                    $("#extLiner2-price1").empty().text("£" + result.price);
-                }
-            }
-        });
-    }else if(option == 'sideLight3'){
-        $(".sideLight3_section").addClass("table_row_show");
-        $(".sideLight3_section").removeClass("table_row_hide");
-
-        var sideLight1 =$('#sideLight1').val();
-        var frameThickness =$('#frameThickness').val();
-        var frameDepth =$('#frameDepth').val();
-        var SL1Height =$('#SL1Height').val();
-        var SL2Height =$('#SL2Height').val();
-
-        $.ajax({
-            url:  $("#FrameCost").html(),
-            method:"POST",
-            data:{_token:$("#_token").val(), option:option, frameType:frameType, frameMaterial:frameMaterial, lippingSpecies:lippingSpecies, sideLight1:sideLight1, frameThickness:frameThickness, frameDepth:frameDepth,SL1Height:SL1Height,SL2Height:SL2Height},
-            dataType:"Json",
-            success: function(result){
-                if(result.status == "ok"){
-                    $("#sideLight31-price1").empty().text("£" + result.price);
-                    $("#sideLight32-price1").empty().text("£" + result.price);
-                }
-            }
-        });
-    }else if(option == 'overpanel3'){
-        $(".overpanel3_section").addClass("table_row_show");
-        $(".overpanel3_section").removeClass("table_row_hide");
-
-        var overpanel =$('#overpanel').val();
-        var frameThickness =$('#frameThickness').val();
-        var frameDepth =$('#frameDepth').val();
-        var OPLippingThickness =$('#OPLippingThickness').val();
-
-        $.ajax({
-            url:  $("#FrameCost").html(),
-            method:"POST",
-            data:{_token:$("#_token").val(), option:option, frameType:frameType, frameMaterial:frameMaterial, lippingSpecies:lippingSpecies, overpanel:overpanel, frameThickness:frameThickness, frameDepth:frameDepth,OPLippingThickness:OPLippingThickness},
-            dataType:"Json",
-            success: function(result){
-                if(result.status == "ok"){
-                    $("#overpanel3-price1").empty().text("£" + result.price);
-                }
-            }
-        });
-    }
 }
 
 function architrave(isModal=0) {
