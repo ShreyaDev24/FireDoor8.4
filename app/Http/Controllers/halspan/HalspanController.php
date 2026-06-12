@@ -477,8 +477,10 @@ class HalspanController extends Controller
 
     public function getColors(Request $request)
     {
+        $UserIds = CompanyUsers();
+
         $colors = Color::where('Status', 1)
-            ->whereIn('editBy', Session::get('UserIds'))
+            ->whereIn('editBy', $UserIds)
             ->select(
                 'id',
                 'ColorName',

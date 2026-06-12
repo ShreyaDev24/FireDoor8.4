@@ -3360,6 +3360,7 @@ $(document).ready(function() {
             var doorLeafFinish =  $("#architraveFinish").val();
             $('#ralColorModalLabel').html('Architrave Finish Color');
         }
+
        var FrameFinishColorValue = $('#FrameFinishColor-value').val();
         if(doorLeafFinish == "Painted_Finish"){
             if(typeinput == 'architraveFinish'){
