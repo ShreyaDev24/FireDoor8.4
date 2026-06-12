@@ -79,8 +79,12 @@ use Illuminate\Http\JsonResponse;
 use App\Models\DoorFrameConstruction;
 
 
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
+
 class MMMController extends Controller
 {
+    use BuildsIronmongeryAdditionalInfo;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -177,34 +181,8 @@ class MMMController extends Controller
             'Cylinders'
         ];
 
-        // Process the data and merge
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = []; // Temporary array to hold additional info
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                // Check if the property exists and is not empty
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                        ->where('UserId', Auth::user()->id)
-                        ->first();
-
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
-                    }
-                }
-            }
-
-            // Dynamically add the additional_info attribute
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
         if(Auth::user()->UserType == 1){
             $species = DB::table('leaf_type as lt')
             ->where('lt.MMM', 9)
@@ -366,34 +344,8 @@ class MMMController extends Controller
             'Cylinders'
         ];
 
-        // Process the data and merge
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = []; // Temporary array to hold additional info
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                // Check if the property exists and is not empty
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $SelectedIronmongery = SelectedIronmongery::where('id', $ironmongery->$valIronmongery)
-                        ->where('UserId', Auth::user()->id)
-                        ->first();
-
-                    if (!empty($SelectedIronmongery)) {
-                        $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)->where('UserId', Auth::user()->id)
-                                ->first();
-                        if(empty($IronmongeryInfoModel)){
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                        }
-
-                        if (!empty($IronmongeryInfoModel)) {
-                            $additionalInfo[] = $IronmongeryInfoModel;
-                        }
-                    }
-                }
-            }
-
-            // Dynamically add the additional_info attribute
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
 
         $species = DB::table('leaf_type')->where('MMM', 9)->where('Status',1)->whereIn('EditBy', $userId)->get();
 

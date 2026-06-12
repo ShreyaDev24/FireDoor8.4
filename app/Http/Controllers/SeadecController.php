@@ -79,8 +79,12 @@ use Illuminate\Http\JsonResponse;
 use App\Models\DoorFrameConstruction;
 
 
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
+
 class SeadecController extends Controller
 {
+    use BuildsIronmongeryAdditionalInfo;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -203,52 +207,8 @@ class SeadecController extends Controller
         //     $ironmongery->setAttribute('additional_info', $additionalInfo);
         // }
 
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
         $species = GetOptions(['leaf_type.Seadec'=> 5 ,'leaf_type.Status' => 1], "join","leaf_type");
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
@@ -430,52 +390,8 @@ class SeadecController extends Controller
         //     $ironmongery->setAttribute('additional_info', $additionalInfo);
         // }
 
-        $qtyFieldOverrides = [
-            'DoorSinage' => 'doorSignageQty',
-            'FaceFixedDoorCloser' => 'faceFixedDoorClosersQty',
-            'DoorStops' => 'DoorStopsQty',
-            'AirTransferGrill' => 'airtransfergrillsQty',
-        ];
-
-        foreach ($setIronmongery as $ironmongery) {
-            $additionalInfo = [];
-
-            foreach ($IronmongeryInfoSet as $valIronmongery) {
-                $qtyField = $qtyFieldOverrides[$valIronmongery] ?? lcfirst($valIronmongery) . 'Qty';
-
-                if (!empty($ironmongery->$valIronmongery)) {
-                    $ids = explode(',', $ironmongery->$valIronmongery);
-                    $qtys = !empty($ironmongery->$qtyField) ? explode(',', $ironmongery->$qtyField) : [];
-
-                    foreach ($ids as $index => $itemId) {
-                        $itemId = trim($itemId);
-                        $qty = isset($qtys[$index]) ? (int) trim($qtys[$index]) : 1;
-
-                        $SelectedIronmongery = SelectedIronmongery::where('id', $itemId)
-                            ->where('UserId', Auth::user()->id)
-                            ->first();
-
-                        if ($SelectedIronmongery) {
-                            $IronmongeryInfoModel = IronmongeryInfoModel::where('IronmongeryId', $SelectedIronmongery->ironmongery_id)
-                                ->where('UserId', Auth::user()->id)
-                                ->first();
-
-                            if (!$IronmongeryInfoModel) {
-                                $IronmongeryInfoModel = IronmongeryInfoModel::where('id', $SelectedIronmongery->ironmongery_id)->first();
-                            }
-
-                            if ($IronmongeryInfoModel) {
-                                for ($i = 0; $i < $qty; $i++) {
-                                    $additionalInfo[] = $IronmongeryInfoModel;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            $ironmongery->setAttribute('additional_info', $additionalInfo);
-        }
+        // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
+        $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
         $species = DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
 
