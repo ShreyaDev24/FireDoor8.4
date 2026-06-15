@@ -206,16 +206,6 @@
                                 <i class="fa fa-image" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#BuildOfMaterial">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#doorPrice" id="doorPriceCalculate">
-                                <i class="fa fa-gbp" aria-hidden="true"></i>
-                            </a>
-                        </li>
                             <li>
                                 <a href="javascript:void(0);" class="btn-sm btn btn-primary active" onClick="render();" style="margin: 0px 10px 0px 5px;">Render Image</a>
                             </li>
@@ -251,14 +241,6 @@
                 <div class="tab-content " id="opDiv">
                     <div id="door" class="tab-pane active">
                         <div id='container'></div>
-                    </div>
-                    <div id="BuildOfMaterial" class="tab-pane table-responsive">
-                        {{--<table id="BuildOfMaterialDetails" class="table table-bordered table-striped"></table>--}}
-                      @include("Items.Deanta.DeantaBuildOfMaterialForCadDoor")
-
-                    </div>
-                    <div id="doorPrice" class="tab-pane table-responsive" >
-                        @include("Items.Deanta.DoorPriceForCadDoor")
                     </div>
                 </div>
             </div>
