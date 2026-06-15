@@ -82,7 +82,7 @@ class HalspanController extends Controller
 
         }else{
             $UserId = CompanyUsers();
-            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 2 ,'options.is_deleted' => 0], "join");
+            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 2 ,'options.is_deleted' => 0, 'options.OptionSlug' => 'Door_Leaf_Facing'], "join");
             $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 2 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
             $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 2 ,'architrave_type.Status' => 1], "join","architrave_type");
 
