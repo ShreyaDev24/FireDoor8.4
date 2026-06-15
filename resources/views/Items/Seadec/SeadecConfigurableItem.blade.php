@@ -469,7 +469,6 @@
         });
     }
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-    var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
     var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data); ?>);
 
@@ -991,7 +990,6 @@ function groovesNumbershow(){
 
 <script>
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-    var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
     var LippingSpeciesJson = JSON.stringify(<?= json_encode($lipping_species); ?>);
     var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);

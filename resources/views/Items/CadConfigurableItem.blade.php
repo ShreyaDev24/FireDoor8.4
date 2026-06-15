@@ -571,7 +571,6 @@
 
     $('#submit').attr({'disabled': true,"readonly":true });
 var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
 var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
 var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data); ?>);
 
