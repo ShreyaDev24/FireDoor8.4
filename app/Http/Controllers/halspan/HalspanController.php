@@ -113,10 +113,11 @@ class HalspanController extends Controller
             $SelectedIntumescentSealArrangement = $intumescentSealArrangement;
         } else {
             $UserId = CompanyUsers();
-            $SelectedOptionsData = GetOptions(['options.configurableitems' => 2, 'options.is_deleted' => 0], "join");
-            $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => 2, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
-            $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => 2, 'architrave_type.Status' => 1], "join", "architrave_type");
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => 2], "join", "intumescentSealArrangement");
+            $SelectedOptionsData = GetOptions(['options.configurableitems'=> 2 ,'options.is_deleted' => 0, 'options.OptionSlug' => 'Door_Leaf_Facing'], "join");
+            $intumescentSealColor = GetOptions(['intumescent_seal_color.'.$configurationDoor=> 2 ,'intumescent_seal_color.Status' => 1], "join","intumescent_seal_color");
+            $ArchitraveType = GetOptions(['architrave_type.'.$configurationDoor=> 2 ,'architrave_type.Status' => 1], "join","architrave_type");
+
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 2], "join", "intumescentSealArrangement");
         }
         $checkpoints['UserTypeProcessing'] = ['time' => microtime(true), 'duration' => microtime(true) - $time5, 'label' => 'User Type & Related Data Processing'];
 
