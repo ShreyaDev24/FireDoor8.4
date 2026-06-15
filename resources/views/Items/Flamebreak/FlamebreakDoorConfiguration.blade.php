@@ -479,8 +479,6 @@
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Plant_on_Stop');
-            // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
             newMin = 32;
             $("#ScallopedWidth").attr('min', '32');
@@ -536,8 +534,6 @@
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Rebated_Frame');
-            // frameprice('Rebated_Frame');
             framewidth();
         } else {
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
@@ -634,12 +630,6 @@ $(document).ready(function() {
 
     @if(isset($Item['DoorLeafFacing']))
     DoorLeafFacingChange(false,true);
-    doorLeafFacingPrice('doorLeafFacing',"@if (isset($Item['DoorLeafFacing'])){{ $Item['DoorLeafFacing'] }}@endif");
-    @endif
-
-    @if(isset($Item['DoorLeafFinish']))
-    doorLeafFacingPrice('doorLeafFinish',"{{$Item['DoorLeafFinish']}}");
-    doorLeafFacingPrice('doorLeafFinish1',"{{$Item['DoorLeafFinish']}}");
     @endif
 
     @if(isset($Item['IronmongerySet']) && $Item['IronmongerySet'] == 'Yes')
@@ -678,34 +668,12 @@ $(document).ready(function() {
     architrave(1);
     @endif
 
-    @if(isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('frameFinish');
-    @endif
-
     @if(isset($Item["DoorLeafFinishColor"]))
     doorLeafFinishChange();
     @endif
 
     @if(isset($Item['FireRating']))
     render($("#fireRating"));
-    @endif
-
-    @if(isset($Item['ExtLiner']) && $Item['ExtLiner'] == "Yes" && isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('extLinerFramefinish',"{{$Item['FrameFinish']}}")
-    @endif
-
-    @if(isset($Item["Leaf1VisionPanel"]) && $Item["Leaf1VisionPanel"] == 'Yes')
-    doorLeafFacingPrice('leaf1VisionPanel',"{{$Item['Leaf1VisionPanel']}}");
-    doorLeafFacingPrice('leaf1VisionPanel1',"{{$Item['Leaf1VisionPanel']}}");
-    @endif
-
-    @if(isset($Item['Leaf1VisionPanel']) && $Item['Leaf1VisionPanel'] == "Yes" && isset($Item["FireRating"]))
-    doorLeafFacingPrice('fireRating',"{{$Item['FireRating']}}");
-    doorLeafFacingPrice('fireRating1',"{{$Item['FireRating']}}");
-    @endif
-
-    @if(isset($Item['DecorativeGroves']) && $Item['DecorativeGroves'] == "Yes")
-    doorLeafFacingPrice('decorativeGroves',"{{$Item['DecorativeGroves']}}");
     @endif
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
@@ -722,32 +690,8 @@ $(document).ready(function() {
     overpanelGlassType(true);
     @endif
 
-    @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
-    doorLeafFacingPrice('sideLight12',"{{$Item['SideLight2']}}");
-    @endif
-
     @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
     doorSize();
-    @endif
-
-    @if(isset($Item['DoorLeafFacing']) && isset($Item['DoorLeafFinish']) && isset($Item['LippingSpecies']))
-    doorLeafFacingPrice('LeafSet',"{{$Item['DoorLeafFinish']}}");
-    @endif
-
-    @if(isset($Item['IntumescentLeapingSealType']) && isset($Item['IntumescentLeapingSealLocation']) && isset($Item['IntumescentLeapingSealColor']) && isset($Item['IntumescentLeapingSealArrangement']))
-    doorLeafFacingPrice('intumescentSealArrangement',"{{$Item['IntumescentLeapingSealArrangement']}}");
-    @endif
-
-    @if(isset($Item['GlazingSystems']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingSystems',"{{$Item['GlazingSystems']}}");
-    @endif
-
-    @if(isset($Item['GlassType']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glassType',"{{$Item['GlassType']}}");
-    @endif
-
-    @if(isset($Item['GlazingBeads']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingBead',"{{$Item['GlazingBeads']}}");
     @endif
 
     validateFrameDepth();

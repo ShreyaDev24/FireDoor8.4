@@ -279,7 +279,6 @@ function DecorativeGrovesLeaf2Change(){
             $("#DoorDimensionGrooveLeaf2").attr({ 'disabled': false, "readonly": true });
             $("#DoorDimensionGrooveLeaf2").addClass("bg-white");
         }
-        doorLeafFacingPrice('DecorativeGrovesLeaf2',"Yes");
     } else {
         $("#GrooveLocationLeaf2").attr({'disabled':true,"required":false}).val('');
         $("#IsSameAsDecorativeGroves1").attr({'disabled':true,"required":false}).val('');

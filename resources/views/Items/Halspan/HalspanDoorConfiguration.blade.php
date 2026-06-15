@@ -466,8 +466,6 @@
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#rebatedWidth-section,#rebatedHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Plant_on_Stop');
-            // frameprice('Plant_on_Stop');
         } else if(framTypeValue == "Scalloped"){
 
             $("#ScallopedHeight").attr({ 'readonly': false, 'required': true });
@@ -494,9 +492,7 @@
             $("#frameTypeDimensions").val('').attr('readonly', false);
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").removeClass("table_row_show");
             $("#plantonStopWidth-section,#plantonStopHeight-section,#ScallopedWidth-section,#ScallopedHeight-section").addClass("table_row_hide");
-            FramePrice('Rebated_Frame');
             framewidth();
-            // frameprice('Rebated_Frame');
         } else {
 
             $("#rebatedWidth").attr({ 'readonly': true, 'required': false }).val(0);
