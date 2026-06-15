@@ -133,7 +133,6 @@ class DeantaController extends Controller
 
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
@@ -252,7 +251,6 @@ class DeantaController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -316,7 +314,6 @@ class DeantaController extends Controller
 
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
@@ -406,7 +403,6 @@ class DeantaController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,

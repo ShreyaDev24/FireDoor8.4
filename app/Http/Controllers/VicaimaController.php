@@ -131,7 +131,6 @@ class VicaimaController extends Controller
 
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
@@ -266,7 +265,6 @@ class VicaimaController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -332,11 +330,6 @@ class VicaimaController extends Controller
         $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
-
-
-        // dd($SelectedOptionsData);
-
-        $ColorData = Color::where([ 'Status' => 1])->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"] ])->first();
@@ -395,7 +388,6 @@ class VicaimaController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -579,7 +571,6 @@ class VicaimaController extends Controller
 
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
@@ -648,7 +639,6 @@ class VicaimaController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
