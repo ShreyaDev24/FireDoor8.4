@@ -72,6 +72,8 @@ class GlazingSystemController extends Controller
 
                 'GlazingBeadFixingDetail' => $request->GlazingBeadFixingDetail,
 
+                'test_ref' => $request->test_ref,
+
                 'VPAreaSize' => $request->VPAreaSize,
 
                 'Status' => $request->Status ?? 1,
@@ -145,6 +147,8 @@ class GlazingSystemController extends Controller
                 'GlazingThickness' => $request->GlazingThickness,
 
                 'GlazingBeadFixingDetail' => $request->GlazingBeadFixingDetail,
+
+                'test_ref' => $request->test_ref,
 
                 'VPAreaSize' => $request->VPAreaSize,
 

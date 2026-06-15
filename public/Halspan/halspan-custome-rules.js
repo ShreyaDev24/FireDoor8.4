@@ -3357,11 +3357,13 @@ $(document).ready(function() {
                                 setTimeout(function(){
                                    $("#glazingSystemsThickness").val(data.GlazingThickness);
                                    $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                   $('#glazingTestRef').val(data.test_ref);
                                 }, 4000);
                             }
 
                         } else {
                             $('#glazingSystemsThickness').val('');
+                            $('#glazingTestRef').val('');
                         }
                         // if(data2 != '' && data2 != null){
                         //     $('#glazingBeadsFixingDetail').val(data2.OptionValue);
@@ -3371,6 +3373,7 @@ $(document).ready(function() {
                         // }
                     } else {
                         $("#glazingSystemsThickness").val(0);
+                        $('#glazingTestRef').val('');
                     }
                 }
             });

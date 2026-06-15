@@ -150,9 +150,9 @@
 
         <hr>
 
-        {{-- Selected Price (Only Non Admin) --}}
-        @if(auth()->id() != 1)
+        {{-- Selected Price (Only Non Admin) + Test Ref --}}
         <div class="row">
+            @if(auth()->id() != 1)
             <div class="col-md-4 mb-3">
                 <label>Selected Price</label>
                 <input type="number"
@@ -161,8 +161,16 @@
                     class="form-control"
                     value="{{ old('price', $item->selectedPrice->selectedPrice ?? '') }}">
             </div>
+            @endif
+
+            <div class="col-md-6 mb-3">
+                <label>Test Ref</label>
+                <input type="text"
+                    name="test_ref"
+                    class="form-control"
+                    value="{{ old('test_ref', $item->test_ref ?? '') }}">
+            </div>
         </div>
-        @endif
 
     </div>
 </div>
