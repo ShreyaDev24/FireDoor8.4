@@ -1233,6 +1233,7 @@ class ItemListController extends Controller
                         'glazingBeadsHeight'                    => $request->glazingBeadsHeight,
                         'glazingBeadsFixingDetail'              => $request->glazingBeadsFixingDetail,
                         'GlazingBeadSpecies'                    => $request->glazingBeadSpecies,
+                        'GlazingTestRef'                        => $request->glazingTestRef,
 
                     //Frame
                         'FrameMaterial'                         => $request->frameMaterial,
@@ -1539,6 +1540,7 @@ class ItemListController extends Controller
                         $item->glazingBeadsHeight = $request->glazingBeadsHeight;
                         $item->glazingBeadsFixingDetail = $request->glazingBeadsFixingDetail;
                         $item->GlazingBeadSpecies = $request->glazingBeadSpecies;
+                        $item->GlazingTestRef = $request->glazingTestRef;
 
                     //Frame
                         $item->FrameMaterial = $request->frameMaterial;
