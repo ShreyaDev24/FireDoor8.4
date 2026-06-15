@@ -5597,11 +5597,6 @@ class DoorScheduleController extends Controller
 
         /* ================= COLORS (CACHED) ================= */
         $start = microtime(true);
-        $ColorData = Cache::remember(
-            'cad_colors_'.md5(json_encode($UserIds)),
-            now()->addHours(6),
-            fn () => Color::where('Status',1)->wherein('editBy',$UserIds)->get()
-        );
         // Log::info('Color query time (cached)', [
         //     'ms' => (microtime(true)-$start)*1000
         // ]);
@@ -5677,7 +5672,6 @@ class DoorScheduleController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -5833,7 +5827,6 @@ class DoorScheduleController extends Controller
 
         /* ================= COLORS ================= */
         $start = microtime(true);
-        $ColorData = Color::where('Status',1)->get();
         // Log::info('Color query time', ['ms' => (microtime(true)-$start)*1000]);
 
         /* ================= COMPANY ================= */
@@ -5883,7 +5876,6 @@ class DoorScheduleController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $LippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,

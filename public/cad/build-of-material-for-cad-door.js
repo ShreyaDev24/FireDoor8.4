@@ -35,8 +35,6 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
         price = priceDirectSet;
     } else {
 
-        var Colors = JSON.parse(ColorsJson);
-
         if (["intumescentSealArrangement"].includes(id)) {
             var Options = JSON.parse(intumescentSealArrangementJson);
             var SelectedOptions = JSON.parse(SelectedIntumescentSealArrangementJson);
@@ -222,21 +220,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
             return false;
         }
 
-        //var SelectedColor = Colors.findIndexOf(ElementValue);
         var isExist = false;
 
 
         if (TagName && typeof TagName === "string" && TagName.toLowerCase() === "select") {
-
-            //Colors.forEach(function(elem, index) {
-            //    if(ActualValue == elem.ColorName){
-            //        isExist = true;
-            //        price = elem.colorCost;
-            //        console.log("Color id is = ",index);
-            //    }
-            //});
-
-            // const possibleSelectedOptionsArray = ["doorLeafFacing"];
 
             console.log(possibleSelectedOptionsArray);
             console.log(SelectedOptions);

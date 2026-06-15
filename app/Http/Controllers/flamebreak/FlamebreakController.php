@@ -44,7 +44,6 @@ class FlamebreakController extends Controller
             $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 7], "join", "intumescentSealArrangement");
         }
 
-        $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
@@ -160,7 +159,6 @@ class FlamebreakController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -229,7 +227,6 @@ class FlamebreakController extends Controller
         $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
-        $ColorData = Color::where([ 'Status' => 1])->get();
         $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"] ])->first();
@@ -322,7 +319,6 @@ class FlamebreakController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,

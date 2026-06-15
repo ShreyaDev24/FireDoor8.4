@@ -186,31 +186,13 @@ class MMMController extends Controller
                 "architrave_type"
             );
 
-            $SelectedIntumescentSealArrangement = GetOptions(
-                ['selected_intumescentseals2.selected_configurableitems' => 9],
-                "join",
-                "intumescentSealArrangement"
-            );
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 9], "join", "intumescentSealArrangement");
+
+            // $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status'=> 1, 'selected_lipping_species.SelectedStatus'=> 1, 'selected_lipping_species.LippingSpeciesUserId' => Auth::user()->id], "join", "lippingSpecies");
+
         }
 
-        // Log::info('UserType conditional block time', ['ms' => (microtime(true) - $start) * 1000]);
-
-        /* ================= COLORS ================= */
-        $start = microtime(true);
-        $ColorData = Color::where('Status', 1)
-            ->whereIn('editBy', $UserIds)
-            ->get();
-        // Log::info('Color query time', ['ms' => (microtime(true) - $start) * 1000]);
-
-        /* ================= COMPANY ================= */
-        $start = microtime(true);
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')
-            ->select('users.*')
-            ->get();
-        // Log::info('Company join time', ['ms' => (microtime(true) - $start) * 1000]);
-
-        /* ================= TOOLTIP ================= */
-        $start = microtime(true);
+        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
         $tooltip = Tooltip::first();
         // Log::info('Tooltip query time', ['ms' => (microtime(true) - $start) * 1000]);
 
@@ -268,7 +250,6 @@ class MMMController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
@@ -405,7 +386,6 @@ class MMMController extends Controller
 
         /* ================= COLORS ================= */
         $start = microtime(true);
-        $ColorData = Color::where('Status', 1)->whereIn('editBy', $UserIds)->get();
         Log::info('Color query time', ['ms' => (microtime(true) - $start) * 1000]);
 
         /* ================= COMPANY ================= */
@@ -466,7 +446,6 @@ class MMMController extends Controller
             'ArchitraveType' => $ArchitraveType,
             'intumescentSealArrangement' => $intumescentSealArrangement,
             'SelectedIntumescentSealArrangement' => $SelectedIntumescentSealArrangement,
-            'color_data' => $ColorData,
             'lipping_species' => $LippingSpeciesData,
             'selected_lipping_species' => $SelectedLippingSpeciesData,
             'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,

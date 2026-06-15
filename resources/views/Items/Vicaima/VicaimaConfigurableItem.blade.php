@@ -161,6 +161,7 @@
                     <div hidden id="rebated-lipping-thickness">{{route('items/rebated-lipping-thickness')}}</div>
                     <div hidden id="door-thickness-filter">{{route('items/door-thickness-filter')}}</div>
                     <div hidden id="door-leaf-face-value-filter">{{route('items/door-leaf-face-value-filter')}}</div>
+                    <div hidden id="get-colors">{{route('ajax.get.colors')}}</div>
                     <div hidden id="ral-color-filter">{{route('items/ral-color-filter')}}</div>
                     <div hidden id="face-groove-image">{{route('items/face-groove-image')}}</div>
                     <div hidden id="filter-iron-mongery-category">{{route('ironmongery-info/filter-iron-mongery-category')}}
@@ -206,16 +207,6 @@
                                 <i class="fa fa-image" aria-hidden="true"></i>
                             </a>
                         </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#BuildOfMaterial">
-                                <i class="fa fa-book" aria-hidden="true"></i>
-                            </a>
-                        </li>
-                        <li class="optionItem">
-                            <a class="btn btn-primary" data-toggle="tab" href="#doorPrice" id="doorPriceCalculate">
-                                <i class="fa fa-gbp" aria-hidden="true"></i>
-                            </a>
-                        </li>
                             <li>
                                 <a href="javascript:void(0);" class="btn-sm btn btn-primary active" onClick="render();" style="margin: 0px 10px 0px 5px;">Render Image</a>
                             </li>
@@ -251,14 +242,6 @@
                 <div class="tab-content" id="opDiv">
                     <div id="door" class="tab-pane active">
                         <div id='container'></div>
-                    </div>
-                    <div id="BuildOfMaterial" class="tab-pane table-responsive">
-                        {{--<table id="BuildOfMaterialDetails" class="table table-bordered table-striped"></table>--}}
-                      @include("Items.Vicaima.VicaimaBuildOfMaterialForCadDoor")
-
-                    </div>
-                    <div id="doorPrice" class="tab-pane table-responsive" >
-                        @include("Items.DoorPriceForCadDoor")
                     </div>
                 </div>
             </div>
@@ -562,7 +545,6 @@
     $('#submit').attr({'disabled': true,"readonly":true });
     $('.defaultbutton').attr({'disabled': true,"readonly":true });
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-    var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
     var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data); ?>);
 
@@ -1123,7 +1105,6 @@ function groovesNumbershow(){
 
 <script>
     var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
-    var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);
     var LippingSpeciesJson = JSON.stringify(<?= json_encode($lipping_species); ?>);
     var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
@@ -1207,12 +1188,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item['DoorLeafFacing']))
     //DoorLeafFacingChange();
-    doorLeafFacingPrice('doorLeafFacing',"@if (isset($Item['DoorLeafFacing'])){{ $Item['DoorLeafFacing'] }}@endif");
-    @endif
-
-    @if(isset($Item['DoorLeafFinish']))
-    doorLeafFacingPrice('doorLeafFinish',"{{$Item['DoorLeafFinish']}}");
-    doorLeafFacingPrice('doorLeafFinish1',"{{$Item['DoorLeafFinish']}}");
     @endif
 
     @if(isset($Item['IronmongerySet']) && $Item['IronmongerySet'] == 'Yes')
@@ -1251,18 +1226,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     architrave(1);
     @endif
 
-    @if(isset($Item["FrameType"]) && $Item["FrameType"] == "Plant_on_Stop")
-    FramePrice('Plant_on_Stop');
-    @endif
-
-    @if(isset($Item["FrameType"]) && $Item["FrameType"] == "Rebated_Frame")
-    FramePrice('Rebated_Frame');
-    @endif
-
-    @if(isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('frameFinish');
-    @endif
-
     @if(isset($Item["DoorLeafFinishColor"]))
     doorLeafFinishChangePrimed();
     @endif
@@ -1274,36 +1237,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     @if(isset($Item['IronmongeryID']) && $Item['IronmongerySet'] == "Yes")
     IronmongeryIDItemsPrice();
     IronmongeryIDPrice();
-    @endif
-
-    @if(isset($Item['ExtLiner']) && $Item['ExtLiner'] == "Yes")
-    doorLeafFacingPrice('extLiner');
-    FramePrice('extLiner');
-    @endif
-
-    @if(isset($Item['ExtLiner']) && $Item['ExtLiner'] == "Yes" && isset($Item["FrameFinish"]))
-    doorLeafFacingPrice('extLinerFramefinish',"{{$Item['FrameFinish']}}")
-    @endif
-
-    @if(isset($Item["Leaf1VisionPanel"]) && $Item["Leaf1VisionPanel"] == 'Yes')
-    doorLeafFacingPrice('leaf1VisionPanel',"{{$Item['Leaf1VisionPanel']}}");
-    doorLeafFacingPrice('leaf1VisionPanel1',"{{$Item['Leaf1VisionPanel']}}");
-    @endif
-
-    @if(isset($Item['Leaf1VisionPanel']) && $Item['Leaf1VisionPanel'] == "Yes" && isset($Item["FireRating"]))
-    doorLeafFacingPrice('fireRating',"{{$Item['FireRating']}}");
-    doorLeafFacingPrice('fireRating1',"{{$Item['FireRating']}}");
-    @endif
-
-    @if(isset($Item['DecorativeGroves']) && $Item['DecorativeGroves'] == "Yes")
-    doorLeafFacingPrice('decorativeGroves',"{{$Item['DecorativeGroves']}}");
-    @endif
-
-    @if(isset($Item['Overpanel']) && $Item['Overpanel'] == "Fan_Light")
-    doorLeafFacingPrice('overpanel',"{{$Item['Overpanel']}}");
-    doorLeafFacingPrice('overpanel1',"{{$Item['Overpanel']}}");
-    doorLeafFacingPrice('overpanel2',"{{$Item['Overpanel']}}");
-    FramePrice('overpanel3');
     @endif
 
     @if(isset($Item['Overpanel']))
@@ -1334,30 +1267,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item["OPGlassType"]))
     OverpanelGlassTypeChange(null,'opGlassType',true);
-    @endif
-
-    @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
-    doorSize();
-    @endif
-
-    @if(isset($Item['DoorLeafFacing']) && isset($Item['DoorLeafFinish']) && isset($Item['LippingSpecies']))
-    doorLeafFacingPrice('LeafSet',"{{$Item['DoorLeafFinish']}}");
-    @endif
-
-    @if(isset($Item['IntumescentLeapingSealType']) && isset($Item['IntumescentLeapingSealLocation']) && isset($Item['IntumescentLeapingSealColor']) && isset($Item['IntumescentLeapingSealArrangement']))
-    doorLeafFacingPrice('intumescentSealArrangement',"{{$Item['IntumescentLeapingSealArrangement']}}");
-    @endif
-
-    @if(isset($Item['GlazingSystems']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingSystems',"{{$Item['GlazingSystems']}}");
-    @endif
-
-    @if(isset($Item['GlassType']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glassType',"{{$Item['GlassType']}}");
-    @endif
-
-    @if(isset($Item['GlazingBeads']) && isset($Item['VisionPanelQuantity']))
-    doorLeafFacingPrice('glazingBead',"{{$Item['GlazingBeads']}}");
     @endif
 
     validateFrameDepth();
