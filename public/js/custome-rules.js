@@ -3648,71 +3648,118 @@ function copyOfSideLite1Change(isstatus = false){
         $("#"+category+'Key').val(code+'-'+name);
         $("#iron").modal('hide');
     }
+    // RAL colour data is no longer dumped into the page as ColorsJson. Instead it is
+    // fetched once via AJAX (route #get-colors) and cached here as an
+    // id => {ColorName, Hex, ColorCost} map so prices can be looked up synchronously.
+    let loadedColors = {};
+    let colorsLoading = false;
+    let colorsCallbackQueue = [];
+
+    function loadColors(callback = null)
+    {
+        // Already cached -> use it straight away.
+        if (Object.keys(loadedColors).length > 0) {
+            if (callback) {
+                callback(loadedColors);
+            }
+            return;
+        }
+
+        // A request is already in flight -> queue the callback instead of firing a
+        // duplicate AJAX call (handles rapid/early swatch clicks).
+        if (colorsLoading) {
+            if (callback) {
+                colorsCallbackQueue.push(callback);
+            }
+            return;
+        }
+
+        colorsLoading = true;
+        if (callback) {
+            colorsCallbackQueue.push(callback);
+        }
+
+        $.ajax({
+            url:  $("#get-colors").html(),
+            type: 'POST',
+            data: {
+                _token: $('#_token').val()
+            },
+            success: function(response) {
+
+                if(response.status === 'ok') {
+
+                    response.data.forEach(function(color){
+
+                        loadedColors[color.id] = {
+                            id: color.id,
+                            ColorName: color.ColorName,
+                            Hex: color.Hex,
+                            ColorCost: color.ColorCost
+                        };
+
+                    });
+                }
+            },
+            complete: function() {
+                colorsLoading = false;
+                // Flush every callback that was waiting on this single request.
+                var queue = colorsCallbackQueue;
+                colorsCallbackQueue = [];
+                queue.forEach(function(cb){
+                    cb(loadedColors);
+                });
+            }
+        });
+    }
+
+    // Warm the cache as soon as the page is ready, so the colour price is available
+    // immediately on the first swatch click and when Edit pages recalculate.
+    $(function(){
+        loadColors();
+    });
+
     function SelectRalColor( typeinput,id,code,name,fieldname){
-        var innerHtml ='';
-        innerHtml+='<option value="'+code+'" style="background:'+code+'">'+name+'</option>'
-        if(fieldname=="Painted" || fieldname=="Paint_Finish"){
-            // $("#doorLeafFinishColor").empty().append(innerHtml);
-            $("#doorLeafFinishColorIcon").show();
-            // $("#doorLeafFinishColor").val(code);
-            $("#doorLeafFinishColor").val(name);
-            var Colors = JSON.parse(ColorsJson);
+        // Defer the work until colour data is available. loadColors() invokes the
+        // callback synchronously when the cache is already warm (the common case),
+        // so there is no UI lag and no duplicate AJAX request.
+        loadColors(function(colors){
             var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
-                }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
-        }else if(fieldname=="Laminate" || fieldname=="PVC"){
-            // $("#doorLeafFinishColor").empty().append(innerHtml);
-            $("#doorLeafFinishIcon").show();
-            $("#doorLeafFinish").val(name);
-            var Colors = JSON.parse(ColorsJson);
-            var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
-                }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
-        } else if(fieldname=="Painted_Finish"){
-            if(typeinput == 'architraveFinish'){
-                // $("#architraveFinishcolor").empty().append('<option value="'+id+'">'+name+'</option>');
-                $("#architraveFinishcolor").val(name)
-                $("input[name='architraveFinishcolor']").val(name)
-            } else if(typeinput == 'framefinish'){
-                $("#framefinishColor").empty().append('<option value="'+id+'">'+name+'</option>');
+            if (colors[id]) {
+                price = colors[id].ColorCost;
             }
 
-            var Colors = JSON.parse(ColorsJson);
-            var price = 0.00;
-            Colors.forEach(function(elem, index) {
-                if(id == elem.id){
-                    price = elem.ColorCost;
-                    // console.log("Color id is = ",index);
+            if(fieldname=="Painted" || fieldname=="Paint_Finish"){
+                $("#doorLeafFinishColorIcon").show();
+                $("#doorLeafFinishColor").val(name);
+                $("#doorLeafFinishColor-selected").empty().text(name);
+                $("#doorLeafFinishColor-price").empty().text("£" + price);
+                $("#doorLeafFinishColor-section").removeClass("table_row_hide");
+                $("#doorLeafFinishColor-section").addClass("table_row_show");
+            }else if(fieldname=="Laminate" || fieldname=="PVC"){
+                $("#doorLeafFinishIcon").show();
+                $("#doorLeafFinish").val(name);
+                $("#doorLeafFinishColor-selected").empty().text(name);
+                $("#doorLeafFinishColor-price").empty().text("£" + price);
+                $("#doorLeafFinishColor-section").removeClass("table_row_hide");
+                $("#doorLeafFinishColor-section").addClass("table_row_show");
+            } else if(fieldname=="Painted_Finish"){
+                if(typeinput == 'architraveFinish'){
+                    $("#architraveFinishcolor").val(name);
+                    $("input[name='architraveFinishcolor']").val(name);
+                } else if(typeinput == 'framefinish'){
+                    $("#framefinishColor").empty().append('<option value="'+id+'">'+name+'</option>');
                 }
-            });
-            $("#doorLeafFinishColor-selected").empty().text(name);
-            $("#doorLeafFinishColor-price").empty().text("£" + price);
-            $("#doorLeafFinishColor-section").removeClass("table_row_hide");
-            $("#doorLeafFinishColor-section").addClass("table_row_show");
-        } else {
-            // $("#framefinishColor").empty().append(innerHtml);
-            $("#doorLeafFinishIcon").hide();
-            $("#doorLeafFinish").hide();
-        }
-        // $("#"+category+'Value').val(id);
-        // $("#"+category+'Key').val(code+'-'+name);
-        $("#ralColor").modal('hide');
+                $("#doorLeafFinishColor-selected").empty().text(name);
+                $("#doorLeafFinishColor-price").empty().text("£" + price);
+                $("#doorLeafFinishColor-section").removeClass("table_row_hide");
+                $("#doorLeafFinishColor-section").addClass("table_row_show");
+            } else {
+                $("#doorLeafFinishIcon").hide();
+                $("#doorLeafFinish").hide();
+            }
+            $("#ralColor").modal('hide');
+        });
     }
     function SelectValueFill(id, key, value, modalId, data = []){
 

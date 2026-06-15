@@ -162,6 +162,7 @@
                     <div hidden id="rebated-lipping-thickness">{{route('items/rebated-lipping-thickness')}}</div>
                     <div hidden id="door-thickness-filter">{{route('items/door-thickness-filter')}}</div>
                     <div hidden id="door-leaf-face-value-filter">{{route('items/door-leaf-face-value-filter')}}</div>
+                    <div hidden id="get-colors">{{route('ajax.get.colors')}}</div>
                     <div hidden id="ral-color-filter">{{route('items/ral-color-filter')}}</div>
                     <div hidden id="face-groove-image">{{route('items/face-groove-image')}}</div>
                     <div hidden id="filter-iron-mongery-category">{{route('ironmongery-info/filter-iron-mongery-category')}}
