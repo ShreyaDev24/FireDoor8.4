@@ -935,8 +935,6 @@ $(document).ready(function() {
     function ironmongerySetchange(){
         const ironmongerySetValue = $("#ironmongerySet").val();
         if(ironmongerySetValue == 'Yes'){
-            IronmongeryIDItemsPrice();
-            IronmongeryIDPrice();
             $('#IronmongeryID').attr({'disabled':false,'required':true})
         } else {
             $('#IronmongeryID').val('').attr({'disabled':true,'required':false})
@@ -4487,82 +4485,6 @@ function copyOfSideLite1Change(isstatus = false){
 // });
 
 
-function BomCalculation(QuotationId){
-    let url = $("#bom_calculation").val();
-    $.ajax({
-        type:"POST",
-        url:url,
-        data:{QuotationId:QuotationId},
-        success:function(data){
-            // console.log(data);
-        }
-    })
-}
-
-function IronmongeryIDItemsPrice(){
-    $("#ironmongerySet-section2").addClass("table_row_show");
-    $("#ironmongerySet-section2").removeClass("table_row_hide");
-    const IronmongeryIDValue = $("#IronmongeryID").val();
-    var ironname = $("#IronmongeryID").find('option:selected').text();
-    $(".IronmongeryID-selected").empty().text(ironname);
-    $.ajax({
-        url:  $("#IronmongeryIDPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), IronmongeryIDValue:IronmongeryIDValue,optionType:'IronmongeryIDItems'},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#ironmongerySet1-price").empty().text("£" + result.IronmongeryInfo);
-            }
-        }
-    });
-}
-
-$("#sOWidth,#sOHeight").on("keyup",function(){
-    doorSize();
-});
-
-function doorSize(){
-    $("#doorsize-section").addClass("table_row_show");
-    $("#doorsize-section").removeClass("table_row_hide");
-    var LeafWidth1 = $("#leafWidth1").val();
-    var LeafHeightNoOP = $("#leafHeightNoOP").val();
-    var fireRating = $("#fireRating").val();
-    var issingleconfiguration = $("input[name=issingleconfiguration]").val();
-
-    $.ajax({
-        url:  $("#doorStandardPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), LeafWidth1:LeafWidth1, LeafHeightNoOP:LeafHeightNoOP, fireRating:fireRating,issingleconfiguration:issingleconfiguration},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#doorsize-price").empty().text("£" + result.door_core);
-                $("#doorsize-LeafWidth1").empty().text(result.selected_mm_width+' x '+result.selected_mm_height);
-                // $("#doorsize-LeafHeight").empty().text(result.selected_mm_height);
-            }
-        }
-    });
-}
-function IronmongeryIDPrice(){
-    $("#ironmongerySet-section1").addClass("table_row_show");
-    $("#ironmongerySet-section1").removeClass("table_row_hide");
-    const IronmongeryIDValue = $("#IronmongeryID").val();
-    var ironname = $("#IronmongeryID").find('option:selected').text();
-    $(".IronmongeryID-selected").empty().text(ironname);
-    $.ajax({
-        url:  $("#IronmongeryIDPrice").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), IronmongeryIDValue:IronmongeryIDValue,optionType:'IronmongeryIDPrice'},
-        dataType:"Json",
-        success: function(result){
-            if(result.status=="ok"){
-                $("#ironmongerySet-price").empty().text("£" + result.IronmongeryInfo);
-            }
-        }
-    });
-}
-
 $("#glazingBeads, #visionPanelQuantity").on("change",function(){
     $("#glazingBead-selected1").empty().text($("#glazingBeads").val());
 });
@@ -4579,25 +4501,6 @@ $("#oPHeigth").on("keyup",function(){
         SideLightHeight('sideLight2');
     }
 });
-
-function labourPrice(){
-    var doorsetType = localStorage.getItem('doorsetType');
-    $.ajax({
-        url:  $("#generalLabourCost").html(),
-        method:"POST",
-        data:{_token:$("#_token").val(), option:'common',doorsetType:doorsetType},
-        dataType:"Json",
-        success: function(result){
-            if(result.status == "ok"){
-                for(var i = 0; i <= 7; i++)
-                {
-                    $("#labour-price" + i).empty().text("£" + result.price[i]);
-                    $("#labour-description" + i).empty().text(result.description[i]);
-                }
-            }
-        }
-    });
-}
 
 $("#extLinerThickness,#frameDepth").on("keyup",function(){
     // frameprice('extLiner');
@@ -4934,7 +4837,6 @@ function intumescentLeafChange(leafTypeId) {
 
                 // Call the FireRatingChange function after options are populated
                 FireRatingChange();
-                doorSize();
 
                 // Additional function call based on the response
                 // doorThicknessLeaf(response.leafType);

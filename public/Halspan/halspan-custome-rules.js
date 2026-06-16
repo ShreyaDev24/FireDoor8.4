@@ -949,16 +949,9 @@ $(document).ready(function() {
     function ironmongerySetchange(){
         const ironmongerySetValue = $("#ironmongerySet").val();
         if(ironmongerySetValue == 'Yes'){
-            IronmongeryIDItemsPrice();
-            IronmongeryIDPrice();
             $('#IronmongeryID').attr({'disabled':false,'required':true})
         } else {
             $('#IronmongeryID').val('').attr({'disabled':true,'required':false})
-            $('#IronmongeryID-selected').empty();
-            $("#ironmongerySet-section2").removeClass("table_row_show");
-            $("#ironmongerySet-section2").addClass("table_row_hide");
-            $("#ironmongerySet-section1").removeClass("table_row_show");
-            $("#ironmongerySet-section1").addClass("table_row_hide");
         }
     }
 

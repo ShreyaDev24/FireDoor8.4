@@ -1153,7 +1153,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
         // let editDoorleafFacingValue = JSON.stringify(<?= json_encode(isset($Item['DoorLeafFacing'])); ?>);
 
         selectIronMongery();
-    labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
     doorThicknessFilter("{{$Item['FireRating']}}");
@@ -1232,11 +1231,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item['FireRating']))
     render($("#fireRating"));
-    @endif
-
-    @if(isset($Item['IronmongeryID']) && $Item['IronmongerySet'] == "Yes")
-    IronmongeryIDItemsPrice();
-    IronmongeryIDPrice();
     @endif
 
     @if(isset($Item['Overpanel']))
