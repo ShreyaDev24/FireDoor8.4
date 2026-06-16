@@ -495,7 +495,6 @@ $(document).ready(function() {
     });
 
     selectIronMongery();
-    labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
     @endif
@@ -587,10 +586,6 @@ $(document).ready(function() {
 
     @if(isset($Item['Overpanel']) && $Item['Overpanel'] == "Fan_Light")
     overpanelGlassType(true);
-    @endif
-
-    @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
-    doorSize();
     @endif
 
     validateFrameDepth();

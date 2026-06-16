@@ -4386,7 +4386,6 @@ function intumescentLeafChange(leafTypeId) {
 
                 // Call the FireRatingChange function after options are populated
                 FireRatingChange();
-                doorSize();
 
                 // Additional function call based on the response
                 doorThicknessLeaf(response.leafType);

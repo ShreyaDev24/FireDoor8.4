@@ -1109,7 +1109,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
         // let editDoorleafFacingValue = JSON.stringify(<?= json_encode(isset($Item['DoorLeafFacing'])); ?>);
 
         selectIronMongery();
-    labourPrice();
     @if(isset($Item['FireRating']))
     FireRatingChange();
     @endif
@@ -1181,11 +1180,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
     render($("#fireRating"));
     @endif
 
-    @if(isset($Item['IronmongeryID']) && $Item['IronmongerySet'] == "Yes")
-    IronmongeryIDItemsPrice();
-    IronmongeryIDPrice();
-    @endif
-
     @if(isset($Item['Overpanel']))
     corewidth1Value();
     @endif
@@ -1201,10 +1195,6 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
     copyOfSideLite1Change();
-    @endif
-
-    @if(isset($Item['LeafWidth1']) && $Item['LeafHeight'])
-    doorSize();
     @endif
 
     validateFrameDepth();

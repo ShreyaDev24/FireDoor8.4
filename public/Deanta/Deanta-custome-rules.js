@@ -911,7 +911,6 @@ $(document).on('change','#ironmongerySet,#IronmongeryID',function(e){
 function ironmongerySetchange(){
     const ironmongerySetValue = $("#ironmongerySet").val();
     if(ironmongerySetValue == 'Yes'){
-        IronmongeryIDPrice();
         $('#IronmongeryID').attr({'disabled':false,'required':true})
     } else {
         $('#IronmongeryID').val('').attr({'disabled':true,'required':false})
