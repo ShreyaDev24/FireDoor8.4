@@ -117,20 +117,36 @@
             </div>
 
             {{-- Fire Only Type --}}
+            @php
+                $fireOnlyOptions = [
+                    'Fire_only'               => 'Fire only',
+                    'Fire_and_Smoke'          => 'Fire and Smoke',
+                    'Fire_Smoke_and_Acoustic' => 'Fire Smoke and Acoustic',
+                ];
+            @endphp
             @if (isset($item->FireOnly))
+            {{-- Edit: single editable dropdown, pre-selecting the saved value --}}
+            @php $selectedFireOnly = old('FireOnly', $item->FireOnly ?? ''); @endphp
             <div class="col-md-6 mb-3">
                 <label>Fire Only Type</label>
-                <input type="FireOnly" name="FireOnly" class="form-control"
-                    value="{{ old('FireOnly', $item->FireOnly ?? '') }}" readonly>
+                <select name="FireOnly" class="form-control">
+                    <option value="">Select Fire Type</option>
+                    @foreach ($fireOnlyOptions as $value => $label)
+                        <option value="{{ $value }}"
+                            {{ $selectedFireOnly == $value ? 'selected' : '' }}>
+                            {{ $label }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
             @else
+            {{-- Create: multi-select (one record created per selected value) --}}
             <div class="col-md-6 mb-3">
                 <label>Fire Only Type</label>
                 <select name="FireOnly[]" class="form-control" multiple>
-
-                    <option value="Fire_only" >Fire only</option>
-                    <option value="Fire_and_Smoke">Fire and Smoke</option>
-                    <option value="Fire_Smoke_and_Acoustic">Fire Smoke and Acoustic</option>
+                    @foreach ($fireOnlyOptions as $value => $label)
+                        <option value="{{ $value }}">{{ $label }}</option>
+                    @endforeach
                 </select>
             </div>
             @endif
