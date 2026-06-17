@@ -3049,12 +3049,8 @@ $(document).ready(function() {
                 return false;
             }
         }
-        var fireRatingValue = document.getElementById('FireRating-value');
-        if(fireRating === null){
-            fireRatingValue = $("#FireRating-value").data("value");
-            if(fireRatingValue != ""){
-                fireRating = fireRatingValue;
-            }
+        if (fireRating == null || fireRating == '') {
+            fireRating = $('#savedfirerating').val();
         }
         // console.log($aa);
         if(fireRating != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){

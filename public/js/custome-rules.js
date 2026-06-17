@@ -3091,7 +3091,7 @@ function copyOfSideLite1Change(isstatus = false){
         const latchTypeValue = $('#latchType').val();       // L,UL
         const swingTypeValue = $('#swingType').val();       // SA,DA
         const doorsetTypeValue = $('#doorsetType').val();   // SD,DD
-        const fireRatingValue = $('#fireRating').val();     // FD30
+        let fireRatingValue = $('#fireRating').val();     // FD30
         const overpanelValue2 = $('#overpanel').val();     // Yes
         const OPFLTurnOnOff = $('#OPFLTurnOnOff').val();     // Yes
         const leafWidth1Value = $('#leafWidth1').val();
@@ -3131,13 +3131,16 @@ function copyOfSideLite1Change(isstatus = false){
                 return false;
             }
         }
+        if (fireRatingValue == null || fireRatingValue == '') {
+            fireRatingValue = $('#savedfirerating').val();
+        }
         // console.log($aa);
         if(fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){
             $.ajax({
                 url: $("#Filterintumescentseals").text(),
                 method:"POST",
                 dataType:"Json",
-                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRating  ,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype,  intumescentSealType:intumescentSealType, _token:$("#_token").val()},
+                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRatingValue  ,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype,  intumescentSealType:intumescentSealType, _token:$("#_token").val()},
                 success: function(result){
                     // console.log(result);
                     // console.log(result.data);
