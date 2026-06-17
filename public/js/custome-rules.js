@@ -3057,7 +3057,7 @@ function copyOfSideLite1Change(isstatus = false){
                 url: $("#Filterintumescentseals").text(),
                 method:"POST",
                 dataType:"Json",
-                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRatingValue,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype, _token:$("#_token").val()},
+                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRatin  ,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype, _token:$("#_token").val()},
                 success: function(result){
                     // console.log(result);
                     // console.log(result.data);
