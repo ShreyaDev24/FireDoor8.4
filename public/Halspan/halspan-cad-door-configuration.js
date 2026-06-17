@@ -350,11 +350,8 @@ const render = (CustomElement = null) => {
             console.log(LeafHeightNoOP,' ',HeadFrameThickness,'no foursided, HeadFrameThickness , sd')
         }
 
-        if (DoorSetType === 'SD' && overpanel != 'No') {
-            LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut + oPHeigth;
-            $("#leafHeightNoOP").val(LeafHeightNoOP);
-            console.log(LeafHeightNoOP,'no foursided, OP/FL , sd')
-        }
+        // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
+        // The OP/FL sits above the door as a separate element, so it is not added here.
 
         let foursidedframe = document.getElementById("foursidedframe");
         if (foursidedframe.checked) {
@@ -364,11 +361,7 @@ const render = (CustomElement = null) => {
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
                 console.log(LeafHeightNoOP,' foursided, HeadFrameThickness BottomFrameThickness, sd')
             }
-            if (DoorSetType === 'SD' && overpanel != 'No') {
-                LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut + oPHeigth;
-                $("#leafHeightNoOP").val(LeafHeightNoOP);
-                console.log(LeafHeightNoOP,' foursided, OP/FL , sd')
-            }
+            // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
             if($("#frameType").val() == 'Rebated_Frame'){
                 if (DoorSetType === 'SD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
