@@ -150,7 +150,8 @@
                                                     List</a></li>
                                             <li><a href="javascript:void(0);" onClick="MainFormImport();">Import</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="ExcelExport();">Export Old</a></li>  --}}
-                                            <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export Custom</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportVicaima();">Export Standard</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                             <li><a href="javascript:void(0);"
                                                     onClick="CopyQuotation({{ $quotationId }});">Copy</a></li>
@@ -3205,16 +3206,22 @@
             };
             ExcelExportNew = function() {
                 var excelexportNewUrl = $("#excelexportNewUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            ExcelExportVicaima = function() {
                 var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
                 var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }

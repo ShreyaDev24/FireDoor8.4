@@ -38,10 +38,11 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
         $versionId = $this->vid;
         $quotaion = Quotation::where('id',$quotationId)->first();
 
-        $item = Items::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->join('quotation','items.QuotationId','quotation.id')
-        ->where('quotation_version_items.version_id',$versionId)->get();
+        $item = Items::join('item_master','items.itemId','item_master.itemID')
+                ->where('items.QuotationId', $quotationId)
+                ->where('items.VersionId', $versionId)
+                ->whereIn('items.configurableitems', [4,5,6,9])
+                ->get();
 
         $SumDoorsetPrice = 0;
         $SumIronmongaryPrice = 0;

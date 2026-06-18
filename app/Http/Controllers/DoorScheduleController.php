@@ -5215,7 +5215,7 @@ class DoorScheduleController extends Controller
         // $fp = fopen('file.csv', 'w');
         return Excel::download(
             new ScheduleOrderNew($quotationId, $versionID),
-            'ScheduleOrder.xlsx',
+            'ScheduleOrderCustom.xlsx',
             \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
@@ -5313,7 +5313,7 @@ class DoorScheduleController extends Controller
     // Export in Vicama excel
     public function excelexportVicaima($quotationId, $versionID)
     {
-        return Excel::download(new ScheduleOrderVicaima($quotationId, $versionID), 'ScheduleOrder.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        return Excel::download(new ScheduleOrderVicaima($quotationId, $versionID), 'ScheduleOrderStandard.xlsx', \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]);
