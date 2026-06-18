@@ -345,9 +345,14 @@ const render = (CustomElement = null) => {
         }
 
         if (DoorSetType == 'SD') {
-            LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut;
+            // 3-sided single door: rebated subtracts the rebate from the frame head thickness
+            if ($("#frameType").val() == 'Rebated_Frame') {
+                LeafHeightNoOP = SOHeight - Tollerance - (FrameThickness - RebatedHeight) - Gap - UnderCut;
+            } else {
+                LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut;
+            }
             $("#leafHeightNoOP").val(LeafHeightNoOP);
-            console.log(LeafHeightNoOP,' ',HeadFrameThickness,'no foursided, HeadFrameThickness , sd')
+            console.log(LeafHeightNoOP,'no foursided, sd');
         }
 
         if (DoorSetType === 'SD' && overpanel != 'No') {
@@ -360,9 +365,10 @@ const render = (CustomElement = null) => {
         if (foursidedframe.checked) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
             if (DoorSetType == 'SD') {
-                LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - (Gap * 2);
+                // 4-sided single door: frame head thickness + frame bottom thickness (both = frame thickness)
+                LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - FrameThickness - (Gap * 2);
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
-                console.log(LeafHeightNoOP,' foursided, HeadFrameThickness BottomFrameThickness, sd')
+                console.log(LeafHeightNoOP,' foursided, sd');
             }
             if (DoorSetType === 'SD' && overpanel != 'No') {
                 LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut + oPHeigth;
