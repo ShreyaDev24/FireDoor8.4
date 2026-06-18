@@ -362,8 +362,6 @@ const render = (CustomElement = null) => {
                 console.log(LeafHeightNoOP,' foursided, HeadFrameThickness BottomFrameThickness, sd')
             }
             // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
-            // 4 sided frame: tolerance x1 (frame bottom thickness replaces the second tolerance/undercut)
-            LeafHeightNoOP = SOHeight - Tollerance - (FrameThickness * 2) - (Gap * 2);
             if($("#frameType").val() == 'Rebated_Frame'){
                 if (DoorSetType === 'SD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
