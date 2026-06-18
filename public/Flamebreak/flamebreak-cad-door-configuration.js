@@ -338,7 +338,8 @@ const render = (CustomElement = null) => {
             }
         let foursidedframe = document.getElementById("foursidedframe");
         if (foursidedframe.checked) {
-            LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
+            // 4 sided frame: tolerance x1 (frame bottom thickness replaces the second tolerance/undercut)
+            LeafHeightNoOP = SOHeight - Tollerance - (FrameThickness * 2) - (Gap * 2);
             if($("#frameType").val() == 'Rebated_Frame'){
                 if (DoorSetType === 'SD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
