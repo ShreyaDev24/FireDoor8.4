@@ -6,6 +6,8 @@
     <td>{{ $item->GlassType }}</td>
     <td>{{ $item->GlazingSystem }}</td>
     <td>{{ $item->VPAreaSize }}</td>
+    <td>{{ $item->VPWidth }}</td>
+    <td>{{ $item->VPHeight }}</td>
 
     <td class="text-center">
         @if($item->UserId != 1 || auth()->user()->UserType == 1)

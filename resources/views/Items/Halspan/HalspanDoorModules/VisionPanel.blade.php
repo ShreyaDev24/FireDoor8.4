@@ -1,4 +1,26 @@
 <!-- VISION PANEL -->
+<style>
+    .vp-limit-info-wrap { position: relative; display: inline-block; margin-left: 4px; }
+    .vp-limit-info-wrap .fa-info-circle { color: #17a2b8; cursor: pointer; }
+    .vp-limit-info-box {
+        display: none;
+        position: absolute;
+        z-index: 1080;
+        left: 18px;
+        top: -6px;
+        min-width: 210px;
+        padding: 8px 10px;
+        background: #2c3e50;
+        color: #fff;
+        font-size: 12px;
+        line-height: 1.5;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,.25);
+        white-space: nowrap;
+    }
+    .vp-limit-info-wrap:hover .vp-limit-info-box { display: block; }
+    .vp-limit-info-box .vp-limit-title { font-weight: 600; margin-bottom: 4px; display: block; }
+</style>
 <div class="main-card mb-3 custom_card">
     <div class="">
         <div class="tab-content">
@@ -648,6 +670,15 @@
                             document.write(Tooltip('{{$tooltip->glazingSystems}}'));
                             </script>
                             @endif
+                            <span class="vp-limit-info-wrap" id="vpLimitInfoWrap" style="display:none;">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                <span class="vp-limit-info-box" id="vpLimitInfoBox">
+                                    <span class="vp-limit-title">Vision Panel limits</span>
+                                    Max Width: <span id="vpLimitWidth">-</span> mm<br>
+                                    Max Height: <span id="vpLimitHeight">-</span> mm<br>
+                                    Max Area: <span id="vpLimitArea">-</span> m²
+                                </span>
+                            </span>
                             </label>
                             <select name="glazingSystems" id="glazingSystems" option_slug="leaf1_glazing_systems" class="form-control">
                                 <option value=""> Select Glazing Systems</option>
@@ -781,6 +812,15 @@
                                 <input type="hidden" name="glazingBeadSpecies" id="glazingBeadSpeciesid"
                                 value="@if(isset($Item['GlazingBeadSpecies'])){{$Item['GlazingBeadSpecies']}}@endif">
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="glazingTestRef">Test Ref</label>
+                            <input type="text" readonly name="glazingTestRef"
+                                id="glazingTestRef" class="form-control"
+                                value="@if(isset($Item['GlazingTestRef'])){{$Item['GlazingTestRef']}}@endif">
                         </div>
                     </div>
 

@@ -53,7 +53,7 @@
             </div>
         </div>
 
-        {{--  @if(Auth::user()->UserType == 1)
+         @if(Auth::user()->UserType == 1)
         <div class="card-body">
             <div class="tab-content">
                 <form method="post" action="{{ route('option/import-glassglazing') }}" enctype="multipart/form-data">
@@ -79,7 +79,7 @@
                 </form>
             </div>
         </div>
-        @endif  --}}
+        @endif
 
         @php
         $tabs = [
@@ -117,7 +117,9 @@
                                 <th>FD60</th>
                                 <th>Glass Type</th>
                                 <th>Glazing System</th>
-                                <th>VP Area Size</th>
+                                <th>Max VP Area (m²)</th>
+                                <th>Max VP Width (mm)</th>
+                                <th>Max VP Height (mm)</th>
                                 <th>Action</th>
                             </tr>
                         </thead>

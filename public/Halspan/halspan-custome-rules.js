@@ -736,6 +736,7 @@ $(document).ready(function() {
     //getting glazing thikness filter using glazing systems
     $("#glazingSystems").change(function(){
         GlazingSystemsChange();
+        updateVpLimitInfoBox();
     });
     $("#opglazingSystems").change(function(){
         GlazingSystemsChange(null,"opglazingSystems");
@@ -3235,7 +3236,54 @@ $(document).ready(function() {
     }
 
 
+    /*
+     | Vision Panel certificate limits (Halspan Optima FD30).
+     | Each glass + glazing combination's max area/width/height are attached as
+     | data-* attributes on the #glazingSystems <option> (data-vparea m²,
+     | data-vpwidth mm, data-vpheight mm) and shown in the hover info box.
+     | Size enforcement is done server-side by filtering the glass/glazing lists
+     | (see ItemListController glassGlazingFilter / GlazingFilter).
+     */
+    function getVpCertLimits(){
+        var $opt = $("#glazingSystems option:selected");
+        return {
+            area:   parseFloat($opt.attr('data-vparea'))   || 0, // m²
+            width:  parseFloat($opt.attr('data-vpwidth'))  || 0, // mm
+            height: parseFloat($opt.attr('data-vpheight')) || 0  // mm
+        };
+    }
+
+    // Guaranteed-visible warning popup (works whether the page uses
+    // SweetAlert2 `Swal`, the legacy `swal`, or neither).
+    function vpAlert(message){
+        try {
+            if (window.Swal && typeof window.Swal.fire === 'function') { window.Swal.fire('Vision Panel', message, 'warning'); return; }
+            if (typeof window.swal === 'function') { window.swal('Vision Panel', message); return; }
+            if (window.Sweetalert2 && typeof window.Sweetalert2.fire === 'function') { window.Sweetalert2.fire('Vision Panel', message); return; }
+        } catch (e) { console.error('[VP] popup error', e); }
+        alert(message);
+    }
+
+    function updateVpLimitInfoBox(){
+        var lim = getVpCertLimits();
+        if(lim.width || lim.height || lim.area){
+            $("#vpLimitWidth").text(lim.width || '-');
+            $("#vpLimitHeight").text(lim.height || '-');
+            $("#vpLimitArea").text(lim.area || '-');
+            $("#vpLimitInfoWrap").show();
+        } else {
+            $("#vpLimitInfoWrap").hide();
+        }
+    }
+    // Exposed so the glazing dropdown builder (top-level scope) can refresh
+    // the info box once the options are rendered on initial load.
+    window.updateVpLimitInfoBox = updateVpLimitInfoBox;
+
     function GlazingSystemsChange(id = null,type=""){
+        // Keep the hover info box in sync with the selected glazing system.
+        if(type == ""){
+            updateVpLimitInfoBox();
+        }
 
         var glazingSystems = (id == null)?$("#glazingSystems").val():id;
         if(type == "opglazingSystems"){
@@ -3274,11 +3322,13 @@ $(document).ready(function() {
                                 setTimeout(function(){
                                    $("#glazingSystemsThickness").val(data.GlazingThickness);
                                    $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                                   $('#glazingTestRef').val(data.test_ref);
                                 }, 4000);
                             }
 
                         } else {
                             $('#glazingSystemsThickness').val('');
+                            $('#glazingTestRef').val('');
                         }
                         // if(data2 != '' && data2 != null){
                         //     $('#glazingBeadsFixingDetail').val(data2.OptionValue);
@@ -3288,6 +3338,7 @@ $(document).ready(function() {
                         // }
                     } else {
                         $("#glazingSystemsThickness").val(0);
+                        $('#glazingTestRef').val('');
                     }
                 }
             });
@@ -4398,11 +4449,13 @@ function glass_glazing_system(isstatus = false){
     }
     var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
     leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+    var leaf1VpWidth  = $('#vP1Width').val() || '';
+    var leaf1VpHeight = vpMaxEnteredHeight();
     $.ajax({
         url: $("#glass-glazing-filter").html(),
         method:"POST",
         dataType:"Json",
-        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value},
+        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value, leaf1VpWidth:leaf1VpWidth, leaf1VpHeight:leaf1VpHeight},
         success: function(result){
             var glassTypeInnerHtml = "";
             if(result.status=="ok"){
@@ -4430,11 +4483,27 @@ function glass_glazing_system(isstatus = false){
                 }
             } else {
                 glassTypeInnerHtml += '<option value="">No Glass Type Found</option>';
+                if (leaf1VpAreaSizeM2Value != '' && integrity != '' && integrity != null && typeof vpAlert === 'function') {
+                    vpAlert('No glass type is available for a vision panel of ' + (leaf1VpWidth || '?') + ' mm wide × ' + (leaf1VpHeight || '?') + ' mm high (' + leaf1VpAreaSizeM2Value + ' m²) for the selected fire rating and integrity. Please reduce the width or height.');
+                }
             }
             $("#glassType").empty().append(glassTypeInnerHtml);
         }
     });
 }
+
+// Tallest entered Leaf-1 VP aperture height (mm), or '' if none entered.
+function vpMaxEnteredHeight(){
+    var h = Math.max(
+        parseFloat($('#vP1Height1').val()) || 0,
+        parseFloat($('#vP1Height2').val()) || 0,
+        parseFloat($('#vP1Height3').val()) || 0,
+        parseFloat($('#vP1Height4').val()) || 0,
+        parseFloat($('#vP1Height5').val()) || 0
+    );
+    return h > 0 ? h : '';
+}
+
 function glazing_system(isIntegrity,isstatus = false){
     let pageId = pageIdentity();
     var fireRating =$("#fireRating").val();
@@ -4459,11 +4528,13 @@ function glazing_system(isIntegrity,isstatus = false){
     }
     var leaf1VpAreaSizeM2Value = $('#leaf1VpAreaSizeM2').val();
     leaf1VpAreaSizeM2Value = (leaf1VpAreaSizeM2Value == 0)?"":leaf1VpAreaSizeM2Value;
+    var leaf1VpWidth  = $('#vP1Width').val() || '';
+    var leaf1VpHeight = vpMaxEnteredHeight();
     $.ajax({
         url: $("#glazing-filter").html(),
         method:"POST",
         dataType:"Json",
-        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value,glassType:glassType},
+        data:{pageId:pageId,fireRating:fireRating,integrity:integrity,_token:$("#_token").val(), leaf1VpAreaSizeM2Value:leaf1VpAreaSizeM2Value,glassType:glassType, leaf1VpWidth:leaf1VpWidth, leaf1VpHeight:leaf1VpHeight},
         success: function(result){
             var glazingSystemInnerHtml = "";
             if(result.status=="ok"){
@@ -4474,7 +4545,21 @@ function glazing_system(isIntegrity,isstatus = false){
 
                 glazingSystemInnerHtml+='<option value="">Select Glazing Systems</option>';
 
+                // Guard against duplicate options: the same glazing system can be
+                // returned more than once (e.g. when several glass_type records
+                // share a name and the query joins by name). Show each Key once.
+                var seenGlazingKeys = {};
+
                 for(var i =0; i<length;i++){
+
+                    if (seenGlazingKeys[data[i].Key]) { continue; }
+                    seenGlazingKeys[data[i].Key] = true;
+
+                    // VP certificate limits for this glass + glazing combination:
+                    // VPAreaSize is in m², VPWidth/VPHeight are in mm.
+                    var vpLimitAttrs = ' data-vparea="'+(data[i].VPAreaSize || 0)+'"'
+                        + ' data-vpwidth="'+(data[i].VPWidth || 0)+'"'
+                        + ' data-vpheight="'+(data[i].VPHeight || 0)+'"';
 
                     if (GlazingSystemsValue != null) {
                         GlazingSystemsValue = $("#GlazingSystems-value").data("value");
@@ -4483,16 +4568,25 @@ function glazing_system(isIntegrity,isstatus = false){
                             GlazingSystemSelected = "selected";
                             GlazingSystemsChange(GlazingSystemsValue,'');
                         }
-                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected +'>'+data[i].GlazingSystem+'</option>';
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'" '+ GlazingSystemSelected + vpLimitAttrs +'>'+data[i].GlazingSystem+'</option>';
                     }else{
-                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'">'+data[i].GlazingSystem +'</option>';
+                        glazingSystemInnerHtml+='<option value="'+data[i].Key+'"'+ vpLimitAttrs +'>'+data[i].GlazingSystem +'</option>';
                     }
                     // $("#glassThickness").val(data[i].GlassThickness);
                 }
             } else {
                 glazingSystemInnerHtml += '<option value="">No Glazing Systems Found</option>';
+                if (leaf1VpAreaSizeM2Value != '' && glassType != '' && glassType != null && typeof vpAlert === 'function') {
+                    vpAlert('No glazing system is available for a vision panel of ' + (leaf1VpWidth || '?') + ' mm wide × ' + (leaf1VpHeight || '?') + ' mm high (' + leaf1VpAreaSizeM2Value + ' m²) with the selected glass. Please reduce the width or height.');
+                }
             }
             $("#glazingSystems").empty().append(glazingSystemInnerHtml);
+
+            // Refresh the VP limit info box now that the (possibly pre-selected)
+            // glazing options are rendered in the DOM.
+            if(typeof window.updateVpLimitInfoBox === 'function'){
+                window.updateVpLimitInfoBox();
+            }
 
             var decodedBeads = JSON.parse(result.GlazingBeads);
 

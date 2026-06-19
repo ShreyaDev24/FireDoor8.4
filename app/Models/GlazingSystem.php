@@ -13,6 +13,7 @@ class GlazingSystem extends Model
         'GlazingSystem',
         'GlazingThickness',
         'GlazingBeadFixingDetail',
+        'test_ref',
         'VPAreaSize',
         'Status',
         'editBy',

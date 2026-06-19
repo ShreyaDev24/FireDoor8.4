@@ -624,7 +624,9 @@ $(".change-event-calulation").change(function(){
 
             if(leaf1VisblePanelEqullSize=="Yes"){
 
-                    var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter);
+                    // Equal-size panes share the same width/height, so multiply the
+                    // single-pane area by the number of vision panels.
+                    var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)*parseInt(leaf1VisblePanelQuantity);
 
             }else{
 
@@ -784,8 +786,6 @@ $(".change-event-calulation").change(function(){
             $('#vP1Height1-section').removeClass("table_row_show");
         }
     }
-
-
 
 });
 

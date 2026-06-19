@@ -18,6 +18,8 @@ class GlassGlazingSystem extends Model
         'GlassType',
         'GlazingSystem',
         'VPAreaSize',
+        'VPWidth',
+        'VPHeight',
         'UserId',
         'Status'
     ];
