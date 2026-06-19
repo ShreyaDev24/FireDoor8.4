@@ -236,6 +236,9 @@ Route::prefix('admins')->group(function (): void {
     Route::get('/edit/{id}', [App\Http\Controllers\AdminController::class,'edit'])->name('admins/edit');
     Route::post('/store', [App\Http\Controllers\AdminController::class,'store'])->name('admins/store');
     Route::post('/delete', [App\Http\Controllers\AdminController::class,'delete'])->name('admins/delete');
+    Route::get('/edit-superadmin/{id}', [App\Http\Controllers\AdminController::class, 'edit_superadmin']);
+    Route::post('/update-superadmin-access/{id}', [App\Http\Controllers\AdminController::class, 'update_superadmin_access']);
+    Route::post('/switch-company', [App\Http\Controllers\AdminController::class, 'switch_company']);
 
 });
 
@@ -394,6 +397,8 @@ Route::prefix('options')->group(function (): void {
     Route::post('/option/import-glasstype', [App\Http\Controllers\OptionController::class,'importglasstype'])->name('option/import-glasstype');
     Route::post('/option/import-glazing', [App\Http\Controllers\OptionController::class,'importglazingsystem'])->name('option/import-glazing');
     Route::post('/option/import-glassglazing', [App\Http\Controllers\OptionController::class,'importglassglazing'])->name('option/import-glassglazing');
+
+    Route::post('/option/import-intumescent', [App\Http\Controllers\OptionController::class, 'importIntumescent'])->name('option/import-intumescent');
 
     Route::match(['get','post'],'/get', [App\Http\Controllers\OptionController::class,'get'])->name('options/get');
 

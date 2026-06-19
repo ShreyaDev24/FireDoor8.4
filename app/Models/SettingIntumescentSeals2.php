@@ -24,7 +24,8 @@ class SettingIntumescentSeals2 extends Model
         'editBy',
         'FireOnly',
         'MeetingEdges',
-        'customeleafTypes'
+        'customeleafTypes',
+        'frameTypes'
     ];
 
     public function selected_cost()

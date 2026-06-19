@@ -2888,7 +2888,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         <table id="WithBorder" class="tbl2">
                             <tbody>
                                 <tr>
-                                    <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
+                                    <td class="tbl_color tblTitle" style="font-weight: normal;">Door Type</td>
                                     <td class="dicription_blank"><b>Type ' . $tt->DoorType . '</b></td>
                                 </tr>
                             </tbody>
@@ -3014,18 +3014,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             $elevTbl .=         '
                                 <tr>
-                                    <td class="dicription_grey">Door Leaf Width 1</td>
-                                    <td class="dicription_blank">' . $leafWidth1 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Width 2</td>
-                                    <td class="dicription_blank">' . $leafWidth2 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Height</td>
-                                    <td class="dicription_blank">' . $LeafHeight . '</td>
-                                </tr>
-                                <tr>
                                     <td class="dicription_grey">Door Leaf Thickness</td>
                                     <td class="dicription_blank">' . $LeafThickness . '</td>
                                 </tr>
@@ -3110,20 +3098,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <th class="tblTitle">Vision Panel</th>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Glass Integrity</td>
-                                    <td class="dicription_blank">' . $GlassIntegrity . '</td>
-                                </tr>
-                                <tr>
                                     <td class="dicription_grey">Glass Type + Thickness</td>
                                     <td class="dicription_blank">' . $GlassTypeForDoorDetailsTable . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Glazing Bead Species</td>
-                                    <td class="dicription_blank">' . $GlazingBeadSpecies . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Beading Type</td>
-                                    <td class="dicription_blank">' . $VPBeadingType . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing System</td>

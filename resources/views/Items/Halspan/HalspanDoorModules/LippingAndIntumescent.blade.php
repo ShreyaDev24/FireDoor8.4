@@ -316,6 +316,21 @@
                                                         value="@if(isset($Item['SpecialFeatureRefs'])){{$Item['SpecialFeatureRefs']}}@endif">
                                                 </div>
                                             </div>
+
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label for="fireratedtestes">Fire Rated Tested
+                                                    @if(!empty($tooltip->fireratedtestes))
+                                                    <script type="text/javascript">
+                                                    document.write(Tooltip('{{$tooltip->fireratedtestes}}'));
+                                                    </script>
+                                                    @endif
+                                                    </label>
+                                                    <input name="fireratedtestes" id="fireratedtestes"
+                                                        placeholder="Fire Rated Tested" class="form-control" type="text"
+                                                        value="@if(isset($Item['FireRatedTested'])){{$Item['FireRatedTested']}}@endif">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

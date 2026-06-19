@@ -131,6 +131,11 @@ function pageIdentity(){
         IntumescentSeals();
     });
 
+     $(document).on('change','#intumescentSealType',function(e){
+        e.preventDefault();
+        IntumescentSeals();
+    });
+
 // Door Dimensions & Door Leaf
     $(document).on('change','#sOWidth',function(e){
         e.preventDefault();
@@ -3019,6 +3024,7 @@ function copyOfSideLite1Change(isstatus = false){
         const leafHeightNoOPValue = $('#leafHeightNoOP').val();
         var sOWidthValue = $('#sOWidth').val();
         var sOHeightValue = $('#sOHeight').val();
+        const intumescentSealType = $('#intumescentSealType').val();
         let overpanel = '';
         if(overpanelValue2 == 'Yes'){
             overpanel = 'OP';
@@ -3055,12 +3061,12 @@ function copyOfSideLite1Change(isstatus = false){
             fireRating = $('#savedfirerating').val();
         }
         // console.log($aa);
-        if(fireRating != '' && sOWidthValue != '' && sOHeightValue != ''){
+        if(fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){
             $.ajax({
                 url: $("#Filterintumescentseals").text(),
                 method:"POST",
                 dataType:"Json",
-                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRating ,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype, _token:$("#_token").val()},
+                data:{pageId:pageId,SelectedValue:SelectedValue,fireRatingValue:fireRatingValue,intumescentseals: $aa ,leafWidth1Value:leafWidth1Value, leafHeightNoOPValue:leafHeightNoOPValue,doorLeafFacingValueNew:doorLeafFacingValueNew,frameMaterialNew:frameMaterialNew,intumescentsealsleaftype:intumescentsealsleaftype,  intumescentSealType:intumescentSealType, _token:$("#_token").val()},
                 success: function(result){
                     // console.log(result);
                     // console.log(result.data);
@@ -3090,6 +3096,14 @@ function copyOfSideLite1Change(isstatus = false){
             });
         }
     }
+     $('#intumescentSealArrangement').on('change', function () {
+
+        let selectedOption = $(this).find(':selected');
+
+        let fireTested = selectedOption.data('firetested');
+
+        $('#fireratedtestes').val(fireTested || '');
+    });
     function DoorLeafFacingChange(status = false,isstatus = false){
         let pageId = pageIdentity();
         var doorLeafFacing =  $("#doorLeafFacing").val();

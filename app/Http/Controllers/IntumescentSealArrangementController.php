@@ -251,6 +251,48 @@ class IntumescentSealArrangementController extends Controller
             ->with('success', 'Updated successfully');
     }
 
+    // public function updateSelected(Request $request)
+    // {
+    //     $userId = auth()->id();
+
+    //     $keys = collect($request->rows)
+    //         ->where('checked', true)
+    //         ->pluck('id')
+    //         ->toArray();
+    //     // dd($keys);
+
+    //     if (!empty($keys)) {
+    //         SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)
+    //             ->whereNotIn('intumescentseals2_id', $keys)
+    //             ->delete();
+
+
+    //         foreach ($request->rows as $row) {
+
+
+    //             if ($row['checked']) {
+
+    //                 SelectedIntumescentSeals2::updateOrCreate(
+
+    //                     [
+    //                         'selected_intumescentseals2_user_id' => $userId,
+    //                         'intumescentseals2_id' => $row['id']
+    //                     ],
+
+    //                     [
+    //                         'selected_cost' => $row['price'] ?? 0
+    //                     ]
+
+    //                 );
+    //             }
+    //         }
+    //     } else {
+    //         SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)->delete();
+    //     }
+
+    //     return response()->json(['status' => 'ok']);
+    // }
+
     public function updateSelected(Request $request)
     {
         $userId = auth()->id();
@@ -260,12 +302,11 @@ class IntumescentSealArrangementController extends Controller
             ->pluck('id')
             ->toArray();
 
-
         if (!empty($keys)) {
+
             SelectedIntumescentSeals2::where('selected_intumescentseals2_user_id', $userId)
                 ->whereNotIn('intumescentseals2_id', $keys)
                 ->delete();
-
 
             foreach ($request->rows as $row) {
 
@@ -281,20 +322,7 @@ class IntumescentSealArrangementController extends Controller
                         ],
 
                         [
-                            'selected_cost' => $row['price'] ?? 0,
-                            'selected_configurableitems'           => $seal->configurableitems,
-                            'selected_configuration'               => $seal->configuration,
-                            'selected_doorname'                    => $seal->doorname,
-                            'selected_firerating'                  => $seal->firerating,
-                            'selected_tag'                         => $seal->tag,
-                            'selected_intumescentSeals'            => $seal->intumescentSeals,
-                            'selected_brand'                       => $seal->brand,
-                            'selected_firetested'                  => $seal->firetested,
-                            'selected_Point1height'                => $seal->Point1height,
-                            'selected_Point1width'                 => $seal->Point1width,
-                            'selected_Point2height'                => $seal->Point2height,
-                            'selected_Point2width'                 => $seal->Point2width,
-                            'MeetingEdges'                         => $seal->MeetingEdges,
+                            'selected_cost' => $row['price'] ?? 0
                         ]
 
                     );
@@ -306,8 +334,6 @@ class IntumescentSealArrangementController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
-
-
     public function destroy($id)
     {
         SettingIntumescentSeals2::where('id', $id)->delete();

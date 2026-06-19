@@ -69,6 +69,14 @@
         </div>
         @endif
 
+        @if($auth->id != 1)
+        <form action="{{ route('option/import-intumescent') }}" method="POST" enctype="multipart/form-data">
+            @csrf
+            <input type="file" name="file" required>
+            <button type="submit">Import</button>
+        </form>
+        @endif
+
         <ul class="nav nav-tabs mb-3" id="glazingSystemTabs" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="custom-tab" data-toggle="tab" href="#custom" role="tab">
