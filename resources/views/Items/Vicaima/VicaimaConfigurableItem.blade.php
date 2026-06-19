@@ -95,13 +95,13 @@
                     <input type="hidden" name="pageIdentity" id="pageIdentity" value="4">
                     <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
                     <input type="hidden" name="SvgImage" value=""/>
-                    @if(in_array(Auth::user()->UserType, ['1', '2', '3']) && isset($quotation->QuotationStatus) && $quotation->QuotationStatus != 'Ordered' && empty($Item["itemId"]))
+                    {{--  @if(in_array(Auth::user()->UserType, ['1', '2', '3']) && isset($quotation->QuotationStatus) && $quotation->QuotationStatus != 'Ordered' && empty($Item["itemId"]))
                         <div class="float-right">
                             <button type="button" id="default" onclick="default()" class="btn btn-primary defaultbutton">
                                 <i class="fas fa-paper-plane"></i> Import Default
                             </button>
                         </div>
-                    @endif
+                    @endif  --}}
                     <div class="tab-content">
                         <div id="main-options-section" class="tab-pane active">
                             @include("Items.Vicaima.VicaimaDoorModules.MainOptions")
@@ -298,11 +298,11 @@
 @section("js")
 
 <script>
-    $(document).on('click', '#default', function(e) {
+    {{--  $(document).on('click', '#default', function(e) {
         defaultimport();
-    });
+    });  --}}
 
-    function defaultimport(){
+    {{--  function defaultimport(){
          $('.loader').empty().css({
             'display': 'block'
         });
@@ -515,7 +515,7 @@
                 SetBuildOfMaterial(element);
             }, index * 100); // Delay increases by 100ms for each element
         });
-    }
+    }  --}}
 
     $('#submit').attr({'disabled': true,"readonly":true });
     $('.defaultbutton').attr({'disabled': true,"readonly":true });
