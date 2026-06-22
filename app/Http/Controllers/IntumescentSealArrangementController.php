@@ -322,7 +322,20 @@ class IntumescentSealArrangementController extends Controller
                         ],
 
                         [
-                            'selected_cost' => $row['price'] ?? 0
+                            'selected_cost' => $row['price'] ?? 0,
+                            'selected_configurableitems'           => $seal->configurableitems,
+                            'selected_configuration'               => $seal->configuration,
+                            'selected_doorname'                    => $seal->doorname,
+                            'selected_firerating'                  => $seal->firerating,
+                            'selected_tag'                         => $seal->tag,
+                            'selected_intumescentSeals'            => $seal->intumescentSeals,
+                            'selected_brand'                       => $seal->brand,
+                            'selected_firetested'                  => $seal->firetested,
+                            'selected_Point1height'                => $seal->Point1height,
+                            'selected_Point1width'                 => $seal->Point1width,
+                            'selected_Point2height'                => $seal->Point2height,
+                            'selected_Point2width'                 => $seal->Point2width,
+                            'MeetingEdges'                         => $seal->MeetingEdges,
                         ]
 
                     );
