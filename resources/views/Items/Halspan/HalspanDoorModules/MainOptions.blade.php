@@ -1,5 +1,7 @@
 <!-- Main Options -->
 <div class="main-card mb-3 custom_card">
+    {{-- Marker: present only on the Halspan door configuration page (not ValidateHalspan), used to scope JS in halspan-custome-rules.js --}}
+    <input type="hidden" id="halspanDoorConfigPage" value="1">
     <input type="hidden" name="issingleconfiguration" value="{{$issingleconfiguration}}">
     <input type="hidden" name="QuotationId" value="@if(isset($QuotationId)){{$QuotationId}}@else{{''}}@endif">
     <input type="hidden" name="itemID" value="@if(isset($Item["itemId"])){{$Item["itemId"]}}@else{{''}}@endif">
