@@ -2988,7 +2988,7 @@ $(document).ready(function() {
             // start
                 let $aa = '';
                 if(doorsetTypeValue == 'leaf_and_a_half'){
-                    const dobledoor = 'SD';
+                    const dobledoor = 'DD';
                     $aa = latchTypeValue+swingTypeValue+dobledoor+overpanel; // LSASD
                 } else {
                     $aa = latchTypeValue+swingTypeValue+doorsetTypeValue+overpanel; // LSASD
