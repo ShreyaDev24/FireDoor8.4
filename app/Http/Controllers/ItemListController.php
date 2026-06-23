@@ -2622,7 +2622,7 @@ class ItemListController extends Controller
             if (!empty($leaf1VpAreaSizeM2Value)) {
                 $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?', [$leaf1VpAreaSizeM2Value]);
             }
-            if ($configurationDoor == 'Halspan') {
+            if ($configurationDoor == 'Halspan' && $fireRating !== 'NFR') {
                 if (!empty($leaf1VpWidth))  $query->where('glass_glazing_system.VPWidth',  '>=', $leaf1VpWidth);
                 if (!empty($leaf1VpHeight)) $query->where('glass_glazing_system.VPHeight', '>=', $leaf1VpHeight);
             }
