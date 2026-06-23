@@ -46,14 +46,38 @@
                                 {{ csrf_field() }}
                                 <div class="card-body">
                                     <div class="form-row">
-                                        <div class="col-md-3">
+                                        <div class="col-md-4">
+                                            <div class="position-relative form-group">
+                                                <label>Excel File <span class="text-danger">*</span></label>
+
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <select class="form-control" id="doorCoreType" name="doorCoreType" required>
+                                                            <option value="">Select</option>
+                                                            <option value="custom">Custom</option>
+                                                            <option value="standard">Standard</option>
+                                                        </select>
+                                                    </div>
+
+
+                                                    <input name="ExcelFile" id="ExcelFile" type="file"
+                                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                                                    required class="form-control">
+
+                                                </div>
+
+                                            </div>
+                                        </div>
+
+
+                                        {{--  <div class="col-md-3">
                                             <div class="position-relative form-group">
                                                 <label for="file">Excel File</label>
                                                 <input name="ExcelFile" id="ExcelFile" type="file"
                                                     accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
                                                     required class="form-control">
                                             </div>
-                                        </div>
+                                        </div>  --}}
                                         <input type="hidden" id="quotationId" name="quotationId"
                                             value="{{ $quotationId }}">
                                         <input type="hidden" id="versionId" name="versionId" value="{{ $vid }}">
