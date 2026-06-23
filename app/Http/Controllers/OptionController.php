@@ -2979,8 +2979,8 @@ class OptionController extends Controller
                 $height = trim((string) $row[$j++]);
                 $width = trim((string) $row[$j++]);
                 if($vpareasize !== "N/A"){
-                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD60','FD60')->where('Halspan',2)->first();
-                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('FD60','FD60')->where('Halspan',2)->first();
+                    $GlassType = GlassType::where('GlassType',$glasstype)->where('status',1)->where('FD30','FD30')->where('Halspan',2)->first();
+                    $GlazingSystem = GlazingSystem::where('GlazingSystem',$glazing)->where('status',1)->where('FD30','FD30')->where('Halspan',2)->first();
 
                     if(!empty($GlassType) && !empty($GlazingSystem)){
                         $data = new GlassGlazingSystem();
