@@ -759,6 +759,14 @@
                                 value="@if(isset($Item['glazingBeadsFixingDetail'])){{$Item['glazingBeadsFixingDetail']}}@endif">
                         </div>
                     </div>
+                     <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="glazingTestRef">Test Ref</label>
+                            <input type="text" readonly name="glazingTestRef"
+                                id="glazingTestRef" class="form-control"
+                                value="@if(isset($Item['GlazingTestRef'])){{$Item['GlazingTestRef']}}@endif">
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="glazingBeadSpecies">Glazing Bead Species

@@ -3500,10 +3500,12 @@ function GlazingSystemsChange(id = null,type=""){
                         }else{
                             $("#glazingSystemsThickness").val(data.GlazingThickness);
                             $('#glazingBeadsFixingDetail').val(data.GlazingBeadFixingDetail);
+                            $('#glazingTestRef').val(data.test_ref);
                         }
 
                     } else {
                         $('#glazingSystemsThickness').val('');
+                        $('#glazingTestRef').val('');
                     }
                     // if(data2 != '' && data2 != null){
                     //     $('#glazingBeadsFixingDetail').val(data2.OptionValue);
@@ -3513,6 +3515,7 @@ function GlazingSystemsChange(id = null,type=""){
                     // }
                 } else {
                     $("#glazingSystemsThickness").val(0);
+                    $('#glazingTestRef').val('');
                 }
             }
         });
