@@ -24,10 +24,6 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
 
     public function collection()
     {
-        $quotation = Quotation::select('project.*', 'quotation.*', 'customers.CstCompanyName', 'project.ProjectName as projectname')
-            ->leftJoin('project', 'quotation.ProjectId', '=', 'project.id')
-            ->leftJoin('customers', 'customers.UserId', 'quotation.MainContractorId')
-            ->where('quotation.id', $this->id)->first();
 
         $item = Item::join('item_master', 'items.itemId', 'item_master.itemID')
             ->leftJoin('door_frame_construction', 'items.DoorFrameConstruction', 'door_frame_construction.DoorFrameConstruction')
@@ -43,6 +39,7 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
 
         foreach ($item as $value) {
             $data[] = [
+                doorcorename($value->configurableitems),
                 $value->doorNumber,
                 $value->plot_ref_no,
                 $value->certification_no,
@@ -73,6 +70,7 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
         return [
             ['Frame Excel'], // Row 1
             [
+                'Door Core',
                 'Door Number',
                 'Plot Number/Ref',
                 'IFC/Certifire No/Q mark Plug',
@@ -99,8 +97,8 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:R1';
-                $cellRange = 'A2:R2';
+                $cellRange1 = 'A1:S1';
+                $cellRange = 'A2:S2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -121,7 +119,7 @@ class ExportFrameExcel implements FromCollection, WithHeadings, WithEvents, With
 
                 ];
                 $event->sheet->mergeCells($cellRange1);
-                $columns = range('R', 'O'); // 'O' should be replaced with the last column you need
+                $columns = range('S', 'O'); // 'O' should be replaced with the last column you need
 
                 foreach ($columns as $column) {
                     $event->sheet->getColumnDimension($column)->setAutoSize(true);
