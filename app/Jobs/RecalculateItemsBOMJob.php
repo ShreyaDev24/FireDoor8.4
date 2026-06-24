@@ -38,7 +38,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
             foreach($Items as $data){
                 $itemid = $data->itemId;
 
-                BOMUpdate($data, $quotation->configurableitems,$this->userLoginId);
+                BOMUpdate($data, $data->configurableitems,$this->userLoginId);
 
                 $GTSellPrice = BOMCalculation::where('QuotationId', $this->quotationId)
                     ->where('DoorType', $data->DoorType)

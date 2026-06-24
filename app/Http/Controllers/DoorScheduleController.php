@@ -765,7 +765,7 @@ class DoorScheduleController extends Controller
 
                 $quotation = Quotation::where('id',$QuotationId)->first();
 
-                BOMUpdate($data, $quotation->configurableitems);
+                BOMUpdate($data, $data->configurableitems);
 
                 $GTSellPrice = BOMCalculation::where('QuotationId', $QuotationId)
                     ->where('DoorType', $data->DoorType)
@@ -843,7 +843,7 @@ class DoorScheduleController extends Controller
 
                     $quotation = Quotation::where('id',$QuotationId)->first();
 
-                    BOMUpdate($data, $quotation->configurableitems);
+                    BOMUpdate($data, $data->configurableitems);
 
                     $GTSellPrice = BOMCalculation::where('QuotationId', $QuotationId)
                     ->where('DoorType', $data->DoorType)

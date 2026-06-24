@@ -2251,7 +2251,7 @@ function discountQuote($quotationId,$versionId): bool{
                 $IronmongaryPrice = round(($totalcost),2);
             }
 
-            BOMUpdate($data, $quotation->configurableitems);
+            BOMUpdate($data, $data->configurableitems);
 
             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$quotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
             $GTSellPrice = 0;

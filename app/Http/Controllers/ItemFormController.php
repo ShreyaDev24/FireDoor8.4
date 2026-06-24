@@ -152,7 +152,7 @@ class ItemFormController extends Controller
             ';
             $i++;
         }
-        
+
         return view('Items.NonConfigurableItems',['tbl' => $tbl]);
     }
 
@@ -174,14 +174,14 @@ class ItemFormController extends Controller
         } else {
             $NonConfigurableItems = new NonConfigurableItems();
         }
-        
+
         $NonConfigurableItems->name = $request->item_name;
         $NonConfigurableItems->price = $request->price;
         $NonConfigurableItems->description = $request->description;
         if(isset($name)){
             $NonConfigurableItems->image = $name;
         }
-        
+
         $NonConfigurableItems->save();
         if(!is_null($update_val)){
             return redirect()->back()->with('success', 'Update Non Configurable Item successfully!');
@@ -218,7 +218,7 @@ class ItemFormController extends Controller
                     BOMCalculation::where('QuotationId',$items->QuotationId)->where('VersionId',$items->VersionId)->where('itemId',$items->itemId)->delete();
                 }
 
-                BOMUpdate($items, $quotation->configurableitems);
+                BOMUpdate($items, $items->configurableitems);
                 // BOMQuatityOfDoorUpdate($items->itemId,$items->QuotationId);
             }
         }
