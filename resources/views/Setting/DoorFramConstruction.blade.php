@@ -115,8 +115,8 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="hinge2Location">Hinge 2 Location (Min 220 mm) <span class="text-danger">*</span></label>
-                                        <input type="number" name="hinge2Location" id="hinge2Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="220">
+                                        <label for="hinge2Location">Hinge 2 Location (Min 200 mm) <span class="text-danger">*</span></label>
+                                        <input type="number" name="hinge2Location" id="hinge2Location" class="form-control" placeholder="Enter Width" value="@if(!empty($hinge_location)){{$hinge_location->hinge2Location}}@endif" min="200">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
