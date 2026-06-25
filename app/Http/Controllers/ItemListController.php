@@ -1301,6 +1301,7 @@ class ItemListController extends Controller
                         'CoreHeight'                            => $request->coreHeight,
                         'OPCoreWidth'                            => $request->opCoreWidth,
                         'OPCoreHeight'                            => $request->opCoreHeight,
+                        'IntumescentNotSupplied'            => $request->intumescentNotSupplied,
                         'IntumescentLeapingSealType'            => $request->intumescentSealType,
                         'IntumescentLeapingSealLocation'        => $request->intumescentSealLocation,
                         'IntumescentLeapingSealColor'           => $request->intumescentSealColor,
@@ -1512,6 +1513,7 @@ class ItemListController extends Controller
                         $item->IntumescentSeal = $request->intumescentSeal;
                         $item->IntumescentSealColor = $request->intumescentSealColor;
                         $item->IntumescentSealSize = $request->intumescentSealSize;
+                        $item->IntumescentNotSupplied = $request->intumescentNotSupplied;
                         $item->IronmongerySet = $request->ironmongerySet;
                         $item->IronmongeryID = $request->IronmongeryID;
                         $item->FolderId    = $request->FolderId;

@@ -395,3 +395,36 @@ document.getElementById("doorThickness").addEventListener("blur", validateFrameD
 document.getElementById("plantonStopWidth").addEventListener("blur", validateFrameDepth);
 document.getElementById("frameDepth").addEventListener("blur", validateFrameDepth);
 
+
+intumescentNotSupplied();
+$(document).on('click', '#frameonoff', function(e) {
+    intumescentNotSupplied();
+});
+
+function intumescentNotSupplied(){
+    if ($("#frameonoff").prop('checked')){
+        var intumescentField = `
+            <div class="col-md-6" id="intumescentNotSuppliedDiv">
+                <div class="position-relative form-group">
+                    <label>&nbsp;</label>
+                    <div class="form-check d-flex align-items-center">
+                        <input type="checkbox"
+                            id="intumescentNotSupplied"
+                            name="intumescentNotSupplied"
+                            class="form-check-input"
+                            value="1">
+                        <label class="form-check-label ml-2 mb-0" for="intumescentNotSupplied">
+                            Intumescent Not Supplied
+                        </label>
+                    </div>
+                </div>
+            </div>`;
+
+            // Existing div ke upar add karne ke liye
+            $('#intumescentSealType').closest('.col-md-6').before(intumescentField);
+    } else {
+        // frameonoff unchecked hone par remove kare
+        $('#intumescentNotSuppliedDiv').remove();
+    }
+}
+
