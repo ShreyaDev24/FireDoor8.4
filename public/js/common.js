@@ -417,3 +417,43 @@ function SaddleChange(){
         $('#saddleLocation').attr({'disabled':true,"required":false});
     }
 }
+
+intumescentNotSupplied();
+$(document).on('click', '#frameonoff', function(e) {
+    intumescentNotSupplied();
+});
+
+function intumescentNotSupplied(){
+    // Preserve the current ticked state if the box is already on screen,
+    // otherwise fall back to the saved value (so EDIT restores correctly).
+    var wasChecked = $('#intumescentNotSupplied').length
+        ? $('#intumescentNotSupplied').prop('checked')
+        : ($('#intumescentNotSuppliedSaved').val() == '1');
+
+    // Always rebuild so we never end up with duplicate boxes.
+    $('#intumescentNotSuppliedDiv').remove();
+
+    if ($("#frameonoff").prop('checked')){
+        var checkedAttr = wasChecked ? 'checked' : '';
+        var intumescentField = `
+            <div class="col-md-6" id="intumescentNotSuppliedDiv">
+                <div class="position-relative form-group">
+                    <label>&nbsp;</label>
+                    <div class="form-check d-flex align-items-center">
+                        <input type="checkbox"
+                            id="intumescentNotSupplied"
+                            name="intumescentNotSupplied"
+                            class="form-check-input"
+                            value="1" ${checkedAttr}>
+                        <label class="form-check-label ml-2 mb-0" for="intumescentNotSupplied">
+                            Intumescent Not Supplied
+                        </label>
+                    </div>
+                </div>
+            </div>`;
+
+            // Existing div ke upar add karne ke liye
+            $('#intumescentSealType').closest('.col-md-6').before(intumescentField);
+    }
+}
+

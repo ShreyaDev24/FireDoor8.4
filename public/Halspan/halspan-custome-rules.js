@@ -103,6 +103,32 @@ function pageIdentity(){
         IntumescentSeals();
     });
 
+    // When any of the main configuration dropdowns (Fire Rating, Doorset Type,
+    // Swing Type, Latch Type) is changed, reset all Intumescent / special-feature
+    // fields so a stale selection is never carried over to a new configuration.
+    // Scoped to the Halspan door configuration page only (the #halspanDoorConfigPage
+    // marker lives in Items.Halspan.HalspanDoorModules.MainOptions) so this does NOT
+    // run on the ValidateHalspan pages, which share this JS file and reuse the same IDs.
+    $(document).on('change', '#fireRating, #doorsetType, #swingType, #latchType', function(){
+        if($('#halspanDoorConfigPage').length === 0){
+            return;
+        }
+        resetIntumescentFields();
+    });
+
+    function resetIntumescentFields(){
+        $('#intumescentSealType').val('');
+        $('#intumescentSealLocation').val('');
+        $('#intumescentSealColor').val('');
+        $('#intumescentSealArrangement').val('');
+        $('#specialFeatureRefs').val('');
+        $('#fireratedtestes').val('');
+
+        // Hide the dependent "Meeting Edges" field that is driven by the seal arrangement.
+        $('.intumescentSealMeetingEdgesDiv').hide();
+        $('#intumescentSealMeetingEdges').val('');
+    }
+
 // Door Dimensions & Door Leaf
     $(document).on('change','#sOWidth',function(e){
         e.preventDefault();
@@ -3028,7 +3054,7 @@ $(document).ready(function() {
             // start
                 let $aa = '';
                 if(doorsetTypeValue == 'leaf_and_a_half'){
-                    const dobledoor = 'SD';
+                    const dobledoor = 'DD';
                     $aa = latchTypeValue+swingTypeValue+dobledoor+overpanel; // LSASD
                 } else {
                     $aa = latchTypeValue+swingTypeValue+doorsetTypeValue+overpanel; // LSASD

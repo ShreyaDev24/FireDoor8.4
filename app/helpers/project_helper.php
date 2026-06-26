@@ -2332,12 +2332,16 @@ function discountQuote($quotationId,$versionId): bool{
     return true;
 }
 
-function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder=false){
+function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder=false,$IntumescentNotSupplied=null){
     $outerColor = '';
     $innerColor = '';
 
     $outerColor2 = '';
     $innerColor2 = '';
+
+    $greenColor = '#2ecc71'; //green - intumescent fitted
+    $redColor   = '#e74c3c'; //red   - intumescent NOT fitted
+    $silverColor = '#bdc3c7'; //silver - ironmongery
 
     if(($FireRating == 'FD30' || $FireRating == 'FD30s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'Yes'){
         $outerColor = '#f4d23c'; //yellow
@@ -2390,6 +2394,30 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
     if(($FireRating == 'FD60' || $FireRating == 'FD60s') && $IronmongerySet == 'No' && $Leaf1VisionPanel == 'No'){
         $outerColor = '#1f3a93'; //Blue
         $innerColor = '#2ecc71'; //green
+    }
+
+    /**
+     * NEW UPDATE: When a silver tree is used the orange tree does not need to
+     * pull through. So if plug 1 is silver (ironmongery) we suppress plug 2
+     * (orange) and only show the silver tree (background colour unchanged).
+     */
+    if($innerColor == $silverColor){
+        $outerColor2 = '';
+        $innerColor2 = '';
+    }
+
+    /**
+     * NEW UPDATE: "Intumescent Not Supplied" (door only / no frame, box ticked).
+     * The green tree turns red (Red = Intumescent not Fitted). The background
+     * (yellow for FD30, blue for FD60) stays the same.
+     */
+    if(!empty($IntumescentNotSupplied) && $IntumescentNotSupplied == 1){
+        if($innerColor == $greenColor){
+            $innerColor = $redColor;
+        }
+        if($innerColor2 == $greenColor){
+            $innerColor2 = $redColor;
+        }
     }
 
     $Tbl = '';

@@ -218,6 +218,7 @@
                                     <input type="checkbox" class="form-check-input" id="frameonoff" @if(isset($Item["FrameOnOff"]) && $Item["FrameOnOff"] == 1){{ 'checked' }}@else{{''}}@endif>
                                     <label class="form-check-label cursor-pointer" for="frameonoff">Frame  On/Off</label>
                                     <input type="hidden" name="FrameOnOff" id="withoutFrameId" value="@if(isset($Item["FrameOnOff"])){{$Item["FrameOnOff"]}}@else{{''}}@endif">
+                                    <input type="hidden" id="intumescentNotSuppliedSaved" value="@if(isset($Item["IntumescentNotSupplied"])){{$Item["IntumescentNotSupplied"]}}@else{{''}}@endif">
                                 </div>
                             </li>
                     </ul>

@@ -1358,6 +1358,7 @@ class ItemListController extends Controller
                         'CoreHeight'                            => $request->coreHeight,
                         'OPCoreWidth'                            => $request->opCoreWidth,
                         'OPCoreHeight'                            => $request->opCoreHeight,
+                        'IntumescentNotSupplied'            => $request->intumescentNotSupplied,
                         'IntumescentLeapingSealType'            => $request->intumescentSealType,
                         'IntumescentLeapingSealLocation'        => $request->intumescentSealLocation,
                         'IntumescentLeapingSealColor'           => $request->intumescentSealColor,
@@ -1577,6 +1578,7 @@ class ItemListController extends Controller
                         $item->IntumescentSeal = $request->intumescentSeal;
                         $item->IntumescentSealColor = $request->intumescentSealColor;
                         $item->IntumescentSealSize = $request->intumescentSealSize;
+                        $item->IntumescentNotSupplied = $request->intumescentNotSupplied;
                         $item->IronmongerySet = $request->ironmongerySet;
                         $item->IronmongeryID = $request->IronmongeryID;
                         $item->FolderId    = $request->FolderId;
@@ -2689,7 +2691,7 @@ class ItemListController extends Controller
             if (!empty($leaf1VpAreaSizeM2Value)) {
                 $query->whereRaw('ROUND(glass_glazing_system.VPAreaSize, 2) >= ?', [$leaf1VpAreaSizeM2Value]);
             }
-            if ($configurationDoor == 'Halspan' || ($configurationDoor == 'VicaimaDoorCore' && $fireRating == 'FD60')) {
+            if ($configurationDoor == 'Halspan' || $fireRating !== 'NFR'|| ($configurationDoor == 'VicaimaDoorCore' && $fireRating == 'FD60')) {
                 if (!empty($leaf1VpWidth))  $query->where('glass_glazing_system.VPWidth',  '>=', $leaf1VpWidth);
                 if (!empty($leaf1VpHeight)) $query->where('glass_glazing_system.VPHeight', '>=', $leaf1VpHeight);
             }

@@ -3135,7 +3135,7 @@ function copyOfSideLite1Change(isstatus = false){
             fireRatingValue = $('#savedfirerating').val();
         }
         // console.log($aa);
-        if(fireRatingValue != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){
+        if(fireRating != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){
             $.ajax({
                 url: $("#Filterintumescentseals").text(),
                 method:"POST",

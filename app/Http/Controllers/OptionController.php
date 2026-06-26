@@ -3114,6 +3114,7 @@ class OptionController extends Controller
                 $fixingDetails = trim((string) $row[$j++]);
                 $FireRating = trim((string) $row[$j++]);
                 $configurable = trim((string) $row[$j++]);
+                $testref = trim((string) $row[$j++]);
 
                 $key = str_replace(' ', '_', $glazing);
 
@@ -3165,6 +3166,7 @@ class OptionController extends Controller
                 $data->GlazingBeadFixingDetail = $fixingDetails;
                 $data->VpAreaSize = 0;
                 $data->editBy = Auth::user()->id;
+                $data->test_ref = $testref;
                 $data->save();
             }
 
