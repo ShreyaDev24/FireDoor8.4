@@ -2752,6 +2752,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $IntumescentLeapingSealColor = $tt->IntumescentLeapingSealColor;
             }
 
+            // Client update: when intumescent is not supplied, the seal details
+            // are not selected - show "Not Supplied" instead of any stored value.
+            if (!empty($tt->IntumescentNotSupplied) && $tt->IntumescentNotSupplied == 1) {
+                $intumescentSealType         = 'Not Supplied';
+                $intumescentSealArrangement  = 'Not Supplied';
+                $IntumescentLeapingSealColor = 'Not Supplied';
+            }
+
             $ArchitraveMaterial = 'N/A';
             if (!empty($tt->ArchitraveMaterial)) {
                 if ($tt->ArchitraveMaterial == 'Softwood' || $tt->ArchitraveMaterial == 'MDF' || $tt->ArchitraveMaterial == 'Hardwood') {
@@ -6575,6 +6583,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $IntumescentLeapingSealColor = 'N/A';
             if (!empty($tt->IntumescentLeapingSealColor)) {
                 $IntumescentLeapingSealColor = $tt->IntumescentLeapingSealColor;
+            }
+
+            // Client update: when intumescent is not supplied, the seal details
+            // are not selected - show "Not Supplied" instead of any stored value.
+            if (!empty($tt->IntumescentNotSupplied) && $tt->IntumescentNotSupplied == 1) {
+                $intumescentSealType         = 'Not Supplied';
+                $intumescentSealArrangement  = 'Not Supplied';
+                $IntumescentLeapingSealColor = 'Not Supplied';
             }
 
             $ArchitraveMaterial = 'N/A';

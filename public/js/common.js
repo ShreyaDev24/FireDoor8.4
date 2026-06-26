@@ -423,6 +423,26 @@ $(document).on('click', '#frameonoff', function(e) {
     intumescentNotSupplied();
 });
 
+// Client update: when "Intumescent Not Supplied" is ticked, the intumescent
+// seal fields are not needed - turn them off (disabled, not required, greyed).
+function toggleIntumescentFields(){
+    var intumescentDependentFields = '#intumescentSealType, #intumescentSealLocation, #intumescentSealColor, #intumescentSealArrangement, #intumescentSealMeetingEdges';
+    if ($('#intumescentNotSupplied').prop('checked')){
+        $(intumescentDependentFields)
+            .prop('disabled', true)
+            .removeAttr('required')
+            .closest('.col-md-6').addClass('disabled-section');
+    } else {
+        $(intumescentDependentFields)
+            .prop('disabled', false)
+            .closest('.col-md-6').removeClass('disabled-section');
+    }
+}
+
+$(document).on('change', '#intumescentNotSupplied', function(){
+    toggleIntumescentFields();
+});
+
 function intumescentNotSupplied(){
     // Preserve the current ticked state if the box is already on screen,
     // otherwise fall back to the saved value (so EDIT restores correctly).
@@ -433,27 +453,31 @@ function intumescentNotSupplied(){
     // Always rebuild so we never end up with duplicate boxes.
     $('#intumescentNotSuppliedDiv').remove();
 
-    if ($("#frameonoff").prop('checked')){
-        var checkedAttr = wasChecked ? 'checked' : '';
-        var intumescentField = `
-            <div class="col-md-6" id="intumescentNotSuppliedDiv">
-                <div class="position-relative form-group">
-                    <label>&nbsp;</label>
-                    <div class="form-check d-flex align-items-center">
-                        <input type="checkbox"
-                            id="intumescentNotSupplied"
-                            name="intumescentNotSupplied"
-                            class="form-check-input"
-                            value="1" ${checkedAttr}>
-                        <label class="form-check-label ml-2 mb-0" for="intumescentNotSupplied">
-                            Intumescent Not Supplied
-                        </label>
-                    </div>
+    // Client update: the box must ALWAYS show (frame on or off). It is
+    // activated only when the user ticks it (turns the green tree red).
+    var checkedAttr = wasChecked ? 'checked' : '';
+    var intumescentField = `
+        <div class="col-md-6" id="intumescentNotSuppliedDiv">
+            <div class="position-relative form-group">
+                <label>&nbsp;</label>
+                <div class="form-check d-flex align-items-center">
+                    <input type="checkbox"
+                        id="intumescentNotSupplied"
+                        name="intumescentNotSupplied"
+                        class="form-check-input"
+                        value="1" ${checkedAttr}>
+                    <label class="form-check-label ml-2 mb-0" for="intumescentNotSupplied">
+                        Intumescent Not Supplied
+                    </label>
                 </div>
-            </div>`;
+            </div>
+        </div>`;
 
-            // Existing div ke upar add karne ke liye
-            $('#intumescentSealType').closest('.col-md-6').before(intumescentField);
-    }
+    // Existing div ke upar add karne ke liye
+    $('#intumescentSealType').closest('.col-md-6').before(intumescentField);
+
+    // Apply the enabled/disabled state of the dependent seal fields
+    // (covers initial load and EDIT where the box is already ticked).
+    toggleIntumescentFields();
 }
 
