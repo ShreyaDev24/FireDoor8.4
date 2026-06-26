@@ -2389,7 +2389,10 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
      * (yellow for FD30, blue for FD60) stays the same.
      */
     if(!empty($IntumescentNotSupplied) && $IntumescentNotSupplied == 1){
-        if($innerColor == $greenColor){
+        // Red = Intumescent not Fitted. This status takes priority on plug 1,
+        // even when the door has ironmongery (silver) - the client wants the
+        // red tree to show whenever intumescent is not supplied.
+        if($innerColor == $greenColor || $innerColor == $silverColor){
             $innerColor = $redColor;
         }
         if($innerColor2 == $greenColor){
