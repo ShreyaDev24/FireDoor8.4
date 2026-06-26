@@ -2528,9 +2528,9 @@ class BOMController extends Controller
             $bomVersion = BOMCalculation::where('QuotationId',$quatationId)->get()->first();
 
             if($versionID == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','items.IntumescentNotSupplied','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }else{
-                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
+                $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items','items.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$quatationId)->where('bom_calculations.VersionId',$version)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.FireRating','items.IronmongerySet','items.Leaf1VisionPanel','items.Leaf1VPHeight1','items.Leaf1VPWidth','items.VisionPanelQuantity','items.GlassType','items.DoorLeafFacing','items.LeafConstruction','items.IntumescentLeafType','items.IntumescentNotSupplied','item_master.plot_ref_no','item_master.certification_no')->distinct('item_master.itemID')->get();
             }
             $elevTbl = '';
             $elevTbl  = '
@@ -2639,7 +2639,7 @@ class BOMController extends Controller
                 <td style="border: 1px solid black; padding: 5px;"></td>
                 <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                $elevTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
+                $elevTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true, $value->IntumescentNotSupplied ?? null);
 
             $elevTbl .= '</tr>';
         }
@@ -2921,7 +2921,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true, $value->IntumescentNotSupplied ?? null);
 
                         $lipingTbl .= '</tr>';
                         }
@@ -2948,7 +2948,7 @@ class BOMController extends Controller
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>
                             <td style="border: 1px solid black; padding: 5px;"></td>';
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
+                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true, $value->IntumescentNotSupplied ?? null);
 
                             $lipingTbl .= '</tr>';
                         }

@@ -3316,7 +3316,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>';
-                            $elevTbl .= doorPlug1_2($tt->FireRating, $tt->IronmongerySet, $tt->Leaf1VisionPanel, $id);
+                            $elevTbl .= doorPlug1_2($tt->FireRating, $tt->IronmongerySet, $tt->Leaf1VisionPanel, $id, false, $tt->IntumescentNotSupplied ?? null);
 
                             $elevTbl .= '<td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
                                 <td style="padding:8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
