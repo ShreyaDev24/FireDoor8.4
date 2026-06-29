@@ -185,16 +185,30 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         }
 
 
-        $parseMeta = function($code) {
+        $parseMeta = function ($code) {
             $code = trim((string)$code);
-            $meta = ['width' => '', 'height' => ''];
-            if ($code === '') return $meta;
 
-            // Pattern: optional "<prefix>x", then "<width>x<height>x<thickness>"
-            if (preg_match('/^(?:[^x]+x)?(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)x(\d+(?:\.\d+)?)/', $code, $m)) {
-                $meta['width']  = $m[1] ?? '';
-                $meta['height'] = $m[2] ?? '';
+            $meta = [
+                'width'  => '',
+                'height' => '',
+            ];
+
+            if ($code === '') {
+                return $meta;
             }
+
+            $parts = explode('x', $code);
+
+            if (count($parts) == 4) {
+                // Format: PrefixxWidthxHeightxThickness
+                $meta['width']  = $parts[1];
+                $meta['height'] = $parts[2];
+            } elseif (count($parts) == 3) {
+                // Format: WidthxHeightxThickness
+                $meta['width']  = $parts[0];
+                $meta['height'] = $parts[1];
+            }
+
             return $meta;
         };
 
@@ -205,8 +219,25 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $codeFireRating = []; // store fire rating per code
 
         foreach ($item as $itemValue) {
-            $c1 = $itemValue->DoorDimensionsCode.'x'.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
-            if ($c1 && !isset($codeFireRating[$c1])) {
+
+            if (!empty($itemValue->DoorDimensionsCode)) {
+                // 4-part code
+                $c1 = implode('x', [
+                    trim($itemValue->DoorDimensionsCode),
+                    trim($itemValue->LeafWidth1),
+                    trim($itemValue->LeafHeight),
+                    trim($itemValue->LeafThickness),
+                ]);
+            } else {
+                // 3-part code
+                $c1 = implode('x', [
+                    trim($itemValue->LeafWidth1),
+                    trim($itemValue->LeafHeight),
+                    trim($itemValue->LeafThickness),
+                ]);
+            }
+
+            if (!isset($codeFireRating[$c1])) {
                 $codeFireRating[$c1] = $itemValue->FireRating ?? '';
             }
         }
