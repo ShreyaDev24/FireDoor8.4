@@ -307,6 +307,10 @@ class DoorDimensionCustomController extends Controller
         $selectedOption = SelectedDoordimension::find($request->selectedId);
 
         if ($selectedOption) {
+            dd(
+    $selectedOption->custome_door_selected_cost,
+    gettype($selectedOption->custome_door_selected_cost)
+);
 
             $costs = $selectedOption->custome_door_selected_cost ?? [];
 
