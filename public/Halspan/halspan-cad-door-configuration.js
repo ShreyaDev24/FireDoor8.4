@@ -312,11 +312,14 @@ const render = (CustomElement = null) => {
         var LeafWidth2ForMap = 0;
         var ScallopedHeight = parseInt($('input[name="ScallopedHeight"]').val(), 10) || 0 ;
         var RebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0 ;
-        var HeadFrameThickness = parseInt($('input[name="HeadFrameThickness"]').val(), 10) || 0 ;
-        var BottomFrameThickness = parseInt($('input[name="BottomFrameThickness"]').val(), 10) || 0 ;
+        var HeadFrameThickness = parseInt($('input[name="headframeThickness"]').val(), 10) || 0 ;
+        var BottomFrameThickness = parseInt($('input[name="bottomframeThickness"]').val(), 10) || 0 ;
         var oPHeigth = parseInt($('input[name="oPHeigth"]').val(), 10) || 0 ;
         if(HeadFrameThickness == 0){
             HeadFrameThickness = FrameThickness;
+        }
+        if(BottomFrameThickness == 0){
+            BottomFrameThickness = FrameThickness;
         }
 
         var LeafHeightNoOPForMap = 0;
@@ -345,11 +348,13 @@ const render = (CustomElement = null) => {
         }
 
         if (DoorSetType == 'SD') {
-            // 3-sided single door: rebated subtracts the rebate from the frame head thickness
+            // 3-sided single door leaf/door height (client spec)
             if ($("#frameType").val() == 'Rebated_Frame') {
-                LeafHeightNoOP = SOHeight - Tollerance - (FrameThickness - RebatedHeight) - Gap - UnderCut;
+                // Rebated Frame: SO HEIGHT - TOLERANCE - (FRAME HEAD THICKNESS - Rebate) - GAP - UNDERCUT
+                LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - Gap - UnderCut;
             } else {
-                LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - Gap - UnderCut;
+                // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - GAP - UNDERCUT
+                LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut;
             }
             $("#leafHeightNoOP").val(LeafHeightNoOP);
             console.log(LeafHeightNoOP,'no foursided, sd');
@@ -359,22 +364,25 @@ const render = (CustomElement = null) => {
         // The OP/FL sits above the door as a separate element, so it is not added here.
 
         let foursidedframe = document.getElementById("foursidedframe");
-        if (foursidedframe.checked) {
+        // When a saddle is required (activated), the frame calculation is the same as a 4-sided frame
+        let saddleRequired = ($('#Saddle').val() == 'Yes');
+        if (foursidedframe.checked || saddleRequired) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
             if (DoorSetType == 'SD') {
-                // 4-sided single door: frame head thickness + frame bottom thickness (both = frame thickness)
-                LeafHeightNoOP = SOHeight - Tollerance - FrameThickness - FrameThickness - (Gap * 2);
+                // 4 SIDED FRAME single door leaf/door height (client spec)
+                if ($("#frameType").val() == 'Rebated_Frame') {
+                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) - GAP x2
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - (Gap * 2);
+                } else {
+                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS - GAP x2
+                    LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - (Gap * 2);
+                }
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
                 console.log(LeafHeightNoOP,' foursided, sd');
             }
             // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
             if($("#frameType").val() == 'Rebated_Frame'){
-                if (DoorSetType === 'SD') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'sd')
-                }
-                else if (DoorSetType === 'DD') {
+                if (DoorSetType === 'DD') {
                     LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
                     $("#leafHeightNoOP").val(LeafHeightNoOP);
                     console.log(LeafHeightNoOP,'dd')

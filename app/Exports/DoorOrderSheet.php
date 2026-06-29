@@ -138,7 +138,9 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 str_replace('_', ' ', $value->LippingType),
                 $value->IntumescentLeapingSealType,
                 $value->rWdBRating,
-                ''
+                '',
+                $value->Saddle,
+                str_replace('_', ' ', $value->saddleLocation ?? '')
             );
 
             $k++;
@@ -176,6 +178,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     str_replace('_', ' ', $value->LippingType),
                     $value->IntumescentLeapingSealType,
                     $value->rWdBRating,
+                    '',
+                    '',
                     ''
                 );
 
@@ -342,7 +346,9 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 'Exposed or Concealed',
                 'Intumescent Seal Type',
                 'DB Rating',
-                'Notes'
+                'Notes',
+                'Saddle Req',
+                'Saddle Location'
             ];
         }
 
@@ -360,8 +366,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 // 🔹 Existing header styling
                 // ----------------------------
                 if($this->section != 'Summary'){
-                    $cellRange1 = 'A1:W1'; // main merged header
-                    $cellRange2 = 'A2:W2'; // column headings row
+                    $cellRange1 = 'A1:Y1'; // main merged header
+                    $cellRange2 = 'A2:Y2'; // column headings row
                 }else{
                     $cellRange1 = 'A1:H1'; // main merged header
                     $cellRange2 = 'A2:H2'; // column headings row
