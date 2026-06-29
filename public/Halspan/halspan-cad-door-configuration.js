@@ -369,16 +369,18 @@ const render = (CustomElement = null) => {
         if (foursidedframe.checked || saddleRequired) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
             if (DoorSetType == 'SD') {
-                // 4 SIDED FRAME single door leaf/door height (client spec)
+                // 4 SIDED FRAME / Door saddle single door leaf/door height (client spec).
+                // When a saddle is required, the undercut is ALSO subtracted; a plain 4-sided frame is not.
+                var saddleUndercut = saddleRequired ? (parseFloat(UnderCut) || 0) : 0;
                 if ($("#frameType").val() == 'Rebated_Frame') {
-                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) - GAP x2
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - (Gap * 2);
+                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) [- undercut if saddle] - GAP x2
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - (Gap * 2);
                 } else {
-                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS - GAP x2
-                    LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - (Gap * 2);
+                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS [- undercut if saddle] - GAP x2
+                    LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - (Gap * 2);
                 }
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
-                console.log(LeafHeightNoOP,' foursided, sd');
+                console.log(LeafHeightNoOP,' foursided/saddle, sd');
             }
             // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
             if($("#frameType").val() == 'Rebated_Frame'){
