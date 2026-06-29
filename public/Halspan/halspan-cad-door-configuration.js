@@ -347,8 +347,8 @@ const render = (CustomElement = null) => {
             }
         }
 
-        if (DoorSetType == 'SD') {
-            // 3-sided single door leaf/door height (client spec)
+        {
+            // 3-sided leaf/door height (client spec) - same rule for SD, DD and leaf-and-a-half
             if ($("#frameType").val() == 'Rebated_Frame') {
                 // Rebated Frame: SO HEIGHT - TOLERANCE - (FRAME HEAD THICKNESS - Rebate) - GAP - UNDERCUT
                 LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - Gap - UnderCut;
@@ -357,7 +357,7 @@ const render = (CustomElement = null) => {
                 LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut;
             }
             $("#leafHeightNoOP").val(LeafHeightNoOP);
-            console.log(LeafHeightNoOP,'no foursided, sd');
+            console.log(LeafHeightNoOP,'no foursided');
         }
 
         // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
@@ -368,33 +368,23 @@ const render = (CustomElement = null) => {
         let saddleRequired = ($('#Saddle').val() == 'Yes');
         if (foursidedframe.checked || saddleRequired) {
             LeafHeightNoOP = SOHeight - (Tollerance * 2) - (FrameThickness * 2) - (Gap * 2);
-            if (DoorSetType == 'SD') {
-                // 4 SIDED FRAME / Door saddle single door leaf/door height (client spec).
-                // When a saddle is required, the undercut is ALSO subtracted; a plain 4-sided frame is not.
+            {
+                // 4 SIDED FRAME / Door saddle leaf/door height (client spec) - same rule for SD, DD, leaf-and-a-half.
+                // Saddle: subtract the undercut and use GAP x1. Plain 4-sided frame: GAP x2, no undercut.
                 var saddleUndercut = saddleRequired ? (parseFloat(UnderCut) || 0) : 0;
+                var frameGap = saddleRequired ? Gap : (Gap * 2);
                 if ($("#frameType").val() == 'Rebated_Frame') {
-                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) [- undercut if saddle] - GAP x2
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - (Gap * 2);
+                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) [- undercut if saddle] - GAP
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - frameGap;
                 } else {
-                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS [- undercut if saddle] - GAP x2
-                    LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - (Gap * 2);
+                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS [- undercut if saddle] - GAP
+                    LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - frameGap;
                 }
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
-                console.log(LeafHeightNoOP,' foursided/saddle, sd');
+                console.log(LeafHeightNoOP,' foursided/saddle');
             }
             // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
-            if($("#frameType").val() == 'Rebated_Frame'){
-                if (DoorSetType === 'DD') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'dd')
-                }
-                else if (DoorSetType === 'leaf_and_a_half') {
-                    LeafHeightNoOP = SOHeight - Tollerance  - (FrameThickness * 2) - (Gap * 2) + (RebatedHeight * 2);
-                    $("#leafHeightNoOP").val(LeafHeightNoOP);
-                    console.log(LeafHeightNoOP,'leafandhalf')
-                }
-            }
+            // DD / leaf-and-a-half rebated are handled by the unified block above (same rule as single door).
         }
         if (LeafHeightNoOP == "") {
             LeafHeightNoOP = 0;
