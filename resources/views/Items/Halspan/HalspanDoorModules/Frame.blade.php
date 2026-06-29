@@ -203,6 +203,37 @@
                                                         value="@if(isset($Item['FrameHeight'])){{$Item['FrameHeight']}}@endif" readonly>
                                                 </div>
                                             </div>
+                                            <div class="col-md-6 framehideshow">
+                                                <div class="position-relative form-group">
+                                                    <label for="headframeThickness">Head Frame Thickness
+                                                        @if(!empty($tooltip->headframeThickness))
+                                                        <script type="text/javascript">
+                                                        document.write(Tooltip('{{$tooltip->headframeThickness}}'));
+                                                        </script>
+                                                        @endif
+                                                    </label>
+                                                    <input type="number" id="headframeThickness" name="headframeThickness" value="{{ isset($Item['HeadFrameThickness']) ? $Item['HeadFrameThickness'] : (isset($Item['FrameThickness']) ? $Item['FrameThickness'] : '') }}"                                                        class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="position-relative form-group">
+                                                    <label class="d-block mb-1" for="concealedOverheadCloser">Concealed overhead closer</label>
+                                                    <input type="checkbox" id="concealedOverheadCloser" name="concealedOverheadCloser" value="1" @if(!empty($Item['ConcealedOverheadCloser']) && $Item['ConcealedOverheadCloser'] == 1) checked @endif>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 framehideshow">
+                                                <div class="position-relative form-group">
+                                                    <label for="bottomframeThickness">bottom Frame Thickness
+                                                        @if(!empty($tooltip->bottomframeThickness))
+                                                        <script type="text/javascript">
+                                                        document.write(Tooltip('{{$tooltip->bottomframeThickness}}'));
+                                                        </script>
+                                                        @endif
+                                                    </label>
+                                                    <input type="number" id="bottomframeThickness" name="bottomframeThickness" value="{{ isset($Item['BottomFrameThickness']) ? $Item['BottomFrameThickness'] : (isset($Item['FrameThickness']) ? $Item['FrameThickness'] : '') }}"
+                                                        class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                                                </div>
+                                            </div>
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="frameDepth">Frame Depth (min 70)

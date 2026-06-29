@@ -192,6 +192,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $RebatedBottomDepth = $item[$i]->RebatedBottomDepth;
             $FrameWidth = $item[$i]->FrameWidth;
             $FrameHeight = $item[$i]->FrameHeight;
+            $HeadFrameThickness = $item[$i]->HeadFrameThickness ?? $item[$i]->FrameThickness;
+            $BottomFrameThickness  = $item[$i]->BottomFrameThickness ?? $item[$i]->FrameThickness;
             $FrameDepth = $item[$i]->FrameDepth;
             $FrameFinish = $item[$i]->FrameFinish;
             $FrameFinishColor = $item[$i]->FrameFinishColor;
@@ -405,6 +407,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $RebatedBottomDepth,
                 $FrameWidth,
                 $FrameHeight,
+                $HeadFrameThickness ,
+                $BottomFrameThickness ,
                 $FrameDepth,
                 $FrameFinish,
                 $FrameFinishColor,
@@ -516,7 +520,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -636,6 +640,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Rebated Bottom Depth  ',
             'Frame Width ',
             'Frame Height ',
+            'Head Frame Thickness ',
+            'Bottom Frame Thickness ',
             'Frame Depth ',
             'Frame Finish ',
             'Frame Finish Color ',
@@ -762,7 +768,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GP1'; // All headers
+                $cellRange = 'A1:GR1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -784,7 +790,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GP1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GR1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
