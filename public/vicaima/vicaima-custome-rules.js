@@ -3251,6 +3251,48 @@ function frameHeight(){
 
 }
 
+// New standard-frame height calc (client spec - "standard frame update").
+// Derives the SO / frame height from the door leaf height, with separate
+// head + bottom frame thickness and a saddle case. The original frameHeight()
+// above is left untouched; this is wired in instead of it at the call sites.
+//   3-sided : frame = leaf + gap   + undercut + head             (SO = frame + tolerance)
+//   4-sided : frame = leaf + gap*2 + head + bottom               (SO = frame + tolerance, no undercut)
+//   saddle  : frame = leaf + gap*2 + head + bottom + undercut    (SO = frame + tolerance)
+// Rebated frames subtract the rebate from head (and bottom for 4-sided / saddle).
+function frameHeightUpdated(){
+    var Gap = parseInt($('input[name="gap"]').val(), 10) || 0;
+    var FrameThickness = parseInt($('#frameThickness').val(), 10) || 0;
+    var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
+    var HeadFrameThickness = parseInt($('input[name="headframeThickness"]').val(), 10) || 0;
+    var BottomFrameThickness = parseInt($('input[name="bottomframeThickness"]').val(), 10) || 0;
+    if (HeadFrameThickness == 0) { HeadFrameThickness = FrameThickness; }
+    if (BottomFrameThickness == 0) { BottomFrameThickness = FrameThickness; }
+
+    var foursidedframe = document.getElementById("foursidedframe");
+    var saddleRequired = ($('#Saddle').val() == 'Yes');
+    var isRebated = ($("#frameType").val() == 'Rebated_Frame');
+
+    // Effective head / bottom thickness (rebated frames subtract the rebate).
+    var headEff = isRebated ? (HeadFrameThickness - rebatedHeight) : HeadFrameThickness;
+    var bottomEff = isRebated ? (BottomFrameThickness - rebatedHeight) : BottomFrameThickness;
+
+    var frameHeightVal;
+    if (foursidedframe && foursidedframe.checked) {
+        frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff;
+    } else if (saddleRequired) {
+        frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff + undercut;
+    } else {
+        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff;
+    }
+
+    $("#frameHeight").val(frameHeightVal);
+    $('#sOHeight').val(parseInt(frameHeightVal) + tollerance);
+    console.log(frameHeightVal, 'frameHeightUpdated', $("#frameType").val(), ((foursidedframe && foursidedframe.checked) ? '4-sided' : (saddleRequired ? 'saddle' : '3-sided')));
+}
+
 
 function filterHandling() {
     let pageId = pageIdentity();

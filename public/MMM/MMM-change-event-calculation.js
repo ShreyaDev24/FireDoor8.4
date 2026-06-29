@@ -621,7 +621,7 @@ $(".change-event-calulation").change(function(){
         let calculateFrameWidth = soWidth-(parseInt(tollerance)*TolleranceAdditionalNumberForFrameWidth);
         framewidth();
         $("#frameHeight").val(soHeight-tollerance);
-        frameHeight();
+        frameHeightUpdated();
         //  alert(soHeight);
         //  $("#frameDepth").val(soHeight);
          $("#extLinerFinish").val(frameFinish);
@@ -819,7 +819,7 @@ function doorDimensionCalculation1(){
 
     var so_height = parseInt($("#sOHeight").val());
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
-    frameHeight();
+    frameHeightUpdated();
 
     let elements = $(this);
     render(elements);
