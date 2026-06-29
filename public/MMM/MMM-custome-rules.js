@@ -3030,7 +3030,7 @@ function frameHeight(){
 // above is left untouched; this is wired in instead of it at the call sites.
 //   3-sided : frame = leaf + gap   + undercut + head             (SO = frame + tolerance)
 //   4-sided : frame = leaf + gap*2 + head + bottom               (SO = frame + tolerance, no undercut)
-//   saddle  : frame = leaf + gap*2 + head + bottom + undercut    (SO = frame + tolerance)
+//   saddle  : frame = leaf + gap   + undercut + head + bottom    (SO = frame + tolerance; gap x1 + undercut, bottom = saddle thickness)
 // Rebated frames subtract the rebate from head (and bottom for 4-sided / saddle).
 function frameHeightUpdated(){
     var Gap = parseInt($('input[name="gap"]').val(), 10) || 0;
@@ -3056,7 +3056,7 @@ function frameHeightUpdated(){
     if (foursidedframe && foursidedframe.checked) {
         frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff;
     } else if (saddleRequired) {
-        frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff + undercut;
+        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff + bottomEff;
     } else {
         frameHeightVal = leafHeightNoOP + Gap + undercut + headEff;
     }
