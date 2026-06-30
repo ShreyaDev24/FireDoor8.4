@@ -851,6 +851,31 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         $words = explode("|", (string) $value->Description);
         $row = [];
 
+        // Frame sheet: the [Head] row should show the HEAD frame thickness and the [Bottom]
+        // row the BOTTOM frame thickness in its Frame Size (depth x thickness x width).
+        // Read those values live from the item; if not set, leave the stored base thickness.
+        if ($category === 'Frame' && isset($words[0], $words[2])) {
+            $loc = trim($words[0]);
+            if ($loc === '[Head]' || $loc === '[Bottom]') {
+                $frameItem = Item::where('itemId', $value->itemId)
+                    ->where('QuotationId', $id)
+                    ->where('VersionId', $vid)
+                    ->first();
+                if ($frameItem) {
+                    $override = $loc === '[Head]'
+                        ? ($frameItem->HeadFrameThickness ?? null)
+                        : ($frameItem->BottomFrameThickness ?? null);
+                    if (!empty($override)) {
+                        $parts = explode(' x ', $words[2]);
+                        if (count($parts) === 3) {
+                            $parts[1] = $override . 'mm';
+                            $words[2] = implode(' x ', $parts);
+                        }
+                    }
+                }
+            }
+        }
+
         foreach ($fields as $field) {
             if (is_int($field)) {
                 // Cache $words[$field] to avoid repetitive access
