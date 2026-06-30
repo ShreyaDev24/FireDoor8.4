@@ -3283,7 +3283,8 @@ function frameHeightUpdated(){
     if (foursidedframe && foursidedframe.checked) {
         frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff;
     } else if (saddleRequired) {
-        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff + bottomEff;
+        // Saddle: head IS rebate-adjusted, but the saddle (bottom) is NOT rebated.
+        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff + BottomFrameThickness;
     } else {
         frameHeightVal = leafHeightNoOP + Gap + undercut + headEff;
     }
