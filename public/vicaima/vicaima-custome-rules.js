@@ -5325,12 +5325,21 @@ function doorDimensionCalculation(){
 
     // Door leaf H-leaf adjustment +gap+undercut+frame thickness+ Tolerance
 
-    var soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(undercut) + parseInt(frame_thickness) +  parseInt(tollerance);
-    console.log(soHeight,parseInt(leafHeightNoOP) , parseInt(gap) , parseInt(undercut) , parseInt(frame_thickness) , parseInt(tollerance),'hiihihi')
+    // Head / bottom frame thickness (fall back to the single frame thickness when not set)
+    var headFrameThickness = parseInt($('#headframeThickness').val(), 10) || parseInt(frame_thickness) || 0;
+    var bottomFrameThickness = parseInt($('#bottomframeThickness').val(), 10) || parseInt(frame_thickness) || 0;
+    var saddleRequired = ($('#Saddle').val() == 'Yes');
+
+    // 3-sided: Door leaf H + gap + undercut + frame head thickness + Tolerance
+    var soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(undercut) + headFrameThickness + parseInt(tollerance);
+    console.log(soHeight,parseInt(leafHeightNoOP) , parseInt(gap) , parseInt(undercut) , headFrameThickness , parseInt(tollerance),'hiihihi')
 
     if(IsFourSidedFrame){
-        // SO Height (4 sided frame)   Door leaf H-leaf adjustment +gapx2+frame thicknessX2 + Tolerance x1 (4 sided frame only)
-        soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(gap) + parseInt(frame_thickness) + + parseInt(frame_thickness) +  parseInt(tollerance);
+        // SO Height (4 sided frame): Door leaf H + gapx2 + frame head thickness + frame bottom thickness + Tolerance (no undercut)
+        soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(gap) + headFrameThickness + bottomFrameThickness + parseInt(tollerance);
+    } else if (saddleRequired){
+        // SO Height (saddle required): Door leaf H + gap + undercut + frame head thickness + frame bottom thickness + Tolerance
+        soHeight = parseInt(leafHeightNoOP) + parseInt(gap) + parseInt(undercut) + headFrameThickness + bottomFrameThickness + parseInt(tollerance);
     }
 
 
@@ -5459,7 +5468,19 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
             $("#sOWidth").val(so_width)
         }
 
-        var soHeight = parseInt(leafH) + parseInt(tollerance) + parseInt(frame_thickness) + parseInt(undercut) + parseInt(gap)
+        var headFrameThicknessB = parseInt($('#headframeThickness').val(), 10) || parseInt(frame_thickness) || 0;
+        var bottomFrameThicknessB = parseInt($('#bottomframeThickness').val(), 10) || parseInt(frame_thickness) || 0;
+        var saddleRequiredB = ($('#Saddle').val() == 'Yes');
+        var isFourSidedB = document.getElementById('foursidedframe').checked;
+        // 3-sided: leaf + gap + undercut + frame head thickness + Tolerance
+        var soHeight = parseInt(leafH) + parseInt(gap) + parseInt(undercut) + headFrameThicknessB + parseInt(tollerance);
+        if (isFourSidedB){
+            // 4-sided: leaf + gapx2 + head + bottom + Tolerance (no undercut)
+            soHeight = parseInt(leafH) + parseInt(gap) + parseInt(gap) + headFrameThicknessB + bottomFrameThicknessB + parseInt(tollerance);
+        } else if (saddleRequiredB){
+            // saddle: leaf + gap + undercut + head + bottom + Tolerance
+            soHeight = parseInt(leafH) + parseInt(gap) + parseInt(undercut) + headFrameThicknessB + bottomFrameThicknessB + parseInt(tollerance);
+        }
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
         frameHeight();
     }
