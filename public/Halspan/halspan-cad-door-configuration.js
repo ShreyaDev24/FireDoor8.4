@@ -375,7 +375,9 @@ const render = (CustomElement = null) => {
                 var frameGap = saddleRequired ? Gap : (Gap * 2);
                 if ($("#frameType").val() == 'Rebated_Frame') {
                     // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) [- undercut if saddle] - GAP
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - frameGap;
+                    // Saddle: head is rebate-adjusted, but the saddle (bottom) is subtracted RAW. A true 4-sided frame keeps (bottom - rebate).
+                    var bottomForCalc = saddleRequired ? BottomFrameThickness : (BottomFrameThickness - RebatedHeight);
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - bottomForCalc - saddleUndercut - frameGap;
                 } else {
                     // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS [- undercut if saddle] - GAP
                     LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - frameGap;
