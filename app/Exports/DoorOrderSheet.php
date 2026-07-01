@@ -41,6 +41,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         $k = 1;
         $data = [];
+        $rowLockType = []; // lock type aligned 1:1 with $data rows (used to group the cut list summary)
         foreach($item as $value){
 
             if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
@@ -140,6 +141,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->rWdBRating,
                 ''
             );
+            $rowLockType[] = $value->LockType ?? '';
 
             $k++;
 
@@ -178,6 +180,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->rWdBRating,
                     ''
                 );
+                $rowLockType[] = $value->LockType ?? '';
 
                 $k++;
             }
@@ -203,51 +206,104 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $leaf2Counts = [];
         $codeMeta    = []; // store width/height per code
         $codeFireRating = []; // store fire rating per code
+        $codeHandling = []; // store handling per code
+        $codeDoorSet = []; // store door set per code
+        $codeLockType = []; // store lock type per code
 
         foreach ($item as $itemValue) {
+            // dd($item);
             $c1 = $itemValue->DoorDimensionsCode.'x'.$itemValue->LeafWidth1.'x'.$itemValue->LeafHeight.'x'.$itemValue->LeafThickness;
             if ($c1 && !isset($codeFireRating[$c1])) {
                 $codeFireRating[$c1] = $itemValue->FireRating ?? '';
             }
+            if ($c1 && !isset($codeHandling[$c1])) {
+                $codeHandling[$c1] = $itemValue->Handing ?? '';
+            }
+            if ($c1 && !isset($codeDoorSet[$c1])) {
+                $codeDoorSet[$c1] = $itemValue->DoorType ?? '';
+            }
+            if ($c1 && !isset($codeLockType[$c1])) {
+                $codeLockType[$c1] = $itemValue->LockType ?? '';
+            }
         }
 
-        foreach ($data as $row) {
-            $c1 = $row[8] ?? '';  // PRODUCT CODE LEAF 1
-            $c2 = $row[9] ?? '';  // PRODUCT CODE LEAF 2
+        // Lock type is a (non-mandatory) grouping dimension for the cut list summary.
+        // Build a composite key "<product code>||<lock type>" so doors that share dimensions
+        // but differ in lock type get their own summary row. Empty lock types group together,
+        // preserving the previous behaviour when lock type isn't populated.
+        $codeKeyLock = []; // composite key => lock type (for splitting the key back out)
+        $makeKey = function($code, $lockType) {
+            return $code . '||' . $lockType;
+        };
+
+        foreach ($data as $rowIndex => $row) {
+            $c1 = $row[9] ?? '';  // PRODUCT CODE LEAF 1
+            $c2 = $row[10] ?? '';  // PRODUCT CODE LEAF 2
             $opLeafExist = $row[4] ?? '';  // PRODUCT CODE LEAF 2
             $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
+            $lockType = $rowLockType[$rowIndex] ?? ''; // lock type for this row
 
             // ✅ Leaf 1 logic
             if ($c1) {
-                $leaf1Counts[$c1] = ($leaf1Counts[$c1] ?? 0) + 1;
-                if (!isset($codeMeta[$c1])) $codeMeta[$c1] = $parseMeta($c1);
+                $key = $makeKey($c1, $lockType);
+                $leaf1Counts[$key] = ($leaf1Counts[$key] ?? 0) + 1;
+                if (!isset($codeMeta[$key])) $codeMeta[$key] = $parseMeta($c1);
+                $codeKeyLock[$key] = $lockType;
             }
 
             // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
             // Leaf 2 should count ONLY when PRODUCT CODE LEAF 2 exists
             if ($c2) {
                 if(!str_contains($opLeafExist, 'OP LEAF SIZE')){
-                    $leaf2Counts[$c2] = ($leaf2Counts[$c2] ?? 0) + 1;
-                    if (!isset($codeMeta[$c2])) $codeMeta[$c2] = $parseMeta($c2);
+                    $key = $makeKey($c2, $lockType);
+                    $leaf2Counts[$key] = ($leaf2Counts[$key] ?? 0) + 1;
+                    if (!isset($codeMeta[$key])) $codeMeta[$key] = $parseMeta($c2);
+                    $codeKeyLock[$key] = $lockType;
                 }
             }
         }
 
-        // Union of all codes (preserve a stable order)
+        // Union of all composite keys (preserve a stable order)
         $allCodes = array_values(array_unique(array_merge(array_keys($leaf1Counts), array_keys($leaf2Counts))));
 
         // Build summary rows
         $summaryRows = [];
-        foreach ($allCodes as $code) {
-            $l1Count = $leaf1Counts[$code] ?? 0;
-            $l2Count = $leaf2Counts[$code] ?? 0;
+        foreach ($allCodes as $key) {
+            $l1Count = $leaf1Counts[$key] ?? 0;
+            $l2Count = $leaf2Counts[$key] ?? 0;
 
-            $meta   = $codeMeta[$code] ?? $parseMeta($code);
+            // Split the composite key back into product code + lock type
+            $lockType = $codeKeyLock[$key] ?? '';
+            $code     = ($pos = strrpos($key, '||')) !== false ? substr($key, 0, $pos) : $key;
+
+            $meta   = $codeMeta[$key] ?? $parseMeta($code);
             $width  = $meta['width'];
             $height = $meta['height'];
-            $fireRating = $codeFireRating[$code] ?? '';
 
-            // Show width under the side that actually has a count
+            $matchedItem = $item->first(function ($itemValue) use ($code, $lockType) {
+                if (($itemValue->LockType ?? '') !== $lockType) {
+                    return false;
+                }
+
+                $leaf1Code = $itemValue->DoorDimensionsCode . 'x' . $itemValue->LeafWidth1 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                $leaf1CodeAlt = $itemValue->LeafWidth1 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+
+                $leaf2Code = '';
+                $leaf2CodeAlt = '';
+
+                if (!empty($itemValue->LeafWidth2)) {
+                    $leaf2Code = $itemValue->DoorDimensionsCode2 . 'x' . $itemValue->LeafWidth2 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                    $leaf2CodeAlt = $itemValue->LeafWidth2 . 'x' . $itemValue->LeafHeight . 'x' . $itemValue->LeafThickness;
+                }
+
+                return in_array($code, [$leaf1Code, $leaf1CodeAlt, $leaf2Code, $leaf2CodeAlt]);
+            });
+
+            $fireRating = $matchedItem->FireRating ?? '';
+            $handling   = $matchedItem->Handing ?? '';
+            $doorSet    = $matchedItem->DoorType ?? '';
+            // $lockType already resolved from the composite key above
+
             $leaf1Width = $l1Count > 0 ? $width : '';
             $leaf2Width = $l2Count > 0 ? $width : '';
 
@@ -255,16 +311,21 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $summaryRows[] = [
                 $code,           // Summary (Product Code)
-                $fireRating,             // Fire Rating
-                $leaf1Width, $l1Count,   // Leaf 1 | Count
-                $leaf2Width, $l2Count,   // Leaf 2 | Count
-                $height,                // Height
-                $gt                     // GT
+                $fireRating,
+                $doorSet,
+                $handling,
+                $leaf1Width,
+                $l1Count,
+                $leaf2Width,
+                $l2Count,
+                $height,
+                $lockType,
+                $gt,                    // GT
             ];
         }
 
         // Header row for summary
-        $summaryHeader = ['Summary','Fire Rating','Leaf 1','Count','Leaf 2','Count','Height','GT'];
+        $summaryHeader = ['Summary','Fire Rating','Doorset Type','Handling','Leaf 1','Count','Leaf 2','Count','Height','Lock Type','GT'];
 
         if($this->section != 'Summary'){
             // Merge: main rows + blank separator + summary header + summary rows
@@ -373,7 +434,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
                 if ($summaryHeaderRow) {
                     // Make the summary header bold, centered, with light gray fill
-                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':H' . $summaryHeaderRow)->applyFromArray([
+                    $event->sheet->getStyle('A' . $summaryHeaderRow . ':K' . $summaryHeaderRow)->applyFromArray([
                         'font' => ['bold' => true],
                         'alignment' => [
                             'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,

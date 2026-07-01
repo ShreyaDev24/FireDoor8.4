@@ -571,6 +571,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 return implode('|', [
                     $row->SpeciesName,
                     $row->FireRating,
+                    $row->Handing,
                     $row->FrameHeight,
                     $row->FrameWidth,
                     $row->FrameDepth
@@ -581,6 +582,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 return [
                     $first->SpeciesName ?? '',
                     $first->FireRating ?? '',
+                    $first->Handing ?? '',
                     $first->FrameHeight ?? '',
                     $first->FrameWidth ?? '',
                     $first->FrameDepth ?? '',
@@ -594,6 +596,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $summaryHeader = [
             'Frame Material',
             'Fire Rating',
+            'Handling',
             'O/A Frame Height',
             'O/A Frame Width',
             'Frame Depth',
@@ -610,7 +613,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             // Add summary rows
             $totalQty = 0;
             foreach ($summaryData as $row) {
-                $totalQty += $row[5]; // sum qty
+                $totalQty += $row[6]; // sum qty
                 $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
             }
         }else{
@@ -622,7 +625,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             // Add summary rows
             $totalQty = 0;
             foreach ($summaryData as $row) {
-                $totalQty += $row[5]; // sum qty
+                $totalQty += $row[6]; // sum qty
                 $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
             }
         }
@@ -748,13 +751,13 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Gray background + bold for Summary table header
                     if ($val === 'Frame Material') {
-                        $sheet->getStyle("A{$i}:F{$i}")->applyFromArray($summaryHeaderStyle);
+                        $sheet->getStyle("A{$i}:G{$i}")->applyFromArray($summaryHeaderStyle);
                     }
 
                     // ✅ Optional: green merge bar for the "Summary" label row
                     if ($val === 'Summary') {
-                        $sheet->mergeCells("A{$i}:F{$i}");
-                        $sheet->getStyle("A{$i}:F{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:G{$i}");
+                        $sheet->getStyle("A{$i}:G{$i}")->applyFromArray($mainTitleStyle);
                     }
                 }
             },
