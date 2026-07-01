@@ -1510,6 +1510,71 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
 
 }
 
+/**
+ * Recompute an item's leaf_price_delta after its BOM has been regenerated.
+ *
+ * The quote schedule displays leaf_price_delta (when non-zero) in preference to
+ * DoorsetPrice. It is normally produced by DoorScheduleController@adjustFinalLeafPrice
+ * from the manually-entered leaf cost (leaf_price_delta_adjust), and that value bakes
+ * in the currency rate. BOMUpdate() regenerates every BOM row at the standard leaf
+ * cost, so after a currency change we must re-apply the manual leaf cost to the
+ * LeafSetBesPoke row and roll the item's sell price back up — otherwise the screen
+ * keeps showing the pre-conversion leaf_price_delta and the total never moves.
+ */
+function recalcLeafPriceDelta($data, $userLoginId = null): void {
+    $adjustValue = floatval($data->leaf_price_delta_adjust ?? 0);
+    if ($adjustValue == 0) {
+        return; // no manual leaf adjustment -> nothing to re-scale
+    }
+
+    $UserId        = $userLoginId ?? Auth::user()->id;
+    $currencyPrice = getCurrencyRate($data->QuotationId, $UserId);
+
+    $ItemMaster = ItemMaster::where('itemID', $data->itemId)->count();
+    $ItemMaster = max(1, $ItemMaster); // prevent divide-by-zero
+
+    $qtyOfD = ($data->DoorsetType == 'DD') ? (2 * $ItemMaster) : (1 * $ItemMaster);
+    $total  = $adjustValue * $qtyOfD;
+
+    $versionNumber = 0;
+    if ($data->VersionId > 0) {
+        $versionNumber = QuotationVersion::where('id', $data->VersionId)->value('version') ?? 0;
+    }
+
+    $bom = BOMCalculation::where('QuotationId', $data->QuotationId)
+        ->where('VersionId', $versionNumber)
+        ->where('itemId', $data->itemId)
+        ->where('Category', 'LeafSetBesPoke')
+        ->first();
+
+    if (!$bom) {
+        return; // no leaf line to adjust
+    }
+
+    // Reuse the margin already computed for this freshly regenerated BOM row so the
+    // leaf price stays consistent with the rest of the door's pricing.
+    $denominator = (1 - ($bom->Margin / 100));
+    $denominator = $denominator == 0 ? 1 : $denominator;
+
+    $bom->UnitCost      = round(($adjustValue * $currencyPrice), 2);
+    $bom->TotalCost     = round(($total * $currencyPrice), 2);
+    $bom->UnitPriceSell = round((($adjustValue * $currencyPrice) / $denominator), 2);
+    $bom->GTSellPrice   = round((($total * $currencyPrice) / $denominator), 2);
+    $bom->save();
+
+    $GTSellPrice = BOMCalculation::where('QuotationId', $data->QuotationId)
+        ->where('DoorType', $data->DoorType)
+        ->where('itemId', $data->itemId)
+        ->where('Category', '!=', 'Ironmongery&MachiningCosts')
+        ->sum('GTSellPrice');
+
+    $GTSellPriceTotal = round($GTSellPrice / $ItemMaster, 2);
+
+    Item::where('itemId', $data->itemId)->update([
+        'leaf_price_delta' => $GTSellPriceTotal,
+    ]);
+}
+
 function BomCalculationDeanta($request,$userLoginId=null): void{
     $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {

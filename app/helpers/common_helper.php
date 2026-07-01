@@ -2571,14 +2571,15 @@ function getCurrencyRate($QuotationId,$userLoginId=null){
     $project = Project::where('id', $quotation->ProjectId)->value('projectCurrency');
     $quotationCurrency = $quotation->Currency;
     $currencyPrice = 1;
-    if(!empty($project)){
-        if (!empty($quotationCurrency)) {
-            if($quotationCurrency != $currency){
-                $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
-            }
-        } elseif ($project != $currency) {
+    // Apply the exchange rate whenever the quotation is in a currency other than
+    // the base currency. The quotation's own currency takes precedence; the linked
+    // project's currency is only used as a fallback when the quotation has none.
+    if (!empty($quotationCurrency)) {
+        if ($quotationCurrency != $currency) {
             $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
         }
+    } elseif (!empty($project) && $project != $currency) {
+        $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
     }
 
     return $currencyPrice;

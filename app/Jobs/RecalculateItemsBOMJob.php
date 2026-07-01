@@ -50,7 +50,7 @@ class RecalculateItemsBOMJob implements ShouldQueue
                 $itemCount = max(1, $itemCount); // prevent divide-by-zero
 
                 $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
-                $GTSellPriceTotal = round($GTSellPrice / $itemCount, 2);
+
                 if($data->AdjustPrice  != 0 || $data->AdjustPrice  != null){
                     if($this->existCurrency == null){
                             Item::where('itemId', $itemid)->update([
@@ -77,6 +77,12 @@ class RecalculateItemsBOMJob implements ShouldQueue
                     }
 
                 }
+
+                // Re-apply the manual leaf cost at the new currency so the displayed
+                // price (leaf_price_delta) also reflects the conversion. Must run AFTER
+                // DoorsetPrice is computed above, because it overwrites the LeafSetBesPoke
+                // BOM row with the manual leaf cost (which DoorsetPrice must not include).
+                recalcLeafPriceDelta($data, $this->userLoginId);
             }
         }
 
