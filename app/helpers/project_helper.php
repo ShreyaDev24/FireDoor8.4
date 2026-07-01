@@ -1511,67 +1511,40 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
 }
 
 /**
- * Recompute an item's leaf_price_delta after its BOM has been regenerated.
+ * Scale an item's leaf_price_delta when the quote's currency changes.
  *
  * The quote schedule displays leaf_price_delta (when non-zero) in preference to
- * DoorsetPrice. It is normally produced by DoorScheduleController@adjustFinalLeafPrice
- * from the manually-entered leaf cost (leaf_price_delta_adjust), and that value bakes
- * in the currency rate. BOMUpdate() regenerates every BOM row at the standard leaf
- * cost, so after a currency change we must re-apply the manual leaf cost to the
- * LeafSetBesPoke row and roll the item's sell price back up — otherwise the screen
- * keeps showing the pre-conversion leaf_price_delta and the total never moves.
+ * DoorsetPrice, but the currency recalc used to update only DoorsetPrice, so the
+ * screen never moved on a currency switch. leaf_price_delta is treated as the value
+ * in the user's base currency; here we simply multiply it by (newRate / oldRate) so
+ * GBP->EUR scales it up and EUR->GBP returns it to the exact base value. Using a pure
+ * ratio (rather than recomputing from the BOM) keeps the manually-adjusted amount
+ * intact and makes currency toggling fully reversible.
  */
-function recalcLeafPriceDelta($data, $userLoginId = null): void {
-    $adjustValue = floatval($data->leaf_price_delta_adjust ?? 0);
-    if ($adjustValue == 0) {
-        return; // no manual leaf adjustment -> nothing to re-scale
+function recalcLeafPriceDelta($data, $userLoginId = null, $existCurrency = null): void {
+    $leafDelta = floatval($data->leaf_price_delta ?? 0);
+    if ($leafDelta == 0) {
+        return; // no leaf price to scale
     }
 
-    $UserId        = $userLoginId ?? Auth::user()->id;
-    $currencyPrice = getCurrencyRate($data->QuotationId, $UserId);
+    $UserId  = $userLoginId ?? Auth::user()->id;
+    $setting = SettingCurrency::where('UserId', $UserId)->first();
+    $base    = empty($setting) ? '£_GBP' : $setting->currency;
+    $rate    = $setting->SetCurrencyRate ?? 1;
 
-    $ItemMaster = ItemMaster::where('itemID', $data->itemId)->count();
-    $ItemMaster = max(1, $ItemMaster); // prevent divide-by-zero
+    $newCurrency = Quotation::where('id', $data->QuotationId)->value('Currency');
 
-    $qtyOfD = ($data->DoorsetType == 'DD') ? (2 * $ItemMaster) : (1 * $ItemMaster);
-    $total  = $adjustValue * $qtyOfD;
-
-    $versionNumber = 0;
-    if ($data->VersionId > 0) {
-        $versionNumber = QuotationVersion::where('id', $data->VersionId)->value('version') ?? 0;
+    // Any currency other than the user's base currency uses SetCurrencyRate; base = 1.
+    $oldRate = (empty($existCurrency) || $existCurrency == $base) ? 1 : $rate;
+    $newRate = (empty($newCurrency)   || $newCurrency   == $base) ? 1 : $rate;
+    if ($oldRate == 0) {
+        $oldRate = 1; // guard against divide-by-zero
     }
 
-    $bom = BOMCalculation::where('QuotationId', $data->QuotationId)
-        ->where('VersionId', $versionNumber)
-        ->where('itemId', $data->itemId)
-        ->where('Category', 'LeafSetBesPoke')
-        ->first();
-
-    if (!$bom) {
-        return; // no leaf line to adjust
-    }
-
-    // Reuse the margin already computed for this freshly regenerated BOM row so the
-    // leaf price stays consistent with the rest of the door's pricing.
-    $denominator = (1 - ($bom->Margin / 100));
-    $denominator = $denominator == 0 ? 1 : $denominator;
-
-    $bom->UnitCost      = round(($adjustValue * $currencyPrice), 2);
-    $bom->TotalCost     = round(($total * $currencyPrice), 2);
-    $bom->UnitPriceSell = round((($adjustValue * $currencyPrice) / $denominator), 2);
-    $bom->GTSellPrice   = round((($total * $currencyPrice) / $denominator), 2);
-    $bom->save();
-
-    $GTSellPrice = BOMCalculation::where('QuotationId', $data->QuotationId)
-        ->where('DoorType', $data->DoorType)
-        ->where('itemId', $data->itemId)
-        ->where('Category', '!=', 'Ironmongery&MachiningCosts')
-        ->sum('GTSellPrice');
-
-    $GTSellPriceTotal = round($GTSellPrice / $ItemMaster, 2);
+    $scaled = round($leafDelta * ($newRate / $oldRate), 2);
 
     Item::where('itemId', $data->itemId)->update([
-        'leaf_price_delta' => $GTSellPriceTotal,
+        'leaf_price_delta' => $scaled,
     ]);
 }
 

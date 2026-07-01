@@ -78,11 +78,10 @@ class RecalculateItemsBOMJob implements ShouldQueue
 
                 }
 
-                // Re-apply the manual leaf cost at the new currency so the displayed
-                // price (leaf_price_delta) also reflects the conversion. Must run AFTER
-                // DoorsetPrice is computed above, because it overwrites the LeafSetBesPoke
-                // BOM row with the manual leaf cost (which DoorsetPrice must not include).
-                recalcLeafPriceDelta($data, $this->userLoginId);
+                // Scale the displayed leaf price by the currency change so the schedule
+                // total (which shows leaf_price_delta) reflects the conversion too, not
+                // just DoorsetPrice. Pure ratio -> fully reversible on GBP<->EUR toggles.
+                recalcLeafPriceDelta($data, $this->userLoginId, $this->existCurrency);
             }
         }
 
