@@ -1314,6 +1314,7 @@ class ItemListController extends Controller
                         'IntumescentLeapingSealColor'           => $request->intumescentSealColor,
                         'IntumescentLeapingSealArrangement'     => $request->intumescentSealArrangement,
                         'intumescentSealMeetingEdges'     => $request->intumescentSealMeetingEdges,
+                        'IntumescentSealFireratedTest'                => $request->fireratedtestes,
 
                     //Accoustics
                         'Accoustics'                            => $request->accoustics,
@@ -1622,6 +1623,7 @@ class ItemListController extends Controller
                         $item->IntumescentLeapingSealColor = $request->intumescentSealColor;
                         $item->IntumescentLeapingSealArrangement = $request->intumescentSealArrangement;
                         $item->intumescentSealMeetingEdges = $request->intumescentSealMeetingEdges;
+                        $item->IntumescentSealFireratedTest = $request->fireratedtestes;
 
                     //Accoustics
                         $item->Accoustics = $request->accoustics;
