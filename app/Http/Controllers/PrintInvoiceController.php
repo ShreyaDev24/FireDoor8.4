@@ -7782,16 +7782,22 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
     {
         $quotaion = Quotation::where('id', $quatationId)->first();
         $QuotationGenerationId = $quotaion->QuotationGenerationId;
-        if($quotaion->configurableitems == 4){
-            return Excel::download(new InvoiceInExcelVicaima($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ]);
-        }else{
-            return Excel::download(new InvoiceInExcel($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
-            [
-                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-            ]);
-        }
+
+        return Excel::download(new InvoiceInExcel($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
+
+    public function printinvoiceinexcelStandard($quatationId, $versionID)
+    {
+        $quotaion = Quotation::where('id', $quatationId)->first();
+        $QuotationGenerationId = $quotaion->QuotationGenerationId;
+
+        return Excel::download(new InvoiceInExcelVicaima($quatationId, $versionID), $QuotationGenerationId . '.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+        [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+
     }
 }

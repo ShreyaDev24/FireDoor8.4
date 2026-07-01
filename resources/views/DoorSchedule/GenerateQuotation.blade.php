@@ -123,7 +123,9 @@
                                                 <li><a href="javascript:void(0);" onClick="CreateRivisionQuotation();">Create Revision Quotation</a></li>
                                             @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
-                                                    Doorset Schedule Excel</a></li>
+                                                    Doorset Schedule Excel Custom</a></li>
+                                            <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcelStandard();">Generate
+                                                    Doorset Schedule Excel Standard</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
                                                     Calculation</a></li>
@@ -1042,6 +1044,8 @@
     <input type="hidden" name="shortQuoteUrl" id="shortQuoteUrl" value="{{ url('/quotation/shortquote') }}" />
     <input type="hidden" name="printInvoiceExcelUrl" id="printInvoiceExcelUrl"
         value="{{ url('/quotation/printinvoiceinexcel') }}" />
+    <input type="hidden" name="printInvoiceExcelStandardUrl" id="printInvoiceExcelStandardUrl"
+        value="{{ url('/quotation/printinvoiceinexcelStandard') }}" />
     <input type="hidden" id="sendToClientUrl" value="{{ route('sendToClientUrl') }}" />
     <input type="hidden" name="buildofmaterialUrl" id="buildofmaterialUrl"
         value="{{ url('/quotation/generateBOM2') }}" />

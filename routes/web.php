@@ -480,6 +480,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/printinvoice/{v}/{qid}/{isActive?}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoice'])->name('printinvoice');
     Route::get('/shortquote/{v}/{qid}', [App\Http\Controllers\ShortQuoteController::class,'shortquote'])->name('shortquote');
     Route::get('/printinvoiceinexcel/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcel'])->name('printinvoiceinexcel');
+    Route::get('/printinvoiceinexcelStandard/{v}/{qid}', [App\Http\Controllers\PrintInvoiceController::class,'printinvoiceinexcelStandard'])->name('printinvoiceinexcelStandard');
 
     Route::post('/testprintinvoice', [App\Http\Controllers\PrintInvoiceController::class,'testprintinvoice'])->name('testprintinvoice');
 

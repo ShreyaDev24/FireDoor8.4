@@ -52,64 +52,25 @@ $(function(){
         let printInvoiceExcelUrl = $("#printInvoiceExcelUrl").val();
         let bomTag = $("#bomTag").val();
         if (currentVersion != 0) {
-            // if(bomTag > 0){
-                var url = printInvoiceExcelUrl + '/' + quotationId + '/' + currentVersion;
-                let filename = "DoorsetExcel.xlsx";
-                // window.open(url, '_blank');
-                // var request = new XMLHttpRequest();
-                // request.onreadystatechange = function() {
-                //     console.log(request.readyState);
-                //     if(request.readyState == 4) {
-                //         if(request.status == 200) {
-                //             console.log(request.response); // should be a blob
-                //             var blob = request.response;
-                //             var link = document.createElement('a');
-                //             link.href = window.URL.createObjectURL(blob);
-                //             link.download = "DoorsetExcel.pdf";
-                //             link.click();
-                //             $('.loader').css({'display':'none'});
-                //         } else if(request.responseText != "") {
-                //             console.log(request.responseText);
-                //         }
-                //     } else if(request.readyState == 2) {
-                //         if(request.status == 200) {
-                //             request.responseType = "blob";
-                //             var blob = request.response;
-                //             var link = document.createElement('a');
-                //             link.href = window.URL.createObjectURL(blob);
-                //             link.download = "DoorsetExcel.pdf";
-                //             link.click();
-                //             $('.loader').css({'display':'none'});
-                //         } else {
-                //             request.responseType = "text";
-                //         }
-                //     }
-                // };
-                // request.open("GET", url, true);
-                // request.send();
+            var url = printInvoiceExcelUrl + '/' + quotationId + '/' + currentVersion;
+            let filename = "DoorsetExcel.xlsx";
 
-                convertToAudio(url , filename);
+            convertToAudio(url , filename);
+        } else {
+            $('.loader').css({'display':'none'});
+            swal("Oops!", "You haven't selected any version yet.", "error");
+        }
+    }
 
+    PrintInvoiceInExcelStandard = function(){
+        $('.loader').css({'display':'block'});
+        let printInvoiceExcelUrl = $("#printInvoiceExcelStandardUrl").val();
+        let bomTag = $("#bomTag").val();
+        if (currentVersion != 0) {
+            var url = printInvoiceExcelUrl + '/' + quotationId + '/' + currentVersion;
+            let filename = "DoorsetExcel.xlsx";
 
-                // $.ajax({
-                //     type: 'GET',
-                //     url: url,
-                //     success: function(response){
-                //         var blob = new Blob([response]);
-                //         var link = document.createElement('a');
-                //         link.href = window.URL.createObjectURL(blob);
-                //         link.download = "Sample.pdf";
-                //         link.click();
-                //     },
-                //     error: function(blob){
-                //         console.log(blob);
-                //     }
-                // });
-
-            // } else {
-            //     $('.loader').css({'display':'none'});
-            //     swal("Oops!", "Please generate Bill Of Material.", "error");
-            // }
+            convertToAudio(url , filename);
         } else {
             $('.loader').css({'display':'none'});
             swal("Oops!", "You haven't selected any version yet.", "error");
