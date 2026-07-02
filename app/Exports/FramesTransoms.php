@@ -75,9 +75,14 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $effectiveFrameThickness = $effectiveFrameThickness - floatval($rebate ?? 0);
             }
 
+            // MS is always a deduction. The stored joint value can arrive negative
+            // (e.g. -32), and "- (-32)" would add it back instead of subtracting.
+            // Normalise with abs() so MS is subtracted regardless of its stored sign.
+            $ms = abs(floatval($ms ?? 0));
+
             return floatval($frameHeight ?? 0)
                 - ($effectiveFrameThickness * $thicknessCount)
-                - floatval($ms ?? 0);
+                - $ms;
         };
 
         $k = 1;
