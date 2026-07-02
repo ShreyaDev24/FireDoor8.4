@@ -476,14 +476,6 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             }
         }
 
-        dd([
-    'FrameHeight' => $value->FrameHeight,
-    'FrameThickness' => $value->FrameThickness,
-    'Rebate' => $value->RebatedHeight,
-    'FrameType' => $value->FrameType,
-    'MS' => $Height
-]);
-
         // Blank row
         $data[] = array_fill(0, 32, '');
         $data[] = array_fill(0, 32, '');
