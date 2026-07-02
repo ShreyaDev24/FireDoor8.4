@@ -980,7 +980,7 @@ class PrintInvoiceController extends Controller
         // // ->where('items.itemId',2342) to see particular quote
         // ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
 
-        $ed = Items::join('item_master','item_master.itemID','=','items.itemId')
+        $ed = Item::join('item_master','item_master.itemID','=','items.itemId')
             ->join('quotation','quotation.id','=','items.QuotationId')
             ->where('items.QuotationId', $quatationId)
             ->where('items.VersionId', $versionID)
