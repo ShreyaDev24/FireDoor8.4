@@ -66,7 +66,10 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $k = 1;
         $data = [];
 
-        $data[] = array_fill(0, 32, '');
+        // NOTE: the first row must have a non-empty cell A1, otherwise maatwebsite's
+        // chunked writer (1000 rows/chunk) sees cellExists('A1') === false via hasRows()
+        // and every chunk after the first overwrites from A1 - corrupting/truncating
+        // any sheet with more than 1000 rows. So the title goes on row 1 (no blank row).
         $data[] = array_merge(['Frames and Transoms'], array_fill(0, 31, ''));
 
         $data[] = [ // Row 2 - Actual column headings
