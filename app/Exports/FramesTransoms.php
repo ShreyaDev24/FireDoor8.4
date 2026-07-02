@@ -124,20 +124,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         ];
 
         foreach ($item as $value) {
-             $ms = floatval($Height ?? 0);
-            if ($ms < 0) {
-                $ms = abs($ms);
-            }
+             $ms = abs(floatval($Height ?? 0));
 
-            $frameThickness = floatval($value->FrameThickness ?? 0);
-
-            if ($value->FrameType == 'Rebated_Frame') {
-                $frameThickness = $frameThickness - floatval($value->RebatedHeight ?? 0);
-            }
-
-            $leg = floatval($value->FrameHeight ?? 0)
-                - $frameThickness
-                - $ms;
+            $leg = $calculateLeg(
+                $value->FrameHeight,
+                $value->FrameThickness,
+                $ms,
+                $value->FrameType,
+                $value->RebatedHeight
+            );
             $head = $value->FrameWidth + $value->Width;
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
             $cutSizeH = 0;
