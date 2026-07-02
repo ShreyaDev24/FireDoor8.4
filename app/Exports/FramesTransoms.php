@@ -466,33 +466,38 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $data[] = array_fill(0, 32, '');
 
 
-        // SCREEN INFO header row (merged A:AF later)
-        $data[] = array_merge(['SCREEN INFO'], array_fill(0, 11, ''));
+        // SCREEN INFO section - only render its heading + column header when
+        // there are actually side screens, otherwise it shows as a stray
+        // heading floating between the frame list and the Summary.
+        if (!empty($this->result) && count($this->result) > 0) {
+            // SCREEN INFO header row (merged A:U later)
+            $data[] = array_merge(['SCREEN INFO'], array_fill(0, 11, ''));
 
-        // Screen info column headers
-        $data[] = array_merge([
-            'S.No',
-            'Screen No',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Screen Type',
-            'Frame Material/Finish',
-            'Frame Finish',
-            'Qty Per Screen Type',
-            'Quantity of screen types',
-            'Screen Dims ',
-            'O/A Frame Height',
-            'O/A Frame Width',
-            'Frame Thickness',
-            'Frame Depth',
-            'Leg x 2',
-            'Head',
-            'Transom',
-            'Transom QTY',
-            'Mullion',
-            'Mullion QTY',
-            'Notes',
-        ], array_fill(0, 32 - 18, ''));
+            // Screen info column headers (21 labels -> pad to 32 columns)
+            $data[] = array_merge([
+                'S.No',
+                'Screen No',
+                'Plot Number/Ref',
+                'IFC/Certifire No/Q mark Plug',
+                'Screen Type',
+                'Frame Material/Finish',
+                'Frame Finish',
+                'Qty Per Screen Type',
+                'Quantity of screen types',
+                'Screen Dims ',
+                'O/A Frame Height',
+                'O/A Frame Width',
+                'Frame Thickness',
+                'Frame Depth',
+                'Leg x 2',
+                'Head',
+                'Transom',
+                'Transom QTY',
+                'Mullion',
+                'Mullion QTY',
+                'Notes',
+            ], array_fill(0, 32 - 21, ''));
+        }
          $j = 1;
         foreach($this->result as $value){
             $screenNumber = $value->screenNumber;

@@ -114,6 +114,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                     ($value->Leaf1VPHeight5 || $value->Leaf2VPHeight5) ? (($value->Leaf1VPHeight5)?1:0) + (($value->Leaf2VPHeight5)?1:0) : '',
                     $value->rWdBRating ? $value->rWdBRating : '',
+                    $value->FireRating,
                 );
 
 
@@ -159,6 +160,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
+                    $value->FireRating,
                 );
             }
 
@@ -203,6 +205,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
+                    $value->FireRating,
                 );
             }
 
@@ -248,6 +251,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                     '',
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
+                    $value->FireRating,
                 );
             }
         }
@@ -268,9 +272,21 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'VP5' => ['H' => 15, 'W' => 7, 'Q' => 16],
             ];
 
+            // Group by glass type AND the aperture sizes on this row. The same
+            // glass used on doors of different fire ratings gets a different
+            // aperture size (e.g. FD30 -6 vs FD60 -9), so keying on size keeps
+            // them as separate summary lines instead of the last one overwriting.
+            $fireRating = $row[18] ?? '';
+            $sizeSig = ($row[6] ?? '').'x'.($row[7] ?? '')
+                .'|'.($row[9] ?? '').'|'.($row[11] ?? '')
+                .'|'.($row[13] ?? '').'|'.($row[15] ?? '');
+            $key = $glassType.'||'.$fireRating.'||'.$sizeSig;
+
             // initialize
-            if (!isset($summary[$glassType])) {
-                $summary[$glassType] = [
+            if (!isset($summary[$key])) {
+                $summary[$key] = [
+                    'GlassType' => $glassType,
+                    'FireRating' => $fireRating,
                     'VP1' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
                     'VP2' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
                     'VP3' => ['H' => 'N/A', 'W' => 'N/A', 'Q' => 0],
@@ -280,29 +296,19 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             }
 
             // fill data
-            // foreach ($vpIndexes as $vp => $ix) {
-            //     $height = $row[$ix['H']] ?? 'N/A';
-            //     $width  = $row[$ix['W']] ?? 'N/A';
-            //     $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
-
-            //     if ($height != '' && $height != 'N/A') $summary[$glassType][$vp]['H'] = $height;
-            //     if ($width  != '' && $width  != 'N/A') $summary[$glassType][$vp]['W'] = $width;
-            //     $summary[$glassType][$vp]['Q'] += $qty;
-            // }
-            // fill data
             foreach ($vpIndexes as $vp => $ix) {
                 $height = $row[$ix['H']] ?? '';
                 $width  = $row[$ix['W']] ?? '';
                 $qty    = (isset($row[$ix['Q']]) && is_numeric($row[$ix['Q']])) ? (float)$row[$ix['Q']] : 0;
 
                 if ($height != '' && $height != 'N/A') {
-                    $summary[$glassType][$vp]['H'] = $height;
+                    $summary[$key][$vp]['H'] = $height;
 
                     if ($width != '' && $width != 'N/A') {
-                        $summary[$glassType][$vp]['W'] = $width;
+                        $summary[$key][$vp]['W'] = $width;
                     }
 
-                    $summary[$glassType][$vp]['Q'] += $qty;
+                    $summary[$key][$vp]['Q'] += $qty;
                 }
             }
         }
@@ -313,6 +319,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             $data[] = [
                 'Glass Type',
+                'Fire Rating',
                 'AP 1 Height', 'AP 1 Width', 'Qty',
                 'AP 2 Height', 'AP 2 Width', 'Qty',
                 'AP 3 Height', 'AP 3 Width', 'Qty',
@@ -326,6 +333,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             $data[] = ['Summary', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''];
             $data[] = [
                 'Glass Type',
+                'Fire Rating',
                 'AP 1 Height', 'AP 1 Width', 'Qty',
                 'AP 2 Height', 'AP 2 Width', 'Qty',
                 'AP 3 Height', 'AP 3 Width', 'Qty',
@@ -337,12 +345,14 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
 
         // Print summary
-        foreach ($summary as $type => $vpData) {
+        foreach ($summary as $vpData) {
             // calculate grand total qty for all VPs
-            $grandTotal = array_sum(array_column($vpData, 'Q'));
+            $grandTotal = $vpData['VP1']['Q'] + $vpData['VP2']['Q'] + $vpData['VP3']['Q']
+                + $vpData['VP4']['Q'] + $vpData['VP5']['Q'];
 
             $data[] = [
-                $type,
+                $vpData['GlassType'],
+                $vpData['FireRating'],
                 $vpData['VP1']['H'], $vpData['VP1']['W'], $vpData['VP1']['Q'] ?: 'N/A',
                 $vpData['VP2']['H'], $vpData['VP2']['W'], $vpData['VP2']['Q'] ?: 'N/A',
                 $vpData['VP3']['H'], $vpData['VP3']['W'], $vpData['VP3']['Q'] ?: 'N/A',
@@ -377,7 +387,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 'QTY',
                 'AP5 H',
                 'QTY',
-                'DB Rating'
+                'DB Rating',
+                'Fire Rating'
             ];
         }
 
