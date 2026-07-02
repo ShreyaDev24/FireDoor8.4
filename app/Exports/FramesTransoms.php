@@ -124,7 +124,20 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         ];
 
         foreach ($item as $value) {
-            $leg = $value->FrameHeight + $value->Height;
+             $ms = floatval($Height ?? 0);
+            if ($ms < 0) {
+                $ms = abs($ms);
+            }
+
+            $frameThickness = floatval($value->FrameThickness ?? 0);
+
+            if ($value->FrameType == 'Rebated_Frame') {
+                $frameThickness = $frameThickness - floatval($value->RebatedHeight ?? 0);
+            }
+
+            $leg = floatval($value->FrameHeight ?? 0)
+                - $frameThickness
+                - $ms;
             $head = $value->FrameWidth + $value->Width;
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
             $cutSizeH = 0;
@@ -163,7 +176,13 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $Width = $butt_joint->Width ?? 0;
             }
 
-            $leg = $calculateLeg($value->FrameHeight, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight);
+            $leg = $calculateLeg(
+                    $value->FrameHeight,
+                    $value->FrameThickness,
+                    $Height,
+                    $value->FrameType,
+                    $value->RebatedHeight
+                );
             $head = $value->FrameWidth + $Width;
             $stopleg2 = $calculateLeg($value->FrameHeight, $value->FrameThickness, 0, $value->FrameType, $value->RebatedHeight);
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
@@ -200,7 +219,14 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
                 $stopbottom = $stophead;
-                $leg = $calculateLeg($value->FrameHeight, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
+                 $leg = $calculateLeg(
+                        $value->FrameHeight,
+                        $value->FrameThickness,
+                        $Height,
+                        $value->FrameType,
+                        $value->RebatedHeight,
+                        2
+                    );
             }
 
             $data[] = [
