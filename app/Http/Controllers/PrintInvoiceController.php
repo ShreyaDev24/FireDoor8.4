@@ -979,7 +979,7 @@ class PrintInvoiceController extends Controller
         ->where('items.QuotationId', $quatationId)
         // ->where('items.itemId',2342) to see particular quote
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
-
+dd($ed);
         $TotalItems = count($ed->toArray());
 
         $PageBreakCount = 1;
