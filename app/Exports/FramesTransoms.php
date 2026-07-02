@@ -65,9 +65,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
 
         // Client requirement for Leg x2 in all cut lists:
-        // Leg = Frame Height - Frame Thickness - MS
-        // For Rebated Frame: effective frame thickness = Frame Thickness - Rebate
-        // Example: 2090 - (44 - 12) - MS = 2090 - 32 - MS
+        //   LEG = O/A Frame Height - (Frame Thickness - Rebate) - MS
+        // - Frame Thickness is deducted ONCE. For a Rebated Frame the effective
+        //   thickness is (Frame Thickness - Rebate), e.g. 44 - 12 = 32.
+        // - MS is a further deduction taken by its MAGNITUDE, so a stored -5 still
+        //   means "take another 5 off".
+        // Example: 2090 - (44 - 12) - 5 = 2090 - 32 - 5 = 2053
+        // NOTE: $thicknessCount is intentionally NOT applied - the client wants the
+        //   thickness off once on every row (including four-sided / overpanel /
+        //   side-light), so the extra head/bottom rail is not deducted from the leg.
         $calculateLeg = function ($frameHeight, $frameThickness, $ms = 0, $frameType = null, $rebate = 0, $thicknessCount = 1) {
             $effectiveFrameThickness = floatval($frameThickness ?? 0);
 
@@ -75,12 +81,9 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $effectiveFrameThickness = $effectiveFrameThickness - floatval($rebate ?? 0);
             }
 
-            // LEG = Frame Height - (Frame Thickness - Rebate) - MS
-            // Frame thickness comes off ONCE (the effective thickness term). MS is the
-            // separate joint allowance and is used with its stored sign as-is.
             return floatval($frameHeight ?? 0)
-                - ($effectiveFrameThickness * $thicknessCount)
-                - floatval($ms ?? 0);
+                - $effectiveFrameThickness
+                - abs(floatval($ms ?? 0));
         };
 
         $k = 1;
