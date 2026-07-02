@@ -1655,7 +1655,7 @@ class PrintInvoiceController extends Controller
 
                         </div>
                         <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
-                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194').'px;" alt="" src="'.$FrameTypeCommon.'">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
@@ -5469,7 +5469,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         </div>
                         <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
-                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194').'px;" alt="" src="'.$FrameTypeCommon.'">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
