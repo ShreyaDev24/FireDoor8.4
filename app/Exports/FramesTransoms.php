@@ -63,6 +63,23 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
+        // Client requirement for Leg x2 in all cut lists:
+        // Leg = Frame Height - Frame Thickness - MS
+        // For Rebated Frame: effective frame thickness = Frame Thickness - Rebate
+        // Example: 2090 - (44 - 12) - MS = 2090 - 32 - MS
+        $calculateLeg = function ($frameHeight, $frameThickness, $ms = 0, $frameType = null, $rebate = 0, $thicknessCount = 1) {
+            $effectiveFrameThickness = floatval($frameThickness ?? 0);
+
+            if ($frameType == 'Rebated_Frame') {
+                $effectiveFrameThickness = $effectiveFrameThickness - floatval($rebate ?? 0);
+            }
+
+            return floatval($frameHeight ?? 0)
+                - ($effectiveFrameThickness * $thicknessCount)
+                - floatval($ms ?? 0);
+        };
+
         $k = 1;
         $data = [];
 
@@ -146,9 +163,9 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $Width = $butt_joint->Width ?? 0;
             }
 
-            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $leg = $calculateLeg($value->FrameHeight, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight);
             $head = $value->FrameWidth + $Width;
-            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stopleg2 = $calculateLeg($value->FrameHeight, $value->FrameThickness, 0, $value->FrameType, $value->RebatedHeight);
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
 
             if($value->FrameType == 'Plant_on_Stop'){
@@ -183,11 +200,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
                 $stopbottom = $stophead;
-                $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
-            }
-
-            if ($value->FrameType == 'Rebated_Frame') {
-                $leg = $cutSizeH + $value->Undercut + $value->GAP + $Height;
+                $leg = $calculateLeg($value->FrameHeight, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
             }
 
             $data[] = [
@@ -257,7 +270,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->OPHeigth, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->OPWidth + $Width;
 
                $foursidedFrame = 0;
@@ -265,7 +278,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->OPHeigth, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $SLWidth = 0;
@@ -342,7 +355,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->SL1Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->SL1Width + $Width;
 
                 $foursidedFrame = 0;
@@ -350,7 +363,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->SL1Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $data[] = [
@@ -416,7 +429,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->SL2Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->SL2Width + $Width;
 
                 $foursidedFrame = 0;
@@ -424,7 +437,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->SL2Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $data[] = [
@@ -554,7 +567,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $FrameWidth,
                     $FrameThickness,
                     $FrameDepth,
-                    $FrameHeight - ($FrameThickness * 2) + $Height,
+                    $calculateLeg($FrameHeight, $FrameThickness, $Height, null, 0, 2),
                     $FrameWidth + $Width,
                     (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($FrameWidth - ($FrameThickness * 2) + $TransomWidth) : 0,
                     (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($value->TransomQuantity) : 0,
