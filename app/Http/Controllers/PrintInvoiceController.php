@@ -971,14 +971,22 @@ class PrintInvoiceController extends Controller
         // Elevation Drawing
         $elevTbl = '';
         // $ed = Item::where('QuotationId',$quatationId)->get();
-        $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
-            $join->on("quotation_version_items.itemID","=","items.itemId")
-                ->on("quotation_version_items.itemmasterID","=","item_master.id");
-        })
-        ->join('quotation','quotation.id','=','items.QuotationId')
-        ->where('items.QuotationId', $quatationId)
-        // ->where('items.itemId',2342) to see particular quote
-        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+        // $ed = Item::join('item_master','item_master.itemID','=','items.itemId')->join("quotation_version_items",function($join): void{
+        //     $join->on("quotation_version_items.itemID","=","items.itemId")
+        //         ->on("quotation_version_items.itemmasterID","=","item_master.id");
+        // })
+        // ->join('quotation','quotation.id','=','items.QuotationId')
+        // ->where('items.QuotationId', $quatationId)
+        // // ->where('items.itemId',2342) to see particular quote
+        // ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+
+        $ed = Items::join('item_master','item_master.itemID','=','items.itemId')
+            ->join('quotation','quotation.id','=','items.QuotationId')
+            ->where('QuotationId', $quatationId)
+            ->where('VersionId', $versionID)
+            ->select('items.*','item_master.doorNumber','quotation.configurableitems')
+            ->groupBy('item_master.itemID')
+            ->get();
 
         $TotalItems = count($ed->toArray());
 
