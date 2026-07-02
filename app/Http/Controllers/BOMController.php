@@ -2820,142 +2820,165 @@ class BOMController extends Controller
                                     </td>
                                 </tr>
                             </table>';
-                if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
-                    $lipingTbl .= '
-                    <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 10px; border: 1px solid black;">
-                        <thead>
-                            <tr style="background: #ddd; border: 1px solid black;">
-                                <th style="border: 1px solid black; padding: 5px;">S.No</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
-                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
-                                <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Core</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Thickness/Liping Species</th>
-                                <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
-                                <th style="border: 1px solid black; padding: 5px;">Total Quantity</th>
-                                <th style="border: 1px solid black; padding: 5px;">Unit</th>
-                                <th style="border: 1px solid black; padding: 5px;">Good Inwards Check by;</th>
-                                <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
-                                <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
-                                if($doorPlugActivated == 1){
-                                $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
-                                }
-                            $lipingTbl .= '</tr>
-                        </thead>
-                        <tbody>';
-                }
-                else{
-                    $lipingTbl .= '
-                    <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 10px; border: 1px solid black;">
-                        <thead>
-                            <tr style="background: #ddd; border: 1px solid black;">
-                                <th style="border: 1px solid black; padding: 5px;">S.No</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
-                                <th style="border: 1px solid black; padding: 5px;">Certification No</th>
-                                <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Core</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Thickness</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Species</th>
-                                <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
-                                <th style="border: 1px solid black; padding: 5px;">Total Quantity</th>
-                                <th style="border: 1px solid black; padding: 5px;">Unit</th>
-                                <th style="border: 1px solid black; padding: 5px;">Good Inwards Check by;</th>
-                                <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
-                                <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
-                                if($doorPlugActivated == 1){
-                                $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
-                                <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
-                                }
-                            $lipingTbl .= '</tr>
-                        </thead>
-                        <tbody>';
-                }
+
+
+
+
 
 
                 $i = 1;
+                $j = 0;
                 $PageBreakCount = 0;
                 $TotalItems = count($data);
                 $ItemsPerPage = 20;
 
                 foreach ($data as $value) {
-                    if ($value->Category == 'LeafSetBesPoke') {
+                    if ($value->Category == 'LeafSetBesPoke' && in_array($value->configurableitems, [1, 2, 7, 8])) {
+
+                        if($j++ === 0){
+                            $lipingTbl .= '
+                            <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 10px; border: 1px solid black;">
+                            <thead>
+                                <tr style="background: #ddd; border: 1px solid black;">
+                                    <th style="border: 1px solid black; padding: 5px;">S.No</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Certification No</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Core</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Liping Thickness</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Liping Species</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Total Quantity</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Unit</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Good Inwards Check by;</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                    if($doorPlugActivated == 1){
+                                    $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
+                                    }
+                                $lipingTbl .= '</tr>
+                            </thead>
+                            <tbody>';
+                        }
 
                         $words = explode("|", (string) $value->Description);
                         // dd($words);
                         $PageBreakCount++;
-                        if($value->configurableitems == 4 || $value->configurableitems == 5 || $value->configurableitems == 6 || $value->configurableitems == 9){
-                            $lipingTbl .= '<tr>
-                            <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
-                            <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[3] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->LeafConstruction . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->DoorLeafFacing . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[4] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->QuantityOfDoorTypes . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->Unit . '</td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>';
 
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
+                        $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
+                        $lipingTbl .= '<tr>
+                        <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
+                        <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[3] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[4] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $getLeaf->leaf_type_key . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->DoorLeafFacing . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[5] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->QuantityOfDoorTypes . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->Unit . '</td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>';
+                        $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
 
                         $lipingTbl .= '</tr>';
-                        }
-                        else{
-                            $getLeaf = IntumescentSealLeafType::where('id',$value->IntumescentLeafType)->select('leaf_type_key')->first();
-                            $lipingTbl .= '<tr>
-                            <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
-                            <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[3] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[4] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $getLeaf->leaf_type_key . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->DoorLeafFacing . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . ($words[5] ?? '') . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->QuantityOfDoorTypes . '</td>
-                            <td style="border: 1px solid black; padding: 5px;">' . $value->Unit . '</td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>
-                            <td style="border: 1px solid black; padding: 5px;"></td>';
-                            $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
-
-                            $lipingTbl .= '</tr>';
-                        }
 
                     }
                 }
 
             $lipingTbl .= '</tbody></table></div></div>';
+
+
+            $i = 1;
+            $j = 0;
+            $lipingTbl = '';
+            $PageBreakCount = 0;
+            $TotalItems = count($data);
+            $ItemsPerPage = 20;
+
+            foreach ($data as $value) {
+                if ($value->Category == 'LeafSetBesPoke'  && in_array($value->configurableitems, [4,5,6,9])) {
+                    if($j++ === 0){
+                        $lipingTbl .= '
+                        <table style="width: 1500px; border-collapse: collapse; font-size: 10px; margin-top: 10px; border: 1px solid black;">
+                            <thead>
+                                <tr style="background: #ddd; border: 1px solid black;">
+                                    <th style="border: 1px solid black; padding: 5px;">S.No</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Assign Plot Ref</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Certification No</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Core</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Liping Thickness/Liping Species</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Total Quantity</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Unit</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Good Inwards Check by;</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                    if($doorPlugActivated == 1){
+                                    $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
+                                    <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
+                                    }
+                                $lipingTbl .= '</tr>
+                            </thead>
+                            <tbody>';
+                        }
+
+                    $words = explode("|", (string) $value->Description);
+                    // dd($words);
+                    $PageBreakCount++;
+
+                    $lipingTbl .= '<tr>
+                        <td style="border: 1px solid black; padding: 5px;">' . $i++ . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->DoorType . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->plot_ref_no . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->certification_no . '</td>
+                        <td style="border: 1px solid black; padding: 5px;"> ' . $value->FireRating . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[1] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[2] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[3] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->LeafConstruction . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->DoorLeafFacing . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . ($words[4] ?? '') . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->QuantityOfDoorTypes . '</td>
+                        <td style="border: 1px solid black; padding: 5px;">' . $value->Unit . '</td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>
+                        <td style="border: 1px solid black; padding: 5px;"></td>';
+
+                    $lipingTbl .= doorPlug1_2($value->FireRating, $value->IronmongerySet, $value->Leaf1VisionPanel, $id, $isBorder = true);
+
+                    $lipingTbl .= '</tr>';
+                }
+            }
+
+        $lipingTbl .= '</tbody></table></div></div>';
 
 
                             //  return view('Company.quality_control_pdf.FramesQualityControl', compact('elevTbl'));
