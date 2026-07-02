@@ -982,8 +982,8 @@ class PrintInvoiceController extends Controller
 
         $ed = Items::join('item_master','item_master.itemID','=','items.itemId')
             ->join('quotation','quotation.id','=','items.QuotationId')
-            ->where('QuotationId', $quatationId)
-            ->where('VersionId', $versionID)
+            ->where('items.QuotationId', $quatationId)
+            ->where('items.VersionId', $versionID)
             ->select('items.*','item_master.doorNumber','quotation.configurableitems')
             ->groupBy('item_master.itemID')
             ->get();
