@@ -2802,6 +2802,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
             $sl1glasstype = 'N/A';
+            $sl2glasstype = 'N/A';
             if (!empty($tt->SideLight1GlassType)) {
                 // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
                 // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
@@ -2822,7 +2823,23 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
         }
+            }
 
+            if (!empty($tt->SideLight2GlassType)) {
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                            ->where('selected_glass_type.editBy', '=', $id);
+                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+                }
+                else{
+                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+        }
             }
 
             $beadingtype = 'N/A';
@@ -3196,6 +3213,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     }
                                      if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
+                                    <tr>
+                                        <td class="dicription_grey">SL2 Glass Type</td>
+                                        <td class="dicription_blank">' . $sl2glasstype . '</td>
+                                    </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
                                         <td class="dicription_blank">' . $ElevSL2Width . '</td>
