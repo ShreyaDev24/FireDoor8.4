@@ -2679,6 +2679,16 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                 $SLBeadingType = $bt ? $bt->OptionValue : null;
             }
+            $SL2BeadingType = 'N/A';
+            if (!empty($tt->SideLight2BeadingType)) {
+                $bt = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->SideLight2BeadingType)
+                    ->first();
+
+                $SL2BeadingType = $bt ? $bt->OptionValue : null;
+            }
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
@@ -2899,7 +2909,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Width = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
                 $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
@@ -2907,7 +2917,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Height = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
                 $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
@@ -3217,6 +3227,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                         <td class="dicription_grey">SL2 Glass Type</td>
                                         <td class="dicription_blank">' . $sl2glasstype . '</td>
                                     </tr>
+                                     <tr>
+                                    <td class="dicription_grey">Beading Type 2</td>
+                                    <td class="dicription_blank">' . $SL2BeadingType . '</td>
+                                </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
                                         <td class="dicription_blank">' . $ElevSL2Width . '</td>
