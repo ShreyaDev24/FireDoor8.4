@@ -2866,6 +2866,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 }
             }
 
+             $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
+                }
+            }
+
             $VPBeadingType = 'N/A';
             if (!empty($tt->GlazingBeads)) {
                 $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
@@ -3230,6 +3238,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                      <tr>
                                     <td class="dicription_grey">Beading Type 2</td>
                                     <td class="dicription_blank">' . $SL2BeadingType . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species2</td>
+                                    <td class="dicription_blank">' . $glazing2beadspecies . '</td>
                                 </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
@@ -6692,6 +6704,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $ls = LippingSpecies::where('id', $tt->SL1GlazingBeadSpecies)->first();
                 if (!empty($ls->SpeciesName)) {
                     $glazingbeadspecies = $ls->SpeciesName;
+                }
+            }
+            $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
                 }
             }
 
