@@ -1816,7 +1816,7 @@ $(function () {
 
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
-        frameHeight();
+        frameHeightUpdated();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
 
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -3012,7 +3012,7 @@ function framewidth(){
     }
 
     $("#frameWidth").val(FrameWidth);
-    frameHeight();
+    frameHeightUpdated();
 }
 function calsowidth(framewidth){
     let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
@@ -4420,7 +4420,7 @@ $("#overpanel1").change(function () {
         var plantonStopHeight = soheight - tollerance;
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
-        frameHeight();
+        frameHeightUpdated();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
         // $("#frameDepth").val(frameDepth);
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -5195,7 +5195,7 @@ function doorDimensionCalculation(){
 
     $("#frameHeight").val(so_height - (parseInt(tollerance)));
     console.log(so_height,parseInt(tollerance),'hii')
-    frameHeight();
+    frameHeightUpdated();
     let foursidedframe = document.getElementById("foursidedframe");
     var rebatedHeight = $("#rebatedHeight").val();
     var DoorSetType = $('select[name="doorsetType"]').val();
@@ -5214,7 +5214,7 @@ function doorDimensionCalculation(){
         }
     }
 
-    frameHeight();
+    frameHeightUpdated();
 
     let elements = $(this);
     render(elements);
@@ -5328,7 +5328,7 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
             soHeight = parseInt(leafH) + parseInt(gap) + parseInt(undercut) + headFrameThicknessB + bottomFrameThicknessB + parseInt(tollerance);
         }
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
-        frameHeight();
+        frameHeightUpdated();
     }
 
     let foursidedframe = document.getElementById("foursidedframe");
