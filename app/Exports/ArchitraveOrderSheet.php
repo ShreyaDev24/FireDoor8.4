@@ -70,10 +70,10 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $SpeciesName = $ls->SpeciesName ?? '';
 
                 // Architrave Leg = Frame leg + architrave width (MS adjustment can be + or -)
-                $totalHeight = $FrameHeight + $ArchitraveHeight;
+                $totalHeight = $FrameHeight + $value->ArchitraveHeight + $ArchitraveHeight;
 
                 // Architrave Head = Frame width + architrave width (MS adjustment can be + or -)
-                $totalWidth = $FrameWidth + $ArchitraveWidth;
+                $totalWidth = $FrameWidth + $value->ArchitraveWidth + $SL2Width + $ArchitraveWidth;
 
                if($value->ArchitraveSetQty == 1){
                     $lm = $FrameHeight + ($OPHeight * 2) + $FrameWidth + $SL1Width + $SL2Width;
