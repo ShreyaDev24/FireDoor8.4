@@ -10730,22 +10730,22 @@ class DoorScheduleController extends Controller
                     $favquotation = Quotation::where('id', $request->quotationId)->first();
                     $configurableitems = configurationDoor($favquotation->configurableitems);
                     $current = configurationDoor($currentquotation->configurableitems);
-                    if (
-                        !is_null($currentquotation->configurableitems) &&
-                        !is_null($favquotation->configurableitems) &&
-                        $currentquotation->configurableitems !== $favquotation->configurableitems
-                    ) {
-                        $response = [
-                            'status' => false,
-                            'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
-                        ];
-                        return response()->json(
-                            $response,
-                            200,
-                            ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
-                            JSON_UNESCAPED_UNICODE
-                        );
-                    }
+                    // if (
+                    //     !is_null($currentquotation->configurableitems) &&
+                    //     !is_null($favquotation->configurableitems) &&
+                    //     $currentquotation->configurableitems !== $favquotation->configurableitems
+                    // ) {
+                    //     $response = [
+                    //         'status' => false,
+                    //         'msg' => 'The selected favorite item has a <strong>' . $configurableitems . '</strong> configuration, but your current quotation uses <strong>' . $current . '</strong>.'
+                    //     ];
+                    //     return response()->json(
+                    //         $response,
+                    //         200,
+                    //         ['Content-Type' => 'application/json;charset=UTF-8', 'Charset' => 'utf-8'],
+                    //         JSON_UNESCAPED_UNICODE
+                    //     );
+                    // }
                     // JFDS 1042 END
 
                     if (empty($request->versionId)) {
