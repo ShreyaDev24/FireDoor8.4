@@ -216,9 +216,9 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
                 $VisionPanelHeightFD60 = 0;
 
                 $SLWidth = 0;
-                if(!empty($allSettings['SideLightFD.NRF'])){
-                    $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
-                    $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
+                if(!empty($allSettings['SideLightFD.FD30'])){
+                    $VisionPanelWidthNFR = $allSettings['SideLightFD.FD30']->Width;
+                    $VisionPanelHeightNFR = $allSettings['SideLightFD.FD30']->Height;
                     $SLWidth = $value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthNFR;
                 }
                 if(!empty($allSettings['SideLightFD.FD60'])){
