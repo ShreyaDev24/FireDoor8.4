@@ -69,11 +69,11 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $ls = LippingSpecies::where('id', $value->ArchitraveMaterial)->first();
                 $SpeciesName = $ls->SpeciesName ?? '';
 
-                // Calculate total height (2 * FrameHeight + OPHeight if any)
-                $totalHeight = $FrameHeight + $OPHeight + $ArchitraveHeight;
+                // Architrave Leg = Frame leg + architrave width (MS adjustment can be + or -)
+                $totalHeight = $FrameHeight + $ArchitraveHeight;
 
-                // Calculate total width (FrameWidth + SL1Width + SL2Width)
-                $totalWidth = $FrameWidth + $SL1Width + $SL2Width + $ArchitraveWidth;
+                // Architrave Head = Frame width + architrave width (MS adjustment can be + or -)
+                $totalWidth = $FrameWidth + $ArchitraveWidth;
 
                if($value->ArchitraveSetQty == 1){
                     $lm = $FrameHeight + ($OPHeight * 2) + $FrameWidth + $SL1Width + $SL2Width;
