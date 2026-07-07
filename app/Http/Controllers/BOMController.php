@@ -2117,13 +2117,14 @@ class BOMController extends Controller
                 //     ? (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthNFR)
                 //     : (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthFD60);
 
-                $height = (!is_null($glassHeight) && $glassHeight !== '' && (float)$glassHeight > 0) ? $glassHeight : (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                    ? (($value->OPHeigth - ($value->OpBeadThickness * 2)) + $VisionPanelHeightFD60)
-                    : (($value->OPHeigth - ($value->OpBeadThickness * 2)) + $VisionPanelHeightNFR));
+                $height = in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->OPHeigth - ($value->OpBeadThickness * 2)) + $VisionPanelHeightFD60)
+                        : (($value->OPHeigth - ($value->OpBeadThickness * 2)) + $VisionPanelHeightNFR);
 
-                $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? $glassWidth : (($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
-                    ? (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthNFR)
-                    : (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthFD60));
+
+                $width = in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthFD60)
+                        : (($value->OPWidth - ($value->OpBeadThickness * 2)) + $VisionPanelWidthNFR);
 
                 $data[] = '<tr>'
                     . '<td>' . $value->DoorType . ' ' . $value->Overpanel . '</td>'
@@ -2161,11 +2162,13 @@ class BOMController extends Controller
 
                 // $width = ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $SLWidthFD60 : $SLWidthNFR;
 
-                $height = (!is_null($glassHeight) && $glassHeight !== '' && (float)$glassHeight > 0) ? $glassHeight : (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+              $height = in_array($value->FireRating, ['FD60s', 'FD60'])
                     ? (($value->SL1Height - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightFD60)
-                    : (($value->SL1Height - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightNFR));
+                    : (($value->SL1Height - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightNFR);
 
-                $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? $glassWidth : (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $SLWidthFD60 : $SLWidthNFR);
+              $width = in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthFD60)
+                        : (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthNFR);
 
                 $data[] = '<tr>'
                     . '<td>' . $value->DoorType . ' Side Light 1</td>'
@@ -2189,7 +2192,7 @@ class BOMController extends Controller
                 if (!empty($allSettings['SideLightFD.NRF'])) {
                     $VisionPanelWidthNFR = $allSettings['SideLightFD.NRF']->Width;
                     $VisionPanelHeightNFR = $allSettings['SideLightFD.NRF']->Height;
-                    $SLWidth = $value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthNFR;
+                    $SLWidth = $value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthFD60;
                 }
                 if (!empty($allSettings['SideLightFD.FD60'])) {
                     $VisionPanelWidthFD60 = $allSettings['SideLightFD.FD60']->Width;
@@ -2201,11 +2204,13 @@ class BOMController extends Controller
                     // ? (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60)
                     // : (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR);
 
-                $height = (!is_null($glassHeight) && $glassHeight !== '' && (float)$glassHeight > 0) ? $glassHeight : (($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
-                    ? (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60)
-                    : (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR));
+                $height = in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60)
+                        : (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR);
 
-                $width = (!is_null($glassWidth) && $glassWidth !== '' && (float)$glassWidth > 0) ? $glassWidth : $SLWidth ;
+               $width = in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthFD60)
+                        : (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthNFR);
 
                 $data[] = '<tr>'
                     . '<td>' . $value->DoorType . ' Side Light 2</td>'
