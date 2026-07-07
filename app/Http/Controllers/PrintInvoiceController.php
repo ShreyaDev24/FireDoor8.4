@@ -357,14 +357,16 @@ class PrintInvoiceController extends Controller
         }
 
         $a2 = '';
-       $shows = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
-            ->where('quotation_version_items.version_id', $versionID)
-            ->select(
-                'items.*',
-                'item_master.doorNumber'
-            )
-            ->get();
+       $shows = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where('QuotationId', $quatationId)->where('VersionId', $versionID)->select('item_master.doorNumber', 'items.*')->get();
+            //   $shows = Items::with('masters')
+            // ->where('QuotationId', $quatationId)
+            // ->where('VersionId', $versionID)
+            // // ->select(
+            // //     'items.*',
+            // //     'item_master.doorNumber'
+            // // )
+            // ->get();
+            // dd($shows);
 
 
         // SUMMARY (if you still need it)
