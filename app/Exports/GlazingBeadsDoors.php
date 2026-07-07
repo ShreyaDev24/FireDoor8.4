@@ -157,11 +157,17 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     str_replace('_', ' ', $value->DoorLeafFinish),
                     $value->GlazingBeadsThickness,
                     $value->glazingBeadsHeight,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL1Width + $VisionPanelWidthNFR) : ($value->SL1Width + $VisionPanelWidthFD60),
+                    // VP Width = SL Width - (Frame Thickness x 2) + MS
+                    in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthFD60)
+                        : (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthNFR),
 
                     4,
 
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL1Height + $VisionPanelHeightFD60 : $value->SL1Height + $VisionPanelHeightNFR,
+                    // VP Height = SL Height - (Frame Thickness x 2) + MS
+                    in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL1Height - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightFD60)
+                        : (($value->SL1Height - ($value->SideLight1FrameThickness * 2)) + $VisionPanelHeightNFR),
 
                     4,
                     '',
@@ -173,6 +179,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     '',
                     $value->rWdBRating ? $value->rWdBRating : '',
                 );
+                // dd($data);
             }
 
             if($value->SideLight2 == 'Yes'){
@@ -198,9 +205,16 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     str_replace('_', ' ', $value->DoorLeafFinish),
                     $value->GlazingBeadsThickness,
                     $value->glazingBeadsHeight,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->SL2Width + $VisionPanelWidthNFR) : ($value->SL2Width + $VisionPanelWidthFD60),
+                    in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthFD60)
+                        : (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthNFR),
+
                     4,
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->SL2Height + $VisionPanelHeightFD60 : $value->SL2Height + $VisionPanelHeightNFR,
+
+                    in_array($value->FireRating, ['FD60s', 'FD60'])
+                        ? (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightFD60)
+                        : (($value->SL2Height - ($value->SideLight2FrameThickness * 2)) + $VisionPanelHeightNFR),
+
                     4,
                     '',
                     '',
