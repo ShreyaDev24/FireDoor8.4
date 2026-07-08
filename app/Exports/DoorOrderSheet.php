@@ -42,6 +42,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $k = 1;
         $data = [];
         $rowLockType = []; // lock type aligned 1:1 with $data rows (used to group the cut list summary)
+        $rowMeta = []; // raw doorset info aligned 1:1 with $data rows (leaf_and_a_half needs the real leaf widths)
         foreach($item as $value){
 
             if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
@@ -142,6 +143,12 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 ''
             );
             $rowLockType[] = $value->LockType ?? '';
+            $rowMeta[] = [
+                'doorset' => $value->DoorsetType ?? '',
+                'w1'      => $value->LeafWidth1 ?? '',
+                'w2'      => $value->LeafWidth2 ?? '',
+                'h'       => $value->LeafHeight ?? '',
+            ];
 
             $k++;
 
@@ -181,6 +188,12 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     ''
                 );
                 $rowLockType[] = $value->LockType ?? '';
+                $rowMeta[] = [
+                    'doorset' => $value->DoorsetType ?? '',
+                    'w1'      => $value->LeafWidth1 ?? '',
+                    'w2'      => $value->LeafWidth2 ?? '',
+                    'h'       => $value->LeafHeight ?? '',
+                ];
 
                 $k++;
             }
@@ -209,6 +222,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $codeHandling = []; // store handling per code
         $codeDoorSet = []; // store door set per code
         $codeLockType = []; // store lock type per code
+        $lahWidths = []; // leaf_and_a_half: real leaf1/leaf2 widths + height per summary key
 
         foreach ($item as $itemValue) {
             // dd($item);
@@ -242,6 +256,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             $opLeafExist = $row[4] ?? '';  // PRODUCT CODE LEAF 2
             $cutW2 = $row[12] ?? ''; // Cut Size W2 (column M, 0-based index 12)
             $lockType = $rowLockType[$rowIndex] ?? ''; // lock type for this row
+            $rowInfo  = $rowMeta[$rowIndex] ?? []; // raw doorset info for this row
+            $isLeafAndHalf = (($rowInfo['doorset'] ?? '') === 'leaf_and_a_half');
 
             // ✅ Leaf 1 logic
             if ($c1) {
@@ -249,11 +265,24 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $leaf1Counts[$key] = ($leaf1Counts[$key] ?? 0) + 1;
                 if (!isset($codeMeta[$key])) $codeMeta[$key] = $parseMeta($c1);
                 $codeKeyLock[$key] = $lockType;
+
+                // leaf_and_a_half: leaf 2 is the same physical doorset as leaf 1 (2 widths,
+                // 1 height) so it shares the leaf 1 summary row and carries its own width.
+                // Overpanel (OP LEAF SIZE) rows are excluded, as in the generic leaf 2 logic.
+                if ($isLeafAndHalf && !str_contains($opLeafExist, 'OP LEAF SIZE')) {
+                    $leaf2Counts[$key] = ($leaf2Counts[$key] ?? 0) + 1;
+                    $lahWidths[$key] = [
+                        'w1' => $rowInfo['w1'] ?? '',
+                        'w2' => $rowInfo['w2'] ?? '',
+                        'h'  => $rowInfo['h'] ?? '',
+                    ];
+                }
             }
 
             // ✅ Leaf 2 logic: count if PRODUCT CODE LEAF 2 exists OR Cut Size W2 is numeric/non-empty
             // Leaf 2 should count ONLY when PRODUCT CODE LEAF 2 exists
-            if ($c2) {
+            // (leaf_and_a_half is handled above so its leaf 2 stays on the leaf 1 row)
+            if ($c2 && !$isLeafAndHalf) {
                 if(!str_contains($opLeafExist, 'OP LEAF SIZE')){
                     $key = $makeKey($c2, $lockType);
                     $leaf2Counts[$key] = ($leaf2Counts[$key] ?? 0) + 1;
@@ -306,6 +335,14 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             $leaf1Width = $l1Count > 0 ? $width : '';
             $leaf2Width = $l2Count > 0 ? $width : '';
+
+            // leaf_and_a_half: leaf 1 and leaf 2 have different widths but share one height,
+            // so use the real leaf widths instead of the single parsed product-code width.
+            if (isset($lahWidths[$key])) {
+                $leaf1Width = $l1Count > 0 ? $lahWidths[$key]['w1'] : '';
+                $leaf2Width = $l2Count > 0 ? $lahWidths[$key]['w2'] : '';
+                $height     = $lahWidths[$key]['h'];
+            }
 
             $gt = $l1Count + $l2Count;
 
