@@ -94,17 +94,17 @@ function itemAdjustCount($Id,$vId): float|int{
     if (!empty($Schedule)) {
         foreach ($Schedule as $row) {
 
-            $basePrice = floatval($row->DoorsetPrice);
+            // 🔥 Final calculation
+            $basePrice = floatval($row->DoorsetPrice ?? 0);
             $leafDelta = floatval($row->leaf_price_delta ?? 0);
 
-            // 🔥 Final calculation
-            $finalPrice = ($row->AdjustPrice)
-                ? floatval($row->AdjustPrice)
-                : (
-                    $leafDelta
-                        ? $leafDelta
-                        : $basePrice
-                );
+            if ($leafDelta) {
+                $finalPrice = $leafDelta;
+            } elseif ($row->AdjustPrice) {
+                $finalPrice = floatval($row->AdjustPrice);
+            } else {
+                $finalPrice = $basePrice;
+            }
 
             $TotalDoorSetPrice += $finalPrice;
         }
