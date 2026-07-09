@@ -2630,6 +2630,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
+            $glassInterrity = "N/A";
+            if(!empty($tt->GlassIntegrity)){
+                $glassInterrity = $tt->GlassIntegrity;
+            }
+            $VisionGlazingBeadSpecies = "N/A";
+            if(!empty($tt->GlazingBeadSpecies)){
+                $ls = LippingSpecies::where('id', $tt->GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $VisionGlazingBeadSpecies = $ls->SpeciesName;
+                }
+            }
 
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
@@ -3151,8 +3162,16 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <th class="tblTitle">Vision Panel</th>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Glass Type Integrity</td>
+                                    <td class="dicription_blank">' . $glassInterrity . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Glass Type + Thickness</td>
                                     <td class="dicription_blank">' . $GlassTypeForDoorDetailsTable . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species</td>
+                                    <td class="dicription_blank">' . $VisionGlazingBeadSpecies . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing System</td>
