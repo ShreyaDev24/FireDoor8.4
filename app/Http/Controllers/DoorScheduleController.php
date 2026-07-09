@@ -9444,18 +9444,19 @@ class DoorScheduleController extends Controller
 
     public function editImage1(Request $request)
     {
-        $quotations = Quotation::where('id',$request->quotationId)->first();
-        if($quotations->configurableitems == 2){
+        // $quotations = Quotation::where('id',$request->quotationId)->first();
+        $id = $request->id;
+        if($id->configurableitems == 2){
             return $this->halspanValidate($request);
-        } elseif($quotations->configurableitems == 7){
+        } elseif($id->configurableitems == 7){
             return $this->flambreakValidate($request);
-        } elseif($quotations->configurableitems == 8){
+        } elseif($id->configurableitems == 8){
             return $this->stredorValidate($request);
-        } elseif($quotations->configurableitems == 4){
+        } elseif($id->configurableitems == 4){
            return $this->vicimaValidate($request);
-        } elseif($quotations->configurableitems == 5){
+        } elseif($id->configurableitems == 5){
             return $this->seadecValidate($request);
-        } elseif($quotations->configurableitems == 6){
+        } elseif($id->configurableitems == 6){
             return $this->deantaValidate($request);
         } else{
             return $this->streboardValidate($request);
