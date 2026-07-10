@@ -2705,10 +2705,27 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
-                // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
-                //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
-                $glazingSystems = @$gs->GlazingSystem;
+
+                // If it's an ID, fetch the glazing system name
+                if (is_numeric($tt->GlazingSystems)) {
+
+                    $gs = GlazingSystem::join(
+                            'selected_glazing_system',
+                            'glazing_system.id',
+                            '=',
+                            'selected_glazing_system.glazingId'
+                        )
+                        ->where('selected_glazing_system.userId', Auth::id())
+                        ->where('glazing_system.' . $configurationDoor, $tt->configurableitems)
+                        ->where('glazing_system.Key', $tt->GlazingSystems)
+                        ->first();
+
+                    $glazingSystems = $gs ? $gs->GlazingSystem : 'N/A';
+
+                } else {
+                    // Already a value, use it directly
+                    $glazingSystems = $tt->GlazingSystems;
+                }
             }
 
             if ($tt->SwingType == 'SA') {
