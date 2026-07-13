@@ -4299,12 +4299,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         //PDF 2
         $CompanyId = get_company_id($id)->id;
         $a = '';
+        $aCustom = '';
         $i = 1;
         $DoorQuantity = 0;
+        $DoorQuantityCustom = 0;
         $DoorsetPrice = 0;
+        $DoorsetPriceCustom = 0;
 
         $SumDoorsetPrice = 0;
+        $SumDoorsetPriceCustom = 0;
         $SumIronmongaryPrice = 0;
+        $SumIronmongaryPriceCustom = 0;
         // $quotation_version = QuotationVersionItems::where(['QuotationId' => $quatationId , 'Version' => $version ])->count();dd($quotation_version);
 
         foreach ($shows as $show) {
@@ -4321,33 +4326,45 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             //     $item = Item::where(['itemId' => $dt->itemID , 'CompanyID' => $CompanyId , 'QuotationId' => $quatationId ])->get();
             //     foreach($item as $show){
             // $totalpriceperdoorset = $show->DoorsetPrice + $show->IronmongaryPrice;
-            $DoorQuantity += $show->DoorQuantity;
             // $DoorsetPrice += $show->DoorsetPrice;
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
 
             $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
             $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
-            $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
-            $IronmongaryPrice = 0;
+            $baseDoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
+            $IronmongaryPriceCalc = 0;
             if (!empty($show->IronmongeryID)) {
                 $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
                 if(!empty($AI->discountprice)){
-                    $IronmongaryPrice = $AI->discountprice;
+                    $IronmongaryPriceCalc = $AI->discountprice;
                 } else{
                     $marginwithcal = 100 - $margin;
                     $testvar = $marginwithcal/100;
                     $totalcost = $AI->totalprice / $testvar;
-                    $IronmongaryPrice = $totalcost;
+                    $IronmongaryPriceCalc = $totalcost;
                 }
             }
 
-            // dd( $IronmongaryPrice);
-            $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                $DoorsetPrice = $baseDoorsetPrice;
+                $IronmongaryPrice = $IronmongaryPriceCalc;
+                $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
+                $SumDoorsetPrice += $DoorsetPrice;
+                $SumIronmongaryPrice += $IronmongaryPrice;
 
-            $SumDoorsetPrice += $DoorsetPrice;
-            $SumIronmongaryPrice += $IronmongaryPrice;
+                $DoorQuantity++;
+            }else{
+                $DoorsetPriceCustom = $baseDoorsetPrice;
+                $IronmongaryPriceCustom = $IronmongaryPriceCalc;
+                $totalpriceperdoorsetCustom = $DoorsetPriceCustom + $IronmongaryPriceCustom;
+
+                $SumDoorsetPriceCustom += $DoorsetPriceCustom;
+                $SumIronmongaryPriceCustom += $IronmongaryPriceCustom;
+
+                $DoorQuantityCustom++;
+            }
 
             $configurationItem = $show->configurableitems;
             $configurationItemName = configurationDoor($configurationItem);
@@ -4648,7 +4665,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $SideScreen2 = 'N/A';
             }
 
-            if($show->configurableitems == 4){
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
@@ -4712,7 +4729,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             ';
             }else{
 
-                $a .= '<tr>
+                $aCustom .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
@@ -4766,11 +4783,11 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <td>' . $COC . '</td>
                             <td>' . $SpecialFeatureRefs . '</td>';
                             if($HideCosts == 0){
-                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
-                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                                $aCustom .= '<td class="tbl_last">' . round($DoorsetPriceCustom, 2) . '</td>
+                                <td class="tbl_last">' . round($IronmongaryPriceCustom, 2) . '</td>';
                             }
 
-                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
+                            $aCustom .= '<td class="tbl_last">' . round($totalpriceperdoorsetCustom, 2) . '</td>
                             </tr>
                             ';
             }
@@ -4781,6 +4798,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
+        $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
 
         $a .= '
                     <tr>
@@ -4796,17 +4814,36 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     </tr>
                 ';
 
+        $aCustom .= '
+                    <tr>
+                        <td class="tbl_bottom" colspan="4"></td>
+                        <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
+                        <td class="tbl_bottom" colspan="39"></td>';
+                        if($HideCosts == 0){
+                            $aCustom .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPriceCustom, 2) . '</td>
+                            <td class="tbl_bottom">' . $currency.round($SumIronmongaryPriceCustom, 2) . '</td>';
+                        }
 
-        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 9){
+                        $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
+                    </tr>
+                ';
+
+
+        if(isset($a)){
             $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
-        }else{
-            $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
 
         // return $pdf4->download('file4.pdf');
         $path4 = public_path() . '/allpdfFile';
         $fileName4 = $id . '4' . '.' . 'pdf';
         $pdf4->save($path4 . '/' . $fileName4);
+
+        if(isset($aCustom)){
+            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        }
+        $path4_custom = public_path() . '/allpdfFile';
+        $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
+        $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
 
         // side screen door list
 
@@ -7615,6 +7652,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
             $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_custom);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
@@ -7623,6 +7661,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         } else {
             $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_custom);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
             $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
