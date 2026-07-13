@@ -3976,16 +3976,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
         $currency = QuotationCurrency($quotaion->Currency);
 
-        // $configurationItem = 1;
-        $configurationItem = $quotaion->configurableitems;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
-
-        $configurationItemName = configurationDoor($configurationItem);
-        if($configurationItemName === 'Halspan'){
-            $configurationItemName = 'Halspan Optima';
-        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -4359,6 +4349,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $SumDoorsetPrice += $DoorsetPrice;
             $SumIronmongaryPrice += $IronmongaryPrice;
 
+            $configurationItem = $show->configurableitems;
+            $configurationItemName = configurationDoor($configurationItem);
+            if($configurationItemName === 'Halspan'){
+                $configurationItemName = 'Halspan Optima';
+            }
+
             $DoorLeafFinish = "N/A";
             if (!empty($show->DoorLeafFinish)) {
                 $dlf = DoorLeafFinish($configurationItem, $show->DoorLeafFinish);
@@ -4652,12 +4648,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4){
+            if($show->configurableitems == 4){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -4720,7 +4716,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -4846,7 +4842,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         })
         ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
-        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
 
         $TotalItems = count($ed->toArray());
 
@@ -4854,6 +4850,12 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $PageBreakCounts = 1;
 
         foreach ($ed as $tt) {
+            $configurationItem = $tt->configurableitems;
+            $configurationItemName = configurationDoor($configurationItem);
+            if($configurationItemName === 'Halspan'){
+                $configurationItemName = 'Halspan Optima';
+            }
+
             $getLeaf = IntumescentSealLeafType::where('id',$tt->IntumescentLeafType)->select('id','leaf_type_key','door_thickness')->first();
             if($getLeaf){
                 $fire = $tt->FireRating . ' - ' . $getLeaf->leaf_type_key . ' (' . $getLeaf->door_thickness . 'mm)';
@@ -6805,7 +6807,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
-            if($quotaion->configurableitems == 4){
+            if($tt->configurableitems == 4){
                     $elevTbl .= '<tr>
                                     <td class="dicription_grey">Leaf Type</td>
                                     <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
