@@ -208,7 +208,7 @@
                                         <thead class="table-header-bg">
                                             <tr class="text-white">
                                                 <th>Line</th>
-                                                <th>Door Qty</th>
+                                                <th>Door Core</th>
                                                 <th>Fire Rating</th>
                                                 <th>Door Type</th>
                                                 <th>Door No.</th>
@@ -240,7 +240,7 @@
                                                     <input type="hidden" class="check" value="{{$row->itemId}}">
                                                     <input type="hidden" class="doors_{{$index}}" value="{{$row->id}}">
                                                 </td>
-                                                <td>{{$row->DoorQuantity}}</td>
+                                                <td>{{ doorcorename($row['configurableitems']) }}</td>
                                                 <td>{{$row->FireRating}}</td>
                                                 <td>{{$row->DoorType}}</td>
                                                 <td>{{$row->doorNumber}}</td>
