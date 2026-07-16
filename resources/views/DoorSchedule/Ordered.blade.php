@@ -535,14 +535,9 @@
         var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -552,14 +547,9 @@
         var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4){
-                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -568,7 +558,6 @@
         var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
@@ -580,14 +569,9 @@
         var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -606,7 +590,6 @@
     ExcelExportNonConfig = function() {
         var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
@@ -619,7 +602,6 @@
         var cuttingListUrl = $("#cuttingListUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
@@ -630,7 +612,6 @@
     allGlazingBeadsExport = function() {
         var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
