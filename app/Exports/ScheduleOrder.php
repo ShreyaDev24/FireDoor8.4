@@ -7,7 +7,7 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Illuminate\Support\Facades\File;
-use App\Models\Item;
+use App\Models\Items;
 use App\Models\Project;
 use App\Models\Quotation;
 use App\Models\CustomerContact;
@@ -37,9 +37,11 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
         $quotaion = Quotation::where('id',$quotationId)->first();
 
 
-        $item = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
-        ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->where('quotation_version_items.version_id',$versionId)->get();
+        $item = Items::join('item_master','items.itemId','item_master.itemID')
+                ->where('items.QuotationId', $quotationId)
+                ->where('items.VersionId', $versionId)
+                ->get();
+
         $SumDoorsetPrice = 0;
         $SumIronmongaryPrice = 0;
         $SumDoorQuantity = 0;
@@ -47,11 +49,33 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
         $i = 0;
         $data = [];
         foreach($item as $items){
+
+            $configurableitems = '';
+            if($item[$i]->configurableitems == 1){
+                $configurableitems = 'Streboard';
+            }elseif($item[$i]->configurableitems == 2){
+                $configurableitems = 'Halspan';
+            }elseif($item[$i]->configurableitems == 3){
+                $configurableitems = 'Norma';
+            }elseif($item[$i]->configurableitems == 4){
+                $configurableitems = 'Vicaima';
+            }elseif($item[$i]->configurableitems == 5){
+                $configurableitems = 'Seadec';
+            }elseif($item[$i]->configurableitems == 6){
+                $configurableitems = 'Deanta';
+            }elseif($item[$i]->configurableitems == 7){
+                $configurableitems = 'Flamebreak';
+            }elseif($item[$i]->configurableitems == 8){
+                $configurableitems = 'Stredor';
+            }elseif($item[$i]->configurableitems == 9){
+                $configurableitems = 'MMM';
+            }
             $totalpriceperdoorset = $item[$i]->DoorsetPrice + $item[$i]->IronmongaryPrice;
             $SumDoorQuantity += $item[$i]->DoorQuantity;
             $SumDoorsetPrice += $item[$i]->DoorsetPrice;
             $SumIronmongaryPrice += $item[$i]->IronmongaryPrice;
 
+            $configurableitems = $configurableitems;
 
             $Floor = $item[$i]->floor;
             $DoorNumber = $item[$i]->doorNumber;
@@ -98,6 +122,7 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
 
             $data[] = [
                 $j,
+                $configurableitems,
                 $Floor,
                 $DoorNumber,
                 'description',
@@ -153,9 +178,10 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
             $i++;
             $j++;
         }
-        
+
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
+            '',
             '',
             '',
             '',
@@ -172,11 +198,12 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
         return collect($allData);
         // return collect($data);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'Line No.',
+            'Configurable Items',
             'Floor',
             'Door No.',
             'Door Description',
@@ -263,14 +290,14 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
 
 
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A10:AR10'; // All headers
+                $cellRange = 'A10:As10'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -303,13 +330,13 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                 } else {
                     $customerContact = '';
                 }
-                
+
                 $cust_FirstName = '';
                 $cust_LastName = '';
                 if(!empty($customerContact->FirstName)){
                     $cust_FirstName = $customerContact->FirstName;
                 }
-                
+
                 if(!empty($customerContact->LastName)){
                     $cust_LastName = $customerContact->LastName;
                 }
@@ -324,7 +351,7 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                     else{
                         $event->sheet->setCellValue('D1', '');
                     }
-                
+
                 $event->sheet->setCellValue('D2', $cust_FirstName.' '.$cust_LastName);
                 $event->sheet->setCellValue('D3', 'Sales Doorset Schedule');
                 $event->sheet->setCellValue('D4', $date);
@@ -363,11 +390,11 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
             }
 
 
-                $event->sheet->mergeCells('AP1:AR1');
-                $event->sheet->getStyle("AP1:AR1")->getFont()->setSize(18)->setBold(true);
+                $event->sheet->mergeCells('AP1:AS1');
+                $event->sheet->getStyle("AP1:AS1")->getFont()->setSize(18)->setBold(true);
 
 
-                $cellRange3 = 'AP2:AR8';
+                $cellRange3 = 'AP2:As8';
                 $styleArray3 = [
                     'alignment' => [
                         // 'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_LEFT,
@@ -380,18 +407,18 @@ class ScheduleOrder implements FromCollection,WithHeadings,WithEvents
                 ];
                 $event->sheet->setCellValue('AP2', $rr);
                 // $event->sheet->getStyle("AP2:AR8")->getAlignment()->setWrapText(true)->setVertical(Alignment::VERTICAL_CENTER);
-                $event->sheet->getDelegate()->getStyle('AP2:AR8')->getAlignment()->setWrapText(true);
-                $event->sheet->mergeCells('AP2:AR5');
+                $event->sheet->getDelegate()->getStyle('AP2:As8')->getAlignment()->setWrapText(true);
+                $event->sheet->mergeCells('AP2:AS5');
                 $event->sheet->getDelegate()->getStyle($cellRange3)->applyFromArray($styleArray3);
                 // $event->sheet->getStyle("AP2:AR8")->getAlignment('top');
 
-                $event->sheet->mergeCells('AP6:AR6');
+                $event->sheet->mergeCells('AP6:AS6');
                 $event->sheet->setCellValue('AP6', $r2);
 
-                $event->sheet->mergeCells('AP7:AR7');
+                $event->sheet->mergeCells('AP7:AS7');
                 $event->sheet->setCellValue('AP7', $r3);
 
-                $event->sheet->mergeCells('AP8:AR8');
+                $event->sheet->mergeCells('AP8:AS8');
                 $event->sheet->setCellValue('AP8', $r4);
 
 
