@@ -506,7 +506,7 @@ class DoorScheduleController extends Controller
                     '
                 <tr>
                     <td>' . $i . '</td>
-                    <td><a href="' . ConfigurationURL($q->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>
+                    <td><a href="' . ConfigurationURL($row->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>
                     <td>' . $row->DoorType . '</td>
                     <td>' . $row->floor . '</td>
                     <td>' . $row->FireRating . '</td>
@@ -5950,6 +5950,17 @@ class DoorScheduleController extends Controller
             $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
         }
 
+        // $QuotationIdData = Quotation::get();
+
+        // foreach($QuotationIdData as $quotation){
+        //     $item = FavoriteItem::where(['quotationId' => $quotation->id])->get();
+        //     foreach($item as $data){
+        //         FavoriteItem::where('id', $data->id)->update([
+        //             'configurableitems' => $quotation->configurableitems
+        //         ]);
+        //     }
+        // }
+
         if ($Quotation === null) {
             return abort(404);
         }
@@ -10629,6 +10640,7 @@ class DoorScheduleController extends Controller
 
             if (empty($Favorite)) {
                 $FavoriteItem = new FavoriteItem();
+                $FavoriteItem->configurableitems = $request->configurableitems;
                 $FavoriteItem->itemId = $request->itemId;
                 $FavoriteItem->favorite_id = $request->favName;
                 $FavoriteItem->favorite_type = $request->favType;
@@ -10729,8 +10741,8 @@ class DoorScheduleController extends Controller
                     //JFDS 1042 START
                     $currentquotation = Quotation::where('id', $request->qId)->first();
                     $favquotation = Quotation::where('id', $request->quotationId)->first();
-                    $configurableitems = configurationDoor($favquotation->configurableitems);
-                    $current = configurationDoor($currentquotation->configurableitems);
+                    // $configurableitems = configurationDoor($favquotation->configurableitems);
+                    // $current = configurationDoor($currentquotation->configurableitems);
                     // if (
                     //     !is_null($currentquotation->configurableitems) &&
                     //     !is_null($favquotation->configurableitems) &&
@@ -10917,7 +10929,7 @@ class DoorScheduleController extends Controller
             foreach ($aa as $row) {
                 $doorNumber = '';
                 if (!empty($row->doorNumber)) {
-                    $doorNumber = '<td><a href="' . ConfigurationURL($q->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
+                    $doorNumber = '<td><a href="' . ConfigurationURL($row->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
                     $delete = '<td><a onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')" href="javascript:void(0);" class="btn btn-danger">Delete <i class="fa fa-trash"></i></a></td>';
                 } else {
                     $doorNumber = '<td></td>';
@@ -10965,7 +10977,7 @@ class DoorScheduleController extends Controller
             foreach ($aa as $row) {
                 $doorNumber = '';
                 if (!empty($row->doorNumber)) {
-                    $doorNumber = '<td><a href="' . ConfigurationURL($q->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
+                    $doorNumber = '<td><a href="' . ConfigurationURL($row->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
                     // $assign = '<td><a onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')" href="javascript:void(0);" class="btn btn-success">Assign <i class="fa fa-edit"></i></a></td>';
                     $assign = '<td><a href="javascript:void(0);" class="btn btn-success" onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')">Assign <i class="fa fa-edit"></i></a></td>';
 
