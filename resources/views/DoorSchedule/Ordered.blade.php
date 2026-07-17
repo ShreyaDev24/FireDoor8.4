@@ -46,25 +46,22 @@
                                               Side Screen Assign Plot Ref/ Certification No
                                             </a>
                                         </li>
-                                        <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
-                                                    id="">Generate Elevation Drawing</a></li>
-                                            <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
-                                                    Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom
-                                                Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
-                                            <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ElevationDrawing();" id="">Generate Elevation Drawing</a></li>
+                                        <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
+                                        <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                         <li><a href="javascript:void(0);" onClick="DoorPickList();">Door Pick list</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                     </ul>
