@@ -1531,7 +1531,7 @@
                     alert("You haven't selected any version yet.");
                     return false;
                 }
-                var configurableitems = $('#configurableitems').val();
+                var configurableitems = $('#configurableitemsId').val();
                 var quotationId = $('#quotationId').val();
                 var itemId = $('#itemId').val();
                 var favName = $('#favName').val();
@@ -3669,7 +3669,7 @@
                 }
             }
             function favoriteItem(itemId, id,favType,title,name,doorSetPrice=null,IronmongaryPrice=null,configurableitems=null) {
-                $('#configurableitems').val(configurableitems);
+                $('#configurableitemsId').val(configurableitems);
                 $('#itemId').val(itemId);
                 $('#itemMasterId').val(id);
                 $('#favType').val(favType);
@@ -3960,7 +3960,7 @@
                             <input type="hidden" class="form-control" id="favType">
                             <input type="hidden" class="form-control" id="doorSetPrice">
                             <input type="hidden" class="form-control" id="IronmongaryPrice">
-                            <input type="hidden" class="form-control" id="configurableitems">
+                            <input type="hidden" class="form-control" id="configurableitemsId">
                         </div>
                     </div>
                 </div>
