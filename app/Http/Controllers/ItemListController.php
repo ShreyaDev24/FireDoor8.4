@@ -1811,21 +1811,182 @@ class ItemListController extends Controller
                     $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.firerating', $fireRatingValue],['intumescentseals2.tag', $fireRatingValue], [ 'intumescentseals2.height_max', '>=', $leafHeightNoOPValue], [ 'intumescentseals2.width_max', '>=', $leafWidth1Value]]);
 
                 }
-                if(!empty($intumescentSealType)){
-                        $getConditions = array_merge($getConditions, [['intumescentseals2.intumescentSealType', $intumescentSealType]]);
-                        $sqlGetConditions = array_merge($sqlGetConditions, [['intumescentseals2.intumescentSealType', $intumescentSealType]]);
-                        $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'intumescentseals2.id');
-                    })
-                    ->where($getConditions)
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->get();
+                /*
+                |--------------------------------------------------------------------------
+                | Halspan FD30 frame-type calculation
+                |--------------------------------------------------------------------------
+                | pageId 2 = Halspan
+                | Density below 640 = Frame Type 1
+                | Minimum density 640 or above = Frame Type 2
+                */
+                $isHalspanFD30 = (
+                    (int) $pageId === 2
+                    && $fireRatingValue === 'FD30'
+                );
 
-                    $sql = SettingIntumescentSeals2::select('setting_intumescentseals2.*', 'intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join): void {
-                        $join->on('setting_intumescentseals2.id', '=', 'intumescentseals2.intumescentseals2_id');
-                    })
-                    ->whereRaw("FIND_IN_SET(?, REPLACE(customeleafTypes, ' ', '')) > 0", [$intumescentsealsleaftype])
-                    ->where($sqlGetConditions)->toSQL();
+                $selectedFrameType = null;
+
+                if ($isHalspanFD30 && !empty($frameMaterialNew)) {
+
+                    /*
+                    * Supports $frameMaterialNew containing either:
+                    * - lipping_species ID
+                    * - SpeciesName
+                    */
+                    $frameMaterialQuery = DB::table('lipping_species')
+                        ->select('id', 'SpeciesName', 'MinValue', 'MaxValues');
+
+                    if (is_numeric($frameMaterialNew)) {
+                        $frameMaterialQuery->where('id', (int) $frameMaterialNew);
+                    } else {
+                        $frameMaterialQuery->where(
+                            'SpeciesName',
+                            trim((string) $frameMaterialNew)
+                        );
+                    }
+
+                    $selectedFrameMaterial = $frameMaterialQuery->first();
+
+                    if (!empty($selectedFrameMaterial)) {
+
+                        /*
+                        * MinValue is used because the material must have a guaranteed
+                        * minimum density of at least 640 to qualify as Frame Type 2.
+                        */
+                        $minimumFrameDensity = (float) $selectedFrameMaterial->MinValue;
+
+                        $selectedFrameType = $minimumFrameDensity >= 640 ? 2 : 1;
+                    }
+                }
+
+                if (!empty($intumescentSealType)) {
+
+                    $getConditions = array_merge(
+                        $getConditions,
+                        [
+                            [
+                                'intumescentseals2.intumescentSealType',
+                                $intumescentSealType
+                            ]
+                        ]
+                    );
+
+                    $sqlGetConditions = array_merge(
+                        $sqlGetConditions,
+                        [
+                            [
+                                'intumescentseals2.intumescentSealType',
+                                $intumescentSealType
+                            ]
+                        ]
+                    );
+
+                    $IntumescentSeals_A = SettingIntumescentSeals2::select(
+                            'setting_intumescentseals2.*',
+                            'intumescentseals2.id as intumescentseals2_id',
+                            'intumescentseals2.*'
+                        )
+                        ->join('intumescentseals2', function ($join): void {
+                            $join->on(
+                                'setting_intumescentseals2.id',
+                                '=',
+                                'intumescentseals2.id'
+                            );
+                        })
+                        ->where($getConditions)
+                        ->whereRaw(
+                            "FIND_IN_SET(
+                                ?,
+                                REPLACE(
+                                    setting_intumescentseals2.customeleafTypes,
+                                    ' ',
+                                    ''
+                                )
+                            ) > 0",
+                            [$intumescentsealsleaftype]
+                        )
+
+                        /*
+                        * Only for Halspan FD30:
+                        * Match the intumescent row with the calculated frame type.
+                        */
+                        ->when(
+                            $isHalspanFD30,
+                            function ($query) use ($selectedFrameType) {
+
+                                if (!in_array($selectedFrameType, [1, 2], true)) {
+                                    /*
+                                    * Frame material was not found.
+                                    * Do not return an incorrect FD30 intumescent option.
+                                    */
+                                    return $query->whereRaw('1 = 0');
+                                }
+
+                                return $query->whereRaw(
+                                    "FIND_IN_SET(
+                                        ?,
+                                        REPLACE(
+                                            setting_intumescentseals2.frameTypes,
+                                            ' ',
+                                            ''
+                                        )
+                                    ) > 0",
+                                    [$selectedFrameType]
+                                );
+                            }
+                        )
+                        ->get();
+
+                    $sql = SettingIntumescentSeals2::select(
+                            'setting_intumescentseals2.*',
+                            'intumescentseals2.id as intumescentseals2_id',
+                            'intumescentseals2.*'
+                        )
+                        ->join('intumescentseals2', function ($join): void {
+                            $join->on(
+                                'setting_intumescentseals2.id',
+                                '=',
+                                'intumescentseals2.intumescentseals2_id'
+                            );
+                        })
+                        ->whereRaw(
+                            "FIND_IN_SET(
+                                ?,
+                                REPLACE(
+                                    setting_intumescentseals2.customeleafTypes,
+                                    ' ',
+                                    ''
+                                )
+                            ) > 0",
+                            [$intumescentsealsleaftype]
+                        )
+                        ->where($sqlGetConditions)
+
+                        /*
+                        * Apply the same frame-type condition to the SQL/debug query.
+                        */
+                        ->when(
+                            $isHalspanFD30,
+                            function ($query) use ($selectedFrameType) {
+
+                                if (!in_array($selectedFrameType, [1, 2], true)) {
+                                    return $query->whereRaw('1 = 0');
+                                }
+
+                                return $query->whereRaw(
+                                    "FIND_IN_SET(
+                                        ?,
+                                        REPLACE(
+                                            setting_intumescentseals2.frameTypes,
+                                            ' ',
+                                            ''
+                                        )
+                                    ) > 0",
+                                    [$selectedFrameType]
+                                );
+                            }
+                        )
+                        ->toSQL();
                 }
                 else{
                     $IntumescentSeals_A = SettingIntumescentSeals2::select('setting_intumescentseals2.*','intumescentseals2.id as intumescentseals2_id','intumescentseals2.*')->Join('intumescentseals2', function($join): void {
