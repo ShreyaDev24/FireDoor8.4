@@ -2363,6 +2363,27 @@
                 })
 
             }
+            /**
+             * Build items[] / doors[] for versionstore from the canonical schedule (All tab only).
+             * Each row carries itemId on .check and item_master id on data-door-id — no global index.
+             */
+            function collectVersionStoreDoorPayload() {
+                var items = [];
+                var doors = [];
+                var quantity = [];
+                $('#All .itemTable tbody tr').each(function () {
+                    var $check = $(this).find('input.check');
+                    if (!$check.length) {
+                        return;
+                    }
+                    items.push($check.val());
+                    doors.push(String($check.data('door-id')));
+                    var $qty = $(this).find('input.quantity-input');
+                    quantity.push($qty.length ? ($qty.val() || '1') : '1');
+                });
+                return { items: items, doors: doors, quantity: quantity };
+            }
+
             function CreateNewVersionModal(version) {
                 if (version == 0) {
                     var Flag = $("#flag").val();
@@ -2375,27 +2396,17 @@
                         swal("Warning!", "Please complete the edit header form.", "warning");
                         return false;
                     }
-                    var checkboxes = document.getElementsByClassName('check');
                     var SideScreenCount = $("#SideScreenCount").val();
                     var isStatusChecked = true;
                     if(SideScreenCount == 0){
                         isStatusChecked = false;
                     }
-                    var isChecked = false;
                     var version = $("#version").val();
-                    var doors = [];
-                    var items = [];
-                    var quantity = [];
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        isChecked = true;
-                        items.push(checkboxes[i].value);
-                        // var quant = document.getElementsByClassName('quantity_'+i);
-                        // items.push(quant[0].value);
-                        quantity.push($('.quantity_' + i).val());
-                        // var door = document.getElementsByClassName('doors_'+i)[0].value;
-                        // doors.push(door[0].value);
-                        doors.push($('.doors_' + i).val());
-                    }
+                    var payload = collectVersionStoreDoorPayload();
+                    var doors = payload.doors;
+                    var items = payload.items;
+                    var quantity = payload.quantity;
+                    var isChecked = items.length > 0;
                     if (isChecked || isStatusChecked) {
                         $('.loader').empty().css({
                             'display': 'block'
@@ -2798,27 +2809,17 @@
                 }
             });
             $("#generateInvoice").click(function() {
-                var checkboxes = document.getElementsByClassName('check');
                 var SideScreenCount = $("#SideScreenCount").val();
                 var isStatusChecked = true;
                 if(SideScreenCount == 0){
                     isStatusChecked = false;
                 }
-                var isChecked = false;
                 var version = $("#version").val();
-                var doors = [];
-                var items = [];
-                var quantity = [];
-                for (var i = 0; i < checkboxes.length; i++) {
-                    isChecked = true;
-                    items.push(checkboxes[i].value);
-                    // var quant = document.getElementsByClassName('quantity_'+i);
-                    // items.push(quant[0].value);
-                    quantity.push($('.quantity_' + i).val());
-                    // var door = document.getElementsByClassName('doors_'+i)[0].value;
-                    // doors.push(door[0].value);
-                    doors.push($('.doors_' + i).val());
-                }
+                var payload = collectVersionStoreDoorPayload();
+                var doors = payload.doors;
+                var items = payload.items;
+                var quantity = payload.quantity;
+                var isChecked = items.length > 0;
                 if (isChecked || isStatusChecked) {
                     $.ajax({
                         type: "POST",
@@ -2884,13 +2885,11 @@
                                 }
                                 innerhtml += '<tr>';
                                 innerhtml += '<td>' + (i + 1) + '<input type="hidden" class="check" value="' + door[
-                                    i].itemId + '"><input type="hidden" class="doors_' + i + '" value="' + door[
-                                    i].id + '"></td>';
+                                    i].itemId + '" data-door-id="' + door[i].id + '"></td>';
                                 innerhtml += '<td>' + door[i].DoorNumber + '</td>';
                                 innerhtml += '<td>' + doorType + '</td>';
                                 innerhtml +=
-                                    '<td><input type="number"  style="width: 100%;" readonly id="quantity" value="1" name="quantity" min="1" max="100" class="quantity_' +
-                                    i + '"></td>';
+                                    '<td><input type="number"  style="width: 100%;" readonly id="quantity" value="1" name="quantity" min="1" max="100" class="quantity-input"></td>';
                                 innerhtml += '<td>' + door[i].DoorsetPrice + '</td>';
                                 innerhtml += '<td>' + door[i].DoorsetPrice + '</td>';
                                 innerhtml += '<td class="text-center">';

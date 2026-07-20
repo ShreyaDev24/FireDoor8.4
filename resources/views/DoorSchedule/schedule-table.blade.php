@@ -46,8 +46,7 @@
                     <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
                         <td>
                             {{ $SI }}
-                            <input type="hidden" class="check" value="{{ $row['itemId'] }}">
-                            <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
+                            <input type="hidden" class="check" value="{{ $row['itemId'] }}" data-door-id="{{ $row['id'] }}">
                         </td>
 
                         <td>{{ doorcorename($row['configurableitems']) }}</td>
