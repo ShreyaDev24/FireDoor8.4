@@ -1018,7 +1018,7 @@ const render = (CustomElement = null) => {
             svg.append('rect') // over panel rect (upper part)
                 .attr('x', ix -SideLightPanel1Width )
                 .attr('y', iy) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                .attr('width', FrameWidthForMap + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                 .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', '#D0D0C6');
@@ -1048,7 +1048,7 @@ const render = (CustomElement = null) => {
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - SideLightPanel1Width )
                             .attr("y1", iy - 10)
-                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x2", ix  + FrameWidthForMap  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy - 10)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)")
@@ -1062,9 +1062,9 @@ const render = (CustomElement = null) => {
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x1", ix + FrameWidthForMap + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y1", iy + FrameThicknessForMap - 20)
-                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x2", ix + FrameWidthForMap + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy + FrameThicknessForMap)
 
                        svg.append("text")           //Text of height of over panel of door
