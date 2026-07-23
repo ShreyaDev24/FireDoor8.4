@@ -822,6 +822,7 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         'Ironmongery&MachiningCosts' => [ 1,'DoorCore', 2, 3, 4, 5, 'LMPerDoorType', 6],
         'GeneralLabourCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'MachiningCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'default' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
     ];
 

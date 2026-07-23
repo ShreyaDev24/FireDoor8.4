@@ -2236,6 +2236,34 @@ class DoorScheduleController extends Controller
 
                     $j = 1;
                     $doorCoreId = trim((string) $row[$j++]);
+
+                    $configurableitems = '';
+                    if ($doorCoreId == 'Streboard') {
+                        $configurableitems = 1;
+                    } elseif ($doorCoreId == 'Halspan') {
+                        $configurableitems = 2;
+                    } elseif ($doorCoreId == 'Norma') {
+                        $configurableitems = 3;
+                    } elseif ($doorCoreId == 'Vicaima') {
+                        $configurableitems = 4;
+                    }elseif($doorCoreId == 'Seadec'){
+                        $configurableitems = 5;
+                    }elseif($doorCoreId == 'Deanta'){
+                        $configurableitems = 6;
+                    }elseif($doorCoreId == 'Flamebreak'){
+                        $configurableitems = 7;
+                    }elseif($doorCoreId == 'Stredor'){
+                        $configurableitems = 8;
+                    }elseif($doorCoreId == 'MMM'){
+                        $configurableitems = 9;
+                    }
+
+                    $allowedDoorCoreIds = [1, 2, 7, 8];
+
+                    if (!in_array($configurableitems, $allowedDoorCoreIds)) {
+                        return redirect()->back()->with('error', "Invalid Door Core ID ({$doorCoreId}). You have selected 'Custom Door'. Please upload a Custom Door file to continue.");
+                    }
+
                     $IntumescentLeafType = trim((string) $row[$j++]);
                     $FrameOnOff = trim((string) $row[$j++]);
                     $floor = trim((string) $row[$j++]);
@@ -2432,27 +2460,6 @@ class DoorScheduleController extends Controller
                     $IronmongaryPrice = trim((string) $row[$j++]);
 
                     // dd($LippingType);
-
-                    $configurableitems = '';
-                    if ($doorCoreId == 'Streboard') {
-                        $configurableitems = 1;
-                    } elseif ($doorCoreId == 'Halspan') {
-                        $configurableitems = 2;
-                    } elseif ($doorCoreId == 'Norma') {
-                        $configurableitems = 3;
-                    } elseif ($doorCoreId == 'Vicaima') {
-                        $configurableitems = 4;
-                    }elseif($doorCoreId == 'Seadec'){
-                        $configurableitems = 5;
-                    }elseif($doorCoreId == 'Deanta'){
-                        $configurableitems = 6;
-                    }elseif($doorCoreId == 'Flamebreak'){
-                        $configurableitems = 7;
-                    }elseif($doorCoreId == 'Stredor'){
-                        $configurableitems = 8;
-                    }elseif($doorCoreId == 'MMM'){
-                        $configurableitems = 9;
-                    }
 
                     $Checkingfirerating = Option::where(['OptionSlug' => 'fire_rating', 'OptionKey' => $FireRating])->count();
 
@@ -3058,6 +3065,34 @@ class DoorScheduleController extends Controller
 
                     $j = 1;
                     $doorCoreId = trim((string) $row[$j++]);
+
+                    $configurableitems = '';
+                    if ($doorCoreId == 'Streboard') {
+                        $configurableitems = 1;
+                    } elseif ($doorCoreId == 'Halspan') {
+                        $configurableitems = 2;
+                    } elseif ($doorCoreId == 'Norma') {
+                        $configurableitems = 3;
+                    } elseif ($doorCoreId == 'Vicaima') {
+                        $configurableitems = 4;
+                    }elseif($doorCoreId == 'Seadec'){
+                        $configurableitems = 5;
+                    }elseif($doorCoreId == 'Deanta'){
+                        $configurableitems = 6;
+                    }elseif($doorCoreId == 'Flamebreak'){
+                        $configurableitems = 7;
+                    }elseif($doorCoreId == 'Stredor'){
+                        $configurableitems = 8;
+                    }elseif($doorCoreId == 'MMM'){
+                        $configurableitems = 9;
+                    }
+
+                    $allowedDoorCoreIds = [4,5,6,9];
+
+                    if (!in_array($configurableitems, $allowedDoorCoreIds)) {
+                        return redirect()->back()->with('error', "Invalid Door Core ({$doorCoreId}). You have selected 'Standard Door'. Please upload a Standard Door file to continue.");
+                    }
+
                     $FrameOnOff = trim((string) $row[$j++]);
                     $floor = trim((string) $row[$j++]);
                     $doorNumber = trim((string) $row[$j++]);
@@ -3277,27 +3312,6 @@ class DoorScheduleController extends Controller
                     $DoorsetPrice = trim((string) $row[$j++]);
                     $IronmongaryPrice = trim((string) $row[$j++]);
                     $totalPricePerDoorSet = trim((string) $row[$j++]);
-
-                    $configurableitems = '';
-                    if ($doorCoreId == 'Streboard') {
-                        $configurableitems = 1;
-                    } elseif ($doorCoreId == 'Halspan') {
-                        $configurableitems = 2;
-                    } elseif ($doorCoreId == 'Norma') {
-                        $configurableitems = 3;
-                    } elseif ($doorCoreId == 'Vicaima') {
-                        $configurableitems = 4;
-                    }elseif($doorCoreId == 'Seadec'){
-                        $configurableitems = 5;
-                    }elseif($doorCoreId == 'Deanta'){
-                        $configurableitems = 6;
-                    }elseif($doorCoreId == 'Flamebreak'){
-                        $configurableitems = 7;
-                    }elseif($doorCoreId == 'Stredor'){
-                        $configurableitems = 8;
-                    }elseif($doorCoreId == 'MMM'){
-                        $configurableitems = 9;
-                    }
 
                     $Checkingfirerating = Option::where(['OptionSlug' => 'fire_rating', 'OptionKey' => $FireRating])->count();
 
