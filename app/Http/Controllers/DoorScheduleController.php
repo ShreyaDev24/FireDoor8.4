@@ -2260,7 +2260,7 @@ class DoorScheduleController extends Controller
 
                     $allowedDoorCoreIds = [1, 2, 7, 8];
 
-                    if (!in_array($configurableitems, $allowedDoorCoreIds)) {
+                    if (isset($configurableitems) && !empty($configurableitems) && !in_array($configurableitems, $allowedDoorCoreIds)) {
                         return redirect()->back()->with('error', "Invalid Door Core ID ({$doorCoreId}). You have selected 'Custom Door'. Please upload a Custom Door file to continue.");
                     }
 
@@ -3089,7 +3089,7 @@ class DoorScheduleController extends Controller
 
                     $allowedDoorCoreIds = [4,5,6,9];
 
-                    if (!in_array($configurableitems, $allowedDoorCoreIds)) {
+                    if (isset($configurableitems) && !empty($configurableitems) && !in_array($configurableitems, $allowedDoorCoreIds)) {
                         return redirect()->back()->with('error', "Invalid Door Core ({$doorCoreId}). You have selected 'Standard Door'. Please upload a Standard Door file to continue.");
                     }
 
