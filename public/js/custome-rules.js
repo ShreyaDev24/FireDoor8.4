@@ -3375,6 +3375,7 @@ function copyOfSideLite1Change(isstatus = false){
 
                         } else {
                             $('#glazingSystemsThickness').val('');
+                            $("#glazingBeadsFixingDetail").val('');
                         }
                         // if(data2 != '' && data2 != null){
                         //     $('#glazingBeadsFixingDetail').val(data2.OptionValue);
@@ -3384,6 +3385,7 @@ function copyOfSideLite1Change(isstatus = false){
                         // }
                     } else {
                         $("#glazingSystemsThickness").val(0);
+                        $("#glazingBeadsFixingDetail").val('');
                     }
                 }
             });
