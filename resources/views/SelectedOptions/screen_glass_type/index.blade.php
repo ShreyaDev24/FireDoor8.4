@@ -70,7 +70,7 @@
                     </th>
                     @endif
                     <th>Fire Rating</th>
-                    <th>DFRating</th>
+                    <th>dB rating</th>
                     <th>Glass Name</th>
                     <th>Width Point 1 (far right)</th>
                     <th>Height Point 1 (Lowest)</th>
