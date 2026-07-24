@@ -425,22 +425,44 @@ $(document).on('click', '#frameonoff', function(e) {
 
 // Client update: when "Intumescent Not Supplied" is ticked, the intumescent
 // seal fields are not needed - turn them off (disabled, not required, greyed).
+// When it is un-ticked, restore exactly the "required" fields that were required
+// before (so a fire rated door still forces an intumescent selection). This is
+// self-contained - it does not call FireRatingChange - so it can never break.
 function toggleIntumescentFields(){
-    var intumescentDependentFields = '#intumescentSealType, #intumescentSealLocation, #intumescentSealColor, #intumescentSealArrangement, #intumescentSealMeetingEdges';
+    var $fields = $('#intumescentSealType, #intumescentSealLocation, #intumescentSealColor, #intumescentSealArrangement, #intumescentSealMeetingEdges');
     if ($('#intumescentNotSupplied').prop('checked')){
-        $(intumescentDependentFields)
-            .prop('disabled', true)
+        $fields.each(function(){
+            // Remember whether this field was required before we switch it off,
+            // so un-ticking restores the correct state for the current fire rating.
+            this.setAttribute('data-was-required', this.hasAttribute('required') ? '1' : '0');
+        });
+        $fields.prop('disabled', true)
             .removeAttr('required')
             .closest('.col-md-6').addClass('disabled-section');
     } else {
-        $(intumescentDependentFields)
-            .prop('disabled', false)
+        $fields.prop('disabled', false)
             .closest('.col-md-6').removeClass('disabled-section');
+        $fields.each(function(){
+            // Put "required" back only on the fields that had it before ticking.
+            if (this.getAttribute('data-was-required') === '1'){
+                this.setAttribute('required', 'required');
+            }
+        });
     }
 }
 
 $(document).on('change', '#intumescentNotSupplied', function(){
     toggleIntumescentFields();
+});
+
+// When the fire rating changes, FireRatingChange() re-applies "required" to the
+// intumescent seal fields (for FD30/FD60 etc). If "Intumescent Not Supplied" is
+// ticked those fields must stay optional, so re-strip "required" afterwards.
+// (common.js loads after the brand rules file, so this runs after FireRatingChange.)
+$(document).on('change', '#fireRating', function(){
+    if ($('#intumescentNotSupplied').prop('checked')){
+        toggleIntumescentFields();
+    }
 });
 
 function intumescentNotSupplied(){

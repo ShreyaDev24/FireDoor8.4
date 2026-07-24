@@ -1912,7 +1912,7 @@ $(function () {
 
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
-        frameHeight();
+        frameHeightUpdated();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
 
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -3167,7 +3167,7 @@ function framewidth(){
     }
 
     $("#frameWidth").val(FrameWidth);
-    frameHeight();
+    frameHeightUpdated();
 }
 function calsowidth(framewidth){
     let tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
@@ -3181,6 +3181,49 @@ $("#foursidedframe, #DoorSetType").on("change", triggerCalculations);
 function triggerCalculations() {
     framewidth();
     doorDimensionCalculation();
+}
+
+
+// New standard-frame height calc (client spec - "standard frame update").
+// Derives the SO / frame height from the door leaf height, with separate
+// head + bottom frame thickness and a saddle case. Wired in instead of frameHeight() at the call sites.
+//   3-sided : frame = leaf + gap   + undercut + head                       (SO = frame + tolerance)
+//   4-sided : frame = leaf + gap*2 + head + bottom                         (SO = frame + tolerance, no undercut)
+//   saddle  : frame = leaf + gap   + undercut + head + bottom              (SO = frame + tolerance; gap x1)
+// Rebated: head subtracts the rebate (and bottom too for 4-sided). The saddle bottom is NOT rebate-adjusted.
+function frameHeightUpdated(){
+    var Gap = parseInt($('input[name="gap"]').val(), 10) || 0;
+    var FrameThickness = parseInt($('#frameThickness').val(), 10) || 0;
+    var leafHeightNoOP = parseInt($('input[name="leafHeightNoOP"]').val(), 10) || 0;
+    var tollerance = parseInt($('input[name="tollerance"]').val(), 10) || 0;
+    var rebatedHeight = parseInt($('input[name="rebatedHeight"]').val(), 10) || 0;
+    var undercut = parseInt($('input[name="undercut"]').val(), 10) || 0;
+    var HeadFrameThickness = parseInt($('input[name="headframeThickness"]').val(), 10) || 0;
+    var BottomFrameThickness = parseInt($('input[name="bottomframeThickness"]').val(), 10) || 0;
+    if (HeadFrameThickness == 0) { HeadFrameThickness = FrameThickness; }
+    if (BottomFrameThickness == 0) { BottomFrameThickness = FrameThickness; }
+
+    var foursidedframe = document.getElementById("foursidedframe");
+    var saddleRequired = ($('#Saddle').val() == 'Yes');
+    var isRebated = ($("#frameType").val() == 'Rebated_Frame');
+
+    // Effective head / bottom thickness (rebated frames subtract the rebate).
+    var headEff = isRebated ? (HeadFrameThickness - rebatedHeight) : HeadFrameThickness;
+    var bottomEff = isRebated ? (BottomFrameThickness - rebatedHeight) : BottomFrameThickness;
+
+    var frameHeightVal;
+    if (foursidedframe && foursidedframe.checked) {
+        frameHeightVal = leafHeightNoOP + (Gap * 2) + headEff + bottomEff;
+    } else if (saddleRequired) {
+        // Saddle: head IS rebate-adjusted, but the saddle (bottom) is NOT rebated.
+        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff + BottomFrameThickness;
+    } else {
+        frameHeightVal = leafHeightNoOP + Gap + undercut + headEff;
+    }
+
+    $("#frameHeight").val(frameHeightVal);
+    $('#sOHeight').val(parseInt(frameHeightVal) + tollerance);
+    console.log(frameHeightVal, 'frameHeightUpdated', $("#frameType").val(), ((foursidedframe && foursidedframe.checked) ? '4-sided' : (saddleRequired ? 'saddle' : '3-sided')));
 }
 
 
@@ -4578,7 +4621,7 @@ $("#overpanel1").change(function () {
         var plantonStopHeight = soheight - tollerance;
         //$("#plantonStopHeight").val(plantonStopHeight);
         $("#frameHeight").val(plantonStopHeight);
-        frameHeight();
+        frameHeightUpdated();
         var frameDepth = $("#sODepth").val() != '' ? $("#sODepth").val() : 0;
         // $("#frameDepth").val(frameDepth);
         $("#leafHeightwithOP").val(0).attr('readonly', true);
@@ -5483,7 +5526,7 @@ $("#adjustmentLeafWidth1, #adjustmentLeafWidth2, #adjustmentLeafHeightNoOP").on(
             soHeight = parseInt(leafH) + parseInt(gap) + parseInt(undercut) + headFrameThicknessB + bottomFrameThicknessB + parseInt(tollerance);
         }
         $("#sOHeight").val(soHeight - parseInt(adjustmentLeafHeightNoOP))
-        frameHeight();
+        frameHeightUpdated();
     }
 
     let foursidedframe = document.getElementById("foursidedframe");

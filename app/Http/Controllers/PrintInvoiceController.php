@@ -357,14 +357,16 @@ class PrintInvoiceController extends Controller
         }
 
         $a2 = '';
-       $shows = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
-            ->where('quotation_version_items.version_id', $versionID)
-            ->select(
-                'items.*',
-                'item_master.doorNumber'
-            )
-            ->get();
+       $shows = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where('QuotationId', $quatationId)->where('VersionId', $versionID)->select('item_master.doorNumber', 'items.*')->get();
+            //   $shows = Items::with('masters')
+            // ->where('QuotationId', $quatationId)
+            // ->where('VersionId', $versionID)
+            // // ->select(
+            // //     'items.*',
+            // //     'item_master.doorNumber'
+            // // )
+            // ->get();
+            // dd($shows);
 
 
         // SUMMARY (if you still need it)
@@ -1031,7 +1033,7 @@ class PrintInvoiceController extends Controller
                 ],
                 2 => [
                     'NFR' => 'Chilt/A01205 Part 1 Revision K',
-                    'FD30' => 'Chilt/A01205 Part 1 Revision K',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision 1',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
@@ -1647,7 +1649,7 @@ class PrintInvoiceController extends Controller
 
                         </div>
                         <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
-                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194').'px;" alt="" src="'.$FrameTypeCommon.'">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
@@ -2620,6 +2622,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
+            $glassInterrity = "N/A";
+            if(!empty($tt->GlassIntegrity)){
+                $glassInterrity = $tt->GlassIntegrity;
+            }
+            $VisionGlazingBeadSpecies = "N/A";
+            if(!empty($tt->GlazingBeadSpecies)){
+                $ls = LippingSpecies::where('id', $tt->GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $VisionGlazingBeadSpecies = $ls->SpeciesName;
+                }
+            }
 
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
@@ -2671,13 +2684,40 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                 $SLBeadingType = $bt ? $bt->OptionValue : null;
             }
+            $SL2BeadingType = 'N/A';
+            if (!empty($tt->SideLight2BeadingType)) {
+                $bt = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->SideLight2BeadingType)
+                    ->first();
+
+                $SL2BeadingType = $bt ? $bt->OptionValue : null;
+            }
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
-                // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
-                //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
-                $glazingSystems = @$gs->GlazingSystem;
+
+                // If it's an ID, fetch the glazing system name
+                if (is_numeric($tt->GlazingSystems)) {
+
+                    $gs = GlazingSystem::join(
+                            'selected_glazing_system',
+                            'glazing_system.id',
+                            '=',
+                            'selected_glazing_system.glazingId'
+                        )
+                        ->where('selected_glazing_system.userId', Auth::id())
+                        ->where('glazing_system.' . $configurationDoor, $tt->configurableitems)
+                        ->where('glazing_system.Key', $tt->GlazingSystems)
+                        ->first();
+
+                    $glazingSystems = $gs ? $gs->GlazingSystem : 'N/A';
+
+                } else {
+                    // Already a value, use it directly
+                    $glazingSystems = $tt->GlazingSystems;
+                }
             }
 
             if ($tt->SwingType == 'SA') {
@@ -2794,6 +2834,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
             $sl1glasstype = 'N/A';
+            $sl2glasstype = 'N/A';
             if (!empty($tt->SideLight1GlassType)) {
                 // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
                 // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
@@ -2814,7 +2855,23 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
         }
+            }
 
+            if (!empty($tt->SideLight2GlassType)) {
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                            ->where('selected_glass_type.editBy', '=', $id);
+                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+                }
+                else{
+                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+        }
             }
 
             $beadingtype = 'N/A';
@@ -2828,6 +2885,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $ls = LippingSpecies::where('id', $tt->SL1GlazingBeadSpecies)->first();
                 if (!empty($ls->SpeciesName)) {
                     $glazingbeadspecies = $ls->SpeciesName;
+                }
+            }
+
+             $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
                 }
             }
 
@@ -2874,7 +2939,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Width = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
                 $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
@@ -2882,7 +2947,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Height = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
                 $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
@@ -3106,8 +3171,16 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <th class="tblTitle">Vision Panel</th>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Glass Type Integrity</td>
+                                    <td class="dicription_blank">' . $glassInterrity . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Glass Type + Thickness</td>
                                     <td class="dicription_blank">' . $GlassTypeForDoorDetailsTable . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species</td>
+                                    <td class="dicription_blank">' . $VisionGlazingBeadSpecies . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing System</td>
@@ -3188,6 +3261,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     }
                                      if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
+                                    <tr>
+                                        <td class="dicription_grey">SL2 Glass Type</td>
+                                        <td class="dicription_blank">' . $sl2glasstype . '</td>
+                                    </tr>
+                                     <tr>
+                                    <td class="dicription_grey">Beading Type 2</td>
+                                    <td class="dicription_blank">' . $SL2BeadingType . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species2</td>
+                                    <td class="dicription_blank">' . $glazing2beadspecies . '</td>
+                                </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
                                         <td class="dicription_blank">' . $ElevSL2Width . '</td>
@@ -4864,7 +4949,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
-                    'FD30' => 'Chilt/A01205 Part 1 Revision K',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision 1',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
@@ -5480,7 +5565,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         </div>
                         <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
-                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194').'px;" alt="" src="'.$FrameTypeCommon.'">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
@@ -6661,6 +6746,13 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $ls = LippingSpecies::where('id', $tt->SL1GlazingBeadSpecies)->first();
                 if (!empty($ls->SpeciesName)) {
                     $glazingbeadspecies = $ls->SpeciesName;
+                }
+            }
+            $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
                 }
             }
 

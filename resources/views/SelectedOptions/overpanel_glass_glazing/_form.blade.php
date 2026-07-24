@@ -12,6 +12,19 @@
             ];
         @endphp
 
+        @php
+            $selectedCores = old('core', []);
+
+            if(isset($item)){
+                $selectedCores = old('core', collect([
+                    $item->Streboard,
+                    $item->Halspan,
+                    $item->Flamebreak,
+                    $item->Stredor
+                ])->filter()->toArray());
+            }
+        @endphp
+
         @foreach ($cores as $core)
             <div class="form-check form-check-inline ml-2">
                 <input type="checkbox"
@@ -19,12 +32,7 @@
                     value="{{ $core['value'] }}"
                     data-core="{{ $core['name'] }}"
                     class="form-check-input"
-                    {{ in_array($core['value'], old('core', collect([
-                        $item->Streboard,
-                        $item->Halspan,
-                        $item->Flamebreak,
-                        $item->Stredor
-                    ])->filter()->toArray())) ? 'checked' : '' }}>
+                    {{ in_array($core['value'], $selectedCores) ? 'checked' : '' }}>
                 <label class="form-check-label">{{ $core['label'] }}</label>
             </div>
         @endforeach

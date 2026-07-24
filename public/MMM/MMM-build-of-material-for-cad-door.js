@@ -96,7 +96,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'frameThickness') {
                     getmsginput = 'FrameThickness should not be less than '+ getmininputvalue +'mm';
                 } else if (id == 'oPHeigth') {
-                    getmsginput = 'OP/FL Height should be more than ' + getmaxinputvalue + '.';
+                    getmsginput = 'OP/FL Height should not be more than ' + getmaxinputvalue + '.';
                 } else if (id == 'opTransomDepth') {
                     getmsginput = 'Transom Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'transomThickness') {
@@ -187,10 +187,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     } else if (id == 'OpBeadThickness') {
                         getmsginput = 'OP/FL Frame thickness should be more than ' + getmininputvalue + 'mm.';
-                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        // getmsginput = 'OP/FL Height should not be more than ' + getmininputvalue + '.';
                     } else if (id == 'OpBeadHeight') {
                         getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
-                        // getmsginput = 'OP/FL Height should be more than ' + getmininputvalue + '.';
+                        // getmsginput = 'OP/FL Height should not be more than ' + getmininputvalue + '.';
                     } else if (id == 'SL1Depth') {
                         getmsginput = 'SL1 Depth should be more than ' + getmininputvalue + 'mm.';
                     } else if (id == 'SL2Depth') {

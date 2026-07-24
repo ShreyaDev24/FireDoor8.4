@@ -91,7 +91,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'frameThickness') {
                     getmsginput = 'FrameThickness should not be less than '+ getmininputvalue +'mm';
                 } else if (id == 'oPHeigth') {
-                    getmsginput = 'OP/FL Height should be more than ' + getmaxinputvalue + '.';
+                    getmsginput = 'OP/FL Height should not be more than ' + getmaxinputvalue + '.';
                 } else if (id == 'ScallopedHeight') {
                     getmsginput = 'Scalloped Height should be more than '+getmaxinputvalue+ 'mm';
                 } else if (id == 'OpBeadHeight') {

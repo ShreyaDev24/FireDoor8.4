@@ -94,17 +94,17 @@ function itemAdjustCount($Id,$vId): float|int{
     if (!empty($Schedule)) {
         foreach ($Schedule as $row) {
 
-            $basePrice = floatval($row->DoorsetPrice);
+            // 🔥 Final calculation
+            $basePrice = floatval($row->DoorsetPrice ?? 0);
             $leafDelta = floatval($row->leaf_price_delta ?? 0);
 
-            // 🔥 Final calculation
-            $finalPrice = ($row->AdjustPrice)
-                ? floatval($row->AdjustPrice)
-                : (
-                    $leafDelta
-                        ? $leafDelta
-                        : $basePrice
-                );
+            if ($leafDelta) {
+                $finalPrice = $leafDelta;
+            } elseif ($row->AdjustPrice) {
+                $finalPrice = floatval($row->AdjustPrice);
+            } else {
+                $finalPrice = $basePrice;
+            }
 
             $TotalDoorSetPrice += $finalPrice;
         }
@@ -1531,6 +1531,44 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
 
 }
 
+/**
+ * Scale an item's leaf_price_delta when the quote's currency changes.
+ *
+ * The quote schedule displays leaf_price_delta (when non-zero) in preference to
+ * DoorsetPrice, but the currency recalc used to update only DoorsetPrice, so the
+ * screen never moved on a currency switch. leaf_price_delta is treated as the value
+ * in the user's base currency; here we simply multiply it by (newRate / oldRate) so
+ * GBP->EUR scales it up and EUR->GBP returns it to the exact base value. Using a pure
+ * ratio (rather than recomputing from the BOM) keeps the manually-adjusted amount
+ * intact and makes currency toggling fully reversible.
+ */
+function recalcLeafPriceDelta($data, $userLoginId = null, $existCurrency = null): void {
+    $leafDelta = floatval($data->leaf_price_delta ?? 0);
+    if ($leafDelta == 0) {
+        return; // no leaf price to scale
+    }
+
+    $UserId  = $userLoginId ?? Auth::user()->id;
+    $setting = SettingCurrency::where('UserId', $UserId)->first();
+    $base    = empty($setting) ? '£_GBP' : $setting->currency;
+    $rate    = $setting->SetCurrencyRate ?? 1;
+
+    $newCurrency = Quotation::where('id', $data->QuotationId)->value('Currency');
+
+    // Any currency other than the user's base currency uses SetCurrencyRate; base = 1.
+    $oldRate = (empty($existCurrency) || $existCurrency == $base) ? 1 : $rate;
+    $newRate = (empty($newCurrency)   || $newCurrency   == $base) ? 1 : $rate;
+    if ($oldRate == 0) {
+        $oldRate = 1; // guard against divide-by-zero
+    }
+
+    $scaled = round($leafDelta * ($newRate / $oldRate), 2);
+
+    Item::where('itemId', $data->itemId)->update([
+        'leaf_price_delta' => $scaled,
+    ]);
+}
+
 function BomCalculationDeanta($request,$userLoginId=null): void{
     $userIds = CompanyUsers(false,$userLoginId);
     if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
@@ -2437,7 +2475,10 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
      * (yellow for FD30, blue for FD60) stays the same.
      */
     if(!empty($IntumescentNotSupplied) && $IntumescentNotSupplied == 1){
-        if($innerColor == $greenColor){
+        // Red = Intumescent not Fitted. This status takes priority on plug 1,
+        // even when the door has ironmongery (silver) - the client wants the
+        // red tree to show whenever intumescent is not supplied.
+        if($innerColor == $greenColor || $innerColor == $silverColor){
             $innerColor = $redColor;
         }
         if($innerColor2 == $greenColor){

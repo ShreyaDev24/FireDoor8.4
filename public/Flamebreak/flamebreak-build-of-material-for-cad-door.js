@@ -96,7 +96,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'frameThickness') {
                     getmsginput = 'FrameThickness should not be more than '+ getmininputvalue +'mm';
                 } else if (id == 'oPHeigth') {
-                    getmsginput = 'OP/FL Height should be more than ' + getmaxinputvalue + '.';
+                    getmsginput = 'OP/FL Height should not be more than ' + getmaxinputvalue + '.';
                 } else if (id == 'OpBeadHeight') {
                     getmsginput = 'Fan Light/ Over Panel Frame Depth should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'OpBeadThickness') {

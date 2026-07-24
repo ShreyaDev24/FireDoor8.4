@@ -63,10 +63,36 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $mortice_tenon_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Mortice_&_Tenon_Joint')->first();
         $butt_joint = DoorFrameConstruction::where('UserId', $ids)->where('DoorFrameConstruction', 'Butt_Joint')->first();
         $allSettings = DoorFrameConstruction::where('UserId', $ids)->get()->keyBy('DoorFrameConstruction');
+
+        // Client requirement for Leg x2 in all cut lists:
+        //   LEG = O/A Frame Height - (Frame Thickness - Rebate) - MS
+        // - Frame Thickness is deducted ONCE. For a Rebated Frame the effective
+        //   thickness is (Frame Thickness - Rebate), e.g. 44 - 12 = 32.
+        // - MS is a further deduction taken by its MAGNITUDE, so a stored -5 still
+        //   means "take another 5 off".
+        // Example: 2090 - (44 - 12) - 5 = 2090 - 32 - 5 = 2053
+        // NOTE: $thicknessCount is intentionally NOT applied - the client wants the
+        //   thickness off once on every row (including four-sided / overpanel /
+        //   side-light), so the extra head/bottom rail is not deducted from the leg.
+        $calculateLeg = function ($frameHeight, $frameThickness, $ms = 0, $frameType = null, $rebate = 0, $thicknessCount = 1) {
+            $effectiveFrameThickness = floatval($frameThickness ?? 0);
+
+            if ($frameType == 'Rebated_Frame') {
+                $effectiveFrameThickness = $effectiveFrameThickness - floatval($rebate ?? 0);
+            }
+
+            return floatval($frameHeight ?? 0)
+                - $effectiveFrameThickness
+                - abs(floatval($ms ?? 0));
+        };
+
         $k = 1;
         $data = [];
 
-        $data[] = array_fill(0, 32, '');
+        // NOTE: the first row must have a non-empty cell A1, otherwise maatwebsite's
+        // chunked writer (1000 rows/chunk) sees cellExists('A1') === false via hasRows()
+        // and every chunk after the first overwrites from A1 - corrupting/truncating
+        // any sheet with more than 1000 rows. So the title goes on row 1 (no blank row).
         $data[] = array_merge(['Frames and Transoms'], array_fill(0, 31, ''));
 
         $data[] = [ // Row 2 - Actual column headings
@@ -104,7 +130,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         ];
 
         foreach ($item as $value) {
-            $leg = $value->FrameHeight + $value->Height;
+             $ms = abs(floatval($Height ?? 0));
+
+            $leg = $calculateLeg(
+                $value->FrameHeight,
+                $value->FrameThickness,
+                $ms,
+                $value->FrameType,
+                $value->RebatedHeight
+            );
             $head = $value->FrameWidth + $value->Width;
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
             $cutSizeH = 0;
@@ -144,9 +178,15 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $Width = $butt_joint->Width ?? 0;
             }
 
-            $leg = $value->FrameHeight - $value->FrameThickness + $Height;
+            $leg = $calculateLeg(
+                    $value->FrameHeight,
+                    $value->FrameThickness,
+                    $Height,
+                    $value->FrameType,
+                    $value->RebatedHeight
+                );
             $head = $value->FrameWidth + $Width;
-            $stopleg2 = $value->FrameHeight - $value->FrameThickness;
+            $stopleg2 = $calculateLeg($value->FrameHeight, $value->FrameThickness, 0, $value->FrameType, $value->RebatedHeight);
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
 
             if($value->FrameType == 'Plant_on_Stop'){
@@ -181,11 +221,14 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             if($value->FourSidedFrame == 1){
                 $foursidedFrame = $head;
                 $stopbottom = $stophead;
-                $leg = $value->FrameHeight - ($value->FrameThickness * 2) + $Height;
-            }
-
-            if ($value->FrameType == 'Rebated_Frame') {
-                $leg = $cutSizeH + $value->Undercut + $value->GAP + $Height;
+                 $leg = $calculateLeg(
+                        $value->FrameHeight,
+                        $value->FrameThickness,
+                        $Height,
+                        $value->FrameType,
+                        $value->RebatedHeight,
+                        2
+                    );
             }
 
             $data[] = [
@@ -255,7 +298,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->OPHeigth, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->OPWidth + $Width;
 
                $foursidedFrame = 0;
@@ -263,7 +306,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->OPHeigth - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->OPHeigth, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $SLWidth = 0;
@@ -340,7 +383,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->SL1Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->SL1Width + $Width;
 
                 $foursidedFrame = 0;
@@ -348,7 +391,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->SL1Height - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->SL1Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $data[] = [
@@ -414,7 +457,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 }
 
 
-                $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
+                $leg = $calculateLeg($value->SL2Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 $head = $value->SL2Width + $Width;
 
                 $foursidedFrame = 0;
@@ -422,7 +465,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 if($value->FourSidedFrame == 1){
                     $foursidedFrame = $head;
                     $stopbottom = $stophead;
-                    $leg = $value->SL2Height - ($value->FrameThickness * 2) + $Height;
+                    $leg = $calculateLeg($value->SL2Height, $value->FrameThickness, $Height, $value->FrameType, $value->RebatedHeight, 2);
                 }
 
                 $data[] = [
@@ -467,33 +510,38 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         $data[] = array_fill(0, 32, '');
 
 
-        // SCREEN INFO header row (merged A:AF later)
-        $data[] = array_merge(['SCREEN INFO'], array_fill(0, 11, ''));
+        // SCREEN INFO section - only render its heading + column header when
+        // there are actually side screens, otherwise it shows as a stray
+        // heading floating between the frame list and the Summary.
+        if (!empty($this->result) && count($this->result) > 0) {
+            // SCREEN INFO header row (merged A:U later)
+            $data[] = array_merge(['SCREEN INFO'], array_fill(0, 11, ''));
 
-        // Screen info column headers
-        $data[] = array_merge([
-            'S.No',
-            'Screen No',
-            'Plot Number/Ref',
-            'IFC/Certifire No/Q mark Plug',
-            'Screen Type',
-            'Frame Material/Finish',
-            'Frame Finish',
-            'Qty Per Screen Type',
-            'Quantity of screen types',
-            'Screen Dims ',
-            'O/A Frame Height',
-            'O/A Frame Width',
-            'Frame Thickness',
-            'Frame Depth',
-            'Leg x 2',
-            'Head',
-            'Transom',
-            'Transom QTY',
-            'Mullion',
-            'Mullion QTY',
-            'Notes',
-        ], array_fill(0, 32 - 18, ''));
+            // Screen info column headers (21 labels -> pad to 32 columns)
+            $data[] = array_merge([
+                'S.No',
+                'Screen No',
+                'Plot Number/Ref',
+                'IFC/Certifire No/Q mark Plug',
+                'Screen Type',
+                'Frame Material/Finish',
+                'Frame Finish',
+                'Qty Per Screen Type',
+                'Quantity of screen types',
+                'Screen Dims ',
+                'O/A Frame Height',
+                'O/A Frame Width',
+                'Frame Thickness',
+                'Frame Depth',
+                'Leg x 2',
+                'Head',
+                'Transom',
+                'Transom QTY',
+                'Mullion',
+                'Mullion QTY',
+                'Notes',
+            ], array_fill(0, 32 - 21, ''));
+        }
          $j = 1;
         foreach($this->result as $value){
             $screenNumber = $value->screenNumber;
@@ -547,7 +595,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $FrameWidth,
                     $FrameThickness,
                     $FrameDepth,
-                    $FrameHeight - ($FrameThickness * 2) + $Height,
+                    $calculateLeg($FrameHeight, $FrameThickness, $Height, null, 0, 2),
                     $FrameWidth + $Width,
                     (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($FrameWidth - ($FrameThickness * 2) + $TransomWidth) : 0,
                     (!empty($value->TransomQuantity) && ($value->TransomQuantity != 0))?($value->TransomQuantity) : 0,

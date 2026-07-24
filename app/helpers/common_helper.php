@@ -242,13 +242,15 @@ if(!function_exists('markAsRead')){
 if(!function_exists('myCreatedUser')){
 
 
-    function myCreatedUser() {
-        $uType = auth()->user()->UserType;
+    function myCreatedUser($id=null,$type=null,$createdBy=null){
+        $uType = $type ?? auth()->user()->UserType;
+        $uId = $id ?? auth()->user()->id;
+        $createdBy = $createdBy ?? auth()->user()->CreatedBy;
         $userIds = [];
         switch ($uType) {
             case '2':
-                $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> auth()->user()->id])->value('value');
-                $prntId = $checkMyParent ?: auth()->user()->id;
+                $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> $uId])->value('value');
+                $prntId = $checkMyParent ?: $uId;
 
                 $myCreatedAdmin = DB::table('user_data')->where(['type'=> 'parent', 'value'=> $prntId])->pluck('user_id')->toArray();
                 $myCreatedAdmin[] = intval($prntId);
@@ -259,8 +261,8 @@ if(!function_exists('myCreatedUser')){
 
                 break;
             case '3':
-                $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> auth()->user()->CreatedBy])->value('value');
-                $prntId = $checkMyParent ?: auth()->user()->CreatedBy;
+                $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> $createdBy])->value('value');
+                $prntId = $checkMyParent ?: $createdBy;
 
                 $myParentCreatedAdmin = DB::table('user_data')->where(['type'=> 'parent', 'value'=> $prntId])->pluck('user_id')->toArray();
                 $myParentCreatedAdmin[] = intval($prntId);
@@ -1858,13 +1860,15 @@ function getMyCreatedAdmins(): array {
     return $userIds;
 }
 
-function myCreatedUser() {
-    $uType = auth()->user()->UserType;
+function myCreatedUser($id=null,$type=null,$createdBy=null){
+    $uType = $type ?? auth()->user()->UserType;
+    $uId = $id ?? auth()->user()->id;
+    $createdBy = $createdBy ?? auth()->user()->CreatedBy;
     $userIds = [];
     switch ($uType) {
         case '2':
-            $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> auth()->user()->id])->value('value');
-            $prntId = $checkMyParent ?: auth()->user()->id;
+            $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> $uId])->value('value');
+            $prntId = $checkMyParent ?: $uId;
 
             $myCreatedAdmin = DB::table('user_data')->where(['type'=> 'parent', 'value'=> $prntId])->pluck('user_id')->toArray();
             $myCreatedAdmin[] = intval($prntId);
@@ -1875,8 +1879,8 @@ function myCreatedUser() {
 
             break;
         case '3':
-            $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> auth()->user()->CreatedBy])->value('value');
-            $prntId = $checkMyParent ?: auth()->user()->CreatedBy;
+            $checkMyParent = DB::table('user_data')->where(['type'=> 'parent', 'user_id'=> $createdBy])->value('value');
+            $prntId = $checkMyParent ?: $createdBy;
 
             $myParentCreatedAdmin = DB::table('user_data')->where(['type'=> 'parent', 'value'=> $prntId])->pluck('user_id')->toArray();
             $myParentCreatedAdmin[] = intval($prntId);
@@ -2583,14 +2587,15 @@ function getCurrencyRate($QuotationId,$userLoginId=null){
     $project = Project::where('id', $quotation->ProjectId)->value('projectCurrency');
     $quotationCurrency = $quotation->Currency;
     $currencyPrice = 1;
-    if(!empty($project)){
-        if (!empty($quotationCurrency)) {
-            if($quotationCurrency != $currency){
-                $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
-            }
-        } elseif ($project != $currency) {
+    // Apply the exchange rate whenever the quotation is in a currency other than
+    // the base currency. The quotation's own currency takes precedence; the linked
+    // project's currency is only used as a fallback when the quotation has none.
+    if (!empty($quotationCurrency)) {
+        if ($quotationCurrency != $currency) {
             $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
         }
+    } elseif (!empty($project) && $project != $currency) {
+        $currencyPrice = $currencyRate->SetCurrencyRate ?? 1;
     }
 
     return $currencyPrice;

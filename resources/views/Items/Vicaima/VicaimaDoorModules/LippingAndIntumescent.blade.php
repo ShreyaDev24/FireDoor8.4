@@ -339,7 +339,7 @@
                                                     </label>
                                                     <input name="fireratedtestes" id="fireratedtestes"
                                                         placeholder="Fire Rated Tested" class="form-control" type="text"
-                                                        value="@if(isset($Item['FireRatedTested'])){{$Item['FireRatedTested']}}@endif">
+                                                        value="@if(isset($Item['IntumescentSealFireratedTest'])){{$Item['IntumescentSealFireratedTest']}}@endif">
                                                 </div>
                                             </div>
                                         </div>

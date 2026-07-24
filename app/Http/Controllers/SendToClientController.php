@@ -196,6 +196,8 @@ class SendToClientController extends Controller
 
         if($q->save()){
             $projectId  = $q->ProjectId;
+            $UserId = $q->UserId;
+            $user = User::where('id',$UserId)->first();
 
             // if(!empty($projectId) && $projectId != NULL ){
             //     $projectDetails = Project::find($projectId);
@@ -204,7 +206,7 @@ class SendToClientController extends Controller
             //     $projectDetails->save();
             // }
 
-                $myCreatedUser = myCreatedUser();
+                $myCreatedUser = myCreatedUser($user->id,$user->UserType,$user->CreatedBy);
                 $data = User::whereIn('UserType',[2,3])->whereIn('CreatedBy', $myCreatedUser)->orderBy('id','desc')->get();
                 foreach ($data as $user) {
                     NotificationService::send([
