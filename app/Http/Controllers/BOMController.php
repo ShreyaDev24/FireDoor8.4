@@ -2237,7 +2237,49 @@ class BOMController extends Controller
 
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
 
-        $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.GlazingBeadSpecies')->where('QuotationId',$id)->where('VersionId',$version)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderBy('items.itemId','ASC')->get();
+        $item = Item::join(
+                'item_master',
+                'items.itemId',
+                '=',
+                'item_master.itemID'
+            )
+            ->leftJoin(
+                'lipping_species as vp_species',
+                'vp_species.id',
+                '=',
+                'items.GlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as op_species',
+                'op_species.id',
+                '=',
+                'items.OPGlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as sl1_species',
+                'sl1_species.id',
+                '=',
+                'items.SL1GlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as sl2_species',
+                'sl2_species.id',
+                '=',
+                'items.SideLight2GlazingBeadSpecies'
+            )
+            ->where('items.QuotationId', $id)
+            ->where('items.VersionId', $version)
+            ->where('items.itemId', 17183)
+            ->select(
+                'item_master.*',
+                'items.*',
+                'vp_species.SpeciesName as GlazingBeadSpeciesName',
+                'op_species.SpeciesName as OPGlazingBeadSpeciesName',
+                'sl1_species.SpeciesName as SL1GlazingBeadSpeciesName',
+                'sl2_species.SpeciesName as SideLight2GlazingBeadSpeciesName'
+            )
+            ->orderBy('items.itemId', 'ASC')
+            ->get();
 
         $currency = QuotationCurrency($quotation->Currency);
         $today = Carbon::now()->format('d-m-Y');
@@ -2274,7 +2316,7 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
-                    . '<td>' . $value->SpeciesName . '</td>'
+                    . '<td>' . $value->GlazingBeadSpeciesName . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
                     . '<td>' . $value->GlazingBeadsThickness . '</td>'
@@ -2322,11 +2364,11 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
-                    . '<td>' . $value->SpeciesName . '</td>'
-                    . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                    . '<td>' . $value->OPGlazingBeadSpeciesName . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->OPGlazingBeads) . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
-                    . '<td>' . $value->GlazingBeadsThickness . '</td>'
-                    . '<td>' . $value->glazingBeadsHeight . '</td>'
+                    . '<td>' . $value->OPGlazingBeadsThickness . '</td>'
+                    . '<td>' . $value->OPGlazingBeadsHeight . '</td>'
                     . '<td>' . (
                         ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
                         ? ($value->OPWidth - ($value->OpBeadThickness * 2) + $VisionPanelWidthNFR)
@@ -2371,11 +2413,11 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
-                    . '<td>' . $value->SpeciesName . '</td>'
-                    . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                    . '<td>' . $value->SL1GlazingBeadSpeciesName . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->BeadingType) . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
-                    . '<td>' . $value->GlazingBeadsThickness . '</td>'
-                    . '<td>' . $value->glazingBeadsHeight . '</td>'
+                    . '<td>' . $value->SideLight1GlazingBeadsThickness . '</td>'
+                    . '<td>' . $value->SlBeadHeight . '</td>'
                     . '<td>' . (
                         ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
                         ? ($value->SL1Width - ($value->SideLight1FrameThickness * 2) + $VisionPanelWidthNFR)
@@ -2412,11 +2454,11 @@ class BOMController extends Controller
                     . '<td>' . $value->doorNumber . '</td>'
                     . '<td>' . $value->plot_ref_no . '</td>'
                     . '<td>' . $value->certification_no . '</td>'
-                    . '<td>' . $value->SpeciesName . '</td>'
-                    . '<td>' . str_replace('_', ' ', $value->GlazingBeads) . '</td>'
+                    . '<td>' . $value->SideLight2GlazingBeadSpeciesName . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->SideLight2BeadingType) . '</td>'
                     . '<td>' . str_replace('_', ' ', $value->DoorLeafFinish) . '</td>'
-                    . '<td>' . $value->GlazingBeadsThickness . '</td>'
-                    . '<td>' . $value->glazingBeadsHeight . '</td>'
+                    . '<td>' . $value->SideLight2GlazingSystemsThickness . '</td>'
+                    . '<td>' . $value->SlBeadHeight . '</td>'
                     . '<td>' . (
                         ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
                         ? ($value->SL2Width - ($value->SideLight2FrameThickness * 2) + $VisionPanelWidthNFR)
