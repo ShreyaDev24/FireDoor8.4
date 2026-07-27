@@ -90,8 +90,18 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             $DoorDimensionsCode2 = '';
             if(isset($quotation->configurableitems) && $quotation->configurableitems == '1'){
                 $configurableitems = 'Streboard';
+                if($value->DoorsetType == 'leaf_and_a_half'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }else if($value->DoorsetType == 'DD'){
+                    $DoorDimensionsCode2 = $value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '2'){
                 $configurableitems = 'Halspan';
+                if($value->DoorsetType == 'leaf_and_a_half'){
+                    $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }else if($value->DoorsetType == 'DD'){
+                    $DoorDimensionsCode2 = $value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
+                }
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '3'){
                 $configurableitems = 'Norma';
             }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
