@@ -498,7 +498,6 @@ class DoorScheduleController extends Controller
                     ->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
             }
 
-            $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
             foreach ($aa as $row) {
@@ -1125,8 +1124,6 @@ class DoorScheduleController extends Controller
             $quotation = Quotation::where('id', $quotationId)->first();
 
             if (!empty($quotation)) {
-                $quotation->configurableitems = $request->pageType;
-                $quotation->save();
                 while ($count > $i) {
                     $doorNumber       = $DoorNumber[$i];    // Mark
                     if ($request->DoorType) {
@@ -1672,8 +1669,6 @@ class DoorScheduleController extends Controller
             $i = 0;
             $quotation = Quotation::where('id', $quotationId)->first();
             if (!empty($quotation)) {
-                $quotation->configurableitems = $request->pageType;
-                $quotation->save();
 
                 while ($count > $i) {
                     $doorNumber       = $DoorNumber[$i];    // Mark
@@ -3319,7 +3314,8 @@ class DoorScheduleController extends Controller
                         $countFR = 0;
                     }
 
-                $configurationDoor = configurationDoor($configurableitems);
+
+                    $configurationDoor = configurationDoor($configurableitems);
                     if ($DoorLeafFacing !== '' && $DoorLeafFacing !== '0') {
                         // $CheckingDLF = Option::where(['OptionSlug' => 'Door_Leaf_Facing', 'OptionValue' => $DoorLeafFacing])->count();
 
@@ -4002,13 +3998,9 @@ class DoorScheduleController extends Controller
                 $configurableitems = 9;
             }
 
-            if($quotation->configurableitems != $configurableitems && $quotation->configurableitems != null){
-                return redirect()->back()->with('error', 'Quotation is not linked with '.$data[0][1][1].' door!');
-            }
+            // Multi-core quotations allowed — door core is stored per item, not on quotation
 
             if ($configurableitems == 1 || $configurableitems == 2 || $configurableitems == 3 || $configurableitems == 7 || $configurableitems == 8) {
-                $quotation->configurableitems = $configurableitems;
-                $quotation->save();
                 $i = 0;
                 foreach ($data[0] as $row) {
 
@@ -4806,8 +4798,6 @@ class DoorScheduleController extends Controller
 
             } elseif ($configurableitems == 4 || $configurableitems == 5 || $configurableitems == 6 || $configurableitems == 9) {
 
-                $quotation->configurableitems = $configurableitems;
-                $quotation->save();
                 $i = 0;
                 //   dd($data[0]);
                 foreach ($data[0] as $row) {
@@ -6160,10 +6150,10 @@ class DoorScheduleController extends Controller
             $currency = SettingCurrency::where('UserId', Auth::user()->id)->first();
             $quotation_data = Quotation::where('id', $Id)->first();
             if (Auth::user()->UserType == 1) {
-                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->get();
+                $Favorite = FavoriteItem::select('favorite_item.*')->get();
             } else {
                 $UserIds = CompanyMultiUsers();
-                $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')->select('favorite_item.*', 'quotation.configurableitems')->wherein('favorite_item.userId', $UserIds)->get();
+                $Favorite = FavoriteItem::select('favorite_item.*')->wherein('favorite_item.userId', $UserIds)->get();
             }
 
             $favorites = Favorite::with('user')->where(['userId'=>Auth::id(),'status'=>1])->latest()->get();
@@ -6271,7 +6261,16 @@ class DoorScheduleController extends Controller
                     }
                 });
             } else {
-                $Quotations = $Quotations->where($column, $operator, $value);
+                if ($column === 'items.configurableitems') {
+                    $Quotations = $Quotations->whereExists(function ($q) use ($operator, $value): void {
+                        $q->select(\DB::raw(1))
+                            ->from('items')
+                            ->whereColumn('items.QuotationId', 'quotation.id')
+                            ->where('items.configurableitems', $operator, $value);
+                    });
+                } else {
+                    $Quotations = $Quotations->where($column, $operator, $value);
+                }
             }
         }
         return $Quotations;
@@ -6331,7 +6330,7 @@ class DoorScheduleController extends Controller
                 }
 
                 if (isset($configurableId)) {
-                    $filters[$i] = ['quotation.configurableitems',$configurableId];
+                    $filters[$i] = ['items.configurableitems', '=', $configurableId];
                 }else{
                     $filters[$i] = [$filters[$i][0], $filters[$i][1], $filters[$i][2]];
                 }
@@ -9490,7 +9489,6 @@ class DoorScheduleController extends Controller
 
      public function streboardValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-        $quotations = Quotation::where('id',$request->quotationId)->first();
         $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
@@ -9651,7 +9649,6 @@ class DoorScheduleController extends Controller
     }
     public function halspanValidate($request){
             $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
@@ -9661,35 +9658,35 @@ class DoorScheduleController extends Controller
 
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
 
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
 
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
 
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
 
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
 
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
 
 
 
             // dd($OptionsData->toArray());
 
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
 
 
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
@@ -9819,7 +9816,6 @@ class DoorScheduleController extends Controller
     }
     public function flambreakValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
@@ -9829,35 +9825,35 @@ class DoorScheduleController extends Controller
 
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
 
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
 
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
 
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
 
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
 
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
 
 
 
             // dd($OptionsData->toArray());
 
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
 
 
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
@@ -9988,7 +9984,6 @@ class DoorScheduleController extends Controller
 
     public function stredorValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
@@ -9998,35 +9993,35 @@ class DoorScheduleController extends Controller
 
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
 
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
 
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
 
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
 
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
 
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
 
 
 
             // dd($OptionsData->toArray());
 
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
 
 
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
@@ -10156,32 +10151,31 @@ class DoorScheduleController extends Controller
     }
     public function vicimaValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
             }
             $item = $item->toArray();
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
             $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
             $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
@@ -10298,32 +10292,31 @@ class DoorScheduleController extends Controller
     }
     public function seadecValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
             }
             $item = $item->toArray();
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
             $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
             $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
@@ -10440,32 +10433,31 @@ class DoorScheduleController extends Controller
     }
     public function deantaValidate($request){
         $item =  Item::where(['items.QuotationId' => $request->quotationId, 'items.itemId' => $request->id])->first();
-            $quotations = Quotation::where('id',$request->quotationId)->first();
             $UserIds = CompanyUsers();
             if ($item === null) {
                 return abort(404);
             }
             $item = $item->toArray();
             $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-            $OptionsData = Option::where(['configurableitems' => $quotations->configurableitems, 'is_deleted' => 0])->get();
-            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $quotations->configurableitems], "", "intumescentSealArrangement");
+            $OptionsData = Option::where(['configurableitems' => $item['configurableitems'], 'is_deleted' => 0])->get();
+            $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => $item['configurableitems']], "", "intumescentSealArrangement");
             $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
             // $SelectedLippingSpeciesData = $LippingSpeciesData;
-            $configurationDoor = configurationDoor($quotations->configurableitems);
+            $configurationDoor = configurationDoor($item['configurableitems']);
 
             $UserType = Auth::user()->UserType;
             if (in_array($UserType, [1, 4])) {
                 $UserId = $item['UserId'];
                 $SelectedOptionsData = $OptionsData;
-                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
-                $ArchitraveType = ArchitraveType::where([$configurationDoor => $quotations->configurableitems, 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $intumescentSealColor = IntumescentSealColor::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
+                $ArchitraveType = ArchitraveType::where([$configurationDoor => $item['configurableitems'], 'Status' => 1])->wherein('editBy', $UserIds)->get();
             } else {
                 $UserId = Auth::user()->id;
-                $SelectedOptionsData = GetOptions(['options.configurableitems' => $quotations->configurableitems, 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
-                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $quotations->configurableitems, 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
-                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $quotations->configurableitems, 'architrave_type.Status' => 1], "join", "architrave_type");
+                $SelectedOptionsData = GetOptions(['options.configurableitems' => $item['configurableitems'], 'options.is_deleted' => 0, 'selected_option.SelectedUserId' => $UserId], "join");
+                $intumescentSealColor = GetOptions(['intumescent_seal_color.' . $configurationDoor => $item['configurableitems'], 'intumescent_seal_color.Status' => 1], "join", "intumescent_seal_color");
+                $ArchitraveType = GetOptions(['architrave_type.' . $configurationDoor => $item['configurableitems'], 'architrave_type.Status' => 1], "join", "architrave_type");
             }
-            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $quotations->configurableitems, 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
+            $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems' => $item['configurableitems'], 'selected_intumescentseals2.selected_intumescentseals2_user_id' => $UserId], "join", "intumescentSealArrangement");
             $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
             $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
             $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
@@ -10588,7 +10580,7 @@ class DoorScheduleController extends Controller
             $UserIds = CompanyMultiUsers();
             $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
             ->join('favorite','favorite.id','favorite_item.favorite_id')
-            ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
+            ->select('favorite_item.*', 'favorite.name')
             ->where('favorite_item.favorite_id',$id)
             ->where('favorite_item.favorite_type',$request->favorite_type)
             ->wherein('favorite_item.userId', $UserIds)->get();
@@ -10809,13 +10801,7 @@ class DoorScheduleController extends Controller
                                 $NewItemInformation->DoorsetPrice = $Favorite->AdjustPrice;
                                 $NewItemInformation->save();
 
-                                //adding configurableitems like streboard etc to quotation table
-                                $quotationConfigurableitems = Quotation::where('id', $request->quotationId)->first();
-                                $quotation = Quotation::where('id', $request->qId)->first();
-                                if (!empty($quotation)) {
-                                    $quotation->configurableitems = $quotationConfigurableitems->configurableitems;
-                                    $quotation->save();
-                                }
+                                // Item already carries configurableitems from replicate(); do not write quotation-level core
 
                                 // }
                                 $response = [
@@ -10936,7 +10922,6 @@ class DoorScheduleController extends Controller
                 $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
             }
 
-            $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
 
@@ -10984,7 +10969,6 @@ class DoorScheduleController extends Controller
                 $aa = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where(['items.QuotationId' => $id])->orderBy('id', 'desc')->get();
             }
 
-            $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
 
@@ -11031,7 +11015,6 @@ class DoorScheduleController extends Controller
                 $aa = SideScreenItem::join('side_screen_item_master', 'side_screen_items.id', 'side_screen_item_master.ScreenId')->where('side_screen_items.QuotationId', $id)->select('side_screen_item_master.*', 'side_screen_items.*','side_screen_items.id as screenItemId')->orderBy('side_screen_items.id', 'ASC')->get();
             }
 
-            $q = Quotation::select('configurableitems')->where('id', $id)->first();
             $i = 1;
             $tbl = '';
 
