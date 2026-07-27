@@ -2270,7 +2270,6 @@ class BOMController extends Controller
             )
             ->where('items.QuotationId', $id)
             ->where('items.VersionId', $version)
-            ->where('items.itemId', 17183)
             ->select(
                 'item_master.*',
                 'items.*',
