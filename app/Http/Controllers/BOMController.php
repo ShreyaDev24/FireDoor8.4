@@ -1337,7 +1337,8 @@ class BOMController extends Controller
             'items.DoorsetType',
             'items.FireRating',
             'items.IntumescentLeafType',
-            'items.DoorLeafFacing'
+            'items.DoorLeafFacing',
+            'items.configurableitems',
         ])
         ->orderByRaw("FIELD(items.DoorsetType, 'SD', 'DD', 'leaf_and_a_half')")
         ->get();
@@ -1352,50 +1353,45 @@ class BOMController extends Controller
 
         $QuotationVersion = QuotationVersion::where('id', $version)->value('version') ?? 'N/A';
 
-        // --------- GROUPED COLLECTION ----------
+        // --------- GROUPED COLLECTION (per-item configurableitems) ----------
         $grouped = [];
 
-        if (in_array($quotation->configurableitems, [1, 2, 7, 8])) {
-            $productCodes = [];
-            foreach ($items as $value) {
-                // --- CUT SIZE CALCULATION (simplified for grouping) ---
+        foreach ($items as $value) {
+            $configurableitems = match((int) $value->configurableitems) {
+                1 => 'Streboard',
+                2 => 'Halspan',
+                3 => 'Norma',
+                4 => 'Vicaima',
+                5 => 'Seadec',
+                6 => 'Deanta',
+                7 => 'Flamebreak',
+                8 => 'StreDoor',
+                9 => 'MMM',
+                default => '',
+            };
+
+            if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
+                $fireRatingVal = 'FD30';
+            } elseif ($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') {
+                $fireRatingVal = 'FD60';
+            } else {
+                $fireRatingVal = 'NFR';
+            }
+
+            if (in_array((int) $value->configurableitems, [1, 2, 7, 8], true)) {
                 $cutSizeH  = $value->LeafHeight;
-
-                $configurableitems = match((int) $quotation->configurableitems) {
-                    1 => 'Streboard',
-                    2 => 'Halspan',
-                    3 => 'Norma',
-                    4 => 'Vicaima',
-                    5 => 'Seadec',
-                    6 => 'Deanta',
-                    7 => 'Flamebreak',
-                    8 => 'StreDoor',
-                    9 => 'MMM',
-                    default => '',
-                };
-
-                if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
-                    $fireRatingVal = 'FD30';
-                } elseif ($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') {
-                    $fireRatingVal = 'FD60';
-                } else{
-                    $fireRatingVal = 'NFR';
-                }
                 $userIds = CompanyUsers();
-                $door_core_size = getDoorDimensionData($userIds, $quotation->configurableitems, $fireRatingVal);
+                $door_core_size = getDoorDimensionData($userIds, $value->configurableitems, $fireRatingVal);
 
                 $code1 = $value->LeafWidth1 .'x'. $cutSizeH;
-                $code2 = $value->LeafWidth2 .'x'. $cutSizeH; // for leaf and a half
+                $code2 = $value->LeafWidth2 .'x'. $cutSizeH;
+                $minWidth1 = PHP_INT_MAX;
+                $minHeight1 = PHP_INT_MAX;
+                $minWidth2 = PHP_INT_MAX;
+                $minHeight2 = PHP_INT_MAX;
 
                 if (!empty($door_core_size)) {
-                    // Track best matches separately
-                    $minWidth1 = PHP_INT_MAX;
-                    $minHeight1 = PHP_INT_MAX;
-                    $minWidth2 = PHP_INT_MAX;
-                    $minHeight2 = PHP_INT_MAX;
-
                     foreach ($door_core_size as $door_core) {
-                        // For LeafWidth1
                         if ($door_core->selected_mm_width + 20 >= $value->LeafWidth1 && $door_core->selected_mm_height + 20 >= $cutSizeH) {
                             if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
                                 $minWidth1 = $door_core->selected_mm_width;
@@ -1404,7 +1400,6 @@ class BOMController extends Controller
                             }
                         }
 
-                        // For LeafWidth2 (only if leaf_and_a_half)
                         if ($value->DoorsetType == 'leaf_and_a_half') {
                             if ($door_core->selected_mm_width + 20 >= $value->LeafWidth2 && $door_core->selected_mm_height + 20 >= $cutSizeH) {
                                 if ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2) {
@@ -1417,107 +1412,68 @@ class BOMController extends Controller
                     }
                 }
 
-                // Add product codes
-                $productCodes[] = [
+                $productCodes = [[
                     'code'     => $code1,
-                    'cutSizeW' => $minWidth1,
-                    'cutSizeH' => $minHeight1,
+                    'cutSizeW' => $minWidth1 === PHP_INT_MAX ? $value->LeafWidth1 : $minWidth1,
+                    'cutSizeH' => $minHeight1 === PHP_INT_MAX ? $cutSizeH : $minHeight1,
                     'LeafThickness' => $value->LeafThickness ?? '',
                     'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
                     'DoorsetType' => $value->DoorsetType,
-                ];
+                ]];
 
                 if ($value->DoorsetType == 'leaf_and_a_half') {
                     $productCodes[] = [
                         'code'     => $code2,
-                        'cutSizeW' => $minWidth2,
-                        'cutSizeH' => $minHeight2,
+                        'cutSizeW' => $minWidth2 === PHP_INT_MAX ? $value->LeafWidth2 : $minWidth2,
+                        'cutSizeH' => $minHeight2 === PHP_INT_MAX ? $cutSizeH : $minHeight2,
                         'LeafThickness' => $value->LeafThickness ?? '',
                         'DoorLeafFacing' => $value->DoorLeafFacing ?? '',
                         'DoorsetType' => $value->DoorsetType,
                     ];
                 }
-            }
 
-            foreach ($productCodes as $p) {
-                // --- COUNT LOGIC ---
-                $item_count = 1;
-                if($p['DoorsetType'] == 'DD'){
-                    $item_count = 2;
+                foreach ($productCodes as $p) {
+                    $item_count = ($p['DoorsetType'] == 'DD') ? 2 : 1;
+                    $pcode = $p['code'];
+                    $cutSizeW = $p['cutSizeW'];
+                    $cutSizeHRow = $p['cutSizeH'];
+                    $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
+
+                    if (!isset($grouped[$key])) {
+                        $grouped[$key] = [
+                            'firerating' => $fireRatingVal,
+                            'qty' => 0,
+                            'LeafThickness' => $p['LeafThickness'],
+                            'configurableitems' => $configurableitems,
+                            'DoorLeafFacing' => str_replace('_', ' ', $p['DoorLeafFacing']),
+                            'ProductCode' => $pcode,
+                            'cutSizeH' => $cutSizeW . 'x' . $cutSizeHRow,
+                        ];
+                    }
+
+                    $grouped[$key]['qty'] += $item_count;
                 }
-
-                $pcode = $p['code'];
-                $cutSizeW = $p['cutSizeW'];
-                $cutSizeH = $p['cutSizeH'];
-
-                $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
-
-                if (!isset($grouped[$key])) {
-                    $grouped[$key] = [
-                        'firerating' => $fireRatingVal,
-                        'qty' => 0,
-                        'LeafThickness' => $p['LeafThickness'],
-                        'configurableitems' => $configurableitems,
-                        'DoorLeafFacing' => str_replace('_', ' ', $p['DoorLeafFacing']),
-                        'ProductCode' => $pcode,
-                        'cutSizeH' => $cutSizeW . 'x' . $cutSizeH, // if you also have cutSizeH
-                    ];
-                }
-
-                $grouped[$key]['qty'] += $item_count;
-            }
-        }else{
-            foreach ($items as $value) {
-
-                // --- COUNT LOGIC ---
-                $item_count = 1;
-                if($value->DoorsetType == 'DD'){
-                    $item_count = 2;
-                }
-
-                // --- CUT SIZE CALCULATION (simplified for grouping) ---
+            } else {
+                $item_count = ($value->DoorsetType == 'DD') ? 2 : 1;
                 $cutSizeH  = $value->LeafHeight;
 
-                // --- CONFIGURABLE ITEM ---
-                $configurableitems = match($quotation->configurableitems) {
-                    '1' => 'Streboard',
-                    '2' => 'Halspan',
-                    '3' => 'Norma',
-                    '4' => 'Vicaima',
-                    '5' => 'Seadec',
-                    '6' => 'Deanta',
-                    '7' => 'Flamebreak',
-                    '8' => 'StreDoor',
-                    '9' => 'MMM',
-                    default => '',
-                };
-
                 $productCodes = [];
-                if(!empty($value->DoorDimensions)){
+                if (!empty($value->DoorDimensions)) {
                     $productCodes[] = [
                         'code' => $value->DoorDimensionsCode ?? $value->LeafWidth1 .'x'.$cutSizeH,
                         'cutSizeW' => $value->LeafWidth1
                     ];
                 }
-                if(!empty($value->DoorDimensions2)){
+                if (!empty($value->DoorDimensions2)) {
                     $productCodes[] = [
                         'code' => $value->DoorDimensionsCode2 ?? $value->LeafWidth2 .'x'.$cutSizeH,
                         'cutSizeW' => $value->LeafWidth2 ?? ''
                     ];
                 }
 
-                if ($value->FireRating == 'FD30' || $value->FireRating == 'FD30s') {
-                    $fireRatingVal = 'FD30';
-                } elseif ($value->FireRating == 'FD60' || $value->FireRating == 'FD60s') {
-                    $fireRatingVal = 'FD60';
-                } else{
-                    $fireRatingVal = 'NFR';
-                }
-
                 foreach ($productCodes as $p) {
                     $pcode = $p['code'];
                     $cutSizeW = $p['cutSizeW'];
-
                     $key = $pcode . '-' . $value->LeafThickness . '-' . $configurableitems . '-' . $value->DoorLeafFacing;
 
                     if (!isset($grouped[$key])) {
@@ -1528,15 +1484,13 @@ class BOMController extends Controller
                             'configurableitems' => $configurableitems,
                             'DoorLeafFacing' => str_replace('_', ' ', $value->DoorLeafFacing),
                             'ProductCode' => $pcode,
-                            'cutSizeH' => $cutSizeW . 'x' . $cutSizeH, // if you also have cutSizeH
+                            'cutSizeH' => $cutSizeW . 'x' . $cutSizeH,
                         ];
                     }
 
                     $grouped[$key]['qty'] += $item_count;
                 }
-
             }
-
         }
 
         // --------- BUILD TABLE DATA ----------
