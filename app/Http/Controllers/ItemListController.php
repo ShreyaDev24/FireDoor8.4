@@ -1353,14 +1353,8 @@ class ItemListController extends Controller
             return response()->json(['status'=>'success1','data'=>$successmsg,'url'=>$url]);
 
         } else {
-            // checking configurableitems is empty or not
-            // if empty then only these code work
-            // it update `quotation` table. These tells about Strebord or Halspan door for perticular quotation
-            if(empty($Quotation->configurableitems)){
-                Quotation::where('id',$QuotationId)->update(["configurableitems" => $pageIdentity]);
-            }
+            // insert — configurableitems is stored on the item (multi-core quotations supported)
 
-            // insert
             $item = new Item();
 
             // check these `Quotation ID` with `Door Number` is not duplicate entry

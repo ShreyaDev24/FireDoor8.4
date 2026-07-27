@@ -2825,13 +2825,11 @@ class OMMAnualController extends Controller
             $join->on("quotation_version_items.itemID", "=", "items.itemId")
                 ->on("quotation_version_items.itemmasterID", "=", "item_master.id");
         })
-        ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
         ->where('quotation_version_items.version_id', $versionID)
-        ->select('items.*','item_master.doorNumber','quotation.configurableitems')
+        ->select('items.*','item_master.doorNumber')
         ->groupBy('item_master.itemID')
         ->get();
-
     $Quotation = Quotation::where('id', $quatationId)->first();
 
     $labels = [];

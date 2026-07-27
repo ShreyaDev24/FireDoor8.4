@@ -39,10 +39,6 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
         $versionId = $this->vid;
 
         $quotaion = Quotation::where('id',$quotationId)->first();
-        $configurationItem = 1;
-        if(!empty($quotaion->configurableitems)){
-            $configurationItem = $quotaion->configurableitems;
-        }
 
         $shows = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
         ->join('item_master','quotation_version_items.itemmasterID','item_master.id')

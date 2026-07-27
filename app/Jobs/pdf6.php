@@ -68,9 +68,8 @@ class pdf6 implements ShouldQueue
             $join->on("quotation_version_items.itemID","=","items.itemId")
                 ->on("quotation_version_items.itemmasterID","=","item_master.id");
         })
-        ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
-        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber','quotation.configurableitems')->groupBy('item_master.itemID')->get();
+        ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
 
         $TotalItems = count($ed->toArray());
 
@@ -1098,9 +1097,9 @@ class pdf6 implements ShouldQueue
                 $QuotationGenerationId = $quotaion->QuotationGenerationId;
             }
 
-            $configurationItem = $quotaion->configurableitems;
-            if (!empty($quotaion->configurableitems)) {
-                $configurationItem = $quotaion->configurableitems;
+            $configurationItem = $tt->configurableitems;
+            if (!empty($tt->configurableitems)) {
+                $configurationItem = $tt->configurableitems;
             }
 
             $ProjectName = null;
@@ -1702,7 +1701,7 @@ class pdf6 implements ShouldQueue
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
-        if($quotaion->configurableitems == 4){
+        if($tt->configurableitems == 4 || $tt->configurableitems == 5 || $tt->configurableitems == 6 || $tt->configurableitems == 9){
             $elevTbl .=         '<tr>
                                     <td class="dicription_grey">Leaf Type</td>
                                     <td class="dicription_blank">' . $tt->LeafConstruction . '</td>

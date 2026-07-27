@@ -43,15 +43,8 @@ class ShortQuoteController extends Controller
         $currency = QuotationCurrency($quotaion->Currency);
 
         // $configurationItem = 1;
-        $configurationItem = $quotaion->configurableitems;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
+        // configurationItem is resolved per door from items.configurableitems below
 
-        $configurationItemName = configurationDoor($configurationItem);
-        if($configurationItemName === 'Halspan'){
-            $configurationItemName = 'Halspan Optima';
-        }
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
 
         $pdf_footer = SettingPDFfooter::where('UserId', $id)->first();
@@ -309,6 +302,7 @@ class ShortQuoteController extends Controller
         $SumIronmongaryPriceCustom = 0;
 
         foreach ($shows as $show) {
+            $configurationItem = $show->configurableitems ?: 1;
             $fireRate = $show->FireRating;
             if($show->FireRating == 'FD30' || $show->FireRating == 'FD30s'){
                 $show->FireRating = 'FD30';

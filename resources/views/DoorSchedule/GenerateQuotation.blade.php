@@ -1114,7 +1114,7 @@
     <input type="hidden" id="SvgImage" name="SvgImage" value="" />
     <input type="hidden" id='store2' value="{{ url('items/store2') }}">
     <input type="hidden" id="quotationId" name="quotationId" value="{{ $quotationId }}">
-    <input type="hidden" id="quotationconfigurableitems" name="quotationconfigurableitems" value="{{ $quotation_data->configurableitems }}">
+    <input type="hidden" id="quotationconfigurableitems" name="quotationconfigurableitems" value="{{ implode(',', $uniqueConfigurableItems ?? []) }}">
     <input type="hidden" id="versionId" name="versionId"
         value="{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}">
     <div class="col-md-6">
@@ -1148,9 +1148,15 @@
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
         <script src="https://d3js.org/d3.v7.min.js" defer></script> <!-- Load D3 -->
-        @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
+        @php
+            $uniqueCores = collect($uniqueConfigurableItems ?? []);
+            $needsHalspanCad = $uniqueCores->intersect([1, 2, 7, 8])->isNotEmpty();
+            $needsVicaimaCad = $uniqueCores->intersect([4, 5, 6, 9])->isNotEmpty() || $uniqueCores->isEmpty();
+        @endphp
+        @if($needsHalspanCad)
             <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
-        @else
+        @endif
+        @if($needsVicaimaCad)
             <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
         @endif
 
@@ -2703,9 +2709,7 @@
             });
             cuttingList = function() {
                 var cuttingListUrl = $("#cuttingListUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
@@ -2715,9 +2719,7 @@
             };
             PickListExport = function() {
                 var PickListExportUrl = $("#PickListExportUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = PickListExportUrl + '/' + quotationId + '/' + currentVersion;
@@ -2728,7 +2730,6 @@
             allGlazingBeadsExport = function() {
                 var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
@@ -3212,7 +3213,6 @@
             ExcelExportNew = function() {
                 var excelexportNewUrl = $("#excelexportNewUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
@@ -3223,7 +3223,6 @@
             ExcelExportVicaima = function() {
                 var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
@@ -3234,7 +3233,6 @@
             ExcelExportNonConfig = function() {
             var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
             var quotationId = $("#quotationId").val();
-            var quotationconfigurableitems = $("#quotationconfigurableitems").val();
             var currentVersion = $("#currentVersion").val();
             if (currentVersion != 0) {
                 window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
@@ -3244,41 +3242,27 @@
         };
             ExportBomCalculation = function() {
                 var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
             ExportDoorTypeBom = function() {
                 var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4){
-                        window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
             ExportSideScreen = function() {
                 var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
@@ -3288,16 +3272,10 @@
             };
             ExportScreenBomCalculation = function() {
                 var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }

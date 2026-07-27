@@ -49,27 +49,27 @@ class pdf4 implements ShouldQueue
         }else{
             $id = Auth::user()->id;
         }
-        
+
         $quotaion = Quotation::where('id', $quatationId)->first();
         $comapnyDetail = Company::where('UserId', $id)->first();
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
         $contractorName = $contractorName ?: '';
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
-        
+
         if (!empty($quotaion->MainContractorId)) {
             $customerContact = Users::where('id', $quotaion->MainContractorId)->first();
         } else {
             $customerContact = '';
         }
-        
+
         $customer = '';
         $CstCompanyAddressLine1 = '';
         if (!empty($customerContact)) {
             $customer = Customer::where(['UserId' => $quotaion->MainContractorId])->first();
             $CstCompanyAddressLine1 = $customer->CstCompanyAddressLine1;
         }
-        
+
         $qv = QuotationVersion::where('id', $versionID)->first();
         $version = $qv->version;
          // for getting margin
@@ -84,16 +84,13 @@ class pdf4 implements ShouldQueue
 
          $SumDoorsetPrice = 0;
          $SumIronmongaryPrice = 0;
-         $configurationItem = $quotaion->configurableitems;
-         if (!empty($quotaion->configurableitems)) {
-             $configurationItem = $quotaion->configurableitems;
-         }
-         
+
          $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
             ->where('quotation_version_items.version_id', $versionID)->get();
 
          foreach ($shows as $show) {
+             $configurationItem = $show->configurableitems ?: 1;
 
              $fireRate = $show->FireRating;
              if($show->FireRating == 'FD30' || $show->FireRating == 'FD30s'){
@@ -101,7 +98,7 @@ class pdf4 implements ShouldQueue
              }elseif($show->FireRating == 'FD60' || $show->FireRating == 'FD60s'){
                  $show->FireRating = 'FD60';
              }
-             
+
              $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
              $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
              $DoorsetPrice = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
@@ -115,7 +112,7 @@ class pdf4 implements ShouldQueue
                      $IronmongaryPrice = $totalcost;
                  }
              }
-             
+
              // dd( $IronmongaryPrice);
              $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
@@ -128,7 +125,7 @@ class pdf4 implements ShouldQueue
                  $dlf = DoorLeafFinish($configurationItem, $show->DoorLeafFinish);
                  $DoorLeafFinish = empty($show->SheenLevel) ? $dlf : $dlf . ' - ' . $show->SheenLevel . ' Sheen';
              }
-             
+
              $DoorLeafFinishColor = '';
              if (!empty($show->DoorLeafFinishColor)) {
                  $DoorLeafFinishColor = ' + ' . $show->DoorLeafFinishColor;
@@ -150,7 +147,7 @@ class pdf4 implements ShouldQueue
                      $LippingType = $SelectedLippingType->OptionValue;
                  }
              }
-             
+
              $LippingSpecies = '';
              if (!empty($show->LippingSpecies)) {
                  $SelectedLippingSpecies = LippingSpecies::find($show->LippingSpecies);
@@ -158,12 +155,12 @@ class pdf4 implements ShouldQueue
                      $LippingSpecies = $SelectedLippingSpecies->SpeciesName;
                  }
              }
-             
+
              $LippingThickness = '';
              if (!empty($show->LippingThickness)) {
                  $LippingThickness = $show->LippingThickness;
              }
-             
+
              if (!empty($LippingType) && !empty($LippingSpecies) && !empty($LippingThickness)) {
                  $Lipping = $LippingType . ' - ' . $LippingSpecies . ' - ' . $LippingThickness . 'mm';
                  // LY-LS-LT = 1-1-1 //
@@ -266,7 +263,7 @@ class pdf4 implements ShouldQueue
              } elseif (!empty($show->FrameType) && $show->FrameType == 'Scalloped') {
                  $FrameSizeForDoorDetailsTable .= $show->ScallopedWidth . "x" . $show->ScallopedHeight . "mm";
              }
-             
+
              // $FrameSizeForDoorDetailsTable .= $show->FrameThickness."mm";
 
              if (!empty($show->IronmongerySet)) {
@@ -280,7 +277,7 @@ class pdf4 implements ShouldQueue
              } else {
                  $IronmongerySet = 'N/A';
              }
-             
+
              $FrameFinishForDoorDetailsTable = 'N/A';
              if (!empty($show->FrameFinish)) {
 
@@ -297,12 +294,12 @@ class pdf4 implements ShouldQueue
              if (!empty($show->ExtLinerValue)) {
                  $ExtLinerValue = $show->ExtLinerValue;
              }
-             
+
              $ExtLinerThickness = '';
              if (!empty($show->ExtLinerThickness)) {
                  $ExtLinerThickness = $show->ExtLinerThickness . 'mm';
              }
-             
+
              if (empty($ExtLinerValue) && ($ExtLinerThickness === '' || $ExtLinerThickness === '0')) {
                  $ExtLinerSizeForDoorDetailsTable = "N/A";
              } elseif (empty($ExtLinerValue) && ($ExtLinerThickness !== '' && $ExtLinerThickness !== '0')) {
@@ -366,7 +363,7 @@ class pdf4 implements ShouldQueue
              if (!empty($show->DoorsetType)) {
                  $DoorDescription = DoorDescription($show->DoorsetType);
              }
-             
+
              $ArchitraveSetQty = 'N/A';
              if (!empty($show->ArchitraveSetQty)) {
                  $ArchitraveSetQty = $show->ArchitraveSetQty;
@@ -377,12 +374,12 @@ class pdf4 implements ShouldQueue
              if (!empty($show->SL1Width)) {
                  $SL1Width = $show->SL1Width;
              }
-             
+
              $SL1Height = '';
              if (!empty($show->SL1Height)) {
                  $SL1Height = $show->SL1Height;
              }
-             
+
              $SideScreen1 = 'N/A';
              if (!empty($SL1Width) && !empty($SL1Height)) {
                  $SideScreen1 = $SL1Width . ' x ' . $SL1Height;
@@ -399,12 +396,12 @@ class pdf4 implements ShouldQueue
              if (!empty($show->SL2Width)) {
                  $SL2Width = $show->SL2Width;
              }
-             
+
              $SL2Height = '';
              if (!empty($show->SL2Height)) {
                  $SL2Height = $show->SL2Height;
              }
-             
+
              $SideScreen2 = 'N/A';
              if (!empty($SL2Width) && !empty($SL2Height)) {
                  $SideScreen2 = $SL2Width . ' x ' . $SL2Height;
@@ -415,8 +412,8 @@ class pdf4 implements ShouldQueue
              } elseif (empty($SL2Width) && empty($SL2Height)) {
                  $SideScreen2 = 'N/A';
              }
-             
-             if($quotaion->configurableitems == 4){
+
+             if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 ||$show->configurableitems == 9){
                  $a .= '<tr>
                              <td>' . $i . '</td>
                              <td>' . $show->floor . '</td>
@@ -534,7 +531,7 @@ class pdf4 implements ShouldQueue
                              </tr>
                              ';
              }
-             
+
              $i++;
              //     }
              // }
@@ -554,7 +551,9 @@ class pdf4 implements ShouldQueue
                  ';
 
 
-         if($quotaion->configurableitems == 4){
+         // Template choice from items (all Vicaima => vicaima layout). Mixed cores keep standard layout.
+         $useVicaimaPdf = $shows->isNotEmpty() && $shows->every(fn ($s) => in_array((int) $s->configurableitems, [4, 5, 6, 9], true));
+         if($useVicaimaPdf){
              $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);
          }else{
              $pdf4 = PDF::loadView('Company.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer]);

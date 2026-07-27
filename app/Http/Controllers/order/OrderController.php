@@ -623,34 +623,18 @@ $sn++;
                 $selectQV = ['selectVersionID'=>$QV->id,'selectVersion'=>$QV->version];
             }
 
-            // Configurable Items
+            // Configurable Items — always allow all cores (item-level configurableitems)
             $configurableItem = ConfigurableItems::get();
             $configItem = '';
             foreach($configurableItem as $ci){
-                if(!empty($Quotation->configurableitems)){
-                    if($Quotation->configurableitems == $ci->id){
-                        $btnLink =
-                        '
-                            <a href="javascript:void(0);" data-type="'.$ci->id.'"
-                            class="configure_btn">Create <br>Door Type</a>
-                            <a href="javascript:void(0);"
-                            data-type="'.$ci->id.'" class="configure_btn configure_door_btn">Add
-                            Additional <br> Door Type</a>
-                        ';
-                    } else {
-                        $btnLink = '<p class="configure_btn"> Another Door is selected for these quotation</p>';
-                    }
-
-                } else {
-                    $btnLink =
-                    '
-                        <a href="javascript:void(0);" data-type="'.$ci->id.'"
-                        class="configure_btn">Create <br>Door Type</a>
-                        <a href="javascript:void(0);"
-                        data-type="'.$ci->id.'" class="configure_btn configure_door_btn">Add
-                        Additional <br> Door Type</a>
-                    ';
-                }
+                $btnLink =
+                '
+                    <a href="javascript:void(0);" data-type="'.$ci->id.'"
+                    class="configure_btn">Create <br>Door Type</a>
+                    <a href="javascript:void(0);"
+                    data-type="'.$ci->id.'" class="configure_btn configure_door_btn">Add
+                    Additional <br> Door Type</a>
+                ';
 
                 $configItem .=
                 '
