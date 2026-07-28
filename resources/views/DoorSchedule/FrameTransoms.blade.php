@@ -47,12 +47,12 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="30">Frames & Transoms BOM</th>
+                <th colspan="31">Frames & Transoms BOM</th>
             </tr>
             <tr>
                 <th colspan="5">Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
-                <th colspan="5">Project</th>
+                <th colspan="1">Project</th>
                 <td colspan="5">{{ $quotation->projectname }}</td>
                 <th colspan="5">Prepared By</th>
                 <td colspan="5">{{ $userName }}</td>
@@ -62,16 +62,16 @@
                 <td colspan="2">{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="3">{{ $today }}</td>
-                <th colspan="4">Main Contractor</th>
+                <th colspan="5">Main Contractor</th>
                 <td colspan="5">{{ $quotation->CstCompanyName }}</td>
                 <th colspan="5">Sales Contact</th>
                 <td colspan="5">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="30">Text</th>
+                <th colspan="31">Text</th>
             </tr>
             <tr>
-                <th colspan="30">Items</th>
+                <th colspan="31">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -90,6 +90,7 @@
                         <th>O/A Frame H</th>
                         <th>O/A Frame W</th>
                         <th>Frame Thickness</th>
+                        <th>Frame Head Thickness</th>
                         <th>Plant on stop thickness</th>
                         <th>Plant on stop Width</th>
                         <th>Rebate Width</th>
@@ -142,7 +143,7 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        {{-- <td></td> --}}
+                        <td></td>
                     </tr>
                 @endif
                 @endforeach
