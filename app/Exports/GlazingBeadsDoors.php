@@ -38,7 +38,48 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
     {
         $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id', $this->id)->first();
 
-        $item = Item::Join('item_master','items.itemId','item_master.itemID')->leftjoin('lipping_species','lipping_species.id','items.GlazingBeadSpecies')->where('QuotationId', $this->id)->where('VersionId',$this->vid)->select('item_master.*','items.*','lipping_species.SpeciesName')->orderBy('items.itemId','ASC')->get();
+        $item = Item::join(
+                'item_master',
+                'items.itemId',
+                '=',
+                'item_master.itemID'
+            )
+            ->leftJoin(
+                'lipping_species as vp_species',
+                'vp_species.id',
+                '=',
+                'items.GlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as op_species',
+                'op_species.id',
+                '=',
+                'items.OPGlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as sl1_species',
+                'sl1_species.id',
+                '=',
+                'items.SL1GlazingBeadSpecies'
+            )
+            ->leftJoin(
+                'lipping_species as sl2_species',
+                'sl2_species.id',
+                '=',
+                'items.SideLight2GlazingBeadSpecies'
+            )
+            ->where('items.QuotationId', $this->id)
+            ->where('items.VersionId', $this->vid)
+            ->select(
+                'item_master.*',
+                'items.*',
+                'vp_species.SpeciesName as GlazingBeadSpeciesName',
+                'op_species.SpeciesName as OPGlazingBeadSpeciesName',
+                'sl1_species.SpeciesName as SL1GlazingBeadSpeciesName',
+                'sl2_species.SpeciesName as SideLight2GlazingBeadSpeciesName'
+            )
+            ->orderBy('items.itemId', 'ASC')
+            ->get();
 
          if(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -114,14 +155,18 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
-                    $value->SpeciesName,
-                    str_replace('_', ' ', $value->GlazingBeads),
+                    $value->OPGlazingBeadSpeciesName,
+                    str_replace('_', ' ', $value->OPGlazingBeads),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->GlazingBeadsThickness,
-                    $value->glazingBeadsHeight,
-                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30') ? ($value->OPWidth + $VisionPanelWidthNFR) : ($value->OPWidth + $VisionPanelWidthFD60),
+                    $value->OPGlazingBeadsThickness,
+                    $value->OPGlazingBeadsHeight,
+                    ($value->FireRating == 'NFR' || $value->FireRating == 'FD30s' || $value->FireRating == 'FD30')
+                     ? ($value->OPWidth - ($value->OpBeadThickness * 2) + $VisionPanelWidthNFR)
+                     : ($value->OPWidth - ($value->OpBeadThickness * 2)+ $VisionPanelWidthFD60),
                     4,
-                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60') ? $value->OPHeigth + $VisionPanelHeightFD60 : $value->OPHeigth + $VisionPanelHeightNFR,
+                    ($value->FireRating == 'FD60s' || $value->FireRating == 'FD60')
+                    ? ($value->OPHeigth - ($value->OpBeadThickness * 2) + $VisionPanelHeightFD60)
+                    : ($value->OPHeigth - ($value->OpBeadThickness * 2) + $VisionPanelHeightNFR),
                     4,
                     '',
                     '',
@@ -152,11 +197,11 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
-                    $value->SpeciesName,
-                    str_replace('_', ' ', $value->GlazingBeads),
+                    $value->SL1GlazingBeadSpeciesName,
+                    str_replace('_', ' ', $value->BeadingType),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->GlazingBeadsThickness,
-                    $value->glazingBeadsHeight,
+                    $value->SideLight1GlazingBeadsThickness,
+                    $value->SlBeadHeight,
                     // VP Width = SL Width - (Frame Thickness x 2) + MS
                     in_array($value->FireRating, ['FD60s', 'FD60'])
                         ? (($value->SL1Width - ($value->SideLight1FrameThickness * 2)) + $VisionPanelWidthFD60)
@@ -200,11 +245,11 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
-                    $value->SpeciesName,
-                    str_replace('_', ' ', $value->GlazingBeads),
+                    $value->SideLight2GlazingBeadSpeciesName,
+                    str_replace('_', ' ', $value->SideLight2BeadingType),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->GlazingBeadsThickness,
-                    $value->glazingBeadsHeight,
+                    $value->SideLight2GlazingSystemsThickness,
+                    $value->SlBeadHeight,
                     in_array($value->FireRating, ['FD60s', 'FD60'])
                         ? (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthFD60)
                         : (($value->SL2Width - ($value->SideLight2FrameThickness * 2)) + $VisionPanelWidthNFR),
