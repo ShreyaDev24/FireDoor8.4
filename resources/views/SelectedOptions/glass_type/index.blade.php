@@ -135,7 +135,7 @@
                             <th>Action</th>
 
                             @if($auth->id != 1)
-                            <th>Price Per M2</th>
+                            <th>Price Per LM</th>
                             @endif
                         </tr>
                     </thead>
@@ -236,7 +236,7 @@
                             <th>Action</th>
 
                             @if($auth->id != 1)
-                            <th>Price Per M2</th>
+                            <th>Price Per LM</th>
                             @endif
                         </tr>
                     </thead>
