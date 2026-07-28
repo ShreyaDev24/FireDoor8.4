@@ -106,7 +106,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Frame Material',
             'O/A Frame H',
             'O/A Frame W',
-            'Frame Thickness',
+            'Frame Style Thickness',
+            'Frame Head Thickness',
             'Plant on stop thickness',
             'Plant on stop Width',
             'Rebate Width',
@@ -243,6 +244,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->FrameHeight,
                 $value->FrameWidth,
                 $value->FrameThickness,
+                $value->HeadFrameThickness,
                 $value->PlantonStopHeight,
                 $value->PlantonStopWidth,
                 $value->RebatedWidth,
@@ -332,6 +334,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->OPHeigth,
                     $value->FrameWidth + $SLWidth,
                     $value->FrameThickness,
+                    $value->HeadFrameThickness,
                     '',
                     '',
                     '',
@@ -406,6 +409,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->SL1Height,
                     $value->SL1Width,
                     $value->FrameThickness,
+                    $value->HeadFrameThickness,
                       '',
                     '',
                     '',
@@ -480,6 +484,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->SL2Height,
                     $value->SL2Width,
                     $value->FrameThickness,
+                    $value->HeadFrameThickness,
                       '',
                     '',
                     '',
@@ -696,7 +701,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 // Auto-size all columns A to AC
                 // ----------------------------------------------------------
                 $col = 'A';
-                while ($col !== 'AE') { // Adjust as per your last column
+                while ($col !== 'AF') { // Adjust as per your last column
                     $sheet->getColumnDimension($col)->setAutoSize(true);
                     $col++;
                 }
@@ -768,8 +773,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Green title (merged and bordered top/bottom)
                     if (in_array($val, ['Door Order Sheet', 'Frames and Transoms'])) {
-                        $sheet->mergeCells("A{$i}:AE{$i}");
-                        $sheet->getStyle("A{$i}:AE{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:AF{$i}");
+                        $sheet->getStyle("A{$i}:AF{$i}")->applyFromArray($mainTitleStyle);
                     }
 
                     // ✅ Green title for "SCREEN INFO"
@@ -780,7 +785,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Red underline for Door Section header
                     if ($val === 'Door Number') {
-                        $sheet->getStyle("A{$i}:AE{$i}")->applyFromArray($headerRowStyle);
+                        $sheet->getStyle("A{$i}:AF{$i}")->applyFromArray($headerRowStyle);
                     }
 
                     // ✅ Red underline for Screen Info section header
