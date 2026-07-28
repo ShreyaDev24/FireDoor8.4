@@ -57,19 +57,88 @@ class HalspanController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getHalspanConfigurationBaseLookups(array $userIds): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('halspan_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'leafTypeIntumescentseal' => $this->rememberLookup('halspan_leaf_type_intumescentseal_2', static function () {
+                return IntumescentSealLeafType::where('configurableitems', 2)->where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('halspan_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('halspan_intumescent_arrangement_2', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 2], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('halspan_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('halspan_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('halspan_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'setIronmongery' => $this->rememberLookup('halspan_set_ironmongery_' . md5(json_encode($userIds)), static function () use ($userIds) {
+                return AddIronmongery::wherein('UserId', $userIds)->orderBy('Setname', 'ASC')->get();
+            }),
+            'BOMSetting' => $this->rememberLookup('halspan_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function addHalspanItem($id,$vid = null,$itemId = null)
     {
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getHalspanConfigurationBaseLookups($UserIds);
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        $OptionsData = $this->rememberLookup('halspan_option_data_add_2_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 2 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
         // Group options by slug once so each Blade dropdown iterates only its own
         // options instead of re-scanning the full collection on every dropdown.
         $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
 
         $configurationDoor = configurationDoor(2);
         $UserId = Auth::user()->id;
@@ -90,10 +159,7 @@ class HalspanController extends Controller
         }
 
         // $ColorData = Color::where('Status',1)->wherein('editBy',$UserIds)->get();
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -155,11 +221,6 @@ class HalspanController extends Controller
         // nested-loop logic, including quantity duplication and ordering.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
-
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-
-
         if(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
             $ids = $users->CreatedBy;
@@ -189,18 +250,6 @@ class HalspanController extends Controller
         }
 
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $id,
@@ -232,6 +281,17 @@ class HalspanController extends Controller
     public function editHalspanConfigurationCadItem($id,$vid){
 
         $UserIds = CompanyUsers();
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getHalspanConfigurationBaseLookups($UserIds);
         $item = Item::where('itemId',$id)->first();
         // dd($item);
         if($item === null){
@@ -243,15 +303,12 @@ class HalspanController extends Controller
         // below code to get lipping name and to show on edit page---
         $LippingName = LippingSpecies::where('id', $item['LippingSpecies'])->where('Status',1)->first();
 
-
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $OptionsData = Option::where(['configurableitems'=> 2 ,'is_deleted' => 0])->get();
+        $OptionsData = $this->rememberLookup('halspan_option_data_edit_2', static function () {
+            return Option::where(['configurableitems'=> 2 ,'is_deleted' => 0])->get();
+        });
         // Group options by slug once so each Blade dropdown iterates only its own
         // options instead of re-scanning the full collection on every dropdown.
         $OptionsDataGrouped = $OptionsData->groupBy('OptionSlug');
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 2], "", "intumescentSealArrangement");
-
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
 
         $configurationDoor = configurationDoor(2);
         $UserType = Auth::user()->UserType;
@@ -277,19 +334,18 @@ class HalspanController extends Controller
         $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
         $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
 
-        $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        $SelectedLippingSpeciesData = $this->rememberLookup('halspan_lipping_species_query', static function () {
+            return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        });
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
         $ColorData = Color::where([ 'Status' => 1])->get();
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"] ])->first();
         $CompanyId = null;
         if($quotation != ''){
             $CompanyId = $quotation->CompanyId;
         }
 
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -350,22 +406,6 @@ class HalspanController extends Controller
         // in memory (no per-row DB queries). Output is identical to the previous
         // nested-loop logic, including quantity duplication and ordering.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
-
-
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
