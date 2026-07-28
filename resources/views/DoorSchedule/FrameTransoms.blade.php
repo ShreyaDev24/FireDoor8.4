@@ -89,7 +89,7 @@
                         <th>Frame Material</th>
                         <th>O/A Frame H</th>
                         <th>O/A Frame W</th>
-                        <th>Frame Thickness</th>
+                        <th>Frame Style Thickness</th>
                         <th>Frame Head Thickness</th>
                         <th>Plant on stop thickness</th>
                         <th>Plant on stop Width</th>
