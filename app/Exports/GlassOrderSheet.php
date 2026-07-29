@@ -260,16 +260,16 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
         $summary = [];
 
         foreach ($data as $row) {
-            if (empty($row[5])) continue; // skip if no Glass Type
-            $glassType = trim($row[5]);
+            if (empty($row[6])) continue; // skip if no Glass Type
+            $glassType = trim($row[6]);
 
             // VP column indexes
             $vpIndexes = [
-                'VP1' => ['H' => 6,  'W' => 7,  'Q' => 8],
-                'VP2' => ['H' => 9,  'W' => 7, 'Q' => 10],
-                'VP3' => ['H' => 11, 'W' => 7, 'Q' => 12],
-                'VP4' => ['H' => 13, 'W' => 7, 'Q' => 14],
-                'VP5' => ['H' => 15, 'W' => 7, 'Q' => 16],
+                'VP1' => ['H' => 7,  'W' => 8,  'Q' => 9],
+                'VP2' => ['H' => 10,  'W' => 8, 'Q' => 11],
+                'VP3' => ['H' => 12, 'W' => 8, 'Q' => 13],
+                'VP4' => ['H' => 14, 'W' => 8, 'Q' => 15],
+                'VP5' => ['H' => 16, 'W' => 8, 'Q' => 17],
             ];
 
             // initialize

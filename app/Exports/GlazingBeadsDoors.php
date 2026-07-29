@@ -221,14 +221,14 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $summary = [];
 
         foreach ($data as $row) {
-            if (!isset($row[4]) || empty($row[4])) continue; // skip blanks
+            if (!isset($row[5]) || empty($row[5])) continue; // skip blanks
 
-            $species = $row[4];
-            $profile = $row[5];
-            $height  = $row[7] ?? 'N/A';
-            $depth   = $row[8] ?? 'N/A';
-            $width   = $row[9] ?? 'N/A';
-            $length  = $row[11] ?? 'N/A';  // was $hgt
+            $species = $row[5];
+            $profile = $row[6];
+            $height  = $row[8] ?? 'N/A';
+            $depth   = $row[9] ?? 'N/A';
+            $width   = $row[10] ?? 'N/A';
+            $length  = $row[12] ?? 'N/A';  // was $hgt
             // $row[10] is the per-row Qty (often 4). We are NOT summing it anymore.
 
             $key = "{$species}|{$profile}|{$height}|{$depth}|{$width}x{$length}";
