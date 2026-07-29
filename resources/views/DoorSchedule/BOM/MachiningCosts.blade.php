@@ -4,12 +4,13 @@
         @php $check =  1; @endphp
         @if($i++==0)
         <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
         <tr style="background:#00B0F0">
-            <td colspan="16"><b>Ironmongery Machining Cost</b></td>
+            <td colspan="17"><b>Ironmongery Machining Cost</b></td>
         </tr>
         <tr>
+            <th>Door Core</th>
             <th>Door Type</th>
             <th colspan="4">Code/Ironmongery Name</th>
             <th>MAN HOURS</th>
@@ -36,6 +37,7 @@
                 $words = explode("|", $value->Description);
         @endphp
         <tr>
+            <td> {{ doorcorename($value->configurableitems) }} </td>
             <td>{{$value->DoorType}}</td>
             <td colspan="4"> {{ isset($words[1]) ? $words[1] : '' }} </td>
             <td> {{ isset($words[2]) ? round($words[2], 2) : '' }} </td>
@@ -66,7 +68,7 @@ global $MachiningCostsstotalGTSell;
 
 @if($check==1)
 <tr style="background:gray">
-    <td colspan="9"><b>Total </b></td>
+    <td colspan="10"><b>Total </b></td>
     <td></td>
     <td></td>
     <td></td>

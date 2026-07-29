@@ -32,6 +32,7 @@ use App\Models\IronmongeryInfoModel;
 use App\Models\IronmongeryID;
 use App\Models\GlassType;
 use App\Models\GlazingSystem;
+use App\Models\OverpanelGlassGlazing;
 use App\Models\User;
 use App\Models\CoreCertificate;
 use App\Models\OverpanelGlassGlazing;
@@ -59,14 +60,8 @@ class OMMAnualController extends Controller
         $quotaion = Quotation::where('id',$quatationId)->first();
         $HideCosts = SettingCurrency::where('UserId', $id)->value('HideCosts');
         $currency = QuotationCurrency($quotaion->Currency);
-        $configurationItem = 1;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
 
-        $configurationItemName = configurationDoor($configurationItem);
-
-        $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
+        $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
 
         if (!empty($quotaion->MainContractorId)) {
             $customerContact = CustomerContact::join('customers', 'customers.id', 'customer_contacts.MainContractorId')->where('customers.UserId', $quotaion->MainContractorId)->first();
@@ -161,7 +156,34 @@ class OMMAnualController extends Controller
 
         $shows = Item::join('quotation_version_items', 'items.itemId', 'quotation_version_items.itemID')
             ->join('item_master', 'quotation_version_items.itemmasterID', 'item_master.id')
-            ->where('quotation_version_items.version_id', $versionID)->get();
+            ->where('quotation_version_items.version_id', $versionID)
+            ->select('items.*', 'item_master.doorNumber')
+            ->get();
+            $i = 1;
+            $DoorDescription = '';
+            foreach ($shows as $show) {
+                if (!empty($show->DoorsetType)) {
+                    $DoorDescription = DoorDescription($show->DoorsetType);
+                }
+
+                $a2 .=
+                    '<tr>
+                <td>' . $show->doorNumber . '</td>
+                <td>' . $DoorDescription . '</td>
+                <td>' . $show->DoorType . '</td>
+                <td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice)), 2) . '</td>
+                <td>' . round($show->IronmongaryPrice, 2) . '</td>
+                <td>' . round((($show->AdjustPrice)?floatval($show->AdjustPrice) + floatval($show->IronmongaryPrice):floatval($show->DoorsetPrice) + floatval($show->IronmongaryPrice)), 2) . '</td>
+                </tr>';
+                $i++;
+            }
+
+            $pdf4 = PDF::loadView('Order.pdf_files.detaildoorlist',['a2' => $a2, 'comapnyDetail' => $comapnyDetail, 'quotaion' => $quotaion, 'project' => $project, 'version' => $version, 'customer' => $customer]);
+            // return $pdf3->download('file3.pdf');
+            $path4 = public_path().'/allpdfFile';
+            $fileName4 = $id.'4' . '.' . 'pdf' ;
+            $pdf4->save($path4 . '/' . $fileName4);
+
         // Sixth PDF
         // Ironmongery Set
         $itemIronmon = Item::where('QuotationId', $quatationId)->where('VersionId', $versionID)->get();
@@ -230,12 +252,17 @@ class OMMAnualController extends Controller
         // Seven PDF
         $CompanyId = get_company_id(Auth::user()->id)->id;
         $a = '';
+        $aCustom = '';
         $i = 1;
         $DoorQuantity = 0;
+        $DoorQuantityCustom = 0;
         $DoorsetPrice = 0;
+        $DoorsetPriceCustom = 0;
 
         $SumDoorsetPrice = 0;
+        $SumDoorsetPriceCustom = 0;
         $SumIronmongaryPrice = 0;
+        $SumIronmongaryPriceCustom = 0;
         // $quotation_version = QuotationVersionItems::where(['QuotationId' => $quatationId , 'Version' => $version ])->count();dd($quotation_version);
 
         foreach ($shows as $show) {
@@ -252,25 +279,40 @@ class OMMAnualController extends Controller
             //     $item = Item::where(['itemId' => $dt->itemID , 'CompanyID' => $CompanyId , 'QuotationId' => $quatationId ])->get();
             //     foreach($item as $show){
             // $totalpriceperdoorset = $show->DoorsetPrice + $show->IronmongaryPrice;
-            $DoorQuantity += $show->DoorQuantity;
             // $DoorsetPrice += $show->DoorsetPrice;
             // $IronmongaryPrice += $show->IronmongaryPrice;
 
 
             $grand_total = BOMDetails::where('itemId', $show->itemId)->sum('grand_total');
             $labour_total = BOMDetails::where('itemId', $show->itemId)->sum('labour_total');
-            $DoorsetPrice = (($show->AdjustPrice) ? floatval($show->AdjustPrice) : floatval($show->DoorsetPrice));
-            $IronmongaryPrice = 0;
+            $DoorsetPriceCalc = (($show->AdjustPrice)?floatval($show->AdjustPrice) :floatval($show->DoorsetPrice));
+            $IronmongaryPriceCalc = 0;
             if (!empty($show->IronmongeryID)) {
                 $AI = AddIronmongery::select('discountprice')->where('id', $show->IronmongeryID)->first();
-                $IronmongaryPrice = $AI->discountprice;
+                $IronmongaryPriceCalc = $AI->discountprice;
             }
 
-            $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
+                $DoorsetPrice = $DoorsetPriceCalc;
+                $IronmongaryPrice = $IronmongaryPriceCalc;
+                $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
+                $SumDoorsetPrice += $DoorsetPrice;
+                $SumIronmongaryPrice += $IronmongaryPrice;
 
-            $SumDoorsetPrice += $DoorsetPrice;
-            $SumIronmongaryPrice += $IronmongaryPrice;
+                $DoorQuantity++;
+            }else{
+                $DoorsetPriceCustom = $DoorsetPriceCalc;
+                $IronmongaryPriceCustom = $IronmongaryPriceCalc;
+                $totalpriceperdoorsetCustom = $DoorsetPriceCustom + $IronmongaryPriceCustom;
+
+                $SumDoorsetPriceCustom += $DoorsetPriceCustom;
+                $SumIronmongaryPriceCustom += $IronmongaryPriceCustom;
+
+                $DoorQuantityCustom++;
+            }
+
+            $configurationItem = $show->configurableitems;
 
             $DoorLeafFinish = "N/A";
             if (!empty($show->DoorLeafFinish)) {
@@ -412,6 +454,8 @@ class OMMAnualController extends Controller
                 $FrameSizeForDoorDetailsTable .= $show->RebatedWidth . "x" . $show->RebatedHeight . "mm";
             } elseif (!empty($show->FrameType) && $show->FrameType == 'Plant_on_Stop') {
                 $FrameSizeForDoorDetailsTable .= $show->PlantonStopWidth . "x" . $show->PlantonStopHeight . "mm";
+            } elseif (!empty($show->FrameType) && $show->FrameType == 'Scalloped') {
+                $FrameSizeForDoorDetailsTable .= $show->ScallopedWidth . "x" . $show->ScallopedHeight . "mm";
             }
 
             // $FrameSizeForDoorDetailsTable .= $show->FrameThickness."mm";
@@ -561,12 +605,12 @@ class OMMAnualController extends Controller
                 $SideScreen2 = 'N/A';
             }
 
-            if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
+            if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
                 $a .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -614,16 +658,22 @@ class OMMAnualController extends Controller
                             <td>' . $IronmongerySet . '</td>
                             <td>' . $rWdBRating . '</td>
                             <td>' . $fireRate . '</td>
-                            <td>' . $SpecialFeatureRefs . '</td>
+                            <td>' . $SpecialFeatureRefs . '</td>';
+                            if($HideCosts == 0){
+                                $a .= '<td class="tbl_last">' . round($DoorsetPrice, 2) . '</td>
+                                <td class="tbl_last">' . round($IronmongaryPrice, 2) . '</td>';
+                            }
+
+                            $a .= '<td class="tbl_last">' . round($totalpriceperdoorset, 2) . '</td>
                             </tr>
                             ';
             }else{
 
-                $a .= '<tr>
+                $aCustom .= '<tr>
                             <td>' . $show->plot_ref_no . '</td>
                             <td>' . $show->certification_no . '</td>
                             <td>' . $show->floor . '</td>
-                            <td>' . configurationDoor($quotaion->configurableitems) . '</td>
+                            <td>' . configurationDoor($show->configurableitems) . '</td>
                             <td>' . $show->doorNumber . '</td>
                             <td>' . $DoorDescription . '</td>
                             <td>' . $show->SOHeight . '</td>
@@ -671,7 +721,13 @@ class OMMAnualController extends Controller
                             <td>' . $rWdBRating . '</td>
                             <td>' . $fireRate . '</td>
                             <td>' . $COC . '</td>
-                            <td>' . $SpecialFeatureRefs . '</td>
+                            <td>' . $SpecialFeatureRefs . '</td>';
+                            if($HideCosts == 0){
+                                $aCustom .= '<td class="tbl_last">' . round($DoorsetPriceCustom, 2) . '</td>
+                                <td class="tbl_last">' . round($IronmongaryPriceCustom, 2) . '</td>';
+                            }
+
+                            $aCustom .= '<td class="tbl_last">' . round($totalpriceperdoorsetCustom, 2) . '</td>
                             </tr>
                             ';
             }
@@ -681,6 +737,8 @@ class OMMAnualController extends Controller
             // }
         }
 
+        $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
+        $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
         $a .= '
                 <tr>
                     <td class="tbl_bottom" colspan="4"></td>
@@ -689,16 +747,34 @@ class OMMAnualController extends Controller
                 </tr>
             ';
 
+        $aCustom .= '
+                <tr>
+                    <td class="tbl_bottom" colspan="4"></td>
+                    <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
+                    <td class="tbl_bottom" colspan="39"></td>';
+                    if($HideCosts == 0){
+                        $aCustom .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPriceCustom, 2) . '</td>
+                        <td class="tbl_bottom">' . $currency.round($SumIronmongaryPriceCustom, 2) . '</td>';
+                    }
 
-        if($quotaion->configurableitems == 4 || $quotaion->configurableitems == 5 || $quotaion->configurableitems == 6 || $quotaion->configurableitems == 9){
-            $pdf5 = PDF::loadView('Order.pdf_files.vicaimapdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
-        }else{
-            $pdf5 = PDF::loadView('Order.pdf_files.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+                    $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
+                </tr>
+            ';
+
+        if(isset($a)){
+            $pdf5 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
         // return $pdf4->download('file4.pdf');
         $path5 = public_path().'/allpdfFile';
         $fileName5 = $id.'5' . '.' . 'pdf' ;
         $pdf5->save($path5 . '/' . $fileName5);
+
+        if(isset($aCustom)){
+            $pdf5_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        }
+        $path5_custom = public_path().'/allpdfFile';
+        $fileName5_custom = $id.'5_custom' . '.' . 'pdf' ;
+        $pdf5_custom->save($path5_custom . '/' . $fileName5_custom);
 
 
         // Eight PDF
@@ -712,7 +788,7 @@ class OMMAnualController extends Controller
         })
             ->join('quotation', 'quotation.id', '=', 'items.QuotationId')
             ->where('items.QuotationId', $quatationId)
-            ->where('quotation_version_items.version_id', $versionID)->select('items.*', 'item_master.doorNumber', 'quotation.configurableitems')->groupBy('item_master.itemID')->get();
+            ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
 
         $TotalItems = count($ed->toArray());
 
@@ -720,23 +796,20 @@ class OMMAnualController extends Controller
         $PageBreakCounts = 1;
         $GlassTypeIds = [];
 
-        foreach ($ed as $tt) {
-            $getLeaf = IntumescentSealLeafType::where('id', $tt->IntumescentLeafType)->select('id', 'leaf_type_key', 'door_thickness')->first();
-            if ($getLeaf) {
-                $fire = $tt->FireRating . ' - ' . $getLeaf->leaf_type_key . ' (' . $getLeaf->door_thickness . 'mm)';
-            } else {
-                $fire = $tt->FireRating;
-            }
+            foreach ($ed as $tt) {
 
-            if ($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s') {
-                $FireRatingActualValue = 'FD30';
-                $tt->FireRating = 'FD30';
-            } elseif ($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s') {
-                $FireRatingActualValue = 'FD60';
-                $tt->FireRating = 'FD60';
-            } else {
-                $FireRatingActualValue  =  $tt->FireRating;
-            }
+                $configurationItem = $tt->configurableitems;
+
+                $fire = $tt->FireRating;
+                if($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s'){
+                    $FireRatingActualValue = 'FD30';
+                    $tt->FireRating = 'FD30';
+                }elseif($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s'){
+                    $FireRatingActualValue = 'FD60';
+                    $tt->FireRating = 'FD60';
+                }else{
+                    $FireRatingActualValue  =  $tt->FireRating;
+                }
 
             // sidelight
             if ($tt->FireRating == 'FD30s') {
@@ -745,37 +818,47 @@ class OMMAnualController extends Controller
                 $tt->FireRating = 'FD60';
             }
 
-            $certMap = [
-                4 => [
-                    'FD30' => 'FEA/F99112 Revision L',
-                    'FD60' => 'FEA/F96103  Revision Q',
-                ],
-                8 => [
-                    'FD30' => 'BMT/CNA/F15159 Revision F',
-                    'FD60' => 'WF377027 Revision A',
-                ],
-                1 => [
-                    'FD30' => 'Chilt/A02066 Revision P',
-                    'FD60' => 'Chilt/A02067 Revision M',
-                ],
-                2 => [
-                    'FD30' => 'Chilt/A01204 Revision H',
-                    'FD60' => 'Chilt/A01205 Part 1 Revision K',
-                ],
-                7 => [
-                    'FD30' => 'FEA98164 Revision P',
-                    'FD60' => 'FEA/F02141 Revision M',
-                ],
-                6 => [
-                    'FD30' => 'WF399992 Revision E',
-                ],
-                5 => [
-                    'FD30' => '10133/22-2.R1',
-                    'FD60' => '10133/22-2.R1',
-                ],
-            ];
+                }
 
-            $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
+                $certMap = [
+                    4 => [
+                        'NFR' => 'FEA/F99112 Revision L',
+                        'FD30' => 'FEA/F99112 Revision L',
+                        'FD60' => 'Chilt/A12064 Part 1 Revision D',
+                    ],
+                    8 => [
+                        'NFR' => 'BMT/CNA/F15159 Revision F',
+                        'FD30' => 'BMT/CNA/F15159 Revision F',
+                        'FD60' => 'WF377027 Revision A',
+                    ],
+                    1 => [
+                        'NFR' => 'Chilt/A02066 Revision P',
+                        'FD30' => 'Chilt/A02066 Revision P',
+                        'FD60' => 'Chilt/A02067 Revision M',
+                    ],
+                    2 => [
+                        'NFR' => 'Chilt/A01205 Part 1 Revision K',
+                        'FD30' => 'Chilt/A01205 Part 1 Revision K',
+                        'FD60' => 'Chilt/A01205 Part 1 Revision K',
+                    ],
+                    7 => [
+                        'NFR' => 'FEA98164 Revision P',
+                        'FD30' => 'FEA98164 Revision P',
+                        'FD60' => 'FEA/F02141 Revision M',
+                    ],
+                    6 => [
+                        'NFR' => 'WF399992 Revision E',
+                        'FD30' => 'WF399992 Revision E',
+                        'FD60' => 'WF399992 Revision E',
+                    ],
+                    5 => [
+                        'NFR' => '10133/22-2.R1',
+                        'FD30' => '10133/22-2.R1',
+                        'FD60' => '10133/22-2.R1',
+                    ],
+                ];
+
+                $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
 
             $configurationDoor = configurationDoor($tt->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
@@ -2341,34 +2424,32 @@ class OMMAnualController extends Controller
                         ->where("firerating", $FireRatingActualValue)
                         ->where("OptionSlug", "Glass_Integrity")
                         ->where("OptionKey", $tt->GlassIntegrity)->first();
+                    $GlassIntegrity = $gi->OptionValue;
                 }
 
-                $GlassIntegrity = $gi->OptionValue;
-            }
+                $glazing_beads_word = in_array($configurationItem, [1,2,7,8]) ? 'side_light_glazing_beads' : 'leaf1_glazing_beads';
 
-            $glazing_beads_word = in_array($configurationItem, [1, 2, 7, 8]) ? 'side_light_glazing_beads' : 'leaf1_glazing_beads';
+                $OPGlazingBeads = 'N/A';
+                if (!empty($tt->OPGlazingBeads)) {
+                    $opgb = Option::where("configurableitems", $configurationItem)
+                        ->where("firerating", $FireRatingActualValue)
+                        ->where("OptionSlug", $glazing_beads_word)
+                        ->where("OptionKey", $tt->OPGlazingBeads)
+                        ->first();
 
-            $OPGlazingBeads = 'N/A';
-            if (!empty($tt->OPGlazingBeads)) {
-                $opgb = Option::where("configurableitems", $configurationItem)
-                    ->where("firerating", $FireRatingActualValue)
-                    ->where("OptionSlug", $glazing_beads_word)
-                    ->where("OptionKey", $tt->OPGlazingBeads)
-                    ->first();
+                    $OPGlazingBeads = $opgb ? $opgb->OptionValue : null;
+                }
 
-                $OPGlazingBeads = $opgb ? $opgb->OptionValue : null;
-            }
+                $SLBeadingType = 'N/A';
+                if (!empty($tt->BeadingType)) {
+                    $bt = Option::where("configurableitems", $configurationItem)
+                        ->where("firerating", $FireRatingActualValue)
+                        ->where("OptionSlug", $glazing_beads_word)
+                        ->where("OptionKey", $tt->BeadingType)
+                        ->first();
 
-            $SLBeadingType = 'N/A';
-            if (!empty($tt->BeadingType)) {
-                $bt = Option::where("configurableitems", $configurationItem)
-                    ->where("firerating", $FireRatingActualValue)
-                    ->where("OptionSlug", $glazing_beads_word)
-                    ->where("OptionKey", $tt->BeadingType)
-                    ->first();
-
-                $SLBeadingType = $bt ? $bt->OptionValue : null;
-            }
+                    $SLBeadingType = $bt ? $bt->OptionValue : null;
+                }
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
@@ -2482,34 +2563,36 @@ class OMMAnualController extends Controller
 
 
 
-            // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
-            $sl1glasstype = 'N/A';
-            if (!empty($tt->SideLight1GlassType)) {
-                // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
-                // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
-                //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
-                //         ->where('selected_glass_type.editBy', '=', $id);
-                // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
-                if ($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM') {
-                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
-                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
-                            ->where('selected_glass_type.editBy', '=', $id);
-                    })->where('glass_type.' . $configurationDoor, $tt->configurableitems)->where('glass_type.Key', $tt->SideLight1GlassType)->first();
-                    $sl1glasstype = $op->GlassType;
-                } else {
-                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
-                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
-                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
-                    })->where('overpanel_glass_glazing.' . $configurationDoor, $tt->configurableitems)->where('overpanel_glass_glazing.Key', $tt->SideLight1GlassType)->first();
-                    $sl1glasstype = $op->GlassType;
-                }
-            }
+                // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
+                $sl1glasstype = 'N/A';
+                if (!empty($tt->SideLight1GlassType)) {
+                    // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
+                    // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
+                    //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                    //         ->where('selected_glass_type.editBy', '=', $id);
+                    // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                    if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                        $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                            $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                                ->where('selected_glass_type.editBy', '=', $id);
+                        })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                        $sl1glasstype = $op->GlassType ?? '';
+                    }
+                    else{
+                        $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                            $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                                ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                        })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
+                        $sl1glasstype = $op->GlassType ?? '';
+                    }
 
-            $beadingtype = 'N/A';
-            if (!empty($tt->SideLight2BeadingType)) {
-                $op2 = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => $glazing_beads_word, 'OptionKey' => $tt->SideLight2BeadingType])->first();
-                $beadingtype = ($op2->OptionValue) ?? "";
-            }
+                }
+
+                $beadingtype = 'N/A';
+                if (!empty($tt->SideLight2BeadingType)) {
+                    $op2 = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => $glazing_beads_word, 'OptionKey' => $tt->SideLight2BeadingType])->first();
+                    $beadingtype = ($op2->OptionValue)??"";
+                }
 
             $glazingbeadspecies = 'N/A';
             if (!empty($tt->SL1GlazingBeadSpecies)) {
@@ -2519,19 +2602,15 @@ class OMMAnualController extends Controller
                 }
             }
 
-            $VPBeadingType = 'N/A';
-            if (!empty($tt->GlazingBeads)) {
-                $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
-            }
+                $VPBeadingType = 'N/A';
+                if (!empty($tt->GlazingBeads)) {
+                    $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
+                }
 
-            $OPFLHeight = 'N/A';
-            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
-                $opHeight = is_numeric($tt->OPHeigth) ? $tt->OPHeigth : 0;
-                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
-                $gap = is_numeric($tt->GAP) ? $tt->GAP : 0;
-
-                $OPFLHeight = $opHeight - $beadThickness - $beadThickness - $gap;
-            }
+                $configurationItemName = configurationDoor($configurationItem);
+                if($configurationItemName === 'Halspan'){
+                    $configurationItemName = 'Halspan Optima';
+                }
 
             $elevTbl .= '</table>
 
@@ -2672,6 +2751,112 @@ class OMMAnualController extends Controller
                         </table>';
             if ($tt->FrameOnOff != 1) {
                 $elevTbl .=  '<table id="WithBorder">
+                $elevTbl .= '</table>
+                        </div>
+                        <div id="section-right">
+                            <table id="WithBorder" class="tbl2">
+                                <tbody>
+                                    <tr>
+                                        <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
+                                        <td class="dicription_blank"><b>Type ' . $tt->DoorType . '</b></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="WithBorder" class="tbl3">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">General</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Core</td>
+                                        <td class="dicription_blank">' . $configurationItemName . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Test Certificate Reference </td>
+                                        <td class="dicription_blank">' . $certNo . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Type</td>
+                                        <td class="dicription_blank">' . $tt->DoorType . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Fire Rating</td>
+                                        <td class="dicription_blank">' . $fire . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Swing Type</td>
+                                        <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Pull Towards</td>
+                                        <td class="dicription_blank">' . $tt->OpensInwards . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Handing</td>
+                                        <td class="dicription_blank">' . $tt->Handing . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Undercut</td>
+                                        <td class="dicription_blank">' . $tt->Undercut . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Frame Thickness</td>
+                                        <td class="dicription_blank">' . $tt->FrameThickness . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Ironmongery Set</td>
+                                        <td class="dicription_blank">' . $IronmongerySet . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Structural Opening & Door Leaf Dimensions</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">S.O. Width</td>
+                                        <td class="dicription_blank">' . $tt->SOWidth . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">S.O. Height</td>
+                                        <td class="dicription_blank">' . $tt->SOHeight . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">S.O. Depth</td>
+                                        <td class="dicription_blank">' . $tt->SOWallThick . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door leaf Facing</td>
+                                        <td class="dicription_blank">' . $DoorLeafFacing . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door leaf Finish</td>
+                                        <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Decorative Groves</td>
+                                        <td class="dicription_blank">' . $DecorativeGroves . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Leaf Width 1</td>
+                                        <td class="dicription_blank">' . $leafWidth1 . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Leaf Width 2</td>
+                                        <td class="dicription_blank">' . $leafWidth2 . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Leaf Height</td>
+                                        <td class="dicription_blank">' . $LeafHeight . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Door Leaf Thickness</td>
+                                        <td class="dicription_blank">' . $LeafThickness . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="WithBorder">
                                 <tbody>
                                     <tr>
                                         <th class="tblTitle">Frame</th>
@@ -2917,6 +3102,67 @@ class OMMAnualController extends Controller
             $elevTbl .=  '</div></div>
                     <div id="footer">
                         <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
+                                </tbody>
+                            </table>
+                            <table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Architrave</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Material</td>
+                                        <td class="dicription_blank">' . $ArchitraveMaterial . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Finish</td>
+                                        <td class="dicription_blank">' . $ArchitraveFinishForDoorDetailsTable . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Set Qty</td>
+                                        <td class="dicription_blank">' . $ArchitraveSetQty . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Width</td>
+                                        <td class="dicription_blank">' . $ArchitraveWidth . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Depth</td>
+                                        <td class="dicription_blank">' . $ArchitraveDepth . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Height</td>
+                                        <td class="dicription_blank">' . $ArchitraveHeight . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Accoustics</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Rating</td>
+                                        <td class="dicription_blank">' . $rWdBRating . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>';
+
+                            $elevTbl .=  '<table id="WithBorder">
+                            <tbody>
+                                <tr>
+                                    <th class="tblTitle">Special Feature</th>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Special Feature Refs</td>
+                                    <td class="dicription_blank">' . $tt->SpecialFeatureRefs . '</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        </div>
+                        </div>
+                        <div id="footer">
+                            <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
 
                     </div>
                 ';
@@ -3027,7 +3273,10 @@ class OMMAnualController extends Controller
         $pdf55 = public_path() . '/allpdfFile' . '/' . $fileName5;
         $pdf66 = public_path() . '/allpdfFile' . '/' . $fileName6;
 
-        // 🔹 Merge process
+        $pdf55 = public_path().'/allpdfFile'.'/'.$fileName5;
+        $pdf55_custom = public_path().'/allpdfFile'.'/'.$fileName5_custom;
+        $pdf66 = public_path().'/allpdfFile'.'/'.$fileName6;
+
         $pdfMerger = PDFMerger::init();
         $pdfMerger->addPDF($pdf1, 'all');
         $pdfMerger->addPDF($pdf2, 'all');
@@ -3039,6 +3288,7 @@ class OMMAnualController extends Controller
         }
 
         $pdfMerger->addPDF($pdf55, 'all');
+        $pdfMerger->addPDF($pdf55_custom, 'all');
         $pdfMerger->addPDF($pdf66, 'all');
 
         // 🔹 Add certificate PDFs
@@ -3105,17 +3355,20 @@ class OMMAnualController extends Controller
         if ($fileName64 !== '' && $fileName64 !== '0') {
             $unlinkpath64 = public_path() . '/allpdfFile' . '/' . $fileName64;
         }
-        $unlinkpath5 = public_path() . '/allpdfFile' . '/' . $fileName5;
-        $unlinkpath6 = public_path() . '/allpdfFile' . '/' . $fileName6;
-        $unlinkpath7 = ($fileName7 !== '') ? public_path() . '/allpdfFile' . '/' . $fileName7 : '';
 
-        // safely unlink files
-        foreach ([$unlinkpath1, $unlinkpath2, $unlinkpath5, $unlinkpath6, $unlinkpath64, $unlinkpath7] as $f) {
-            if ($f !== '' && file_exists($f)) {
-                unlink($f);
-            }
-        }
-
+        $unlinkpath5 = public_path().'/allpdfFile'.'/'.$fileName5;
+        $unlinkpath5_custom = public_path().'/allpdfFile'.'/'.$fileName5_custom;
+        $unlinkpath6 = public_path().'/allpdfFile'.'/'.$fileName6;
+        unlink($unlinkpath1);
+        unlink($unlinkpath2);
+        unlink($unlinkpath3);
+        unlink($unlinkpath4_2);
+        unlink($unlinkpath4);
+        unlink($unlinkpath6);
+        unlink($unlinkpath5);
+        unlink($unlinkpath5_custom);
+        unlink($unlinkpath_m_p_r);
+        unlink($unlinkpath64);
     }
 
     public function Labels($quatationId, $versionID)
@@ -3125,13 +3378,11 @@ class OMMAnualController extends Controller
             $join->on("quotation_version_items.itemID", "=", "items.itemId")
                 ->on("quotation_version_items.itemmasterID", "=", "item_master.id");
         })
-        ->join('quotation','quotation.id','=','items.QuotationId')
         ->where('items.QuotationId', $quatationId)
         ->where('quotation_version_items.version_id', $versionID)
-        ->select('items.*','item_master.doorNumber','quotation.configurableitems')
+        ->select('items.*','item_master.doorNumber')
         ->groupBy('item_master.itemID')
         ->get();
-
     $Quotation = Quotation::where('id', $quatationId)->first();
 
     $labels = [];

@@ -46,25 +46,22 @@
                                               Side Screen Assign Plot Ref/ Certification No
                                             </a>
                                         </li>
-                                        <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
-                                                    id="">Generate Elevation Drawing</a></li>
-                                            <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
-                                                    Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom
-                                                Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
-                                            <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ElevationDrawing();" id="">Generate Elevation Drawing</a></li>
+                                        <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
+                                        <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                         <li><a href="javascript:void(0);" onClick="DoorPickList();">Door Pick list</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                     </ul>
@@ -208,7 +205,7 @@
                                         <thead class="table-header-bg">
                                             <tr class="text-white">
                                                 <th>Line</th>
-                                                <th>Door Qty</th>
+                                                <th>Door Core</th>
                                                 <th>Fire Rating</th>
                                                 <th>Door Type</th>
                                                 <th>Door No.</th>
@@ -240,7 +237,7 @@
                                                     <input type="hidden" class="check" value="{{$row->itemId}}">
                                                     <input type="hidden" class="doors_{{$index}}" value="{{$row->id}}">
                                                 </td>
-                                                <td>{{$row->DoorQuantity}}</td>
+                                                <td>{{ doorcorename($row['configurableitems']) }}</td>
                                                 <td>{{$row->FireRating}}</td>
                                                 <td>{{$row->DoorType}}</td>
                                                 <td>{{$row->doorNumber}}</td>
@@ -258,7 +255,7 @@
                                                             data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>
                                                         <ul class="dropdown-menu drop_style">
                                                             <li><a
-                                                                    href="{{ConfigurationURL($quotation->configurableitems  , $row->itemId , $version_id)}}">Edit</a>
+                                                                    href="{{ConfigurationURL($row->configurableitems  , $row->itemId , $version_id)}}">Edit</a>
                                                             </li>
                                                             <li><a href="#">Name Configuration</a></li>
                                                             <li><a href="#">Adjust Price</a></li>
@@ -535,14 +532,9 @@
         var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -552,14 +544,9 @@
         var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4){
-                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -568,7 +555,6 @@
         var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
@@ -580,14 +566,9 @@
         var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
-            if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }else{
-                window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-            }
+            window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
         } else {
             swal("Oops!", "You haven't selected any version yet.", "error");
         }
@@ -606,7 +587,6 @@
     ExcelExportNonConfig = function() {
         var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
@@ -619,7 +599,6 @@
         var cuttingListUrl = $("#cuttingListUrl").val();
         var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
@@ -630,7 +609,6 @@
     allGlazingBeadsExport = function() {
         var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
         var quotationId = $("#quotationId").val();
-        var quotationconfigurableitems = $("#quotationconfigurableitems").val();
         var currentVersion = $("#currentVersion").val();
         if (currentVersion != 0) {
             window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;

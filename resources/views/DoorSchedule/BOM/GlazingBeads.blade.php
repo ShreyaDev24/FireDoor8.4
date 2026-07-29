@@ -4,12 +4,13 @@
         @php $check =  1; @endphp
         @if($i++==0)
         <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
         <tr style="background:#00B0F0">
-            <td colspan="16"><b>Glazing Beads</b></td>
+            <td colspan="17"><b>Glazing Beads</b></td>
         </tr>
         <tr>
+            <th>Door core</th>
             <th>Door Type</th>
             <th>Glazing Beads</th>
             <th>Glazing Bead Species</th>
@@ -38,12 +39,13 @@
                 $words = explode("|", $value->Description);
         @endphp
         <tr>
-        <td> {{ isset($words[0]) ? $words[0] : '' }} </td>
-        <td> {{ isset($words[1]) ? $words[1] : '' }} </td>
-        <td> {{ isset($words[2]) ? $words[2] : '' }} </td>
-        <td> {{ isset($words[3]) ? $words[3] : '' }} </td>
-        <td  colspan="2"> {{ isset($words[4]) ? $words[4] : '' }} </td>
-        <td  colspan="2"> {{ isset($words[5]) ? $words[5] : '' }} </td>
+            <td> {{ doorcorename($value->configurableitems) }} </td>
+            <td> {{ isset($words[0]) ? $words[0] : '' }} </td>
+            <td> {{ isset($words[1]) ? $words[1] : '' }} </td>
+            <td> {{ isset($words[2]) ? $words[2] : '' }} </td>
+            <td> {{ isset($words[3]) ? $words[3] : '' }} </td>
+            <td  colspan="2"> {{ isset($words[4]) ? $words[4] : '' }} </td>
+            <td  colspan="2"> {{ isset($words[5]) ? $words[5] : '' }} </td>
             <td>{{$value->LMPerDoorType}}</td>
             <td>{{$value->QuantityOfDoorTypes}}</td>
             <td>{{$value->Unit}}</td>
@@ -65,7 +67,7 @@
 
     @if($check==1)
        <tr style="background:gray">
-            <td colspan="8"><b>Total </b></td>
+            <td colspan="9"><b>Total </b></td>
             <td></td>
             <td></td>
             <td></td>

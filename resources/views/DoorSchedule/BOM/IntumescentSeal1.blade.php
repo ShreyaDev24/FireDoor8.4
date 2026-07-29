@@ -2,6 +2,7 @@
 
 $IntumescentSealData = collect($data)->where("Category", "IntumescentSeal")->groupBy('Description');
 $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMaterial")->groupBy('Description');
+$isVicaimaCore = collect($data)->contains(fn ($row) => (int) ($row->configurableitems ?? 0) === 4);
 
 @endphp
 
@@ -16,7 +17,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
     <th colspan="2">Total Cost</th>
     <th colspan="2">Unit Price Sell</th>
     <th>GT Sell Price</th>
-    @if($quotation->configurableitems == 4)
+    @if($isVicaimaCore)
     <th>Margin</th>
     @else
     <th>Markup</th>

@@ -99,6 +99,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'Door Number',
             'Plot Number/Ref',
             'IFC/Certifire No/Q mark Plug',
+            'Door Core',
             'Door Type',
             'Ironmongery Ref',
             'Fire Rating',
@@ -143,7 +144,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             $head = $value->FrameWidth + $value->Width;
             $stophead = $value->FrameWidth - $value->FrameThickness - $value->FrameThickness;
             $cutSizeH = 0;
-            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+            if($value->configurableitems == '1' || $value->configurableitems == '2' || $value->configurableitems == '7' || $value->configurableitems == '8'){
                 $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
             }else{
                 $AdjustmentLeafHeightNoOP = $value->AdjustmentLeafHeightNoOP ?? 0;
@@ -236,6 +237,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                 $value->doorNumber,
                 $value->plot_ref_no,
                 $value->certification_no,
+                doorcorename($value->configurableitems),
                 $value->DoorType,
                 IronmongerySetName($value->IronmongeryID),
                 $value->FireRating,
@@ -326,6 +328,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
+                    doorcorename($value->configurableitems),
                     $value->DoorType . ' '. $value->Overpanel,
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
@@ -401,6 +404,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
+                    doorcorename($value->configurableitems),
                     $value->DoorType . ' Side Light 1',
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
@@ -476,6 +480,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
+                    doorcorename($value->configurableitems),
                     $value->DoorType . ' Side Light 2',
                     IronmongerySetName($value->IronmongeryID),
                     $value->FireRating,
@@ -510,9 +515,9 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
         }
 
         // Blank row
-        $data[] = array_fill(0, 32, '');
-        $data[] = array_fill(0, 32, '');
-        $data[] = array_fill(0, 32, '');
+        $data[] = array_fill(0, 33, '');
+        $data[] = array_fill(0, 33, '');
+        $data[] = array_fill(0, 33, '');
 
 
         // SCREEN INFO section - only render its heading + column header when

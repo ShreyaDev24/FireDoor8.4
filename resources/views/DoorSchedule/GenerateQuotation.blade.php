@@ -65,13 +65,13 @@
             text-transform: uppercase;
             text-align: center;
         }
-        #itemTable {
+        .itemTable {
             width: 100% !important;
             table-layout: fixed;
         }
 
-        #itemTable th,
-        #itemTable td {
+        .itemTable th,
+        .itemTable td {
             white-space: normal !important;
             word-wrap: break-word;
         }
@@ -79,7 +79,7 @@
             overflow-x: inherit !important;
         }
 
-        #itemTable thead th {
+        .itemTable thead th {
             font-size: 10px;
             padding: 4px 6px;
             white-space: nowrap; /* prevents wrapping */
@@ -123,7 +123,9 @@
                                                 <li><a href="javascript:void(0);" onClick="CreateRivisionQuotation();">Create Rivision Quotation</a></li>
                                             @endif
                                             <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcel();">Generate
-                                                    Doorset Schedule Excel</a></li>
+                                                    Doorset Schedule Excel Custom</a></li>
+                                            <li><a href="javascript:void(0);" onClick="PrintInvoiceInExcelStandard();">Generate
+                                                    Doorset Schedule Excel Standard</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="BuildOfMaterial();">Generate Bill Of Material</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
                                                     Calculation</a></li>
@@ -142,6 +144,7 @@
                                             <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors</a></li>
                                             <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+                                            {{--  <li><a href="{{route('quotation/storeConfigurableITEM')}}">Store Configurable Item</a></li>  --}}
                                             <li><a href="javascript:void(0);" onClick="ExportFrameExcel();">Frame Excel</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
                                             <li><a
@@ -149,7 +152,8 @@
                                                     List</a></li>
                                             <li><a href="javascript:void(0);" onClick="MainFormImport();">Import</a></li>
                                             {{--  <li><a href="javascript:void(0);" onClick="ExcelExport();">Export Old</a></li>  --}}
-                                            <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export Custom</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ExcelExportVicaima();">Export Standard</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
                                             <li><a href="javascript:void(0);"
                                                     onClick="CopyQuotation({{ $quotationId }});">Copy</a></li>
@@ -475,10 +479,10 @@
                                                             @foreach ($configurableItem as $ci)
 
                                                             {{-- BUTTON LOGIC --}}
-                                                            @php
+                                                            {{--  @php
                                                                 $showButtons = empty($quotation_data->configurableitems)
                                                                     || $quotation_data->configurableitems == $ci->id;
-                                                            @endphp
+                                                            @endphp  --}}
 
                                                             <div class="col-sm-6 p-0 pr-1">
 
@@ -506,7 +510,7 @@
                                                                     @endif
 
                                                                     {{-- BUTTONS --}}
-                                                                    @if ($showButtons)
+                                                                    {{--  @if ($showButtons)  --}}
 
                                                                         <a href="javascript:void(0);"
                                                                         data-type="{{ $ci->id }}"
@@ -520,11 +524,11 @@
                                                                             Add Additional <br> Door Set
                                                                         </a>
 
-                                                                    @else
+                                                                    {{--  @else
                                                                         <p class="configure_btn">
                                                                             Another Door is selected for these quotation
                                                                         </p>
-                                                                    @endif
+                                                                    @endif  --}}
 
                                                                 </div>
                                                             </div>
@@ -675,203 +679,92 @@
                                     </table>
                                 </div>
                             </div>
+
                             <div class="main-card mb-3" id="quotation-item-list">
                                 <div class="card-body">
-                                    <table class="table table-bordered table-striped" id="itemTable">
-                                        <thead class="table-header-bg">
-                                            <tr class="text-white">
-                                                <th>Line</th>
-                                                <th>Fire Rating</th>
-                                                <th>Door Type</th>
-                                                <th>Door No.</th>
-                                                <th>Floor</th>
-                                                <th>Item</th>
-                                                <th>Handing</th>
-                                                <th>S.O. Width</th>
-                                                <th>S.O. Height</th>
-                                                <th>S.O. Depth</th>
-                                                <th>Doorset Price</th>
-                                                <th>Ironmongery Price</th>
-                                                <th>Total</th>
-                                                <th>Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="versionData">
-                                            @if (!empty($data) && count($data) > 0)
 
-                                                @php
-                                                    $index = 0;
-                                                    $SI = 1;
-                                                @endphp
+                                    <div class="container-fluid">
+                                        <div class="row">
 
-                                                @foreach ($data as $row)
+                                            {{-- Tabs --}}
+                                            <div class="col-sm-12 p-0">
 
-                                                    @php
-                                                        if($row['DoorsetType'] == 'leaf_and_a_half'){
-                                                            $row['DoorsetType'] = 'LAH';
-                                                            if($row['Handing'] == 'Left_Hand_Master_Right_Hand_Slave'){
-                                                                $row['Handing'] = 'Left';
-                                                            }else{
-                                                                $row['Handing'] = 'Right';
-                                                            }
-                                                        }
-                                                        $version_id = $row['version_id'] ?? 0;
-                                                        $SvgImage = empty($row['SvgImage']) ? 'color_red' : '';
-                                                    @endphp
+                                                <ul class="CustomTabs tabs inline_tab">
 
-                                                    {{-- 🔥 LOOP DOORS --}}
+                                                    {{-- ALL TAB --}}
+                                                    <li class="active">
+                                                        <a data-toggle="tab" href="#All">All</a>
+                                                    </li>
 
-                                                    <tr id="validate{{ $row['itemId'] }}" class="{{ $SvgImage }}">
-                                                        <td>
-                                                            {{ $SI }}
-                                                            <input type="hidden" class="check" value="{{ $row['itemId'] }}">
-                                                            <input type="hidden" class="doors_{{ $index }}" value="{{ $row['id'] }}">
-                                                        </td>
+                                                    {{-- DYNAMIC CONFIGURABLE ITEM TABS --}}
+                                                    @foreach($uniqueConfigurableItems as $key => $tab)
 
-                                                        <td>{{ $row['FireRating'] }}</td>
-                                                        <td>{{ $row['DoorType'] }}</td>
-                                                        <td>{{ $row['doorNumber'] }}</td>
-                                                        <td>{{ $row['floor'] }}</td>
-                                                        <td>{{ $row['DoorsetType'] }}</td>
-                                                        <td>{{ $row['Handing'] }}</td>
-                                                        <td>{{ $row['SOWidth'] }}</td>
-                                                        <td>{{ $row['SOHeight'] }}</td>
-                                                        <td>{{ $row['SOWallThick'] }}</td>
-                                                        <td>
-                                                            {{ number_format(
-                                                                $row['leafpricedelta']
-                                                                    ? floatval($row['leafpricedelta'])
-                                                                    : (
-                                                                        !empty($row['AdjustPrice'])
-                                                                            ? floatval($row['AdjustPrice'])
-                                                                            : floatval($row['DoorsetPrice'])
-                                                                    ),
-                                                                2
-                                                            ) }}
-                                                        </td>
+                                                        @php
+                                                            $tabName = doorcorename($tab);
+                                                            $tabId = \Illuminate\Support\Str::slug($tabName, '_');
+                                                        @endphp
 
-                                                        <td>{{ number_format($row['IronmongaryPrice'], 2) }}</td>
+                                                        <li>
+                                                            <a data-toggle="tab" href="#{{ $tabId }}">
+                                                                {{ $tabName }}
+                                                            </a>
+                                                        </li>
 
-                                                        <td>
-                                                               {{ number_format(
-                                                                    (
-                                                                        $row['leafpricedelta']
-                                                                            ? floatval($row['leafpricedelta']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            : (
-                                                                                !empty($row['AdjustPrice'])
-                                                                                    ? floatval($row['AdjustPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                                    : floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice'] ?? 0)
-                                                                            )
-                                                                    ),
-                                                                    2
-                                                            ) }}
-                                                        </td>
+                                                    @endforeach
 
-                                                        <td class="text-center">
-                                                            <div class="dropdown">
-                                                                <a class="dropdown-toggle btn btn-light" data-toggle="dropdown">
-                                                                    <i class="fa fa-ellipsis-h"></i>
-                                                                </a>
+                                                </ul>
 
-                                                                <ul class="dropdown-menu drop_style">
-
-                                                                    <li>
-                                                                        <a href="{{ ConfigurationURL($quotation->configurableitems, $row['itemId'], $version_id) }}">
-                                                                            Edit
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="favoriteItem('{{ $row['itemId'] }}','{{ $row['id'] }}','Door','Configurable Favorite Item','Configurable Type Name')"
-                                                                            href="javascript:void(0);">
-                                                                                Name Configuration
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="FloorNoChange(
-                                                                            '{{ $row['id'] }}',
-                                                                            '{{ $row['DoorType'] }}',
-                                                                            '{{ $row['doorNumber'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Edit Floor No.
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a href="{{ url('quotation/add-new-doors') }}/{{ $quotationId }}/{{ $version_id }}/{{ $row['itemId'] }}">
-                                                                            Add New
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="DoorNoChange(
-                                                                            '{{ $row['id'] }}',
-                                                                            '{{ $row['DoorType'] }}',
-                                                                            '{{ $row['doorNumber'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Edit Door No.
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="adjustPrice(
-                                                                            {{ $row['itemId'] }},
-                                                                            {{ $row['id'] }},
-                                                                            {{ floatval($row['DoorsetPrice']) + floatval($row['IronmongaryPrice']) }}
-                                                                        )" href="javascript:void(0);">
-                                                                            Adjust Price
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="adjustLeafType(
-                                                                            {{ $row['itemId'] }},
-                                                                            {{ $row['id'] }},
-                                                                            '{{ $row['DoorDimensions'] }}'
-                                                                        )" href="javascript:void(0);">
-                                                                            Door Leaf Adjust Price
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="CopyDoorSet({{ $quotationId }}, {{ $row['id'] }})"
-                                                                        href="javascript:void(0);">
-                                                                            Copy
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="remove_item({{ $row['id'] }})" href="javascript:void(0);">
-                                                                            Remove
-                                                                        </a>
-                                                                    </li>
-
-                                                                    <li>
-                                                                        <a onclick="edit_image1({{ $row['itemId'] }})"
-                                                                        href="javascript:void(0);">
-                                                                            Validate
-                                                                        </a>
-                                                                    </li>
-
-                                                                </ul>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-
-                                                    @php
-                                                        $index++;
-                                                        $SI++;
-                                                    @endphp
+                                            </div>
 
 
-                                                @endforeach
-                                            @endif
+                                            <div class="col-sm-12 mt-3">
 
-                                        </tbody>
-                                    </table>
+                                                <div class="CustomTabContent tab-content">
+
+                                                    {{-- ================= ALL TAB ================= --}}
+                                                    <div id="All" class="tab-pane active">
+
+                                                        @include('DoorSchedule.schedule-table', [
+                                                            'rows' => $data,
+                                                            'quotationId' => $quotationId
+                                                        ])
+
+                                                    </div>
+
+
+                                                    {{-- ================= DYNAMIC TABS ================= --}}
+                                                    @foreach($uniqueConfigurableItems as $key => $tab)
+
+                                                        @php
+                                                            $tabName = doorcorename($tab);
+                                                            $tabId = \Illuminate\Support\Str::slug($tabName, '_');
+
+                                                            $filteredRows = collect($data)->filter(function($row) use ($tab){
+                                                                return $row['configurableitems'] == $tab;
+                                                            });
+                                                        @endphp
+
+                                                        <div id="{{ $tabId }}" class="tab-pane fade">
+
+                                                            @include('DoorSchedule.schedule-table', [
+                                                                'rows' => $filteredRows,
+                                                                'quotationId' => $quotationId
+                                                            ])
+
+                                                        </div>
+
+                                                    @endforeach
+
+                                                </div>
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
+
                             <div class="main-card mb-3" id="NonConfig-item-list" style="display: none;">
                                 <div class="card-body">
                                     <table class="table table-bordered table-striped">
@@ -1151,6 +1044,8 @@
     <input type="hidden" name="shortQuoteUrl" id="shortQuoteUrl" value="{{ url('/quotation/shortquote') }}" />
     <input type="hidden" name="printInvoiceExcelUrl" id="printInvoiceExcelUrl"
         value="{{ url('/quotation/printinvoiceinexcel') }}" />
+    <input type="hidden" name="printInvoiceExcelStandardUrl" id="printInvoiceExcelStandardUrl"
+        value="{{ url('/quotation/printinvoiceinexcelStandard') }}" />
     <input type="hidden" id="sendToClientUrl" value="{{ route('sendToClientUrl') }}" />
     <input type="hidden" name="buildofmaterialUrl" id="buildofmaterialUrl"
         value="{{ url('/quotation/generateBOM2') }}" />
@@ -1219,7 +1114,7 @@
     <input type="hidden" id="SvgImage" name="SvgImage" value="" />
     <input type="hidden" id='store2' value="{{ url('items/store2') }}">
     <input type="hidden" id="quotationId" name="quotationId" value="{{ $quotationId }}">
-    <input type="hidden" id="quotationconfigurableitems" name="quotationconfigurableitems" value="{{ $quotation_data->configurableitems }}">
+    <input type="hidden" id="quotationconfigurableitems" name="quotationconfigurableitems" value="{{ implode(',', $uniqueConfigurableItems ?? []) }}">
     <input type="hidden" id="versionId" name="versionId"
         value="{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}">
     <div class="col-md-6">
@@ -1253,9 +1148,15 @@
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
         <script src="https://d3js.org/d3.v7.min.js" defer></script> <!-- Load D3 -->
-        @if($quotation_data->configurableitems == 2 || $quotation_data->configurableitems == 1 || $quotation_data->configurableitems == 7 || $quotation_data->configurableitems == 8)
+        @php
+            $uniqueCores = collect($uniqueConfigurableItems ?? []);
+            $needsHalspanCad = $uniqueCores->intersect([1, 2, 7, 8])->isNotEmpty();
+            $needsVicaimaCad = $uniqueCores->intersect([4, 5, 6, 9])->isNotEmpty() || $uniqueCores->isEmpty();
+        @endphp
+        @if($needsHalspanCad)
             <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
-        @else
+        @endif
+        @if($needsVicaimaCad)
             <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
         @endif
 
@@ -1263,7 +1164,7 @@
         <script>
             $(document).ready(function () {
 
-                let table = $('#itemTable').DataTable({
+                let table = $('.itemTable').DataTable({
                     paging: false,
                     ordering: true,
                     searching: false,
@@ -1278,6 +1179,7 @@
                         { orderable: false, targets: [0, -1] },
 
                         { width: "50px", targets: 0 },  // Line column
+                        { width: "50px", targets: 6 },   // Floor column (adjust index if needed)
                         { width: "50px", targets: 5 }   // Floor column (adjust index if needed)
                     ]
                 });
@@ -1635,6 +1537,7 @@
                     alert("You haven't selected any version yet.");
                     return false;
                 }
+                var configurableitems = $('#configurableitemsId').val();
                 var quotationId = $('#quotationId').val();
                 var itemId = $('#itemId').val();
                 var favName = $('#favName').val();
@@ -1648,6 +1551,7 @@
                     method: "POST",
                     data: {
                         _token: $("#_token").val(),
+                        configurableitems: configurableitems,
                         quotationId: quotationId,
                         favName: favName,
                         versionId: versionId,
@@ -2476,6 +2380,27 @@
                 })
 
             }
+            /**
+             * Build items[] / doors[] for versionstore from the canonical schedule (All tab only).
+             * Each row carries itemId on .check and item_master id on data-door-id — no global index.
+             */
+            function collectVersionStoreDoorPayload() {
+                var items = [];
+                var doors = [];
+                var quantity = [];
+                $('#All .itemTable tbody tr').each(function () {
+                    var $check = $(this).find('input.check');
+                    if (!$check.length) {
+                        return;
+                    }
+                    items.push($check.val());
+                    doors.push(String($check.data('door-id')));
+                    var $qty = $(this).find('input.quantity-input');
+                    quantity.push($qty.length ? ($qty.val() || '1') : '1');
+                });
+                return { items: items, doors: doors, quantity: quantity };
+            }
+
             function CreateNewVersionModal(version) {
                 if (version == 0) {
                     var Flag = $("#flag").val();
@@ -2488,27 +2413,17 @@
                         swal("Warning!", "Please complete the edit header form.", "warning");
                         return false;
                     }
-                    var checkboxes = document.getElementsByClassName('check');
                     var SideScreenCount = $("#SideScreenCount").val();
                     var isStatusChecked = true;
                     if(SideScreenCount == 0){
                         isStatusChecked = false;
                     }
-                    var isChecked = false;
                     var version = $("#version").val();
-                    var doors = [];
-                    var items = [];
-                    var quantity = [];
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        isChecked = true;
-                        items.push(checkboxes[i].value);
-                        // var quant = document.getElementsByClassName('quantity_'+i);
-                        // items.push(quant[0].value);
-                        quantity.push($('.quantity_' + i).val());
-                        // var door = document.getElementsByClassName('doors_'+i)[0].value;
-                        // doors.push(door[0].value);
-                        doors.push($('.doors_' + i).val());
-                    }
+                    var payload = collectVersionStoreDoorPayload();
+                    var doors = payload.doors;
+                    var items = payload.items;
+                    var quantity = payload.quantity;
+                    var isChecked = items.length > 0;
                     if (isChecked || isStatusChecked) {
                         $('.loader').empty().css({
                             'display': 'block'
@@ -2805,9 +2720,7 @@
             });
             cuttingList = function() {
                 var cuttingListUrl = $("#cuttingListUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = cuttingListUrl + '/' + quotationId + '/' + currentVersion;
@@ -2817,9 +2730,7 @@
             };
             PickListExport = function() {
                 var PickListExportUrl = $("#PickListExportUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = PickListExportUrl + '/' + quotationId + '/' + currentVersion;
@@ -2830,7 +2741,6 @@
             allGlazingBeadsExport = function() {
                 var allGlazingBeadsUrl = $("#allGlazingBeadsUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
@@ -2911,27 +2821,17 @@
                 }
             });
             $("#generateInvoice").click(function() {
-                var checkboxes = document.getElementsByClassName('check');
                 var SideScreenCount = $("#SideScreenCount").val();
                 var isStatusChecked = true;
                 if(SideScreenCount == 0){
                     isStatusChecked = false;
                 }
-                var isChecked = false;
                 var version = $("#version").val();
-                var doors = [];
-                var items = [];
-                var quantity = [];
-                for (var i = 0; i < checkboxes.length; i++) {
-                    isChecked = true;
-                    items.push(checkboxes[i].value);
-                    // var quant = document.getElementsByClassName('quantity_'+i);
-                    // items.push(quant[0].value);
-                    quantity.push($('.quantity_' + i).val());
-                    // var door = document.getElementsByClassName('doors_'+i)[0].value;
-                    // doors.push(door[0].value);
-                    doors.push($('.doors_' + i).val());
-                }
+                var payload = collectVersionStoreDoorPayload();
+                var doors = payload.doors;
+                var items = payload.items;
+                var quantity = payload.quantity;
+                var isChecked = items.length > 0;
                 if (isChecked || isStatusChecked) {
                     $.ajax({
                         type: "POST",
@@ -2997,13 +2897,11 @@
                                 }
                                 innerhtml += '<tr>';
                                 innerhtml += '<td>' + (i + 1) + '<input type="hidden" class="check" value="' + door[
-                                    i].itemId + '"><input type="hidden" class="doors_' + i + '" value="' + door[
-                                    i].id + '"></td>';
+                                    i].itemId + '" data-door-id="' + door[i].id + '"></td>';
                                 innerhtml += '<td>' + door[i].DoorNumber + '</td>';
                                 innerhtml += '<td>' + doorType + '</td>';
                                 innerhtml +=
-                                    '<td><input type="number"  style="width: 100%;" readonly id="quantity" value="1" name="quantity" min="1" max="100" class="quantity_' +
-                                    i + '"></td>';
+                                    '<td><input type="number"  style="width: 100%;" readonly id="quantity" value="1" name="quantity" min="1" max="100" class="quantity-input"></td>';
                                 innerhtml += '<td>' + door[i].DoorsetPrice + '</td>';
                                 innerhtml += '<td>' + door[i].DoorsetPrice + '</td>';
                                 innerhtml += '<td class="text-center">';
@@ -3325,16 +3223,20 @@
             };
             ExcelExportNew = function() {
                 var excelexportNewUrl = $("#excelexportNewUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            ExcelExportVicaima = function() {
+                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+                var quotationId = $("#quotationId").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
@@ -3342,7 +3244,6 @@
             ExcelExportNonConfig = function() {
             var ExcelExportNonConfigUrl = $("#ExcelExportNonConfigUrl").val();
             var quotationId = $("#quotationId").val();
-            var quotationconfigurableitems = $("#quotationconfigurableitems").val();
             var currentVersion = $("#currentVersion").val();
             if (currentVersion != 0) {
                 window.location.href = ExcelExportNonConfigUrl + '/' + quotationId + '/' + currentVersion;
@@ -3352,41 +3253,27 @@
         };
             ExportBomCalculation = function() {
                 var ExportBomCalculationUrl = $("#ExportBomCalculationUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
             ExportDoorTypeBom = function() {
                 var ExportDoorTypeBomUrl = $("#ExportDoorTypeBomUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4){
-                        window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
             ExportSideScreen = function() {
                 var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = ExportSideScreenUrl + '/' + quotationId + '/' + currentVersion;
@@ -3396,16 +3283,10 @@
             };
             ExportScreenBomCalculation = function() {
                 var ExportScreenBomCalculationUrl = $("#ExportScreenBomCalculationUrl").val();
-                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
                 var quotationId = $("#quotationId").val();
-                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
-                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
-                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }else{
-                        window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
-                    }
+                    window.location.href = ExportScreenBomCalculationUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
@@ -3775,7 +3656,8 @@
                 } else {
                 }
             }
-            function favoriteItem(itemId, id,favType,title,name,doorSetPrice=null,IronmongaryPrice=null) {
+            function favoriteItem(itemId, id,favType,title,name,doorSetPrice=null,IronmongaryPrice=null,configurableitems=null) {
+                $('#configurableitemsId').val(configurableitems);
                 $('#itemId').val(itemId);
                 $('#itemMasterId').val(id);
                 $('#favType').val(favType);
@@ -4066,6 +3948,7 @@
                             <input type="hidden" class="form-control" id="favType">
                             <input type="hidden" class="form-control" id="doorSetPrice">
                             <input type="hidden" class="form-control" id="IronmongaryPrice">
+                            <input type="hidden" class="form-control" id="configurableitemsId">
                         </div>
                     </div>
                 </div>

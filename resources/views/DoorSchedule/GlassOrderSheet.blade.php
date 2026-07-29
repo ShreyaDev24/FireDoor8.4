@@ -34,10 +34,10 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="17">Glass Order Sheet</th>
+                <th colspan="18">Glass Order Sheet</th>
             </tr>
             <tr>
-                <th colspan="1">Ref</th>
+                <th colspan="2">Ref</th>
                 <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
                 <th colspan="2">Project</th>
                 <td colspan="4">{{ $quotation->projectname }}</td>
@@ -45,7 +45,7 @@
                 <td colspan="5">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="2">Revision</th>
+                <th colspan="3">Revision</th>
                 <td colspan="3">{{ $item[0]->VersionId }}</td>
                 <th colspan="1">Date</th>
                 <td colspan="3">{{ $today }}</td>
@@ -55,10 +55,10 @@
                 <td colspan="2">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="17">Text</th>
+                <th colspan="18">Text</th>
             </tr>
             <tr>
-                <th colspan="17">Items</th>
+                <th colspan="18">Items</th>
             </tr>
             @php
                 $i = 0;
@@ -67,6 +67,7 @@
            @foreach ($item as $value)
             @if ($i++ == 0)
                 <tr>
+                    <th>Door Core</th>
                     <th>Door Type</th>
                     <th>DOOR NUMBER</th>
                     <th>Plot Number/Ref</th>
@@ -90,7 +91,7 @@
                     <td></td><td></td><td></td><td></td><td></td>
                     <td></td><td></td><td></td><td></td><td></td>
                     <td></td><td></td><td></td><td></td><td></td>
-                    <td></td>
+                    <td></td><td></td>
                 </tr>
             @endif
             @endforeach

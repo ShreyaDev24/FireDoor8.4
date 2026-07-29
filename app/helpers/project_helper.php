@@ -761,11 +761,11 @@ function BOMCAlculationExport($id,$version): array{
     $quotation = Quotation::select('project.*','quotation.*','customers.CstCompanyName','project.ProjectName as projectname')->leftjoin('project','quotation.ProjectId','=','project.id')->leftjoin('customers','customers.UserId','quotation.MainContractorId')->where('quotation.id',$id)->first();
     $bomVersion = BOMCalculation::where('QuotationId',$id)->get()->first();
     if($vid == 0 || $bomVersion->VersionId == 0 || $bomVersion->VersionId == NULL){
-        $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$id)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*')->distinct('item_master.itemID')->get();
+        $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items', 'items.itemId', '=', 'bom_calculations.itemId')->where('bom_calculations.QuotationId',$id)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.configurableitems')->distinct('item_master.itemID')->get();
 
         $laborCost = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->select('bom_calculations.*',DB::raw('count(*) as count'),DB::raw('sum(QuantityOfDoorTypes) as sum'),DB::raw('sum(UnitCost) as sum_UnitCost'),DB::raw('sum(TotalCost) as sum_TotalCost'),DB::raw('sum(UnitPriceSell) as sum_UnitPriceSell'),DB::raw('sum(GTSellPrice) as sum_GTSellPrice'))->where('bom_calculations.QuotationId',$id)->where('bom_calculations.Category','GeneralLabourCosts')->whereNotNull('bom_calculations.itemId')->groupBy('bom_calculations.Description')->distinct('item_master.itemID')->get();
     }else{
-        $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->where('bom_calculations.QuotationId',$id)->where('bom_calculations.VersionId',$vid)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*')->distinct('item_master.itemID')->get();
+        $data = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->join('items', 'items.itemId', '=', 'bom_calculations.itemId')->where('bom_calculations.QuotationId',$id)->where('bom_calculations.VersionId',$vid)->whereNotNull('bom_calculations.itemId')->select('bom_calculations.*','items.configurableitems')->distinct('item_master.itemID')->get();
 
         $laborCost = BOMCalculation::join('item_master','item_master.itemID','bom_calculations.itemId')->select('bom_calculations.*',DB::raw('count(*) as count'),DB::raw('sum(QuantityOfDoorTypes) as sum'),DB::raw('sum(UnitCost) as sum_UnitCost'),DB::raw('sum(TotalCost) as sum_TotalCost'),DB::raw('sum(UnitPriceSell) as sum_UnitPriceSell'),DB::raw('sum(GTSellPrice) as sum_GTSellPrice'))->where('bom_calculations.QuotationId',$id)->where('bom_calculations.VersionId',$vid)->where('bom_calculations.Category','GeneralLabourCosts')->whereNotNull('bom_calculations.itemId')->groupBy('bom_calculations.Description')->distinct('item_master.itemID')->get();
     }
@@ -825,6 +825,7 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
     BOMCalculation::where('QuotationId', $id)->whereNull('itemId')->delete();
 
     $data = BOMCalculation::join('item_master', 'item_master.itemID', 'bom_calculations.itemId')
+        ->join('items', 'items.itemId', '=', 'bom_calculations.itemId')
         ->where([
             ['bom_calculations.QuotationId', $id],
             ['bom_calculations.VersionId', $vid],
@@ -832,17 +833,18 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
             ['bom_calculations.Category', $category]
         ])
         ->whereNotNull('bom_calculations.itemId')
-        ->select('bom_calculations.*')
+        ->select('bom_calculations.*','items.configurableitems')
         ->distinct('item_master.itemID')
         ->get();
 
     $result = [];
 
     $mapping = [
-        'Ironmongery&MachiningCosts' => [1, 2, 3, 4, 5, 'LMPerDoorType', 6],
-        'GeneralLabourCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'MachiningCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'default' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
+        'Ironmongery&MachiningCosts' => [ 1,'DoorCore', 2, 3, 4, 5, 'LMPerDoorType', 6],
+        'GeneralLabourCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'MachiningCosts' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        'default' => ['DoorCore', 0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
     ];
 
     $fields = $mapping[$category] ?? $mapping['default'];
@@ -877,7 +879,15 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         }
 
         foreach ($fields as $field) {
-            if (is_int($field)) {
+            if ($field === 'DoorCore') {
+
+                $doorCoreName = '';
+                if (!empty($value->configurableitems)) {
+                    $doorCoreName = doorcorename($value->configurableitems); // your function
+                }
+
+                $row[] = $doorCoreName;
+            } elseif (is_int($field)) {
                 // Cache $words[$field] to avoid repetitive access
                 $wordValue = $words[$field] ?? '';
                 if (in_array($category, ['MachiningCosts', 'GeneralLabourCosts'])) {
@@ -1516,9 +1526,9 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
     $item->architraveFinishcolor = $data->ArchitraveFinishColor;
     $item->architraveSetQty = $data->ArchitraveSetQty;
     $item->FrameOnOff = $data->FrameOnOff;
-    $item->issingleconfiguration = $configurableitems;
+    $item->issingleconfiguration = $data->configurableitems;
 
-    match ($configurableitems) {
+    match ($data->configurableitems) {
         4 => BomCalculationVicaima($item,$userLoginId),
         5 => BomCalculationSeadec($item,$userLoginId),
         6 => BomCalculationDeanta($item,$userLoginId),
@@ -2328,7 +2338,7 @@ function discountQuote($quotationId,$versionId): bool{
                 $IronmongaryPrice = round(($totalcost),2);
             }
 
-            BOMUpdate($data, $quotation->configurableitems);
+            BOMUpdate($data, $data->configurableitems);
 
             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId',$quotationId)->where('DoorType',$data->DoorType)->where('itemId',$itemid)->get();
             $GTSellPrice = 0;

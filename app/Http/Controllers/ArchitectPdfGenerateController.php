@@ -63,13 +63,9 @@ class ArchitectPdfGenerateController extends Controller
         $id = Auth::user()->id;
         $comapnyDetail = Company::where('id',$id)->first();
         $quotaion = Quotation::where('id',$quatationId)->first();
-        $configurationItem = 1;
         $GlassIntegrity='';
         $FrameFinishForDoorDetailsTable='';
         $frameMaterial='';
-        if(!empty($quotaion->configurableitems)){
-            $configurationItem = $quotaion->configurableitems;
-        }
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id',$quotaion->ProjectId)->first();
 
@@ -91,6 +87,7 @@ class ArchitectPdfGenerateController extends Controller
         $PageBreakCount = 1;
 
         foreach($ed as $tt){
+            $configurationItem = $tt->configurableitems ?: 1;
 
             $countDoorNumber = ItemMaster::where('itemID',$tt->itemId)->count();
             $DoorNumber = ItemMaster::where('itemID',$tt->itemId)->get();

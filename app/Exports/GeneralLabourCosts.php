@@ -64,6 +64,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -83,19 +84,19 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
         }
 
         $footData = [
-            '','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
+            '','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
-            'Door Type',
+            'Door Core','Door Type',
             'Labour Element',
             'MAN HOURS',
             'MAN Hour Rate',
@@ -118,15 +119,15 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:N1';
-                $cellRange = 'A2:N2';
+                $cellRange1 = 'A1:O1';
+                $cellRange = 'A2:O2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -161,6 +162,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
                 $event->sheet->getColumnDimension('L')->setAutoSize(true);
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
                 $event->sheet->getColumnDimension('N')->setAutoSize(true);
+                $event->sheet->getColumnDimension('O')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
@@ -172,7 +174,7 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
     {
         return 'General Labour Costs';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [
@@ -187,36 +189,30 @@ class GeneralLabourCosts implements FromCollection,WithHeadings,WithEvents,WithT
 
         if ($currency == '$') {
             return [
-                'K' => $currencyFormats['$'],
+                'N' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
-                'J' => $currencyFormats['$'],
-                // 'D' => $currencyFormats['$'],
-                'E' => $currencyFormats['$'],
-                // 'F' => $currencyFormats['$'],
-                'G' => $currencyFormats['$'],
+                'K' => $currencyFormats['$'],
+                'F' => $currencyFormats['$'],
+                'H' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'K' => $currencyFormats['£'],
+                'N' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
-                'J' => $currencyFormats['£'],
-                // 'D' => $currencyFormats['£'],
-                'E' => $currencyFormats['£'],
-                // 'F' => $currencyFormats['£'],
-                'G' => $currencyFormats['£'],
+                'K' => $currencyFormats['£'],
+                'F' => $currencyFormats['£'],
+                'H' => $currencyFormats['£'],
             ];
         } else {
             return [
                 'K' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
-                'J' => $currencyFormats['€'],
-                // 'D' => $currencyFormats['€'],
-                'E' => $currencyFormats['€'],
-                // 'F' => $currencyFormats['€'],
-                'G' => $currencyFormats['€'],
+                'N' => $currencyFormats['€'],
+                'F' => $currencyFormats['€'],
+                'H' => $currencyFormats['€'],
             ];
         }
     }

@@ -839,11 +839,11 @@
         @if (Auth::user()->UserType == 2 || Auth::user()->UserType == 3)
         <li class="tab" data-tab-target="#survey" id="survey_tab">Survey<span></span></li>
         @endif
-        <li class="tab common" data-tab-target="#defaults">Defaults<span></span></li>
+        {{--  <li class="tab common" data-tab-target="#defaults">Defaults<span></span></li>  --}}
     </ul>
 </div>
 
-<div class="tab-content mb-5" id="defaults" data-tab-content style="display: none; transform: translateY(20px); opacity: 1;">
+{{--  <div class="tab-content mb-5" id="defaults" data-tab-content style="display: none; transform: translateY(20px); opacity: 1;">
     <ul class="CustomTabs tabs d-flex" id="again_black_Defaults">
         <li class="brdrBlackDefaults active_black_again_Defaults" id="customtab"><a href="#Custom">Custom</a></li>
         <li class="brdrBlackDefaults" id="standardtab"><a href="#Standard">Standard</a></li>
@@ -893,7 +893,7 @@
             </div>
         </div>
     </div>
-</div>
+</div>  --}}
 
 {{--  //survey tab  --}}
 <div class="tab-content mb-5" id="survey" data-tab-content style="display: none; transform: translateY(20px); opacity: 1;">
@@ -2227,16 +2227,16 @@
         </div>
     </div>
 </div>
-<script src="{{asset('js/custome-rules.js')}}"></script>
-<script src="{{asset('js/default.js')}}"></script>
+{{--  <script src="{{asset('js/custome-rules.js')}}"></script>
+<script src="{{asset('js/default.js')}}"></script>  --}}
 <script>
-    var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
+    {{--  var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
     var possibleSelectedOptionsJson = JSON.stringify(<?=json_encode(\Config::get('constants.PossibleSelectedOptions.SelectedOptionsWithDbSlugKey'))?>);
     var ColorsJson = JSON.stringify(<?= json_encode($color_data); ?>);
     var LippingSpeciesJson = JSON.stringify(<?= json_encode($lipping_species); ?>);
-    var SelectedLippingSpeciesJson = JSON.stringify(<?= json_encode($selected_lipping_species); ?>);
+    var SelectedLippingSpeciesJson = JSON.stringify(<?= json_encode($selected_lipping_species); ?>);  --}}
 
-    function floor_finish_change(){
+    {{--  function floor_finish_change(){
 
         if($("#fireRating").val()=='FD30' || $("#fireRating").val()=='FD60'){
             $("#undercut").attr("readonly","readonly")
@@ -2252,40 +2252,41 @@
         }
     }
 
-    $(document).ready(function() {
-        frameMaterialFilter('FD30');
-        StandardframeMaterialFilter('FD30');
-        FireRatingChange();
-        $("#doorsetType").change(function(){
-            DoorSetTypeChange();
-        });
-
-        @if(isset($defaultItemsCustom->FrameFinish) && $defaultItemsCustom->FrameFinish == "Painted_Finish")
-            FrameFinishChange(false , 'framefinish');
-        @endif
-
-        @if(isset($defaultItemsCustom->DoorsetType) && isset($defaultItemsCustom->SwingType))
+    frameMaterialFilter('FD30');
+    StandardframeMaterialFilter('FD30');
+    FireRatingChange();
+    $("#doorsetType").change(function(){
         DoorSetTypeChange();
-        @endif
+    });
 
-        @if(isset($defaultItemsCustom->DoorLeafFacing))
-        DoorLeafFacingChange(false,true);
-        @endif
+    @if(isset($defaultItemsCustom->FrameFinish) && $defaultItemsCustom->FrameFinish == "Painted_Finish")
+        FrameFinishChange(false , 'framefinish');
+    @endif
 
-        @if(isset($defaultItemsCustom->ArchitraveMaterial) && $defaultItemsCustom->Architrave == 'Yes')
-        architrave(1);
-        @endif
-        @if(isset($defaultItemsStandard->ArchitraveMaterial) && $defaultItemsStandard->Architrave == 'Yes')
-        standardarchitrave(1);
-        @endif
+    @if(isset($defaultItemsCustom->DoorsetType) && isset($defaultItemsCustom->SwingType))
+    DoorSetTypeChange();
+    @endif
 
-        @if(isset($defaultItemsCustom->DoorLeafFinishColor))
-        doorLeafFinishChange();
-        @endif
+    @if(isset($defaultItemsCustom->DoorLeafFacing))
+    DoorLeafFacingChange(false,true);
+    @endif
 
-        @if(isset($defaultItemsStandard->FrameFinish) && $defaultItemsStandard->FrameFinish == "Painted_Finish")
-        StandardFrameFinishChange(false ,  'StandardframeFinish');
-        @endif
+    @if(isset($defaultItemsCustom->ArchitraveMaterial) && $defaultItemsCustom->Architrave == 'Yes')
+    architrave(1);
+    @endif
+    @if(isset($defaultItemsStandard->ArchitraveMaterial) && $defaultItemsStandard->Architrave == 'Yes')
+    standardarchitrave(1);
+    @endif
+
+    @if(isset($defaultItemsCustom->DoorLeafFinishColor))
+    doorLeafFinishChange();
+    @endif
+
+    @if(isset($defaultItemsStandard->FrameFinish) && $defaultItemsStandard->FrameFinish == "Painted_Finish")
+    StandardFrameFinishChange(false ,  'StandardframeFinish');
+    @endif  --}}
+
+    $(document).ready(function() {
 
         var tabRedirect = $('#tab_redirect').val();
         $('#floorplanid').on('click',function(){
@@ -3445,7 +3446,7 @@
         });
     }
 
-    var header = document.getElementById("again_black_Defaults");
+    {{--  var header = document.getElementById("again_black_Defaults");
     var btns = header.getElementsByClassName("brdrBlackDefaults");
     for (var i = 0; i < btns.length; i++) {
         btns[i].addEventListener("click", function() {
@@ -3453,7 +3454,7 @@
             current[0].className = current[0].className.replace(" active_black_again_Defaults", "");
             this.className += " active_black_again_Defaults";
         });
-    }
+    }  --}}
 </script>
 
 {{--  @section('js')  --}}

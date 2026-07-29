@@ -85,6 +85,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $data[] = [
                     $value->plot_ref_no,
                     $value->certification_no,
+                    doorcorename($value->configurableitems),
                     $value->doorNumber,
                     $value->DoorType,
                     $value->rWdBRating ? $value->rWdBRating : '',
@@ -102,7 +103,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
 
 
         $footData = [
-            '','','','','','','','','','','',''
+            '','','','','','','','','','','','',''
         ];
 
         $allData = [$data,$footData];
@@ -115,6 +116,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
         $a = [
             "Plot Number/Ref",
             "IFC/Certifire No/Q mark Plug",
+            "Door Core",
             "Door Number",
             "Door Type",
             'DB Rating',
@@ -136,8 +138,8 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
     {
         return [
             AfterSheet::class    => function(AfterSheet $event) {
-                $cellRange1 = 'A1:M1';
-                $cellRange = 'A2:M2';
+                $cellRange1 = 'A1:N1';
+                $cellRange = 'A2:N2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -171,6 +173,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                 $event->sheet->getColumnDimension('K')->setAutoSize(true);
                 $event->sheet->getColumnDimension('L')->setAutoSize(true);
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
+                $event->sheet->getColumnDimension('N')->setAutoSize(true);
 
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);

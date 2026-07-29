@@ -39,14 +39,12 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
         $versionId = $this->vid;
 
         $quotaion = Quotation::where('id',$quotationId)->first();
-        $configurationItem = 1;
-        if(!empty($quotaion->configurableitems)){
-            $configurationItem = $quotaion->configurableitems;
-        }
-        
+
         $shows = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
         ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-        ->where('quotation_version_items.version_id',$versionId)->get();
+        ->where('quotation_version_items.version_id',$versionId)
+        ->whereIn('items.configurableitems', [1,2,7,8])
+        ->get();
         $SumDoorsetPrice = 0;
         $SumIronmongaryPrice = 0;
         $SumDoorQuantity = 0;
@@ -61,7 +59,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
                 $AI = AddIronmongery::select('discountprice')->where('id',$item->IronmongeryID)->first();
                 $IronmongaryPrice = $AI->discountprice;
             }
-            
+
             $totalpriceperdoorset = $DoorsetPrice + $IronmongaryPrice;
 
 
@@ -70,9 +68,9 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
 
             $DoorLeafFinish = "N/A";
             if(!empty($item->DoorLeafFinish)){
-                $DoorLeafFinish = DoorLeafFinish($configurationItem,$item->DoorLeafFinish);
+                $DoorLeafFinish = DoorLeafFinish($item->configurableitems,$item->DoorLeafFinish);
             }
-            
+
             $DoorLeafFinishColor = '';
             if(!empty($item->DoorLeafFinishColor)){
                 $DoorLeafFinishColor = ' + '.$item->DoorLeafFinishColor;
@@ -82,14 +80,14 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
 
             $DoorLeafFacing = "N/A";
             if(!empty($item->DoorLeafFacing)){
-                $DoorLeafFacing = DoorLeafFacing($configurationItem,$item->DoorLeafFacing,$item->DoorLeafFacingValue);
+                $DoorLeafFacing = DoorLeafFacing($item->configurableitems,$item->DoorLeafFacing,$item->DoorLeafFacingValue);
             }
 
 
 
             $LippingType = "";
             if(!empty($item->LippingType)){
-                $SelectedLippingType = Option::where("configurableitems",$configurationItem)
+                $SelectedLippingType = Option::where("configurableitems",$item->configurableitems)
                 ->where("OptionSlug","lipping_type")
                 ->where("OptionKey",$item->LippingType)->first();
                 if($SelectedLippingType != null){
@@ -118,7 +116,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
             $GlassTypeForDoorDetailsTable = "N/A";
 
             if(!empty($item->GlassType)){
-                $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem,$item->FireRating,$item->GlassType,$item->GlassThickness);
+                $GlassTypeForDoorDetailsTable = GlassTypeThickness($item->configurableitems,$item->FireRating,$item->GlassType,$item->GlassThickness);
             }
 
             $OverpanelForDoorDetailsTable = "N/A";
@@ -130,7 +128,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
             $OPGlassTypeForDoorDetailsTable = "N/A";
 
             if(!empty($item->OPGlassType)){
-                $OPGlassTypeForDoorDetailsTable = OPGlassType($configurationItem,$item->FireRating,$item->OPGlassType);
+                $OPGlassTypeForDoorDetailsTable = OPGlassType($item->configurableitems,$item->FireRating,$item->OPGlassType);
             }
 
             $FrameMaterialForDoorDetailsTable = "N/A";
@@ -150,20 +148,20 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
             $FrameTypeForDoorDetailsTable = 'N/A';
 
             if(!empty($item->FrameType)){
-                $FrameTypeForDoorDetailsTable = FrameType($configurationItem,$item->FrameType);
+                $FrameTypeForDoorDetailsTable = FrameType($item->configurableitems,$item->FrameType);
             }
 
             $FrameSizeForDoorDetailsTable = "";
             if(!empty($item->FrameDepth)){
                 $FrameSizeForDoorDetailsTable .= $item->FrameDepth."x";
             }
-            
+
             $FrameSizeForDoorDetailsTable .= $item->FrameThickness."mm";
 
             $FrameFinishForDoorDetailsTable = 'N/A';
 
             if(!empty($item->FrameFinish)){
-                $FrameFinishForDoorDetailsTable = FrameFinish($configurationItem,$item->FrameFinish,$item->FrameFinishColor);
+                $FrameFinishForDoorDetailsTable = FrameFinish($item->configurableitems,$item->FrameFinish,$item->FrameFinishColor);
             }
 
             $ExtLinerForDoorDetailsTable = "None";
@@ -178,7 +176,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
                 if(!empty($item->extLinerSize)){
                     $ExtLinerSizeForDoorDetailsTable .= "x";
                 }
-                
+
                 $ExtLinerSizeForDoorDetailsTable .= $item->ExtLinerThickness.'mm';
             }
 
@@ -193,7 +191,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
                 $ArchitraveSizeForDoorDetailsTable = $item->ArchitraveWidth."x".$item->ArchitraveHeight."mm";
 
                 if(!empty($item->ArchitraveFinish)){
-                    $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($configurationItem,$item->ArchitraveFinish,$item->FrameFinishColor);
+                    $ArchitraveFinishForDoorDetailsTable = ArchitraveFinish($item->configurableitems,$item->ArchitraveFinish,$item->FrameFinishColor);
                 }
 
             }
@@ -284,6 +282,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
             $IronmongerySet = $item->IronmongerySet;
             $rWdBRating = $item->rWdBRating;
             $FireRating = $item->FireRating;
+            $configurationItemName = doorcorename($item->configurableitems);
             $COC = $item->COC;
             $SpecialFeatureRefs = $item->SpecialFeatureRefs;
             $DoorsetPrice = round($DoorsetPrice,2);
@@ -292,6 +291,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
 
             $data[] = [
                 $j,
+                $configurationItemName,
                 $Floor,
                 $DoorNumber,
                 'description',
@@ -347,10 +347,10 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
             $i++;
             $j++;
         }
-        
+
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $footData = [
-            '',
+            '','',
             '',
             '',
             '',
@@ -364,11 +364,12 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'Line No.',
+            'Door Core',
             'Floor',
             'Door No.',
             'Door Description',
@@ -446,7 +447,7 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
 
 
     }
-    
+
     public function registerEvents(): array
     {
 
@@ -457,11 +458,11 @@ class InvoiceInExcel implements FromCollection,WithHeadings,WithEvents
                 $versionId = $this->vid;
                 $count = Item::join('quotation_version_items','items.itemId','quotation_version_items.itemID')
                 ->join('item_master','quotation_version_items.itemmasterID','item_master.id')
-                ->where('quotation_version_items.version_id',$versionId)->count();
+                ->where('quotation_version_items.version_id',$versionId)->whereIn('items.configurableitems', [1,2,7,8])->count();
                 $lastrownumber = $count+2;
 
-                $cellRange = 'A1:AR1'; // All headers
-                $lastRow = 'A'.$lastrownumber.':AR'.$lastrownumber;
+                $cellRange = 'A1:AS1'; // All headers
+                $lastRow = 'A'.$lastrownumber.':AS'.$lastrownumber;
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [

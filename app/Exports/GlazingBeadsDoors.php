@@ -107,6 +107,8 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
                 }
                 $data[] = array(
+                    doorcorename($value->configurableitems),
+                    $value->DoorType,
                     $value->doorNumber,
                     $value->DoorType,
                     $value->plot_ref_no,
@@ -151,8 +153,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['FanlightBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->doorNumber,
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' ' .$value->Overpanel,
+                    $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->OPGlazingBeadSpeciesName,
@@ -193,8 +196,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->doorNumber,
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 1',
+                    $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SL1GlazingBeadSpeciesName,
@@ -241,8 +245,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelHeightFD60 = $allSettings['SideBead.FD60']->Height;
                 }
                 $data[] = array(
-                    $value->doorNumber,
+                    doorcorename($value->configurableitems),
                     $value->DoorType. ' Side Light 2',
+                    $value->doorNumber,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SideLight2GlazingBeadSpeciesName,
@@ -392,7 +397,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $a = [];
         if($this->section != 'Summary'){
             $a = [
-            'Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+            'Door Core','Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
             'Glazing Bead Height', 'Glazing Bead Depth',
             'GB1 W', 'QTY', 'GB1 H', 'QTY', 'GB2 H', 'QTY',
             'GB3 H', 'QTY', 'GB4 H', 'QTY', 'GB5 H', 'QTY','rW dB Rating'
@@ -414,7 +419,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 // ===== MAIN HEADER =====
                 if($this->section != 'Summary'){
-                    $titleRange = 'A1:V1';
+                    $titleRange = 'A1:W1';
                 }else{
                     $titleRange = 'A1:G1';
                 }
@@ -456,7 +461,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
 
                 $sheet->getStyle($titleRange)->applyFromArray($titleStyle);
                 if($this->section != 'Summary'){
-                    $sheet->getStyle('A2:V2')->applyFromArray($headerStyle);
+                    $sheet->getStyle('A2:W2')->applyFromArray($headerStyle);
                 }else{
                     $sheet->getStyle('A2:G2')->applyFromArray($headerStyle);
                 }

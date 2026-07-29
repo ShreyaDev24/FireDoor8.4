@@ -45,7 +45,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         $rowMeta = []; // raw doorset info aligned 1:1 with $data rows (leaf_and_a_half needs the real leaf widths)
         foreach($item as $value){
 
-            if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+            if($value->configurableitems == '1' || $value->configurableitems == '2' || $value->configurableitems == '7' || $value->configurableitems == '8'){
                 $cutSizeH = ($value->LeafHeight  - $value->LippingThickness - $value->LippingThickness);
                 $cutSizeW = ($value->LeafWidth1 - $value->LippingThickness - $value->LippingThickness);
                 $cutSizeW2 = isset($value->LeafWidth2) && $value->LeafWidth2 != null && $value->LeafWidth2 != '' ? ($value->LeafWidth2 - $value->LippingThickness - $value->LippingThickness): '';
@@ -88,23 +88,23 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
             }
             $DoorDimensionsCode = '';
             $DoorDimensionsCode2 = '';
-            if(isset($quotation->configurableitems) && $quotation->configurableitems == '1'){
+            if(isset($value->configurableitems) && $value->configurableitems == '1'){
                 $configurableitems = 'Streboard';
                 if($value->DoorsetType == 'leaf_and_a_half'){
                     $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }else if($value->DoorsetType == 'DD'){
                     $DoorDimensionsCode2 = $value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }
-            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '2'){
+            }elseif(isset($value->configurableitems) && $value->configurableitems == '2'){
                 $configurableitems = 'Halspan';
                 if($value->DoorsetType == 'leaf_and_a_half'){
                     $DoorDimensionsCode2 = $value->DoorDimensionsCode2.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }else if($value->DoorsetType == 'DD'){
                     $DoorDimensionsCode2 = $value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }
-            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '3'){
+            }elseif(isset($value->configurableitems) && $value->configurableitems == '3'){
                 $configurableitems = 'Norma';
-            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '4'){
+            }elseif(isset($value->configurableitems) && $value->configurableitems == '4'){
                 $configurableitems = 'Vicaima';
                 $DoorDimensionsCode = $value->DoorDimensionsCode . 'x';
                 if($value->DoorsetType == 'leaf_and_a_half'){
@@ -112,18 +112,18 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 }else if($value->DoorsetType == 'DD'){
                     $DoorDimensionsCode2 = $value->DoorDimensionsCode.'x'.$value->LeafWidth2.'x'.$value->LeafHeight.'x'.$value->LeafThickness;
                 }
-            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '5'){
+            }elseif(isset($value->configurableitems) && $value->configurableitems == '5'){
                 $configurableitems = 'Seadec';
-            }elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '6'){
+            }elseif(isset($value->configurableitems) && $value->configurableitems == '6'){
                 $configurableitems = 'Deanta';
             }
-            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '7'){
+            elseif(isset($value->configurableitems) && $value->configurableitems == '7'){
                 $configurableitems = 'Flamebreak';
             }
-            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '8'){
+            elseif(isset($value->configurableitems) && $value->configurableitems == '8'){
                 $configurableitems = 'StreDoor';
             }
-            elseif(isset($quotation->configurableitems) && $quotation->configurableitems == '9'){
+            elseif(isset($value->configurableitems) && $value->configurableitems == '9'){
                 $configurableitems = 'MMM';
             }
 
@@ -170,7 +170,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
             if($value->Overpanel == 'Overpanel'){
 
-                if($quotation->configurableitems == '1' || $quotation->configurableitems == '2' || $quotation->configurableitems == '7' || $quotation->configurableitems == '8'){
+                if($value->configurableitems == '1' || $value->configurableitems == '2' || $value->configurableitems == '7' || $value->configurableitems == '8'){
                     $cutSizeH = $value->OPHeigth - $value->GAP - $value->GAP - $value->OpBeadThickness - $value->OpBeadThickness - $value->LippingThickness - $value->LippingThickness;
                     $cutSizeW = $value->FrameWidth - $value->GAP - $value->GAP - $value->LippingThickness - $value->LippingThickness;
                 }else{

@@ -40,6 +40,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
         </tr>
         @endif --}}
         <tr>
+            <td> {{ doorcorename($value->configurableitems) }} </td>
             <td colspan="6">{{ $value->Description }}</td>
             {{-- <td>{{$value->LMPerDoorType}}</td> --}}
             <td colspan="2">{{$value->QuantityOfDoorTypes}}</td>
@@ -64,7 +65,7 @@ $IronmomngeryMaterialData = collect($data)->where("Category", "IronmomngeryMater
 
 @if($check==1)
 <tr style="background:gray">
-    <td colspan="3"><b>Total </b></td>
+    <td colspan="4"><b>Total </b></td>
     <td>#######</td>
     <td></td>
     <td></td>

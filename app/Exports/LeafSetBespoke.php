@@ -9,182 +9,169 @@ use Maatwebsite\Excel\Concerns\WithTitle;
 use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
-use App\Models\Item;
-use App\Models\Project;
-use App\Models\Quotation;
-use App\Models\QuotationVersion;
-use App\Models\BOMCalculation;
-use Carbon\Carbon;
-use App\Models\Company;
-use Auth;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Border;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
 
-class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle,WithColumnFormatting
+class LeafSetBespoke implements FromCollection, WithHeadings, WithEvents, WithTitle, WithColumnFormatting
 {
+    private const VICAIMA_CONFIG_IDS = [4, 5, 6, 9];
+
+    private const STANDARD_CONFIG_IDS = [1, 2, 7, 8];
+
     public function __construct(
-        /**
-         * @return \Illuminate\Support\Collection
-         */
         protected $id,
-        /**
-         * @return \Illuminate\Support\Collection
-         */
         protected $vid,
-        /**
-         * @return \Illuminate\Support\Collection
-         */
         protected $result
-    )
-    {
+    ) {
     }
 
     public function collection()
     {
-        $currency = $this->result['currency'];
-        $total = 0;
-        $GTSell = 0;
+        $vicaimaRows = [];
+        $standardRows = [];
+        $vicaimaTotalCost = 0;
+        $vicaimaGTSell = 0;
+        $standardTotalCost = 0;
+        $standardGTSell = 0;
+        $marginMarkup = 'Margin';
 
-        $j = 1;
-        $data = [];
-        foreach($this->result['data'] as $value){
-            if($value->Category=='LeafSetBesPoke'){
-                $total += $value->TotalCost;
-                $GTSell += $value->GTSellPrice;
-                $words = explode("|", (string) $value->Description);
-                $doortype = $words[0] ?? "";
-                $words1 = $words[1] ?? "";
-                $words2 = $words[2] ?? "";
-                $words3 = $words[3] ?? "";
-                $words4 = $words[4] ?? "";
-                $words5 = $words[5] ?? "";
-                $QuantityOfDoorTypes = $value->QuantityOfDoorTypes;
-                $Unit = $value->Unit;
-                $UnitCost = $value->UnitCost;
-                $TotalCost = round($value->TotalCost, 2);
-                $UnitPriceSell = $value->UnitPriceSell;
-                $GTSellPrice = $value->GTSellPrice;
-                $Margin = $value->Margin.'%';
+        foreach ($this->result['data'] as $value) {
+            if ($value->Category !== 'LeafSetBesPoke') {
+                continue;
+            }
 
-                $data[] = [
-                    $j,
-                    $doortype,
-                    $words1,
-                    $words2,
-                    $words3,
-                    $words4,
-                    $words5,
-                    $QuantityOfDoorTypes,
-                    $Unit,
-                    $UnitCost,
-                    $TotalCost,
-                    $UnitPriceSell,
-                    $GTSellPrice,
-                    $Margin
-                ];
-                $j++;
+            $marginMarkup = $value->MarginMarkup;
+            $configItem = (int) $value->configurableitems;
+            $rowCells = $this->mapDescriptionToRowCells($value);
+
+            if (in_array($configItem, self::VICAIMA_CONFIG_IDS, true)) {
+                $vicaimaRows[] = $rowCells;
+                $vicaimaTotalCost += $value->TotalCost;
+                $vicaimaGTSell += $value->GTSellPrice;
+            } elseif (in_array($configItem, self::STANDARD_CONFIG_IDS, true)) {
+                $standardRows[] = $rowCells;
+                $standardTotalCost += $value->TotalCost;
+                $standardGTSell += $value->GTSellPrice;
             }
         }
 
-        $footData = [
-            '','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
-        ];
+        $sheetRows = [];
 
-        $allData = [$data,$footData];
+        if ($vicaimaRows !== []) {
+            $sheetRows[] = $this->titleRow('Door Details');
+            $sheetRows[] = $this->vicaimaHeaderRow($marginMarkup);
+            $serial = 1;
+            foreach ($vicaimaRows as $cells) {
+                $sheetRows[] = array_merge([$serial++], $cells);
+            }
+            $sheetRows[] = $this->sectionSubtotalRow($vicaimaTotalCost, $vicaimaGTSell);
+        }
 
-        return collect($allData);
+        if ($vicaimaRows !== [] && $standardRows !== []) {
+            $sheetRows[] = array_fill(0, 14, '');
+        }
+
+        if ($standardRows !== []) {
+            $sheetRows[] = $this->titleRow('Door Details');
+            $sheetRows[] = $this->standardHeaderRow($marginMarkup);
+            $serial = 1;
+            foreach ($standardRows as $cells) {
+                $sheetRows[] = array_merge([$serial++], $cells);
+            }
+            $sheetRows[] = $this->sectionSubtotalRow($standardTotalCost, $standardGTSell);
+        }
+
+        $grandTotalCost = $vicaimaTotalCost + $standardTotalCost;
+        $grandGTSell = $vicaimaGTSell + $standardGTSell;
+
+        if ($vicaimaRows !== [] || $standardRows !== []) {
+            if ($vicaimaRows !== [] && $standardRows !== []) {
+                $sheetRows[] = $this->grandTotalRow($grandTotalCost, $grandGTSell);
+            }
+        }
+
+        return collect($sheetRows);
     }
-    
+
     public function headings(): array
     {
-        if($this->result['quotation']->configurableitems == 4 || $this->result['quotation']->configurableitems == 5 || $this->result['quotation']->configurableitems == 6 || $this->result['quotation']->configurableitems == 5){
-            $a = [
-                'S.No',
-                'Door Type',
-                'Door Core',
-                'Lipping Type',
-                'Lipping Thickness/Lipping Species',
-                'Door Leaf Size',
-                'Door Dimensions Code',
-                'Total Quantity',
-                'Unit',
-                'Unit Cost',
-                'Total Cost',
-                'Unit Price Sell ',
-                'GT Sell Price',
-            ];
-        }else{
-            $a = [
-                'S.No',
-                'Door Type',
-                'Door Core',
-                'Lipping Type',
-                'Lipping Thickness',
-                'Lipping Species',
-                'Door Leaf Size',
-                'Total Quantity',
-                'Unit',
-                'Unit Cost',
-                'Total Cost',
-                'Unit Price Sell ',
-                'GT Sell Price',
-            ];
-        }
-
-        foreach($this->result['data'] as $value){
-            $MarginMarkup = $value->MarginMarkup;
-        }
-        
-        $b  = ['Door Details'];
-
-        $d = [$b,$a];
-        return $d;
+        // Full layout is built in collection() to match PDF section order (Vicaima then Standard).
+        return [];
     }
-    
+
     public function registerEvents(): array
     {
-
-
         return [
-            AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:N1';
-                $cellRange = 'A2:N2';
-                $styleArray = [
-                    'font' => [
-                        'bold' => true,
-                    ],
-                    'background' => [
-                        'color'=> '#000000'
-                    ],
+            AfterSheet::class => function (AfterSheet $event) {
+                $sheet = $event->sheet->getDelegate();
+                $highestRow = $sheet->getHighestRow();
+
+                $headerStyle = [
+                    'font' => ['bold' => true],
                     'alignment' => [
-                        'vertical' => \PhpOffice\PhpSpreadsheet\Style\Alignment::VERTICAL_CENTER,
-                        'horizontal' => \PhpOffice\PhpSpreadsheet\Style\Alignment::HORIZONTAL_CENTER,
+                        'vertical' => Alignment::VERTICAL_CENTER,
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
                     ],
                     'borders' => [
                         'outline' => [
-                            'borderStyle' => \PhpOffice\PhpSpreadsheet\Style\Border::BORDER_THICK,
+                            'borderStyle' => Border::BORDER_THICK,
                             'color' => ['argb' => 'FF0000'],
                         ],
                     ],
-
                 ];
-                $event->sheet->mergeCells($cellRange1);
-                $event->sheet->getColumnDimension('A')->setAutoSize(true);
-                $event->sheet->getColumnDimension('B')->setAutoSize(true);
-                $event->sheet->getColumnDimension('C')->setAutoSize(true);
-                $event->sheet->getColumnDimension('D')->setAutoSize(true);
-                $event->sheet->getColumnDimension('E')->setAutoSize(true);
-                $event->sheet->getColumnDimension('F')->setAutoSize(true);
-                $event->sheet->getColumnDimension('G')->setAutoSize(true);
-                $event->sheet->getColumnDimension('H')->setAutoSize(true);
-                $event->sheet->getColumnDimension('I')->setAutoSize(true);
-                $event->sheet->getColumnDimension('J')->setAutoSize(true);
-                $event->sheet->getColumnDimension('K')->setAutoSize(true);
-                $event->sheet->getColumnDimension('L')->setAutoSize(true);
-                $event->sheet->getColumnDimension('M')->setAutoSize(true);
-                $event->sheet->getColumnDimension('N')->setAutoSize(true);
-                $event->sheet->getColumnDimension('O')->setAutoSize(true);
-                $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
-                $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
-                $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
+
+                $columnHeaderStyle = [
+                    'font' => ['bold' => true],
+                    'alignment' => [
+                        'vertical' => Alignment::VERTICAL_CENTER,
+                        'horizontal' => Alignment::HORIZONTAL_CENTER,
+                    ],
+                    'borders' => [
+                        'outline' => [
+                            'borderStyle' => Border::BORDER_THICK,
+                            'color' => ['argb' => 'FF0000'],
+                        ],
+                    ],
+                ];
+
+                for ($row = 1; $row <= $highestRow; $row++) {
+                    $cellA = trim((string) $sheet->getCell('A' . $row)->getValue());
+                    if ($cellA === 'Door Details') {
+                        $sheet->mergeCells('A' . $row . ':N' . $row);
+                        $sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray($headerStyle);
+                    }
+
+                    $cellG = trim((string) $sheet->getCell('G' . $row)->getValue());
+                    if ($cellG === 'Door Dimensions Code') {
+                        $sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray([
+                            'font' => ['bold' => true],
+                            'alignment' => [
+                                'horizontal' => Alignment::HORIZONTAL_CENTER,
+                                'vertical' => Alignment::VERTICAL_CENTER,
+                            ],
+                            'fill' => [
+                                'fillType' => Fill::FILL_SOLID,
+                                'startColor' => ['argb' => 'FFD9D9D9'],
+                            ],
+                            'borders' => [
+                                'allBorders' => [
+                                    'borderStyle' => Border::BORDER_THIN,
+                                    'color' => ['argb' => 'FF000000'],
+                                ],
+                            ],
+                        ]);
+                    }
+
+                    if ($cellA === 'S.No') {
+                        $sheet->getStyle('A' . $row . ':N' . $row)->applyFromArray($columnHeaderStyle);
+                        $sheet->getStyle('A' . $row . ':N' . $row)->getAlignment()->setWrapText(true);
+                    }
+                }
+
+                foreach (range('A', 'N') as $col) {
+                    $sheet->getColumnDimension($col)->setAutoSize(true);
+                }
             },
         ];
     }
@@ -199,38 +186,140 @@ class LeafSetBespoke implements FromCollection,WithHeadings,WithEvents,WithTitle
         $currencyFormats = [
             '$' => NumberFormat::FORMAT_CURRENCY_USD_SIMPLE,
             '£' => '£#,##0.00',
-            '€' => '€#,##0.00'
+            '€' => '€#,##0.00',
         ];
 
-        // Get the currency from the result
         $currency = $this->result['currency'];
 
-        // Select the appropriate format or default to EUR
-        $format = $currencyFormats[$currency] ?? $currencyFormats['€'];
-
-        // Apply the appropriate format based on the currency
         if ($currency == '$') {
             return [
+                'J' => $currencyFormats['$'],
                 'K' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
-                'J' => $currencyFormats['$'],
-            ];
-        } elseif ($currency == '£') {
-            return [
-                'K' => $currencyFormats['£'],
-                'L' => $currencyFormats['£'],
-                'M' => $currencyFormats['£'],
-                'J' => $currencyFormats['£'],
-            ];
-        } else {
-            return [
-                'K' => $currencyFormats['€'],
-                'L' => $currencyFormats['€'],
-                'M' => $currencyFormats['€'],
-                'J' => $currencyFormats['€'],
             ];
         }
 
+        if ($currency == '£') {
+            return [
+                'J' => $currencyFormats['£'],
+                'K' => $currencyFormats['£'],
+                'L' => $currencyFormats['£'],
+                'M' => $currencyFormats['£'],
+            ];
+        }
+
+        return [
+            'J' => $currencyFormats['€'],
+            'K' => $currencyFormats['€'],
+            'L' => $currencyFormats['€'],
+            'M' => $currencyFormats['€'],
+        ];
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function mapDescriptionToRowCells(object $value): array
+    {
+        $words = explode('|', (string) $value->Description);
+
+        return [
+            $words[0] ?? '',
+            $words[1] ?? '',
+            $words[2] ?? '',
+            $words[3] ?? '',
+            $words[4] ?? '',
+            $words[5] ?? '',
+            $value->QuantityOfDoorTypes,
+            $value->Unit,
+            $value->UnitCost,
+            round($value->TotalCost, 2),
+            $value->UnitPriceSell,
+            $value->GTSellPrice,
+            $value->Margin . '%',
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function titleRow(string $title): array
+    {
+        return array_merge([$title], array_fill(0, 13, ''));
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function vicaimaHeaderRow(string $marginMarkup): array
+    {
+        return [
+            'S.No',
+            'Door Type',
+            'Door Core',
+            'Lipping Type',
+            'Lipping Thickness/Lipping Species',
+            'Door Leaf Size',
+            'Door Dimensions Code',
+            'Total Quantity',
+            'Unit',
+            'Unit Cost',
+            'Total Cost',
+            'Unit Price Sell ',
+            'GT Sell Price',
+            $marginMarkup,
+        ];
+    }
+
+    /**
+     * @return array<int, string>
+     */
+    private function standardHeaderRow(string $marginMarkup): array
+    {
+        return [
+            'S.No',
+            'Door Type',
+            'Door Core',
+            'Lipping Type',
+            'Lipping Thickness',
+            'Lipping Species',
+            'Door Leaf Size',
+            'Total Quantity',
+            'Unit',
+            'Unit Cost',
+            'Total Cost',
+            'Unit Price Sell ',
+            'GT Sell Price',
+            $marginMarkup,
+        ];
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function sectionSubtotalRow(float $totalCost, float $gtSell): array
+    {
+        return [
+            '', '', '', '', '', '', '', '', '', '',
+            round($totalCost, 2),
+            '',
+            round($gtSell, 2),
+            '',
+        ];
+    }
+
+    /**
+     * @return array<int, mixed>
+     */
+    private function grandTotalRow(float $totalCost, float $gtSell): array
+    {
+        return [
+            '', '', '', '', '', '', '', '', '', '',
+            round($totalCost, 2),
+            '',
+            round($gtSell, 2),
+            '',
+        ];
     }
 }

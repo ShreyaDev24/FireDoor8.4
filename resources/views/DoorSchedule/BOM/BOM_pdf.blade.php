@@ -64,7 +64,7 @@
     <tbody>
         <tr>
             <th>Ref</th>
-            <td colspan="3">{{ $quotation->QuotationGenerationId }}</td>
+            <td colspan="4">{{ $quotation->QuotationGenerationId }}</td>
             <th>Project</th>
             <td colspan="4">{{ $quotation->projectname }}</td>
             <th colspan="3">Prepared By</th>
@@ -77,11 +77,11 @@
             <td>{{ $today }}</td>
             <th>Main Contractor</th>
             <td colspan="4">{{ $quotation->CstCompanyName }}</td>
-            <th colspan="3">Sales Contact</th>
+            <th colspan="4">Sales Contact</th>
             <td colspan="4">{{ $quotation->SalesContact }}</td>
         </tr>
         <!-- <tr><th colspan="16">Text</th></tr>
-        <tr><th colspan="16">Items</th></tr> -->
+        <tr><th colspan="17">Items</th></tr> -->
 
         @include('DoorSchedule.BOM.GlazingBeads')
         @include('DoorSchedule.BOM.Frame')

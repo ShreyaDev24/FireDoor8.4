@@ -12,7 +12,7 @@
             <th colspan="2">Total Cost</th>
             <th colspan="2">Unit Price Sell</th>
             <th>GT Sell Price</th>
-            @if($quotation->configurableitems == 4)
+            @if($value->configurableitems == 4)
             <th>Margin</th>
             @else
             <th>Markup</th>
@@ -36,7 +36,7 @@
         </tr>
         @endif
         @php
-            if($quotation->configurableitems == 4){
+            if($value->configurableitems == 4){
                 $total = $total + round(($value->LMPerDoorType * $value->UnitCost) , 2);
                 $GTSellPrice = $GTSellPrice + $value->GTSellPrice;
             }else{
@@ -50,7 +50,7 @@
             <td>{{$value->QuantityOfDoorTypes}}</td>
             <td>{{$value->Unit}}</td>
             <td>{{ $currency }}{{$value->UnitCost}}</td>
-            @if($quotation->configurableitems == 4)
+            @if($value->configurableitems == 4)
             <td colspan="2">{{ $currency }}{{ round(($value->LMPerDoorType * $value->UnitCost) , 2)}}</td>
             @else
             <td colspan="2">{{ $currency }}{{$value->TotalCost * $value->QuantityOfDoorTypes}}</td>

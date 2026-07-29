@@ -53,11 +53,7 @@ class pdf1 implements ShouldQueue
         $contractorName = DB::table('users')->where(['id' => $quotaion->MainContractorId, 'UserType' => 5 ])->value('FirstName');
         $contractorName = $contractorName ?: '';
 
-        // $configurationItem = 1;
-        $configurationItem = $quotaion->configurableitems;
-        if (!empty($quotaion->configurableitems)) {
-            $configurationItem = $quotaion->configurableitems;
-        }
+        // PDF 1 (Introduction) — no per-door configurationItem needed
 
         $project = empty($quotaion->ProjectId) ? '' : Project::where('id', $quotaion->ProjectId)->first();
         

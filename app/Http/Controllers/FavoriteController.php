@@ -50,7 +50,7 @@ class FavoriteController extends Controller
         $UserIds = CompanyMultiUsers();
         $Favorite = FavoriteItem::join('quotation', 'quotation.id', 'favorite_item.quotationId')
         ->join('favorite','favorite.id','favorite_item.favorite_id')
-        ->select('favorite_item.*', 'quotation.configurableitems','favorite.name')
+        ->select('favorite_item.*','favorite.name')
         ->where('favorite_item.favorite_id',$favorite->id)
         ->wherein('favorite_item.userId', $UserIds)->get();
 

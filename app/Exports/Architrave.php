@@ -66,6 +66,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
                 $data[] = [
                     $j,
+                    doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
                     $words2,
@@ -86,18 +87,19 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         }
 
         $footData = [
-            '','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
+            '','','','','','','','','','','','',$total ?? 0,'',$GTSell  ?? 0 ,''
         ];
 
         $allData = [$data,$footData];
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
             'S.No',
+            'Door Core',
             'Door Type',
             'Architrave Size',
             'Architrave Type',
@@ -122,15 +124,15 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange1 = 'A1:O1';
-                $cellRange = 'A2:O2';
+                $cellRange1 = 'A1:P1';
+                $cellRange = 'A2:P2';
                 $styleArray = [
                     'font' => [
                         'bold' => true,
@@ -166,6 +168,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
                 $event->sheet->getColumnDimension('M')->setAutoSize(true);
                 $event->sheet->getColumnDimension('N')->setAutoSize(true);
                 $event->sheet->getColumnDimension('O')->setAutoSize(true);
+                $event->sheet->getColumnDimension('P')->setAutoSize(true);
                 $event->sheet->getStyle($cellRange)->getAlignment()->setWrapText(true);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
                 $event->sheet->getDelegate()->getStyle($cellRange1)->applyFromArray($styleArray);
@@ -177,7 +180,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
     {
         return 'Architrave';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [
@@ -195,21 +198,21 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         // Apply the appropriate format based on the currency
         if ($currency == '$') {
             return [
-                'K' => $currencyFormats['$'],
+                'O' => $currencyFormats['$'],
                 'L' => $currencyFormats['$'],
                 'M' => $currencyFormats['$'],
                 'N' => $currencyFormats['$'],
             ];
         } elseif ($currency == '£') {
             return [
-                'K' => $currencyFormats['£'],
+                'O' => $currencyFormats['£'],
                 'L' => $currencyFormats['£'],
                 'M' => $currencyFormats['£'],
                 'N' => $currencyFormats['£'],
             ];
         } else {
             return [
-                'K' => $currencyFormats['€'],
+                'O' => $currencyFormats['€'],
                 'L' => $currencyFormats['€'],
                 'M' => $currencyFormats['€'],
                 'N' => $currencyFormats['€'],

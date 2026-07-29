@@ -5,12 +5,13 @@
         @php $check =  1; @endphp
         @if($i++==0)
         <tr class="bg-white">
-            <td colspan="16"></td>
+            <td colspan="17"></td>
         </tr>
         <tr style="background:#00B0F0">
-            <td colspan="16"><b>General Labour Costs - Total Cost: </b></td>
+            <td colspan="17"><b>General Labour Costs - Total Cost: </b></td>
         </tr>
         <tr style="margin-top:30px">
+            <th>Door Core</th>
             <th>Door Type</th>
             <th colspan="4">Labour Element</th>
             <th>MAN HOURS</th>
@@ -54,6 +55,7 @@
             <td>{{ $currency }}{{$value->sum_GTSellPrice}}</td>
             <td>{{$value->Margin}}%</td>  --}}
 
+            <td> {{ doorcorename($value->configurableitems) }} </td>
             <td>{{$value->DoorType}}</td>
             <td  colspan="4"> {{ isset($words[1]) ? $words[1] : '' }} </td>
             <td> {{ isset($words[2]) ? round($words[2], 2) : '' }} </td>
@@ -80,7 +82,7 @@
 
     @if($check==1)
         <tr style="background:gray">
-            <td colspan="9"><b>Total </b></td>
+            <td colspan="10"><b>Total </b></td>
             <td></td>
             <td></td>
             <td></td>
