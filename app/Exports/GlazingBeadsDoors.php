@@ -397,7 +397,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
         $a = [];
         if($this->section != 'Summary'){
             $a = [
-            'Door Core','Door Ref', 'Door Type', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
+            'Door Core', 'Door Type','Door Ref', 'Plot Number/Ref','IFC/Certifire No/Q mark Plug','Timber', 'Profile','Finish on Bead',
             'Glazing Bead Height', 'Glazing Bead Depth',
             'GB1 W', 'QTY', 'GB1 H', 'QTY', 'GB2 H', 'QTY',
             'GB3 H', 'QTY', 'GB4 H', 'QTY', 'GB5 H', 'QTY','rW dB Rating'

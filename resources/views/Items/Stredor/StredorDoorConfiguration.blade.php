@@ -347,6 +347,33 @@
 @section("js")
 <script>
 
+    $(document).ready(function () {
+
+        function toggleOverPanel() {
+            let value = $('#OPFLTurnOnOff').val();
+
+            if (value === 'No') {
+                $('#over-panel-section').addClass('disabled-section');
+
+                // Optional: update tooltip dynamically
+                $('#OPFLTurnOnOff').attr('title', "Overpanel/FanLight section is disabled because 'No' is selected.");
+            } else {
+                $('#over-panel-section').removeClass('disabled-section');
+
+                $('#OPFLTurnOnOff').attr('title', "Overpanel/FanLight section is enabled.");
+            }
+        }
+
+        // Run on page load
+        toggleOverPanel();
+
+        // Run on change
+        $('#OPFLTurnOnOff').on('change', function () {
+            toggleOverPanel();
+        });
+
+    });
+
     $('#submit').attr({'disabled': true,"readonly":true });
 var BomSettingsJson = JSON.stringify(<?= json_encode($BOMSetting); ?>);
 var OptionsJson = JSON.stringify(<?= json_encode($option_data); ?>);

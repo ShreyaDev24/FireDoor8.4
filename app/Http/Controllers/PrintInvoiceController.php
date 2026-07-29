@@ -475,11 +475,11 @@ class PrintInvoiceController extends Controller
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
             if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
-                $DoorsetPrice = ($show->AdjustPrice)
-                            ? floatval($show->AdjustPrice)
+                $DoorsetPrice = $leafDelta
+                            ? $leafDelta
                             : (
-                                $leafDelta
-                                    ? $leafDelta
+                                $show->AdjustPrice
+                                    ? floatval($show->AdjustPrice)
                                     : $basePrice
                             );
                 $IronmongaryPrice = $show->IronmongaryPrice;
@@ -493,11 +493,11 @@ class PrintInvoiceController extends Controller
 
                 $DoorQuantity++;
             }else{
-                $DoorsetPriceCustom = ($show->AdjustPrice)
-                            ? floatval($show->AdjustPrice)
+                $DoorsetPriceCustom = $leafDelta
+                            ? $leafDelta
                             : (
-                                $leafDelta
-                                    ? $leafDelta
+                                $show->AdjustPrice
+                                    ? floatval($show->AdjustPrice)
                                     : $basePrice
                             );
                 $IronmongaryPriceCustom = $show->IronmongaryPrice;

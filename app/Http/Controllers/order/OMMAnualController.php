@@ -798,90 +798,97 @@ class OMMAnualController extends Controller
 
             foreach ($ed as $tt) {
 
-                $configurationItem = $tt->configurableitems;
+                 $configurationItem = $tt->configurableitems;
 
+            $getLeaf = IntumescentSealLeafType::where('id',$tt->IntumescentLeafType)->select('id','leaf_type_key','door_thickness')->first();
+            if($getLeaf){
+                $fire = $tt->FireRating . ' - ' . $getLeaf->leaf_type_key . ' (' . $getLeaf->door_thickness . 'mm)';
+            }
+            else{
                 $fire = $tt->FireRating;
-                if($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s'){
-                    $FireRatingActualValue = 'FD30';
-                    $tt->FireRating = 'FD30';
-                }elseif($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s'){
-                    $FireRatingActualValue = 'FD60';
-                    $tt->FireRating = 'FD60';
-                }else{
-                    $FireRatingActualValue  =  $tt->FireRating;
-                }
-
-            // sidelight
-            if ($tt->FireRating == 'FD30s') {
-                $tt->FireRating = 'FD30';
-            } elseif ($tt->FireRating == 'FD60s') {
-                $tt->FireRating = 'FD60';
             }
 
-                }
+            if($tt->FireRating == 'FD30' || $tt->FireRating == 'FD30s'){
+                $FireRatingActualValue = 'FD30';
+                $tt->FireRating = 'FD30';
+            }elseif($tt->FireRating == 'FD60' || $tt->FireRating == 'FD60s'){
+                $FireRatingActualValue = 'FD60';
+                $tt->FireRating = 'FD60';
+            }else{
+                $FireRatingActualValue  =  $tt->FireRating;
+            }
 
-                $certMap = [
-                    4 => [
-                        'NFR' => 'FEA/F99112 Revision L',
-                        'FD30' => 'FEA/F99112 Revision L',
-                        'FD60' => 'Chilt/A12064 Part 1 Revision D',
-                    ],
-                    8 => [
-                        'NFR' => 'BMT/CNA/F15159 Revision F',
-                        'FD30' => 'BMT/CNA/F15159 Revision F',
-                        'FD60' => 'WF377027 Revision A',
-                    ],
-                    1 => [
-                        'NFR' => 'Chilt/A02066 Revision P',
-                        'FD30' => 'Chilt/A02066 Revision P',
-                        'FD60' => 'Chilt/A02067 Revision M',
-                    ],
-                    2 => [
-                        'NFR' => 'Chilt/A01205 Part 1 Revision K',
-                        'FD30' => 'Chilt/A01205 Part 1 Revision K',
-                        'FD60' => 'Chilt/A01205 Part 1 Revision K',
-                    ],
-                    7 => [
-                        'NFR' => 'FEA98164 Revision P',
-                        'FD30' => 'FEA98164 Revision P',
-                        'FD60' => 'FEA/F02141 Revision M',
-                    ],
-                    6 => [
-                        'NFR' => 'WF399992 Revision E',
-                        'FD30' => 'WF399992 Revision E',
-                        'FD60' => 'WF399992 Revision E',
-                    ],
-                    5 => [
-                        'NFR' => '10133/22-2.R1',
-                        'FD30' => '10133/22-2.R1',
-                        'FD60' => '10133/22-2.R1',
-                    ],
-                ];
+           // sidelight
+            if($tt->FireRating == 'FD30s'){
+                $tt->FireRating = 'FD30';
 
-                $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
+            }elseif($tt->FireRating == 'FD60s'){
+                $tt->FireRating = 'FD60';
+
+            }
+
+           $certMap = [
+                4 => [
+                    'NFR' => 'FEA/F99112 Revision L',
+                    'FD30' => 'FEA/F99112 Revision L',
+                    'FD60' => 'Chilt/A12064 Part 1 Revision D',
+                ],
+                8 => [
+                    'NFR' => 'BMT/CNA/F15159 Revision F',
+                    'FD30' => 'BMT/CNA/F15159 Revision F',
+                    'FD60' => 'WF377027 Revision A',
+                ],
+                1 => [
+                    'NFR' => 'Chilt/A02066 Revision P',
+                    'FD30' => 'Chilt/A02066 Revision P',
+                    'FD60' => 'Chilt/A02067 Revision M',
+                ],
+                2 => [
+                    'NFR' => 'Chilt/A01205 Part 1 Revision K',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision 1',
+                    'FD60' => 'Chilt/A01205 Part 1 Revision K',
+                ],
+                7 => [
+                    'NFR' => 'FEA98164 Revision P',
+                    'FD30' => 'FEA98164 Revision P',
+                    'FD60' => 'FEA/F02141 Revision M',
+                ],
+                6 => [
+                    'NFR' => 'WF399992 Revision E',
+                    'FD30' => 'WF399992 Revision E',
+                    'FD60' => 'WF399992 Revision E',
+                ],
+                5 => [
+                    'NFR' => '10133/22-2.R1',
+                    'FD30' => '10133/22-2.R1',
+                    'FD60' => '10133/22-2.R1',
+                ],
+            ];
+
+            $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
 
             $configurationDoor = configurationDoor($tt->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
 
             // dd($tt);
             // $tt->DoorsetType = 'SD';
-            if ($tt->DoorsetType == 'leaf_and_a_half') {
+            if($tt->DoorsetType == 'leaf_and_a_half'){
                 $tt->DoorsetType = 'DD';
             }
 
             $sidelight = '';
             $frameImageLeftMargin = 10;
-            if ($tt->DoorsetType == "SD") {
+            if($tt->DoorsetType == "SD") {
                 $frameImageLeftMargin = 0;
             }
 
             // $tt->SideLight1 = 'Yes';
             // $tt->SideLight2BeadingType = "Splayed_Flush";
 
-            if (($tt->SideLight1 == 'Yes' || $tt->SideLight2 == 'Yes') && ($tt->SideLight2BeadingType != "Splayed_Bolection")) {
+            if(($tt->SideLight1 == 'Yes' || $tt->SideLight2 == 'Yes') && ($tt->SideLight2BeadingType != "Splayed_Bolection")){
                 $sidelight = 'sidelight';
                 $frameImageLeftMargin = 192;
-                if ($tt->DoorsetType == "SD") {
+                if($tt->DoorsetType == "SD") {
                     $frameImageLeftMargin = 222;
                 }
 
@@ -932,7 +939,7 @@ class OMMAnualController extends Controller
             // $GlazingBeads = "Splayed_Bolection";
 
             // $tt->FireRating = "FD60";
-            $GlazingSystems = GlazingSystemsImage($GlazingSystems, $GlazingBeads, $tt->FireRating);
+            $GlazingSystems = GlazingSystemsImage($GlazingSystems,$GlazingBeads,$tt->FireRating);
             $VisionPanelGlazingImageStructure = $GlazingSystems['VisionPanelGlazingImageStructure'];
             $VisionPanelGlazingImageRight = $GlazingSystems['VisionPanelGlazingImageRight'];
             $VisionPanelGlazingImageLeft = $GlazingSystems['VisionPanelGlazingImageLeft'];
@@ -967,20 +974,20 @@ class OMMAnualController extends Controller
                 $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
             } elseif (!empty($tt->FrameType) && $tt->FrameType == "Scalloped") {
 
-                if ($tt->DoorsetType == "SD") {
-                    if (!empty($tt->Handing) && $tt->Handing == "Left") {
-                        $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
-                        $FrameTypeRight = \Config::get('constants.base64Images.ScallopedStraight');
-                        $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                    } else {
-                        $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
-                        $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
-                        $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
-                    }
+                if($tt->DoorsetType == "SD"){
+                if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                  $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
+                  $FrameTypeRight = \Config::get('constants.base64Images.ScallopedStraight');
+                  $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
                 } else {
+                  $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
+                  $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
+                  $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                }}
+                else{
                     $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
-                    $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
-                    $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
+                $FrameTypeRight = \Config::get('constants.base64Images.ScallopedRight');
+                $FrameTypeCommon = \Config::get('constants.base64Images.FrameRebatedCommon');
                 }
                 // $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedLeft');
                 // $FrameTypeLeft = \Config::get('constants.base64Images.ScallopedStraight');
@@ -992,10 +999,10 @@ class OMMAnualController extends Controller
             $FixedSpaceBlock = \Config::get('constants.base64Images.FixedSpaceBlock');
             $RemainingSpaceBlock = \Config::get('constants.base64Images.RemainingSpaceBlock');
             $FullBlock = \Config::get('constants.base64Images.FullBlock');
-            $RemainingSpaceBlockScallopedLeft = \Config::get('constants.base64Images.RemainingSpaceBlockScallopedLeft');
-            $RemainingSpaceBlockScallopedRight = \Config::get('constants.base64Images.RemainingSpaceBlockScallopedRight');
-            $FixedSpaceBlockScallopedLeft = \Config::get('constants.base64Images.FixedSpaceBlockScallopedLeft');
-            $FixedSpaceBlockScallopedRight = \Config::get('constants.base64Images.FixedSpaceBlockScallopedRight');
+            $RemainingSpaceBlockScallopedLeft=\Config::get('constants.base64Images.RemainingSpaceBlockScallopedLeft');
+            $RemainingSpaceBlockScallopedRight=\Config::get('constants.base64Images.RemainingSpaceBlockScallopedRight');
+            $FixedSpaceBlockScallopedLeft=\Config::get('constants.base64Images.FixedSpaceBlockScallopedLeft');
+            $FixedSpaceBlockScallopedRight=\Config::get('constants.base64Images.FixedSpaceBlockScallopedRight');
 
 
             $remainingWidth = $tt->LeafWidth1 - ($tt->Leaf1VPWidth + $tt->DistanceFromTheEdgeOfDoor);
@@ -1004,24 +1011,26 @@ class OMMAnualController extends Controller
                 if ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedLeft;
+
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
 
 
-                    if (($show->DoorsetType == "SD")) {
-                        if (!empty($tt->Handing) && $tt->Handing == "Left") {
-                            $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
-                            $FrameImageStructureRight = $FixedSpaceBlock;
-                        } else {
-                            $FrameImageStructureLeft = $FixedSpaceBlock;
-                            $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
-                        }
-                    } else {
-                        $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
-                        $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                     if(($show->DoorsetType == "SD")){
+                       if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                          $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
+                          $FrameImageStructureRight = $FixedSpaceBlock;
+                       }else{
+                           $FrameImageStructureLeft = $FixedSpaceBlock;
+                           $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+                       }
+                    }else{
+                           $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
+                           $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
                     }
                 } else {
                     $FrameImageStructureLeft = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRight = $FixedSpaceBlockScallopedRight;
+
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $remainingWidth) {
                 $FrameImageStructureLeft = $FixedSpaceBlock;
@@ -1041,23 +1050,26 @@ class OMMAnualController extends Controller
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedRight;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
                     $FullBlock = $FixedSpaceBlockScallopedLeft;
+
                 } elseif ($tt->DistanceFromTheEdgeOfDoor < $remainingWidth) {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $FixedSpaceBlock;
 
-                    if (($show->DoorsetType == "SD")) {
-                        if (!empty($tt->Handing) && $tt->Handing == "Left") {
-                            $FullBlock = $FixedSpaceBlockScallopedLeft;
-                        } else {
-                            $FullBlock = $FixedSpaceBlockScallopedRight;
-                        }
-                    } else {
-                        $FullBlock = $FixedSpaceBlockScallopedRight;
+                   if(($tt->DoorsetType == "SD")){
+                       if(!empty($tt->Handing) && $tt->Handing == "Left"){
+                           $FullBlock =$FixedSpaceBlockScallopedLeft;
+                       }else{
+                          $FullBlock =$FixedSpaceBlockScallopedRight;
+                       }
+                    }else{
+                          $FullBlock =$FixedSpaceBlockScallopedRight;
                     }
+
                 } else {
                     $FrameImageStructureLeftLeaf1 = $FixedSpaceBlockScallopedLeft;
                     $FrameImageStructureRightLeaf1 = $RemainingSpaceBlock;
-                    $FullBlock = $FixedSpaceBlockScallopedRight;
+                    $FullBlock =$FixedSpaceBlockScallopedRight;
+
                 }
             } elseif ($tt->DistanceFromTheEdgeOfDoor > $leaf1RemainingWidth) {
                 $FrameImageStructureLeftLeaf1 = $FixedSpaceBlock;
@@ -1094,14 +1106,15 @@ class OMMAnualController extends Controller
                 $FrameImageStructureRightLeaf2 = $RemainingSpaceBlock;
             }
 
-            // dd($tt->Leaf2VisionPanel != 'Yes');
-            $redstripRightCommonClass = $tt->IntumescentLeapingSealLocation . '_right_strip_' . $tt->DoorsetType;
-            $redstripLeftCommonClass = $tt->IntumescentLeapingSealLocation . '_left_strip_' . $tt->DoorsetType;
+            $fetchSignature = ClientSignature::where('quotation_id',$quatationId)->where('version_id',$versionID)->first();
+// dd($tt->Leaf2VisionPanel != 'Yes');
+            $redstripRightCommonClass = $tt->IntumescentLeapingSealLocation.'_right_strip_'.$tt->DoorsetType;
+            $redstripLeftCommonClass = $tt->IntumescentLeapingSealLocation.'_left_strip_'.$tt->DoorsetType;
             switch ($tt->DoorsetType) {
                 case "SD":
                     // $DoorFrameImage = Base64Image('FD30SingleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: ' . $frameImageLeftMargin . 'px;height: 200px;">
+                    $DoorFrameImage = '<div style="padding:10px 30px;position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 100px;">
                                 <div style="position: relative;top: 12px;">';
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
@@ -1115,8 +1128,8 @@ class OMMAnualController extends Controller
                                     height: 16px;
                                     width: 6px;
                                     box-shadow: none;
-                                    margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '26' : ((empty($tt->Handing) && $tt->Handing == "Left") ? '13' : '14')) : ($tt->IntumescentLeapingSealLocation == 'Door' ? '-3' : '-3')) . 'px;
+                                    margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : ((empty($tt->Handing) && $tt->Handing == "Left")?'13':'14')) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-3' : '-3')) .'px;
                                     margin-top: 25px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // dd("985");
@@ -1127,8 +1140,8 @@ class OMMAnualController extends Controller
                                     height: 16px;
                                     width: 6px;
                                     box-shadow: none;
-                                    margin-left: ' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door' ? '15' : '3')) . 'px;
+                                    margin-left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door'? '15' : '3')) .'px;
                                     margin-top: 15px;"></div>
 
                                     <div style="border: 0.5px solid black;
@@ -1138,14 +1151,14 @@ class OMMAnualController extends Controller
                                     height: 16px;
                                     width: 6px;
                                     box-shadow: none;
-                                    margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door' ? '15' : '3')) . 'px;
+                                    margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '26' : '13') : ($tt->IntumescentLeapingSealLocation == 'Door'? '15' : '3')) .'px;
                                     margin-top: 42px;"></div>';
                         }
                     }
 
 
-                    if ($sidelight !== "" && $tt->SideLight1 == 'Yes') {
+                    if($sidelight !== "" && $tt->SideLight1 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="
                         width: 0px;
@@ -1161,21 +1174,21 @@ class OMMAnualController extends Controller
                         width: 69px;
                         height: 71px;
                         margin-left: -26px;
-                        ' .
+                        '.
                             (($tt->FireRating == 'FD30') ?
-                                'top:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' :  '133') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '86' : '137')) . 'px;'
+                                'top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' :  '133') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '86' : '137')) .'px;'
                                 :
-                                'top:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '86' : '137')) . 'px;')
-                            . '
-                        " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                'top:'. (
+                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '86' : '137')) .'px;')
+                        .'
+                        " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                            >
 
 
                      </div>
-                     <div style="position: absolute;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-47' : '5') . 'px;left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-251' : '-265') . 'px;">
-                        <img style="width:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '53' : '76') . 'px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')) . 'px;" alt="" src="' . $FrameTypeCommon . '">
+                     <div style="position: absolute;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-47' : '5').'px;left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-251' : '-265').'px;">
+                        <img style="width:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '53' : '76').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')).'px;" alt="" src="'.$FrameTypeCommon.'">
                      </div>
                      <div style="
                         width: 0px;
@@ -1193,29 +1206,30 @@ class OMMAnualController extends Controller
                            width: 69px;
                            height: 71px;
                            margin-left: -8px;
-                           ' .
+                           '.
                             (($tt->FireRating == 'FD30') ?
-                                'top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-108' : '-158') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-111' : '-163')) . 'px;'
+                                'top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-108' : '-158') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-111' : '-163')) .'px;'
                                 :
-                                'top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-108' : '-158') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-111' : '-163')) . 'px;')
-                            . '
-                           " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                'top: '. (
+                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-108' : '-158') :((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-111' : '-163')) .'px;')
+                            .'
+                           " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                            >
 
                      </div>
-                     <div style="position: absolute;top:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7') . 'px;left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-83' : '-87') . 'px;">
-                        <img style="width: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '53' : '76') . 'px; height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')) . 'px;" alt="" src="' . $FrameTypeCommon . '">
+                     <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-83' : '-87').'px;">
+                        <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '53' : '76').'px; height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')).'px;" alt="" src="'.$FrameTypeCommon.'">
                      </div>';
+
                     }
 
 
-                    $DoorFrameImage .= '<div  style="position: absolute; top: ' . (
-                        (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7') . 'px;left: -44px;">
-                                        <img style="width:' . (
-                        (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing == "Left") ? '77' : '67') . 'px; height:' . (
-                        (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : ($tt->FrameType == 'Rebated_Frame' ? '126px' : '196px')) . ';" src="' . $FrameTypeLeft . '" alt="">
+                    $DoorFrameImage .= '<div  style="position: absolute; top: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-46' : '7') .'px;left: -44px;">
+                                        <img style="width:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing == "Left") ? '77' : '67') .'px; height:'. (
+    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : ($tt->FrameType == 'Rebated_Frame'? '126px': '196px' ) ) .';" src="' . $FrameTypeLeft . '" alt="">
                                     </div>
                                 </div>';
 
@@ -1223,16 +1237,16 @@ class OMMAnualController extends Controller
 
                         $DoorFrameImage .= '<div style="position: relative;top: 12px;">
                                     <img style="
-                                        width: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ?  '155' : '165') . 'px;
+                                        width: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ?  '155' : '165') .'px;
                                         position: relative;
-                                        top: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left")) ? '-17' : '5') : '-17') . 'px;
-                                        left: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '26' : '7') . 'px;'
-                            .
-                            ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes")) ? 'height: 116px;' : 'height: 65px;') : '') .
-                            '" src="' . $FrameImageStructureLeft . '" alt="">
+                                        top: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left"))?'-17': '5') : '-17') .'px;
+                                        left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '26' : '7') .'px;'
+                                           .
+        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes"))? 'height: 116px;' :'height: 65px;') : '') .
+        '" src="' . $FrameImageStructureLeft . '" alt="">
                                     </div>
                                     <div style="width:430px;">
                                         <div style="
@@ -1241,24 +1255,24 @@ class OMMAnualController extends Controller
                                             position: relative;
                                             margin-left: -66px;
                                             top: -168px;
-                                            left: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '248' : '245') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '237' : '235')) . 'px;
+                                            left: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '248' : '245') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '237' : '235')) .'px;
                                             ">
 
                                             <img style="
                                             z-index: 999;
-                                            ' . (($tt->FireRating == 'FD30') ?
-                                'width: 125px;
-                             margin-top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes")) ? '71' : '118') : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((!empty($tt->Handing) && $tt->Handing != "Left") ? '62' : '111') : '68')) . 'px;
-                                                height:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : '82') . 'px;' :
-                                'width: 108px; margin-left: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '-6' : '4') . 'px;
-                                                margin-top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing != "Left") ? '66' : '118')  : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '69')) . 'px;
-                                                height:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '80'))) . 'px;' . '" src="' . $VisionPanelGlazingImageStructure . '" alt="">
+                                            ' .(($tt->FireRating == 'FD30') ?
+                            'width: 125px;
+                             margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left")&& ($show->Leaf1VisionPanel == "Yes"))?'71': '118') : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((!empty($tt->Handing) && $tt->Handing != "Left")?'62':'111') : '68')) .'px;
+                                                height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : '82') .'px;' :
+                            'width: 108px; margin-left: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '-6' : '4') .'px;
+                                                margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ?( ($tt->Handing != "Left")?'66':'118')  : '74') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '69')) .'px;
+                                                height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '70' : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '80'))) .'px;' . '" src="' . $VisionPanelGlazingImageStructure . '" alt="">
 
 
 
@@ -1275,21 +1289,21 @@ class OMMAnualController extends Controller
                                             z-index: 999;
                                             ' . (($tt->FireRating == 'FD30') ?
 
-                                'width: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '117' : '125') . 'px;
-                                                 margin-top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes")) ? '135' : '135') : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124' : '121')) . 'px;
-                                                 margin-left: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') : '34') . 'px;
-                                                height: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '73' : '84') . 'px;'
-                                :
-                                'width: 124px; margin-top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '135' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124.5' : '122.5')) . 'px;
-                                                 margin-left: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '25.5' : '31.5') . 'px;
-                                                height:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? '72' : '82') . 'px;') . '
+                                             'width: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '117' : '125') .'px;
+                                                 margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (((!empty($tt->Handing) && $tt->Handing != "Left")&& ($show->Leaf1VisionPanel == "Yes"))? '135':'135') : '132') :  ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124' : '121')) .'px;
+                                                 margin-left: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') : '34') .'px;
+                                                height: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '73' : '84') .'px;'
+                            :
+                            'width: 124px; margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '135' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '124.5' : '122.5')) .'px;
+                                                 margin-left: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '25.5' : '31.5') .'px;
+                                                height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? '72' : '82') .'px;') . '
                                             transform: rotate(180deg);" src="' . $VisionPanelGlazingImageStructure . '" alt="">
 
 
@@ -1313,17 +1327,17 @@ class OMMAnualController extends Controller
 
                         //     }
                         // }
-                        //    dd((in_array($tt->FireRating, ["FD60", "FD60s"])),'jhgjhg');
-                        $DoorFrameImage .= '   <div style="position: relative;position: absolute;top: 7px;left:475px;"><img style="width: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '158' : '170') . 'px;
+                    //    dd((in_array($tt->FireRating, ["FD60", "FD60s"])),'jhgjhg');
+                        $DoorFrameImage .= '   <div style="position: relative;position: absolute;top: 7px;left:475px;"><img style="width: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '158' : '170') .'px;
                                         position: relative;
-                                        bottom: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing != "Left") ? (($show->Leaf1VisionPanel == "Yes") ? '-22' : '2') :  '1') : (($tt->Leaf1VisionPanel == "Yes") ? '2' : '-22'))  . 'px;
-                                        left: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((empty($tt->Handing) && $tt->Handing == "Left") ? '-32' : '-30') : '-31') . 'px;'
-                            .
-                            ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing == "Left") ? (($show->Leaf1VisionPanel == "Yes") ? ((in_array($tt->FireRating, ["FD60", "FD60s"])) ? 'height:112px;' : 'height:112px;') : 'height:109px;') : 'height:65px;')  : '') .
-                            '" src="' . $FrameImageStructureRight . '" alt="">
+                                        bottom: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing != "Left")? (($show->Leaf1VisionPanel == "Yes")? '-22':'2'):  '1') : (($tt->Leaf1VisionPanel == "Yes")?'2':'-22')  )  .'px;
+                                        left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((empty($tt->Handing) && $tt->Handing == "Left")?'-32': '-30') : '-31') .'px;'
+                                           .
+        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing == "Left")? (($show->Leaf1VisionPanel == "Yes")? ((in_array($tt->FireRating, ["FD60", "FD60s"]))?'height:112px;': 'height:112px;'):'height:109px;') : 'height:65px;' )  : '') .
+        '" src="' . $FrameImageStructureRight . '" alt="">
                                     </div>';
                     } else {
 
@@ -1345,12 +1359,12 @@ class OMMAnualController extends Controller
                         //     }
                         // }
 
-                        $DoorFrameImage .= '<img style="width:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '575' : '583') . 'px;
+                        $DoorFrameImage .= '<img style="width:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ) ? '575':'583') .'px;
                         position: relative;
                         top: -17px;
-                        left: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ((!empty($tt->Handing) && $tt->Handing != "Left") ? '27' : '25') : '3') . 'px;height: 108px;" src="' . $FullBlock . '" alt="">
+                        left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ) ? (( !empty($tt->Handing) && $tt->Handing != "Left")? '27' : '25'):'3') .'px;height: 108px;" src="' . $FullBlock . '" alt="">
                                 </div>';
                     }
 
@@ -1368,9 +1382,9 @@ class OMMAnualController extends Controller
                                         height: 16px;
                                         width: 6px;
                                         box-shadow: none;
-                                        margin-left: ' . (
-                                !empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '-50' : (!empty($tt->Handing) && $tt->Handing != "Left" ? (($show->Leaf1VisionPanel == "Yes") ? '-31.5' : '-5.5') : (($show->Leaf1VisionPanel == "Yes") ? '-34.5' : '-6.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door' ? '-27.5' : '-27.5')) . 'px;
-                                        margin-top:' . (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left") && ($show->Leaf1VisionPanel == "Yes") ? '50' : '41') . 'px;"></div>';
+                                        margin-left: '. (
+                                            !empty($tt->FrameType) && $tt->FrameType == 'Scalloped' ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : (!empty($tt->Handing) && $tt->Handing != "Left"? (($show->Leaf1VisionPanel == "Yes")?'-31.5':'-5.5') :(($show->Leaf1VisionPanel == "Yes")?'-34.5':'-6.5')) ) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-27.5' : '-27.5')) .'px;
+                                        margin-top:'.(!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left") &&($show->Leaf1VisionPanel == "Yes")?'50':'41'  ).'px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // class="'.$redstripRightCommonClass.'"
                             $DoorFrameImage .= '<div  style="border: 0.5px solid black;
@@ -1380,8 +1394,8 @@ class OMMAnualController extends Controller
                                         height: 16px;
                                         width: 6px;
                                         box-shadow: none;
-                                        margin-left: ' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left") ? (($tt->Handing != "Left") ? '-34.5' : '-5.5') : ((in_array($tt->FireRating, ["FD60", "FD60s"])) ? (($show->Leaf1VisionPanel == "Yes") ? '-35.5' : '-5.5') : '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door' ? '-35.5' : '-25.5')) . 'px;
+                                        margin-left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left" )?( ($tt->Handing != "Left")? '-34.5':'-5.5' ): ((in_array($tt->FireRating, ["FD60", "FD60s"]))? (($show->Leaf1VisionPanel == "Yes")?'-35.5':'-5.5' ): '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
                                         margin-top: 30px;"></div>
 
                                         <div style="border: 0.5px solid black;
@@ -1391,30 +1405,30 @@ class OMMAnualController extends Controller
                                         height: 16px;
                                         width: 6px;
                                         box-shadow: none;
-                                        margin-left: ' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door' ? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left") ? (($tt->Handing != "Left") ? '-34.5' : '-5.5') : ((in_array($tt->FireRating, ["FD60", "FD60s"])) ? (($show->Leaf1VisionPanel == "Yes") ? '-35.5' : '-5.5') : '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door' ? '-35.5' : '-25.5')) . 'px;
+                                        margin-left: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? ($tt->IntumescentLeapingSealLocation == 'Door'? '-50' : ((!empty($tt->Handing) && $tt->Handing != "Left" )?( ($tt->Handing != "Left")? '-34.5':'-5.5' ):((in_array($tt->FireRating, ["FD60", "FD60s"]))?(($show->Leaf1VisionPanel == "Yes")?'-35.5':'-5.5' ): '-5.5'))) : ($tt->IntumescentLeapingSealLocation == 'Door'? '-35.5' : '-25.5')) .'px;
                                         margin-top: 57px;"></div>';
                         }
                     }
 
-                    if (empty($FrameTypeRight)) {
+                    if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
                     // dd($tt->Handing);
-                    if ($tt->FrameType !== null) {
-                        $DoorFrameImage .= '<div style="position: absolute;top:  ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && $tt->Handing != "Left" && ($show->Leaf1VisionPanel == "Yes")) ? '28' : '21') . 'px;right: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Handing == "Left") ? (($show->Leaf1VisionPanel == "Yes") ? '-40' : '-69') : (($show->Leaf1VisionPanel == "Yes") ? '-32' : '-60')) : '-27') . 'px;">
-                                        <img style="width:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing != "Left") ? '77' : '77') . 'px;
-                                        margin-top: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-53' : '-1') . 'px; height:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : 'auto') . ';" src="' .  $FrameTypeRight . '" alt="">
+                    if($tt->FrameType !== null){
+                    $DoorFrameImage .= '<div style="position: absolute;top:  '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && $tt->Handing != "Left" && ($show->Leaf1VisionPanel == "Yes") ) ? '28' :'21' ).'px;right: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (( $tt->Handing == "Left")? (($show->Leaf1VisionPanel == "Yes")?'-40':'-69') :(($show->Leaf1VisionPanel == "Yes")?'-32':'-60')) : '-27') .'px;">
+                                        <img style="width:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && !empty($tt->Handing) && $tt->Handing != "Left") ? '77' : '77') .'px;
+                                        margin-top: '. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-53' : '-1') .'px; height:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '170px' : 'auto') .';" src="' .  $FrameTypeRight . '" alt="">
                                     </div>
                                 </div>
                             ';
-                    }
-                    if ($sidelight !== "" && $tt->SideLight2 == 'Yes') {
+                                        }
+                    if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="position: absolute;top: 23px;left: 912px;">
                         <div style="
@@ -1431,23 +1445,23 @@ class OMMAnualController extends Controller
                               width: 69px;
                               height: 71px;
                               margin-left: -26px;
-                              top: ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) . 'px;
-                              ' .
+                              top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) .'px;
+                              '.
                             (($tt->FireRating == 'FD30') ?
-                                'top:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) . 'px;'
+                                'top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) .'px;'
                                 :
-                                'top:' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) . 'px;')
-                            . '
-                              " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                'top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '82' : '132') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '84' : '135')) .'px;')
+                            .'
+                              " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                               >
 
 
                         </div>
-                        <div style="position: absolute;top:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4') . 'px;left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265') . 'px;">
-                           <img style="width: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77') . 'px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194') . 'px;" alt="" src="' . $FrameTypeCommon . '">
+                        <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
@@ -1465,27 +1479,28 @@ class OMMAnualController extends Controller
                               width: 69px;
                               height: 71px;
                               margin-left: -8px;
-                              top: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) . 'px;
-                              ' .
+                              top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) .'px;
+                              '.
                             (($tt->FireRating == 'FD30') ?
-                                'top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) . 'px;'
+                                'top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) .'px;'
                                 :
-                                'top: ' . (
-                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) . 'px;')
-                            . '" alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                'top: '. (
+                                    $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-157') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-109' : '-162')) .'px;')
+                            .'" alt="" src="'.$VisionPanelGlazingImageStructure.'"
                               >
 
 
                         </div>
-                        <div style="position: absolute;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-48' : '7') . 'px;left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-84' : '-87') . 'px;">
-                           <img style="width: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '76') . 'px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')) . 'px;" alt="" src="' . $FrameTypeCommon . '"
+                        <div style="position: absolute;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-48' : '7').'px;left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-84' : '-87').'px;">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '76').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '208' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '196')).'px;" alt="" src="'.$FrameTypeCommon.'"
                               >
                         </div>
                        </div>
 
                       </div>';
+
                     }
 
                     break;
@@ -1494,7 +1509,7 @@ class OMMAnualController extends Controller
                 case "DD":
                     // $DoorFrameImage = Base64Image('FD30DoubleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: ' . $frameImageLeftMargin . 'px;height: 200px;">
+                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 100px;">
                             <div style="position: relative;  top: 12px;">';
 
 
@@ -1502,10 +1517,10 @@ class OMMAnualController extends Controller
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
                         // margin-left: 5px;
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                            $DoorFrameImage .= '<div class="' . ($tt->FrameType !== null ? $redstripLeftCommonClass : 'DD_NoFrame_left_intubacent') . '"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-top: 18px;"></div>';
+                            $DoorFrameImage .= '<div class="'. ($tt->FrameType !== null ? $redstripLeftCommonClass : 'DD_NoFrame_left_intubacent') .'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-top: 18px;"></div>';
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                            $DoorFrameImage .= '<div class="' . $redstripLeftCommonClass . '"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 10px;"></div>
-                                    <div class="' . $redstripLeftCommonClass . '" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 25px;"></div>';
+                            $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 10px;"></div>
+                                    <div class="'.$redstripLeftCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -12px;margin-top: 25px;"></div>';
                         }
                     }
 
@@ -1513,7 +1528,7 @@ class OMMAnualController extends Controller
 
                     // ----------------Left-------------------
 
-                    if ($sidelight !== "" && $tt->SideLight1 == 'Yes') {
+                    if($sidelight !== "" && $tt->SideLight1 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="
                                 width: 0px;
@@ -1527,34 +1542,34 @@ class OMMAnualController extends Controller
                                 <img style="
                                 z-index: 999;
                                 position: absolute;
-                                ' .
-                            (($tt->FireRating == 'FD30') ?
-                                'width: 66px;height: 50px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-14' : '-4') . 'px;top:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '133' : '135')) . 'px;'
+                                '.
+                                (($tt->FireRating == 'FD30') ?
+                                'width: 66px;height: 50px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-14' : '-4').'px;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'133': '135')).'px;'
                                 :
-                                'width: 66px;height: 50px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-14' : '-4') . 'px;top:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '133' : '135')) . 'px;')
-                            . '
-                                " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                'width: 66px;height: 50px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-14' : '-4').'px;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'133': '135')).'px;')
+                                 .'
+                                " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                                     />
 
 
                             </div>
 
-                            <div style="position: absolute;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-19' : '4') . 'px;left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-233' : '-222') . 'px;">';
+                            <div style="position: absolute;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-19' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-233' : '-222').'px;">';
 
-                        // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
-                        //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                            // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
+                            //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 18px;"></div>';
+                            //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 18px;"></div>';
 
-                        //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 10px;"></div>
-                        //                 <div class="'.$redstripLeftCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 25px;"></div>';
-                        //     }
-                        // }
+                            //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 10px;"></div>
+                            //                 <div class="'.$redstripLeftCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 25px;"></div>';
+                            //     }
+                            // }
 
 
-                        $DoorFrameImage .= '<img style="width: 46px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117') . 'px;" alt="" src="' . $FrameTypeCommon . '" />
+                            $DoorFrameImage .= '<img style="width: 46px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117').'px;" alt="" src="'.$FrameTypeCommon.'" />
                             </div>
 
                             <div style="
@@ -1571,13 +1586,13 @@ class OMMAnualController extends Controller
                                     z-index: 999;
                                     position: absolute;
                                     margin-top: 86px;
-                                    ' .
-                            (($tt->FireRating == 'FD30') ?
-                                'width: 66px;height: 55px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '2' : '-7') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-116' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-141' : '-143.5')) . 'px;'
-                                :
-                                'width: 66px;height: 55px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '2' : '-7') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-116' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-141' : '-143.5')) . 'px;')
-                            . '
-                                    " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                    '.
+                                    (($tt->FireRating == 'FD30') ?
+                                    'width: 66px;height: 55px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '2' : '-7').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-116' :  ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'-141':'-143.5')).'px;'
+                                    :
+                                    'width: 66px;height: 55px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '2' : '-7').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-116' :  ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'-141':'-143.5')).'px;')
+                                    .'
+                                    " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                                     >
 
 
@@ -1586,32 +1601,33 @@ class OMMAnualController extends Controller
 
                             </div>
 
-                            <div style="position: absolute;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4') . 'px;left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-74' : '-66') . 'px;">';
+                            <div style="position: absolute;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-74' : '-66').'px;">';
 
 
-                        // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
+                            // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
 
-                        //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                            //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 18px;"></div>';
+                            //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 18px;"></div>';
 
-                        //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 10px;"></div>
-                        //                 <div class="'.$redstripRightCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 25px;"></div>';
-                        //     }
-                        // }
-                        $DoorFrameImage .= '<img style="width: 46px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117') . 'px;" alt="" src="' . $FrameTypeCommon . '">
+                            //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 10px;"></div>
+                            //                 <div class="'.$redstripRightCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 25px;"></div>';
+                            //     }
+                            // }
+                            $DoorFrameImage .= '<img style="width: 46px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117').'px;" alt="" src="'.$FrameTypeCommon.'">
                             </div>
                         ';
+
                     }
 
 
-                    $DoorFrameImage .= '<div style="position: absolute; top:' . (
-                        $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4')) . 'px; left: -40px;">
-                                    <img style="width: ' . (
-                        ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) . 'px; alt="" src="' . $FrameTypeLeft . '">
+                    $DoorFrameImage .= '<div style="position: absolute; top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-22' : '4')) .'px; left: -40px;">
+                                    <img style="width: '. (
+                                                ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px; alt="" src="' . $FrameTypeLeft . '">
                                 </div>
                             </div>';
 
@@ -1621,8 +1637,8 @@ class OMMAnualController extends Controller
                                 <div style="position: relative;  top: 12px;">
                                     <img style="width: 97px;
                                         position: relative;
-                                        top: ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '7' : '-10') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '7' : '-10')) . 'px;
+                                        top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '7' : '-10') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '7' : '-10')) .'px;
                                         left:-5px " alt="" src="' . $FrameImageStructureLeftLeaf1 . '">
                                 </div>
                                 <div style="width:265px; position: relative;">
@@ -1633,22 +1649,22 @@ class OMMAnualController extends Controller
                                     top: -185px;
                                     left: 258px;">
                                         <img style="z-index: 999;
-                                        ' . (($tt->FireRating == 'FD30') ? 'width:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) . 'px; margin-left:  ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-100' : '-100') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-106')) . 'px;
-                                                 height:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '49')) . 'px;
-                                        margin-top: ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '174' : '134') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '172' : '131')) . 'px;'
-                            :
-                            'width: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) . 'px;
-                                        margin-left:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-100.5' : '-103.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-104.5' : '-103.5')) . 'px;
-                                        height:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '49')) . 'px;
-                                        margin-top: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '174.5' : '134') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '171.5' : '131.5')) . 'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
+                                        ' . (($tt->FireRating == 'FD30') ? 'width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) .'px; margin-left:  '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-100' : '-100') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-106' : '-106')) .'px;
+                                                 height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '49')) .'px;
+                                        margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '174' : '134') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '172' : '131')) .'px;'
+                                                 :
+                                                 'width: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) .'px;
+                                        margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-100.5' : '-103.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-104.5' : '-103.5')) .'px;
+                                        height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '49')) .'px;
+                                        margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '174.5' : '134') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '171.5' : '131.5')) .'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
 
 
 
@@ -1663,23 +1679,23 @@ class OMMAnualController extends Controller
                                         <img style="
                                         transform: rotate(180deg);
                                         z-index: 999;
-                                        ' . (($tt->FireRating == 'FD30') ? 'width:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) . 'px;
-                                        margin-left:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-65') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-62' : '-62')) . 'px;
-                                        margin-top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '16.5' : '8') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '12.5' : '1')) . 'px;
-                                                 height:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '41') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '48')) . 'px;'
-                            :
-                            'width: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) . 'px;
-                                                margin-left:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-65' : '-65') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-64')) . 'px;
-                                                 height:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '48')) . 'px;
-                                        margin-top: ' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '18' : '7') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '13' : '0')) . 'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
+                                        ' . (($tt->FireRating == 'FD30') ? 'width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) .'px;
+                                        margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-65') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-62' : '-62')) .'px;
+                                        margin-top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '16.5' : '8') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '12.5' : '1')) .'px;
+                                                 height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '41') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '48')) .'px;'
+                                                :
+                                                'width: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '67' : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '70' : '70')) .'px;
+                                                margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-65' : '-65') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-64')) .'px;
+                                                 height:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '42') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '36' : '48')) .'px;
+                                        margin-top: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '18' : '7') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '13' : '0')) .'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
 
 
 
@@ -1694,23 +1710,23 @@ class OMMAnualController extends Controller
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
                                 $DoorFrameImage .= '<div style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;
-                                margin-left:' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '53') . 'px;
-                                                margin-top: ' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') . 'px;"></div>';
+                                margin-left:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '53') .'px;
+                                                margin-top: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '31' : '33') .'px;"></div>';
                             } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                                $DoorFrameImage .= '<div class=""  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame') ? (($tt->Leaf2VisionPanel == 'Yes') ? '31' : '140') : '132') : '53') . 'px;margin-top: 23px;"></div>
-                                            <div style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame') ? (($tt->Leaf2VisionPanel == 'Yes') ? '31' : '140') : '132') : '53') . 'px;margin-top: 40px;"></div>';
+                                $DoorFrameImage .= '<div class=""  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? (($tt->Leaf2VisionPanel == 'Yes')? '31':'140'):'132') : '53') .'px;margin-top: 23px;"></div>
+                                            <div style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? (($tt->Leaf2VisionPanel == 'Yes')? '31':'140'):'132') : '53') .'px;margin-top: 40px;"></div>';
                             }
                         }
 
-                        $DoorFrameImage .= '<img style="width: ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '75' : '95') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '75' : '95')) . 'px;
+                        $DoorFrameImage .= '<img style="width: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '75' : '95') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '75' : '95')) .'px;
                                         position: relative;
-                                        top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '10' : '5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '10' : '5')) . 'px;
+                                        top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '10' : '5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '10' : '5')) .'px;
                                         right: 37.5px;" alt="" src="' . $FrameImageStructureRightLeaf1 . '">
                                 </div>';
                     } else {
@@ -1719,19 +1735,22 @@ class OMMAnualController extends Controller
                         if ($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') {
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                                $DoorFrameImage .= '<div class="' . $redstripRightCommonClass . '"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 18px;"></div>';
+                                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 18px;"></div>';
                             } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                                $DoorFrameImage .= '<div class="' . $redstripRightCommonClass . '"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 13px;"></div>
-                                            <div class="' . $redstripRightCommonClass . '" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 310px;margin-top: 24px;"></div>';
+                                                              $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 13px;"></div>
+                                            <div class="'.$redstripRightCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 24px;"></div>';
                             }
                         }
 
                         $DoorFrameImage .= '<img style="
-                                    width: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '105' : '323')  . 'px;
+                                    width: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '105' : '323')  .'px;
                                     position: relative;
-                                    top: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '6' : '-10')  . 'px;
+                                    top: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '6' : '-10')  .'px;
                                     left: -5.5px;" src="' . $FullBlock . '" alt="">
                                 </div>';
                     }
@@ -1741,13 +1760,13 @@ class OMMAnualController extends Controller
                         $DoorFrameImage .= '<div style="position: absolute;
                                         top: 8px;
                                         left: 386px;">
-                                        <img style="width:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '78' : '95')  . 'px;
+                                        <img style="width:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '78' : '95')  .'px;
                                             position: relative;
-                                            top:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '9' : '5')  . 'px;
-                                            right:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '56.5' : '37.5')  . 'px;" alt="" src="' . $FrameImageStructureLeftLeaf2 . '">
+                                            top:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '9' : '5')  .'px;
+                                            right:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '56.5' : '37.5')  .'px;" alt="" src="' . $FrameImageStructureLeftLeaf2 . '">
                                     </div>
 
                                     <div style="position: absolute;top: 78px;left: 286px;">
@@ -1760,19 +1779,19 @@ class OMMAnualController extends Controller
 
                                             <img style="
                                                 z-index: 999;
-                                                ' . (($tt->FireRating == 'FD30') ? 'width: ' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '56' : '70') : '70') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '58' : '70') : '70')) . 'px;
-                                                 margin-left:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-41' : '-5') : '-5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-45' : '-5') : '-10')) . 'px;
-                                                margin-top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '134' : '130') : '131') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '131' : '130') : '129')) . 'px;'
-                            :
-                            'width:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '56' : '70') : '70') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '58' : '70') : '70')) . 'px;
-                                                 margin-left:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-41' : '-5') : '-5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-45' : '-5') : '-10')) . 'px;
-                                                margin-top:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '134' : '130') : '131') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '131' : '130') : '129')) . 'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
+                                                ' . (($tt->FireRating == 'FD30') ? 'width: '. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '56':'70') : '70') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '58':'70') : '70')) .'px;
+                                                 margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-41':'-5') : '-5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-45':'-5') : '-10')) .'px;
+                                                margin-top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '134':'130') : '131') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '131':'130') : '129')) .'px;'
+                                                 :
+                                                'width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '56':'70') : '70') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '58':'70') : '70')) .'px;
+                                                 margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-41':'-5') : '-5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-45':'-5') : '-10')) .'px;
+                                                margin-top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '134':'130') : '131') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '131':'130') : '129')) .'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
 
 
                                             <img style="position: absolute;
@@ -1789,19 +1808,19 @@ class OMMAnualController extends Controller
                                             <img style="
                                                 z-index: 999;
                                                 transform: rotate(180deg);
-                                                ' . (($tt->FireRating == 'FD30') ? 'width:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '56' : '67') : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '57' : '70') : '70')) . 'px;
-                                                margin-left:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-13' : '29') : '32') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-9' : '29') : '34')) . 'px;
-                                                margin-top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '70' : '38') : '63.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '65' : '38') : '57')) . 'px;'
-                            :
-                            'width:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '56' : '67') : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '57' : '70') : '70')) . 'px;
-                                                margin-left:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-13' : '29') : '32') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '-9' : '29') : '34')) . 'px;
-                                                margin-top:' . (
-                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '70' : '38') : '63.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '65' : '38') : '57')) . 'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
+                                                ' . (($tt->FireRating == 'FD30') ? 'width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '56':'67') : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '57':'70') : '70')) .'px;
+                                                margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-13':'29') : '32') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-9':'29') : '34')) .'px;
+                                                margin-top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '70':'38') : '63.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '65':'38') : '57')) .'px;'
+                                                :
+                                                'width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '56':'67') : '67') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '57':'70') : '70')) .'px;
+                                                margin-left:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-13':'29') : '32') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '-9':'29') : '34')) .'px;
+                                                margin-top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '70':'38') : '63.5') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '65':'38') : '57')) .'px;') . '" alt="" src="' . $VisionPanelGlazingImageStructure . '">
 
 
                                             <img style="position: absolute;
@@ -1811,31 +1830,31 @@ class OMMAnualController extends Controller
                                         </div>
                                     </div>
                                     <div style="position: relative;  position: absolute; top: 8px; left: 630px;">
-                                        <img style="width: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '136' : '95') . 'px;
+                                        <img style="width: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '136' : '95') .'px;
                                             position: relative;
-                                            top:' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '9' : '5') . 'px;
-                                            right: ' . (
-                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '55') . 'px; alt="" src="' . $FrameImageStructureRightLeaf2 . '">
+                                            top:'. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '9' : '5') .'px;
+                                            right: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '111' : '55') .'px; alt="" src="' . $FrameImageStructureRightLeaf2 . '">
                                     </div>';
                     } else {
                         $DoorFrameImage .= '<div style="position: absolute;
                                         top: 8px;
                                         left: 386px;">
-                                        <img style="width:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319')) . 'px;
+                                        <img style="width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '99' : '319')) .'px;
                                         position: relative;
-                                        top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4')) . 'px;;
-                                        right:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '56' : '35') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '56' : '35')) . 'px;" alt="" src="' . $FullBlock . '">
+                                        top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '21' : '4')) .'px;;
+                                        right:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '256' : '35') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '256' : '35')) .'px;" alt="" src="' . $FullBlock . '">
                                     </div>';
 
-                        if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                                    if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                            $DoorFrameImage .= '<div class="' . $redstripRightCommonClass . '"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' . (($tt->FrameType !== null) ? '640' : '632') . 'px;margin-top:' . (($tt->FrameType !== null) ? '-35' : '-385') . 'px;"></div>';
-                        }
+                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385;
+                                    }
                     }
 
                     $DoorFrameImage .= '
@@ -1845,53 +1864,53 @@ class OMMAnualController extends Controller
 
 
 
-                    // if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                    //     $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -52px;margin-top: 31px;"></div>';
-                    // } else
-                    if (($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') && in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            // if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                            //     $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: -52px;margin-top: 31px;"></div>';
+                            // } else
+                            if (($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') && in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                        // class="'.$redstripLeftCommonClass.'"
-                        $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' . (($tt->Leaf2VisionPanel == 'Yes') ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52') : '-60') . 'px;margin-top: 24px;"></div>
-                                            <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: ' . (($tt->Leaf2VisionPanel == 'Yes') ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52') : '-60') . 'px;margin-top: 37px;"></div>';
-                    }
+                                // class="'.$redstripLeftCommonClass.'"
+                               $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 24px;"></div>
+                                            <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 37px;"></div>';
+                            }
 
                     if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
                         if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                            if ($tt->Leaf2VisionPanel == 'Yes') {
-                                $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: ' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame') ? '-64' : '-73') : '-50') . 'px;
-                                                margin-top: ' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '33') . 'px;"></div>';
+                            if($tt->Leaf2VisionPanel == 'Yes'){
+                            $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-64':'-73') : '-50') .'px;
+                                                margin-top: '. (
+                                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '32' : '33') .'px;"></div>';
                             }
                         } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
                             // class="'.$redstripRightCommonClass.'"
-                            if ($tt->Leaf2VisionPanel = ! 'Yes') {
+                            if($tt->Leaf2VisionPanel =! 'Yes'){
 
 
-                                $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: ' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame') ? '-63' : '-74') : '-50') . 'px;margin-top: 23px;"></div>
-                                    <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: ' . (
-                                    (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame') ? '-63' : '-74') : '-50') . 'px;margin-top: 40px;"></div>';
-                            }
+                                                        $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 23px;"></div>
+                                    <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->IntumescentLeapingSealLocation == 'Frame')? '-63':'-74') : '-50') .'px;margin-top: 40px;"></div>';
+                                                                }
                         }
                     }
 
-                    if (empty($FrameTypeRight)) {
+                    if(empty($FrameTypeRight)){
                         $FrameTypeRight = '';
                     }
-                    if ($tt->FrameType !== null) {
-                        $DoorFrameImage .= '<div style="position: absolute; top:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) . 'px;
-                                                right:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '32' : '32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes') ? '33' : '33') : '20')) . 'px;">
-                                            <img style="width:' . (
-                            $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) . 'px;" alt="" src="' . $FrameTypeRight . '">
+                    if($tt->FrameType !== null){
+                    $DoorFrameImage .= '<div style="position: absolute; top:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
+                                                right:'. (
+                                              $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'458') : '20')) .'px;">
+                                            <img style="width:'. (
+                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
                                         </div>';
-                    }
+                                            }
                     // ----------------Right-------------------
 
-                    if ($sidelight !== "" && $tt->SideLight2 == 'Yes') {
+                    if($sidelight !== "" && $tt->SideLight2 == 'Yes'){
 
                         $DoorFrameImage .= '<div style="position:relative; right:-191px; bottom:-14px;"><div style="
                                 width: 0px;
@@ -1905,13 +1924,13 @@ class OMMAnualController extends Controller
                                 <img style="
                                 z-index: 999;
                                 position: absolute;
-                                ' .
-                            (($tt->FireRating == 'FD30') ?
-                                'width: 66px;height: 50px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-10' : '-5') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '109' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '133' : '135')) . 'px;'
-                                :
-                                'width: 66px;height: 50px;margin-left: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-10' : '-5') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '109' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '133' : '135')) . 'px;')
-                            . '
-                                " alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                '.
+                                    (($tt->FireRating == 'FD30') ?
+                                    'width: 66px;height: 50px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-10' : '-5').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '109' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'133': '135')).'px;'
+                                    :
+                                   'width: 66px;height: 50px;margin-left: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-10' : '-5').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '109' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ?'133': '135')).'px;')
+                                    .'
+                                " alt="" src="'.$VisionPanelGlazingImageStructure.'"
                                     />
 
 
@@ -1920,22 +1939,22 @@ class OMMAnualController extends Controller
 
                             </div>
 
-                            <div style="position: absolute;top:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-21' : '4') . 'px;left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel = ! 'Yes') ? '-456' : '-229') : '-222') . 'px;">';
+                            <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-21' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel =! 'Yes')? '-456' : '-229') : '-222').'px;">';
 
-                        // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
-                        //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                            // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
+                            //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 18px;"></div>';
+                            //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 18px;"></div>';
 
-                        //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 10px;"></div>
-                        //                 <div class="'.$redstripLeftCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 25px;"></div>';
-                        //     }
-                        // }
+                            //         $DoorFrameImage .= '<div class="'.$redstripLeftCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 10px;"></div>
+                            //                 <div class="'.$redstripLeftCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 28px;margin-top: 25px;"></div>';
+                            //     }
+                            // }
 
 
-                        $DoorFrameImage .= '<img style="width: 46px;height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117') . 'px;" alt="" src="' . $FrameTypeCommon . '" />
+                            $DoorFrameImage .= '<img style="width: 46px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117').'px;" alt="" src="'.$FrameTypeCommon.'" />
                             </div>
 
                             <div style="
@@ -1952,12 +1971,12 @@ class OMMAnualController extends Controller
                                 z-index: 999;
                                 margin-top: 86px;
                                 position: absolute;
-                                ' .
-                            (($tt->FireRating == 'FD30') ?
-                                ' width: 66px;height: 52px;margin-left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '0' : '-7') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-110' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-134' : '-136.5')) . 'px;'
-                                :
-                                ' width: 66px;height: 52px;margin-left:' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '0' : '-7') . 'px;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-110' : ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-134' : '-136.5')) . 'px;')
-                            . '" alt="" src="' . $VisionPanelGlazingImageStructure . '"
+                                '.
+                                    (($tt->FireRating == 'FD30') ?
+                                    ' width: 66px;height: 52px;margin-left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '0' : '-7').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-110' :  ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-134':'-136.5')).'px;'
+                                    :
+                                    ' width: 66px;height: 52px;margin-left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '0' : '-7').'px;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-110' :  ($GlazingSystems['GlazingBeadsPadding'] == 0 ? '-134':'-136.5')).'px;')
+                                    .'" alt="" src="'.$VisionPanelGlazingImageStructure.'"
                                     >
 
 
@@ -1965,29 +1984,31 @@ class OMMAnualController extends Controller
 
                             </div>
 
-                            <div style="position: absolute;top: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-21' : '4') . 'px;left:  ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-73' : '-66') . 'px;">';
+                            <div style="position: absolute;top: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-21' : '4').'px;left:  '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-73' : '-66').'px;">';
 
 
-                        // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
+                            // if ($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') {
 
 
-                        //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
+                            //     if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 18px;"></div>';
+                            //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 18px;"></div>';
 
-                        //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
+                            //     } else if (in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
-                        //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 10px;"></div>
-                        //                 <div class="'.$redstripRightCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 25px;"></div>';
-                        //     }
-                        // }
-                        $DoorFrameImage .= '<img style="width: 46px; height: ' . ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117') . 'px;" alt="" src="' . $FrameTypeCommon . '">
+                            //         $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'_'.$sidelight.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 10px;"></div>
+                            //                 <div class="'.$redstripRightCommonClass.'_'.$sidelight.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: 7px;margin-top: 25px;"></div>';
+                            //     }
+                            // }
+                            $DoorFrameImage .= '<img style="width: 46px; height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '107' : '117').'px;" alt="" src="'.$FrameTypeCommon.'">
                             </div>
                             </div>
                         ';
+
                     }
 
-                    break;
+                break;
+
             }
 
             $QuotationGenerationId = null;
@@ -2029,92 +2050,105 @@ class OMMAnualController extends Controller
                 <div id="main">
                     <div id="section-left">
                         <table id="NoBorder">
-                            <tr>
-                                <td colspan="2">
-                                    <table id="WithBorder" class="tbl1">
-                                        <tbody>
-                                            <tr>
-                                                <td class="marImg" rowspan="2">
-                                                    <span>';
+                           <tr>
+    <td colspan="2">
+        <!-- HEADER TABLE -->
+        <table id="WithBorderNew" class="tbl1">
+            <tbody>
+                <tr>
+                    <td class="marImg" rowspan="2">
+                        <span>';
             if (!empty($comapnyDetail->ComplogoBase64)) {
-                $elevTbl .=
-                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
+                $elevTbl .= '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
             } else {
                 $elevTbl .= Base64Image('defaultImg');
             }
+            $elevTbl .= '</span>
+                    </td>
+                    <td class="tbl_color"><span>Ref</span></td>
+                    <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
+                    <td class="tbl_color"><span>Project</span></td>
+                    <td><span>' . $ProjectName . '</span></td>
+                    <td class="tbl_color"><span>Prepared By</span></td>
+                    <td><span>' . $Username . '</span></td>
+                </tr>
+                <tr>
+                    <td class="tbl_color" style="width:25px;"><span>Revision</span></td>
+                    <td style="width:20px;"><span>' . $version . '</span></td>
+                    <td class="tbl_color" style="width:20px;"><span>Date</span></td>
+                    <td><span>' . date('Y-m-d') . '</span></td>
+                    <td class="tbl_color" style="width:10px;"><span>Customer</span></td>
+                    <td><span>' . $customer->CstCompanyName . '</span></td>
+                    <td class="tbl_color" style="width:60px;"><span>Quote name</span></td>
+                    <td><span>' . $SalesContact . '</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>
 
-            $elevTbl .=
-                '</span>
-                                                </td>
-                                                <td class="tbl_color"><span>Ref</span></td>
-                                                <td colspan="3"><span>' . $QuotationGenerationId . '</span></td>
-                                                <td class="tbl_color"><span>Project</span></td>
-                                                <td><span>' . $ProjectName . '</span></td>
-                                                <td class="tbl_color"><span>Prepared By</span></td>
-                                                <td><span>' . $Username . '</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tbl_color" style="width:25px;padding-right:5px;"><span>Revision</span></td>
-                                                <td style="width:20px;"><span>' . $version . '</span></td>
-                                                <td class="tbl_color" style="width:20px;padding-right:5px;"><span>Date</span></td>
-                                                <td><span >' . date('Y-m-d') . '</span></td>
-                                                <td class="tbl_color" style="width:10px;padding-right:5px;"><span>Customer</span></td>
-                                                <td><span>' . $customer->CstCompanyName . '</span></td>
-                                                <td class="tbl_color" style="width:60px;padding-right:5px;"><span>Quote name</span></td>
-                                                <td><span>' . $SalesContact . '</span></td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+<tr>
+    <td colspan="2">
+        <!-- PO TABLE -->
+        <table id="WithBorderNew" class="tbl1 dashedborder">
+            <tbody>
+                <tr>
+                    <td class="tbl_color"><span>IO No</span></td>
+                    <td>' . $project->ioNumberOne . '</td>
+                    <td>' . $project->ioNumberTwo . '</td>
+                    <td>' . $project->ioNumberThree . '</td>
+                    <td class="tbl_color"><span>Frame Po</span></td>
+                    <td>' . $project->framePoOne . '</td>
+                    <td>' . $project->framePoTwo . '</td>
+                    <td>' . $project->framePoThree . '</td>
+                    <td class="tbl_color"><span>Ironmongery Po</span></td>
+                    <td>' . $project->ironmongeryPoOne . '</td>
+                    <td>' . $project->ironmongeryPoTwo . '</td>
+                    <td>' . $project->ironmongeryPoThree . '</td>
+                </tr>
+                <tr>
+                    <td class="tbl_color"><span>Door Po</span></td>
+                    <td>' . $project->doorPoOne . '</td>
+                    <td>' . $project->doorPoTwo . '</td>
+                    <td>' . $project->doorPoThree . '</td>
+                    <td class="tbl_color"><span>Glass Po</span></td>
+                    <td>' . $project->glassPoOne . '</td>
+                    <td>' . $project->glassPoTwo . '</td>
+                    <td>' . $project->glassPoThree . '</td>
+                    <td class="tbl_color"><span>Intumescent Po</span></td>
+                    <td>' . $project->intumescentPoOne . '</td>
+                    <td>' . $project->intumescentPoTwo . '</td>
+                    <td>' . $project->intumescentPoThree . '</td>
+                </tr>
+
+                <!-- SIGNATURE + DATE ROW -->
+                <tr>
+                    <td colspan="12" style="padding: 12px;">
+                        <table style="width:100%; border-collapse: collapse;">
+                            <tr>
+                                <td style="text-align:left; font-size:16px; vertical-align:middle;">
+                                    <b>Signature:</b>
+                                    ';
+                                if(!empty($fetchSignature->signature_path) && $clientclick == 'yes'){
+                                    $elevTbl .= '<img style="width: 160px; margin-left:10px;" src="' . public_path($fetchSignature->signature_path) . '"/>';
+                                }
+                                $elevTbl .= '
+                                                                </td>
+                                                                <td style="text-align:right; font-size:16px; vertical-align:middle;">
+                                                                    <b>Date:</b> ';
+                                if($clientclick == 'yes'){
+                                    $elevTbl .= \Carbon\Carbon::parse($fetchSignature->signed_at)->format('d-m-Y');
+                                }
+                                $elevTbl .= '
                                 </td>
                             </tr>
-                            <tr>
-                                <td colspan="2">
-                                    <table id="WithBorder" class="tbl1 dashedborder">
-                                        <tbody>
-                                            <tr>
-                                                <td class="marImg" rowspan="2">
-                                                    <span>';
-            if (!empty($comapnyDetail->ComplogoBase64)) {
-                $elevTbl .=
-                    '<img src="' . $comapnyDetail->ComplogoBase64 . '" class="imgClass" alt="Logo"/>';
-            } else {
-                $elevTbl .= Base64Image('defaultImg');
-            }
-
-            $elevTbl .=
-                '</span>
-                                                </td>
-                                                <td class="tbl_color"><span>IO No</span></td>
-                                                <td>' . $project->ioNumberOne . '</td>
-                                                <td>' . $project->ioNumberTwo . '</td>
-                                                <td>' . $project->ioNumberThree . '</td>
-                                                <td class="tbl_color"><span>Frame Po</span></td>
-                                                <td>' . $project->framePoOne . '</td>
-                                                <td>' . $project->framePoTwo . '</td>
-                                                <td>' . $project->framePoThree . '</td>
-                                                <td class="tbl_color"><span>Ironmongery Po</span></td>
-                                                <td>' . $project->ironmongeryPoOne . '</td>
-                                                <td>' . $project->ironmongeryPoTwo . '</td>
-                                                <td>' . $project->ironmongeryPoThree . '</td>
-                                            </tr>
-                                            <tr>
-                                                <td class="tbl_color"><span>Door Po</span></td>
-                                                <td>' . $project->doorPoOne . '</td>
-                                                <td>' . $project->doorPoTwo . '</td>
-                                                <td>' . $project->doorPoThree . '</td>
-                                                <td class="tbl_color"><span>Glass Po</span></td>
-                                                <td>' . $project->glassPoOne . '</td>
-                                                <td>' . $project->glassPoTwo . '</td>
-                                                <td>' . $project->glassPoThree . '</td>
-                                                <td class="tbl_color"><span>Intumescent Po</span></td>
-                                                <td>' . $project->intumescentPoOne . '</td>
-                                                <td>' . $project->intumescentPoTwo . '</td>
-                                                <td>' . $project->intumescentPoThree . '</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </td>
-                            </tr>';
+                        </table>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </td>
+</tr>';
             $elevTbl .= '<tr>';
 
             $ConfigurableItems = "Streboard";
@@ -2127,9 +2161,9 @@ class OMMAnualController extends Controller
 
             $GlassType = "";
 
-            $SelectedGlassType =  GlassType::where($configurationDoor, $configurationItem)
-                ->where($fireRatingDoor, $FireRatingActualValue)
-                ->where("Key", $tt->GlassType)->first();
+            $SelectedGlassType =  GlassType::where($configurationDoor,$configurationItem)
+            ->where($fireRatingDoor,$FireRatingActualValue)
+            ->where("Key",$tt->GlassType)->first();
 
             if ($SelectedGlassType != null) {
                 $GlassType = $SelectedGlassType->GlassType;
@@ -2164,8 +2198,8 @@ class OMMAnualController extends Controller
                 //                                    <div class="doorImgBox">
                 //                                        <img src="'.URL('/').'/uploads/files/fanlightframe.jpg" class="doorImg" style="position:relative;">
                 //                                    </div></td>'
-                if ($tt->DoorsetType == "SD" &&  $tt->FrameType == null) {
-                    $elevTbl .= '<td style="width:20%;font-size: 7px !important;">
+if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
+    $elevTbl .= '<td style="width:20%;font-size: 7px !important;">
     <p class="visionpanel_t1_sd">' . $GlassType . '</p>
     <p class="visionpanel_t2_sd">' . $tt->glazingBeadsFixingDetail . '</p>
     <p class="visionpanel_t3_sd">' . $GlazingBeadSpecies . '<br>' . $tt->GlazingBeadsThickness . ' x ' . $tt->glazingBeadsHeight . 'mm</p>
@@ -2173,8 +2207,8 @@ class OMMAnualController extends Controller
     <p class="visionpanel_t5_sd">' . $tt->LeafThickness . '</p>
     <div class="doorImgBox">' . $VisionPanelGlazingImage . '</div>
 </td>';
-                } else {
-                    $elevTbl .= '<td style="width:20%;font-size: 7px !important;">
+}else{
+    $elevTbl .= '<td style="width:20%;font-size: 7px !important;">
     <p class="visionpanel_t1">' . $GlassType . '</p>
     <p class="visionpanel_t2">' . $tt->glazingBeadsFixingDetail . '</p>
     <p class="visionpanel_t3">' . $GlazingBeadSpecies . '<br>' . $tt->GlazingBeadsThickness . ' x ' . $tt->glazingBeadsHeight . 'mm</p>
@@ -2182,7 +2216,7 @@ class OMMAnualController extends Controller
     <p class="visionpanel_t5">' . $tt->LeafThickness . '</p>
     <div class="doorImgBox">' . $VisionPanelGlazingImage . '</div>
 </td>';
-                }
+}
 
 
                 // $elevTbl .= '<td style="width:50%;"></td>';
@@ -2235,30 +2269,30 @@ class OMMAnualController extends Controller
                 switch ($tt->DoorsetType) {
 
                     case "SD":
-                        if ($tt->FrameOnOff != 1) {
-                            $elevTbl .= '<tr>
+                        if($tt->FrameOnOff != 1){
+                        $elevTbl .= '<tr>
                                     <td class="mytabledata_sd"  colspan="2" style="">
-                                    <p class="frame_dd_t1_sd_' . $tt->FrameType . ' frame_dd_t1_sd_' . $sidelight . '" style="margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  (($show->Leaf1VisionPanel == "Yes") ? '637' : '660') : '') . 'px;
-                                            margin-top:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  (($show->Leaf1VisionPanel == "Yes") ? '22px !important' : '') : '') . '">' . $tt->FrameDepth . 'mm</p>
-                                    <p class="frame_dd_t2_sd_' . $tt->FrameType . ' frame_dd_t2_sd_' . $sidelight . '" style="margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ? (($show->Leaf1VisionPanel == "Yes") ? '626' : '653') : '') . 'px">' . $tt->FrameThickness . 'mm</p>
-                                    <p style="' . (($tt->FrameType == 'Rebated_Frame') ? 'display: none;' : '') . '" class="frame_dd_t3_sd_' . $tt->FrameType . ' frame_dd_t3_sd_' . $sidelight . '">' . $FrameTypeWidth . 'mm</p>
-                                    <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_' . $sidelight . '" style="margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?   (($show->Leaf1VisionPanel == "Yes") ? '587' : '613') : '') . 'px;
-                                            margin-top:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  (($show->Leaf1VisionPanel == "Yes") ? '158px !important' : '') : '') . ' ">' . $FrameTypeHeight . 'mm</p>
-                                    <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_' . $sidelight . '" style="margin-left:' . (
-                                (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  (($show->Leaf1VisionPanel == "Yes") ? '530' : '550') : '') . 'px">' . $tt->LeafThickness . '</p>';
+                                    <p class="frame_dd_t1_sd_' . $tt->FrameType . ' frame_dd_t1_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'637':'660' ) : '') .'px;
+                                            margin-top:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'22px !important':'' ) : '') .'">' . $tt->FrameDepth . 'mm</p>
+                                    <p class="frame_dd_t2_sd_' . $tt->FrameType . ' frame_dd_t2_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ? ( ($show->Leaf1VisionPanel == "Yes")?'626':'653' ) : '') .'px">' . $tt->FrameThickness . 'mm</p>
+                                    <p style="'.(($tt->FrameType == 'Rebated_Frame')?'display: none;':'').'" class="frame_dd_t3_sd_' . $tt->FrameType . ' frame_dd_t3_sd_'.$sidelight.'">' . $FrameTypeWidth . 'mm</p>
+                                    <p class="frame_dd_t4_sd_' . $tt->FrameType . ' frame_dd_t4_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?   ( ($show->Leaf1VisionPanel == "Yes")?'587':'613' ) : '') .'px;
+                                            margin-top:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'158px !important':'' ) : '') .' ">' . $FrameTypeHeight . 'mm</p>
+                                    <p class="frame_dd_t5_sd_' . $tt->FrameType . ' frame_dd_t5_sd_'.$sidelight.'" style="margin-left:'. (
+                                            (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped' && (!empty($tt->Handing) && $tt->Handing != "Left")) ?  ( ($show->Leaf1VisionPanel == "Yes")?'530':'550' ) : '') .'px">' . $tt->LeafThickness . '</p>';
                         }
 
-                        if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
-                            $elevTbl .= '
-                                <p class="scalloped-' . $tt->Handing . '-1' . (($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left") ? '-VP' : '') . '"  ></p>
-                                <p class="scalloped-' . $tt->Handing . '-2' . (($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left") ? '-VP' : '') . '" >' . $tt->ScallopedWidth . '</p>
-                                <p class="scalloped-' . $tt->Handing . '-3' . (($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left") ? '-VP' : '') . '" ></p>';
-                        }
+                      if (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') {
+                           $elevTbl .= '
+                                <p class="scalloped-'.$tt->Handing.'-1'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'"  ></p>
+                                <p class="scalloped-'.$tt->Handing.'-2'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" >'.$tt->ScallopedWidth.'</p>
+                                <p class="scalloped-'.$tt->Handing.'-3'.(($show->Leaf1VisionPanel == "Yes" && $tt->Handing != "Left")?'-VP':'').'" ></p>';
+                       }
 
 
                         $elevTbl .= '<!--  <div class="arrow-strat"></div>
@@ -2281,15 +2315,15 @@ class OMMAnualController extends Controller
                     case "DD":
 
                         // dd($tt);
-                        if ($tt->FrameOnOff != 1) {
-                            $elevTbl .= '<tr>
+                        if($tt->FrameOnOff != 1){
+                        $elevTbl .= '<tr>
                                     <td class="mytabledata" colspan="2" style="">
 
-                                    <p class="frame_dd_t1 frame_dd_t1_' . $tt->FrameType . ' ' . $sidelight . '">' . $tt->FrameDepth . 'mm</p>
-                                    <p class="frame_dd_t2 frame_dd_t2_' . $tt->FrameType . ' ' . $sidelight . '">' . $tt->FrameThickness . 'mm</p>
-                                    <p style="' . (($tt->FrameType == 'Rebated_Frame') ? 'display: none;' : '') . '" class="frame_dd_t3 frame_dd_t3_' . $tt->FrameType . ' ' . $sidelight . '">' . $FrameTypeWidth . 'mm</p>
-                                    <p class="frame_dd_t4 frame_dd_t4_' . $tt->FrameType . ' ' . $sidelight . '">' . $FrameTypeHeight . 'mm</p>
-                                    <p class="frame_dd_t5 frame_dd_t5_' . $tt->FrameType . ' ' . $sidelight . '">' . $tt->LeafThickness . '</p>';
+                                    <p class="frame_dd_t1 frame_dd_t1_' . $tt->FrameType.' '.$sidelight.'">' . $tt->FrameDepth . 'mm</p>
+                                    <p class="frame_dd_t2 frame_dd_t2_' . $tt->FrameType . ' '.$sidelight.'">' . $tt->FrameThickness . 'mm</p>
+                                    <p style="'.(($tt->FrameType == 'Rebated_Frame')?'display: none;':'').'" class="frame_dd_t3 frame_dd_t3_' . $tt->FrameType . ' '.$sidelight.'">' . $FrameTypeWidth . 'mm</p>
+                                    <p class="frame_dd_t4 frame_dd_t4_' . $tt->FrameType . ' '.$sidelight.'">' . $FrameTypeHeight . 'mm</p>
+                                    <p class="frame_dd_t5 frame_dd_t5_' . $tt->FrameType . ' '.$sidelight.'">' . $tt->LeafThickness . '</p>';
                         }
 
                         $elevTbl .= '<!-- <div class="arrow-strat"></div>  <p class="frame_sd_t1">' . $tt->FrameDepth . '</p>
@@ -2399,8 +2433,17 @@ class OMMAnualController extends Controller
             $GlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
-
-                $GlassTypeIds[] = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness,'OMMGlassID');
+            }
+            $glassInterrity = "N/A";
+            if(!empty($tt->GlassIntegrity)){
+                $glassInterrity = $tt->GlassIntegrity;
+            }
+            $VisionGlazingBeadSpecies = "N/A";
+            if(!empty($tt->GlazingBeadSpecies)){
+                $ls = LippingSpecies::where('id', $tt->GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $VisionGlazingBeadSpecies = $ls->SpeciesName;
+                }
             }
 
             $OPGlassTypeForDoorDetailsTable = "N/A";
@@ -2415,48 +2458,78 @@ class OMMAnualController extends Controller
 
             $GlassIntegrity = 'N/A';
             if (!empty($tt->GlassIntegrity)) {
-                if ($FireRatingActualValue == 'NFR') {
+                if($FireRatingActualValue == 'NFR'){
                     $gi = Option::where("configurableitems", $configurationItem)
-                        ->where("OptionSlug", "Glass_Integrity")
-                        ->where("OptionKey", $tt->GlassIntegrity)->first();
-                } else {
+                    ->where("OptionSlug", "Glass_Integrity")
+                    ->where("OptionKey", $tt->GlassIntegrity)->first();
+                }
+                else{
                     $gi = Option::where("configurableitems", $configurationItem)
-                        ->where("firerating", $FireRatingActualValue)
-                        ->where("OptionSlug", "Glass_Integrity")
-                        ->where("OptionKey", $tt->GlassIntegrity)->first();
-                    $GlassIntegrity = $gi->OptionValue;
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", "Glass_Integrity")
+                    ->where("OptionKey", $tt->GlassIntegrity)->first();
                 }
 
-                $glazing_beads_word = in_array($configurationItem, [1,2,7,8]) ? 'side_light_glazing_beads' : 'leaf1_glazing_beads';
+                $GlassIntegrity = $gi->OptionValue;
+            }
 
-                $OPGlazingBeads = 'N/A';
-                if (!empty($tt->OPGlazingBeads)) {
-                    $opgb = Option::where("configurableitems", $configurationItem)
-                        ->where("firerating", $FireRatingActualValue)
-                        ->where("OptionSlug", $glazing_beads_word)
-                        ->where("OptionKey", $tt->OPGlazingBeads)
-                        ->first();
+            $glazing_beads_word = in_array($configurationItem, [1,2,7,8]) ? 'side_light_glazing_beads' : 'leaf1_glazing_beads';
 
-                    $OPGlazingBeads = $opgb ? $opgb->OptionValue : null;
-                }
+            $OPGlazingBeads = 'N/A';
+            if (!empty($tt->OPGlazingBeads)) {
+                $opgb = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->OPGlazingBeads)
+                    ->first();
 
-                $SLBeadingType = 'N/A';
-                if (!empty($tt->BeadingType)) {
-                    $bt = Option::where("configurableitems", $configurationItem)
-                        ->where("firerating", $FireRatingActualValue)
-                        ->where("OptionSlug", $glazing_beads_word)
-                        ->where("OptionKey", $tt->BeadingType)
-                        ->first();
+                $OPGlazingBeads = $opgb ? $opgb->OptionValue : null;
+            }
 
-                    $SLBeadingType = $bt ? $bt->OptionValue : null;
-                }
+            $SLBeadingType = 'N/A';
+            if (!empty($tt->BeadingType)) {
+                $bt = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->BeadingType)
+                    ->first();
+
+                $SLBeadingType = $bt ? $bt->OptionValue : null;
+            }
+            $SL2BeadingType = 'N/A';
+            if (!empty($tt->SideLight2BeadingType)) {
+                $bt = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->SideLight2BeadingType)
+                    ->first();
+
+                $SL2BeadingType = $bt ? $bt->OptionValue : null;
+            }
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
-                // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
-                //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                $gs = GlazingSystem::join('selected_glazing_system', 'glazing_system.id', 'selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.' . $configurationDoor, $tt->configurableitems)->where('glazing_system.Key', $tt->GlazingSystems)->first();
-                $glazingSystems = @$gs->GlazingSystem;
+
+                // If it's an ID, fetch the glazing system name
+                if (is_numeric($tt->GlazingSystems)) {
+
+                    $gs = GlazingSystem::join(
+                            'selected_glazing_system',
+                            'glazing_system.id',
+                            '=',
+                            'selected_glazing_system.glazingId'
+                        )
+                        ->where('selected_glazing_system.userId', Auth::id())
+                        ->where('glazing_system.' . $configurationDoor, $tt->configurableitems)
+                        ->where('glazing_system.Key', $tt->GlazingSystems)
+                        ->first();
+
+                    $glazingSystems = $gs ? $gs->GlazingSystem : 'N/A';
+
+                } else {
+                    // Already a value, use it directly
+                    $glazingSystems = $tt->GlazingSystems;
+                }
             }
 
             if ($tt->SwingType == 'SA') {
@@ -2521,7 +2594,7 @@ class OMMAnualController extends Controller
             $intumescentSealArrangement = 'N/A';
             if (!empty($tt->IntumescentLeapingSealArrangement)) {
                 $Intumescentseals = SettingIntumescentSeals2::where('id', $tt->IntumescentLeapingSealArrangement)->first();
-                if ($Intumescentseals) {
+                if($Intumescentseals){
                     $intumescentSealArrangement =  $Intumescentseals->brand . ' - ' . $Intumescentseals->intumescentSeals;
                 }
             }
@@ -2529,6 +2602,14 @@ class OMMAnualController extends Controller
             $IntumescentLeapingSealColor = 'N/A';
             if (!empty($tt->IntumescentLeapingSealColor)) {
                 $IntumescentLeapingSealColor = $tt->IntumescentLeapingSealColor;
+            }
+
+            // Client update: when intumescent is not supplied, the seal details
+            // are not selected - show "Not Supplied" instead of any stored value.
+            if (!empty($tt->IntumescentNotSupplied) && $tt->IntumescentNotSupplied == 1) {
+                $intumescentSealType         = 'Not Supplied';
+                $intumescentSealArrangement  = 'Not Supplied';
+                $IntumescentLeapingSealColor = 'Not Supplied';
             }
 
             $ArchitraveMaterial = 'N/A';
@@ -2563,36 +2644,53 @@ class OMMAnualController extends Controller
 
 
 
-                // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
-                $sl1glasstype = 'N/A';
-                if (!empty($tt->SideLight1GlassType)) {
-                    // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
-                    // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
-                    //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
-                    //         ->where('selected_glass_type.editBy', '=', $id);
-                    // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
-                    if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
-                        $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
-                            $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
-                                ->where('selected_glass_type.editBy', '=', $id);
-                        })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
-                        $sl1glasstype = $op->GlassType ?? '';
-                    }
-                    else{
-                        $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
-                            $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
-                                ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
-                        })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
-                        $sl1glasstype = $op->GlassType ?? '';
-                    }
-
+            // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
+            $sl1glasstype = 'N/A';
+            $sl2glasstype = 'N/A';
+            if (!empty($tt->SideLight1GlassType)) {
+                // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
+                // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
+                //     $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                //         ->where('selected_glass_type.editBy', '=', $id);
+                // })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                            ->where('selected_glass_type.editBy', '=', $id);
+                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight1GlassType)->first();
+                    $sl1glasstype = $op->GlassType ?? '';
                 }
+                else{
+                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
+                    $sl1glasstype = $op->GlassType ?? '';
+        }
+            }
 
-                $beadingtype = 'N/A';
-                if (!empty($tt->SideLight2BeadingType)) {
-                    $op2 = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => $glazing_beads_word, 'OptionKey' => $tt->SideLight2BeadingType])->first();
-                    $beadingtype = ($op2->OptionValue)??"";
+            if (!empty($tt->SideLight2GlassType)) {
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                            ->where('selected_glass_type.editBy', '=', $id);
+                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
                 }
+                else{
+                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+        }
+            }
+
+            $beadingtype = 'N/A';
+            if (!empty($tt->SideLight2BeadingType)) {
+                $op2 = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => $glazing_beads_word, 'OptionKey' => $tt->SideLight2BeadingType])->first();
+                $beadingtype = ($op2->OptionValue)??"";
+            }
 
             $glazingbeadspecies = 'N/A';
             if (!empty($tt->SL1GlazingBeadSpecies)) {
@@ -2602,15 +2700,76 @@ class OMMAnualController extends Controller
                 }
             }
 
-                $VPBeadingType = 'N/A';
-                if (!empty($tt->GlazingBeads)) {
-                    $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
+             $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
                 }
+            }
 
-                $configurationItemName = configurationDoor($configurationItem);
-                if($configurationItemName === 'Halspan'){
-                    $configurationItemName = 'Halspan Optima';
-                }
+            $VPBeadingType = 'N/A';
+            if (!empty($tt->GlazingBeads)) {
+                $VPBeadingType = VPBeadingType($configurationItem, 'leaf1_glazing_beads', $tt->GlazingBeads);
+            }
+
+            $OPFLHeight = 'N/A';
+            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
+                $opHeight = is_numeric($tt->OPHeigth) ? $tt->OPHeigth : 0;
+                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                $gap = is_numeric($tt->GAP) ? $tt->GAP : 0;
+
+                $OPFLHeight = $opHeight - $beadThickness - $beadThickness;
+            }
+
+            $OPFLWeidth = 'N/A';
+            if ($tt->Overpanel == 'Overpanel' || $tt->Overpanel == 'Fan_Light') {
+                $frameWidth = is_numeric($tt->FrameWidth) ? $tt->FrameWidth : 0;
+                $beadThickness = is_numeric($tt->OpBeadThickness) ? $tt->OpBeadThickness : 0;
+                // old formula before 15-09-2025
+                // $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+                //new formula after 15-09-2025
+                //$OPFLWeidth = $frameWidth + $SideLight1Width + $SideLight2Width - $beadThickness - $beadThickness;
+                // NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $OPFLWeidth = $frameWidth - $beadThickness - $beadThickness;
+            }
+
+            $ElevSL1Width = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Width= is_numeric($tt->SL1Width) ? $tt->SL1Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Width = $SLight1Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL1Height = 'N/A';
+            if ($tt->SideLight1 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight1Height = is_numeric($tt->SL1Height) ? $tt->SL1Height : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL1Height = $SLight1Height - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Width = 'N/A';
+            if ($tt->SideLight2 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
+                $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
+                $ElevSL2Width = $SLight2Width - $SideLight1FrameThickness - $SideLight1FrameThickness;
+            }
+
+            $ElevSL2Height = 'N/A';
+            if ($tt->SideLight2 == 'Yes') {
+                //NEW DEVELOPMENT JFDS 1059 25-09-2025
+                $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
+                $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
+                $ElevSL2Height = $SLight2Height - $SideLight2FrameThickness - $SideLight2FrameThickness;
+            }
+
+            $configurationItemName = configurationDoor($configurationItem);
+            if($configurationItemName === 'Halspan'){
+                $configurationItemName = 'Halspan Optima';
+            }
 
             $elevTbl .= '</table>
 
@@ -2619,7 +2778,7 @@ class OMMAnualController extends Controller
                         <table id="WithBorder" class="tbl2">
                             <tbody>
                                 <tr>
-                                    <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
+                                    <td class="tbl_color tblTitle" style="font-weight: normal;">Door Type</td>
                                     <td class="dicription_blank"><b>Type ' . $tt->DoorType . '</b></td>
                                 </tr>
                             </tbody>
@@ -2653,10 +2812,18 @@ class OMMAnualController extends Controller
                                     <td class="dicription_grey">Pull Towards</td>
                                     <td class="dicription_blank">' . $tt->OpensInwards . '</td>
                                 </tr>';
-            if ($tt->FrameOnOff != 1) {
-                $elevTbl .=  '<tr>
+                if($tt->FrameOnOff != 1){
+                    $Handing = '';
+                    if($tt->Handing == 'Left_Hand_Master_Right_Hand_Slave'){
+                        $Handing = 'Primary Leaf Left';
+                    }else if($tt->Handing == 'Right_Hand_Master_Left_Hand_Slave'){
+                        $Handing = 'Primary Leaf Right';
+                    }else{
+                        $Handing = $tt->Handing;
+                    }
+                    $elevTbl .=  '<tr>
                                     <td class="dicription_grey">Handing</td>
-                                    <td class="dicription_blank">' . $tt->Handing . '</td>
+                                    <td class="dicription_blank">' . $Handing . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Undercut</td>
@@ -2666,9 +2833,9 @@ class OMMAnualController extends Controller
                                     <td class="dicription_grey">Frame Thickness</td>
                                     <td class="dicription_blank">' . $tt->FrameThickness . '</td>
                                 </tr>';
-            }
+                    }
 
-            $elevTbl .= '<tr>
+                    $elevTbl .= '<tr>
                                     <td class="dicription_grey">Ironmongery Set</td>
                                     <td class="dicription_blank">' . $IronmongerySet . '</td>
                                 </tr>
@@ -2679,7 +2846,7 @@ class OMMAnualController extends Controller
                                 <tr>
                                     <th class="tblTitle">Structural Opening & Door Leaf Dimensions</th>
                                 </tr>';
-            if ($tt->FrameOnOff != 1) {
+            if($tt->FrameOnOff != 1){
                 $elevTbl .=  '  <tr>
                                     <td class="dicription_grey">S.O. Width</td>
                                     <td class="dicription_blank">' . $tt->SOWidth . '</td>
@@ -2698,29 +2865,34 @@ class OMMAnualController extends Controller
                                     <td class="dicription_grey">Door leaf Facing</td>
                                     <td class="dicription_blank">' . $DoorLeafFacing . '</td>
                                 </tr>';
-            if ($quotaion->configurableitems == 4) {
-                $elevTbl .= '<tr>
+            if($tt->configurableitems == 4){
+                    $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">Door leaf Finish</td>
+                                    <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Leaf Type</td>
                                     <td class="dicription_blank">' . $tt->LeafConstruction . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Product code</td>
-                                    <td class="dicription_blank">' . $tt->DoorDimensionsCode . '</td>
+                                    <td class="dicription_blank">' . $tt->DoorDimensionsCode .'</td>
                                 </tr>';
 
-                if ($tt->DoorsetType != 'SD') {
-                    $elevTbl .= '<tr>
-                                        <td class="dicription_grey">Product code2/Size </td>
-                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 . ' (' . $leafWidth2 . '<span style="font-weight: bold; font-size: 1.2em;">×</span>' . $LeafHeight  . ')</td>
+                    if ($tt->DoorsetType != 'SD' || $tt->DoorsetType != 'leaf_and_a_half') {
+                        $elevTbl .= '<tr>
+                                        <td class="dicription_grey">Product code2 </td>
+                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .'</td>
                                     </tr>';
-                }
+                    }
 
-                $elevTbl .= '<tr>
+                    $elevTbl .= '<tr>
                                     <td class="dicription_grey">Decorative Groves</td>
                                     <td class="dicription_blank">' . $tt->groovesNumber . '</td>
                                 </tr>';
-            } else {
-                $elevTbl .=         '<tr>
+            }else{
+            $elevTbl .=         '<tr>
                                     <td class="dicription_grey">Door leaf Finish</td>
                                     <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                 </tr>
@@ -2728,142 +2900,24 @@ class OMMAnualController extends Controller
                                     <td class="dicription_grey">Decorative Groves</td>
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
-            }
+        }
 
             $elevTbl .=         '
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Width 1</td>
-                                    <td class="dicription_blank">' . $leafWidth1 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Width 2</td>
-                                    <td class="dicription_blank">' . $leafWidth2 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Height</td>
-                                    <td class="dicription_blank">' . $LeafHeight . '</td>
-                                </tr>
                                 <tr>
                                     <td class="dicription_grey">Door Leaf Thickness</td>
                                     <td class="dicription_blank">' . $LeafThickness . '</td>
                                 </tr>
                             </tbody>
                         </table>';
-            if ($tt->FrameOnOff != 1) {
+            if($tt->FrameOnOff != 1){
                 $elevTbl .=  '<table id="WithBorder">
-                $elevTbl .= '</table>
-                        </div>
-                        <div id="section-right">
-                            <table id="WithBorder" class="tbl2">
-                                <tbody>
-                                    <tr>
-                                        <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
-                                        <td class="dicription_blank"><b>Type ' . $tt->DoorType . '</b></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table id="WithBorder" class="tbl3">
-                                <tbody>
-                                    <tr>
-                                        <th class="tblTitle">General</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Core</td>
-                                        <td class="dicription_blank">' . $configurationItemName . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Test Certificate Reference </td>
-                                        <td class="dicription_blank">' . $certNo . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Type</td>
-                                        <td class="dicription_blank">' . $tt->DoorType . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Fire Rating</td>
-                                        <td class="dicription_blank">' . $fire . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Swing Type</td>
-                                        <td class="dicription_blank">' . $SwingType . ' ' . $tt->SwingType . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Pull Towards</td>
-                                        <td class="dicription_blank">' . $tt->OpensInwards . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Handing</td>
-                                        <td class="dicription_blank">' . $tt->Handing . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Undercut</td>
-                                        <td class="dicription_blank">' . $tt->Undercut . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Frame Thickness</td>
-                                        <td class="dicription_blank">' . $tt->FrameThickness . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Ironmongery Set</td>
-                                        <td class="dicription_blank">' . $IronmongerySet . '</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table id="WithBorder">
-                                <tbody>
-                                    <tr>
-                                        <th class="tblTitle">Structural Opening & Door Leaf Dimensions</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">S.O. Width</td>
-                                        <td class="dicription_blank">' . $tt->SOWidth . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">S.O. Height</td>
-                                        <td class="dicription_blank">' . $tt->SOHeight . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">S.O. Depth</td>
-                                        <td class="dicription_blank">' . $tt->SOWallThick . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door leaf Facing</td>
-                                        <td class="dicription_blank">' . $DoorLeafFacing . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door leaf Finish</td>
-                                        <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Decorative Groves</td>
-                                        <td class="dicription_blank">' . $DecorativeGroves . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Leaf Width 1</td>
-                                        <td class="dicription_blank">' . $leafWidth1 . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Leaf Width 2</td>
-                                        <td class="dicription_blank">' . $leafWidth2 . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Leaf Height</td>
-                                        <td class="dicription_blank">' . $LeafHeight . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Door Leaf Thickness</td>
-                                        <td class="dicription_blank">' . $LeafThickness . '</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table id="WithBorder">
                                 <tbody>
                                     <tr>
                                         <th class="tblTitle">Frame</th>
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">Four Sided Frame</td>
-                                        <td class="dicription_blank">' . (($tt->FourSidedFrame == 1) ? 'Yes' : 'No') . '</td>
+                                        <td class="dicription_blank">' . (($tt->FourSidedFrame == 1)?'Yes':'No') . '</td>
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">Frame Material</td>
@@ -2934,8 +2988,8 @@ class OMMAnualController extends Controller
                                     <th class="tblTitle">Vision Panel</th>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Glass Integrity</td>
-                                    <td class="dicription_blank">' . $GlassIntegrity . '</td>
+                                    <td class="dicription_grey">Glass Type Integrity</td>
+                                    <td class="dicription_blank">' . $glassInterrity . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glass Type + Thickness</td>
@@ -2943,11 +2997,7 @@ class OMMAnualController extends Controller
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing Bead Species</td>
-                                    <td class="dicription_blank">' . $GlazingBeadSpecies . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Beading Type</td>
-                                    <td class="dicription_blank">' . $VPBeadingType . '</td>
+                                    <td class="dicription_blank">' . $VisionGlazingBeadSpecies . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing System</td>
@@ -2955,12 +3005,24 @@ class OMMAnualController extends Controller
                                 </tr>
                             </tbody>
                         </table>';
-            if ($tt->FrameOnOff != 1) {
-                $elevTbl .=  '<table id="WithBorder">
+                if($tt->FrameOnOff != 1){
+                            $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">Overpanel/Fanlight Section</th>
+                                </tr>';
+                                if($tt->Overpanel == 'Overpanel'){
+                                $elevTbl .= '
+                                <tr>
+                                    <td class="dicription_grey">OP Panel Width</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
+                                <tr>
+                                    <td class="dicription_grey">OP Panel Height</td>
+                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
+                                </tr>';
+                                } else if($tt->Overpanel == 'Fan_Light'){
+                                $elevTbl .= '
                                 <tr>
                                     <td class="dicription_grey">OP/FL Glass Type</td>
                                     <td class="dicription_blank">' . $OPGlassTypeForDoorDetailsTable . '</td>
@@ -2972,30 +3034,18 @@ class OMMAnualController extends Controller
                                 <tr>
                                     <td class="dicription_grey">OP/FL Glazing Bead Species</td>
                                     <td class="dicription_blank">' . $OPGlazingBeadSpecies . '</td>
-                                </tr>';
-                if ($tt->Overpanel == 'Overpanel') {
-                    $elevTbl .= '
-                                <tr>
-                                    <td class="dicription_grey">OP Panel Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">OP Panel Height</td>
-                                    <td class="dicription_blank">' . $OPFLHeight . '</td>
-                                </tr>';
-                } else if ($tt->Overpanel == 'Fan_Light') {
-                    $elevTbl .= '
-                                <tr>
                                     <td class="dicription_grey">FL Width</td>
-                                    <td class="dicription_blank">' . $tt->FrameWidth . '</td>
+                                    <td class="dicription_blank">' . $OPFLWeidth . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">FL Height</td>
                                     <td class="dicription_blank">' . $OPFLHeight . '</td>
                                 </tr>';
-                }
+                                }
 
-                $elevTbl .= ' </tbody>
+                           $elevTbl .= ' </tbody>
                         </table>
                         <table id="WithBorder">
                             <tbody>
@@ -3014,32 +3064,44 @@ class OMMAnualController extends Controller
                                     <td class="dicription_grey">Glazing Bead Species</td>
                                     <td class="dicription_blank">' . $glazingbeadspecies . '</td>
                                 </tr>';
-                if ($tt->SideLight1 == 'Yes') {
-                    $elevTbl .= '
+                                if($tt->SideLight1 == 'Yes'){
+                                    $elevTbl .= '
                                     <tr>
                                         <td class="dicription_grey">SL1 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL1Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Width . '</td>
                                     </tr>
                                      <tr>
                                         <td class="dicription_grey">SL1 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL1Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL1Height . '</td>
                                     </tr>
                                     ';
-                }
-                if ($tt->SideLight2 == 'Yes') {
-                    $elevTbl .= '
+                                    }
+                                     if($tt->SideLight2 == 'Yes'){
+                                    $elevTbl .= '
+                                    <tr>
+                                        <td class="dicription_grey">SL2 Glass Type</td>
+                                        <td class="dicription_blank">' . $sl2glasstype . '</td>
+                                    </tr>
+                                     <tr>
+                                    <td class="dicription_grey">Beading Type 2</td>
+                                    <td class="dicription_blank">' . $SL2BeadingType . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species2</td>
+                                    <td class="dicription_blank">' . $glazing2beadspecies . '</td>
+                                </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
-                                        <td class="dicription_blank">' . $tt->SL2Width . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Width . '</td>
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">SL2 Height</td>
-                                        <td class="dicription_blank">' . $tt->SL2Height . '</td>
+                                        <td class="dicription_blank">' . $ElevSL2Height . '</td>
                                     </tr>
                                     ';
-                }
+                                    }
 
-                $elevTbl .= '</tbody>
+                            $elevTbl .= '</tbody>
                         </table>
                         <table id="WithBorder">
                             <tbody>
@@ -3072,9 +3134,9 @@ class OMMAnualController extends Controller
                                 </tr>
                             </tbody>
                         </table>';
-            }
+                        }
 
-            $elevTbl .=  '<table id="WithBorder">
+                        $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
                                     <th class="tblTitle">Acoustics</th>
@@ -3085,67 +3147,24 @@ class OMMAnualController extends Controller
                                 </tr>
                             </tbody>
                         </table>';
-            if ($tt->FrameOnOff != 1) {
-                $elevTbl .=  '<table id="WithBorder">
-                            <tbody>
-                                <tr>
-                                    <th class="tblTitle">Special Feature</th>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Special Feature Refs</td>
-                                    <td class="dicription_blank">' . $tt->SpecialFeatureRefs . '</td>
-                                </tr>
-                            </tbody>
-                        </table>';
-            }
-
-            $elevTbl .=  '</div></div>
-                    <div id="footer">
-                        <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
-                                </tbody>
-                            </table>
-                            <table id="WithBorder">
+                        if($tt->FrameOnOff != 1){
+                            if($tt->Saddle == 'Yes'){
+                                $elevTbl .=  '<table id="WithBorder">
                                 <tbody>
                                     <tr>
-                                        <th class="tblTitle">Architrave</th>
+                                        <th class="tblTitle">Saddle</th>
                                     </tr>
                                     <tr>
-                                        <td class="dicription_grey">Material</td>
-                                        <td class="dicription_blank">' . $ArchitraveMaterial . '</td>
+                                        <td class="dicription_grey">Saddle Required</td>
+                                        <td class="dicription_blank">' . $tt->Saddle . '</td>
                                     </tr>
                                     <tr>
-                                        <td class="dicription_grey">Finish</td>
-                                        <td class="dicription_blank">' . $ArchitraveFinishForDoorDetailsTable . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Set Qty</td>
-                                        <td class="dicription_blank">' . $ArchitraveSetQty . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Width</td>
-                                        <td class="dicription_blank">' . $ArchitraveWidth . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Depth</td>
-                                        <td class="dicription_blank">' . $ArchitraveDepth . '</td>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Height</td>
-                                        <td class="dicription_blank">' . $ArchitraveHeight . '</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table id="WithBorder">
-                                <tbody>
-                                    <tr>
-                                        <th class="tblTitle">Accoustics</th>
-                                    </tr>
-                                    <tr>
-                                        <td class="dicription_grey">Rating</td>
-                                        <td class="dicription_blank">' . $rWdBRating . '</td>
+                                        <td class="dicription_grey">Saddle Location</td>
+                                        <td class="dicription_blank">' . $tt->saddleLocation . '</td>
                                     </tr>
                                 </tbody>
                             </table>';
+                            }
 
                             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
@@ -3157,12 +3176,14 @@ class OMMAnualController extends Controller
                                     <td class="dicription_blank">' . $tt->SpecialFeatureRefs . '</td>
                                 </tr>
                             </tbody>
-                        </table>
+                        </table>';
 
-                        </div>
-                        </div>
-                        <div id="footer">
-                            <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
+
+                        }
+
+                        $elevTbl .=  '</div></div>
+                    <div id="footer">
+                        <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
 
                     </div>
                 ';
@@ -3270,8 +3291,6 @@ class OMMAnualController extends Controller
         if ($fileName64 !== '' && $fileName64 !== '0') {
             $pdf64 = public_path() . '/allpdfFile' . '/' . $fileName64;
         }
-        $pdf55 = public_path() . '/allpdfFile' . '/' . $fileName5;
-        $pdf66 = public_path() . '/allpdfFile' . '/' . $fileName6;
 
         $pdf55 = public_path().'/allpdfFile'.'/'.$fileName5;
         $pdf55_custom = public_path().'/allpdfFile'.'/'.$fileName5_custom;
@@ -3356,19 +3375,18 @@ class OMMAnualController extends Controller
             $unlinkpath64 = public_path() . '/allpdfFile' . '/' . $fileName64;
         }
 
-        $unlinkpath5 = public_path().'/allpdfFile'.'/'.$fileName5;
+        $unlinkpath5 = public_path() . '/allpdfFile' . '/' . $fileName5;
         $unlinkpath5_custom = public_path().'/allpdfFile'.'/'.$fileName5_custom;
-        $unlinkpath6 = public_path().'/allpdfFile'.'/'.$fileName6;
-        unlink($unlinkpath1);
-        unlink($unlinkpath2);
-        unlink($unlinkpath3);
-        unlink($unlinkpath4_2);
-        unlink($unlinkpath4);
-        unlink($unlinkpath6);
-        unlink($unlinkpath5);
-        unlink($unlinkpath5_custom);
-        unlink($unlinkpath_m_p_r);
-        unlink($unlinkpath64);
+        $unlinkpath6 = public_path() . '/allpdfFile' . '/' . $fileName6;
+        $unlinkpath7 = ($fileName7 !== '') ? public_path() . '/allpdfFile' . '/' . $fileName7 : '';
+
+        // safely unlink files
+        foreach ([$unlinkpath1, $unlinkpath2, $unlinkpath5, $unlinkpath5_custom, $unlinkpath6, $unlinkpath64, $unlinkpath7] as $f) {
+            if ($f !== '' && file_exists($f)) {
+                unlink($f);
+            }
+        }
+
     }
 
     public function Labels($quatationId, $versionID)
