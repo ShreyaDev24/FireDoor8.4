@@ -9509,7 +9509,12 @@ class DoorScheduleController extends Controller
             }
 
             // Validate the current door
-            $validator = Validator::make($door->toArray(), $rules);
+            $validator = Validator::make($door->toArray(), $rules, [], [
+                'IntumescentLeapingSealType' => 'intumescent lipping seal type',
+                'IntumescentLeapingSealLocation' => 'intumescent lipping seal location',
+                'IntumescentLeapingSealColor' => 'intumescent lipping seal color',
+                'IntumescentLeapingSealArrangement' => 'intumescent lipping seal arrangement',
+            ]);
 
             // Vision Panel reset for Leaf2 if SD
             if ($door->DoorsetType == 'SD' && $door->Leaf2VisionPanel == 'Yes') {
