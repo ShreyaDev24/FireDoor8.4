@@ -108,6 +108,66 @@ class DoorScheduleController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getCadConfigurationBaseLookups(array $userIds): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('cad_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'leafTypeIntumescentseal' => $this->rememberLookup('cad_leaf_type_intumescentseal_1', static function () {
+                return IntumescentSealLeafType::where('configurableitems', 1)->where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('cad_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('cad_intumescent_arrangement_1', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 1], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('cad_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('cad_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('cad_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'setIronmongery' => $this->rememberLookup('cad_set_ironmongery_' . md5(json_encode($userIds)), static function () use ($userIds) {
+                return AddIronmongery::wherein('UserId', $userIds)->orderBy('Setname', 'ASC')->get();
+            }),
+            'BOMSetting' => $this->rememberLookup('cad_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -5463,13 +5523,21 @@ class DoorScheduleController extends Controller
     {
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getCadConfigurationBaseLookups($UserIds);
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems' => 1, 'is_deleted' => 0])->wherein('editBy', $UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 1], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('cad_option_data_add_1_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems' => 1, 'is_deleted' => 0])->wherein('editBy', $UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(1);
         $UserId = Auth::user()->id;
@@ -5493,22 +5561,7 @@ class DoorScheduleController extends Controller
 
         }
 
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id', $id)->first();
-
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
         // if(!empty($quotation->ProjectId)){
         //     $setIronmongery = AddIronmongery::where('ProjectId',$quotation->ProjectId)->get();
@@ -5517,7 +5570,6 @@ class DoorScheduleController extends Controller
         // }
 
         //old
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -5611,7 +5663,6 @@ class DoorScheduleController extends Controller
     $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
 
 // dd($defaultItemsCustom,$quotation->ProjectId);
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
         return view('Items/CadConfigurableItem', [
             "QuotationId" => $id,
             'Item' => $item,
@@ -5687,6 +5738,17 @@ class DoorScheduleController extends Controller
     {
 
         $UserIds = CompanyUsers();
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getCadConfigurationBaseLookups($UserIds);
         $item = Item::where('itemId', $id)->first();
         if ($item === null) {
             return abort(404);
@@ -5694,13 +5756,10 @@ class DoorScheduleController extends Controller
 
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
-
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $OptionsData = Option::where(['configurableitems' => 1, 'is_deleted' => 0])->get();
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 1], "", "intumescentSealArrangement");
-
-        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
         // $SelectedLippingSpeciesData = $LippingSpeciesData;
+        $OptionsData = $this->rememberLookup('cad_option_data_edit_1', static function () {
+            return Option::where(['configurableitems' => 1, 'is_deleted' => 0])->get();
+        });
 
         $configurationDoor = configurationDoor(1);
         $UserType = Auth::user()->UserType;
@@ -5731,24 +5790,11 @@ class DoorScheduleController extends Controller
         $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
         $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
 
-        $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        $SelectedLippingSpeciesData = $this->rememberLookup('cad_lipping_species_query', static function () {
+            return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        });
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
-
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
 
         $CompanyId = null;
@@ -5765,7 +5811,6 @@ class DoorScheduleController extends Controller
         // $setIronmongery = AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
 
         // new code
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -5824,9 +5869,6 @@ class DoorScheduleController extends Controller
         // }
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
-
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
 
         // dd(\Config::get('constants.PossibleSelectedOptions'));
 

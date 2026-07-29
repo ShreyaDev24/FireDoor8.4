@@ -85,6 +85,60 @@ class MMMController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getMmmConfigurationBaseLookups(): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('mmm_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('mmm_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('mmm_intumescent_arrangement_9', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 9], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('mmm_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('mmm_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('mmm_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'BOMSetting' => $this->rememberLookup('mmm_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -102,12 +156,19 @@ class MMMController extends Controller
 
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getMmmConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 9], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('mmm_option_data_add_9_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(9);
         $UserId = Auth::user()->id;
@@ -131,26 +192,16 @@ class MMMController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
         if (Auth::user()->UserType == 1) {
-            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+            $setIronmongery = $this->rememberLookup('mmm_set_ironmongery_all', static function () {
+                return AddIronmongery::orderBy('Setname','ASC')->get();
+            });
         } else{
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+            $setIronmongery = $this->rememberLookup('mmm_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+                return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+            });
         }
         $IronmongeryInfoSet = [
             'Hinges',
@@ -183,17 +234,19 @@ class MMMController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
         if(Auth::user()->UserType == 1){
-            $species = DB::table('leaf_type as lt')
-            ->where('lt.MMM', 9)
-            ->where('lt.EditBy', 1)
-            ->select('lt.*')
-            ->get();
+            $species = $this->rememberLookup('mmm_species_add_admin_9', static function () {
+                return DB::table('leaf_type as lt')
+                    ->where('lt.MMM', 9)
+                    ->where('lt.EditBy', 1)
+                    ->select('lt.*')
+                    ->get();
+            });
         } else {
-            $species = GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
+            $species = $this->rememberLookup('mmm_species_add_9', static function () {
+                return GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
+            });
         }
         // $species = GetOptions(['leaf_type.MMM'=> 9 ,'leaf_type.Status' => 1], "join","leaf_type");
-
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
         if(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -267,12 +320,20 @@ class MMMController extends Controller
 
        $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getMmmConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        $OptionsData = $this->rememberLookup('mmm_option_data_add_9_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 9 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 9], "", "intumescentSealArrangement");
        // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
         $configurationDoor = configurationDoor(9);
         $UserId = Auth::user()->id;
@@ -296,23 +357,11 @@ class MMMController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('mmm_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -344,9 +393,10 @@ class MMMController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfoSingle($setIronmongery, $IronmongeryInfoSet);
 
-        $species = DB::table('leaf_type')->where('MMM', 9)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        $species = $this->rememberLookup('mmm_species_edit_9_' . md5(json_encode($userId)), static function () use ($userId) {
+            return DB::table('leaf_type')->where('MMM', 9)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        });
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
         return view('Items/MMM/MMMConfigurableItem',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,

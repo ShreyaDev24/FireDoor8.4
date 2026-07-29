@@ -87,6 +87,60 @@ class DeantaController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getDeantaConfigurationBaseLookups(): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('deanta_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('deanta_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('deanta_intumescent_arrangement_6', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 6], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('deanta_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('deanta_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('deanta_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'BOMSetting' => $this->rememberLookup('deanta_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -104,12 +158,19 @@ class DeantaController extends Controller
 
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getDeantaConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 6 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 6], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('deanta_option_data_add_6_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 6 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(6);
         $UserId = Auth::user()->id;
@@ -133,24 +194,11 @@ class DeantaController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('deanta_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -210,8 +258,9 @@ class DeantaController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $species = GetOptions(['leaf_type.Deanta'=> 6 ,'leaf_type.Status' => 1], "join","leaf_type");
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
+        $species = $this->rememberLookup('deanta_species_add_6', static function () {
+            return GetOptions(['leaf_type.Deanta'=> 6 ,'leaf_type.Status' => 1], "join","leaf_type");
+        });
 
         if(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -285,12 +334,20 @@ class DeantaController extends Controller
 
        $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getDeantaConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 6 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        $OptionsData = $this->rememberLookup('deanta_option_data_add_6_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 6 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 6], "", "intumescentSealArrangement");
        // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
         $configurationDoor = configurationDoor(6);
         $UserId = Auth::user()->id;
@@ -314,23 +371,11 @@ class DeantaController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('deanta_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -391,9 +436,10 @@ class DeantaController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $species = DB::table('leaf_type')->where('Deanta', 6)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        $species = $this->rememberLookup('deanta_species_edit_6_' . md5(json_encode($userId)), static function () use ($userId) {
+            return DB::table('leaf_type')->where('Deanta', 6)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        });
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
         return view('Items/Deanta/DeantaConfigurableItem',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,

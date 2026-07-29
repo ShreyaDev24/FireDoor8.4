@@ -13,18 +13,84 @@ class FlamebreakController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getFlamebreakConfigurationBaseLookups(array $userIds): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('flamebreak_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'leafTypeIntumescentseal' => $this->rememberLookup('flamebreak_leaf_type_intumescentseal_7', static function () {
+                return DB::table('intumescent_seal_leaf_type')->where('configurableitems', 7)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('flamebreak_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('flamebreak_intumescent_arrangement_7', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 7], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('flamebreak_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('flamebreak_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('flamebreak_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'setIronmongery' => $this->rememberLookup('flamebreak_set_ironmongery_' . md5(json_encode($userIds)), static function () use ($userIds) {
+                return AddIronmongery::wherein('UserId', $userIds)->orderBy('Setname', 'ASC')->get();
+            }),
+            'BOMSetting' => $this->rememberLookup('flamebreak_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function addFlamebreakItem($id,$vid = null,$itemId = null){
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getFlamebreakConfigurationBaseLookups($UserIds);
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 7 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
-
-        //leafTypeIntumescentseal
-        $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 7], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('flamebreak_option_data_add_7_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 7 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(7);
         $UserId = Auth::user()->id;
@@ -44,10 +110,7 @@ class FlamebreakController extends Controller
             $SelectedIntumescentSealArrangement = GetOptions(['selected_intumescentseals2.selected_configurableitems'=> 7], "join", "intumescentSealArrangement");
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -137,19 +200,6 @@ class FlamebreakController extends Controller
         }
 
         $hinge_location = DoorFrameConstruction::where('UserId',$ids)->where('DoorFrameConstruction', 'Hinge_Location')->first();
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
         return view('Items/Flamebreak/FlamebreakDoorConfiguration',[
             "QuotationId" => $id,
             'Item' => $item,
@@ -190,15 +240,21 @@ class FlamebreakController extends Controller
         // below code to get lipping name and to show on edit page---
         $LippingName = LippingSpecies::where('id', $item['LippingSpecies'])->where('Status',1)->first();
 
-        //leafTypeIntumescentseal
-        $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getFlamebreakConfigurationBaseLookups($UserIds);
 
-
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $OptionsData = Option::where(['configurableitems'=> 7 ,'is_deleted' => 0])->get();
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 7], "", "intumescentSealArrangement");
-
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        $OptionsData = $this->rememberLookup('flamebreak_option_data_edit_7', static function () {
+            return Option::where(['configurableitems'=> 7 ,'is_deleted' => 0])->get();
+        });
 
         $configurationDoor = configurationDoor(7);
         $UserType = Auth::user()->UserType;
@@ -224,18 +280,17 @@ class FlamebreakController extends Controller
         $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
         $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
 
-        $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        $SelectedLippingSpeciesData = $this->rememberLookup('flamebreak_lipping_species_query', static function () {
+            return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        });
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"] ])->first();
         $CompanyId = null;
         if($quotation != ''){
             $CompanyId = $quotation->CompanyId;
         }
 
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -295,21 +350,6 @@ class FlamebreakController extends Controller
 
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
-
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
         return view('Items/Flamebreak/FlamebreakDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],

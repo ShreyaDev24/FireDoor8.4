@@ -85,6 +85,60 @@ class VicaimaController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getVicaimaConfigurationBaseLookups(): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('vicaima_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('vicaima_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('vicaima_intumescent_arrangement_4', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 4], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('vicaima_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('vicaima_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('vicaima_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'BOMSetting' => $this->rememberLookup('vicaima_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -102,12 +156,19 @@ class VicaimaController extends Controller
 
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getVicaimaConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 4], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('vicaima_option_data_add_4_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(4);
         $UserId = Auth::user()->id;
@@ -131,27 +192,16 @@ class VicaimaController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
-
 
         if (Auth::user()->UserType == 1) {
-            $setIronmongery = AddIronmongery::orderBy('Setname','ASC')->get();
+            $setIronmongery = $this->rememberLookup('vicaima_set_ironmongery_all', static function () {
+                return AddIronmongery::orderBy('Setname','ASC')->get();
+            });
         }else{
-            $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+            $setIronmongery = $this->rememberLookup('vicaima_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+                return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+            });
         }
         $IronmongeryInfoSet = [
             'Hinges',
@@ -213,18 +263,16 @@ class VicaimaController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
         // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
-        $species = DB::table('leaf_type as lt')
-            ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
-            ->where('lt.VicaimaDoorCore', 4)
-            // ->where('lt.Status', 1)
-            ->whereIn('slt.editBy', $userId)
-            // ->groupBy('LeafType')
-            ->select('lt.*', 'slt.id as selected_leaf_type_id')
-            ->get();
-
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
-
-
+        $species = $this->rememberLookup('vicaima_species_' . md5(json_encode($userId)), static function () use ($userId) {
+            return DB::table('leaf_type as lt')
+                ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
+                ->where('lt.VicaimaDoorCore', 4)
+                // ->where('lt.Status', 1)
+                ->whereIn('slt.editBy', $userId)
+                // ->groupBy('LeafType')
+                ->select('lt.*', 'slt.id as selected_leaf_type_id')
+                ->get();
+        });
 
     if(Auth::user()->UserType == 3){
         $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -542,12 +590,20 @@ class VicaimaController extends Controller
 
        $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getVicaimaConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        $OptionsData = $this->rememberLookup('vicaima_option_data_add_4_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 4 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 4], "", "intumescentSealArrangement");
        // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
         $configurationDoor = configurationDoor(4);
         $UserId = Auth::user()->id;
@@ -571,23 +627,11 @@ class VicaimaController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('vicaima_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -622,14 +666,15 @@ class VicaimaController extends Controller
 
         // $species = DB::table('leaf_type')->where('VicaimaDoorCore', 4)->where('Status',1)->whereIn('EditBy', $userId)->get();
 
-        $species = DB::table('leaf_type as lt')
-            ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
-            ->where('lt.VicaimaDoorCore', 4)
-            ->whereIn('slt.editBy', $userId)
-            ->select('lt.*', 'slt.id as selected_leaf_type_id')
-            ->get();
+        $species = $this->rememberLookup('vicaima_species_' . md5(json_encode($userId)), static function () use ($userId) {
+            return DB::table('leaf_type as lt')
+                ->join('selected_leaf_type as slt', 'lt.id', '=', 'slt.leaf_id')
+                ->where('lt.VicaimaDoorCore', 4)
+                ->whereIn('slt.editBy', $userId)
+                ->select('lt.*', 'slt.id as selected_leaf_type_id')
+                ->get();
+        });
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
         return view('Items/Vicaima/VicaimaConfigurableItem',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,

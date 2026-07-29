@@ -85,6 +85,60 @@ class SeadecController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getSeadecConfigurationBaseLookups(): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('seadec_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('seadec_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('seadec_intumescent_arrangement_5', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 5], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('seadec_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('seadec_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('seadec_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'BOMSetting' => $this->rememberLookup('seadec_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -102,12 +156,19 @@ class SeadecController extends Controller
 
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getSeadecConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 5 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 5], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('seadec_option_data_add_5_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 5 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(5);
         $UserId = Auth::user()->id;
@@ -131,24 +192,11 @@ class SeadecController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$id)->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('seadec_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -209,8 +257,9 @@ class SeadecController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $species = GetOptions(['leaf_type.Seadec'=> 5 ,'leaf_type.Status' => 1], "join","leaf_type");
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
+        $species = $this->rememberLookup('seadec_species_add_5', static function () {
+            return GetOptions(['leaf_type.Seadec'=> 5 ,'leaf_type.Status' => 1], "join","leaf_type");
+        });
 
         if(Auth::user()->UserType == 3){
             $users = User::where('UserType',3)->where('id',Auth::user()->id)->first();
@@ -284,12 +333,20 @@ class SeadecController extends Controller
 
        $item = $item->toArray();
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status'=> 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getSeadecConfigurationBaseLookups();
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems'=> 5 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        $OptionsData = $this->rememberLookup('seadec_option_data_add_5_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems'=> 5 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
+        });
 
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 5], "", "intumescentSealArrangement");
        // dd($UserIds, $ConfigurableDoorFormulaData, $LippingSpeciesData, $SelectedLippingSpeciesData,$OptionsData, $intumescentSealArrangement);
         $configurationDoor = configurationDoor(5);
         $UserId = Auth::user()->id;
@@ -313,23 +370,11 @@ class SeadecController extends Controller
 
         }
 
-        $company_data = Company::join('users','users.id','companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id',$item["QuotationId"])->first();
-        $folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
 
-        $setIronmongery = AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        $setIronmongery = $this->rememberLookup('seadec_set_ironmongery_' . md5(json_encode($UserId)), static function () use ($UserId) {
+            return AddIronmongery::wherein('UserId', $UserId)->orderBy('Setname','ASC')->get();
+        });
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -390,9 +435,10 @@ class SeadecController extends Controller
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $species = DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        $species = $this->rememberLookup('seadec_species_edit_5_' . md5(json_encode($userId)), static function () use ($userId) {
+            return DB::table('leaf_type')->where('Seadec', 5)->where('Status',1)->whereIn('EditBy', $userId)->get();
+        });
 
-        $BOMSetting = BOMSetting::where("id",1)->get()->first();
         return view('Items/Seadec/SeadecConfigurableItem',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,

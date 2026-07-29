@@ -30,17 +30,85 @@ class StredorController extends Controller
 {
     use BuildsIronmongeryAdditionalInfo;
 
+    /**
+     * Request-local lookup cache for repeated controller reads.
+     *
+     * @var array<string, mixed>
+     */
+    private array $requestLookupCache = [];
+
+    private function rememberLookup(string $key, callable $resolver)
+    {
+        if (!array_key_exists($key, $this->requestLookupCache)) {
+            $this->requestLookupCache[$key] = $resolver();
+        }
+
+        return $this->requestLookupCache[$key];
+    }
+
+    private function getStredorConfigurationBaseLookups(array $userIds): array
+    {
+        return [
+            'ConfigurableDoorFormulaData' => $this->rememberLookup('stredor_configurable_door_formula', static function () {
+                return ConfigurableDoorFormula::where('status', 1)->get();
+            }),
+            'leafTypeIntumescentseal' => $this->rememberLookup('stredor_leaf_type_intumescentseal_8', static function () {
+                return IntumescentSealLeafType::where('configurableitems', 8)->where('status', 1)->get();
+            }),
+            'LippingSpeciesData' => $this->rememberLookup('stredor_lipping_species_join', static function () {
+                return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+            }),
+            'intumescentSealArrangement' => $this->rememberLookup('stredor_intumescent_arrangement_8', static function () {
+                return GetOptions(['setting_intumescentseals2.configurableitems' => 8], "", "intumescentSealArrangement");
+            }),
+            'company_data' => $this->rememberLookup('stredor_company_data', static function () {
+                return Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
+            }),
+            'tooltip' => $this->rememberLookup('stredor_tooltip', static function () {
+                return Tooltip::first();
+            }),
+            'folders' => $this->rememberLookup('stredor_folders_' . Auth::id(), static function () {
+                return DB::table('folders')
+                    ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
+                    ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
+                    ->select(
+                        'folders.id as folder_id',
+                        'folders.name',
+                        'add_ironmongery.id as ironmongery_id',
+                        'add_ironmongery.Setname'
+                    )
+                    ->where('folders.user_id', Auth::user()->id)
+                    ->get()
+                    ->groupBy('folder_id');
+            }),
+            'setIronmongery' => $this->rememberLookup('stredor_set_ironmongery_' . md5(json_encode($userIds)), static function () use ($userIds) {
+                return AddIronmongery::wherein('UserId', $userIds)->orderBy('Setname', 'ASC')->get();
+            }),
+            'BOMSetting' => $this->rememberLookup('stredor_bom_setting', static function () {
+                return BOMSetting::where("id", 1)->get()->first();
+            }),
+        ];
+    }
+
     public function addStredorItem($id, $vid = null, $itemId = null)
     {
         $item = [];
         $UserIds = CompanyUsers();
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',8)->where('status',1)->get();
-        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getStredorConfigurationBaseLookups($UserIds);
         $SelectedLippingSpeciesData = $LippingSpeciesData;
-        $OptionsData = Option::where(['configurableitems' => 8, 'is_deleted' => 0])->wherein('editBy', $UserIds)->get();
-
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 8], "", "intumescentSealArrangement");
+        $OptionsData = $this->rememberLookup('stredor_option_data_add_8_' . md5(json_encode($UserIds)), static function () use ($UserIds) {
+            return Option::where(['configurableitems' => 8, 'is_deleted' => 0])->wherein('editBy', $UserIds)->get();
+        });
 
         $configurationDoor = configurationDoor(8);
         $UserId = Auth::user()->id;
@@ -66,8 +134,6 @@ class StredorController extends Controller
 
         }
 
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where('id', $id)->first();
 
         // if(!empty($quotation->ProjectId)){
@@ -75,7 +141,6 @@ class StredorController extends Controller
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -168,19 +233,6 @@ class StredorController extends Controller
     // Simplified null check with optional chaining
 
 // dd($defaultItemsCustom,$quotation->ProjectId);
-$folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
         return view('Items/Stredor/StredorDoorConfiguration', [
             "QuotationId" => $id,
             'Item' => $item,
@@ -221,11 +273,21 @@ $folders = DB::table('folders')
         $item = $item->toArray();
         // $LippingSpeciesData = LippingSpecies::where(['Status' => 1])->get();
 
-        $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $OptionsData = Option::where(['configurableitems' => 8, 'is_deleted' => 0])->get();
-        $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems' => 8], "", "intumescentSealArrangement");
+        [
+            'ConfigurableDoorFormulaData' => $ConfigurableDoorFormulaData,
+            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'LippingSpeciesData' => $LippingSpeciesData,
+            'intumescentSealArrangement' => $intumescentSealArrangement,
+            'company_data' => $company_data,
+            'tooltip' => $tooltip,
+            'folders' => $folders,
+            'setIronmongery' => $setIronmongery,
+            'BOMSetting' => $BOMSetting,
+        ] = $this->getStredorConfigurationBaseLookups($UserIds);
 
-        $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
+        $OptionsData = $this->rememberLookup('stredor_option_data_edit_8', static function () {
+            return Option::where(['configurableitems' => 8, 'is_deleted' => 0])->get();
+        });
         // $SelectedLippingSpeciesData = $LippingSpeciesData;
 
         $configurationDoor = configurationDoor(8);
@@ -257,11 +319,11 @@ $folders = DB::table('folders')
         $SelectedLippingSpeciesQuery = SelectedLippingSpeciesItems::where([['selected_lipping_species_items.selected_user_id', '=', $UserId]]);
         $SelectedLippingSpeciesIds = array_column($SelectedLippingSpeciesQuery->groupBy("selected_lipping_species_id")->get()->toArray(), "id");
 
-        $SelectedLippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        $SelectedLippingSpeciesData = $this->rememberLookup('stredor_lipping_species_query', static function () {
+            return GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies", "query");
+        });
         $SelectedLippingSpeciesData = $SelectedLippingSpeciesData->whereIn("lipping_species.id",  $SelectedLippingSpeciesIds)->get();
 
-        $company_data = Company::join('users', 'users.id', 'companies.UserId')->select('users.*')->get();
-        $tooltip = Tooltip::first();
         $quotation = Quotation::where(['id' => $item["QuotationId"]])->first();
         $CompanyId = null;
         if ($quotation != '') {
@@ -273,7 +335,6 @@ $folders = DB::table('folders')
         // } else {
         //     $setIronmongery = null;
         // }
-        $setIronmongery =  AddIronmongery::wherein('UserId', $UserIds)->orderBy('Setname', 'ASC')->get();
         $IronmongeryInfoSet = [
             'Hinges',
             'FloorSpring',
@@ -334,22 +395,7 @@ $folders = DB::table('folders')
         // Bulk-load + slim ironmongery additional_info (BuildsIronmongeryAdditionalInfo trait).
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $BOMSetting = BOMSetting::where("id", 1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',8)->where('status',1)->get();
-
         // dd(\Config::get('constants.PossibleSelectedOptions'));
-$folders = DB::table('folders')
-                ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
-                ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
-                ->select(
-                    'folders.id as folder_id',
-                    'folders.name',
-                    'add_ironmongery.id as ironmongery_id',
-                    'add_ironmongery.Setname'
-                )
-                ->where('folders.user_id',Auth::user()->id)
-                ->get()
-                ->groupBy('folder_id');
         return view('Items/Stredor/StredorDoorConfiguration', [
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
