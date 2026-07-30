@@ -5988,16 +5988,16 @@ class DoorScheduleController extends Controller
             $QuotationShipToInformation = QuotationShipToInformation::where('QuotationId', $Id)->first();
         }
 
-        $QuotationIdData = Quotation::get();
+        // $QuotationIdData = Quotation::get();
 
-        foreach($QuotationIdData as $quotation){
-            $item = FavoriteItem::where(['quotationId' => $quotation->id])->get();
-            foreach($item as $data){
-                FavoriteItem::where('id', $data->id)->update([
-                    'configurableitems' => $quotation->configurableitems
-                ]);
-            }
-        }
+        // foreach($QuotationIdData as $quotation){
+        //     $item = FavoriteItem::where(['quotationId' => $quotation->id])->get();
+        //     foreach($item as $data){
+        //         FavoriteItem::where('id', $data->id)->update([
+        //             'configurableitems' => $quotation->configurableitems
+        //         ]);
+        //     }
+        // }
 
         if ($Quotation === null) {
             return abort(404);
