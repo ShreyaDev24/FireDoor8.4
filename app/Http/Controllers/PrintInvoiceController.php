@@ -2784,6 +2784,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->rWdBRating)) {
                 $rWdBRating = $tt->rWdBRating;
             }
+            $perimeterSeal1 = 'N/A';
+            if (!empty($tt->perimeterSeal1)) {
+                $perimeterSeal1 = $tt->perimeterSeal1;
+            }
+            $perimeterSeal2 = 'N/A';
+            if (!empty($tt->perimeterSeal2)) {
+                $perimeterSeal2 = $tt->perimeterSeal2;
+            }
+            $AccousticsMeetingStiles = 'N/A';
+            if (!empty($tt->AccousticsMeetingStiles)) {
+                $AccousticsMeetingStiles = $tt->AccousticsMeetingStiles;
+            }
 
 
 
@@ -3336,6 +3348,21 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Rating</td>
                                     <td class="dicription_blank">' . $rWdBRating . '</td>
                                 </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 1</td>
+                                    <td class="dicription_blank">' . $perimeterSeal1 . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 2</td>
+                                    <td class="dicription_blank">' . $perimeterSeal2 . '</td>
+                                </tr>';
+                                if($tt->DoorsetType == 'DD'){
+                                $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Meeting Stiles</td>
+                                    <td class="dicription_blank">' . $AccousticsMeetingStiles . '</td>
+                                </tr>';
+                                }
+                                $elevTbl .= '
                             </tbody>
                         </table>';
                         if($tt->FrameOnOff != 1){
