@@ -563,7 +563,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -818,7 +818,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GV1'; // All headers
+                $cellRange = 'A1:GZ1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -840,7 +840,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GV1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GZ1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },

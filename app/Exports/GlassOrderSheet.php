@@ -280,10 +280,10 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // glass used on doors of different fire ratings gets a different
             // aperture size (e.g. FD30 -6 vs FD60 -9), so keying on size keeps
             // them as separate summary lines instead of the last one overwriting.
-            $fireRating = $row[18] ?? '';
-            $sizeSig = ($row[6] ?? '').'x'.($row[7] ?? '')
-                .'|'.($row[9] ?? '').'|'.($row[11] ?? '')
-                .'|'.($row[13] ?? '').'|'.($row[15] ?? '');
+            $fireRating = $row[19] ?? '';
+            $sizeSig = ($row[7] ?? '').'x'.($row[8] ?? '')
+                .'|'.($row[10] ?? '').'|'.($row[12] ?? '')
+                .'|'.($row[14] ?? '').'|'.($row[16] ?? '');
             $key = $glassType.'||'.$fireRating.'||'.$sizeSig;
 
             // initialize
@@ -410,8 +410,8 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             // --------------------------------------------
             // 🔹 1. GLASS ORDER SHEET HEADER STYLING
             // --------------------------------------------
-            $titleRange = 'A1:S1';
-            $headerRange = 'A2:S2';
+            $titleRange = 'A1:T1';
+            $headerRange = 'A2:T2';
 
             // Merge "Glass Order Sheet" title
             $event->sheet->mergeCells($titleRange);
@@ -457,7 +457,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
             ]);
 
             // Auto-size all columns A–R
-            foreach (range('A', 'S') as $col) {
+            foreach (range('A', 'T') as $col) {
                 $event->sheet->getColumnDimension($col)->setAutoSize(true);
             }
 
@@ -476,7 +476,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
             if ($summaryRow) {
                 // Summary title row styling (yellow bar)
-                $summaryTitle = "A{$summaryRow}:S{$summaryRow}";
+                $summaryTitle = "A{$summaryRow}:T{$summaryRow}";
                 $event->sheet->mergeCells($summaryTitle);
                 $event->sheet->getDelegate()->getStyle($summaryTitle)->applyFromArray([
                     'font' => [
@@ -501,7 +501,7 @@ class GlassOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitl
 
                 // Summary header row ("Glass Type", etc.)
                 $summaryHeader = $summaryRow + 1;
-                $summaryHeaderRange = "A{$summaryHeader}:S{$summaryHeader}";
+                $summaryHeaderRange = "A{$summaryHeader}:T{$summaryHeader}";
                 $event->sheet->getDelegate()->getStyle($summaryHeaderRange)->applyFromArray([
                     'font' => [
                         'bold' => true,
