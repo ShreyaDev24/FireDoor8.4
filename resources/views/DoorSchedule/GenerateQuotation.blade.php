@@ -144,7 +144,7 @@
                                             <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors</a></li>
                                             <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
                                             <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
-                                            {{--  <li><a href="{{route('quotation/storeConfigurableITEM')}}">Store Configurable Item</a></li>  --}}
+                                            <li><a href="{{route('quotation/storeConfigurableITEM')}}">Store Configurable Item</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportFrameExcel();">Frame Excel</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
                                             <li><a
