@@ -103,6 +103,7 @@ use App\Jobs\RecalculateItemsBOMJob;
 use App\Jobs\RecalculateNonConfigurableItemsJob;
 use App\Jobs\RecalculateSideScreenItemsJob;
 use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
+use App\Exports\HangingDocumentExport;
 
 class DoorScheduleController extends Controller
 {
@@ -9984,5 +9985,15 @@ private function getQuotationGrandTotal($quotationId, $versionId)
             'Content-Type' => 'application/json;charset=UTF-8',
             'Charset' => 'utf-8'
         ], JSON_UNESCAPED_UNICODE);
+    }
+
+    public function ExportHangingDocument($quotationId,$versionID){
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        $vid = ['selectVersionID'=>0,'selectVersion'=>0];
+        if($vid > 0){
+            $QV = QuotationVersion::where('id',operator: $versionID)->first();
+            $vid = $QV->version;
+        }
+        return Excel::download(new HangingDocumentExport($quotationId,$versionID), "Worksheet ".trim($quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx');
     }
 }
