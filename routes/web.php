@@ -21,6 +21,7 @@ use App\Http\Controllers\OverpanelGlassGlazingType;
 use App\Http\Controllers\ColourListController;
 use App\Http\Controllers\FinishCostController;
 use App\Http\Controllers\LippingSpeciesController;
+use App\Http\Controllers\LockTypeController;
 use App\Http\Controllers\Admin\SupportTicketController as AdminSupportTicketController;
 
 /*
@@ -182,6 +183,7 @@ Route::middleware(['auth', 'user.type'])->group(function () {
     Route::resource('options/Lipping-Species', LippingSpeciesController::class);
     Route::post('options/Lipping-Species/update-selected', [LippingSpeciesController::class, 'updateSelected'])->name('Lipping-Species.updateSelected');
 
+    Route::resource('options/Lock-Type', LockTypeController::class)->except(['show']);
 
 });
 

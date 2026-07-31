@@ -319,6 +319,12 @@
                             <a href="{{ route('Colour-List.index') }}">Colour List</a>
                         </li>
 
+                        {{-- Lock Type --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lock-Type') ? 'active' : '' }}">
+                            <a href="{{ route('Lock-Type.index') }}">Lock Type</a>
+                        </li>
+
                         {{-- Door Dimension --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Door-Dimension-Custom') ? 'active' : '' }}">
@@ -664,6 +670,12 @@
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Colour-List') ? 'active' : '' }}">
                             <a href="{{ route('Colour-List.index') }}">Colour List</a>
+                        </li>
+
+                        {{-- Lock Type --}}
+                        <li
+                            class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'Lock-Type') ? 'active' : '' }}">
+                            <a href="{{ route('Lock-Type.index') }}">Lock Type</a>
                         </li>
 
                         {{-- Door Dimension --}}
