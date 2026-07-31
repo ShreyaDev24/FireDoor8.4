@@ -3200,10 +3200,14 @@ class DoorScheduleController extends Controller
                     $PlantonStopHeight = trim((string) $row[$j++]);
                     $RebatedWidth = trim((string) $row[$j++]);
                     $RebatedHeight = trim((string) $row[$j++]);
+                    $RebatedHeadDepth = trim((string) $row[$j++]);
+                    $RebatedBottomDepth = trim((string) $row[$j++]);
                     $ScallopedWidth = trim((string) $row[$j++]);
                     $ScallopedHeight = trim((string) $row[$j++]);
                     $FrameWidth = trim((string) $row[$j++]);
                     $FrameHeight = trim((string) $row[$j++]);
+                    $HeadFrameThickness = trim((string) $row[$j++]);
+                    $BottomFrameThickness = trim((string) $row[$j++]);
                     $FrameDepth = trim((string) $row[$j++]);
                     $FrameFinish = trim((string) $row[$j++]);
                     $FrameFinishColor = trim((string) $row[$j++]);
@@ -3212,6 +3216,8 @@ class DoorScheduleController extends Controller
                     $ExtLinerValue = trim((string) $row[$j++]);
                     $extLinerSize = trim((string) $row[$j++]);
                     $ExtLinerThickness = trim((string) $row[$j++]);
+                    $Saddle = trim((string) $row[$j++]);
+                    $SaddleLocation = trim((string) $row[$j++]);
                     $SpecialFeatureRefs = trim((string) $row[$j++]);
                     $Overpanel = trim((string) $row[$j++]);
                     $OPWidth = trim((string) $row[$j++]);
@@ -3254,6 +3260,7 @@ class DoorScheduleController extends Controller
                     $SlBeadHeight = trim((string) $row[$j++]);
                     $SL1Depth = trim((string) $row[$j++]);
                     $SL1Transom = trim((string) $row[$j++]);
+                    $SideLight1FrameThickness = trim((string) $row[$j++]);
                     $SideLight2 = trim((string) $row[$j++]);
                     $DoYouWantToCopySameAsSL1 = trim((string) $row[$j++]);
                     $SideLight2GlassType = trim((string) $row[$j++]);
@@ -3275,6 +3282,8 @@ class DoorScheduleController extends Controller
                     $SL2Transom = trim((string) $row[$j++]);
                     $SLtransomHeightFromTop = trim((string) $row[$j++]);
                     $SLtransomThickness = trim((string) $row[$j++]);
+                    $SideLight2FrameThickness = trim((string) $row[$j++]);
+
                     $LippingType = trim((string) $row[$j++]);
                     $LippingThickness = trim((string) $row[$j++]);
                     $LippingSpecies = trim((string) $row[$j++]);
@@ -3493,10 +3502,14 @@ class DoorScheduleController extends Controller
                                 $aa->PlantonStopHeight = floatval($PlantonStopHeight);
                                 $aa->RebatedWidth = floatval($RebatedWidth);
                                 $aa->RebatedHeight = floatval($RebatedHeight);
+                                $aa->RebatedHeadDepth = floatval($RebatedHeadDepth);
+                                $aa->RebatedBottomDepth = floatval($RebatedBottomDepth);
                                 $aa->ScallopedWidth = floatval($ScallopedWidth);
                                 $aa->ScallopedHeight = floatval($ScallopedHeight);
                                 $aa->FrameWidth = floatval($FrameWidth);
                                 $aa->FrameHeight = floatval($FrameHeight);
+                                $aa->HeadFrameThickness = floatval($HeadFrameThickness);
+                                $aa->BottomFrameThickness = floatval($BottomFrameThickness);
                                 $aa->FrameDepth = floatval($FrameDepth);
                                 $aa->FrameFinish = $FrameFinish;
                                 $aa->FrameFinishColor = $FrameFinishColor;
@@ -3505,6 +3518,8 @@ class DoorScheduleController extends Controller
                                 $aa->ExtLinerValue = $ExtLinerValue;
                                 $aa->extLinerSize = floatval($extLinerSize);
                                 $aa->ExtLinerThickness = floatval($ExtLinerThickness);
+                                $aa->Saddle = floatval($Saddle);
+                                $aa->saddleLocation = floatval($SaddleLocation);
                                 $aa->SpecialFeatureRefs = $SpecialFeatureRefs;
                                 $aa->Overpanel = $Overpanel;
                                 $aa->OPWidth = floatval($OPWidth);
@@ -3547,6 +3562,7 @@ class DoorScheduleController extends Controller
                                 $aa->SlBeadHeight = floatval($SlBeadHeight);
                                 $aa->SL1Depth = floatval($SL1Depth);
                                 $aa->SL1Transom = floatval($SL1Transom);
+                                $aa->SideLight1FrameThickness = floatval($SideLight1FrameThickness);
                                 $aa->SideLight2 = $SideLight2;
                                 $aa->DoYouWantToCopySameAsSL1 = $DoYouWantToCopySameAsSL1;
                                 $aa->SideLight2GlassType = $SideLight2GlassType;
@@ -3568,6 +3584,7 @@ class DoorScheduleController extends Controller
                                 $aa->SL2Transom = floatval($SL2Transom);
                                 $aa->SLtransomHeightFromTop = floatval($SLtransomHeightFromTop);
                                 $aa->SLtransomThickness = floatval($SLtransomThickness);
+                                $aa->SideLight2FrameThickness = floatval($SideLight2FrameThickness );
                                 $aa->Architrave = $Architrave;
                                 $aa->ArchitraveMaterial = lippingSpeciesId($ArchitraveMaterial);
                                 $aa->ArchitraveType = $ArchitraveType;
@@ -3843,6 +3860,16 @@ class DoorScheduleController extends Controller
                             $item->architraveFinish = $aa->ArchitraveFinish;
                             $item->architraveFinishcolor = $aa->ArchitraveFinishColor;
                             $item->architraveSetQty = $aa->ArchitraveSetQty;
+
+                            $item->RebatedHeadDepth  = $aa->RebatedHeadDepth;
+                            $item->RebatedBottomDepth = $aa->RebatedBottomDepth;
+                            $item->HeadFrameThickness = $aa->HeadFrameThickness;
+                            $item->BottomFrameThickness = $aa->BottomFrameThickness;
+                            $item->Saddle = $aa->Saddle;
+                            $item->SaddleLocation = $aa->saddleLocation;
+                            $item->SideLight1FrameThickness = $aa->SideLight1FrameThickness;
+                            $item->SideLight2FrameThickness = $aa->SideLight2FrameThickness;
+
                             $item->issingleconfiguration = $configurableitems;
 
                             $item->IronmongaryPrice = $IronmongaryPrice;

@@ -318,8 +318,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $rWdBRating = $item[$i]->rWdBRating;
             $perimeterSeal1 = $item[$i]->perimeterSeal1;
             $perimeterSeal2 = $item[$i]->perimeterSeal2;
-            $thresholdSeal1 = $item[$i]->thresholdSeal1;
-            $thresholdSeal2 = $item[$i]->thresholdSeal2;
+            // $thresholdSeal1 = $item[$i]->thresholdSeal1;
+            // $thresholdSeal2 = $item[$i]->thresholdSeal2;
             $AccousticsMeetingStiles = $item[$i]->AccousticsMeetingStiles;
 
             //Architrave
@@ -535,8 +535,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $rWdBRating,
                 $perimeterSeal1,
                 $perimeterSeal2,
-                $thresholdSeal1,
-                $thresholdSeal2,
+                // $thresholdSeal1,
+                // $thresholdSeal2,
                 $AccousticsMeetingStiles,
                 $Architrave,
                 $ArchitraveMaterial,
@@ -563,7 +563,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -772,8 +772,6 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'rWdBRating ',
             'perimeter Seal1 ',
             'perimeter Seal2 ',
-            'threshold Seal1 ',
-            'threshold Seal2 ',
             'Accoustics Meeting Stiles ',
             'Architrave ',
             'Architrave Material ',
@@ -818,7 +816,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GZ1'; // All headers
+                $cellRange = 'A1:GX1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -840,7 +838,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GZ1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GX1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
