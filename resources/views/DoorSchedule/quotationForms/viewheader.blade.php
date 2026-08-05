@@ -499,8 +499,46 @@
                             <div class="input-group">
                                 <select name="CurrencyCostperdelivery" readonly class="form-control" style="max-width: 100px;">
                                     <option value=""></option>
-                                    <option value="€" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '€' ? 'selected' : '' }}>€</option>
-                                    <option value="£" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '£' ? 'selected' : '' }}>£</option>
+                                    {{--  <option value="€" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '€' ? 'selected' : '' }}>€</option>
+                                    <option value="£" {{ $QuotationShipToInformation->CurrencyCostperdelivery == '£' ? 'selected' : '' }}>£</option>  --}}
+                                    <option value="£_GBP"
+                                    @php
+                                        if(!empty($QuotationShipToInformation->CurrencyCostperdelivery)){
+                                            if($QuotationShipToInformation->CurrencyCostperdelivery == '£_GBP'){
+                                                echo 'selected';
+                                            }
+                                        }else if(!empty($Project->projectCurrency)){
+                                            if($Project->projectCurrency == '£_GBP'){
+                                                echo 'selected';
+                                            }
+                                        } else {
+                                            if(!empty($currency->currency)){
+                                                if($currency->currency == '£_GBP'){
+                                                    echo 'selected';
+                                                }
+                                            }
+                                        }
+                                    @endphp
+                                    >£ GBP</option>
+                                    <option value="€_EURO"
+                                        @php
+                                            if(!empty($QuotationShipToInformation->CurrencyCostperdelivery)){
+                                                if($QuotationShipToInformation->CurrencyCostperdelivery == '€_EURO'){
+                                                    echo 'selected';
+                                                }
+                                            }else if(!empty($Project->projectCurrency)){
+                                                if($Project->projectCurrency == '€_EURO'){
+                                                    echo 'selected';
+                                                }
+                                            } else {
+                                                if(!empty($currency->currency)){
+                                                    if($currency->currency == '€_EURO'){
+                                                        echo 'selected';
+                                                    }
+                                                }
+                                            }
+                                        @endphp
+                                    >€ EURO</option>
                                 </select>
                                 <input type="text" readonly name="Costperdelivery" class="form-control"
                                 value="@if(!empty($QuotationShipToInformation->Costperdelivery)){{$QuotationShipToInformation->Costperdelivery}}@endif">
