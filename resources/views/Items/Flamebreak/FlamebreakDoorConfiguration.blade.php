@@ -31,8 +31,24 @@
     padding: 10px;
 }
 
+/*
+ * Scrollbar owner (Chrome headless inspection): document.scrollingElement (html).
+ * Right-edge scrollbar is the viewport/document scroller (overflow-y: visible +
+ * content taller than viewport) — not #opDiv / #container (overflow hidden/visible,
+ * no scrollbar). Suppress only that document scrollbar. Left .item-form keeps its
+ * own overflow-y scrolling. Do not touch #container / SVG.
+ */
+html, body {
+    overflow-y: hidden;
+}
+
 .item-form {
     margin-top: 70px;
+    /* Must fit under the fixed header so content is not trapped when html can't scroll.
+       !important beats custom.css .item-form{height:800px !important}. */
+    height: calc(100vh - 130px) !important;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 #BuildOfMaterial {
@@ -57,6 +73,7 @@
 
     .item-form {
         margin-top: 200px;
+        height: calc(100vh - 260px) !important;
     }
 
 }
