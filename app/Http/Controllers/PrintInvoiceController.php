@@ -1075,7 +1075,7 @@ class PrintInvoiceController extends Controller
                 ],
                 2 => [
                     'NFR' => 'Chilt/A01205 Part 1 Revision K',
-                    'FD30' => 'Chilt/A01204 Part 1 Revision 1',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision I',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
@@ -2818,6 +2818,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->rWdBRating)) {
                 $rWdBRating = $tt->rWdBRating;
             }
+            $perimeterSeal1 = 'N/A';
+            if (!empty($tt->perimeterSeal1)) {
+                $perimeterSeal1 = $tt->perimeterSeal1;
+            }
+            $perimeterSeal2 = 'N/A';
+            if (!empty($tt->perimeterSeal2)) {
+                $perimeterSeal2 = $tt->perimeterSeal2;
+            }
+            $AccousticsMeetingStiles = 'N/A';
+            if (!empty($tt->AccousticsMeetingStiles)) {
+                $AccousticsMeetingStiles = $tt->AccousticsMeetingStiles;
+            }
 
 
 
@@ -3375,6 +3387,21 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Rating</td>
                                     <td class="dicription_blank">' . $rWdBRating . '</td>
                                 </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 1</td>
+                                    <td class="dicription_blank">' . $perimeterSeal1 . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 2</td>
+                                    <td class="dicription_blank">' . $perimeterSeal2 . '</td>
+                                </tr>';
+                                if($tt->DoorsetType == 'DD'){
+                                $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Meeting Stiles</td>
+                                    <td class="dicription_blank">' . $AccousticsMeetingStiles . '</td>
+                                </tr>';
+                                }
+                                $elevTbl .= '
                             </tbody>
                         </table>';
                         if($tt->FrameOnOff != 1){
@@ -5036,7 +5063,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
-                    'FD30' => 'Chilt/A01204 Part 1 Revision 1',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision I',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
