@@ -268,6 +268,12 @@ class PrintInvoiceController extends Controller
                 </tr>';
             }
 
+            if($QuotationShipToInformation->CurrencyCostperdelivery == '£_GBP'){
+                $CurrencyCostperdelivery = '£';
+            } elseif($QuotationShipToInformation->CurrencyCostperdelivery == '€_EURO'){
+                $CurrencyCostperdelivery = '€';
+            }
+
             $htmlPreview .= '<tr>
                     <td class="tbl_color"><span>Delivery Restrictions</span></td>
                     <td colspan="3"><span>' . ($QuotationShipToInformation->DeliveryRestrictions ?? '') . '</span></td>
@@ -318,7 +324,7 @@ class PrintInvoiceController extends Controller
                 </tr>
                 <tr>
                     <td class="tbl_color"><span>Cost Per Delivery</span></td>
-                    <td><span>' . ($QuotationShipToInformation->CurrencyCostperdelivery  ?? '').(number_format((float)$QuotationShipToInformation->Costperdelivery, 2) ?? '0.00') . '</span></td>
+                    <td><span>' . ($CurrencyCostperdelivery ?? '').(number_format((float)$QuotationShipToInformation->Costperdelivery, 2) ?? '0.00') . '</span></td>
                     <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
                     <td><span>' . ($QuotationShipToInformation->AverageNoDoorsetsperdrop ?? '') . '</span></td>
                 </tr>
