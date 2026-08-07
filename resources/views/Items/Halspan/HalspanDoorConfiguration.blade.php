@@ -505,9 +505,11 @@ $(document).ready(function() {
 
     @if(isset($Item['SideLight1']) && $Item['SideLight1'] == "Yes")
     sideLight1Change(true);
+    sideLightGlassType(true);
     @endif
     @if(isset($Item['SideLight2']) && $Item['SideLight2'] == "Yes")
     sideLight2Change(true);
+    sideLight2GlassType(true);
     @endif
     @if(isset($Item['DoYouWantToCopySameAsSL1']) && $Item['DoYouWantToCopySameAsSL1'] == "Yes")
     copyOfSideLite1Change(true);
