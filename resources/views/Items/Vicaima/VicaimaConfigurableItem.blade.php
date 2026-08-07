@@ -16,46 +16,22 @@
     }
 
     /*
-     * Single shared scroll: .vicaima-shared-scroll wraps both columns.
-     * Left .item-form and right #container must NOT scroll independently.
-     * CadMaster/custom.css fixed #container / .item-form heights are undone here.
+     * Scrollbar owner (Chrome headless inspection): document.scrollingElement (html).
+     * Right-edge scrollbar is the viewport/document scroller (overflow-y: visible +
+     * content taller than viewport) — not #opDiv / #container (overflow hidden/visible,
+     * no scrollbar). Suppress only that document scrollbar. Left .item-form keeps its
+     * own overflow-y scrolling. Do not touch #container / SVG.
      */
     html, body {
         overflow-y: hidden;
     }
 
-    .vicaima-shared-scroll {
-        /* Viewport budget under app header — scrollport only, not CAD sizing. */
-        max-height: calc(100vh - 130px);
+    .item-form {
+        /* Must fit under the fixed header so content is not trapped when html can't scroll.
+           !important beats custom.css .item-form{height:800px !important}. */
+        height: calc(100vh - 130px) !important;
         overflow-x: hidden;
         overflow-y: auto;
-    }
-
-    .vicaima-shared-scroll .item-form {
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-
-    .vicaima-shared-scroll #container {
-        height: auto !important;
-        max-height: none !important;
-        overflow: visible !important;
-    }
-
-    .vicaima-shared-scroll #container svg.svg-content {
-        width: 100%;
-        height: auto;
-        display: block;
-    }
-
-    /* Was position:fixed — that decoupled CAD chrome from shared scroll. */
-    .vicaima-cad-toolbar {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-        background: #ffffff;
-        padding: 10px;
     }
 
     @media only screen and (max-width: 600px) {
@@ -68,8 +44,9 @@
             width: 92%;
         }
 
-        .vicaima-shared-scroll {
-            max-height: calc(100vh - 260px);
+        .item-form {
+            margin-top: 200px;
+            height: calc(100vh - 260px) !important;
         }
 
     }
@@ -93,7 +70,6 @@
             }
         </script>
 
-        <div class="vicaima-shared-scroll">
         <div class="form-row">
             <div class="col-md-6">
 
@@ -255,7 +231,7 @@
                         </li>
                     @endif
                 </ul> --}}
-                <div class="vicaima-cad-toolbar">
+                <div style="position: fixed;z-index: 1;background: #ffffff;padding: 10px;width: 47.5%;">
                     <ul class="nav nav-tabs border-0 float-left">
                         <li class="optionItem">
                             <a href="{{url('quotation/generate')}}/{{$QuotationId}}/{{ ($versionId !== null)?$versionId:0 }}"
@@ -307,7 +283,6 @@
                     </div>
                 </div>
             </div>
-        </div>
         </div>
     </div>
 
@@ -1701,7 +1676,8 @@ function changeLippingThickness(){
 
         $(document).on('click','.optionItem',function(){
             let ScrolHeight = $(this).children('input').val();
-            $('.vicaima-shared-scroll').animate({scrollTop: ScrolHeight});
+            // alert($("#opDiv").scrollTop() + " px");
+            $('#opDiv').animate({scrollTop: ScrolHeight});
         });
 
         $(function(){
