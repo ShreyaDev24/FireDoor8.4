@@ -3054,8 +3054,10 @@ if (IsFourSidedFrame == true) {
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
-                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                        KickPlatesHeight = KickPlatesData.staticHeight
+                        const KickPlatesData = (elem.additional_info || []).find((item) => item.Category === "KickPlates");
+                        if (KickPlatesData && typeof KickPlatesData.staticHeight !== 'undefined') {
+                            KickPlatesHeight = KickPlatesData.staticHeight;
+                        }
                     }
 
                    if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {

@@ -162,7 +162,7 @@ const render = (CustomElement = null) => {
         }
 
         // var FrameThickness = $('select[name="frameThickness"]').val();
-        var FrameThickness = $('#frameThickness').val();
+        var FrameThickness = $('#frameThickness').val() ?? 0;
         var FrameThicknessForMap = 0;
         if (FrameThickness == "") {
             FrameThickness = 0;
@@ -3115,8 +3115,10 @@ const render = (CustomElement = null) => {
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
-                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                        KickPlatesHeight = KickPlatesData.staticHeight
+                        const KickPlatesData = (elem.additional_info || []).find((item) => item.Category === "KickPlates");
+                        if (KickPlatesData && typeof KickPlatesData.staticHeight !== 'undefined') {
+                            KickPlatesHeight = KickPlatesData.staticHeight;
+                        }
                     }
 
                   if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {

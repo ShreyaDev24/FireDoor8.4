@@ -6,6 +6,14 @@ d3.select('button#save').on('click', function () {
     d3_save_svg.save(d3.select('svg').node(), config);
 });
 
+// Ensure expected JSON variables exist to avoid runtime ReferenceError on pages missing injections
+if (typeof OptionsJson === 'undefined') { OptionsJson = '[]'; console.warn('OptionsJson undefined — defaulting to []'); }
+if (typeof SelectedOptionsJson === 'undefined') { SelectedOptionsJson = '[]'; console.warn('SelectedOptionsJson undefined — defaulting to []'); }
+if (typeof IronmongeryJson === 'undefined') { IronmongeryJson = '[]'; console.warn('IronmongeryJson undefined — defaulting to []'); }
+if (typeof possibleSelectedOptionsJson === 'undefined') { possibleSelectedOptionsJson = '[]'; console.warn('possibleSelectedOptionsJson undefined — defaulting to []'); }
+if (typeof intumescentSealArrangementJson === 'undefined') { intumescentSealArrangementJson = '[]'; console.warn('intumescentSealArrangementJson undefined — defaulting to []'); }
+if (typeof SelectedIntumescentSealArrangementJson === 'undefined') { SelectedIntumescentSealArrangementJson = '[]'; console.warn('SelectedIntumescentSealArrangementJson undefined — defaulting to []'); }
+
 $(document).ready(function () {
     var element = $(this);
     render(element);
@@ -72,7 +80,11 @@ const render = (CustomElement = null) => {
     var WritingMode = "lr";
     var ShowMeasurements = true;
 
-    var ChangedFieldName = CustomElement.attr("name");
+    var ChangedFieldName = '';
+    if (CustomElement && typeof CustomElement.attr === 'function') {
+        ChangedFieldName = CustomElement.attr("name") || '';
+    }
+    
 
     if (!$("#change-dimension").prop('checked')) {
         // WritingMode = "tb";
@@ -3106,24 +3118,38 @@ const render = (CustomElement = null) => {
 
         if (IronmongerySet == "Yes" && IronmongeryID != "") {
 
-            var ParsedIronmongerySet = JSON.parse(IronmongeryJson);
+            
+
+            var ParsedIronmongerySet = [];
+            if (typeof IronmongeryJson !== 'undefined' && IronmongeryJson) {
+                try {
+                    ParsedIronmongerySet = JSON.parse(IronmongeryJson);
+                    
+                } catch (e) {
+                    ParsedIronmongerySet = [];
+                }
+            } else {
+                
+            }
 
             ParsedIronmongerySet.forEach(function (elem, index) {
                 if (elem.id == IronmongeryID) {
 
-                    console.log(elem);
+                    
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
-                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                        KickPlatesHeight = KickPlatesData.staticHeight
+                        const KickPlatesData = (elem.additional_info || []).find((item) => item.Category === "KickPlates");
+                        if (KickPlatesData && typeof KickPlatesData.staticHeight !== 'undefined') {
+                            KickPlatesHeight = KickPlatesData.staticHeight;
+                        }
                     }
 
                    if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
 
 
 
-                    const doorSignages = elem.additional_info.filter(item => item.Category === "DoorSignage");
+                    const doorSignages = (elem.additional_info || []).filter(item => item.Category === "DoorSignage");
 
                     if (doorSignages.length > 0) {
                          IsDoorSinageEnable = true;
@@ -3148,7 +3174,7 @@ const render = (CustomElement = null) => {
 
                     if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null) {
 
-                          const LocksAndLatches = elem.additional_info.filter(item => item.Category === "LocksandLatches");
+                          const LocksAndLatches = (elem.additional_info || []).filter(item => item.Category === "LocksandLatches");
 
                     if (LocksAndLatches.length > 0) {
                         IsLockNLatchesEnable = true;
@@ -3166,7 +3192,7 @@ const render = (CustomElement = null) => {
                     }
                     if (elem.Thumbturn != '' && elem.Thumbturn != null) {
 
-                         const Thumbturns = elem.additional_info.filter(item => item.Category === "Thumbturn");
+                         const Thumbturns = (elem.additional_info || []).filter(item => item.Category === "Thumbturn");
 
                     if (Thumbturns.length > 0) {
                         IsThumbturnEnable = true;
@@ -3185,7 +3211,7 @@ const render = (CustomElement = null) => {
                     if (elem.Cylinders != '' && elem.Cylinders != null) {
 
 
-                          const Cylinders = elem.additional_info.filter(item => item.Category === "Cylinders");
+                          const Cylinders = (elem.additional_info || []).filter(item => item.Category === "Cylinders");
 
                     if (Cylinders.length > 0) {
                         IsCylindersEnable = true;
@@ -3205,7 +3231,7 @@ const render = (CustomElement = null) => {
                     if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
 
 
-                                               const ConcealedOverheadCloser = elem.additional_info.filter(item => item.Category === "ConcealedOverheadCloser");
+                                               const ConcealedOverheadCloser = (elem.additional_info || []).filter(item => item.Category === "ConcealedOverheadCloser");
 
                     if (ConcealedOverheadCloser.length > 0) {
                         IsConcealedOverheadCloserEnable = true;
@@ -3216,15 +3242,14 @@ const render = (CustomElement = null) => {
 
                     if (ConcealedOverheadCloser.length > 1) {
                         IsConcealedOverheadCloserEnable2 = true;
-                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
                         const ConcealedOverheadCloserData2 = ConcealedOverheadCloser[1];
                        ConcealedOverheadCloserWidth2 = ConcealedOverheadCloserData2.staticWidth
                         ConcealedOverheadCloserHeight2 = ConcealedOverheadCloserData2.staticHeight
                     }
                     }
                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
-                                 const FaceFixedDoorClosers = elem.additional_info.filter(item => item.Category === "FaceFixedDoorClosers");
-   console.log(FaceFixedDoorClosers.length,'/////////////////////////')
+                                 const FaceFixedDoorClosers = (elem.additional_info || []).filter(item => item.Category === "FaceFixedDoorClosers");
+   
                     if (FaceFixedDoorClosers.length > 0) {
                         IsFaceFixedDoorClosersEnable = true;
                         const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
@@ -3234,7 +3259,6 @@ const render = (CustomElement = null) => {
 
                     if (FaceFixedDoorClosers.length > 1) {
                         IsFaceFixedDoorClosersEnable2 = true;
-                        console.log(' IsFaceFixedDoorClosersEnable2 = true;','///////////////////////')
                         const FaceFixedDoorClosersData2 = FaceFixedDoorClosers[1];
                        FaceFixedDoorClosersWidth2 = FaceFixedDoorClosersData2.staticWidth
                         FaceFixedDoorCloserDataHeight2 = FaceFixedDoorClosersData2.staticHeight
@@ -3244,7 +3268,7 @@ const render = (CustomElement = null) => {
                     if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
 
 
-                         const PullHandles = elem.additional_info.filter(item => item.Category === "PullHandles");
+                         const PullHandles = (elem.additional_info || []).filter(item => item.Category === "PullHandles");
 
                     if (PullHandles.length > 0) {
                         IsPullHandlesEnable = true;
@@ -3252,7 +3276,6 @@ const render = (CustomElement = null) => {
                         PullHandleHeight = PullHandlesData1.staticHeight
                         PullHandleDistanceFromBottomOfDoor = PullHandlesData1.distanceFromBottomOfDoor
                         PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData1.distanceFromLeadingEdgeOfDoor
-                        console.log(PullHandleHeight,PullHandleDistanceFromBottomOfDoor,PullHandleDistanceFromLeadingEdgeOfDoor)
                     }
 
                     if (PullHandles.length > 1) {
@@ -3261,13 +3284,12 @@ const render = (CustomElement = null) => {
                         PullHandleHeight2 = PullHandlesData2.staticHeight
                         PullHandleDistanceFromBottomOfDoor2 = PullHandlesData2.distanceFromBottomOfDoor
                         PullHandleDistanceFromLeadingEdgeOfDoor2 = PullHandlesData2.distanceFromLeadingEdgeOfDoor
-                        console.log(PullHandleHeight2,PullHandleDistanceFromBottomOfDoor2,PullHandleDistanceFromLeadingEdgeOfDoor2)
                     }
                     }
 
                     if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null) {
 
-                        const PushHandles = elem.additional_info.filter(item => item.Category === "PushHandles");
+                        const PushHandles = (elem.additional_info || []).filter(item => item.Category === "PushHandles");
 
                     if (PushHandles.length > 0) {
                         IsPushHandlesEnable = true;
@@ -3288,16 +3310,18 @@ const render = (CustomElement = null) => {
 
                     if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
                         IsLeverHandlesEnable = true;
-                        const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
-                        LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
-                        LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor
+                        const LeverHandleData = (elem.additional_info || []).find((item) => item.Category === "LeverHandle");
+                        if (LeverHandleData) {
+                            LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor;
+                            LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor;
+                        }
                         // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
                     }
 
                     if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
 
 
-                    const SecurityViewers = elem.additional_info.filter(item => item.Category === "Doorsecurityviewer");
+                    const SecurityViewers = (elem.additional_info || []).filter(item => item.Category === "Doorsecurityviewer");
 
                     if (SecurityViewers.length > 0) {
                         IsSecurityViewerEnable = true;
@@ -3315,7 +3339,7 @@ const render = (CustomElement = null) => {
                     if (elem.Letterplates != '' && elem.Letterplates != null) {
 
 
-                         const LetterPlates = elem.additional_info.filter(item => item.Category === "Letterplates");
+                         const LetterPlates = (elem.additional_info || []).filter(item => item.Category === "Letterplates");
 
                     if (LetterPlates.length > 0) {
                         IsLetterPlatesEnable = true;
@@ -3341,7 +3365,7 @@ const render = (CustomElement = null) => {
                     }
                     if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null) {
 
-                    const AirTransfers = elem.additional_info.filter(item => item.Category === "Airtransfergrills");
+                    const AirTransfers = (elem.additional_info || []).filter(item => item.Category === "Airtransfergrills");
 
                     if (AirTransfers.length > 0) {
                         IsAirTransferGrillsEnable = true;
@@ -3362,7 +3386,7 @@ const render = (CustomElement = null) => {
                     }
                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
 
-                        const FlushBoltsData = elem.additional_info.filter(item => item.Category === "FlushBolts");
+                        const FlushBoltsData = (elem.additional_info || []).filter(item => item.Category === "FlushBolts");
 
                     if (FlushBoltsData.length > 0) {
                         IsFlushBoltsEnable = true;
@@ -5900,7 +5924,6 @@ svg.append("circle")
     drawDoorSignage(DoorSignagedistanceFromLeadingEdgeOfDoor2, DoorSignageCentered2, DoorSignageDistanceFromBottomOfDoor2,245,205,245);
     }
     function drawDoorSignageDD(distanceFromEdge, isCentered, distanceFromBottom,rightDistance,leftdistance){
-console.log("called 11111111")
             if (isCentered == 1) {
                 svg.append("circle")
                     .style("stroke", "black")
@@ -9022,7 +9045,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                     svg.append('line')   //
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", DistanceXForLeaf1VPShape + Leaf1VisionPanelWidth + 15)
+                        .attr("x1", DistanceXForLeaf1VPShape + + + 15)
                         .attr("y1", DistanceYForLeaf1VPShape)
                         .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                         .attr("y2", DistanceYForLeaf1VPShape)
@@ -12702,6 +12725,26 @@ $(document).ready(function () {
         // console.log("Triggered:", $(this).attr("name")); // ← check this logs
         render($(this));
     });
+});
+
+// Debug listener for ironmongery selects — logs value and triggers render
+$(document).on('change', '#ironmongerySet, #IronmongeryID', function (e) {
+    console.log('ironmongery select changed:', this.id, $(this).val());
+    // defensive: if select element is malformed (e.g. due to invalid HTML), this may not fire
+    try {
+        // additional debug info
+        try {
+            console.log('element outerHTML:', this.outerHTML);
+        } catch (ex) {
+            console.log('could not read outerHTML', ex);
+        }
+        console.log('#' + this.id + ' exists? ', $('#' + this.id).length);
+        console.log('#' + this.id + ' disabled? ', $('#' + this.id).prop('disabled'));
+        console.log('#' + this.id + ' has child inputs? ', $('#' + this.id).find('input').length);
+        render($(this));
+    } catch (err) {
+        console.error('Error calling render() from ironmongery change handler:', err);
+    }
 });
 
 $("#change-dimension").change(function (event) {

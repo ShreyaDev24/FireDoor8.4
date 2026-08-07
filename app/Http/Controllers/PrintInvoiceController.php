@@ -947,7 +947,8 @@ class PrintInvoiceController extends Controller
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
-        $a .= '
+        if ($DoorQuantity > 0) {
+            $a .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
@@ -960,8 +961,10 @@ class PrintInvoiceController extends Controller
                         $a .= '<td class="tbl_bottom">' .$currency. number_format($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
+        }
 
-        $aCustom .= '
+        if ($DoorQuantityCustom > 0) {
+            $aCustom .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
@@ -974,22 +977,25 @@ class PrintInvoiceController extends Controller
                         $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
                     </tr>
                 ';
-
-        if(isset($a)){
-            $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
 
-        // return $pdf4->download('file4.pdf');
+        if ($DoorQuantity > 0) {
+            $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
             $path4 = public_path() . '/allpdfFile';
             $fileName4 = $id . '4' . '.' . 'pdf';
             $pdf4->save($path4 . '/' . $fileName4);
-
-        if(isset($aCustom)){
-            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        } else {
+            $fileName4 = '';
         }
+
+        if ($DoorQuantityCustom > 0) {
+            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
             $path4_custom = public_path() . '/allpdfFile';
             $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
             $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
+        } else {
+            $fileName4_custom = '';
+        }
 
         // side screen door list
 
@@ -1027,6 +1033,7 @@ class PrintInvoiceController extends Controller
         ->where('items.QuotationId', $quatationId)
         // ->where('items.itemId',2342) to see particular quote
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
+        // dd($ed);
 
         $TotalItems = count($ed->toArray());
 
@@ -3934,37 +3941,31 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
-        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-                 $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName4,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName7,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
-            }
-        else{
-            $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName4,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
-            }
+        $pdfFiles = [
+            public_path() . '/allpdfFile' . '/' . $fileName1,
+            public_path() . '/allpdfFile' . '/' . $fileName2,
+            public_path() . '/allpdfFile' . '/' . $fileName2_1,
+            public_path() . '/allpdfFile' . '/' . $fileName3,
+            public_path() . '/allpdfFile' . '/' . $fileName4_2,
+        ];
+        if ($DoorQuantity > 0) {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName4;
+        }
+        if ($DoorQuantityCustom > 0) {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName4_custom;
+        }
+
+        $pdfFiles = array_merge($pdfFiles, [
+            public_path() . '/allpdfFile' . '/' . $fileName9,
+            public_path() . '/allpdfFile' . '/' . $fileName6,
+            public_path() . '/allpdfFile' . '/' . $fileName8,
+        ]);
+
+        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName7;
+        }
+
+        $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName5;
 
         if(count($ed) == 0){
             $pdfFiles = [
@@ -4932,7 +4933,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
 
-        $a .= '
+        if ($DoorQuantity > 0) {
+            $a .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
@@ -4945,8 +4947,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
+        }
 
-        $aCustom .= '
+        if ($DoorQuantityCustom > 0) {
+            $aCustom .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
@@ -4959,23 +4963,26 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
                     </tr>
                 ';
+        }
 
 
-        if(isset($a)){
+        if ($DoorQuantity > 0) {
             $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+            $path4 = public_path() . '/allpdfFile';
+            $fileName4 = $id . '4' . '.' . 'pdf';
+            $pdf4->save($path4 . '/' . $fileName4);
+        } else {
+            $fileName4 = '';
         }
 
-        // return $pdf4->download('file4.pdf');
-        $path4 = public_path() . '/allpdfFile';
-        $fileName4 = $id . '4' . '.' . 'pdf';
-        $pdf4->save($path4 . '/' . $fileName4);
-
-        if(isset($aCustom)){
+        if ($DoorQuantityCustom > 0) {
             $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+            $path4_custom = public_path() . '/allpdfFile';
+            $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
+            $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
+        } else {
+            $fileName4_custom = '';
         }
-        $path4_custom = public_path() . '/allpdfFile';
-        $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
-        $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
 
         // side screen door list
 
@@ -7839,24 +7846,20 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
         // Conditional blocks
-        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
+        if (!empty($fileName4)) {
             $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_custom);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName7);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
-        } else {
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_2);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_custom);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
-            $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
         }
+        if (!empty($fileName4_custom)) {
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName4_custom);
+        }
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName9);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName6);
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName8);
+        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
+            $pdfFiles[] = public_path('allpdfFile/' . $fileName7);
+        }
+        $pdfFiles[] = public_path('allpdfFile/' . $fileName5);
 
         // If $ed count is 0, override with a smaller set
         if (count($ed) == 0) {

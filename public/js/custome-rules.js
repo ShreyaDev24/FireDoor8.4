@@ -6080,9 +6080,15 @@ $(document).ready(function () {
             $('#IronmongeryID').empty().append('<option value="">Select Ironmongery Set</option>');
 
             filteredIronmongery.forEach(item => {
-                let selected = (selectedIronmongeryId == item.ironmongery_id) ? 'selected' : '';
+                // tolerate multiple possible key names in the data coming from backend
+                var id = item.ironmongery_id || item.ironmongeryId || item.id || item.ID || item.set_id || item.SetId;
+                var name = item.Setname || item.setname || item.SetName || item.name || item.SetNameDisplay || '';
+                if (typeof id === 'undefined' || id === null) {
+                    console.warn('populateIronmongeryDropdown: item has no id property', item);
+                }
+                let selected = (selectedIronmongeryId == id) ? 'selected' : '';
                 $('#IronmongeryID').append(
-                    `<option value="${item.ironmongery_id}" ${selected}>${item.Setname}</option>`
+                    `<option value="${(typeof id !== 'undefined' && id !== null) ? id : ''}" ${selected}>${name}</option>`
                 );
             });
 
