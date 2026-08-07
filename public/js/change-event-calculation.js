@@ -30,6 +30,7 @@ $(".change-event-calulation").change(function(){
     var frameFinish ='';
     var Ext_Liner ='No';
     var UnderCutAdditionalNumber_a = 3;
+    var OpBeadThickness = 0;
     var thisvalue = document.getElementsByClassName("change-event-calulation");
     for (var i = 0; i < thisvalue.length; i++) {
         //get value of tollerance from field
@@ -370,7 +371,7 @@ $(".change-event-calulation").change(function(){
     // old calculation
     // var calculateOfOpWidth = soWidth-(tollerance*TolleranceAdditionalNumberForOPWidth)-(framethikness*FrameThicknessAdditionalNumberForOPWidth)-(GapAdditionalNumberForOPWidth*gap);
     // new calculation according to 1059 => OP/FL width = Frame width - OP/Fl frame thickness X2.
-    let OpBeadThickness = parseFloat($('#OpBeadThickness').val()) || 0; // urgent issue fix 04-02-2026
+    OpBeadThickness = parseFloat($('#OpBeadThickness').val()) || 0; // urgent issue fix 04-02-2026
     var calculateOfOpWidth = FrameWidth - (OpBeadThickness * 2);
     if($("#sideLight1").val() == 'Yes' || $("#sideLight2").val() == 'Yes'){
         if($("#overpanel").val() != 'No'){

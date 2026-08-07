@@ -35,16 +35,45 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
         price = priceDirectSet;
     } else {
 
-        if (["intumescentSealArrangement"].includes(id)) {
-            var Options = JSON.parse(intumescentSealArrangementJson);
-            var SelectedOptions = JSON.parse(SelectedIntumescentSealArrangementJson);
-
-        } else {
-            var Options = JSON.parse(OptionsJson);
-            var SelectedOptions = JSON.parse(SelectedOptionsJson);
+        // Safely parse options JSON blobs — these may be undefined on some pages
+        var Options = [];
+        var SelectedOptions = [];
+        try {
+            if (["intumescentSealArrangement"].includes(id)) {
+                if (typeof intumescentSealArrangementJson !== 'undefined' && intumescentSealArrangementJson) {
+                    Options = JSON.parse(intumescentSealArrangementJson);
+                } else {
+                    console.warn('intumescentSealArrangementJson is undefined or empty');
+                }
+                if (typeof SelectedIntumescentSealArrangementJson !== 'undefined' && SelectedIntumescentSealArrangementJson) {
+                    SelectedOptions = JSON.parse(SelectedIntumescentSealArrangementJson);
+                }
+            } else {
+                if (typeof OptionsJson !== 'undefined' && OptionsJson) {
+                    Options = JSON.parse(OptionsJson);
+                } else {
+                    console.warn('OptionsJson is undefined or empty');
+                }
+                if (typeof SelectedOptionsJson !== 'undefined' && SelectedOptionsJson) {
+                    SelectedOptions = JSON.parse(SelectedOptionsJson);
+                }
+            }
+        } catch (e) {
+            console.error('Failed to parse options JSON:', e);
+            Options = []; SelectedOptions = [];
         }
 
-        var possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+        var possibleSelectedOptionsArray = [];
+        try {
+            if (typeof possibleSelectedOptionsJson !== 'undefined' && possibleSelectedOptionsJson) {
+                possibleSelectedOptionsArray = JSON.parse(possibleSelectedOptionsJson);
+            } else {
+                console.warn('possibleSelectedOptionsJson is undefined or empty');
+            }
+        } catch (e) {
+            console.error('Failed to parse possibleSelectedOptionsJson:', e);
+            possibleSelectedOptionsArray = [];
+        }
 
         if (name != "accoustics") {
             if (TagName && typeof TagName === "string" && TagName.toLowerCase() === "select") {
