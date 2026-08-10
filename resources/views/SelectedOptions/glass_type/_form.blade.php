@@ -49,7 +49,7 @@
                         {{ old('GlassIntegrity', $item->GlassIntegrity ?? '') == 'All_Fire_Rated_Glass' ? 'checked' : '' }}
                     >
                     <label class="form-check-label" for="Integrity_only">
-                        All Fire Rated Glass
+                        Non Fire rated Glass
                     </label>
                 </div>
 
