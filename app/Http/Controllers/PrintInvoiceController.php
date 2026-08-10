@@ -1087,7 +1087,7 @@ class PrintInvoiceController extends Controller
                     'FD60' => 'Chilt/A02067 Revision M',
                 ],
                 2 => [
-                    'NFR' => 'Chilt/A01205 Part 1 Revision K',
+                    'NFR' => 'Chilt/A01204 Part 1 Revision I',
                     'FD30' => 'Chilt/A01204 Part 1 Revision I',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
@@ -3408,7 +3408,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Perimeter Seal 2</td>
                                     <td class="dicription_blank">' . $perimeterSeal2 . '</td>
                                 </tr>';
-                                if($tt->DoorsetType == 'DD'){
+                                if($tt->DoorsetType == 'DD' || $tt->DoorsetType == 'Leaf and Half'){
                                 $elevTbl .= '<tr>
                                     <td class="dicription_grey">Meeting Stiles</td>
                                     <td class="dicription_blank">' . $AccousticsMeetingStiles . '</td>
