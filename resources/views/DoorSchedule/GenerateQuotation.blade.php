@@ -1162,6 +1162,13 @@
 
         {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
         <script>
+
+            $(document).on('change', '#Currency', function () {
+                const currencyValue = $(this).val();
+
+                $('#CurrencyCostperdelivery').val(currencyValue).trigger('change');
+            });
+
             $(document).ready(function () {
 
                 let table = $('.itemTable').DataTable({

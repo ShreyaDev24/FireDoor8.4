@@ -498,7 +498,7 @@
                         <div class="position-relative form-group">
                             <label for="Costperdelivery">Cost per delivery</label>
                             <div class="input-group">
-                                <select name="CurrencyCostperdelivery" class="form-control" style="max-width: 100px;">
+                                <select name="CurrencyCostperdelivery" id="CurrencyCostperdelivery" class="form-control" style="max-width: 100px;">
                                     {{--  <option value="€" {{ ($QuotationShipToInformation?->CurrencyCostperdelivery == '€') ? 'selected' : '' }}>€</option>
                                     <option value="£" {{ ($QuotationShipToInformation?->CurrencyCostperdelivery == '£') ? 'selected' : '' }}>£</option>  --}}
 
