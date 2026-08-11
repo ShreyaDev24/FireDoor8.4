@@ -38,6 +38,21 @@
                     </label>
                 </div>
 
+                <div class="form-check form-check-inline">
+                    <input
+                        type="radio"
+                        name="GlassIntegrity"
+                        id="All_Fire_Rated_Glass"
+                        value="All_Fire_Rated_Glass"
+                        class="form-check-input option-style"
+                        required
+                        {{ old('GlassIntegrity', $item->GlassIntegrity ?? '') == 'All_Fire_Rated_Glass' ? 'checked' : '' }}
+                    >
+                    <label class="form-check-label" for="Integrity_only">
+                        Non Fire rated Glass
+                    </label>
+                </div>
+
             </div>
 
 
@@ -56,7 +71,7 @@
 
             <div class="col-md-6 mb-3">
                 <label>Glass Thickness <span class="text-danger">*</span></label>
-                <input type="number" min="0"
+                <input type="text"
                     name="GlassThickness"
                     class="form-control @error('GlassThickness') is-invalid @enderror"
                     value="{{ old('GlassThickness', $item->GlassThickness ?? '') }}"
