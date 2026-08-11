@@ -71,7 +71,7 @@
 
             <div class="col-md-6 mb-3">
                 <label>Glass Thickness <span class="text-danger">*</span></label>
-                <input type="number" min="0"
+                <input type="text"
                     name="GlassThickness"
                     class="form-control @error('GlassThickness') is-invalid @enderror"
                     value="{{ old('GlassThickness', $item->GlassThickness ?? '') }}"
