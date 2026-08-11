@@ -2974,7 +2974,7 @@ $(document).ready(function() {
         const overpanelValue2 = $('#overpanel').val();     // Yes
         const leafWidth1Value = $('#leafWidth1').val();
         const leafHeightNoOPValue = $('#leafHeightNoOP').val();
-        const intumescentSealType = $('#intumescentSealType').val();
+        let intumescentSealType = $('#intumescentSealType').val();
         var sOWidthValue = $('#sOWidth').val();
         var sOHeightValue = $('#sOHeight').val();
         let overpanel = '';
