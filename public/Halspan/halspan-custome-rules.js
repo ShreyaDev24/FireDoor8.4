@@ -3012,6 +3012,9 @@ $(document).ready(function() {
         if (fireRating == null || fireRating == '') {
             fireRating = $('#savedfirerating').val();
         }
+        if(fireRating == 'NFR' && intumescentSealType == 'None'){
+            intumescentSealType = '';
+        }
         // console.log($aa);
         if(fireRating != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){
             $.ajax({
