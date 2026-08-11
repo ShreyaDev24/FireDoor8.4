@@ -42,13 +42,13 @@
                     <input
                         type="radio"
                         name="GlassIntegrity"
-                        id="All_Fire_Rated_Glass"
-                        value="All_Fire_Rated_Glass"
+                        id="Non_Fire_Rated_Glass"
+                        value="Non_Fire_Rated_Glass"
                         class="form-check-input option-style"
                         required
-                        {{ old('GlassIntegrity', $item->GlassIntegrity ?? '') == 'All_Fire_Rated_Glass' ? 'checked' : '' }}
+                        {{ old('GlassIntegrity', $item->GlassIntegrity ?? '') == 'Non_Fire_Rated_Glass' ? 'checked' : '' }}
                     >
-                    <label class="form-check-label" for="Integrity_only">
+                    <label class="form-check-label" for="Non_Fire_Rated_Glass">
                         Non Fire rated Glass
                     </label>
                 </div>
