@@ -113,16 +113,38 @@
         #footer {
             position: absolute;
             bottom: 20px;
-            font-size: 9px;
-            width: 100% !important;
-            max-width: 100% !important;
+            left: 40px;
+            right: 40px;
+            width: auto;
+            max-width: 100%;
             clear: both;
-            white-space: normal !important;
-            word-wrap: break-word !important;
-            word-break: break-word !important;
-            margin-top: 30px !important;   /* ← Increase this */
-            padding-right: 5px;
-            font-size: 5px;
+            font-size: 9px;
+            margin: 0;
+            padding: 0;
+            overflow: visible;
+        }
+
+        #footer .footer-door-nos {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        #footer .footer-door-nos td {
+            width: 100%;
+            font-size: 9px;
+            line-height: 1.45;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            vertical-align: top;
+        }
+
+        #footer .door-nos-wrap {
+            width: 100%;
+            white-space: normal;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .tbl4 {

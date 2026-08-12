@@ -1035,6 +1035,14 @@ class PrintInvoiceController extends Controller
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
         // dd($ed);
 
+        // Door Type Count per DoorType for this quotation version (door = item_master row)
+        $doorTypeCounts = Item::join('item_master', 'item_master.itemID', '=', 'items.itemId')
+            ->where('items.QuotationId', $quatationId)
+            ->where('items.VersionId', $versionID)
+            ->select('items.DoorType', DB::raw('COUNT(item_master.id) as door_count'))
+            ->groupBy('items.DoorType')
+            ->pluck('door_count', 'DoorType');
+
         $TotalItems = count($ed->toArray());
 
         $PageBreakCount = 1;
@@ -1148,12 +1156,14 @@ class PrintInvoiceController extends Controller
 
             $countDoorNumber = ItemMaster::where('itemID', $tt->itemId)->count();
             $DoorNumber = ItemMaster::where('itemID', $tt->itemId)->get();
+            $doorTypeCount = (int) ($doorTypeCounts[$tt->DoorType] ?? $countDoorNumber);
 
-            $doorNo = '';
-
+            // Space-separated door numbers wrap reliably in DomPDF (avoid one long unbreakable line)
+            $doorNoParts = [];
             foreach ($DoorNumber as $bb) {
-                $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
+                $doorNoParts[] = $bb->doorNumber;
             }
+            $doorNo = implode(', ', $doorNoParts);
 
             $species = LippingSpecies::where('id', $tt->FrameMaterial)->first();
             if ($species != '') {
@@ -3056,6 +3066,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->DoorType . '</td>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Door Type Count</td>
+                                    <td class="dicription_blank">' . $doorTypeCount . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Fire Rating</td>
                                     <td class="dicription_blank">' . $fire . '</td>
                                 </tr>
@@ -3453,8 +3467,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         $elevTbl .=  '</div></div>
                     <div id="footer">
-                        <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
-
+                        <table class="footer-door-nos" width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <div><b>Total Doorsets: ' . $countDoorNumber . '</b></div>
+                                    <div class="door-nos-wrap"><b>Door No-</b> ' . $doorNo . '</div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 ';
 
@@ -5020,6 +5040,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         ->where('items.QuotationId', $quatationId)
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
 
+        // Door Type Count per DoorType for this quotation version (door = item_master row)
+        $doorTypeCounts = Item::join('item_master', 'item_master.itemID', '=', 'items.itemId')
+            ->join('quotation_version_items', function ($join): void {
+                $join->on('quotation_version_items.itemID', '=', 'items.itemId')
+                    ->on('quotation_version_items.itemmasterID', '=', 'item_master.id');
+            })
+            ->where('items.QuotationId', $quatationId)
+            ->where('quotation_version_items.version_id', $versionID)
+            ->select('items.DoorType', DB::raw('COUNT(item_master.id) as door_count'))
+            ->groupBy('items.DoorType')
+            ->pluck('door_count', 'DoorType');
+
         $TotalItems = count($ed->toArray());
 
         $PageBreakCount = 1;
@@ -5136,12 +5168,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             $countDoorNumber = ItemMaster::where('itemID', $tt->itemId)->count();
             $DoorNumber = ItemMaster::where('itemID', $tt->itemId)->get();
+            $doorTypeCount = (int) ($doorTypeCounts[$tt->DoorType] ?? $countDoorNumber);
 
-            $doorNo = '';
-
+            // Space-separated door numbers wrap reliably in DomPDF (avoid one long unbreakable line)
+            $doorNoParts = [];
             foreach ($DoorNumber as $bb) {
-                $doorNo .= '<span style="padding-left:5px;">' . $bb->doorNumber . '</span>';
+                $doorNoParts[] = $bb->doorNumber;
             }
+            $doorNo = implode(', ', $doorNoParts);
 
             $species = LippingSpecies::where('id', $tt->FrameMaterial)->first();
             if ($species != '') {
@@ -6971,6 +7005,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->DoorType . '</td>
                                 </tr>
                                 <tr>
+                                    <td class="dicription_grey">Door Type Count</td>
+                                    <td class="dicription_blank">' . $doorTypeCount . '</td>
+                                </tr>
+                                <tr>
                                     <td class="dicription_grey">Fire Rating</td>
                                     <td class="dicription_blank">' . $fire . '</td>
                                 </tr>
@@ -7352,8 +7390,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         $elevTbl .=  '</div></div>
                     <div id="footer">
-                        <h3><b>Total Doorsets: ' . $countDoorNumber . ',Door No-' . $doorNo . '</b></h3>
-
+                        <table class="footer-door-nos" width="100%" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td>
+                                    <div><b>Total Doorsets: ' . $countDoorNumber . '</b></div>
+                                    <div class="door-nos-wrap"><b>Door No-</b> ' . $doorNo . '</div>
+                                </td>
+                            </tr>
+                        </table>
                     </div>
                 ';
 
