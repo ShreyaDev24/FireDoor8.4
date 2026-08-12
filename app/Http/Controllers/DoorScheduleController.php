@@ -6286,6 +6286,7 @@ class DoorScheduleController extends Controller
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
                 'floor' => $floor,
                 'vId' => $vId,
+                'setIronmongery' => AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get(),
             ]);
         } else {
             return redirect()->route('quotation/list');
