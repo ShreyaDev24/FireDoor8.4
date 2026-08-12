@@ -1148,19 +1148,16 @@
         </script>
         <script type="text/javascript" src="{{ url('/') }}/js/generateQuotation.js"></script>
         <script src="https://d3js.org/d3.v7.min.js" defer></script> <!-- Load D3 -->
-        @php
-            $uniqueCores = collect($uniqueConfigurableItems ?? []);
-            $needsHalspanCad = $uniqueCores->intersect([1, 2, 7, 8])->isNotEmpty();
-            $needsVicaimaCad = $uniqueCores->intersect([4, 5, 6, 9])->isNotEmpty() || $uniqueCores->isEmpty();
-        @endphp
-        @if($needsHalspanCad)
-            <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
-        @endif
-        @if($needsVicaimaCad)
-            <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
-        @endif
-
-        {{-- <script src="{{url('/')}}/Halspan/new-cad.js"></script> --}}
+        {{-- Bulk "Validate All" CAD render scripts. Halspan-family (Streboard/Halspan/
+             Flamebreak/Stredor: configurableitems 1,2,7,8) and Vicaima-family (Vicaima/
+             Seadec/Deanta/MMM: 4,5,6,9) genuinely differ in frame-height/undercut
+             calculation, so both are always loaded here (each assigns a distinctly-named
+             global, renderHalspanFamily / renderVicaimaFamily, instead of colliding on the
+             same window.render like before) and processItemsSequentially dispatches each
+             item to the correct one by its configurableitems. NormaDoorCore (3) has no CAD
+             logic anywhere in the system and is skipped there. --}}
+        <script src="{{ url('/') }}/Halspan/new-cad.js" defer></script>
+        <script src="{{ url('/') }}/vicaima/validate-all-cad.js" defer></script>
         <script>
             $(document).ready(function () {
 
@@ -1186,6 +1183,7 @@
 
             });
             var ConfigurableDoorFormulaJson = JSON.stringify(<?= json_encode($ConfigurableDoorFormula); ?>);
+            var IronmongeryJson = JSON.stringify(<?= json_encode($setIronmongery ?? []); ?>);
             $("#ManualQuotationStatus").click(function(e) {
                 e.preventDefault();
                 $("#ManualAddForm").modal('show');
@@ -2283,11 +2281,23 @@
             }
            function generateCADImage(val) {
                 // $('.loader').empty().css({ 'display': 'block' });
-                totalItemsToSave = val.length;
+                // NormaDoorCore (configurableitems == 3) has no CAD render logic anywhere
+                // in the system yet, so it's skipped here rather than attempted/broken.
+                var itemsToRender = (val || []).filter(function(item) {
+                    if (item.configurableitems == 3) {
+                        console.warn('Validate All: skipping SVG generation for unsupported NormaDoorCore item', item.itemId);
+                        return false;
+                    }
+                    return true;
+                });
+                totalItemsToSave = itemsToRender.length;
                 completedItems = 0;
 
-                processItemsSequentially(val, 0);
+                processItemsSequentially(itemsToRender, 0);
             }
+
+            var HALSPAN_FAMILY_CORE_IDS = [1, 2, 7, 8]; // Streboard, Halspan, Flamebreak, Stredor
+            var VICAIMA_FAMILY_CORE_IDS = [4, 5, 6, 9]; // VicaimaDoorCore, Seadec, Deanta, MMM
 
             function processItemsSequentially(dataList, index) {
                   $('.loader').empty().css({ 'display': 'block' });
@@ -2295,7 +2305,22 @@
 
                 const item = dataList[index];
 
-                render(null, item);
+                try {
+                    if (HALSPAN_FAMILY_CORE_IDS.indexOf(item.configurableitems) !== -1) {
+                        if (typeof renderHalspanFamily === 'function') {
+                            renderHalspanFamily(null, item);
+                        }
+                    } else if (VICAIMA_FAMILY_CORE_IDS.indexOf(item.configurableitems) !== -1) {
+                        if (typeof renderVicaimaFamily === 'function') {
+                            renderVicaimaFamily(null, item);
+                        }
+                    }
+                    // configurableitems == 3 (NormaDoorCore) has no CAD logic anywhere in
+                    // the system yet, so it's intentionally left unhandled here.
+                } catch (err) {
+                    // Don't let one bad item abort the rest of the batch.
+                    console.error('Validate All: render failed for item', item.itemId, err);
+                }
 
                 setTimeout(() => {
                     processItemsSequentially(dataList, index + 1);

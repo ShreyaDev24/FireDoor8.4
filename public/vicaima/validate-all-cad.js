@@ -5,8 +5,8 @@ d3.select('button#save').on('click', function() {
     };
     d3_save_svg.save(d3.select('svg').node(), config);
 });
-let totalItemsToSave = 0;
-let completedItems = 0;
+var totalItemsToSave = totalItemsToSave || 0;
+var completedItems = completedItems || 0;
 
 // $(document).ready(function() {
 //     var element = $(this);
@@ -48,9 +48,9 @@ var svg = d3.select("#container")
 //var svgPanZoom= $("svg").svgPanZoom(options);
 
 var DoorUrl = $("#door_url").text();
-let imageUtil = {};
+var imageUtil = imageUtil || {};
 
-window.render = (CustomElement = null,formValues = {}) => {
+window.renderVicaimaFamily = (CustomElement = null,formValues = {}) => {
 
     let element = null;
     let ChangedFieldName = null;
@@ -2921,7 +2921,7 @@ else if (swingType != 'DA' && frameonoff) {
             const item = elem.additional_info?.find(info => info.Category === "ConcealedOverheadCloser");
             if (item) {
                 const staticWidth = Number(item.staticWidth); // Convert to number
-                const leafWidth = Number($("#leafWidth1").val()); // Convert leafWidth1 to number
+                const leafWidth = Number(CustomElement ? $("#leafWidth1").val() : formValues.LeafWidth1); // Convert leafWidth1 to number
                 //  console.log(staticWidth,leafWidth)
                 if (!isNaN(leafWidth) && !isNaN(staticWidth) && leafWidth < staticWidth) {
                     swal('Warning!', "The door closer is too big for the size of the door");
@@ -9144,9 +9144,11 @@ else if (swingType != 'DA' && frameonoff) {
 
           }
 
-          var DistanceBetweenVPsMinValueforLeaf2 = parseFloat($('input[name="distanceBetweenVPsforLeaf2"]').attr("min"));
-          var DistanceFromTopOfDoorMinValueforLeaf2 = parseFloat($('input[name="distanceFromTopOfDoorforLeaf2"]').attr("min"));
-          var DistanceFromTheEdgeOfDoorMinValueforLeaf2 = parseFloat($('input[name="distanceFromTheEdgeOfDoorforLeaf2"]').attr("min"));
+          // These min= values are static markup constants (see HalspanDoorModules/VisionPanel.blade.php),
+          // not per-item data, and the inputs don't exist on the bulk Validate All page anyway.
+          var DistanceBetweenVPsMinValueforLeaf2 = 80;
+          var DistanceFromTopOfDoorMinValueforLeaf2 = 100;
+          var DistanceFromTheEdgeOfDoorMinValueforLeaf2 = 100;
 
           var VPSameAsLeaf1 = formValues.sVPSameAsLeaf1;
           if (VPSameAsLeaf1 != "Yes") {
@@ -9162,12 +9164,12 @@ else if (swingType != 'DA' && frameonoff) {
                   $('input[name="distanceFromTopOfDoorforLeaf2"]').val(DistanceFromTopOfDoorMinValueforLeaf2);
                   $('input[name="distanceFromTheEdgeOfDoorforLeaf2"]').val(DistanceFromTheEdgeOfDoorMinValueforLeaf2);
               } else {
-                  DistanceFromTopOfDoorForLeaf2 = $('input[name="distanceFromTopOfDoorforLeaf2"]').val();
-                  if (DistanceFromTopOfDoorForLeaf2 == "" || parseFloat(DistanceFromTopOfDoorForLeaf2) < DistanceFromTopOfDoorMinValueforLeaf2) {
+                  DistanceFromTopOfDoorForLeaf2 = (CustomElement ? $('input[name="distanceFromTopOfDoorforLeaf2"]').val() : formValues.DistanceFromTopOfDoorForLeaf2);
+                  if (DistanceFromTopOfDoorForLeaf2 == "" || DistanceFromTopOfDoorForLeaf2 == null || parseFloat(DistanceFromTopOfDoorForLeaf2) < DistanceFromTopOfDoorMinValueforLeaf2) {
                       DistanceFromTopOfDoorForLeaf2 = DistanceFromTopOfDoorMinValueforLeaf2;
                   }
-                  DistanceFromTheEdgeOfDoorForLeaf2 = $('input[name="distanceFromTheEdgeOfDoorforLeaf2"]').val();
-                  if (DistanceFromTheEdgeOfDoorForLeaf2 == "" || parseFloat(DistanceFromTheEdgeOfDoorForLeaf2) < DistanceFromTheEdgeOfDoorMinValueforLeaf2) {
+                  DistanceFromTheEdgeOfDoorForLeaf2 = (CustomElement ? $('input[name="distanceFromTheEdgeOfDoorforLeaf2"]').val() : formValues.DistanceFromTheEdgeOfDoorforLeaf2);
+                  if (DistanceFromTheEdgeOfDoorForLeaf2 == "" || DistanceFromTheEdgeOfDoorForLeaf2 == null || parseFloat(DistanceFromTheEdgeOfDoorForLeaf2) < DistanceFromTheEdgeOfDoorMinValueforLeaf2) {
                       DistanceFromTheEdgeOfDoorForLeaf2 = DistanceFromTheEdgeOfDoorMinValueforLeaf2;
                   }
               }
@@ -9230,8 +9232,8 @@ else if (swingType != 'DA' && frameonoff) {
                   if (VisionPanelQuantityForLeaf2 < 2) {
                       DistanceBetweenVPsForLeaf2 = 0;
                   } else {
-                      DistanceBetweenVPsForLeaf2 = $('input[name="distanceBetweenVPsforLeaf2"]').val();
-                      if (DistanceBetweenVPsForLeaf2 == "" || parseFloat(DistanceBetweenVPsForLeaf2) < DistanceBetweenVPsMinValueforLeaf2) {
+                      DistanceBetweenVPsForLeaf2 = (CustomElement ? $('input[name="distanceBetweenVPsforLeaf2"]').val() : formValues.DistanceBetweenVp);
+                      if (DistanceBetweenVPsForLeaf2 == "" || DistanceBetweenVPsForLeaf2 == null || parseFloat(DistanceBetweenVPsForLeaf2) < DistanceBetweenVPsMinValueforLeaf2) {
                           DistanceBetweenVPsForLeaf2 = DistanceBetweenVPsMinValueforLeaf2;
                       }
                   }
@@ -10321,6 +10323,12 @@ imageUtil.base64SvgToBase64Png = function (originalBase64, width, secondTry) {
                 resolve(null);
             }
         };
+        img.onerror = function (e) {
+            // Without this, a malformed SVG data-uri never resolves the promise and
+            // the bulk Validate All loop silently stalls on that item forever.
+            console.error('Validate All: SVG-to-PNG conversion failed', e);
+            resolve(null);
+        };
         img.src = originalBase64;
     });
 }
@@ -10340,15 +10348,15 @@ imageUtil.base64SvgToBase64Png = function (originalBase64, width, secondTry) {
 // });
 $(document).ready(function () {
     // Call render only once after the page is fully loaded
-    render($('.form-control'));  // Instead of looping through each form control, call render with all of them
+    renderVicaimaFamily($('.form-control'));  // Instead of looping through each form control, call render with all of them
     // render(element);
 });
 
-const optionRow = document.querySelector('.container-carousel');
-const optionItems = document.querySelectorAll('.optionItem');
+var optionRow = document.querySelector('.container-carousel');
+var optionItems = document.querySelectorAll('.optionItem');
 
-const arrowLeft = document.getElementById('arrow-left');
-const arrowRight = document.getElementById('arrow-right');
+var arrowLeft = document.getElementById('arrow-left');
+var arrowRight = document.getElementById('arrow-right');
 
 // ? ----- ----- Right arrow Event Listener ----- -----
 // arrowRight.addEventListener('click', () => {
@@ -10362,16 +10370,20 @@ const arrowRight = document.getElementById('arrow-right');
 //     }
 // });
 
-// ? ----- ----- Left arrow Event Listener ----- -----
-arrowLeft.addEventListener('click', () => {
-    optionRow.scrollLeft -= optionRow.offsetWidth;
+// This carousel UI (favorite-items picker) doesn't exist on the bulk
+// Validate All page, so arrowLeft is null there - guard instead of throwing.
+if (arrowLeft) {
+    // ? ----- ----- Left arrow Event Listener ----- -----
+    arrowLeft.addEventListener('click', () => {
+        optionRow.scrollLeft -= optionRow.offsetWidth;
 
-    const activeArrow = document.querySelector('.indicadores .activo');
-    if (activeArrow) {
-        activeArrow.classList.add('activo');
-        activeArrow.classList.remove('activo');
-    }
-});
+        const activeArrow = document.querySelector('.indicadores .activo');
+        if (activeArrow) {
+            activeArrow.classList.add('activo');
+            activeArrow.classList.remove('activo');
+        }
+    });
+}
 
 /**
  * converts a base64 encoded data url SVG image to a PNG image
