@@ -11579,7 +11579,7 @@ class DoorScheduleController extends Controller
                 $rules['SideLight2BeadingType'] = 'required';
                 $rules['SideLight2FrameThickness'] = 'required';
                 $rules['SideLight2GlazingBeadsFixingDetail'] = 'required';
-                $rules['SL2GlazingBeadSpecies'] = 'required';
+                $rules['SideLight2GlazingBeadSpecies'] = 'required';
                 $rules['SL2Depth'] = 'required';
                 $rules['SL2Transom'] = 'required';
                 if($door['SL2Transom'] != 'No'){
