@@ -2317,32 +2317,98 @@
             var HALSPAN_FAMILY_CORE_IDS = [1, 2, 7, 8]; // Streboard, Halspan, Flamebreak, Stredor
             var VICAIMA_FAMILY_CORE_IDS = [4, 5, 6, 9]; // VicaimaDoorCore, Seadec, Deanta, MMM
 
-            function processItemsSequentially(dataList, index) {
+            function processItemsSequentially(dataList, index, retryCount) {
+                  retryCount = retryCount || 0;
                   $('.loader').empty().css({ 'display': 'block' });
-                if (index >= dataList.length) return;
+                if (index >= dataList.length) {
+                    // Give the last item's async save time to land, then make sure the
+                    // loader never gets stuck forever - even if some items didn't save
+                    // (e.g. a render error for that item), the user still gets unblocked.
+                    setTimeout(() => {
+                        if (completedItems < totalItemsToSave) {
+                            $('.loader').hide();
+                            console.warn('Validate All: only ' + completedItems + ' of ' + totalItemsToSave + ' items saved a CAD image.');
+                            swal({
+                                title: "Some doors couldn't be validated",
+                                text: (totalItemsToSave - completedItems) + ' of ' + totalItemsToSave + ' door(s) failed to generate a CAD image. Check the browser console for details, or try Validate All again.',
+                                type: "warning"
+                            }).then(function () {
+                                location.reload();
+                            });
+                        }
+                    }, 3000);
+                    return;
+                }
 
                 const item = dataList[index];
+
+                // render() draws into ONE shared <svg> and serializes it 500ms later
+                // (asynchronously). Advancing on a blind timer let the next item's
+                // redraw clear that shared <svg> before the current item's delayed
+                // serialize/save ever captured it - producing a validly-saved but
+                // completely blank image for every item. Waiting for this item's own
+                // save to actually finish (signaled from saveCadImage) before starting
+                // the next one closes that race. The fallback timeout is a safety net
+                // only, in case something upstream never calls the completion signal.
+                var MAX_RETRIES_PER_ITEM = 2;
+                var advancedToNext = false;
+                var advanceToNextItem = function() {
+                    if (advancedToNext) return;
+                    advancedToNext = true;
+                    window.__onCadItemSaveComplete = null;
+                    processItemsSequentially(dataList, index + 1);
+                };
+                var retryThisItem = function() {
+                    if (advancedToNext) return;
+                    advancedToNext = true;
+                    window.__onCadItemSaveComplete = null;
+                    if (retryCount < MAX_RETRIES_PER_ITEM) {
+                        console.warn('Validate All: retrying item', item.itemId, '(attempt ' + (retryCount + 2) + ')');
+                        setTimeout(() => {
+                            processItemsSequentially(dataList, index, retryCount + 1);
+                        }, 800);
+                    } else {
+                        console.error('Validate All: gave up on item', item.itemId, 'after', MAX_RETRIES_PER_ITEM + 1, 'attempts');
+                        processItemsSequentially(dataList, index + 1);
+                    }
+                };
+                var fallbackTimer = setTimeout(advanceToNextItem, 8000);
+                // success === false (a failed/empty conversion, or a store2 error) means
+                // this attempt produced no real image - retry the same item a couple of
+                // times (transient timing issues, not bad data, are what cause this)
+                // before finally giving up and moving on.
+                window.__onCadItemSaveComplete = function(success) {
+                    clearTimeout(fallbackTimer);
+                    if (success === false) {
+                        retryThisItem();
+                    } else {
+                        advanceToNextItem();
+                    }
+                };
 
                 try {
                     if (HALSPAN_FAMILY_CORE_IDS.indexOf(item.configurableitems) !== -1) {
                         if (typeof renderHalspanFamily === 'function') {
                             renderHalspanFamily(null, item);
+                        } else {
+                            advanceToNextItem();
                         }
                     } else if (VICAIMA_FAMILY_CORE_IDS.indexOf(item.configurableitems) !== -1) {
                         if (typeof renderVicaimaFamily === 'function') {
                             renderVicaimaFamily(null, item);
+                        } else {
+                            advanceToNextItem();
                         }
+                    } else {
+                        // configurableitems == 3 (NormaDoorCore) has no CAD logic anywhere
+                        // in the system yet, so it's intentionally skipped here.
+                        advanceToNextItem();
                     }
-                    // configurableitems == 3 (NormaDoorCore) has no CAD logic anywhere in
-                    // the system yet, so it's intentionally left unhandled here.
                 } catch (err) {
                     // Don't let one bad item abort the rest of the batch.
                     console.error('Validate All: render failed for item', item.itemId, err);
+                    advanceToNextItem();
                 }
-
-                setTimeout(() => {
-                    processItemsSequentially(dataList, index + 1);
-                }, 1500); // Wait enough time for render & save
             }
 
 

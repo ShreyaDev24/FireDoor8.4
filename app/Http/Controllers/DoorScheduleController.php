@@ -103,9 +103,12 @@ use App\Jobs\RecalculateItemsBOMJob;
 use App\Jobs\RecalculateNonConfigurableItemsJob;
 use App\Jobs\RecalculateSideScreenItemsJob;
 use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
 
 class DoorScheduleController extends Controller
 {
+    use BuildsIronmongeryAdditionalInfo;
+
     public function __construct()
     {
         $this->middleware('auth');
@@ -6247,6 +6250,41 @@ class DoorScheduleController extends Controller
             $q20_start = microtime(true);
             $floor = Quotation::join('project_building_details', 'quotation.ProjectId', 'project_building_details.projectId')->where('quotation.id', $Id)->select('project_building_details.*')->get();
 
+            // Ironmongery sets, with additional_info attached so the "Validate All" CAD
+            // renderer can position hinges/locks/etc. exactly like the per-item add/edit
+            // page does (which builds additional_info the same way) - without this, every
+            // item with IronmongerySet=Yes renders its accessory annotations at NaN/undefined
+            // coordinates.
+            $setIronmongery = AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get();
+            $IronmongeryInfoSet = [
+                'Hinges',
+                'FloorSpring',
+                'LocksAndLatches',
+                'FlushBolts',
+                'ConcealedOverheadCloser',
+                'PullHandles',
+                'PushHandles',
+                'KickPlates',
+                'DoorSelectors',
+                'PanicHardware',
+                'Doorsecurityviewer',
+                'Morticeddropdownseals',
+                'Facefixeddropseals',
+                'ThresholdSeal',
+                'AirTransferGrill',
+                'Letterplates',
+                'CableWays',
+                'SafeHinge',
+                'LeverHandle',
+                'DoorSinage',
+                'FaceFixedDoorCloser',
+                'Thumbturn',
+                'KeyholeEscutchen',
+                'DoorStops',
+                'Cylinders'
+            ];
+            $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
+
             return view('DoorSchedule.GenerateQuotation', [
                 'data' => $Schedule,
                 'uniqueConfigurableItems' => $uniqueConfigurableItems,
@@ -6286,7 +6324,7 @@ class DoorScheduleController extends Controller
                 'ConfigurableDoorFormula' => $ConfigurableDoorFormulaData,
                 'floor' => $floor,
                 'vId' => $vId,
-                'setIronmongery' => AddIronmongery::where(['UserId' => Auth::user()->id])->orderBy('Setname', 'ASC')->get(),
+                'setIronmongery' => $setIronmongery,
             ]);
         } else {
             return redirect()->route('quotation/list');
