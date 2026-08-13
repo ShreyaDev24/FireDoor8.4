@@ -7,6 +7,9 @@ d3.select('button#save').on('click', function () {
 });
 var totalItemsToSave = totalItemsToSave || 0;
 var completedItems = completedItems || 0;
+
+(function() {
+
 var options = {
     events: {
         mouseWheel: true, // enables mouse wheel zooming events
@@ -713,7 +716,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix - 15},
                                ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                            .text(parseFloat(LeafHeightNoOP) + (typeof OverPanelHeightToShow !== 'undefined' ? Number(OverPanelHeightToShow) : 0));
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -793,7 +796,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameThicknessForMap + (SideLightPanel1Width - (FrameThicknessForMap * 2)) - 15},
                                ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                            .text(parseFloat(LeafHeightNoOP) + (typeof OverPanelHeightToShow !== 'undefined' ? Number(OverPanelHeightToShow) : 0));
                     }
                 }
 
@@ -862,7 +865,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + SideLightPanel2Width + 25},
                                ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                            .text(parseFloat(LeafHeightNoOP) + (typeof OverPanelHeightToShow !== 'undefined' ? Number(OverPanelHeightToShow) : 0));
 
                         svg.append('line')//vertical line to show measurement of side panel joining line top
                             .style("stroke", "black")
@@ -894,7 +897,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("font-size", 10)
                             .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
                             .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) + 30)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
+                            .text(SideLightPanel2WidthToShow - (2 * (FrameThickness + Gap)));
                         svg.append('line')//horizontal line to show measurement of side panel joining line
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
@@ -924,7 +927,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("font-size", 10)
                             .attr("x", ix + FrameWidthForMap + (SideLightPanel2Width / 2) - 5)
                             .attr("y", iy + TopFrameHeight + ((FrameHeight - FrameThickness) / 5) - 25)
-                            .text(SideLightPanel1WidthToShow - (2 * (FrameThickness + Gap)));
+                            .text(SideLightPanel2WidthToShow - (2 * (FrameThickness + Gap)));
                         svg.append('line')//vertical line to show measurement of side panel
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
@@ -942,7 +945,7 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
                             .attr("y", iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15)
                             .attr("transform", `rotate(-90, ${ix + FrameWidthForMap + FrameThicknessForMap + (SideLightPanel2Width - (FrameThicknessForMap * 2)) - 15},
                                ${iy + ((GapAfterOverPanelApplied + FrameThicknessForMap + (FrameHeight / 5) - (FrameThicknessForMap * 2)) / 2) - 15})`)
-                            .text(LeafHeightNoOP + (typeof OverPanelHeightToShow !== 'undefined' ? OverPanelHeightToShow : 0));
+                            .text(parseFloat(LeafHeightNoOP) + (typeof OverPanelHeightToShow !== 'undefined' ? Number(OverPanelHeightToShow) : 0));
                     }
                 }
             }
@@ -2928,19 +2931,23 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
             ParsedIronmongerySet.forEach(function (elem, index) {
                 if (elem.id == IronmongeryID) {
 
-                    // console.log(elem.additional_info);
+                    // additional_info isn't present on the raw ironmongery data this page
+                    // loads (unlike the per-item add/edit page), so every lookup below is
+                    // guarded with ?. instead of assuming it exists - a missing category
+                    // just means that accessory isn't drawn, rather than crashing render()
+                    // and silently killing the whole item's Validate All save.
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
-                        const KickPlatesData = elem.additional_info.find((item) => item.Category === "KickPlates");
-                        KickPlatesHeight = KickPlatesData.staticHeight
+                        const KickPlatesData = elem.additional_info?.find((item) => item.Category === "KickPlates");
+                        KickPlatesHeight = KickPlatesData?.staticHeight
                     }
 
                     if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
                         IsDoorSinageEnable = true;
-                        const DoorSignageData = elem.additional_info.find((item) => item.Category === "DoorSignage");
-                        DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData.distanceFromLeadingEdgeOfDoor
-                        DoorSignageCentered = DoorSignageData.centered
+                        const DoorSignageData = elem.additional_info?.find((item) => item.Category === "DoorSignage");
+                        DoorSignagedistanceFromLeadingEdgeOfDoor = DoorSignageData?.distanceFromLeadingEdgeOfDoor
+                        DoorSignageCentered = DoorSignageData?.centered
                     }
 
                     if (elem.hingesQty != '' && elem.hingesQty != null) {
@@ -2949,91 +2956,91 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
 
                     if (elem.LocksAndLatches != '' && elem.LocksAndLatches != null) {
                         IsLockNLatchesEnable = true;
-                        const LockNLatchesData = elem.additional_info.find((item) => item.Category === "LocksandLatches");
-                        LockNLatchesDistanceFromBottomOfDoor = LockNLatchesData.distanceFromBottomOfDoor
-                        LockNLatchesDistanceFromLeadingEdgeOfDoor=LockNLatchesData.distanceFromLeadingEdgeOfDoor
+                        const LockNLatchesData = elem.additional_info?.find((item) => item.Category === "LocksandLatches");
+                        LockNLatchesDistanceFromBottomOfDoor = LockNLatchesData?.distanceFromBottomOfDoor
+                        LockNLatchesDistanceFromLeadingEdgeOfDoor=LockNLatchesData?.distanceFromLeadingEdgeOfDoor
                     }
                     if (elem.Thumbturn != '' && elem.Thumbturn != null) {
                         IsThumbturnEnable = true;
-                        const ThumbturnData = elem.additional_info.find((item) => item.Category === "Thumbturn");
-                        ThumbturnDistanceFromBottomOfDoor = ThumbturnData.distanceFromBottomOfDoor
-                        ThumbturnDistanceFromLeadingEdgeOfDoor=ThumbturnData.distanceFromLeadingEdgeOfDoor
+                        const ThumbturnData = elem.additional_info?.find((item) => item.Category === "Thumbturn");
+                        ThumbturnDistanceFromBottomOfDoor = ThumbturnData?.distanceFromBottomOfDoor
+                        ThumbturnDistanceFromLeadingEdgeOfDoor=ThumbturnData?.distanceFromLeadingEdgeOfDoor
                     }
                     if (elem.Cylinders != '' && elem.Cylinders != null) {
                         IsCylindersEnable = true;
-                        const CylindersData = elem.additional_info.find((item) => item.Category === "Cylinders");
-                        CylindersDistanceFromBottomOfDoor = CylindersData.distanceFromBottomOfDoor
-                        CylindersDistanceFromLeadingEdgeOfDoor=CylindersData.distanceFromLeadingEdgeOfDoor
+                        const CylindersData = elem.additional_info?.find((item) => item.Category === "Cylinders");
+                        CylindersDistanceFromBottomOfDoor = CylindersData?.distanceFromBottomOfDoor
+                        CylindersDistanceFromLeadingEdgeOfDoor=CylindersData?.distanceFromLeadingEdgeOfDoor
                     }
 
                     if (elem.ConcealedOverheadCloser != '' && elem.ConcealedOverheadCloser != null) {
                         IsConcealedOverheadCloserEnable = true;
-                        const ConcealedOverheadCloserData = elem.additional_info.find((item) => item.Category === "ConcealedOverheadCloser");
-                        ConcealedOverheadCloserWidth = ConcealedOverheadCloserData.staticWidth
-                        ConcealedOverheadCloserHeight = ConcealedOverheadCloserData.staticHeight
+                        const ConcealedOverheadCloserData = elem.additional_info?.find((item) => item.Category === "ConcealedOverheadCloser");
+                        ConcealedOverheadCloserWidth = ConcealedOverheadCloserData?.staticWidth
+                        ConcealedOverheadCloserHeight = ConcealedOverheadCloserData?.staticHeight
                         // // console.log("ConcealedOverheadCloser", ConcealedOverheadCloserWidth, ConcealedOverheadCloserHeight)
                     }
                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
                         IsFaceFixedDoorClosersEnable = true;
-                        const FaceFixedDoorCloserData = elem.additional_info.find((item) => item.Category === "FaceFixedDoorClosers");
-                        FaceFixedDoorClosersWidth = FaceFixedDoorCloserData.staticWidth
-                        FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData.staticHeight
+                        const FaceFixedDoorCloserData = elem.additional_info?.find((item) => item.Category === "FaceFixedDoorClosers");
+                        FaceFixedDoorClosersWidth = FaceFixedDoorCloserData?.staticWidth
+                        FaceFixedDoorCloserDataHeight = FaceFixedDoorCloserData?.staticHeight
                         // // console.log("FaceFixedDoorClosers", FaceFixedDoorClosersWidth, FaceFixedDoorCloserDataHeight)
                     }
 
                     if (elem.pullHandlesQty != '' && elem.pullHandlesQty != null) {
                         IsPullHandlesEnable = true;
-                        const PullHandlesData = elem.additional_info.find((item) => item.Category === "PullHandles");
-                        PullHandleHeight = PullHandlesData.staticHeight
-                        PullHandleDistanceFromBottomOfDoor = PullHandlesData.distanceFromBottomOfDoor
-                        PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData.distanceFromLeadingEdgeOfDoor
+                        const PullHandlesData = elem.additional_info?.find((item) => item.Category === "PullHandles");
+                        PullHandleHeight = PullHandlesData?.staticHeight
+                        PullHandleDistanceFromBottomOfDoor = PullHandlesData?.distanceFromBottomOfDoor
+                        PullHandleDistanceFromLeadingEdgeOfDoor = PullHandlesData?.distanceFromLeadingEdgeOfDoor
                     }
 
                     if (elem.pushHandlesQty != '' && elem.pushHandlesQty != null) {
                         IsPushHandlesEnable = true;
-                        const PushHandlesData = elem.additional_info.find((item) => item.Category === "PushHandles");
-                        PushHandleHeight = PushHandlesData.staticHeight
-                        PushHandleDistanceFromBottomOfDoor = PushHandlesData.distanceFromBottomOfDoor
-                        PushHandleDistanceFromLeadingEdgeOfDoor = PushHandlesData.distanceFromLeadingEdgeOfDoor
+                        const PushHandlesData = elem.additional_info?.find((item) => item.Category === "PushHandles");
+                        PushHandleHeight = PushHandlesData?.staticHeight
+                        PushHandleDistanceFromBottomOfDoor = PushHandlesData?.distanceFromBottomOfDoor
+                        PushHandleDistanceFromLeadingEdgeOfDoor = PushHandlesData?.distanceFromLeadingEdgeOfDoor
                         // // console.log("PushhandlesData: ", PushHandleHeight, PushHandleDistanceFromBottomOfDoor, PushHandleDistanceFromLeadingEdgeOfDoor)
                     }
 
                     if (elem.leverHandleQty != '' && elem.leverHandleQty != null) {
                         IsLeverHandlesEnable = true;
-                        const LeverHandleData = elem.additional_info.find((item) => item.Category === "LeverHandle");
-                        LeverHandleDistanceFromBottomOfDoor = LeverHandleData.distanceFromBottomOfDoor
-                        LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData.distanceFromLeadingEdgeOfDoor
+                        const LeverHandleData = elem.additional_info?.find((item) => item.Category === "LeverHandle");
+                        LeverHandleDistanceFromBottomOfDoor = LeverHandleData?.distanceFromBottomOfDoor
+                        LeverHandleDistanceFromLeadingEdgeOfDoor = LeverHandleData?.distanceFromLeadingEdgeOfDoor
                         // // console.log(LeverHandleDistanceFromBottomOfDoor, LeverHandleDistanceFromLeadingEdgeOfDoor, '1111111111111111111')
                     }
 
                     if (elem.Doorsecurityviewer != '' && elem.Doorsecurityviewer != null) {
                         IsSecurityViewerEnable = true;
-                        const DoorsecurityviewerData = elem.additional_info.find((item) => item.Category === "Doorsecurityviewer");
-                        DoorsecurityviewerdistanceFromBottomOfDoor = DoorsecurityviewerData.distanceFromBottomOfDoor
+                        const DoorsecurityviewerData = elem.additional_info?.find((item) => item.Category === "Doorsecurityviewer");
+                        DoorsecurityviewerdistanceFromBottomOfDoor = DoorsecurityviewerData?.distanceFromBottomOfDoor
                     }
                     if (elem.Letterplates != '' && elem.Letterplates != null) {
                         IsLetterPlatesEnable = true;
-                        const LetterplatesData = elem.additional_info.find((item) => item.Category === "Letterplates");
-                        LetterplatesHeight = LetterplatesData.staticHeight
-                        LetterplatesWidth = LetterplatesData.staticWidth
-                        LetterplatesDistanceFromBottomOfDoor = LetterplatesData.distanceFromBottomOfDoor
-                        LetterplatesDistanceFromLeadingEdgeOfDoor = LetterplatesData.distanceFromLeadingEdgeOfDoor
-                        LetterplatesCentered = LetterplatesData.centered
+                        const LetterplatesData = elem.additional_info?.find((item) => item.Category === "Letterplates");
+                        LetterplatesHeight = LetterplatesData?.staticHeight
+                        LetterplatesWidth = LetterplatesData?.staticWidth
+                        LetterplatesDistanceFromBottomOfDoor = LetterplatesData?.distanceFromBottomOfDoor
+                        LetterplatesDistanceFromLeadingEdgeOfDoor = LetterplatesData?.distanceFromLeadingEdgeOfDoor
+                        LetterplatesCentered = LetterplatesData?.centered
                     }
                     if (elem.AirTransferGrill != '' && elem.AirTransferGrill != null) {
                         IsAirTransferGrillsEnable = true;
-                        const AirTransferGrillData = elem.additional_info.find((item) => item.Category === "Airtransfergrills");
-                        AirTransferGrillsHeight = AirTransferGrillData.staticHeight
-                        AirTransferGrillsWidth = AirTransferGrillData.staticWidth
-                        AirTransferGrillsDistanceFromBottomOfDoor = AirTransferGrillData.distanceFromBottomOfDoor
+                        const AirTransferGrillData = elem.additional_info?.find((item) => item.Category === "Airtransfergrills");
+                        AirTransferGrillsHeight = AirTransferGrillData?.staticHeight
+                        AirTransferGrillsWidth = AirTransferGrillData?.staticWidth
+                        AirTransferGrillsDistanceFromBottomOfDoor = AirTransferGrillData?.distanceFromBottomOfDoor
 
 
                     }
                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
                         IsFlushBoltsEnable = true;
-                        const FlushBoltsData = elem.additional_info.find((item) => item.Category === "FlushBolts");
-                        FlushBoltsHeight = FlushBoltsData.staticHeight
-                        FlushBoltsWidth = FlushBoltsData.staticWidth
+                        const FlushBoltsData = elem.additional_info?.find((item) => item.Category === "FlushBolts");
+                        FlushBoltsHeight = FlushBoltsData?.staticHeight
+                        FlushBoltsWidth = FlushBoltsData?.staticWidth
                     }
                     if (elem.Morticeddropdownseals != '' && elem.Morticeddropdownseals != null) {
                         IsMorticedDropdownSealsEnable = true;
@@ -10398,6 +10405,23 @@ conditionalRenderItem(thumbturnDistance, thumbturnDistance * 5, 0, 255, 250,285,
 
         setTimeout(() => {
             var svgData = d3.select('#container svg').node(); // ✅ fixed selection
+
+            // The <svg> only ever gets a viewBox, never explicit width/height. Without
+            // those, loading this SVG into an <img> can yield naturalWidth/Height === 0
+            // in Chrome (not just the Firefox case fixSvgDocumentFF works around) -
+            // drawImage then paints nothing, saving a validly-formed but totally blank
+            // PNG. Setting explicit width/height from the current viewBox fixes that.
+            if (svgData) {
+                var viewBoxAttr = svgData.getAttribute('viewBox');
+                if (viewBoxAttr) {
+                    var viewBoxParts = viewBoxAttr.split(/\s+/).map(Number);
+                    if (viewBoxParts.length === 4 && viewBoxParts[2] > 0 && viewBoxParts[3] > 0) {
+                        svgData.setAttribute('width', viewBoxParts[2]);
+                        svgData.setAttribute('height', viewBoxParts[3]);
+                    }
+                }
+            }
+
             var serializer = new XMLSerializer();
             var source = serializer.serializeToString(svgData);
 
@@ -10575,10 +10599,15 @@ function saveCadImage(pngSrc, item) {
     var calculationOfLeafHeight = item.LeafHeight;
     var quotationId = item.QuotationId;
 
-    if (SvgImage == '') {
-        swal('Warning', 'Something went wrong!').then(function() {
-            location.reload();
-        });
+    // A falsy SvgImage (empty string, or null from a failed/onerror PNG conversion)
+    // means this attempt didn't produce a real image - signal failure so the bulk
+    // loop can retry this item instead of silently saving nothing or (for the old
+    // single-item warning dialog) reloading the page mid-batch and losing progress.
+    if (!SvgImage) {
+        console.warn('Validate All: empty SvgImage for item', itemID, '- will retry');
+        if (typeof window.__onCadItemSaveComplete === 'function') {
+            window.__onCadItemSaveComplete(false);
+        }
         return false;
     }
     // console.log(leafWidth1,calculationOfLeafHeight)
@@ -10613,7 +10642,23 @@ function saveCadImage(pngSrc, item) {
                         });
                     }
                 }
+                // Signal this item's full draw -> serialize -> save cycle is finished,
+                // so the bulk loop only starts the next item once this one is truly
+                // done - fixes the render race where a fixed timer let the next
+                // item's redraw wipe this item's shared <svg> before it was captured.
+                if (typeof window.__onCadItemSaveComplete === 'function') {
+                    window.__onCadItemSaveComplete(true);
+                }
+        },
+        error: function() {
+            // Don't let a failed save leave the bulk loop waiting forever.
+            console.error('Validate All: store2 request failed for item', itemID);
+            if (typeof window.__onCadItemSaveComplete === 'function') {
+                window.__onCadItemSaveComplete(false);
+            }
         }
     });
 }
 
+
+})();
