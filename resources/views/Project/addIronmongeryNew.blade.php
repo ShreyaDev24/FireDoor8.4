@@ -526,6 +526,27 @@ input[type=number]::-webkit-outer-spin-button {
         });
     }
 
+    // Names/codes can contain quotes and apostrophes (e.g. KCC PVC 'Fire Exit Keep Clear' Sign),
+    // so every value dropped into an HTML attribute has to be escaped.
+    function escapeAttr(value){
+        return String(value === null || value === undefined ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;');
+    }
+
+    $(document).on('click','.select_ironmongery',function(){
+        makeOption(
+            $(this).attr('data-id'),
+            $(this).attr('data-name'),
+            $(this).attr('data-code'),
+            $(this).attr('data-category'),
+            $(this).attr('data-price')
+        );
+    });
+
     function IronMongery(ironCategoryType,ironCategoryName, dis){
         if(ironCategoryName == 'Push Handles'){
             ironCategoryName = 'Push Plates';
@@ -553,11 +574,12 @@ input[type=number]::-webkit-outer-spin-button {
                     innerHtml+='<b>'+currency+data[index].Price+'</b>';
                     innerHtml+='<b>'+data[index].Category+'</b>';
                     innerHtml+='</div>';
-                    let name = data[index].Name.replace(/"/g, '&quot;'); // Replace double quotes with &quot;
-                    innerHtml += '<a href="javascript:void(0);" onClick="makeOption(' +
-                                    data[index].id + ', \'' + name + '\', \'' +
-                                    data[index].Code + '\', \'' + ironCategoryType + '\', ' +
-                                    data[index].Price + ')" class="product_edit" id="product_edit">Select</a>';
+                    innerHtml += '<a href="javascript:void(0);" class="product_edit select_ironmongery"' +
+                                    ' data-id="' + escapeAttr(data[index].id) + '"' +
+                                    ' data-name="' + escapeAttr(data[index].Name) + '"' +
+                                    ' data-code="' + escapeAttr(data[index].Code) + '"' +
+                                    ' data-category="' + escapeAttr(ironCategoryType) + '"' +
+                                    ' data-price="' + escapeAttr(data[index].Price) + '">Select</a>';
                     innerHtml+='</div></div>';
                 }
             }
