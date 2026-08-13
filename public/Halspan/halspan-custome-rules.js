@@ -3040,7 +3040,7 @@ $(document).ready(function() {
         const OPFLTurnOnOff = $('#OPFLTurnOnOff').val();     // Yes
         const leafWidth1Value = $('#leafWidth1').val();
         const leafHeightNoOPValue = $('#leafHeightNoOP').val();
-        const intumescentSealType = $('#intumescentSealType').val();
+        let intumescentSealType = $('#intumescentSealType').val();
         var sOWidthValue = $('#sOWidth').val();
         var sOHeightValue = $('#sOHeight').val();
         let overpanel = '';
@@ -3077,6 +3077,9 @@ $(document).ready(function() {
         }
         if (fireRating == null || fireRating == '') {
             fireRating = $('#savedfirerating').val();
+        }
+        if(fireRating == 'NFR' && intumescentSealType == 'None'){
+            intumescentSealType = '';
         }
         // console.log($aa);
         if(fireRating != '' && sOWidthValue != '' && sOHeightValue != '' || intumescentSealType != ''){

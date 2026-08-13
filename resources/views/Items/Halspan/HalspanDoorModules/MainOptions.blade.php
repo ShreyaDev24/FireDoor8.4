@@ -192,7 +192,7 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <div class="col-md-6 framehideshow">
                         <div class="position-relative form-group">
                             <label for="tollerance">Tolerance
