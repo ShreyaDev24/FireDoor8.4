@@ -26,7 +26,7 @@
                                                 </div>
 
                                             </div>
-                                            <div class="col-md-6 framehideshow">
+                                            {{--  <div class="col-md-6 framehideshow">
                                                 <div class="position-relative form-group">
                                                     <label for="frameThickness">Frame Thickness
                                                         @if (!empty($tooltip->frameThickness))
@@ -41,7 +41,7 @@
                                                         maxlength="5"
                                                         oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                                                 </div>
-                                            </div>
+                                            </div>  --}}
                                             <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="frameType">Frame Type
@@ -340,7 +340,7 @@
                                             <!-- <div class="col-md-6">
                                                 <div class="position-relative form-group">
                                                     <label for="extLinerSize">Ext-Liner Size
-                                                        
+
                                                     @if(!empty($tooltip->extLinerSize))
                                                     <script type="text/javascript">
                                                     document.write(Tooltip('{{$tooltip->extLinerSize}}'));
