@@ -377,7 +377,8 @@ const render = (CustomElement = null) => {
                 var saddleUndercut = saddleRequired ? (parseFloat(UnderCut) || 0) : 0;
                 var frameGap = saddleRequired ? Gap : (Gap * 2);
                 if ($("#frameType").val() == 'Rebated_Frame') {
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - frameGap;
+                    var bottomForCalc = saddleRequired ? BottomFrameThickness : (BottomFrameThickness - RebatedHeight);
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - bottomForCalc - saddleUndercut - frameGap;
                 } else {
                     LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - frameGap;
                 }
