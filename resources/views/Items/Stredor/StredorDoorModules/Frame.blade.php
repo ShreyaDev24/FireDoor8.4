@@ -25,15 +25,28 @@
                                                         value="@if(isset($Item['FrameMaterial'])){{$Item['FrameMaterial']}}@endif">
                                                 </div>
 
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="position-relative form-group">
-                                                    <label for="frameType">Frame Type
-                                                    @if(!empty($tooltip->frameType))
-                                                    <script type="text/javascript">
-                                                    document.write(Tooltip('{{$tooltip->frameType}}'));
-                                                    </script>
-                                                    @endif
+                    </div>
+                     {{--  <div class="col-md-6 framehideshow">
+                        <div class="position-relative form-group">
+                            <label for="frameThickness">Frame Thickness
+                                @if(!empty($tooltip->frameThickness))
+                                <script type="text/javascript">
+                                document.write(Tooltip('{{$tooltip->frameThickness}}'));
+                                </script>
+                                @endif
+                            </label>
+                            <input type="number" id="frameThickness" name="frameThickness" value="@if(isset($Item["FrameThickness"])){{$Item["FrameThickness"]}}@else{{''}}@endif"
+                                class="form-control change-event-calulation door-configuration" required pattern="\d*" maxlength="5" oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                        </div>
+                    </div>  --}}
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="frameType">Frame Type
+                                @if(!empty($tooltip->frameType))
+                                <script type="text/javascript">
+                                    document.write(Tooltip('{{$tooltip->frameType}}'));
+                                </script>
+                                @endif
 
                                                     </label>
                                                     <select name="frameType" required id="frameType" class="form-control">
