@@ -84,7 +84,7 @@ const render = (CustomElement = null) => {
     if (CustomElement && typeof CustomElement.attr === 'function') {
         ChangedFieldName = CustomElement.attr("name") || '';
     }
-    
+
 
     if (!$("#change-dimension").prop('checked')) {
         // WritingMode = "tb";
@@ -389,7 +389,8 @@ const render = (CustomElement = null) => {
                 var saddleUndercut = saddleRequired ? (parseFloat(UnderCut) || 0) : 0;
                 var frameGap = saddleRequired ? Gap : (Gap * 2);
                 if ($("#frameType").val() == 'Rebated_Frame') {
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - frameGap;
+                    var bottomForCalc = saddleRequired ? BottomFrameThickness : (BottomFrameThickness - RebatedHeight);
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - bottomForCalc - saddleUndercut - frameGap;
                 } else {
                     LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - frameGap;
                 }
@@ -3118,24 +3119,24 @@ const render = (CustomElement = null) => {
 
         if (IronmongerySet == "Yes" && IronmongeryID != "") {
 
-            
+
 
             var ParsedIronmongerySet = [];
             if (typeof IronmongeryJson !== 'undefined' && IronmongeryJson) {
                 try {
                     ParsedIronmongerySet = JSON.parse(IronmongeryJson);
-                    
+
                 } catch (e) {
                     ParsedIronmongerySet = [];
                 }
             } else {
-                
+
             }
 
             ParsedIronmongerySet.forEach(function (elem, index) {
                 if (elem.id == IronmongeryID) {
 
-                    
+
 
                     if (elem.kickPlatesQty != '' && elem.kickPlatesQty != null) {
                         IsKickPlateEnable = true;
@@ -3249,7 +3250,7 @@ const render = (CustomElement = null) => {
                     }
                     if (elem.FaceFixedDoorCloser != '' && elem.FaceFixedDoorCloser != null) {
                                  const FaceFixedDoorClosers = (elem.additional_info || []).filter(item => item.Category === "FaceFixedDoorClosers");
-   
+
                     if (FaceFixedDoorClosers.length > 0) {
                         IsFaceFixedDoorClosersEnable = true;
                         const FaceFixedDoorClosersData1 = FaceFixedDoorClosers[0];
