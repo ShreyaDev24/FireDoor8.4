@@ -3055,6 +3055,12 @@ window.renderHalspanFamily = (CustomElement = null,formValues = {}) => {
 
         }
 
+        // Business rule: when a hardware pack includes both pull handles and push
+        // plates, only the pull handles are drawn on the elevation.
+        if (IsPullHandlesEnable) {
+            IsPushHandlesEnable = false;
+        }
+
         var DecorativeGroves = formValues.DecorativeGroves;
 
         if (DecorativeGroves == "Yes") {
