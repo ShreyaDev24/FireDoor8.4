@@ -70,7 +70,6 @@
             table-layout: fixed;
         }
 
-        .itemTable th,
         .itemTable td {
             white-space: normal !important;
             word-wrap: break-word;
@@ -81,8 +80,12 @@
 
         .itemTable thead th {
             font-size: 10px;
-            padding: 4px 6px;
-            white-space: nowrap; /* prevents wrapping */
+            padding: 6px 4px;
+            white-space: normal !important;
+            word-break: normal;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 1.25;
         }
     </style>
     <div class="app-main__outer">
@@ -197,7 +200,7 @@
                         <span class="success"></span>
                         <div class="row w-100 m-0">
                             @if (Auth::user()->UserType == 1 || Auth::user()->UserType == 2 || Auth::user()->UserType == 3)
-                                <div class="col-sm-9 p-0">
+                                <div class="col-sm-10 p-0">
                                 @else
                                     <div class="col-sm-12 p-0">
                             @endif
@@ -717,7 +720,7 @@
                                             </div>
 
 
-                                            <div class="col-sm-12 mt-3">
+                                            <div class="col-sm-12 mt-3 p-0">
 
                                                 <div class="CustomTabContent tab-content">
 
@@ -838,7 +841,7 @@
                             }
                         @endphp
                         @if (Auth::user()->UserType == 1 || Auth::user()->UserType == 2 || Auth::user()->UserType == 3)
-                            <div class="col-sm-3 p-0">
+                            <div class="col-sm-2 p-0">
                                 <div class="quote_card">
                                     <div class="quote_card_title">
                                         <h3>Quote Summary</h3>
@@ -1182,9 +1185,21 @@
                     columnDefs: [
                         { orderable: false, targets: [0, -1] },
 
-                        { width: "50px", targets: 0 },  // Line column
-                        { width: "50px", targets: 6 },   // Floor column (adjust index if needed)
-                        { width: "50px", targets: 5 }   // Floor column (adjust index if needed)
+                        { width: "3.33%", targets: 0 },   // Line
+                        { width: "7.22%", targets: 1 },   // Door Core
+                        { width: "7.22%", targets: 2 },   // Fire Rating
+                        { width: "9.44%", targets: 3 },   // Door Type
+                        { width: "6.67%", targets: 4 },   // Door No.
+                        { width: "5.56%", targets: 5 },   // Floor
+                        { width: "5.56%", targets: 6 },   // Item
+                        { width: "6.67%", targets: 7 },   // Handing
+                        { width: "6.67%", targets: 8 },   // S.O. Width
+                        { width: "6.67%", targets: 9 },   // S.O. Height
+                        { width: "6.67%", targets: 10 },  // S.O. Depth
+                        { width: "8.33%", targets: 11 },  // Doorset Price
+                        { width: "6.11%", targets: 12 },  // Ironmongery Price
+                        { width: "7.78%", targets: 13 },  // Total
+                        { width: "6.11%", targets: 14 }   // Action
                     ]
                 });
 
