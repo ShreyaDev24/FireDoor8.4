@@ -42,14 +42,14 @@
     <table style="max-width: 100vw; width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
-                <th colspan="22">Door Order Sheet BOM</th>
+                <th colspan="23">Door Order Sheet BOM</th>
             </tr>
             <tr>
                 <th>Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="5">{{ $quotation->projectname }}</td>
-                <th colspan="4">Prepared By</th>
+                <th colspan="5">Prepared By</th>
                 <td colspan="6">{{ $userName }}</td>
             </tr>
             <tr>
@@ -59,14 +59,14 @@
                 <td colspan="3">{{ $today }}</td>
                 <th colspan="3">Main Contractor</th>
                 <td colspan="3">{{ $quotation->CstCompanyName }}</td>
-                <th colspan="3">Sales Contact</th>
+                <th colspan="4">Sales Contact</th>
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="22">Text</th>
+                <th colspan="23">Text</th>
             </tr>
             <tr>
-                <th colspan="22">Items</th>
+                <th colspan="23">Items</th>
             </tr>
             <tr>
                 <th>Total Doors</th>
@@ -74,6 +74,7 @@
                 <th>IFC/Certifire No/Q mark Plug</th>
                 <th>Door Number</th>
                 <th>Door Type</th>
+                <th>FireRating</th>
                 <th>Door Thickness</th>
                 <th>Door Mat</th>
                 <th>Door Leaf Facing</th>
@@ -94,6 +95,7 @@
             </tr>
             <tr style="background:#00B0F0">
                 <td style="padding:5px 0px;"><b></b></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
