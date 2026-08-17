@@ -16,7 +16,7 @@ class IntumescentSealsImport implements ToModel, WithHeadingRow
             'strebord'    => 1,
             'halspan'   => 2,
             'flamebreak' => 7,
-            'stredoor'   => 8,
+            'stredor'   => 8,
             'vicaima'   => 4,
         ];
 
