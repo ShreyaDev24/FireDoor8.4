@@ -622,7 +622,9 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $row->Handing,
                     $row->FrameHeight,
                     $row->FrameWidth,
-                    $row->FrameDepth
+                    $row->FrameDepth,
+                    $row->LockType,
+                    $row->DoorType,
                 ]);
             })
             ->map(function ($group) {
@@ -634,6 +636,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
                     $first->FrameHeight ?? '',
                     $first->FrameWidth ?? '',
                     $first->FrameDepth ?? '',
+                    $first->LockType ?? '',
+                    $first->DoorType ?? '',
                     $group->count(), // ✅ Add quantity count per group
                 ];
             })
@@ -648,6 +652,8 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             'O/A Frame Height',
             'O/A Frame Width',
             'Frame Depth',
+            'Lock',
+            'Door Type',
             'QTY', // ✅ Add qty header
         ];
 
@@ -655,25 +661,25 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             // Add empty rows before summary
             $data[] = array_fill(0, 32, '');
             $data[] = array_fill(0, 32, '');
-            $data[] = ['Summary', '', '', '', '', '', ''];
+            $data[] = ['Summary', '', '', '', '', '', '', '', ''];
             $data[] = $summaryHeader;
 
             // Add summary rows
             $totalQty = 0;
             foreach ($summaryData as $row) {
-                $totalQty += $row[6]; // sum qty
+                $totalQty += $row[8]; // sum qty
                 $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
             }
         }else{
             // Add empty rows before summary
             $data = [];
-            $data[] = ['Summary', '', '', '', '', '', ''];
+            $data[] = ['Summary', '', '', '', '', '', '', '', ''];
             $data[] = $summaryHeader;
 
             // Add summary rows
             $totalQty = 0;
             foreach ($summaryData as $row) {
-                $totalQty += $row[6]; // sum qty
+                $totalQty += $row[8]; // sum qty
                 $data[] = array_merge($row, array_fill(0, 32 - count($row), ''));
             }
         }
@@ -799,13 +805,13 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
 
                     // ✅ Gray background + bold for Summary table header
                     if ($val === 'Frame Material') {
-                        $sheet->getStyle("A{$i}:G{$i}")->applyFromArray($summaryHeaderStyle);
+                        $sheet->getStyle("A{$i}:I{$i}")->applyFromArray($summaryHeaderStyle);
                     }
 
                     // ✅ Optional: green merge bar for the "Summary" label row
                     if ($val === 'Summary') {
-                        $sheet->mergeCells("A{$i}:G{$i}");
-                        $sheet->getStyle("A{$i}:G{$i}")->applyFromArray($mainTitleStyle);
+                        $sheet->mergeCells("A{$i}:I{$i}");
+                        $sheet->getStyle("A{$i}:I{$i}")->applyFromArray($mainTitleStyle);
                     }
                 }
             },
