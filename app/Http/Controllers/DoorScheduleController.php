@@ -2516,10 +2516,30 @@ class DoorScheduleController extends Controller
 
                             $success = 0;
                         } else {
+                            // Price the ironmongery set exactly like the door form does
+                            // (ItemListController): no UserId filter, and when the set has no
+                            // discountprice stored, fall back to totalprice + material margin.
+                            // The old lookup read discountprice only, so any set without one
+                            // came back as 0/NULL after import.
                             $IronmongaryPrice = 0;
-                            if (!empty(floatval($IronmongeryID)) || floatval($IronmongeryID) != 0) {
-                                $AI = AddIronmongery::select('discountprice')->where('id', floatval($IronmongeryID))->where('UserId', user_id())->first();
-                                $IronmongaryPrice = empty($AI) ? 0 : $AI->discountprice;
+                            if (!empty(floatval($IronmongeryID))) {
+                                $AI = AddIronmongery::select('discountprice', 'totalprice')->where('id', floatval($IronmongeryID))->first();
+                                if (!empty($AI)) {
+                                    if (!empty($AI->discountprice)) {
+                                        $IronmongaryPrice = round(floatval($AI->discountprice), 2);
+                                    } else {
+                                        $margin = floatval(BOMSetting::wherein('UserId', CompanyUsers())->value('margin_for_material'));
+                                        $marginDiscount = floatval(discountQuotationValue($quotationId, $versionId));
+                                        if ($marginDiscount != 0) {
+                                            $margin += $marginDiscount;
+                                        }
+
+                                        $marginwithcal = 100 - $margin;
+                                        $IronmongaryPrice = ($marginwithcal == 0)
+                                            ? round(floatval($AI->totalprice), 2)
+                                            : round(floatval($AI->totalprice) / ($marginwithcal / 100), 2);
+                                    }
+                                }
                             }
 
                             $FrameOnOff = ($FrameOnOff == 1) ? 1 : 0;
@@ -2728,7 +2748,11 @@ class DoorScheduleController extends Controller
                             // $aa->thresholdSeal1 = $thresholdSeal1;
                             // $aa->thresholdSeal2 = $thresholdSeal2;
                             $aa->AccousticsMeetingStiles = $AccousticsMeetingStiles;
-                            $aa->leaf_price_delta = floatval($LeafPriceDelta);
+                            // Adjusted prices are NOT imported - the client wants the original
+                            // price on import, so leaf_price_delta/AdjustPrice stay empty and the
+                            // doorset price comes from the BOM recalculation below.
+                            $aa->leaf_price_delta = 0;
+                            $aa->AdjustPrice = 0;
                             // $aa->DoorsetPrice = floatval($DoorsetPrice);
                             $aa->IronmongaryPrice = $IronmongaryPrice;
                             $aa->FrameOnOff = $FrameOnOff;
@@ -2740,6 +2764,9 @@ class DoorScheduleController extends Controller
                             $item->QuotationId = $aa->QuotationId;
                             $item->version_id = $aa->VersionId;
                             $item->IntumescentLeafType = $aa->IntumescentLeafType;
+                            // The BOM reads the leaf type as intumescentLeafType (lower case i) - it is
+                            // the key into the door core price list, so without it the core price is 0.
+                            $item->intumescentLeafType = $aa->IntumescentLeafType;
                             $item->UserId = Auth::user()->id;
                             $item->DoorQuantity = $aa->DoorQuantity;
                             //Main Options
@@ -2812,6 +2839,8 @@ class DoorScheduleController extends Controller
                             $item->leaf2VisionPanel = $aa->Leaf2VisionPanel;
                             $item->vpSameAsLeaf1 = $aa->sVPSameAsLeaf1;
                             $item->Leaf2VisionPanelQuantity = $aa->Leaf2VisionPanelQuantity;
+                            // The BOM reads the leaf 2 vision panel count as visionPanelQuantityforLeaf2.
+                            $item->visionPanelQuantityforLeaf2 = $aa->Leaf2VisionPanelQuantity;
                             $item->AreVPsEqualSizesForLeaf2 =  $aa->AreVPsEqualSizesForLeaf2;
                             $item->distanceFromTopOfDoorforLeaf2 = $aa->DistanceFromTopOfDoorForLeaf2;
                             $item->distanceFromTheEdgeOfDoorforLeaf2 = $aa->DistanceFromTheEdgeOfDoorforLeaf2;
@@ -2892,6 +2921,8 @@ class DoorScheduleController extends Controller
                             $item->SL1Width = $aa->SL1Width;
                             $item->SL1Height = $aa->SL1Height;
                             $item->SL1Depth = $aa->SL1Depth;
+                            $item->SlBeadThickness = $aa->SlBeadThickness;
+                            $item->SlBeadHeight = $aa->SlBeadHeight;
                             $item->SL1Transom = $aa->SL1Transom;
                             $item->SL1TransomDepth = $aa->SL1TransomDepth;
                             $item->SL1transomThickness = $aa->SL1transomThickness;
@@ -2900,6 +2931,9 @@ class DoorScheduleController extends Controller
                             $item->copyOfSideLite1 = $aa->DoYouWantToCopySameAsSL1;
                             $item->SL2GlassIntegrity = $aa->SL2GlassIntegrity;
                             $item->SideLight2GlassType = $aa->SideLight2GlassType;
+                            // The glass BOM reads this as sideLight2GlassType (lower case s); without it
+                            // the Sidelight 2 glass line is never priced.
+                            $item->sideLight2GlassType = $aa->SideLight2GlassType;
                             $item->sideLight2GlassThickness = $aa->SideLight2GlassThickness;
                             $item->sideLight2GlazingSystems = $aa->SideLight2GlazingSystems;
                             $item->sideLight2GlazingSystemsThickness = $aa->SideLight2GlazingSystemsThickness;
@@ -2959,6 +2993,7 @@ class DoorScheduleController extends Controller
                             $item->SaddleLocation = $aa->saddleLocation;
 
                             $item->issingleconfiguration = $configurableitems;
+                            $item->FrameOnOff = $aa->FrameOnOff;
 
                             $item->IronmongaryPrice = $IronmongaryPrice;
                             $item->leaf_price_delta = $aa->leaf_price_delta;
@@ -3025,6 +3060,7 @@ class DoorScheduleController extends Controller
                             }
 
                             $BOMCalculation = BOMCalculation::select('*')->where('QuotationId', $aa->QuotationId)->where('DoorType', $DoorType)->where('itemId', $Item->itemId)->get();
+                            // dd($BOMCalculation);
                             $GTSellPrice = 0;
                             $GTSellPriceTotal = 0;
                             if (!empty($BOMCalculation)) {
@@ -3037,16 +3073,23 @@ class DoorScheduleController extends Controller
                                 $ItemMaster = ItemMaster::where('itemID', $Item->itemId)->get()->count();
                                 $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
                             }
-                            if($Item->leaf_price_delta != null){
-                                 // 🔹 Store calculated impact separately
-                                Item::where('itemId', $request->itemId)->update([
-                                    'leaf_price_delta' => $GTSellPriceTotal
-                                ]);
-                            } else{
+                            // if($Item->leaf_price_delta != null){
+                            //      // 🔹 Store calculated impact separately
+                            //     Item::where('itemId', $request->itemId)->update([
+                            //         'leaf_price_delta' => $GTSellPriceTotal
+                            //     ]);
+                            // } else{
+                                  // Keep the doorset price that came in the file, so an imported
+                                  // quotation totals the same as the exported one. The BOM is still
+                                  // rebuilt above (BOM screens need it), but it is priced with
+                                  // today's margin/cost settings, which is why recalculating here
+                                  // moved the price. Fall back to the BOM total when the file has
+                                  // no price for the row.
+                                  $importedDoorsetPrice = floatval($DoorsetPrice);
                                   $Item = Item::where('itemId', $Item->itemId)->update([
-                                        'DoorsetPrice' => $GTSellPriceTotal
+                                        'DoorsetPrice' => ($importedDoorsetPrice > 0) ? $importedDoorsetPrice : $GTSellPriceTotal
                                     ]);
-                            }
+                            // }
 
 
                             $success = 0;
@@ -3407,10 +3450,26 @@ class DoorScheduleController extends Controller
 
                             $success = 0;
                         } else {
+                            // Same ironmongery pricing as the door form (see the custom branch above).
                             $IronmongaryPrice = 0;
-                            if (!empty(floatval($IronmongeryID)) || floatval($IronmongeryID) != 0) {
-                                $AI = AddIronmongery::select('discountprice')->where('id', floatval($IronmongeryID))->where('UserId', user_id())->first();
-                                $IronmongaryPrice = empty($AI) ? 0 : $AI->discountprice;
+                            if (!empty(floatval($IronmongeryID))) {
+                                $AI = AddIronmongery::select('discountprice', 'totalprice')->where('id', floatval($IronmongeryID))->first();
+                                if (!empty($AI)) {
+                                    if (!empty($AI->discountprice)) {
+                                        $IronmongaryPrice = round(floatval($AI->discountprice), 2);
+                                    } else {
+                                        $margin = floatval(BOMSetting::wherein('UserId', CompanyUsers())->value('margin_for_material'));
+                                        $marginDiscount = floatval(discountQuotationValue($quotationId, $versionId));
+                                        if ($marginDiscount != 0) {
+                                            $margin += $marginDiscount;
+                                        }
+
+                                        $marginwithcal = 100 - $margin;
+                                        $IronmongaryPrice = ($marginwithcal == 0)
+                                            ? round(floatval($AI->totalprice), 2)
+                                            : round(floatval($AI->totalprice) / ($marginwithcal / 100), 2);
+                                    }
+                                }
                             }
 
                             if($DoorDimensionId2 === '' || $DoorDimensionId2 === '0'){
@@ -3743,6 +3802,8 @@ class DoorScheduleController extends Controller
                             $item->leaf2VisionPanel = $aa->Leaf2VisionPanel;
                             $item->vpSameAsLeaf1 = $aa->sVPSameAsLeaf1;
                             $item->Leaf2VisionPanelQuantity = $aa->Leaf2VisionPanelQuantity;
+                            // The BOM reads the leaf 2 vision panel count as visionPanelQuantityforLeaf2.
+                            $item->visionPanelQuantityforLeaf2 = $aa->Leaf2VisionPanelQuantity;
                             $item->AreVPsEqualSizesForLeaf2 =  $aa->AreVPsEqualSizesForLeaf2;
                             $item->distanceFromTopOfDoorforLeaf2 = $aa->DistanceFromTopOfDoorForLeaf2;
                             $item->distanceFromTheEdgeOfDoorforLeaf2 = $aa->DistanceFromTheEdgeOfDoorforLeaf2;
@@ -3905,6 +3966,7 @@ class DoorScheduleController extends Controller
                             $item->SideLight2FrameThickness = $aa->SideLight2FrameThickness;
 
                             $item->issingleconfiguration = $configurableitems;
+                            $item->FrameOnOff = $aa->FrameOnOff;
 
                             $item->IronmongaryPrice = $IronmongaryPrice;
 
