@@ -17,6 +17,7 @@ use App\Exports\BomCalculationExport;
 use App\Exports\SideScreenExport;
 use App\Exports\IronmongeryExport;
 use App\Exports\ExportFrameExcel;
+use App\Exports\WorksheetHangingDocument;
 use App\Exports\ScheduleOrderNew;
 use App\Exports\NonConfig;
 use App\Exports\ExportNonConfig;
@@ -7205,6 +7206,25 @@ class DoorScheduleController extends Controller
         }
 
         return Excel::download(new ExportFrameExcel($quotationId,$versionID), "FrameExcel ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
+            [
+                'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ]);
+    }
+
+    public function WorksheetHangingDocument($quotationId,$versionID)
+    {
+        $quotation = Quotation::where('quotation.id',$quotationId)->first();
+        if (!$quotation) {
+            abort(404);
+        }
+
+        $vid = 0;
+        $QV = QuotationVersion::where('id',$versionID)->first();
+        if ($QV) {
+            $vid = $QV->version;
+        }
+
+        return Excel::download(new WorksheetHangingDocument($quotationId,$versionID), "WorksheetHangingDocument ".trim((string) $quotation->QuotationGenerationId, "#")."-".$vid.'.xlsx', \Maatwebsite\Excel\Excel::XLSX,
             [
                 'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ]);

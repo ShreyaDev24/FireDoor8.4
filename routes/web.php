@@ -636,6 +636,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/excelexportVicaimaUrl/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'excelexportVicaima'])->name('excelexportVicaima');
     Route::get('/ExportIronmongery/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportIronmongery'])->name('ExportIronmongery');
     Route::get('/ExportFrameExcel/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportFrameExcel'])->name('ExportFrameExcel');
+    Route::get('/WorksheetHangingDocument/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'WorksheetHangingDocument'])->name('WorksheetHangingDocument');
 
     // export all quotions
     Route::get('/exportAllQuotationsurl', [App\Http\Controllers\DoorScheduleController::class,'exportAllQuotations'])->name('exportAllQuotationsurl');
