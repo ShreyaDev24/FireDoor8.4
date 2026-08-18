@@ -2462,6 +2462,7 @@ class DoorScheduleController extends Controller
                     $ArchitraveFinish = trim((string) $row[$j++]);
                     $ArchitraveFinishColor = trim((string) $row[$j++]);
                     $ArchitraveSetQty = trim((string) $row[$j++]);
+                    $LeafPriceDelta = trim((string) $row[$j++]);
                     $DoorsetPrice = trim((string) $row[$j++]);
                     $IronmongaryPrice = trim((string) $row[$j++]);
                     $totalPricePerDoorSet = trim((string) $row[$j++]);
@@ -2727,7 +2728,7 @@ class DoorScheduleController extends Controller
                             // $aa->thresholdSeal1 = $thresholdSeal1;
                             // $aa->thresholdSeal2 = $thresholdSeal2;
                             $aa->AccousticsMeetingStiles = $AccousticsMeetingStiles;
-
+                            $aa->leaf_price_delta = floatval($LeafPriceDelta);
                             // $aa->DoorsetPrice = floatval($DoorsetPrice);
                             $aa->IronmongaryPrice = $IronmongaryPrice;
                             $aa->FrameOnOff = $FrameOnOff;
@@ -2960,6 +2961,7 @@ class DoorScheduleController extends Controller
                             $item->issingleconfiguration = $configurableitems;
 
                             $item->IronmongaryPrice = $IronmongaryPrice;
+                            $item->leaf_price_delta = $aa->leaf_price_delta;
 
                             $itemLastId = Item::orderBy('itemId', 'DESC')->limit(1)->first();
                             $itemId = $itemLastId->itemId;
@@ -3035,10 +3037,17 @@ class DoorScheduleController extends Controller
                                 $ItemMaster = ItemMaster::where('itemID', $Item->itemId)->get()->count();
                                 $GTSellPriceTotal = round(($GTSellPrice / $ItemMaster), 2);
                             }
+                            if($Item->leaf_price_delta != null){
+                                 // 🔹 Store calculated impact separately
+                                Item::where('itemId', $request->itemId)->update([
+                                    'leaf_price_delta' => $GTSellPriceTotal
+                                ]);
+                            } else{
+                                  $Item = Item::where('itemId', $Item->itemId)->update([
+                                        'DoorsetPrice' => $GTSellPriceTotal
+                                    ]);
+                            }
 
-                            $Item = Item::where('itemId', $Item->itemId)->update([
-                                'DoorsetPrice' => $GTSellPriceTotal
-                            ]);
 
                             $success = 0;
                         }
