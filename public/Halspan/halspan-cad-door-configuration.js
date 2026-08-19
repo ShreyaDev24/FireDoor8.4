@@ -3156,12 +3156,12 @@ const render = (CustomElement = null) => {
                         LockNLatchesDistanceFromLeadingEdgeOfDoor=LockNLatchesData1.distanceFromLeadingEdgeOfDoor
                     }
 
-                    if (LocksAndLatches.length > 1) {
-                        IsLockNLatchesEnable2 = true;
-                        const LockNLatchesData2 = LocksAndLatches[1];
-                        LockNLatchesDistanceFromBottomOfDoor2 = LockNLatchesData2.distanceFromBottomOfDoor
-                        LockNLatchesDistanceFromLeadingEdgeOfDoor2=LockNLatchesData2.distanceFromLeadingEdgeOfDoor
-                    }
+                    // if (LocksAndLatches.length > 1) {
+                    //     IsLockNLatchesEnable2 = true;
+                    //     const LockNLatchesData2 = LocksAndLatches[1];
+                    //     LockNLatchesDistanceFromBottomOfDoor2 = LockNLatchesData2.distanceFromBottomOfDoor
+                    //     LockNLatchesDistanceFromLeadingEdgeOfDoor2=LockNLatchesData2.distanceFromLeadingEdgeOfDoor
+                    // }
                     }
                     if (elem.Thumbturn != '' && elem.Thumbturn != null) {
 
