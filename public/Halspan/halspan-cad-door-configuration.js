@@ -3064,6 +3064,46 @@ const render = (CustomElement = null) => {
          *  Optima 30 (Chilt/A01204 Rev I) and Optima 60 (Chilt/A01205 Rev K) both
          *  certify 200mm minimum between grilles for every grille route. */
         var ATGMinGapBetweenGrills = 200
+        /**
+         * Works out where each of a leaf's air transfer grills sits, measured in mm from
+         * the bottom of the door. A grill keeps its own recorded distanceFromBottomOfDoor
+         * whenever that clears the grill below it by ATGMinGapBetweenGrills. When it does
+         * not, the grill is moved into the gap ABOVE the one below it - and if the leaf is
+         * not tall enough for that (two grills both recorded at, say, 1200mm on a 1980mm
+         * leaf), into the gap BELOW instead, so it can never be drawn off the leaf.
+         * Returns one entry per unit; nothing is drawn until every position is settled,
+         * which is what lets the last resort re-seat the pair.
+         */
+        var LayOutAirTransferGrills = function (units, leafHeight) {
+            const placed = [];
+            (units || []).forEach(function (unit, index) {
+                const height = Number(unit.staticHeight) || 0;
+                const width = Number(unit.staticWidth) || 0;
+                let bottom = Number(unit.distanceFromBottomOfDoor) || 0;
+                const previous = placed[index - 1];
+
+                if (previous && bottom < previous.top + ATGMinGapBetweenGrills) {
+                    const above = previous.top + ATGMinGapBetweenGrills;
+                    const below = previous.bottom - ATGMinGapBetweenGrills - height;
+
+                    if (!leafHeight || above + height <= leafHeight) {
+                        bottom = above;
+                    } else if (below >= 0) {
+                        bottom = below;
+                    } else {
+                        // Neither grill's own distance can be honoured on a leaf this
+                        // short, so centre the pair rather than let one escape the leaf.
+                        const pairHeight = previous.height + ATGMinGapBetweenGrills + height;
+                        previous.bottom = Math.max(0, (leafHeight - pairHeight) / 2);
+                        previous.top = previous.bottom + previous.height;
+                        bottom = previous.top + ATGMinGapBetweenGrills;
+                    }
+                }
+
+                placed.push({ bottom: bottom, top: bottom + height, height: height, width: width });
+            });
+            return placed;
+        }
         /** PullHandle Measurements */
         var PullHandleHeight = 0
         var PullHandleDistanceFromBottomOfDoor = 0
@@ -4070,20 +4110,10 @@ const render = (CustomElement = null) => {
                     ? AirTransferGrillsUnits
                     : [{ staticHeight: AirTransferGrillsHeight, staticWidth: AirTransferGrillsWidth, distanceFromBottomOfDoor: AirTransferGrillsDistanceFromBottomOfDoor }]
                     ).slice(0, ATGMaxPerLeaf);
-                const SDATGStackGap = ATGMinGapBetweenGrills;
-                let SDATGTopOfPrevious = null;
-                SDATGUnits.forEach(function (unit, index) {
-                    const ATGheight = Number(unit.staticHeight) || 0;
-                    const ATGwidth = Number(unit.staticWidth) || 0;
-                    let ATGDistanceFromBottomOfDoor = Number(unit.distanceFromBottomOfDoor) || 0;
-                    // Keep each grill's own recorded distance from the bottom of the door
-                    // unless that would clash with the grill below it.
-                    if (SDATGTopOfPrevious !== null && ATGDistanceFromBottomOfDoor < SDATGTopOfPrevious + SDATGStackGap) {
-                        ATGDistanceFromBottomOfDoor = SDATGTopOfPrevious + SDATGStackGap;
-                    }
-                    SDATGTopOfPrevious = ATGDistanceFromBottomOfDoor + ATGheight;
-                    SDAirTransferGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, index);
-                });
+                LayOutAirTransferGrills(SDATGUnits, LeafHeightNoOPForMap * 5)
+                    .forEach(function (grill, index) {
+                        SDAirTransferGrill(grill.bottom, grill.height, grill.width, index);
+                    });
             }
 
             function SDAirTransferGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, stackIndex) {
@@ -7895,23 +7925,13 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                 ];
             }
 
-            /** Lay one leaf's grills out bottom-up. Each keeps its own recorded distance
-             *  from the bottom of the door unless that would clash with the grill below it,
-             *  in which case it is pushed up so both stay fully visible and dimensioned.
+            /** Draw one leaf's grills at the positions LayOutAirTransferGrills settled on.
              *  `index` is passed on so each grill's leader lines sit in their own lane. */
             function StackAirTransferGrills(units, drawGrill){
-                const ATGStackGap = ATGMinGapBetweenGrills;
-                let topOfPrevious = null;
-                units.forEach(function (unit, index) {
-                    const ATGheight = Number(unit.staticHeight) || 0;
-                    const ATGwidth = Number(unit.staticWidth) || 0;
-                    let ATGDistanceFromBottomOfDoor = Number(unit.distanceFromBottomOfDoor) || 0;
-                    if (topOfPrevious !== null && ATGDistanceFromBottomOfDoor < topOfPrevious + ATGStackGap) {
-                        ATGDistanceFromBottomOfDoor = topOfPrevious + ATGStackGap;
-                    }
-                    topOfPrevious = ATGDistanceFromBottomOfDoor + ATGheight;
-                    drawGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, index);
-                });
+                LayOutAirTransferGrills(units, LeafHeightNoOPForMap * 5)
+                    .forEach(function (grill, index) {
+                        drawGrill(grill.bottom, grill.height, grill.width, index);
+                    });
             }
 
 
