@@ -696,6 +696,10 @@ function frameonoff(){
         $("#SlBeadHeight").val('').attr('readonly',true);
         $("#SlBeadThickness").val('').attr('required',false);
         $("#SlBeadHeight").val('').attr('required',false);
+        $("#Sl2BeadThickness").val('').attr('readonly',true);
+        $("#Sl2BeadHeight").val('').attr('readonly',true);
+        $("#Sl2BeadThickness").val('').attr('required',false);
+        $("#Sl2BeadHeight").val('').attr('required',false);
         $("#copyOfSideLite1").attr({'disabled': true,"readonly":true }).val("No");
         $("#sideLight2GlassType").attr({ 'disabled': false, "required": true }).val('');
         $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true }).val('');

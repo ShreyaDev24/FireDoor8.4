@@ -1458,6 +1458,8 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
     $item->SLtransomThickness = $data->SLtransomThickness;
     $item->SlBeadThickness = $data->SlBeadThickness;
     $item->SlBeadHeight = $data->SlBeadHeight;
+    $item->Sl2BeadThickness = $data->Sl2BeadThickness;
+    $item->Sl2BeadHeight = $data->Sl2BeadHeight;
 
     //Lipping And Intumescent
     $item->lippingType = $data->LippingType;

@@ -1292,6 +1292,8 @@ class ItemListController extends Controller
                         'SLtransomThickness'                    => $request->SLtransomThickness,
                         'SlBeadThickness'                       => $request->SlBeadThickness,
                         'SlBeadHeight'                          => $request->SlBeadHeight,
+                        'Sl2BeadThickness'                      => ($request->copyOfSideLite1 == "Yes") ? $request->SlBeadThickness : $request->Sl2BeadThickness,
+                        'Sl2BeadHeight'                         => ($request->copyOfSideLite1 == "Yes") ? $request->SlBeadHeight : $request->Sl2BeadHeight,
                         'SideLight1GlassWidth'                  => $request->sidelight1GlassWidth,
                         'Sidelight1GlassHeight'                 => $request->sidelight1GlassHeight,
                         'SideLight2GlassWidth'                  => ($request->copyOfSideLite1 == "Yes")?$request->sidelight1GlassWidth:$request->sidelight2GlassWidth,
@@ -1602,6 +1604,8 @@ class ItemListController extends Controller
                         $item->SLtransomThickness = $request->SLtransomThickness;
                         $item->SlBeadThickness = $request->SlBeadThickness;
                         $item->SlBeadHeight = $request->SlBeadHeight;
+                        $item->Sl2BeadThickness = ($request->copyOfSideLite1 == "Yes") ? $request->SlBeadThickness : $request->Sl2BeadThickness;
+                        $item->Sl2BeadHeight = ($request->copyOfSideLite1 == "Yes") ? $request->SlBeadHeight : $request->Sl2BeadHeight;
                         $item->SideLight2GlassWidth = ($request->copyOfSideLite1 == "Yes")?$request->sidelight1GlassWidth:$request->sidelight2GlassWidth;
 
 
