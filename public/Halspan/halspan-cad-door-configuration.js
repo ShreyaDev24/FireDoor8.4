@@ -3052,6 +3052,17 @@ const render = (CustomElement = null) => {
         var AirTransferGrillsHeight2 = 0
         var AirTransferGrillsWidth2 = 0
         var AirTransferGrillsDistanceFromBottomOfDoor2 = 0
+        /** Every air transfer grill UNIT, in the order it was selected. The server
+         *  flattens quantity (an entry is repeated `qty` times), so 2 selected grills
+         *  with qty 2 each arrive here as 4 units. */
+        var AirTransferGrillsUnits = []
+        /** Most grills a single leaf can show: qty 4 on a double door = 2 per leaf,
+         *  qty 2 on a single door = 2 on its one leaf. */
+        var ATGMaxPerLeaf = 2
+        /** Minimum clear leaf between two grills on the same leaf, in mm. Halspan
+         *  Optima 30 (Chilt/A01204 Rev I) and Optima 60 (Chilt/A01205 Rev K) both
+         *  certify 200mm minimum between grilles for every grille route. */
+        var ATGMinGapBetweenGrills = 200
         /** PullHandle Measurements */
         var PullHandleHeight = 0
         var PullHandleDistanceFromBottomOfDoor = 0
@@ -3358,6 +3369,8 @@ const render = (CustomElement = null) => {
                         AirTransferGrillsWidth2 = AirTransferGrillData2.staticWidth;
                         AirTransferGrillsDistanceFromBottomOfDoor2 = AirTransferGrillData2.distanceFromBottomOfDoor
                     }
+
+                    AirTransferGrillsUnits = AirTransfers;
 
                     }
                     if (elem.FlushBolts != '' && elem.FlushBolts != null) {
@@ -4048,10 +4061,40 @@ const render = (CustomElement = null) => {
 
 
             if (IsAirTransferGrillsEnable && DoorSetType == "SD") {
-                const grillX = ix + (FrameWidthForMap / 2) - ((AirTransferGrillsWidth / 5) / 2);
-                const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (AirTransferGrillsDistanceFromBottomOfDoor / 5) - (AirTransferGrillsHeight / 5);
-                const grillWidth = AirTransferGrillsWidth / 5;
-                const grillHeight = AirTransferGrillsHeight / 5;
+                // Quantity is flattened server-side (each selected grill is repeated `qty`
+                // times), so on a single door qty 2 means 2 grills on the one leaf. They are
+                // stacked, because an ATG is always centred on its leaf.
+                // A leaf never carries more than ATGMaxPerLeaf: an ironmongery set built for
+                // a double door holds qty 4 (2 per leaf), and re-using that set on a single
+                // doorset must still draw 2 - not all 4 stacked off the top of the leaf.
+                const SDATGUnits = ((AirTransferGrillsUnits && AirTransferGrillsUnits.length > 0)
+                    ? AirTransferGrillsUnits
+                    : [{ staticHeight: AirTransferGrillsHeight, staticWidth: AirTransferGrillsWidth, distanceFromBottomOfDoor: AirTransferGrillsDistanceFromBottomOfDoor }]
+                    ).slice(0, ATGMaxPerLeaf);
+                const SDATGStackGap = ATGMinGapBetweenGrills;
+                let SDATGTopOfPrevious = null;
+                SDATGUnits.forEach(function (unit, index) {
+                    const ATGheight = Number(unit.staticHeight) || 0;
+                    const ATGwidth = Number(unit.staticWidth) || 0;
+                    let ATGDistanceFromBottomOfDoor = Number(unit.distanceFromBottomOfDoor) || 0;
+                    // Keep each grill's own recorded distance from the bottom of the door
+                    // unless that would clash with the grill below it.
+                    if (SDATGTopOfPrevious !== null && ATGDistanceFromBottomOfDoor < SDATGTopOfPrevious + SDATGStackGap) {
+                        ATGDistanceFromBottomOfDoor = SDATGTopOfPrevious + SDATGStackGap;
+                    }
+                    SDATGTopOfPrevious = ATGDistanceFromBottomOfDoor + ATGheight;
+                    SDAirTransferGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, index);
+                });
+            }
+
+            function SDAirTransferGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, stackIndex) {
+                // Grills stacked on the same leaf each get their own leader-line lane,
+                // so the lower grill's dimensions are not overdrawn by the upper one's.
+                const ATGDimLane = (stackIndex || 0) * 18;
+                const grillX = ix + (FrameWidthForMap / 2) - ((ATGwidth / 5) / 2);
+                const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (ATGDistanceFromBottomOfDoor / 5) - (ATGheight / 5);
+                const grillWidth = ATGwidth / 5;
+                const grillHeight = ATGheight / 5;
 
                 // Draw the outer rectangle
                 svg.append('rect')
@@ -4063,7 +4106,7 @@ const render = (CustomElement = null) => {
                     .attr('fill', '#D0D0C6');
 
                 // Draw the horizontal slots
-                const numSlots = AirTransferGrillsHeight / 20; // Number of horizontal slots
+                const numSlots = ATGheight / 20; // Number of horizontal slots
                 const slotHeight = grillHeight / (2 * numSlots); // Slot height
                 const gapHeight = slotHeight; // Gap between slots
 
@@ -4091,7 +4134,7 @@ const render = (CustomElement = null) => {
                     .attr("x", grillX - 10)    // set x position
                     .attr("y", grillY + (grillHeight / 2) + 5) // set y position
                     .attr("transform", `rotate(-90, ${grillX - 10}, ${grillY + (grillHeight / 2) + 5})`) // rotate around the text's position
-                    .text(AirTransferGrillsHeight);
+                    .text(ATGheight);
 
 
                 svg.append('line')
@@ -4125,7 +4168,7 @@ const render = (CustomElement = null) => {
                     .attr("font-size", 10)
                     .attr("x", grillX + (grillWidth / 2) - 5)    // set x position
                     .attr("y", grillY - 10) // set y position
-                    .text(AirTransferGrillsWidth);
+                    .text(ATGwidth);
 
                 svg.append('line')
                     .style("stroke", "black")
@@ -4142,15 +4185,15 @@ const render = (CustomElement = null) => {
                         .style("stroke-width", 0.5)
                         .attr("x1", grillX + grillWidth)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX + grillWidth + 30)
+                        .attr("x2", grillX + grillWidth + 30 + ATGDimLane)
                         .attr("y2", grillY + grillHeight)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", grillX + grillWidth + 25)
+                        .attr("x1", grillX + grillWidth + 25 + ATGDimLane)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX + grillWidth + 25)
+                        .attr("x2", grillX + grillWidth + 25 + ATGDimLane)
                         .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
@@ -4158,10 +4201,10 @@ const render = (CustomElement = null) => {
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", grillX + grillWidth + 30)    // set x position
+                        .attr("x", grillX + grillWidth + 30 + ATGDimLane)    // set x position
                         .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${grillX + grillWidth + 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
-                        .text(AirTransferGrillsDistanceFromBottomOfDoor);
+                        .attr("transform", `rotate(-90, ${grillX + grillWidth + 30 + ATGDimLane}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
+                        .text(ATGDistanceFromBottomOfDoor);
                 } else {
 
                     svg.append('line')
@@ -4169,15 +4212,15 @@ const render = (CustomElement = null) => {
                         .style("stroke-width", 0.5)
                         .attr("x1", grillX)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX - 30)
+                        .attr("x2", grillX - 30 - ATGDimLane)
                         .attr("y2", grillY + grillHeight)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", grillX - 25)
+                        .attr("x1", grillX - 25 - ATGDimLane)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX - 25)
+                        .attr("x2", grillX - 25 - ATGDimLane)
                         .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
@@ -4185,10 +4228,10 @@ const render = (CustomElement = null) => {
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", grillX - 30)    // set x position
+                        .attr("x", grillX - 30 - ATGDimLane)    // set x position
                         .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${grillX - 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
-                        .text(AirTransferGrillsDistanceFromBottomOfDoor);
+                        .attr("transform", `rotate(-90, ${grillX - 30 - ATGDimLane}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
+                        .text(ATGDistanceFromBottomOfDoor);
                 }
 
 
@@ -7829,13 +7872,54 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
             }
 
                 if (IsAirTransferGrillsEnable2 ) {
-                     LeftAirTransferGrill(AirTransferGrillsDistanceFromBottomOfDoor,AirTransferGrillsHeight,AirTransferGrillsWidth)
-            RightAirtransferGrill(AirTransferGrillsDistanceFromBottomOfDoor2,AirTransferGrillsHeight2,AirTransferGrillsWidth2)
+                    // Quantity is flattened server-side (each selected grill is repeated
+                    // `qty` times), so 2 grills x qty 2 arrives here as 4 units. Client rule:
+                    // split the units evenly over the two leaves - qty 4 on a double door
+                    // (or a leaf-and-a-half, which reaches this same branch) means 2 grills
+                    // per leaf. Two units sharing a leaf are stacked, because an ATG is
+                    // always centred on its leaf.
+                    const ATGUnits = AirTransferGrillsUnitsForDrawing();
+                    const ATGLeftCount = Math.min(Math.ceil(ATGUnits.length / 2), ATGMaxPerLeaf);
+                    StackAirTransferGrills(ATGUnits.slice(0, ATGLeftCount).slice(0, ATGMaxPerLeaf), LeftAirTransferGrill);
+                    StackAirTransferGrills(ATGUnits.slice(ATGLeftCount).slice(0, ATGMaxPerLeaf), RightAirtransferGrill);
+            }
 
+            /** Falls back to the two legacy [0]/[1] variables if the unit list is missing,
+             *  so this never draws less than it used to. */
+            function AirTransferGrillsUnitsForDrawing(){
+                if (AirTransferGrillsUnits && AirTransferGrillsUnits.length > 1) {
+                    return AirTransferGrillsUnits;
+                }
+                return [
+                    { staticHeight: AirTransferGrillsHeight, staticWidth: AirTransferGrillsWidth, distanceFromBottomOfDoor: AirTransferGrillsDistanceFromBottomOfDoor },
+                    { staticHeight: AirTransferGrillsHeight2, staticWidth: AirTransferGrillsWidth2, distanceFromBottomOfDoor: AirTransferGrillsDistanceFromBottomOfDoor2 },
+                ];
+            }
+
+            /** Lay one leaf's grills out bottom-up. Each keeps its own recorded distance
+             *  from the bottom of the door unless that would clash with the grill below it,
+             *  in which case it is pushed up so both stay fully visible and dimensioned.
+             *  `index` is passed on so each grill's leader lines sit in their own lane. */
+            function StackAirTransferGrills(units, drawGrill){
+                const ATGStackGap = ATGMinGapBetweenGrills;
+                let topOfPrevious = null;
+                units.forEach(function (unit, index) {
+                    const ATGheight = Number(unit.staticHeight) || 0;
+                    const ATGwidth = Number(unit.staticWidth) || 0;
+                    let ATGDistanceFromBottomOfDoor = Number(unit.distanceFromBottomOfDoor) || 0;
+                    if (topOfPrevious !== null && ATGDistanceFromBottomOfDoor < topOfPrevious + ATGStackGap) {
+                        ATGDistanceFromBottomOfDoor = topOfPrevious + ATGStackGap;
+                    }
+                    topOfPrevious = ATGDistanceFromBottomOfDoor + ATGheight;
+                    drawGrill(ATGDistanceFromBottomOfDoor, ATGheight, ATGwidth, index);
+                });
             }
 
 
-            function RightAirtransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth){
+            function RightAirtransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth,stackIndex){
+                // Grills stacked on the same leaf each get their own leader-line lane,
+                // so the lower grill's dimensions are not overdrawn by the upper one's.
+                const ATGDimLane = (stackIndex || 0) * 18;
                 const grillrightX = ix +FrameThicknessForMap + GapForMap+LeafWidth1ForMap+MeetingStiles+ (LeafWidth2ForMap / 2) - ((ATGwidth / 5) / 2);
                 const grillrightY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (ATGDistanceFromBottomOfDoor / 5) - (ATGheight / 5);
                 const grillrightWidth = ATGwidth / 5;
@@ -7928,15 +8012,15 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                         .style("stroke-width", 0.5)
                         .attr("x1", grillrightX + grillrightWidth)
                         .attr("y1", grillrightY + grillrightHeight)
-                        .attr("x2", grillrightX + grillrightWidth + 30)
+                        .attr("x2", grillrightX + grillrightWidth + 30 + ATGDimLane)
                         .attr("y2", grillrightY + grillrightHeight)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", grillrightX + grillrightWidth + 25)
+                        .attr("x1", grillrightX + grillrightWidth + 25 + ATGDimLane)
                         .attr("y1", grillrightY + grillrightHeight)
-                        .attr("x2", grillrightX + grillrightWidth + 25)
+                        .attr("x2", grillrightX + grillrightWidth + 25 + ATGDimLane)
                         .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
@@ -7944,13 +8028,16 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", grillrightX + grillrightWidth + 30)    // set x position
+                        .attr("x", grillrightX + grillrightWidth + 30 + ATGDimLane)    // set x position
                         .attr("y", ((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${grillrightX + grillrightWidth + 30}, ${((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
+                        .attr("transform", `rotate(-90, ${grillrightX + grillrightWidth + 30 + ATGDimLane}, ${((grillrightY + grillrightHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2)})`) // rotate around the text's position
                         .text(ATGDistanceFromBottomOfDoor);
 
             }
-            function LeftAirTransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth){
+            function LeftAirTransferGrill(ATGDistanceFromBottomOfDoor,ATGheight,ATGwidth,stackIndex){
+                // Grills stacked on the same leaf each get their own leader-line lane,
+                // so the lower grill's dimensions are not overdrawn by the upper one's.
+                const ATGDimLane = (stackIndex || 0) * 18;
                 const grillX = ix +FrameThicknessForMap + GapForMap+ (LeafWidth1ForMap / 2) - ((ATGwidth / 5) / 2);
                 const grillY = iy + (TopFrameHeight - FrameThicknessForMap) + FrameHeightForMap - (ATGDistanceFromBottomOfDoor / 5) - (ATGheight / 5);
                 const grillWidth = ATGwidth / 5;
@@ -8045,15 +8132,15 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                         .style("stroke-width", 0.5)
                         .attr("x1", grillX)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX - 30)
+                        .attr("x2", grillX - 30 - ATGDimLane)
                         .attr("y2", grillY + grillHeight)
 
                     svg.append('line')
                         .style("stroke", "black")
                         .style("stroke-width", 0.5)
-                        .attr("x1", grillX - 25)
+                        .attr("x1", grillX - 25 - ATGDimLane)
                         .attr("y1", grillY + grillHeight)
-                        .attr("x2", grillX - 25)
+                        .attr("x2", grillX - 25 - ATGDimLane)
                         .attr("y2", iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap)
                         .attr("marker-start", "url(#arrowLeft)")
                         .attr("marker-end", "url(#arrowRight)")
@@ -8061,9 +8148,9 @@ if (LeafWidth2ForMap == LeafWidth1ForMap){
                     svg.append("text")            // append text
                         .style("fill", "black")   // make the text
                         .attr("font-size", 10)
-                        .attr("x", grillX - 30)    // set x position
+                        .attr("x", grillX - 30 - ATGDimLane)    // set x position
                         .attr("y", ((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5) // set y position
-                        .attr("transform", `rotate(-90, ${grillX - 30}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
+                        .attr("transform", `rotate(-90, ${grillX - 30 - ATGDimLane}, ${((grillY + grillHeight + iy + TopFrameHeight + GapForMap + LeafHeightNoOPForMap) / 2) + 5})`) // rotate around the text's position
                         .text(ATGDistanceFromBottomOfDoor);
 
             }
