@@ -90,3 +90,6 @@ composer.lock
 *.pdf
 storage/framework/views
 # vendor
+
+# Generated quotation document folders (one Excel file per door type)
+/public/quotationDocuments

@@ -176,6 +176,10 @@ class DoorScheduleController extends Controller
         $quotation->updated_at = date('Y-m-d H:i:s');
         $quotation->save();
 
+        // Give the quotation its documents folder up front, so it exists before
+        // any door is added. Never throws - it must not be able to fail a save.
+        QuotationDocumentsController::ensureQuotationFolder($quotation);
+
         if($selectVersionID > 0){
             $QuotationVersion = QuotationVersion::find($selectVersionID);
             $QuotationVersion->RevisionDescription = $request->RevisionDescription;
