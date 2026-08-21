@@ -628,6 +628,14 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/ExportNonConfig', [App\Http\Controllers\DoorScheduleController::class,'ExportNonConfig'])->name('ExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
+
+    // Quotation documents folder - one Excel file per door type
+    Route::get('/documents/{id}/{vid}', [App\Http\Controllers\QuotationDocumentsController::class,'index'])->name('quotation.documents');
+    Route::get('/documents/{id}/{vid}/view', [App\Http\Controllers\QuotationDocumentsController::class,'preview'])->name('quotation.documents.view');
+    Route::get('/documents/{id}/{vid}/download', [App\Http\Controllers\QuotationDocumentsController::class,'download'])->name('quotation.documents.download');
+    Route::get('/documents/{id}/{vid}/download-all', [App\Http\Controllers\QuotationDocumentsController::class,'downloadAll'])->name('quotation.documents.downloadAll');
+    Route::get('/documents/{id}/{vid}/history', [App\Http\Controllers\QuotationDocumentsController::class,'history'])->name('quotation.documents.history');
+    Route::get('/documents/{id}/{vid}/options-check', [App\Http\Controllers\QuotationDocumentsController::class,'optionsCheck'])->name('quotation.documents.optionsCheck');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
     Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');

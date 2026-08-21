@@ -137,6 +137,7 @@
                                                 Calculation</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="QuotationDocuments();">Quotation Documents Folder</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
                                             <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
                                             <li><a href="javascript:void(0);" onClick="PickListExport();">Pick List Export</a></li>
@@ -1095,6 +1096,8 @@
         value="{{ url('/quotation/ExportBomCalculation') }}" />
     <input type="hidden" name="ExportDoorTypeBomUrl" id="ExportDoorTypeBomUrl"
         value="{{ url('/quotation/ExportDoorTypeBom') }}" />
+    <input type="hidden" name="QuotationDocumentsUrl" id="QuotationDocumentsUrl"
+        value="{{ url('/quotation/documents') }}" />
     <input type="hidden" name="ExportSideScreenUrl" id="ExportSideScreenUrl"
         value="{{ url('/quotation/ExportSideScreen') }}" />
     <input type="hidden" name="ExportScreenBomCalculationUrl" id="ExportScreenBomCalculationUrl"
@@ -3383,6 +3386,16 @@
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = ExportDoorTypeBomUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            QuotationDocuments = function() {
+                var QuotationDocumentsUrl = $("#QuotationDocumentsUrl").val();
+                var quotationId = $("#quotationId").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = QuotationDocumentsUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
