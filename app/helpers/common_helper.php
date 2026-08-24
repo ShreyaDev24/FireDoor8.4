@@ -4545,6 +4545,13 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
 
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|' .$door_cost;
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm.'|'.$thickness_cost .'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|'.$door_cost;
+
+        }
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }

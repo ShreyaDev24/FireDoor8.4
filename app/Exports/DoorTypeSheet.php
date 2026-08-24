@@ -30,10 +30,10 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             foreach ($section['data'] as $dataRow) {
                 $rows[] = $dataRow; // Section content
             }
-            
+
             $rows[] = ['']; // Blank row for spacing
         }
-        
+
         return $rows;
     }
 
@@ -53,6 +53,12 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             'K' => 15, // Set width for column C
             'L' => 15, // Set width for column C
             'M' => 15, // Set width for column C
+            'N' => 15, // Set width for column C
+            'O' => 15, // Set width for column C
+            'P' => 15, // Set width for column C
+            'Q' => 15, // Set width for column C
+            'R' => 15, // Set width for column C
+            'S' => 15, // Set width for column C
         ];
     }
 
@@ -63,7 +69,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                 $currentRow = 1;
                 foreach ($this->sections as $section) {
                     // Bold the title
-                    $event->sheet->mergeCells(sprintf('A%s:O%s', $currentRow, $currentRow));
+                    $event->sheet->mergeCells(sprintf('A%s:S%s', $currentRow, $currentRow));
                     $event->sheet->getStyle('A' . $currentRow)->applyFromArray([
                         'font' => [
                             'bold' => true,
@@ -75,7 +81,7 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                     $currentRow++;
 
                     // Bold the headings
-                    $event->sheet->getStyle(sprintf('A%s:O%s', $currentRow, $currentRow))->applyFromArray([
+                    $event->sheet->getStyle(sprintf('A%s:S%s', $currentRow, $currentRow))->applyFromArray([
                         'font' => [
                             'bold' => true,
                         ],

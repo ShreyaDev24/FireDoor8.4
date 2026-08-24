@@ -66,7 +66,7 @@ class BomDoorTypeExport implements WithMultipleSheets
                     ],
                     'LeafSetBesPoke' => [
                         'title' => 'Door Details',
-                        'headings' => ['S.No', 'Door Type', 'Door Core', 'Lipping Type', 'Lipping Thickness/Lipping Species', 'Door Leaf Size', 'Door Dimensions Code','', 'Total Quantity', 'Unit', 'Unit Cost', 'Total Cost', 'Unit Price Sell', 'GT Sell Price', 'Margin']
+                        'headings' => ['S.No', 'Door Type', 'Door Core', 'Lipping Type', 'Lipping Thickness/Lipping Species', 'Door Leaf Size', 'Door Dimensions Code','', 'Total Quantity', 'Unit', 'Unit Cost', 'Total Cost', 'Unit Price Sell', 'GT Sell Price', 'Margin','Kraft Paper/Laminate/Veneer (m²)', 'Lipping (m²)','Core','Door Finish Cost']
                     ],
                     'MachiningCosts' => [
                         'title' => 'Ironmongery Machining Cost',
@@ -94,7 +94,7 @@ class BomDoorTypeExport implements WithMultipleSheets
                 $sheet[$door->DoorType] = new DoorTypeSheet($sections, $door->DoorType,$this->id);
             }
         }
-        
+
         // dd($sheet);
         return $sheet;
     }
