@@ -1049,6 +1049,13 @@ function BomCalculationSeadec($request,$userLoginId=null): void{
             $description .= '| ' .$request->DoorDimensionsCode;
         }
 
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'| - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm2.'|'.$thickness_cost .'| - | - ';
+        }
+
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
@@ -1074,6 +1081,13 @@ function BomCalculationSeadec($request,$userLoginId=null): void{
             $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
         }else{
             $description .= '| ' .$request->DoorDimensionsCode;
+        }
+
+         $description .= '|'.$door_core1.'| - | - | - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'| - | - | - | - ';
         }
 
         $category = 'LeafSetBesPoke';
@@ -1211,6 +1225,13 @@ function MMMBomCalculation($request,$userLoginId=null): void{
             $description .= '| ' .$request->DoorDimensionsCode;
         }
 
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'| - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm2.'|'.$thickness_cost .'| - | - ';
+        }
+
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
@@ -1236,6 +1257,13 @@ function MMMBomCalculation($request,$userLoginId=null): void{
             $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
         }else{
             $description .= '| ' .$request->DoorDimensionsCode;
+        }
+
+         $description .= '|'.$door_core1.'| - | - | - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'| - | - | - | - ';
         }
 
         $category = 'LeafSetBesPoke';
@@ -1669,6 +1697,13 @@ function BomCalculationDeanta($request,$userLoginId=null): void{
             $description .= '| ' .$request->DoorDimensionsCode;
         }
 
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'| - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm2.'|'.$thickness_cost .'| - | - ';
+        }
+
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (floatval($door_core1) + (floatval($lm) * floatval($thickness_cost))) + floatval($leafandhalfunitcost);
@@ -1694,6 +1729,13 @@ function BomCalculationDeanta($request,$userLoginId=null): void{
             $description .= ' and '.$request->leafWidth2.' x '.$request->leafHeightNoOP.' x '.$request->doorThickness.'| ' .$request->DoorDimensionsCode.', ' .$request->DoorDimensionsCode2;
         }else{
             $description .= '| ' .$request->DoorDimensionsCode;
+        }
+
+        $description .= '|'.$door_core1.'| - | - | - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'| - | - | - | - ';
         }
 
         $category = 'LeafSetBesPoke';

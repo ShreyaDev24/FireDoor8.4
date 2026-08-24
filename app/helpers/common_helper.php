@@ -3956,6 +3956,14 @@ function BomCalculationVicaima($request,$userLoginId=null): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
+
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'| - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm2.'|'.$thickness_cost .'| - | - ';
+        }
+
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 4) {
         $doorConfiguration = "Vicaima";
@@ -3983,6 +3991,14 @@ function BomCalculationVicaima($request,$userLoginId=null): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
+
+        $description .= '|'.$door_core1.'| - | - | - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'| - | - | - | - ';
+        }
+
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
