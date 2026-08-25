@@ -338,7 +338,7 @@ class PrintInvoiceController extends Controller
         // Details Door List PDF
         $version = $qv->version;
 
-        if($project->QualificationsStatus == 1){
+        if ((int)$project->QualificationsStatus === 1) {
             $MoreInformation = $project->MoreInformation;
             $pdf2_2 = PDF::loadView('Company.pdf_files.MoreInformation', ['comapnyDetail' => $comapnyDetail,'version' => $version,'project' => $project,'MoreInformation' => $MoreInformation,'quotaion' => $quotaion]);
 
@@ -349,14 +349,16 @@ class PrintInvoiceController extends Controller
         }
 
         $a2 = '';
-       $shows = Item::join('quotation_version_items', 'items.itemId', '=', 'quotation_version_items.itemID')
-            ->join('item_master', 'quotation_version_items.itemmasterID', '=', 'item_master.id')
-            ->where('quotation_version_items.version_id', $versionID)
-            ->select(
-                'items.*',
-                'item_master.doorNumber'
-            )
-            ->get();
+       $shows = Item::join('item_master', 'items.itemId', 'item_master.itemID')->where('QuotationId', $quatationId)->where('VersionId', $versionID)->select('item_master.doorNumber', 'items.*')->get();
+            //   $shows = Items::with('masters')
+            // ->where('QuotationId', $quatationId)
+            // ->where('VersionId', $versionID)
+            // // ->select(
+            // //     'items.*',
+            // //     'item_master.doorNumber'
+            // // )
+            // ->get();
+            // dd($shows);
 
 
         // SUMMARY (if you still need it)
@@ -375,14 +377,13 @@ class PrintInvoiceController extends Controller
             $basePrice = floatval($show->DoorsetPrice ?? 0);
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
-            if ($show->AdjustPrice) {
-                $doorPrice = floatval($show->AdjustPrice);
-            } elseif ($leafDelta) {
+            if ($leafDelta) {
                 $doorPrice = $leafDelta;
+            } elseif ($show->AdjustPrice) {
+                $doorPrice = floatval($show->AdjustPrice);
             } else {
                 $doorPrice = $basePrice;
             }
-
 
             // $doorPrice = $show->AdjustPrice
             //                 ? floatval($show->AdjustPrice)
@@ -474,11 +475,11 @@ class PrintInvoiceController extends Controller
             $leafDelta = floatval($show->leaf_price_delta ?? 0);
 
             if($show->configurableitems == 4 || $show->configurableitems == 5 || $show->configurableitems == 6 || $show->configurableitems == 9){
-                $DoorsetPrice = ($show->AdjustPrice)
-                            ? floatval($show->AdjustPrice)
+                $DoorsetPrice = $leafDelta
+                            ? $leafDelta
                             : (
-                                $leafDelta
-                                    ? $leafDelta
+                                $show->AdjustPrice
+                                    ? floatval($show->AdjustPrice)
                                     : $basePrice
                             );
                 $IronmongaryPrice = $show->IronmongaryPrice;
@@ -492,11 +493,11 @@ class PrintInvoiceController extends Controller
 
                 $DoorQuantity++;
             }else{
-                $DoorsetPriceCustom = ($show->AdjustPrice)
-                            ? floatval($show->AdjustPrice)
+                $DoorsetPriceCustom = $leafDelta
+                            ? $leafDelta
                             : (
-                                $leafDelta
-                                    ? $leafDelta
+                                $show->AdjustPrice
+                                    ? floatval($show->AdjustPrice)
                                     : $basePrice
                             );
                 $IronmongaryPriceCustom = $show->IronmongaryPrice;
@@ -940,21 +941,24 @@ class PrintInvoiceController extends Controller
 
         $Alltotalpriceperdoorset = $SumDoorsetPrice + $SumIronmongaryPrice;
         $AlltotalpriceperdoorsetCustom = $SumDoorsetPriceCustom + $SumIronmongaryPriceCustom;
-        $a .= '
+        if ($DoorQuantity > 0) {
+            $a .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantity . '</td>
                         <td class="tbl_bottom" colspan="39"></td>';
                         if($HideCosts == 0){
-                            $a .= '<td class="tbl_bottom">' .$currency. round($SumDoorsetPrice, 2) . '</td>
-                            <td class="tbl_bottom">' . $currency.round($SumIronmongaryPrice, 2) . '</td>';
+                            $a .= '<td class="tbl_bottom">' .$currency. number_format($SumDoorsetPrice, 2) . '</td>
+                            <td class="tbl_bottom">' . $currency.number_format($SumIronmongaryPrice, 2) . '</td>';
                         }
 
-                        $a .= '<td class="tbl_bottom">' .$currency. round($Alltotalpriceperdoorset, 2) . '</td>
+                        $a .= '<td class="tbl_bottom">' .$currency. number_format($Alltotalpriceperdoorset, 2) . '</td>
                     </tr>
                 ';
+        }
 
-        $aCustom .= '
+        if ($DoorQuantityCustom > 0) {
+            $aCustom .= '
                     <tr>
                         <td class="tbl_bottom" colspan="4"></td>
                         <td class="tbl_bottom">' . $DoorQuantityCustom . '</td>
@@ -967,22 +971,25 @@ class PrintInvoiceController extends Controller
                         $aCustom .= '<td class="tbl_bottom">' .$currency. round($AlltotalpriceperdoorsetCustom, 2) . '</td>
                     </tr>
                 ';
-
-        if(isset($a)){
-            $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
         }
 
-        // return $pdf4->download('file4.pdf');
+        if ($DoorQuantity > 0) {
+            $pdf4 = PDF::loadView('Company.pdf_files.vicaima.pdf2', ['a' => $a, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
             $path4 = public_path() . '/allpdfFile';
             $fileName4 = $id . '4' . '.' . 'pdf';
             $pdf4->save($path4 . '/' . $fileName4);
-
-        if(isset($aCustom)){
-            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
+        } else {
+            $fileName4 = '';
         }
+
+        if ($DoorQuantityCustom > 0) {
+            $pdf4_custom = PDF::loadView('Company.pdf_files.pdf2', ['a' => $aCustom, 'comapnyDetail' => $comapnyDetail, 'project' => $project, 'customerContact' => $customerContact, 'version' => $version, 'customer' => $customer, 'HideCosts' => $HideCosts]);
             $path4_custom = public_path() . '/allpdfFile';
             $fileName4_custom = $id . '4_custom' . '.' . 'pdf';
             $pdf4_custom->save($path4_custom . '/' . $fileName4_custom);
+        } else {
+            $fileName4_custom = '';
+        }
 
         // side screen door list
 
@@ -1020,6 +1027,7 @@ class PrintInvoiceController extends Controller
         ->where('items.QuotationId', $quatationId)
         // ->where('items.itemId',2342) to see particular quote
         ->where('quotation_version_items.version_id', $versionID)->select('items.*','item_master.doorNumber')->groupBy('item_master.itemID')->get();
+        // dd($ed);
 
         $TotalItems = count($ed->toArray());
 
@@ -1074,7 +1082,7 @@ class PrintInvoiceController extends Controller
                 ],
                 2 => [
                     'NFR' => 'Chilt/A01205 Part 1 Revision K',
-                    'FD30' => 'Chilt/A01205 Part 1 Revision K',
+                    'FD30' => 'Chilt/A01204 Part 1 Revision I',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
@@ -1690,7 +1698,7 @@ class PrintInvoiceController extends Controller
 
                         </div>
                         <div style="position: absolute;top:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-49' : '4').'px;left:'.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-252' : '-265').'px;">
-                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : '194').'px;" alt="" src="'.$FrameTypeCommon.'">
+                           <img style="width: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '55' : '77').'px;height: '.((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '212' : ((!empty($tt->FrameType) && $tt->FrameType == 'Rebated_Frame') ? '131' : '194')).'px;" alt="" src="'.$FrameTypeCommon.'">
                         </div>
                         <div style="
                            width: 0px;
@@ -1738,7 +1746,7 @@ class PrintInvoiceController extends Controller
                 case "DD":
                     // $DoorFrameImage = Base64Image('FD30DoubleDoorsetwithVP');
 
-                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 200px;">
+                    $DoorFrameImage = '<div style="padding: 10px 30px; position: relative;margin-left: '.$frameImageLeftMargin.'px;height: 100px;">
                             <div style="position: relative;  top: 12px;">';
 
 
@@ -1964,10 +1972,10 @@ class PrintInvoiceController extends Controller
                         if ($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') {
 
                             if (in_array($tt->FireRating, ["FD30", "FD30s"])) {
-                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
+                                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 18px;"></div>';
                             } elseif (in_array($tt->FireRating, ["FD60", "FD60s"])) {
-                                $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
+                                                              $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 13px;"></div>
                                             <div class="'.$redstripRightCommonClass.'" style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '. (
                                                 (!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '93' : '310')  .'px;margin-top: 24px;"></div>';
@@ -2082,7 +2090,7 @@ class PrintInvoiceController extends Controller
 
                                     if (($tt->IntumescentLeapingSealLocation == 'Door' || $tt->IntumescentLeapingSealLocation == 'Frame') && in_array($tt->FireRating, ["FD30", "FD30s"])) {
 
-                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385
+                                        $DoorFrameImage .= '<div class="'.$redstripRightCommonClass.'"  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'194':'640'):'634').'px;margin-top:' .(($tt->FrameType !== null)? (($tt->FrameType == 'Scalloped')?'-5':'-37'):'-37').'px;"></div>'; //intubacent fixes -385;
                                     }
                     }
 
@@ -2099,7 +2107,7 @@ class PrintInvoiceController extends Controller
                             if (($tt->IntumescentLeapingSealLocation == 'Frame' || $tt->IntumescentLeapingSealLocation == 'Door') && in_array($tt->FireRating, ["FD60", "FD60s"])) {
 
                                 // class="'.$redstripLeftCommonClass.'"
-                                $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 24px;"></div>
+                               $DoorFrameImage .= '<div   style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left:'.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 24px;"></div>
                                             <div  style="border: 0.5px solid black;background-color: red;z-index: 999;position: absolute;height: 8px;width: 3px;box-shadow: none;margin-left: '.(($tt->Leaf2VisionPanel == 'Yes')? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-64' : '-52'):((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-489' : '-60')).'px;margin-top: 37px;"></div>';
                             }
 
@@ -2132,7 +2140,7 @@ class PrintInvoiceController extends Controller
                     $DoorFrameImage .= '<div style="position: absolute; top:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '-6' : '18')) .'px;
                                                 right:'. (
-                                                $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'458') : '20')) .'px;">
+                                              $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '32':'32') : '20') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? (($tt->Leaf2VisionPanel == 'Yes')? '33':'458') : '20')) .'px;">
                                             <img style="width:'. (
                                                 $GlazingSystems['GlazingBeadsPadding'] == 0 ? ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46') : ((!empty($tt->FrameType) && $tt->FrameType == 'Scalloped') ? '39' : '46')) .'px;" alt="" src="' . $FrameTypeRight . '">
                                         </div>';
@@ -2663,6 +2671,17 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->GlassType)) {
                 $GlassTypeForDoorDetailsTable = GlassTypeThickness($configurationItem, $FireRatingActualValue, $tt->GlassType, $tt->GlassThickness);
             }
+            $glassInterrity = "N/A";
+            if(!empty($tt->GlassIntegrity)){
+                $glassInterrity = $tt->GlassIntegrity;
+            }
+            $VisionGlazingBeadSpecies = "N/A";
+            if(!empty($tt->GlazingBeadSpecies)){
+                $ls = LippingSpecies::where('id', $tt->GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $VisionGlazingBeadSpecies = $ls->SpeciesName;
+                }
+            }
 
             $OPGlassTypeForDoorDetailsTable = "N/A";
             if (!empty($tt->OPGlassType)) {
@@ -2714,13 +2733,40 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                 $SLBeadingType = $bt ? $bt->OptionValue : null;
             }
+            $SL2BeadingType = 'N/A';
+            if (!empty($tt->SideLight2BeadingType)) {
+                $bt = Option::where("configurableitems", $configurationItem)
+                    ->where("firerating", $FireRatingActualValue)
+                    ->where("OptionSlug", $glazing_beads_word)
+                    ->where("OptionKey", $tt->SideLight2BeadingType)
+                    ->first();
+
+                $SL2BeadingType = $bt ? $bt->OptionValue : null;
+            }
 
             $glazingSystems = 'N/A';
             if (!empty($tt->GlazingSystems)) {
-                // $gs = Option::where('configurableitems', $configurationItem)->where('UnderAttribute', $FireRatingActualValue)->where('OptionKey', $tt->GlazingSystems)
-                //     ->where('OptionSlug', 'leaf1_glazing_systems')->first();
-                 $gs = GlazingSystem::join('selected_glazing_system','glazing_system.id','selected_glazing_system.glazingId')->where('selected_glazing_system.userId', Auth::user()->id)->where('glazing_system.'.$configurationDoor,$tt->configurableitems)->where('glazing_system.Key',$tt->GlazingSystems)->first();
-                $glazingSystems = @$gs->GlazingSystem;
+
+                // If it's an ID, fetch the glazing system name
+                if (is_numeric($tt->GlazingSystems)) {
+
+                    $gs = GlazingSystem::join(
+                            'selected_glazing_system',
+                            'glazing_system.id',
+                            '=',
+                            'selected_glazing_system.glazingId'
+                        )
+                        ->where('selected_glazing_system.userId', Auth::id())
+                        ->where('glazing_system.' . $configurationDoor, $tt->configurableitems)
+                        ->where('glazing_system.Key', $tt->GlazingSystems)
+                        ->first();
+
+                    $glazingSystems = $gs ? $gs->GlazingSystem : 'N/A';
+
+                } else {
+                    // Already a value, use it directly
+                    $glazingSystems = $tt->GlazingSystems;
+                }
             }
 
             if ($tt->SwingType == 'SA') {
@@ -2779,6 +2825,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             if (!empty($tt->rWdBRating)) {
                 $rWdBRating = $tt->rWdBRating;
             }
+            $perimeterSeal1 = 'N/A';
+            if (!empty($tt->perimeterSeal1)) {
+                $perimeterSeal1 = $tt->perimeterSeal1;
+            }
+            $perimeterSeal2 = 'N/A';
+            if (!empty($tt->perimeterSeal2)) {
+                $perimeterSeal2 = $tt->perimeterSeal2;
+            }
+            $AccousticsMeetingStiles = 'N/A';
+            if (!empty($tt->AccousticsMeetingStiles)) {
+                $AccousticsMeetingStiles = $tt->AccousticsMeetingStiles;
+            }
 
 
 
@@ -2793,6 +2851,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             $IntumescentLeapingSealColor = 'N/A';
             if (!empty($tt->IntumescentLeapingSealColor)) {
                 $IntumescentLeapingSealColor = $tt->IntumescentLeapingSealColor;
+            }
+
+            // Client update: when intumescent is not supplied, the seal details
+            // are not selected - show "Not Supplied" instead of any stored value.
+            if (!empty($tt->IntumescentNotSupplied) && $tt->IntumescentNotSupplied == 1) {
+                $intumescentSealType         = 'Not Supplied';
+                $intumescentSealArrangement  = 'Not Supplied';
+                $IntumescentLeapingSealColor = 'Not Supplied';
             }
 
             $ArchitraveMaterial = 'N/A';
@@ -2829,6 +2895,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
             // Add a new section called 'Side Screen Section' SL1 Glass Type , Beading Type and Glazing Bead Species.
             $sl1glasstype = 'N/A';
+            $sl2glasstype = 'N/A';
             if (!empty($tt->SideLight1GlassType)) {
                 // $op = Option::where(['configurableitems' => $configurationItem, 'UnderAttribute' => $FireRatingActualValue, 'OptionSlug' => 'leaf1_glass_type', 'OptionKey' => $tt->SideLight1GlassType])->first();
                 // $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id) {
@@ -2849,7 +2916,23 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight1GlassType)->first();
                     $sl1glasstype = $op->GlassType ?? '';
         }
+            }
 
+            if (!empty($tt->SideLight2GlassType)) {
+                if($configurationDoor === 'VicaimaDoorCore' || $configurationDoor === 'MMM'){
+                    $op = GlassType::leftJoin('selected_glass_type', function ($join) use ($id): void {
+                        $join->on('glass_type.id', '=', 'selected_glass_type.glass_id')
+                            ->where('selected_glass_type.editBy', '=', $id);
+                    })->where('glass_type.'.$configurationDoor,$tt->configurableitems)->where('glass_type.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+                }
+                else{
+                    $op = OverpanelGlassGlazing::leftJoin('selected_overpanel_glass_glazing', function ($join) use ($id): void {
+                        $join->on('overpanel_glass_glazing.id', '=', 'selected_overpanel_glass_glazing.glass_glazing_id')
+                            ->where('selected_overpanel_glass_glazing.editBy', '=', $id);
+                    })->where('overpanel_glass_glazing.'.$configurationDoor,$tt->configurableitems)->where('overpanel_glass_glazing.Key',$tt->SideLight2GlassType)->first();
+                    $sl2glasstype = $op->GlassType ?? '';
+        }
             }
 
             $beadingtype = 'N/A';
@@ -2863,6 +2946,14 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $ls = LippingSpecies::where('id', $tt->SL1GlazingBeadSpecies)->first();
                 if (!empty($ls->SpeciesName)) {
                     $glazingbeadspecies = $ls->SpeciesName;
+                }
+            }
+
+             $glazing2beadspecies = 'N/A';
+            if (!empty($tt->SideLight2GlazingBeadSpecies)) {
+                $ls = LippingSpecies::where('id', $tt->SideLight2GlazingBeadSpecies)->first();
+                if (!empty($ls->SpeciesName)) {
+                    $glazing2beadspecies = $ls->SpeciesName;
                 }
             }
 
@@ -2909,7 +3000,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Width = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Width= is_numeric($tt->SL2Width) ? $tt->SL2Width : 0;
                 $SideLight1FrameThickness = is_numeric($tt->SideLight1FrameThickness) ? $tt->SideLight1FrameThickness : 0;
@@ -2917,7 +3008,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
             }
 
             $ElevSL2Height = 'N/A';
-            if ($tt->SideLight1 == 'Yes') {
+            if ($tt->SideLight2 == 'Yes') {
                 //NEW DEVELOPMENT JFDS 1059 25-09-2025
                 $SLight2Height = is_numeric($tt->SL2Height) ? $tt->SL2Height : 0;
                 $SideLight2FrameThickness = is_numeric($tt->SideLight2FrameThickness) ? $tt->SideLight2FrameThickness : 0;
@@ -2936,7 +3027,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                         <table id="WithBorder" class="tbl2">
                             <tbody>
                                 <tr>
-                                    <td class="tbl_color tblTitle" style="font-weight: normal;">SELECT <br>Door Type</td>
+                                    <td class="tbl_color tblTitle" style="font-weight: normal;">Door Type</td>
                                     <td class="dicription_blank"><b>Type ' . $tt->DoorType . '</b></td>
                                 </tr>
                             </tbody>
@@ -3038,10 +3129,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->DoorDimensionsCode .'</td>
                                 </tr>';
 
-                    if ($tt->DoorsetType != 'SD') {
+                    if ($tt->DoorsetType != 'SD' || $tt->DoorsetType != 'leaf_and_a_half') {
                         $elevTbl .= '<tr>
-                                        <td class="dicription_grey">Product code2/Size </td>
-                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .' ('. $leafWidth2 .'<span style="font-weight: bold; font-size: 1.2em;">×</span>'. $LeafHeight  .')</td>
+                                        <td class="dicription_grey">Product code2 </td>
+                                        <td class="dicription_blank">' . $tt->DoorDimensionsCode2 .'</td>
                                     </tr>';
                     }
 
@@ -3061,18 +3152,6 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
         }
 
             $elevTbl .=         '
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Width 1</td>
-                                    <td class="dicription_blank">' . $leafWidth1 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Width 2</td>
-                                    <td class="dicription_blank">' . $leafWidth2 . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Door Leaf Height</td>
-                                    <td class="dicription_blank">' . $LeafHeight . '</td>
-                                </tr>
                                 <tr>
                                     <td class="dicription_grey">Door Leaf Thickness</td>
                                     <td class="dicription_blank">' . $LeafThickness . '</td>
@@ -3158,8 +3237,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <th class="tblTitle">Vision Panel</th>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Glass Integrity</td>
-                                    <td class="dicription_blank">' . $GlassIntegrity . '</td>
+                                    <td class="dicription_grey">Glass Type Integrity</td>
+                                    <td class="dicription_blank">' . $glassInterrity . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glass Type + Thickness</td>
@@ -3167,11 +3246,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing Bead Species</td>
-                                    <td class="dicription_blank">' . $GlazingBeadSpecies . '</td>
-                                </tr>
-                                <tr>
-                                    <td class="dicription_grey">Beading Type</td>
-                                    <td class="dicription_blank">' . $VPBeadingType . '</td>
+                                    <td class="dicription_blank">' . $VisionGlazingBeadSpecies . '</td>
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Glazing System</td>
@@ -3252,6 +3327,18 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     }
                                      if($tt->SideLight2 == 'Yes'){
                                     $elevTbl .= '
+                                    <tr>
+                                        <td class="dicription_grey">SL2 Glass Type</td>
+                                        <td class="dicription_blank">' . $sl2glasstype . '</td>
+                                    </tr>
+                                     <tr>
+                                    <td class="dicription_grey">Beading Type 2</td>
+                                    <td class="dicription_blank">' . $SL2BeadingType . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Glazing Bead Species2</td>
+                                    <td class="dicription_blank">' . $glazing2beadspecies . '</td>
+                                </tr>
                                      <tr>
                                         <td class="dicription_grey">SL2 Width</td>
                                         <td class="dicription_blank">' . $ElevSL2Width . '</td>
@@ -3307,9 +3394,42 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Rating</td>
                                     <td class="dicription_blank">' . $rWdBRating . '</td>
                                 </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 1</td>
+                                    <td class="dicription_blank">' . $perimeterSeal1 . '</td>
+                                </tr>
+                                <tr>
+                                    <td class="dicription_grey">Perimeter Seal 2</td>
+                                    <td class="dicription_blank">' . $perimeterSeal2 . '</td>
+                                </tr>';
+                                if($tt->DoorsetType == 'DD'){
+                                $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Meeting Stiles</td>
+                                    <td class="dicription_blank">' . $AccousticsMeetingStiles . '</td>
+                                </tr>';
+                                }
+                                $elevTbl .= '
                             </tbody>
                         </table>';
                         if($tt->FrameOnOff != 1){
+                            if($tt->Saddle == 'Yes'){
+                                $elevTbl .=  '<table id="WithBorder">
+                                <tbody>
+                                    <tr>
+                                        <th class="tblTitle">Saddle</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Required</td>
+                                        <td class="dicription_blank">' . $tt->Saddle . '</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="dicription_grey">Saddle Location</td>
+                                        <td class="dicription_blank">' . $tt->saddleLocation . '</td>
+                                    </tr>
+                                </tbody>
+                            </table>';
+                            }
+
                             $elevTbl .=  '<table id="WithBorder">
                             <tbody>
                                 <tr>
@@ -3321,6 +3441,8 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                             </tbody>
                         </table>';
+
+
                         }
 
                         $elevTbl .=  '</div></div>
@@ -3388,7 +3510,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
                         <table style="width: 800px; margin: 0 auto; border: 1px solid #000; border-collapse: collapse;">
                             <tr>';
-                            $elevTbl .= doorPlug1_2($tt->FireRating, $tt->IronmongerySet, $tt->Leaf1VisionPanel, $id);
+                            $elevTbl .= doorPlug1_2($tt->FireRating, $tt->IronmongerySet, $tt->Leaf1VisionPanel, $id, false, $tt->IntumescentNotSupplied ?? null);
 
                             $elevTbl .= '<td style="background:#f2f2f2; padding:8px;">SELECT<br>Door Type</td>
                                 <td style="padding:8px;"><b>Type ' . htmlspecialchars($tt->DoorType) . '</b></td>
@@ -3813,37 +3935,31 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
 
         $PDFfilename = public_path() . '/allpdfFile' . '/' . $quotaion->QuotationGenerationId . '_' . $version . '.pdf';
 
-        if($IronmongeryData !== '' && $IronmongeryData !== '0'){
-                 $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName4,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName7,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
-            }
-        else{
-            $pdfFiles = [
-                    public_path() . '/allpdfFile' . '/' . $fileName1,
-                    public_path() . '/allpdfFile' . '/' . $fileName2,
-                    public_path() . '/allpdfFile' . '/' . $fileName2_1,
-                    public_path() . '/allpdfFile' . '/' . $fileName3,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_2,
-                    public_path() . '/allpdfFile' . '/' . $fileName4,
-                    public_path() . '/allpdfFile' . '/' . $fileName4_custom,
-                    public_path() . '/allpdfFile' . '/' . $fileName9,
-                    public_path() . '/allpdfFile' . '/' . $fileName6,
-                    public_path() . '/allpdfFile' . '/' . $fileName8,
-                    public_path() . '/allpdfFile' . '/' . $fileName5,
-                ];
-            }
+        $pdfFiles = [
+            public_path() . '/allpdfFile' . '/' . $fileName1,
+            public_path() . '/allpdfFile' . '/' . $fileName2,
+            public_path() . '/allpdfFile' . '/' . $fileName2_1,
+            public_path() . '/allpdfFile' . '/' . $fileName3,
+            public_path() . '/allpdfFile' . '/' . $fileName4_2,
+        ];
+        if ($DoorQuantity > 0) {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName4;
+        }
+        if ($DoorQuantityCustom > 0) {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName4_custom;
+        }
+
+        $pdfFiles = array_merge($pdfFiles, [
+            public_path() . '/allpdfFile' . '/' . $fileName9,
+            public_path() . '/allpdfFile' . '/' . $fileName6,
+            public_path() . '/allpdfFile' . '/' . $fileName8,
+        ]);
+
+        if ($IronmongeryData !== '' && $IronmongeryData !== '0') {
+            $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName7;
+        }
+
+        $pdfFiles[] = public_path() . '/allpdfFile' . '/' . $fileName5;
 
         if(count($ed) == 0){
             $pdfFiles = [
