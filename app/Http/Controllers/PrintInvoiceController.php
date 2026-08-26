@@ -276,9 +276,9 @@ class PrintInvoiceController extends Controller
                 </tr>';
             }
 
-            if($QuotationShipToInformation->CurrencyCostperdelivery == '£_GBP'){
+            if($QuotationShipToInformation->CurrencyCostperdelivery == '£_GBP' || $QuotationShipToInformation->CurrencyCostperdelivery == '£'){
                 $CurrencyCostperdelivery = '£';
-            } elseif($QuotationShipToInformation->CurrencyCostperdelivery == '€_EURO'){
+            } elseif($QuotationShipToInformation->CurrencyCostperdelivery == '€_EURO' || $QuotationShipToInformation->CurrencyCostperdelivery == '€'){
                 $CurrencyCostperdelivery = '€';
             }
 
