@@ -280,6 +280,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $SideLight2GlazingBeadSpecies = lippingSpeciesName($item[$i]->SideLight2GlazingBeadSpecies);
             $SL2Width = $item[$i]->SL2Width;
             $SL2Height = $item[$i]->SL2Height;
+            $Sl2BeadThickness = $item[$i]->Sl2BeadThickness;
+            $Sl2BeadHeight = $item[$i]->Sl2BeadHeight;
             $SL2Depth = $item[$i]->SL2Depth;
             $SL2Transom = $item[$i]->SL2Transom;
             $SLtransomHeightFromTop = $item[$i]->SLtransomHeightFromTop;
@@ -507,6 +509,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $SideLight2GlazingBeadSpecies,
                 $SL2Width,
                 $SL2Height,
+                $Sl2BeadThickness,
+                $Sl2BeadHeight,
                 $SL2Depth,
                 $SL2Transom,
                 $SLtransomHeightFromTop,
@@ -742,6 +746,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'SideLight2 Glazing Bead Species ',
             'SL2Width ',
             'SL2Height ',
+            'SL2 Bead Depth ',
+            'SL2 Bead Height ',
             'SL2 Frame Depth ',
             'SL2Transom ',
             'SLtransom Heigh From Top ',
@@ -811,7 +817,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GX1'; // All headers
+                $cellRange = 'A1:GZ1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [

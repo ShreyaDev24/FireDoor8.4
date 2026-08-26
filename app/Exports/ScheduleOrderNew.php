@@ -256,6 +256,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             $SideLight2GlazingBeadSpecies = lippingSpeciesName($item[$i]->SideLight2GlazingBeadSpecies);
             $SL2Width = $item[$i]->SL2Width;
             $SL2Height = $item[$i]->SL2Height;
+            $Sl2BeadThickness = $item[$i]->Sl2BeadThickness;
+            $Sl2BeadHeight = $item[$i]->Sl2BeadHeight;
             $SL2Depth = $item[$i]->SL2Depth;
             $SL2Transom = $item[$i]->SL2Transom;
             $SL2transomThickness = $item[$i]->SL2transomThickness;
@@ -468,6 +470,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
                 $SideLight2GlazingBeadSpecies,
                 $SL2Width,
                 $SL2Height,
+                $Sl2BeadThickness,
+                $Sl2BeadHeight,
                 $SL2Depth,
                 $SL2Transom,
                 $SL2TransomDepth,
@@ -700,6 +704,8 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'SideLight2 Glazing Bead Species ',
             'SL2Width ',
             'SL2Height ',
+            'SL2 Bead Depth ',
+            'SL2 Bead Height ',
             'SL2 Frame Depth ',
             'SL2Transom ',
             'SL2 Transom Depth ',
@@ -768,7 +774,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GR1'; // All headers
+                $cellRange = 'A1:GT1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
