@@ -70,9 +70,14 @@
         <td class="tbl_color"><span>Actual No. of Deliveries</span></td>
         <td><span>{{ $shipToInfo->ActualNoOfDeliveries ?? '' }}</span></td>
     </tr>
+    @if($shipToInfo->CurrencyCostperdelivery == '£_GBP' || $shipToInfo->CurrencyCostperdelivery == '£')
+        @php $CurrencyCostperdelivery = '£'; @endphp
+    @elseif($shipToInfo->CurrencyCostperdelivery == '€_EURO' || $shipToInfo->CurrencyCostperdelivery == '€')
+        @php $CurrencyCostperdelivery = '€'; @endphp
+    @endif
     <tr>
         <td class="tbl_color"><span>Cost Per Delivery</span></td>
-        <td><span>{{ $shipToInfo->CurrencyCostperdelivery ?? '' }}{{ number_format((float)$shipToInfo->Costperdelivery, 2) ?? '0.00' }}</span></td>
+        <td><span>{{ $CurrencyCostperdelivery ?? '' }}{{ number_format((float)$shipToInfo->Costperdelivery, 2) ?? '0.00' }}</span></td>
         <td class="tbl_color"><span>Average No. Doorsets per Drop</span></td>
         <td><span>{{ $shipToInfo->AverageNoDoorsetsperdrop ?? '' }}</span></td>
     </tr>
