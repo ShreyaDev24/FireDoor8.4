@@ -360,11 +360,8 @@ const render = (CustomElement = null) => {
             console.log(LeafHeightNoOP,'no foursided');
         }
 
-        if (DoorSetType === 'SD' && overpanel != 'No') {
-            LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut + oPHeigth;
-            $("#leafHeightNoOP").val(LeafHeightNoOP);
-            console.log(LeafHeightNoOP,'no foursided, OP/FL , sd')
-        }
+        // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
+        // The OP/FL sits above the door as a separate element, so it is not added here.
 
         let foursidedframe = document.getElementById("foursidedframe");
         // When a saddle is required (activated), the frame calculation is the same as a 4-sided frame
@@ -377,18 +374,18 @@ const render = (CustomElement = null) => {
                 var saddleUndercut = saddleRequired ? (parseFloat(UnderCut) || 0) : 0;
                 var frameGap = saddleRequired ? Gap : (Gap * 2);
                 if ($("#frameType").val() == 'Rebated_Frame') {
-                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - (BottomFrameThickness - RebatedHeight) - saddleUndercut - frameGap;
+                    // Rebated: SO HEIGHT - TOLERANCE - (HEAD - Rebate) - (BOTTOM - Rebate) [- undercut if saddle] - GAP
+                    // Saddle: head is rebate-adjusted, but the saddle (bottom) is subtracted RAW. A true 4-sided frame keeps (bottom - rebate).
+                    var bottomForCalc = saddleRequired ? BottomFrameThickness : (BottomFrameThickness - RebatedHeight);
+                    LeafHeightNoOP = SOHeight - Tollerance - (HeadFrameThickness - RebatedHeight) - bottomForCalc - saddleUndercut - frameGap;
                 } else {
+                    // Plant on Stop / Scalloped: SO HEIGHT - TOLERANCE - FRAME HEAD THICKNESS - FRAME BOTTOM THICKNESS [- undercut if saddle] - GAP
                     LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - BottomFrameThickness - saddleUndercut - frameGap;
                 }
                 $("#leafHeightNoOP").val(LeafHeightNoOP);
                 console.log(LeafHeightNoOP,' foursided/saddle');
             }
-            if (DoorSetType === 'SD' && overpanel != 'No') {
-                LeafHeightNoOP = SOHeight - Tollerance - HeadFrameThickness - Gap - UnderCut + oPHeigth;
-                $("#leafHeightNoOP").val(LeafHeightNoOP);
-                console.log(LeafHeightNoOP,' foursided, OP/FL , sd')
-            }
+            // Leaf height is the door only and must NOT include the Overpanel/Fanlight.
             // DD / leaf-and-a-half rebated are handled by the unified block above (same rule as single door).
         }
         if (LeafHeightNoOP == "") {
@@ -518,6 +515,8 @@ const render = (CustomElement = null) => {
                 LeafWidth2ForMap = LeafWidth2 / 5;
             }
         }
+
+
 
         var LeftGapForLeaf1 = 0, RightGapForLeaf1 = 0, LeftGapForLeaf2 = 0, RightGapForLeaf2 = 0, UpperAndLowerGap = 0;
         //UpperAndLowerGap  = NumberChanger(Tollerance + FrameThickness + UnderCut + Gap);
@@ -1019,7 +1018,7 @@ const render = (CustomElement = null) => {
             svg.append('rect') // over panel rect (upper part)
                 .attr('x', ix -SideLightPanel1Width )
                 .attr('y', iy) // Remove FrameThicknessForMap from y
-                .attr('width', OverPanelWidth + (2 * FrameThicknessForMap)+(2*GapForMap) + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                .attr('width', FrameWidthForMap + SideLightPanel1Width + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                 .attr('height', OverPanelHeight + FrameThicknessForMap) // Reduce height
                 .attr('stroke', 'black')
                 .attr('fill', '#D0D0C6');
@@ -1049,7 +1048,7 @@ const render = (CustomElement = null) => {
                             .style("stroke-width", 0.5)
                             .attr("x1", ix - SideLightPanel1Width )
                             .attr("y1", iy - 10)
-                            .attr("x2", ix  + OverPanelWidth +  (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x2", ix  + FrameWidthForMap  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy - 10)
                             .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                             .attr("marker-end", "url(#arrowRight)")
@@ -1063,9 +1062,9 @@ const render = (CustomElement = null) => {
                         svg.append('line')//measurement line of Width of over panel of door
                             .style("stroke", "black")
                             .style("stroke-width", 0.5)
-                            .attr("x1", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap)  + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x1", ix + FrameWidthForMap + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y1", iy + FrameThicknessForMap - 20)
-                            .attr("x2", ix + OverPanelWidth + + (2 * FrameThicknessForMap)+(2*GapForMap) + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
+                            .attr("x2", ix + FrameWidthForMap + (SideLightPanel2 === 'Yes' ? SideLightPanel2Width : 0))
                             .attr("y2", iy + FrameThicknessForMap)
 
                        svg.append("text")           //Text of height of over panel of door
@@ -3119,7 +3118,7 @@ const render = (CustomElement = null) => {
                         KickPlatesHeight = KickPlatesData.staticHeight
                     }
 
-                  if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
+                   if (elem.doorSignageQty != '' && elem.doorSignageQty != null) {
 
 
 
@@ -9088,7 +9087,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                         .attr("x1", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
                         .attr("y1", DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height))
                         .attr("x2", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2))
-                        .attr("y2", iy + SOHeightForMap)
+                        .attr("y2", iy + TopFrameHeight + LeafHeightNoOPForMap + GapForMap)
                         .attr("marker-start", "url(#arrowLeft)")  // Left-pointing arrow
                         .attr("marker-end", "url(#arrowRight)");
                         svg.append("text")            // append text
@@ -9096,7 +9095,7 @@ if((IsLockNLatchesEnable || IsThumbturnEnable || IsCylindersEnable) && (!IsLockN
                         .style("writing-mode", WritingMode) // set the writing mode
                         .attr("x", DistanceXForLeaf1VPShape + (Leaf1VisionPanelWidth / 2) + 5)         // set x position of left side of text
                         .attr("font-size", 10)
-                        .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + SOHeightForMap)/2)         // set y position of bottom of text
+                        .attr("y", (   DistanceYForLeaf1VPShape + parseFloat(Leaf1VisionPanel1Height)+iy + TopFrameHeight + LeafHeightNoOPForMap + GapForMap)/2)         // set y position of bottom of text
                         .text(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5));
                          if((LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5))<200){
                            var newHeight = (Leaf1VisionPanel1Height * 5)-(200 -(LeafHeightNoOP - DistanceFromTopOfDoorValue - ((VisionPanelQuantityForLeaf1 - 1) * (distanceBetweenVP)) -  (Leaf1VisionPanel1Height * 5)))
@@ -12385,7 +12384,7 @@ $('input[name="vP2Width"]').val(newVP1Height).trigger('change');
                 if(THeight >= 2950){
                     swal('.','The overall height of the door and fanlight exceeds 2950 mm')
                 }
-                $("#SL1Height,#SL2Height").attr({ 'readonly': true, "required": true }).val(THeight);
+                $("#SL1Height,#SL2Height").attr({ 'readonly': true, "required": true }).val(FrameHeight);
 
                 svg.append('line') //height with overpanel of door
                     .style("stroke", "black")
