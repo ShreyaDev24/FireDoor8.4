@@ -458,8 +458,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 // 🔹 Existing header styling
                 // ----------------------------
                 if($this->section != 'Summary'){
-                    $cellRange1 = 'A1:X1'; // main merged header
-                    $cellRange2 = 'A2:X2'; // column headings row
+                    $cellRange1 = 'A1:Z1'; // main merged header
+                    $cellRange2 = 'A2:Z2'; // column headings row
                 }else{
                     $cellRange1 = 'A1:H1'; // main merged header
                     $cellRange2 = 'A2:H2'; // column headings row
@@ -486,7 +486,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $event->sheet->getStyle($cellRange2)->getAlignment()->setWrapText(true);
 
                 // Auto size all columns A–V
-                foreach (range('A', 'X') as $col) {
+                foreach (range('A', 'Z') as $col) {
                     $event->sheet->getColumnDimension($col)->setAutoSize(true);
                 }
 

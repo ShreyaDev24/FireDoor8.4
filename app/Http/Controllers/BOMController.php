@@ -1641,6 +1641,8 @@ class BOMController extends Controller
                 . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
                 . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                 . '<td></td>'
+                . '<td>' . $value->Saddle . '</td>'
+                . '<td>' . $value->saddleLocation . '</td>'
                 . '</tr>';
 
             // Overpanel Row
@@ -1677,6 +1679,8 @@ class BOMController extends Controller
                     . '<td>' . str_replace('_', ' ', $value->LippingType) . '</td>'
                     . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                     . '<td></td>'
+                    . '<td>' . $value->Saddle . '</td>'
+                    . '<td>' . $value->saddleLocation . '</td>'
                     . '</tr>';
             }
         }
