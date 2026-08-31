@@ -1493,6 +1493,8 @@ class ItemListController extends Controller
                         $item->glazingBeadsHeight = $request->glazingBeadsHeight;
                         $item->glazingBeadsFixingDetail = $request->glazingBeadsFixingDetail;
                         $item->GlazingBeadSpecies = $request->glazingBeadSpecies;
+                        $item->GlazingBeadFinish = $request->glazingBeadFinish;
+                        $item->GlazingBeadFinishColor = $request->glazingBeadFinishColor;
                         $item->GlazingTestRef = $request->glazingTestRef;
 
                     //Frame
