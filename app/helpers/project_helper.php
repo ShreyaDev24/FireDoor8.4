@@ -1364,6 +1364,8 @@ function BOMUpdate($data, $configurableitems,$userLoginId=null): void{
     $item->glazingBeadsHeight = $data->glazingBeadsHeight;
     $item->glazingBeadsFixingDetail = $data->glazingBeadsFixingDetail;
     $item->glazingBeadSpecies = $data->GlazingBeadSpecies;
+    $item->glazingBeadFinish = $data->GlazingBeadFinish;
+    $item->glazingBeadFinishColor = $data->GlazingBeadFinishColor;
 
     //Frame
     $item->frameMaterial = $data->FrameMaterial;

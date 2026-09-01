@@ -111,6 +111,8 @@ class Items extends Model
         'GlazingBeads',
         'GlazingBeadsThickness',
         'GlazingBeadSpecies',
+        'GlazingBeadFinish',
+        'GlazingBeadFinishColor',
         'FrameMaterial',
         'FrameType',
         'Dimensions',

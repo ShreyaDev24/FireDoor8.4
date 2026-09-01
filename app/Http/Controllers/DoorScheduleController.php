@@ -2809,6 +2809,8 @@ class DoorScheduleController extends Controller
                             $item->glazingBeadsHeight = $aa->glazingBeadsHeight;
                             $item->glazingBeadsFixingDetail = $aa->glazingBeadsFixingDetail;
                             $item->glazingBeadSpecies = $aa->GlazingBeadSpecies;
+                            $item->glazingBeadFinish = $aa->GlazingBeadFinish;
+                            $item->glazingBeadFinishColor = $aa->GlazingBeadFinishColor;
 
                             //Frame
                             $item->frameMaterial = $aa->FrameMaterial;
@@ -3692,6 +3694,8 @@ class DoorScheduleController extends Controller
                             $item->glazingBeadsHeight = $aa->glazingBeadsHeight;
                             $item->glazingBeadsFixingDetail = $aa->glazingBeadsFixingDetail;
                             $item->glazingBeadSpecies = $aa->GlazingBeadSpecies;
+                            $item->glazingBeadFinish = $aa->GlazingBeadFinish;
+                            $item->glazingBeadFinishColor = $aa->GlazingBeadFinishColor;
 
                             //Frame
                             $item->frameMaterial = $aa->FrameMaterial;
