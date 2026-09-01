@@ -105,7 +105,7 @@
                 <a class="nav-link" data-toggle="tab" href="#Flamebreak">Flamebreak</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" data-toggle="tab" href="#Stredoor">Stredoor</a>
+                <a class="nav-link" data-toggle="tab" href="#Stredoor">Stredor</a>
             </li>
         </ul>
 
