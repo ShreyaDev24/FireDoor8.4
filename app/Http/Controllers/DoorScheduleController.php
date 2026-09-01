@@ -2335,6 +2335,8 @@ class DoorScheduleController extends Controller
                     $glazingBeadsHeight = trim((string) $row[$j++]);
                     $glazingBeadsFixingDetail = trim((string) $row[$j++]);
                     $GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $GlazingBeadFinish = trim((string) $row[$j++]);
+                    $GlazingBeadFinishColor = trim((string) $row[$j++]);
                     $FrameMaterial = trim((string) $row[$j++]);
                     $FrameType = trim((string) $row[$j++]);
                     $PlantonStopWidth = trim((string) $row[$j++]);
@@ -2581,6 +2583,8 @@ class DoorScheduleController extends Controller
                             $aa->glazingBeadsWidth = floatval($glazingBeadsWidth);
                             $aa->glazingBeadsHeight = floatval($glazingBeadsHeight);
                             $aa->glazingBeadsFixingDetail = $glazingBeadsFixingDetail;
+                            $aa->GlazingBeadFinish = $GlazingBeadFinish;
+                            $aa->GlazingBeadFinishColor = $GlazingBeadFinishColor;
                             $aa->GlazingBeadSpecies = lippingSpeciesId($GlazingBeadSpecies);
                             if ($FrameOnOff == 0) {
                                 $aa->COC = $COC;
@@ -3165,6 +3169,8 @@ class DoorScheduleController extends Controller
                     $glazingBeadsHeight = trim((string) $row[$j++]);
                     $glazingBeadsFixingDetail = trim((string) $row[$j++]);
                     $GlazingBeadSpecies = trim((string) $row[$j++]);
+                    $GlazingBeadFinish = trim((string) $row[$j++]);
+                    $GlazingBeadFinishColor = trim((string) $row[$j++]);
                     $FrameMaterial = trim((string) $row[$j++]);
                     $FrameType = trim((string) $row[$j++]);
                     $PlantonStopWidth = trim((string) $row[$j++]);
@@ -3451,6 +3457,8 @@ class DoorScheduleController extends Controller
                             $aa->glazingBeadsWidth = floatval($glazingBeadsWidth);
                             $aa->glazingBeadsHeight = floatval($glazingBeadsHeight);
                             $aa->glazingBeadsFixingDetail = $glazingBeadsFixingDetail;
+                            $aa->GlazingBeadFinish = $GlazingBeadFinish;
+                            $aa->GlazingBeadFinishColor = $GlazingBeadFinishColor;
                             $aa->GlazingBeadSpecies = lippingSpeciesId($GlazingBeadSpecies);
                             $aa->SOHeight = floatval($SOHeight);
                             $aa->SOWidth = floatval($SOWidth);

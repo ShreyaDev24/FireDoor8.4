@@ -206,6 +206,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             $glazingBeadsHeight = $item[$i]->glazingBeadsHeight;
             $glazingBeadsFixingDetail = $item[$i]->glazingBeadsFixingDetail;
             $GlazingBeadSpecies = lippingSpeciesName($item[$i]->GlazingBeadSpecies);
+            $GlazingBeadFinish = $item[$i]->GlazingBeadFinish;
+            $GlazingBeadFinishColor = $item[$i]->GlazingBeadFinishColor;
             //Frame
             $FrameMaterial = lippingSpeciesName($item[$i]->FrameMaterial);
             $FrameType = $item[$i]->FrameType;
@@ -432,6 +434,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                 $glazingBeadsHeight,
                 $glazingBeadsFixingDetail,
                 $GlazingBeadSpecies,
+                $GlazingBeadFinish,
+                $GlazingBeadFinishColor,
                 $FrameMaterial,
                 $FrameType,
                 $PlantonStopWidth,
@@ -558,7 +562,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             '',
             '',
             $SumDoorQuantity,
-            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
+            '','', '','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','','',
             $SumDoorsetPrice,
             $SumIronmongaryPrice,
             $Alltotalpriceperdoorset,
@@ -671,6 +675,8 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'glazing Beads Height ',
             'glazing Beads Fixing Detail ',
             'Glazing Bead Species ',
+            'Glazing Bead Finish ',
+            'Glazing Bead Finish Color ',
             'Frame Material ',
             'Frame Type ',
             'Plant on Stop Width ',
@@ -811,7 +817,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
 
         return [
             AfterSheet::class    => function(AfterSheet $event): void {
-                $cellRange = 'A1:GX1'; // All headers
+                $cellRange = 'A1:GZ1'; // All headers
                 // $cellRange->setFontWeight('bold');
                 // $event->sheet->getDelegate()->getStyle($cellRange)->getFont()->setSize(14);
                 $styleArray = [
@@ -833,7 +839,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
                     ],
 
                 ];
-                $event->sheet->getStyle("A1:GX1")->getAlignment()->setTextRotation(90)->setWrapText(true);
+                $event->sheet->getStyle("A1:GZ1")->getAlignment()->setTextRotation(90)->setWrapText(true);
                 $event->sheet->getDelegate()->getRowDimension(10)->setRowHeight(60);
                 $event->sheet->getDelegate()->getStyle($cellRange)->applyFromArray($styleArray);
             },
