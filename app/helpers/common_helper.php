@@ -2601,7 +2601,7 @@ function getCurrencyRate($QuotationId,$userLoginId=null){
     return $currencyPrice;
 }
 
-function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false): void{
+function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false, $breakdown=null): void{
 
     $version_id = QuotationVersion::where('quotation_id', $request->QuotationId)->where('id', $request->version_id)->value('version');
     if(empty($version_id)){
@@ -2716,6 +2716,9 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
     $bom_calculation->GTSellPrice = round((($total * $currencyPrice) /(1 - ($margin/100))),2);
     $bom_calculation->Margin = round($margin,2);
     $bom_calculation->MarginMarkup = $marginData->MarginMarkup;
+    if($breakdown !== null){
+        $bom_calculation->Breakdown = json_encode($breakdown);
+    }
     $bom_calculation->save();
 }
 
@@ -4459,6 +4462,8 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         $minCost = null;
         $minCostLeafAndAHalf = null;
+        $minCoreCode1 = null;
+        $minCoreCode2 = null;
 
         // Initialize variables to track minimum width and height
         $minWidth1 = PHP_INT_MAX;
@@ -4478,6 +4483,8 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                         // dd($pricesArray);
                         if (isset($pricesArray[$intumescentLeafType])) {
                             $minCost = $pricesArray[$intumescentLeafType];
+                            // Slab/core size the door leaf is being cut from, e.g. "950x2150x44" — for the BOM breakdown only.
+                            $minCoreCode1 = $door_core->code ?? null;
                         }
                     }
 
@@ -4493,6 +4500,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
                         // $minCost = $door_core->selected_cost;
+                        $minCoreCode2 = $door_core->code ?? null;
                     }
                 }
             }
@@ -4505,15 +4513,21 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
         $thickness_cost = ($lippingThickness * $request->doorThickness * $unitcost1)/1000000;
         $painted_cost = (($request->leafHeightNoOP * 2) + 50)/1000;
+        // Facing/finish rate per m2 and finish rate per m2, captured for the BOM breakdown only —
+        // does not change $doorLeafFacingCost/$door_cost, which still drive the real Unit Cost below.
+        $facingRatePerM2 = 0;
+        $finishRatePerM2 = 0;
 
         if($request->doorLeafFacing == 'Kraft_Paper'){
 
             $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing;
+            $facingRatePerM2 = is_numeric($doorLeafFacing) ? (float)$doorLeafFacing : 0;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+            $finishRatePerM2 = is_numeric($doorLeafFinish) ? (float)$doorLeafFinish : 0;
         }elseif($request->doorLeafFacing == 'Veneer'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
@@ -4523,9 +4537,11 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+            $finishRatePerM2 = is_numeric($doorLeafFinish) ? (float)$doorLeafFinish : 0;
         }elseif($request->doorLeafFacing == 'Laminate'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
@@ -4535,12 +4551,14 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
             ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
             ->where('selected_color.SelectedUserId',Auth::user()->id)
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+            $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
 
         }elseif($request->doorLeafFacing == 'PVC'){
 
@@ -4551,12 +4569,14 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
             ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
             ->where('selected_color.SelectedUserId',Auth::user()->id)
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+            $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
         }
 
 
@@ -4581,7 +4601,65 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         }
 
-        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+        // Client-facing "show your work" breakdown for the Door Details BOM sheet: real facing/finish
+        // m2, lipping cross-section, and the matched slab code. Display-only — none of this feeds
+        // $unit_cost above, so existing pricing is untouched.
+        $leafM2 = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2);
+        $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
+        $facingTotal = round($leafM2 * $facingRatePerM2, 2);
+        $lippingTotal = round($lm * $thickness_cost, 2);
+        $finishTotal = round($leafM2 * $finishRatePerM2, 2);
+
+        $breakdown = [
+            'leaves' => [
+                [
+                    'coreSizeCode' => $minCoreCode1,
+                    'coreQty' => 1,
+                    'coreCost' => round($door_core1, 2),
+                    'facingType' => $request->doorLeafFacing,
+                    'facingM2' => round($leafM2, 4),
+                    'facingCostPerM2' => round($facingRatePerM2, 4),
+                    'facingTotal' => $facingTotal,
+                    'lippingLM' => round($lm, 4),
+                    'lippingCrossSectionM2PerLM' => round($lippingCrossSection, 6),
+                    'lippingCostPerM3' => round($unitcost1, 4),
+                    'lippingCostPerLM' => round($thickness_cost, 4),
+                    'lippingTotal' => $lippingTotal,
+                    'finishM2' => round($leafM2, 4),
+                    'finishCostPerM2' => round($finishRatePerM2, 4),
+                    'finishTotal' => $finishTotal,
+                    'totalLeafCost' => round($door_core1 + $facingTotal + $lippingTotal + $finishTotal, 2),
+                ],
+            ],
+        ];
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+            $leafM2_2 = ((($request->leafWidth2 / 1000) * ($request->leafHeightNoOP / 1000)) * 2);
+            $facingTotal2 = round($leafM2_2 * $facingRatePerM2, 2);
+            $lippingTotal2 = round($lm * $thickness_cost, 2);
+            $finishTotal2 = round($leafM2_2 * $finishRatePerM2, 2);
+
+            $breakdown['leaves'][] = [
+                'coreSizeCode' => $minCoreCode2,
+                'coreQty' => 1,
+                'coreCost' => round($door_core2, 2),
+                'facingType' => $request->doorLeafFacing,
+                'facingM2' => round($leafM2_2, 4),
+                'facingCostPerM2' => round($facingRatePerM2, 4),
+                'facingTotal' => $facingTotal2,
+                'lippingLM' => round($lm, 4),
+                'lippingCrossSectionM2PerLM' => round($lippingCrossSection, 6),
+                'lippingCostPerM3' => round($unitcost1, 4),
+                'lippingCostPerLM' => round($thickness_cost, 4),
+                'lippingTotal' => $lippingTotal2,
+                'finishM2' => round($leafM2_2, 4),
+                'finishCostPerM2' => round($finishRatePerM2, 4),
+                'finishTotal' => $finishTotal2,
+                'totalLeafCost' => round($door_core2 + $facingTotal2 + $lippingTotal2 + $finishTotal2, 2),
+            ];
+        }
+
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, breakdown: $breakdown);
     }
 }
 

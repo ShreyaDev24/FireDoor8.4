@@ -843,7 +843,7 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         'Ironmongery&MachiningCosts' => [1, 2, 3, 4, 5, 'LMPerDoorType', 6],
         'GeneralLabourCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'MachiningCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin', 9, 7, 6, 10],
+        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'default' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
     ];
 
@@ -914,6 +914,34 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         }
 
         $result[] = $row;
+    }
+
+    return $result;
+}
+
+// Decoded "Breakdown" (Kraft Paper/Laminate/Veneer m2, lipping, core slab, finish) per Door Details
+// row, in the same order as getBomDoorTypeDetails($id,$version,$doorType,'LeafSetBesPoke') so the
+// export can insert one colour-coded block under each door row without touching that function's
+// existing column layout.
+function getLeafSetBespokeBreakdown($id, $version, $doorType): array {
+    $vid = QuotationVersion::where('id', $version)->value('version') ?? 0;
+
+    $data = BOMCalculation::join('item_master', 'item_master.itemID', 'bom_calculations.itemId')
+        ->where([
+            ['bom_calculations.QuotationId', $id],
+            ['bom_calculations.VersionId', $vid],
+            ['bom_calculations.DoorType', $doorType],
+            ['bom_calculations.Category', 'LeafSetBesPoke']
+        ])
+        ->whereNotNull('bom_calculations.itemId')
+        ->select('bom_calculations.*')
+        ->distinct('item_master.itemID')
+        ->get();
+
+    $result = [];
+    foreach ($data as $value) {
+        $decoded = json_decode((string) $value->Breakdown, true);
+        $result[] = $decoded['leaves'] ?? [];
     }
 
     return $result;

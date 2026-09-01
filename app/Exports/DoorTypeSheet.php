@@ -14,6 +14,14 @@ use App\Models\Quotation;
 
 class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatting,WithColumnWidths
 {
+    const SHEET_COLUMN_COUNT = 19; // A..S, matches the widest section heading (Door Details)
+
+    const FILL_CORE = 'BDD7EE';    // blue
+    const FILL_FACING = 'FFE699';  // yellow
+    const FILL_LIPPING = 'C6E0B4'; // green
+    const FILL_FINISH = 'E2EFDA';  // light green
+    const FILL_TOTAL = 'F8CBAD';   // orange
+
     public function __construct(protected $sections, protected $DoorType, protected $QId)
     {
     }
@@ -27,14 +35,66 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
         foreach ($this->sections as $section) {
             $rows[] = [$section['title']];  // Section title
             $rows[] = $section['headings']; // Section headings
-            foreach ($section['data'] as $dataRow) {
+            foreach ($section['data'] as $rowIndex => $dataRow) {
                 $rows[] = $dataRow; // Section content
+
+                foreach ($this->breakdownRowSpecs($section, $rowIndex, $dataRow) as $spec) {
+                    $rows[] = $spec['cells'];
+                }
             }
 
             $rows[] = ['']; // Blank row for spacing
         }
 
         return $rows;
+    }
+
+    /**
+     * Builds the colour-coded "show your work" block (core slab, facing m2, lipping, finish) that
+     * goes directly under a Door Details row, when that row has a saved Breakdown. Returns [] for
+     * every other section/row, so nothing else in the sheet is affected.
+     */
+    private function breakdownRowSpecs(array $section, int $rowIndex, array $dataRow): array
+    {
+        $leaves = $section['breakdown'][$rowIndex] ?? [];
+        if (empty($leaves)) {
+            return [];
+        }
+
+        $coreName = trim((string) ($dataRow[2] ?? '')) ?: 'Core';
+        $specs = [];
+        $leafCount = count($leaves);
+
+        foreach ($leaves as $leafNumber => $leaf) {
+            $suffix = $leafCount > 1 ? ' (Leaf ' . ($leafNumber + 1) . ')' : '';
+            $facingType = str_replace('_', ' ', (string) ($leaf['facingType'] ?? 'Facing'));
+
+            $specs[] = $this->row(['C' => $coreName . ' Core' . $suffix, 'D' => 'Door Core Size', 'E' => 'Quantity', 'F' => 'Cost Per Core'], self::FILL_CORE, true);
+            $specs[] = $this->row(['D' => $leaf['coreSizeCode'] ?? '', 'E' => $leaf['coreQty'] ?? '', 'F' => $leaf['coreCost'] ?? ''], self::FILL_CORE, false);
+
+            $specs[] = $this->row(['C' => $facingType . ' (m²)', 'D' => 'M² area of ' . strtolower($facingType), 'E' => 'Cost per M²', 'F' => 'Total Cost'], self::FILL_FACING, true);
+            $specs[] = $this->row(['D' => $leaf['facingM2'] ?? '', 'E' => $leaf['facingCostPerM2'] ?? '', 'F' => $leaf['facingTotal'] ?? ''], self::FILL_FACING, false);
+
+            $specs[] = $this->row(['C' => 'Lipping', 'D' => 'LM of Lipping used', 'E' => 'Lipping Cross-section (m²/LM)', 'F' => 'Cost per M³', 'G' => 'Cost per LM', 'H' => 'Total Cost'], self::FILL_LIPPING, true);
+            $specs[] = $this->row(['D' => $leaf['lippingLM'] ?? '', 'E' => $leaf['lippingCrossSectionM2PerLM'] ?? '', 'F' => $leaf['lippingCostPerM3'] ?? '', 'G' => $leaf['lippingCostPerLM'] ?? '', 'H' => $leaf['lippingTotal'] ?? ''], self::FILL_LIPPING, false);
+
+            $specs[] = $this->row(['C' => 'Prime / Paint / Lacquer', 'D' => 'M² area of finishing', 'E' => 'Cost per M² to finish', 'F' => 'Total Cost'], self::FILL_FINISH, true);
+            $specs[] = $this->row(['D' => $leaf['finishM2'] ?? '', 'E' => $leaf['finishCostPerM2'] ?? '', 'F' => $leaf['finishTotal'] ?? ''], self::FILL_FINISH, false);
+
+            $specs[] = $this->row(['F' => 'Total Door Leaf Cost', 'G' => $leaf['totalLeafCost'] ?? ''], self::FILL_TOTAL, true);
+        }
+
+        return $specs;
+    }
+
+    private function row(array $cellsByColumn, string $fill, bool $bold): array
+    {
+        $cells = array_fill(0, self::SHEET_COLUMN_COUNT, '');
+        foreach ($cellsByColumn as $column => $value) {
+            $cells[\PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($column) - 1] = $value;
+        }
+
+        return ['cells' => $cells, 'fill' => $fill, 'bold' => $bold];
     }
 
     public function columnWidths(): array
@@ -92,8 +152,30 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
                     //     $event->sheet->mergeCells("D{$currentRow}:G{$currentRow}");
                     // }
 
-                    // Increment the row by the number of rows in each section
-                    $currentRow += count($section['data']) + 2; // +2 for the title and headings
+                    $currentRow++; // move pointer to the first data row
+
+                    // Colour the breakdown block(s) sitting under each Door Details data row.
+                    // $currentRow is the row number of the data row at the top of each iteration.
+                    foreach ($section['data'] as $rowIndex => $dataRow) {
+                        foreach ($this->breakdownRowSpecs($section, $rowIndex, $dataRow) as $spec) {
+                            $currentRow++; // the next breakdown row, directly under the data/previous row
+
+                            $style = $event->sheet->getStyle(sprintf('A%s:S%s', $currentRow, $currentRow));
+                            $style->applyFromArray([
+                                'fill' => [
+                                    'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+                                    'startColor' => ['rgb' => $spec['fill']],
+                                ],
+                            ]);
+                            if ($spec['bold']) {
+                                $style->applyFromArray(['font' => ['bold' => true]]);
+                            }
+                        }
+
+                        $currentRow++; // advance past this data row's block to the next data row
+                    }
+
+                    $currentRow++; // blank spacer row
                 }
             },
         ];
@@ -145,4 +227,3 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
         }
     }
 }
-
