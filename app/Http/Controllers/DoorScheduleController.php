@@ -4302,6 +4302,8 @@ class DoorScheduleController extends Controller
                     $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
                     $SL2Width = trim((string) $row[$j++]);
                     $SL2Height = trim((string) $row[$j++]);
+                    $Sl2BeadThickness = trim((string) $row[$j++]);
+                    $Sl2BeadHeight = trim((string) $row[$j++]);
                     $SL2Depth = trim((string) $row[$j++]);
                     $SL2Transom = trim((string) $row[$j++]);
                     $SL2transomThickness = trim((string) $row[$j++]);
@@ -4559,6 +4561,8 @@ class DoorScheduleController extends Controller
                                 $aa->SideLight2GlazingBeadSpecies = lippingSpeciesId($SideLight2GlazingBeadSpecies);
                                 $aa->SL2Width = floatval($SL2Width);
                                 $aa->SL2Height = floatval($SL2Height);
+                                $aa->Sl2BeadThickness = floatval($Sl2BeadThickness);
+                                $aa->Sl2BeadHeight = floatval($Sl2BeadHeight);
                                 $aa->SL2Depth = floatval($SL2Depth);
                                 $aa->SL2Transom = floatval($SL2Transom);
                                 $aa->SL2TransomDepth = floatval($SL2TransomDepth);
@@ -4780,6 +4784,8 @@ class DoorScheduleController extends Controller
                             $item->SideLight2GlazingBeadSpecies = $aa->SideLight2GlazingBeadSpecies;
                             $item->SL2Width = $aa->SL2Width;
                             $item->SL2Height = $aa->SL2Height;
+                            $item->Sl2BeadThickness = $aa->Sl2BeadThickness;
+                            $item->Sl2BeadHeight = $aa->Sl2BeadHeight;
                             $item->SL2Depth = $aa->SL2Depth;
                             $item->SL2Transom = $aa->SL2Transom;
                             $item->SL2TransomDepth = $aa->SL2TransomDepth;
@@ -5138,6 +5144,8 @@ class DoorScheduleController extends Controller
                     $SideLight2GlazingBeadSpecies = trim((string) $row[$j++]);
                     $SL2Width = trim((string) $row[$j++]);
                     $SL2Height = trim((string) $row[$j++]);
+                    $Sl2BeadThickness = trim((string) $row[$j++]);
+                    $Sl2BeadHeight = trim((string) $row[$j++]);
                     $SL2Depth = trim((string) $row[$j++]);
                     $SL2Transom = trim((string) $row[$j++]);
                     $SLtransomHeightFromTop = trim((string) $row[$j++]);
@@ -5437,6 +5445,8 @@ class DoorScheduleController extends Controller
                                 $aa->SideLight2GlazingBeadSpecies = lippingSpeciesId($SideLight2GlazingBeadSpecies);
                                 $aa->SL2Width = floatval($SL2Width);
                                 $aa->SL2Height = floatval($SL2Height);
+                                $aa->Sl2BeadThickness = floatval($Sl2BeadThickness);
+                                $aa->Sl2BeadHeight = floatval($Sl2BeadHeight);
                                 $aa->SL2Depth = floatval($SL2Depth);
                                 $aa->SL2Transom = floatval($SL2Transom);
                                 $aa->SLtransomHeightFromTop = floatval($SLtransomHeightFromTop);
@@ -5685,6 +5695,8 @@ class DoorScheduleController extends Controller
                             $item->SlBeadThickness = $aa->SlBeadThickness;
                             $item->SlBeadHeight = $aa->SlBeadHeight;
                             $item->SideLight2FrameThickness = $aa->SideLight2FrameThickness;
+                            $item->Sl2BeadThickness = $aa->Sl2BeadThickness;
+                            $item->Sl2BeadHeight = $aa->Sl2BeadHeight;
 
                             //Lipping And Intumescent
                             $item->lippingType = $aa->LippingType;
