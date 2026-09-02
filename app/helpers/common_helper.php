@@ -4616,15 +4616,16 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         // $unit_cost above, so existing pricing is untouched.
         $finishSteps = buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch);
         $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
+        $laminateSheetOptionsList = $laminateSheetMatch ? laminateSheetOptions($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1) : [];
 
         $breakdown = [
             'leaves' => [
-                buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps),
+                buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
             ],
         ];
 
         if($request->doorsetType == 'leaf_and_a_half'){
-            $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps);
+            $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
         }
 
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, breakdown: $breakdown);
@@ -4699,6 +4700,62 @@ function matchLaminateSheet($doorLeafFacingValue, $selectedColorName, $requiredW
     return $best;
 }
 
+// Display-only: every registered sheet size for the chosen pattern (e.g. every "... - Alpino
+// Matte" row), smallest first — for the breakdown's "Sheet Sizes" table, matching the client's
+// reference sheet which lists all candidate sizes with the picked one highlighted. Purely
+// additive; never touches the real cost (that stays matchLaminateSheet()'s job).
+function laminateSheetOptions($doorLeafFacingValue, $selectedColorName, $requiredWidth, $requiredHeight): array{
+    $parsedSelected = parseLaminateSheetSize((string) $selectedColorName);
+    if (!$parsedSelected) {
+        return [];
+    }
+
+    $candidates = Color::where('DoorLeafFacing', 'Laminate')
+        ->where('DoorLeafFacingValue', $doorLeafFacingValue)
+        ->get();
+
+    $options = [];
+
+    foreach ($candidates as $candidate) {
+        $parsed = parseLaminateSheetSize((string) $candidate->ColorName);
+        if (!$parsed || strcasecmp($parsed['pattern'], $parsedSelected['pattern']) !== 0) {
+            continue;
+        }
+
+        $selectedColor = SelectedColor::where('SelectedColorId', $candidate->id)->where('SelectedUserId', Auth::user()->id)->first();
+        $price = $selectedColor->SelectedPrice ?? $candidate->ColorCost ?? 0;
+        $price = is_numeric($price) ? (float) $price : 0;
+
+        $fits = ($parsed['widthMm'] >= $requiredWidth && $parsed['heightMm'] >= $requiredHeight)
+            || ($parsed['widthMm'] >= $requiredHeight && $parsed['heightMm'] >= $requiredWidth);
+
+        $options[] = [
+            'sizeLabel' => $parsed['widthMm'] . 'x' . $parsed['heightMm'],
+            'area' => $parsed['widthMm'] * $parsed['heightMm'],
+            'costPerSheet' => round($price, 2),
+            'qty' => 2,
+            'total' => round($price * 2, 2),
+            'fits' => $fits,
+            'isSelected' => false,
+        ];
+    }
+
+    usort($options, static fn($a, $b) => $a['area'] <=> $b['area']);
+
+    foreach ($options as &$option) {
+        if ($option['fits']) {
+            $option['isSelected'] = true;
+            break;
+        }
+    }
+    unset($option);
+
+    return array_map(static function ($option) {
+        unset($option['area'], $option['fits']);
+        return $option;
+    }, $options);
+}
+
 // "Door Core Size" label for the breakdown (e.g. "915x2135x44"). door_dimension.code is the
 // obvious source but is empty for Halspan's whole size range in this DB — selected_mm_width/height
 // (the exact fields already used to match the core) are reliably populated, so build the label
@@ -4744,7 +4801,7 @@ function buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $l
 // finishing" formula — (leaf width/1000 + 0.05) x (leaf height/1000 + 0.05) x 2 faces, wastage
 // allowance confirmed against the client's own worked example (930x2062 -> 4.13952 m2) — only
 // exists in one place.
-function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCode, $facingType, $facingRatePerM2, $lm, $thicknessCost, $unitcost1, $lippingCrossSection, array $finishSteps): array{
+function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCode, $facingType, $facingRatePerM2, $lm, $thicknessCost, $unitcost1, $lippingCrossSection, array $finishSteps, array $laminateSheetOptions = []): array{
     $leafM2 = (($leafWidth / 1000) + 0.05) * (($leafHeight / 1000) + 0.05) * 2;
     $facingTotal = round($leafM2 * $facingRatePerM2, 2);
     $lippingTotal = round($lm * $thicknessCost, 2);
@@ -4776,6 +4833,7 @@ function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCod
         'lippingTotal' => $lippingTotal,
         'finishSteps' => $finishStepsWithTotals,
         'finishTotal' => $finishTotal,
+        'laminateSheetOptions' => $laminateSheetOptions,
         'totalLeafCost' => round($coreCost + $facingTotal + $lippingTotal + $finishTotal, 2),
     ];
 }
@@ -4914,15 +4972,16 @@ function buildLeafSetBreakdownOnly($request, $userIds): ?array{
 
     $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
     $finishSteps = buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch);
+    $laminateSheetOptionsList = $laminateSheetMatch ? laminateSheetOptions($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1) : [];
 
     $breakdown = [
         'leaves' => [
-            buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps),
+            buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
         ],
     ];
 
     if($request->doorsetType == 'leaf_and_a_half'){
-        $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps);
+        $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
     }
 
     return $breakdown;
@@ -5144,6 +5203,27 @@ function configurationDoor($pageId): string{
     }
 
     return $configurableitems;
+}
+
+// Reverse of configurationDoor() — needed because Quotation.configurableitems is empty for a real
+// chunk of existing quotations (a pre-existing data gap, confirmed 2026-09-02: ~183/545), so
+// callers that only have the quotation row can't always get the brand from it. Every saved
+// LeafSetBesPoke row's Description already starts "{doorType} | {brandName}|...", so that's used
+// as the fallback source instead.
+function configurationDoorId(string $brandName): int{
+    $map = [
+        'Streboard' => 1,
+        'Halspan' => 2,
+        'NormaDoorCore' => 3,
+        'VicaimaDoorCore' => 4,
+        'Seadec' => 5,
+        'Deanta' => 6,
+        'Flamebreak' => 7,
+        'Stredor' => 8,
+        'MMM' => 9,
+    ];
+
+    return $map[$brandName] ?? 0;
 }
 
 function fireRatingDoor($firerating): string{

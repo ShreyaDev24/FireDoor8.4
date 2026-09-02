@@ -10,9 +10,15 @@ use Maatwebsite\Excel\Events\AfterSheet;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
 use Maatwebsite\Excel\Concerns\WithColumnFormatting;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
+use Maatwebsite\Excel\Concerns\WithStrictNullComparison;
 use App\Models\Quotation;
 
-class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatting,WithColumnWidths
+// WithStrictNullComparison matters here: PhpSpreadsheet's Worksheet::fromArray() (which Maatwebsite
+// calls under FromArray) defaults to loose (==) comparison against null when deciding which cells to
+// skip — and in PHP, 0 == null is true. Without this interface every legitimate 0 in a row (a Primed
+// rate that's genuinely £0, a Laminate facing rate that isn't configured, £0.00 costs) gets silently
+// left blank instead of written as "0".
+class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatting,WithColumnWidths,WithStrictNullComparison
 {
     const SHEET_COLUMN_COUNT = 19; // A..S, matches the widest section heading (Door Details)
 
@@ -72,20 +78,40 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             $specs[] = $this->row(['C' => $coreName . ' Core' . $suffix, 'D' => 'Door Core Size', 'E' => 'Quantity', 'F' => 'Cost Per Core'], self::FILL_CORE, true);
             $specs[] = $this->row(['D' => $leaf['coreSizeCode'] ?? '', 'E' => $leaf['coreQty'] ?? '', 'F' => $leaf['coreCost'] ?? ''], self::FILL_CORE, false);
 
-            $specs[] = $this->row(['C' => $facingType . ' (m²)', 'D' => 'M² area of ' . strtolower($facingType), 'E' => 'Cost per M²', 'F' => 'Total Cost'], self::FILL_FACING, true);
-            $specs[] = $this->row(['D' => $leaf['facingM2'] ?? '', 'E' => $leaf['facingCostPerM2'] ?? '', 'F' => $leaf['facingTotal'] ?? ''], self::FILL_FACING, false);
+            $sheetOptions = $leaf['laminateSheetOptions'] ?? [];
+            if (!empty($sheetOptions)) {
+                // Laminate with registered sheet sizes: list every candidate size (smallest first),
+                // highlighting the one actually picked — matches the client's own reference sheet.
+                $specs[] = $this->row(['C' => $facingType, 'D' => 'Sheet Sizes', 'E' => 'Cost per sheet', 'F' => 'Quantity', 'G' => 'Total Cost'], self::FILL_FACING, true);
+                foreach ($sheetOptions as $option) {
+                    $isSelected = !empty($option['isSelected']);
+                    $specs[] = $this->row([
+                        'D' => $option['sizeLabel'] ?? '',
+                        'E' => $option['costPerSheet'] ?? '',
+                        'F' => $option['qty'] ?? '',
+                        'G' => $isSelected ? ($option['total'] ?? '') : '',
+                    ], $isSelected ? self::FILL_TOTAL : self::FILL_FACING, $isSelected);
+                }
+            } else {
+                $specs[] = $this->row(['C' => $facingType . ' (m²)', 'D' => 'M² area of ' . strtolower($facingType), 'E' => 'Cost per M²', 'F' => 'Total Cost'], self::FILL_FACING, true);
+                $specs[] = $this->row(['D' => $leaf['facingM2'] ?? '', 'E' => $leaf['facingCostPerM2'] ?? '', 'F' => $leaf['facingTotal'] ?? ''], self::FILL_FACING, false);
+            }
 
             $specs[] = $this->row(['C' => 'Lipping', 'D' => 'LM of Lipping used', 'E' => 'Lipping Cross-section (m²/LM)', 'F' => 'Cost per M³', 'G' => 'Cost per LM', 'H' => 'Total Cost'], self::FILL_LIPPING, true);
             $specs[] = $this->row(['D' => $leaf['lippingLM'] ?? '', 'E' => $leaf['lippingCrossSectionM2PerLM'] ?? '', 'F' => $leaf['lippingCostPerM3'] ?? '', 'G' => $leaf['lippingCostPerLM'] ?? '', 'H' => $leaf['lippingTotal'] ?? ''], self::FILL_LIPPING, false);
 
-            $specs[] = $this->row(['C' => 'Prime / Paint / Lacquer', 'D' => 'M² area of finishing', 'E' => 'Cost per M² to finish', 'F' => 'Total Cost'], self::FILL_FINISH, true);
-            // finishSteps: usually one line (the selected finish), but a Kraft Paper door finished
-            // "Painted" carries two — Primed then Painted — each its own row. Older saved rows from
-            // before this existed only have the flat finishM2/finishCostPerM2/finishTotal fields;
-            // fall back to a single-step row from those so they still render correctly.
-            $steps = $leaf['finishSteps'] ?? [['label' => '', 'm2' => $leaf['finishM2'] ?? '', 'costPerM2' => $leaf['finishCostPerM2'] ?? '', 'total' => $leaf['finishTotal'] ?? '']];
-            foreach ($steps as $step) {
-                $specs[] = $this->row(['C' => $step['label'] ?? '', 'D' => $step['m2'] ?? '', 'E' => $step['costPerM2'] ?? '', 'F' => $step['total'] ?? ''], self::FILL_FINISH, false);
+            // A matched Laminate sheet already shows its price in the table above — no separate
+            // finish/paint step applies to it, so skip this section entirely in that case.
+            if (empty($sheetOptions)) {
+                $specs[] = $this->row(['C' => 'Prime / Paint / Lacquer', 'D' => 'M² area of finishing', 'E' => 'Cost per M² to finish', 'F' => 'Total Cost'], self::FILL_FINISH, true);
+                // finishSteps: usually one line (the selected finish), but a Kraft Paper door finished
+                // "Painted" carries two — Primed then Painted — each its own row. Older saved rows from
+                // before this existed only have the flat finishM2/finishCostPerM2/finishTotal fields;
+                // fall back to a single-step row from those so they still render correctly.
+                $steps = $leaf['finishSteps'] ?? [['label' => '', 'm2' => $leaf['finishM2'] ?? '', 'costPerM2' => $leaf['finishCostPerM2'] ?? '', 'total' => $leaf['finishTotal'] ?? '']];
+                foreach ($steps as $step) {
+                    $specs[] = $this->row(['C' => $step['label'] ?? '', 'D' => $step['m2'] ?? '', 'E' => $step['costPerM2'] ?? '', 'F' => $step['total'] ?? ''], self::FILL_FINISH, false);
+                }
             }
         }
 
