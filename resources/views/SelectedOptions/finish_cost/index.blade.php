@@ -96,7 +96,7 @@
                                 <input type="checkbox" class="checkAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>
@@ -177,7 +177,7 @@
                                 <input type="checkbox" class="checkAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>
@@ -258,7 +258,7 @@
                                 <input type="checkbox" class="checkAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>
@@ -327,7 +327,7 @@
                                 <input type="checkbox" class="checkAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>

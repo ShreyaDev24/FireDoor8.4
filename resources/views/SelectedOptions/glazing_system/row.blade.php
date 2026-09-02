@@ -65,7 +65,7 @@
                         <input type="checkbox" id="checkAll">
                     </th>
                     @endif
-                    <th>Streboard</th>
+                    <th>Strebord</th>
                     <th>Halspan</th>
                     <th>Flamebreak</th>
                     <th>Stredor</th>
