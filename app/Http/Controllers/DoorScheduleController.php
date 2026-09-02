@@ -9340,7 +9340,7 @@ class DoorScheduleController extends Controller
             return response()->json(['success' => false, 'message' => "You haven't selected any version yet."]);
         }
 
-        $configurableitems = Quotation::where('id', $quotationId)->value('configurableitems');
+        $quotationConfigurableitems = Quotation::where('id', $quotationId)->value('configurableitems');
 
         $rows = BOMCalculation::where('Category', 'LeafSetBesPoke')
             ->where('QuotationId', $quotationId)
@@ -9360,6 +9360,15 @@ class DoorScheduleController extends Controller
             if(!$item){
                 $skipped++;
                 continue;
+            }
+
+            // Quotation.configurableitems is empty for a real chunk of existing quotations (a
+            // pre-existing data gap). When that happens, fall back to the brand name already saved
+            // in this row's own Description ("{doorType} | {brandName}|...").
+            $configurableitems = $quotationConfigurableitems;
+            if(empty($configurableitems)){
+                $brandName = trim(explode('|', (string) $row->Description)[1] ?? '');
+                $configurableitems = configurationDoorId($brandName);
             }
 
             $userIds = CompanyUsers(false, $item->UserId);
