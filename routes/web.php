@@ -609,6 +609,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/ExportNonConfig', [App\Http\Controllers\DoorScheduleController::class,'ExportNonConfig'])->name('ExportNonConfig');
     Route::get('/ExportBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportBomCalculation'])->name('ExportBomCalculation');
     Route::get('/ExportDoorTypeBom/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportDoorTypeBom'])->name('ExportDoorTypeBom');
+    Route::post('/ValidateAllLeafSetBreakdown', [App\Http\Controllers\DoorScheduleController::class,'ValidateAllLeafSetBreakdown'])->name('ValidateAllLeafSetBreakdown');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
     Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');

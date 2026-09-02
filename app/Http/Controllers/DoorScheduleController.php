@@ -9324,6 +9324,63 @@ class DoorScheduleController extends Controller
             ]);
     }
 
+    // "Validate All" button: refreshes the Kraft Paper/Laminate/Veneer/Lipping/finish breakdown
+    // (the Breakdown column added for the Door Details BOM sheet) for every door already saved in
+    // this quotation+version, in one click — for doors saved before that breakdown existed, or
+    // whose lipping/facing rates changed since. It only ever writes the Breakdown column via
+    // buildLeafSetBreakdownOnly(); UnitCost/TotalCost/GTSellPrice/DoorsetPrice/AdjustPrice are
+    // never touched, so a door's charged price cannot change from clicking this. New doors don't
+    // need this — LeafSetBesPoke() already computes their breakdown the moment they're saved.
+    public function ValidateAllLeafSetBreakdown(Request $request){
+        $quotationId = $request->quotationId;
+        $versionID = $request->versionId;
+
+        $version = QuotationVersion::where('id', $versionID)->first();
+        if(!$version){
+            return response()->json(['success' => false, 'message' => "You haven't selected any version yet."]);
+        }
+
+        $configurableitems = Quotation::where('id', $quotationId)->value('configurableitems');
+
+        $rows = BOMCalculation::where('Category', 'LeafSetBesPoke')
+            ->where('QuotationId', $quotationId)
+            ->where('VersionId', $version->version)
+            ->whereNotNull('itemId')
+            ->get();
+
+        $updated = 0;
+        $skipped = 0;
+
+        foreach($rows as $row){
+            $item = Item::where('itemId', $row->itemId)
+                ->where('QuotationId', $quotationId)
+                ->where('VersionId', $versionID)
+                ->first();
+
+            if(!$item){
+                $skipped++;
+                continue;
+            }
+
+            $userIds = CompanyUsers(false, $item->UserId);
+            $fakeRequest = itemToLeafSetBreakdownRequest($item, $configurableitems);
+            $breakdown = buildLeafSetBreakdownOnly($fakeRequest, $userIds);
+
+            if(empty($breakdown)){
+                $skipped++;
+                continue;
+            }
+
+            BOMCalculation::where('id', $row->id)->update(['Breakdown' => json_encode($breakdown)]);
+            $updated++;
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => "Updated breakdown for {$updated} door(s)." . ($skipped ? " Skipped {$skipped} (missing item or no Kraft Paper/Laminate/Veneer/PVC facing)." : ''),
+        ]);
+    }
+
     public function cuttingList($quotationId,$versionID)
     {
         $quotation = Quotation::where('quotation.id',$quotationId)->first();
