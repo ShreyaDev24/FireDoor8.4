@@ -23,12 +23,12 @@
                             <li class="nav-item tab-item">
                                 <a class="nav-link show active companytab" id="pills-company-tab" data-toggle="pill"
                                     href="#pdf_formate_one" role="tab" aria-controls="company" aria-selected="true">PDF
-                                    Formate One</a>
+                                    Format One</a>
                             </li>
                             <li class="nav-item tab-item">
                                 <a class="nav-link show" id="pills-office-tab" data-toggle="pill"
                                     href="#pdf_formate_two" role="tab" aria-controls="pdf_formate_two"
-                                    aria-selected="false">PDF Formate Two</a>
+                                    aria-selected="false">PDF Format Two</a>
                             </li>
                             <li class="nav-item tab-item">
                                 <a class="nav-link show" id="pills-admin-tab" data-toggle="pill" href="#footer_design"

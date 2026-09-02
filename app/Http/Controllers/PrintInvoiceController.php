@@ -2736,7 +2736,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $SwingType = '';
             }
 
-            // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
+            // Under the row ‘Decorative Grooves’ this should show the width x depth. Example 5mm wide x 2mm deep
             if (!empty($tt->DecorativeGroves)) {
                 $GrooveWidth = empty($tt->GrooveWidth) ? 'N/A' : $tt->GrooveWidth . 'mm wide';
 
@@ -3091,7 +3091,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     }
 
                     $elevTbl .= '<tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $tt->groovesNumber . '</td>
                                 </tr>';
             }else{
@@ -3100,7 +3100,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
@@ -3378,7 +3378,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     </tr>
                                     <tr>
                                         <td class="dicription_grey">Saddle Location</td>
-                                        <td class="dicription_blank">' . $tt->saddleLocation . '</td>
+                                        <td class="dicription_blank">' . str_replace('Between_Styles', 'Between Stiles', (string) $tt->saddleLocation) . '</td>
                                     </tr>
                                 </tbody>
                             </table>';
@@ -3697,7 +3697,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->FireRating . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">SO WIdth</td>
+                                    <td class="dicription_grey">SO Width</td>
                                     <td class="dicription_blank">' . $tt->SOWidth . '</td>
                                 </tr>';
 
@@ -3731,10 +3731,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Frame Finish</td>
-                                    <td class="dicription_blank">' . $tt->Finish . '</td>
+                                    <td class="dicription_blank">' . str_replace('Prime', 'Primed', (string) $tt->Finish) . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Frame WIdth</td>
+                                    <td class="dicription_grey">Frame Width</td>
                                     <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>';
 
@@ -6629,7 +6629,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                 $SwingType = '';
             }
 
-            // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
+            // Under the row ‘Decorative Grooves’ this should show the width x depth. Example 5mm wide x 2mm deep
             if (!empty($tt->DecorativeGroves)) {
                 $GrooveWidth = empty($tt->GrooveWidth) ? 'N/A' : $tt->GrooveWidth . 'mm wide';
 
@@ -6912,7 +6912,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     }
 
                     $elevTbl .= '<tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $tt->groovesNumber . '</td>
                                 </tr>';
             }else{
@@ -6921,7 +6921,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
@@ -7493,7 +7493,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $tt->FireRating . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">SO WIdth</td>
+                                    <td class="dicription_grey">SO Width</td>
                                     <td class="dicription_blank">' . $tt->SOWidth . '</td>
                                 </tr>';
 
@@ -7527,10 +7527,10 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Frame Finish</td>
-                                    <td class="dicription_blank">' . $tt->Finish . '</td>
+                                    <td class="dicription_blank">' . str_replace('Prime', 'Primed', (string) $tt->Finish) . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Frame WIdth</td>
+                                    <td class="dicription_grey">Frame Width</td>
                                     <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>';
 

@@ -24,7 +24,7 @@
             <div class="main-card mb-3 card">
                 <div class="card-body">
                     <div class="card-header">
-                        <h6 class="card-title font-weight-bold" style="margin-top: 10px">Manufacturing Setting</h6>
+                        <h6 class="card-title font-weight-bold" style="margin-top: 10px">Manufacturing Settings</h6>
                     </div>
                     <form action="{{route('storeDoorFrameConstruction')}}" method="post">
                         {{ csrf_field() }}

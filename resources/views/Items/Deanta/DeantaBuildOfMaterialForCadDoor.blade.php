@@ -325,7 +325,7 @@
             </tr>
 
             <tr id="decorativeGroves-section" class="@if (isset($Item['DecorativeGroves'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>Decorative Groves</td>
+                <td>Decorative Grooves</td>
                 <td id="decorativeGroves-selected">@if (isset($Item['DecorativeGroves'])){{ $Item['DecorativeGroves'] }}@endif</td>
             </tr>
             <tr id="doorDimensionGroove-section" class="@if (isset($Item['groovesNumber'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
@@ -1419,7 +1419,7 @@
                 @endif
             </tr>
             <tr id="meetingStyle-section" class="@if (isset($Item['MeetingStyle'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>Meeting Style</td>
+                <td>Meeting Stile</td>
                 <td id="meetingStyle-selected">@if (isset($Item['MeetingStyle'])){{ $Item['MeetingStyle'] }}@endif</td>
                 {{--  @if (price_view_vlidator() == 1)
                     <td id="meetingStyle-price">
