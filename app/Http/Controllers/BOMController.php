@@ -2606,7 +2606,7 @@ class BOMController extends Controller
                     <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
                     <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                     <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                    <th style="border: 1px solid black; padding: 5px;">Notes,Please any non-conformance of quantity issues</th>';
                     if($doorPlugActivated == 1){
                     $elevTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
                     <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
@@ -2731,7 +2731,7 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Quality Check(Please Tick if Correct)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non-conformance of quantity issues</th>
                             </tr>
                         </thead>
                         <tbody>';
@@ -2839,8 +2839,8 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Core</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Thickness/Liping Species</th>
+                                <th style="border: 1px solid black; padding: 5px;">Lipping Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Lipping Thickness/Lipping Species</th>
                                 <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
@@ -2851,7 +2851,7 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non-conformance of quantity issues</th>';
                                 if($doorPlugActivated == 1){
                                 $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';
@@ -2871,9 +2871,9 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Certification No</th>
                                 <th style="border: 1px solid black; padding: 5px;">Fire Rating</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Core</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Type</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Thickness</th>
-                                <th style="border: 1px solid black; padding: 5px;">Liping Species</th>
+                                <th style="border: 1px solid black; padding: 5px;">Lipping Type</th>
+                                <th style="border: 1px solid black; padding: 5px;">Lipping Thickness</th>
+                                <th style="border: 1px solid black; padding: 5px;">Lipping Species</th>
                                 <th style="border: 1px solid black; padding: 5px;">Leaf Type</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Leaf Facing</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Leaf Size</th>
@@ -2884,7 +2884,7 @@ class BOMController extends Controller
                                 <th style="border: 1px solid black; padding: 5px;">Door Thickness (mm)</th>
                                 <th style="border: 1px solid black; padding: 5px;">Please Insert Moisture Content And Report if Not Between 10% to 12%</th>
                                 <th style="border: 1px solid black; padding: 5px;">Density Check (Please Tick 510kg/m3 FD30 & 640kg/m3 FD60)</th>
-                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non conformainace of quantity issues</th>';
+                                <th style="border: 1px solid black; padding: 5px;">Notes,Please any non-conformance of quantity issues</th>';
                                 if($doorPlugActivated == 1){
                                 $lipingTbl .= '<th style="border: 1px solid black; padding: 5px;">Door Plug1</th>
                                 <th style="border: 1px solid black; padding: 5px;">Door Plug2</th>';

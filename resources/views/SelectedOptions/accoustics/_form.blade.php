@@ -4,7 +4,7 @@
         {{-- Accoustics Name --}}
         <div class="row">
             <div class="col-md-12 mb-3">
-                <label>Accoustics <span class="text-danger">*</span></label>
+                <label>Acoustics <span class="text-danger">*</span></label>
                 <input type="text"
                     name="Accoustics"
                     class="form-control @error('Accoustics') is-invalid @enderror"
@@ -99,7 +99,7 @@
         {{-- Accoustics Image --}}
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label>Accoustics Image</label>
+                <label>Acoustics Image</label>
                 <input type="file"
                     name="file"
                     class="form-control @error('file') is-invalid @enderror">

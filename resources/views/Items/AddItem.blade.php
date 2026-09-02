@@ -1418,16 +1418,16 @@
                     <div class="">
                         <div class="tab-content">
                             <div class="card-header">
-                                <h5 class="card-title" style="margin-top: 10px">ACCOUSTICS </h5>
+                                <h5 class="card-title" style="margin-top: 10px">ACOUSTICS </h5>
                             </div>
                             <div class="">
                                 <div class="form-row">
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accoustics" class="">Accoustics</label>
+                                            <label for="accoustics" class="">Acoustics</label>
                                             <select name="accoustics" id="accoustics" class="form-control">
-                                                <option value="">Select Accoustics</option>
+                                                <option value="">Select Acoustics</option>
                                                 @foreach($option_data as $row)
                                                 @if($row->OptionSlug=='Accoustics')
                                                 <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
@@ -1445,14 +1445,14 @@
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsJambs" class="">Accoustics Jambs</label>
+                                            <label for="accousticsJambs" class="">Acoustics Jambs</label>
                                             <input name="accousticsJambs" id="accousticsJambs" class="form-control"
                                                 type="text">
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsHead" class="">Accoustics Head</label>
+                                            <label for="accousticsHead" class="">Acoustics Head</label>
                                             <input name="accousticsHead" id="accousticsHead" class="form-control"
                                                 type="text">
                                         </div>
@@ -1467,7 +1467,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsSeal" class="">Accoustics Seal</label>
+                                            <label for="accousticsSeal" class="">Acoustics Seal</label>
                                             <input name="accousticsSeal" id="accousticsSeal" class="form-control"
                                                 type="text">
                                         </div>
