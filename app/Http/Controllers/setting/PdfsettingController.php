@@ -37,7 +37,7 @@ class PdfsettingController extends Controller
             'editor1' => 'required'
         ],
         [
-           'editor1.required' => 'The PDF Formate One field is required.',
+           'editor1.required' => 'The PDF Format One field is required.',
         ]);
         if(Auth::user()->UserType== 2){
             $users = CompanyUsers(true);
@@ -78,7 +78,7 @@ class PdfsettingController extends Controller
             'editor2' => 'required'
         ],
         [
-           'editor2.required' => 'The PDF Formate Two field is required.',
+           'editor2.required' => 'The PDF Format Two field is required.',
         ]);
         if(Auth::user()->UserType== 2){
             $users = CompanyUsers(true);

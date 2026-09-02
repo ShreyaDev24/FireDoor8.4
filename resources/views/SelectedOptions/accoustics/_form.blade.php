@@ -4,7 +4,7 @@
         {{-- Accoustics Name --}}
         <div class="row">
             <div class="col-md-12 mb-3">
-                <label>Accoustics <span class="text-danger">*</span></label>
+                <label>Acoustics <span class="text-danger">*</span></label>
                 <input type="text"
                     name="Accoustics"
                     class="form-control @error('Accoustics') is-invalid @enderror"

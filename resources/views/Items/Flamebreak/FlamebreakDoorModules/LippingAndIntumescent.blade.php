@@ -74,7 +74,7 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="meetingStyle">Meeting Style
+                            <label for="meetingStyle">Meeting Stile
                             @if(!empty($tooltip->meetingStyle))
                             <script type="text/javascript">
                             document.write(Tooltip('{{$tooltip->meetingStyle}}'));
@@ -84,7 +84,7 @@
                             <select name="meetingStyle"
                                 @if(empty($Item['MeetingStyle'])){{'disabled'}}@endif
                                 id="meetingStyle" class="form-control">
-                                <option value="">Select Meeting Style</option>
+                                <option value="">Select Meeting Stile</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='meeting_style')
                                 <option value="{{$row->OptionKey}}"

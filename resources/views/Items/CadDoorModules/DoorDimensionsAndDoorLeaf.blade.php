@@ -290,7 +290,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="decorativeGroves">Decorative Groves
+                            <label for="decorativeGroves">Decorative Grooves
                                 @if(!empty($tooltip->decorativeGroves))
                                 <script type="text/javascript">
                                 document.write(Tooltip('{{$tooltip->decorativeGroves}}'));
@@ -298,7 +298,7 @@
                                 @endif
                             </label>
                             <select name="decorativeGroves" id="decorativeGroves" class="form-control" required>
-                                <option value="">Select Decorative Groves</option>
+                                <option value="">Select Decorative Grooves</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='Decorative_Groves')
                                 <option value="{{$row->OptionKey}}"

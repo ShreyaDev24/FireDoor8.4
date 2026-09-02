@@ -15,7 +15,7 @@
                         <div class="card-body">
                           <div class="row">
                             <div class="col-sm-6">
-                                <div class="card-header"><h5 class="card-title">Main Contractor's List</h5></div>
+                                <div class="card-header"><h5 class="card-title">Main Contractors List</h5></div>
                             </div>
                             <div class="col-sm-6 ">
                             @if(Auth::user()->UserType=='2')

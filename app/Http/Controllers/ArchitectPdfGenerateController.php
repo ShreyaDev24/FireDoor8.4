@@ -563,7 +563,7 @@ class ArchitectPdfGenerateController extends Controller
             $SwingType = '';
         }
 
-            // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
+            // Under the row ‘Decorative Grooves’ this should show the width x depth. Example 5mm wide x 2mm deep
             if (!empty($tt->DecorativeGroves)) {
                 $GrooveWidth = empty($tt->GrooveWidth) ? 'N/A' : $tt->GrooveWidth .'mm wide';
 
@@ -748,7 +748,7 @@ class ArchitectPdfGenerateController extends Controller
                                     <td class="dicription_blank">'.$DoorLeafFinish . $DoorLeafFinishColor.'</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">'.$DecorativeGroves.'</td>
                                 </tr>
                                 <tr>

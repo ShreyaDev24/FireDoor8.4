@@ -87,7 +87,7 @@
                                 <input type="checkbox" id="checkGlassAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>
@@ -189,7 +189,7 @@
                                 <input type="checkbox" id="checkGlazingAll">
                             </th>
                             @endif  --}}
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>

@@ -44,7 +44,7 @@
     <div class="app-main__inner">
 
         <div class="d-flex justify-content-between mb-3">
-            <h4>Accoustic</h4>
+            <h4>Acoustic</h4>
             <a href="{{ route('accoustics.create') }}" class="btn btn-primary">
                 + Add New
             </a>
@@ -70,7 +70,7 @@
                         <input type="checkbox" id="checkAll">
                     </th>
                     @endif
-                    <th>Streboard</th>
+                    <th>Strebord</th>
                     <th>Halspan</th>
                     <th>Flamebreak</th>
                     <th>Stredor</th>

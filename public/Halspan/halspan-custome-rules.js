@@ -2949,7 +2949,7 @@ $(document).ready(function() {
     }
     function MeetingStyle(){
         // Lipping And Intumescent
-        // Meeting Style input field
+        // Meeting Stile input field
         // if($("#fireRating").val()!="NFR"){
             var MeetingStyleValue = document.getElementById('MeetingStyle-value');
             if(MeetingStyleValue != null){

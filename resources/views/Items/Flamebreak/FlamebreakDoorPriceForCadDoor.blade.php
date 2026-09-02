@@ -356,7 +356,7 @@
 
             <tr id="decorativeGroves-section1" class="@if (isset($Item['DecorativeGroves']) && $Item['DecorativeGroves'] == 'Yes'){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
                 <td id="decorativeGroves-description1"></td>
-                <td>Decorative Groves</td>
+                <td>Decorative Grooves</td>
                 <td id="decorativeGroves-selected1">@if (isset($Item['DecorativeGroves']) && $Item['DecorativeGroves'] == 'Yes'){{ $Item['DecorativeGroves'] }}@endif</td>
                 @if (price_view_vlidator() == 1)
                     <td id="decorativeGroves-price1">£0.00</td>

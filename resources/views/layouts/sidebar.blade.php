@@ -304,7 +304,7 @@
                         {{-- Accoustics --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
-                            <a href="{{ route('accoustics.index') }}">Accoustics</a>
+                            <a href="{{ route('accoustics.index') }}">Acoustics</a>
                         </li>
 
                         {{-- Architrave Type --}}
@@ -663,7 +663,7 @@
                         {{-- Accoustics --}}
                         <li
                             class="submm-{{ (Request::segment(2) == 'options' && Request::segment(3) == 'accoustics') ? 'active' : '' }}">
-                            <a href="{{ route('accoustics.index') }}">Accoustics</a>
+                            <a href="{{ route('accoustics.index') }}">Acoustics</a>
                         </li>
 
                         {{-- Architrave Type --}}
