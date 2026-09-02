@@ -43,7 +43,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_half_lap">Frame HEAD Height<span class="text-danger">*</span></label>
+                                        <label for="height_half_lap">Frame Stile Height<span class="text-danger">*</span></label>
                                         <input name="height_half_lap" id="height_half_lap" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($half_lap_joint)){{$half_lap_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_mitre">Frame HEAD Height<span class="text-danger">*</span></label>
+                                        <label for="height_mitre">Frame Stile Height<span class="text-danger">*</span></label>
                                         <input name="height_mitre" id="height_mitre" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($mitre_joint)){{$mitre_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -79,7 +79,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_mortice">Frame HEAD Height<span class="text-danger">*</span></label>
+                                        <label for="height_mortice">Frame Stile Height<span class="text-danger">*</span></label>
                                         <input name="height_mortice" id="height_mortice" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($mortice_tenon_joint)){{$mortice_tenon_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -97,7 +97,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="height_butt">Frame HEAD Height<span class="text-danger">*</span></label>
+                                        <label for="height_butt">Frame Stile Height<span class="text-danger">*</span></label>
                                         <input name="height_butt" id="height_butt" placeholder="Enter Height" type="number" class="form-control" value="@if(!empty($butt_joint)){{$butt_joint->Height}}@endif">
                                     </div>
                                 </div>
@@ -210,7 +210,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_halfLippedHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="sideLight_halfLippedHeight">Frame Stile Height</label>
                                         <input type="number" name="sideLight_halfLippedHeight" id="sideLight_halfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.HalfLipped'])){{$allSettings['SideLight.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
@@ -225,7 +225,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_mitreHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="sideLight_mitreHeight">Frame Stile Height</label>
                                         <input type="number" name="sideLight_mitreHeight" id="sideLight_mitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mitre'])){{$allSettings['SideLight.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
@@ -240,7 +240,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_mortice1Height">FRAME HEAD HEIGHT</label>
+                                        <label for="sideLight_mortice1Height">Frame Stile Height</label>
                                         <input type="number" name="sideLight_mortice1Height" id="sideLight_mortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Mortice1'])){{$allSettings['SideLight.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
@@ -255,7 +255,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="sideLight_buttHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="sideLight_buttHeight">Frame Stile Height</label>
                                         <input type="number" name="sideLight_buttHeight" id="sideLight_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['SideLight.Butt'])){{$allSettings['SideLight.Butt']->Height}}@endif">
                                     </div>
                                 </div>
@@ -277,7 +277,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightHalfLippedHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="fanlightHalfLippedHeight">Frame Stile Height</label>
                                         <input type="number" name="fanlightHalfLippedHeight" id="fanlightHalfLippedHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.HalfLipped'])){{$allSettings['Fanlight.HalfLipped']->Height}}@endif">
                                     </div>
                                 </div>
@@ -292,7 +292,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightMitreHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="fanlightMitreHeight">Frame Stile Height</label>
                                         <input type="number" name="fanlightMitreHeight" id="fanlightMitreHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mitre'])){{$allSettings['Fanlight.Mitre']->Height}}@endif">
                                     </div>
                                 </div>
@@ -307,7 +307,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlightMortice1Height">FRAME HEAD HEIGHT</label>
+                                        <label for="fanlightMortice1Height">Frame Stile Height</label>
                                         <input type="number" name="fanlightMortice1Height" id="fanlightMortice1Height" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Mortice1'])){{$allSettings['Fanlight.Mortice1']->Height}}@endif">
                                     </div>
                                 </div>
@@ -322,7 +322,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
-                                        <label for="fanlight_buttHeight">FRAME HEAD HEIGHT</label>
+                                        <label for="fanlight_buttHeight">Frame Stile Height</label>
                                         <input type="number" name="fanlight_buttHeight" id="fanlight_buttHeight" class="form-control" placeholder="Enter Height" value="@if(!empty($allSettings['Fanlight.Butt'])){{$allSettings['Fanlight.Butt']->Height}}@endif">
                                     </div>
                                 </div>
