@@ -4520,7 +4520,11 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         }elseif($request->doorLeafFacing == 'Veneer'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category (e.g. both
+            // Laminate and Veneer can have a "Ash" row, and MySQL's default collation is
+            // case-insensitive so "ASH"/"Ash" also collide) — must filter by category too, or
+            // ->first() can silently grab a different category's (often £0) price instead.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if($doorLeafFacing->selectedPrice == NULL){
                 $doorLeafFacing->selectedPrice = 0;
             }
@@ -4534,7 +4538,9 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         }elseif($request->doorLeafFacing == 'Laminate'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must
+            // filter by category too, or ->first() can silently grab a different category's price.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
@@ -4561,7 +4567,9 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         }elseif($request->doorLeafFacing == 'PVC'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must
+            // filter by category too, or ->first() can silently grab a different category's price.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
@@ -4934,7 +4942,9 @@ function buildLeafSetBreakdownOnly($request, $userIds): ?array{
         $facingRatePerM2 = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
         $finishRatePerM2 = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
     } elseif(in_array($request->doorLeafFacing, ['Veneer', 'Laminate', 'PVC'])){
-        $facing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+        // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must filter
+        // by category too, or ->first() can silently grab a different category's price.
+        $facing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
         $facingRatePerM2 = $facing->selectedPrice ?? 0;
 
         if($request->doorLeafFacing == 'Veneer'){
