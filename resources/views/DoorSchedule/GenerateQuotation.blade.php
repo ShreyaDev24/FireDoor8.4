@@ -214,6 +214,7 @@
                                             <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen BOM Calculation</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
                                             <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                            <li><a href="javascript:void(0);" onClick="ValidateAllLeafSetBreakdown();">Validate All (Update Door Breakdown)</a></li>
                                             {{-- <li><a href="{{url('quotation/generateBOMPrint')}}/{{$quotation->id}}">Generate Bom Calculation</a></li> --}}
 
                                             <li class="docs_menu_group">Production documents</li>
@@ -1180,6 +1181,8 @@
         value="{{ url('/quotation/documents') }}" />
     <input type="hidden" name="ExportSideScreenUrl" id="ExportSideScreenUrl"
         value="{{ url('/quotation/ExportSideScreen') }}" />
+    <input type="hidden" name="ValidateAllLeafSetBreakdownUrl" id="ValidateAllLeafSetBreakdownUrl"
+        value="{{ url('/quotation/ValidateAllLeafSetBreakdown') }}" />
     <input type="hidden" name="ExportScreenBomCalculationUrl" id="ExportScreenBomCalculationUrl"
         value="{{ url('/quotation/ExportScreenBomCalculation') }}" />
     <input type="hidden" name="cuttingListUrl" id="cuttingListUrl"
@@ -3480,6 +3483,37 @@
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
             };
+
+            ValidateAllLeafSetBreakdown = function() {
+                var ValidateAllLeafSetBreakdownUrl = $("#ValidateAllLeafSetBreakdownUrl").val();
+                var quotationId = $("#quotationId").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion == 0) {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                    return;
+                }
+                $.ajax({
+                    type: "POST",
+                    url: ValidateAllLeafSetBreakdownUrl,
+                    data: {
+                        _token: $("#_token").val(),
+                        quotationId: quotationId,
+                        versionId: currentVersion
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.success) {
+                            swal("Done!", data.message, "success");
+                        } else {
+                            swal("Oops!", data.message, "error");
+                        }
+                    },
+                    error: function() {
+                        swal("Oops!", "Something went wrong while updating the breakdown.", "error");
+                    }
+                });
+            };
+
             ExportSideScreen = function() {
                 var ExportSideScreenUrl = $("#ExportSideScreenUrl").val();
                 var quotationId = $("#quotationId").val();

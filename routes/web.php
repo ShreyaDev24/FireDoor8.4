@@ -636,6 +636,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/documents/{id}/{vid}/download-all', [App\Http\Controllers\QuotationDocumentsController::class,'downloadAll'])->name('quotation.documents.downloadAll');
     Route::get('/documents/{id}/{vid}/history', [App\Http\Controllers\QuotationDocumentsController::class,'history'])->name('quotation.documents.history');
     Route::get('/documents/{id}/{vid}/options-check', [App\Http\Controllers\QuotationDocumentsController::class,'optionsCheck'])->name('quotation.documents.optionsCheck');
+    Route::post('/ValidateAllLeafSetBreakdown', [App\Http\Controllers\DoorScheduleController::class,'ValidateAllLeafSetBreakdown'])->name('ValidateAllLeafSetBreakdown');
     Route::get('/ExportScreenBomCalculation/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportScreenBomCalculation'])->name('ExportScreenBomCalculation');
     Route::get('/ExportSideScreen/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'ExportSideScreen'])->name('ExportSideScreen');
     Route::get('/cuttingList/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'cuttingList'])->name('cuttingList');

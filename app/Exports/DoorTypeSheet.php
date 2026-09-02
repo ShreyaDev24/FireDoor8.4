@@ -79,9 +79,14 @@ class DoorTypeSheet implements FromArray,WithEvents,WithTitle,WithColumnFormatti
             $specs[] = $this->row(['D' => $leaf['lippingLM'] ?? '', 'E' => $leaf['lippingCrossSectionM2PerLM'] ?? '', 'F' => $leaf['lippingCostPerM3'] ?? '', 'G' => $leaf['lippingCostPerLM'] ?? '', 'H' => $leaf['lippingTotal'] ?? ''], self::FILL_LIPPING, false);
 
             $specs[] = $this->row(['C' => 'Prime / Paint / Lacquer', 'D' => 'M² area of finishing', 'E' => 'Cost per M² to finish', 'F' => 'Total Cost'], self::FILL_FINISH, true);
-            $specs[] = $this->row(['D' => $leaf['finishM2'] ?? '', 'E' => $leaf['finishCostPerM2'] ?? '', 'F' => $leaf['finishTotal'] ?? ''], self::FILL_FINISH, false);
-
-            $specs[] = $this->row(['F' => 'Total Door Leaf Cost', 'G' => $leaf['totalLeafCost'] ?? ''], self::FILL_TOTAL, true);
+            // finishSteps: usually one line (the selected finish), but a Kraft Paper door finished
+            // "Painted" carries two — Primed then Painted — each its own row. Older saved rows from
+            // before this existed only have the flat finishM2/finishCostPerM2/finishTotal fields;
+            // fall back to a single-step row from those so they still render correctly.
+            $steps = $leaf['finishSteps'] ?? [['label' => '', 'm2' => $leaf['finishM2'] ?? '', 'costPerM2' => $leaf['finishCostPerM2'] ?? '', 'total' => $leaf['finishTotal'] ?? '']];
+            foreach ($steps as $step) {
+                $specs[] = $this->row(['C' => $step['label'] ?? '', 'D' => $step['m2'] ?? '', 'E' => $step['costPerM2'] ?? '', 'F' => $step['total'] ?? ''], self::FILL_FINISH, false);
+            }
         }
 
         return $specs;
