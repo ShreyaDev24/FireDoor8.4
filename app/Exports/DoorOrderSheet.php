@@ -153,7 +153,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $value->rWdBRating,
                 '',
                 $value->Saddle,
-                $value->saddleLocation,
+                str_replace('_', ' ', $value->saddleLocation),
             );
             $rowLockType[] = $value->LockType ?? '';
             $rowMeta[] = [
@@ -205,7 +205,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->rWdBRating,
                     '',
                     $value->Saddle,
-                    $value->saddleLocation,
+                    str_replace('_', ' ', $value->saddleLocation),
                 );
                 $rowLockType[] = $value->LockType ?? '';
                 $rowMeta[] = [
