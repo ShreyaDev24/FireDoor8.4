@@ -429,7 +429,7 @@ function glazingBeadExport($request,$userIds,$userLoginId): void{
         $acronym .= $w[0];
         }
 
-        $GlazingBeadFinish = $request->GlazingBeadFinish ?? 'Lacquer';
+        $GlazingBeadFinish = $request->glazingBeadFinish ?? 'Lacquer';
 
         if($request->visionPanelQuantity == '1'){
             $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|'. $GlazingBeadFinish .'|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP1Width.'mm x '.$request->vP1Height1.'mm';
@@ -492,8 +492,8 @@ function glazingBeadExport($request,$userIds,$userLoginId): void{
         foreach ($words as $w) {
         $acronym .= $w[0];
         }
-        
-        $GlazingBeadFinish = $request->GlazingBeadFinish ?? 'Lacquer';
+
+        $GlazingBeadFinish = $request->glazingBeadFinish ?? 'Lacquer';
 
         if($request->visionPanelQuantityforLeaf2 == '1'){
             $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|'. $GlazingBeadFinish .'|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP2Width.'mm x '.$request->vP2Height1.'mm';
@@ -505,7 +505,7 @@ function glazingBeadExport($request,$userIds,$userLoginId): void{
         }elseif($request->visionPanelQuantityforLeaf2 == '4'){
             $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|'. $GlazingBeadFinish .'|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm';
         }elseif($request->visionPanelQuantityforLeaf2 == '5'){
-            $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|'. $GlazingBeadFinish .'|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP2Width=' mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height5.'mm';
+            $description = $word.'|'.$selected_lipping_species[0]['SpeciesName'].'|'. $GlazingBeadFinish .'|'.$acronym.'_'.$request->glazingBeadsThickness.'mm x '.$request->glazingBeadsHeight.'mm|'.$request->vP2Width.'mm x '.$request->vP2Height1.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height2.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height3.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height4.'mm, & '.$request->vP2Width.'mm x '.$request->vP2Height5.'mm';
         }
 
         $category = 'GlazingBeads';

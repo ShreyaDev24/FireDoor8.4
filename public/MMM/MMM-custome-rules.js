@@ -556,6 +556,7 @@ function visionPanelChange(){
         $('#glazingBeadsHeight').attr('required', true);
         $('#glazingBeadsFixingDetail').attr('required', true);
         // $('#glazingBeadSpecies').attr('required', true);
+        $('#glazingBeadFinish').attr('required', true);
     } else {
         $("#visionPanelQuantity").val('').attr({ 'disabled': true, 'required': false });
         $("#leaf1VisionPanelShape").val('').attr({ 'readonly': true, 'required': false });
@@ -582,6 +583,9 @@ function visionPanelChange(){
             $('#glazingBeadsHeight').val('').attr('required', false);
             $('#glazingBeadsFixingDetail').val('').attr('required', false);
             $('#glazingBeadSpecies').val('').attr('required', false);
+            $('#glazingBeadFinish').val('').attr('required', false);
+            $('#glazingBeadFinishColor').val('').html('<option value="">Glazing Bead Finish Color</option>');
+            $('#GlazingBeadFinishColor-value').val('');
             $('#glassThickness').val('').attr('required', false);
         }
     }
@@ -940,6 +944,10 @@ $(document).on('change', '#frameDepth', function (e) {
 
 $("#frameFinish").change(function () {
     FrameFinishChange(true, 'framefinish');
+});
+
+$(document).on('change', '#glazingBeadFinish', function () {
+    FrameFinishChange(true, 'glazingBeadFinish');
 });
 
 $("#extLiner").change(function () {
@@ -3558,7 +3566,14 @@ function FrameFinishChange(showModal = false, typeinput) {
         var doorLeafFinish = $("#architraveFinish").val();
         $('#ralColorModalLabel').html('Architrave Finish Color');
     }
+    if (typeinput == 'glazingBeadFinish') {
+        var doorLeafFinish = $("#glazingBeadFinish").val();
+        $('#ralColorModalLabel').html('Glazing Bead Finish Color');
+    }
     var FrameFinishColorValue = $('#FrameFinishColor-value').val();
+    if (typeinput == 'glazingBeadFinish') {
+        FrameFinishColorValue = $('#GlazingBeadFinishColor-value').val();
+    }
     if (doorLeafFinish == "Painted_Finish") {
         if (typeinput == 'architraveFinish') {
             $("#architraveFinishcolor").attr({ 'disabled': false });
@@ -3578,15 +3593,29 @@ function FrameFinishChange(showModal = false, typeinput) {
                     innerHtml += '<div class="container"><div class="row">';
                     innerHtml += '<div id="field" hidden>' + doorLeafFinish + '</div>';
                     $("#doorLeafFinishColor").attr({ 'disabled': false });
-                    $("#framefinishColor").attr({ 'disabled': false });
+                    if (typeinput == 'glazingBeadFinish') {
+                        $("#glazingBeadFinishColor").attr({ 'disabled': false });
+                    } else {
+                        $("#framefinishColor").attr({ 'disabled': false });
+                    }
 
 
                     for (var index = 0; index < length; index++) {
-                        if (FrameFinishColorValue != null) {
-                            FrameFinishColorValue = $('#FrameFinishColor-value').val();
-                            if (FrameFinishColorValue == data[index].id) {
-                                var select = '<option value="' + data[index].id + '" selected>' + data[index].ColorName + '</option>';
-                                $("#framefinishColor").empty().append(select);
+                        if (typeinput == 'glazingBeadFinish') {
+                            if (FrameFinishColorValue != null) {
+                                FrameFinishColorValue = $('#GlazingBeadFinishColor-value').val();
+                                if (FrameFinishColorValue == data[index].id) {
+                                    var select = '<option value="' + data[index].id + '" selected>' + data[index].ColorName + '</option>';
+                                    $("#glazingBeadFinishColor").empty().append(select);
+                                }
+                            }
+                        } else {
+                            if (FrameFinishColorValue != null) {
+                                FrameFinishColorValue = $('#FrameFinishColor-value').val();
+                                if (FrameFinishColorValue == data[index].id) {
+                                    var select = '<option value="' + data[index].id + '" selected>' + data[index].ColorName + '</option>';
+                                    $("#framefinishColor").empty().append(select);
+                                }
                             }
                         }
                         innerHtml += '<div class="col-md-2 col-sm-4 col-6" onClick="SelectRalColor(\'' + typeinput + '\',' + data[index].id + ',\'' + data[index].Hex + '\',\'' + data[index].ColorName + '\',\'' + doorLeafFinish + '\')">';
@@ -3608,6 +3637,12 @@ function FrameFinishChange(showModal = false, typeinput) {
             }
         });
     } else {
+        if (typeinput == 'glazingBeadFinish') {
+            $("#glazingBeadFinishColor").val('').attr({ 'disabled': true });
+            $("#glazingBeadFinishColor").html('<option value="">Glazing Bead Finish Color</option>');
+            $('#GlazingBeadFinishColor-value').val('');
+            return;
+        }
         var doorLeafFinish = $("#doorLeafFinish").val();
         var frameFinish = $("#frameFinish").val();
         var architraveFinish = $("#architraveFinish").val();
@@ -4101,6 +4136,9 @@ function makeOption(id, name, code, category) {
                     $("input[name='architraveFinishcolor']").val(name);
                 } else if(typeinput == 'framefinish'){
                     $("#framefinishColor").empty().append('<option value="'+id+'">'+name+'</option>');
+                } else if(typeinput == 'glazingBeadFinish'){
+                    $("#glazingBeadFinishColor").empty().append('<option value="'+id+'">'+name+'</option>');
+                    $("#GlazingBeadFinishColor-value").val(id);
                 }
                 $("#doorLeafFinishColor-selected").empty().text(name);
                 $("#doorLeafFinishColor-price").empty().text("£" + price);

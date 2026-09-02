@@ -394,6 +394,11 @@
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){
             FrameFinishChange(false ,  'framefinish');
         }
+        $("#GlazingBeadFinishColor-value").val($("#GlazingBeadFinishColor-import").data("value"));
+        $("select[name=glazingBeadFinish]").val($("#GlazingBeadFinish-import").data("value"));
+        if($("#GlazingBeadFinish-import").data("value") == 'Painted_Finish'){
+            FrameFinishChange(false ,  'glazingBeadFinish');
+        }
         $("input[name=frameCostuction]").val($("#DoorFrameConstruction-import").data("value"));
         DoorFrameConstruction('#frameCostuction',frameCostuction,frameCostuction.split('_').join(' '))
         $("select[name=lippingType]").val($("#LippingType-import").data("value"));
@@ -1171,6 +1176,9 @@ var SelectedOptionsJson = JSON.stringify(<?= json_encode($selected_option_data);
 
     @if(isset($Item["FrameFinish"]) && $Item["FrameFinish"] == "Painted_Finish")
     FrameFinishChange(false ,  'framefinish');
+    @endif
+    @if(isset($Item["GlazingBeadFinish"]) && $Item["GlazingBeadFinish"] == "Painted_Finish")
+    FrameFinishChange(false ,  'glazingBeadFinish');
     @endif
 
     @if(isset($Item['ArchitraveMaterial']) && $Item['Architrave'] == 'Yes')

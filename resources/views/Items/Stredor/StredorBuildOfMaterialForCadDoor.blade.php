@@ -806,6 +806,31 @@
                     <td id="glazingBeadSpecies-price">£0.00</td>
                 @endif  --}}
             </tr>
+            <tr id="glazingBeadFinish-section" class="@if (isset($Item['GlazingBeadFinish'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
+                <td>Glazing Bead Finish</td>
+                <td id="glazingBeadFinish-selected">@if (isset($Item['GlazingBeadFinish'])){{ $Item['GlazingBeadFinish'] }}@endif</td>
+                {{--  @if (price_view_vlidator() == 1)
+                    <td id="glazingBeadFinish-price">
+                        @if (isset($Item['GlazingBeadFinish']))
+                            @foreach ($option_data as $row)
+                                @if ($row->OptionSlug == 'Frame_Finish' && $Item['GlazingBeadFinish'] == $row->OptionKey)
+                                    £{{ (isset($row->SelectedOptionCost) && $row->SelectedOptionCost != null)?$row->SelectedOptionCost:$row->OptionCost}}
+                                @break
+                            @endif
+                        @endforeach
+                    @else
+                        £0.00
+                @endif
+                </td>
+                @endif  --}}
+            </tr>
+            <tr id="glazingBeadFinishColor-section" class="@if (isset($Item['GlazingBeadFinishColor'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
+                <td>Glazing Bead Finish Color</td>
+                <td id="glazingBeadFinishColor-selected">@if (isset($Item['GlazingBeadFinishColor'])){{ $Item['GlazingBeadFinishColor'] }}@endif</td>
+                {{--  @if (price_view_vlidator() == 1)
+                    <td id="glazingBeadFinishColor-price">£0.00</td>
+                @endif  --}}
+            </tr>
         </table>
     </div>
 </div>

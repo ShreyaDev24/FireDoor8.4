@@ -216,6 +216,8 @@ function SetBuildOfMaterial(identifier,TagName){
                         isExist = true;
                     }else if(id == "frameFinish" && elem.OptionSlug == "Frame_Finish"){
                         isExist = true;
+                    }else if(id == "glazingBeadFinish" && elem.OptionSlug == "Frame_Finish"){
+                        isExist = true;
                     }else if(id == "extLiner" && elem.OptionSlug == "Ext_Liner"){
                         isExist = true;
                     }else if(id == "overpanel" && elem.OptionSlug == "door_configuration_overpanel"){

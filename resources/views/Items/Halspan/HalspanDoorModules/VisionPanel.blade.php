@@ -817,6 +817,42 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
+                            <label for="glazingBeadFinish">Glazing Bead Finish
+
+                            @if(!empty($tooltip->glazingBeadFinish))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->glazingBeadFinish}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <select name="glazingBeadFinish" id="glazingBeadFinish"
+                                class="form-control change-event-calulation" required>
+                                <option value="">Select Glazing Bead finish</option>
+                                @foreach(($option_data_grouped['Frame_Finish'] ?? []) as $row)
+                                <option value="{{$row->OptionKey}}" @if(isset($Item['GlazingBeadFinish'])) @if($Item['GlazingBeadFinish'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="glazingBeadFinishColor">Glazing Bead Finish Color
+                            @if(!empty($tooltip->glazingBeadFinishColor))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->glazingBeadFinishColor}}'));
+                            </script>
+                            @endif
+
+                            </label>
+                            <select name="glazingBeadFinishColor" id="glazingBeadFinishColor" class="form-control">
+                                <option value="">Glazing Bead Finish Color</option>
+                            </select>
+                            <input type="hidden" id="GlazingBeadFinishColor-value" value="@if(isset($Item['GlazingBeadFinishColor'])){{$Item['GlazingBeadFinishColor']}}@endif">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
                             <label for="glazingTestRef">Test Ref</label>
                             <input type="text" readonly name="glazingTestRef"
                                 id="glazingTestRef" class="form-control"

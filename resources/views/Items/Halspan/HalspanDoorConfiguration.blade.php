@@ -430,6 +430,11 @@
         if($("#FrameFinish-import").data("value") == 'Painted_Finish'){
             FrameFinishChange(false ,  'framefinish');
         }
+        $("#GlazingBeadFinishColor-value").val($("#GlazingBeadFinishColor-import").data("value"));
+        $("select[name=glazingBeadFinish]").val($("#GlazingBeadFinish-import").data("value"));
+        if($("#GlazingBeadFinish-import").data("value") == 'Painted_Finish'){
+            FrameFinishChange(false ,  'glazingBeadFinish');
+        }
         //$("select[name=framefinishColor]").val($("#FrameFinishColor-import").data("value"));
         $("input[name=frameCostuction]").val($("#DoorFrameConstruction-import").data("value"));
         DoorFrameConstruction('#frameCostuction',frameCostuction,frameCostuction.split('_').join(' '))
@@ -621,6 +626,9 @@ $(document).ready(function() {
 
     @if(isset($Item["FrameFinish"]) && $Item["FrameFinish"] == "Painted_Finish")
     FrameFinishChange(false ,  'framefinish');
+    @endif
+    @if(isset($Item["GlazingBeadFinish"]) && $Item["GlazingBeadFinish"] == "Painted_Finish")
+    FrameFinishChange(false ,  'glazingBeadFinish');
     @endif
 
     @if(isset($Item['ArchitraveMaterial']) && $Item['Architrave'] == 'Yes')

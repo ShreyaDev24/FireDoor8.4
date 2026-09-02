@@ -787,6 +787,30 @@
                         </div>
                     </div>
 
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="glazingBeadFinish">Glazing Bead Finish</label>
+                            <select name="glazingBeadFinish" id="glazingBeadFinish"
+                                class="form-control change-event-calulation" required>
+                                <option value="">Select Glazing Bead finish</option>
+                                @foreach($option_data as $row)
+                                @if($row->OptionSlug=='Frame_Finish')
+                                <option value="{{$row->OptionKey}}" @if(isset($Item['GlazingBeadFinish'])) @if($Item['GlazingBeadFinish'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
+                                @endif
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="glazingBeadFinishColor">Glazing Bead Finish Color</label>
+                            <select name="glazingBeadFinishColor" id="glazingBeadFinishColor" class="form-control">
+                                <option value="">Glazing Bead Finish Color</option>
+                            </select>
+                            <input type="hidden" id="GlazingBeadFinishColor-value" value="@if(isset($Item['GlazingBeadFinishColor'])){{$Item['GlazingBeadFinishColor']}}@endif">
+                        </div>
+                    </div>
+
 
 
 
