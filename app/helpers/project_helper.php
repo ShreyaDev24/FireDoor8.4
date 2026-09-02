@@ -821,7 +821,12 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
         'Ironmongery&MachiningCosts' => [1, 2, 3, 4, 5, 'LMPerDoorType', 6],
         'GeneralLabourCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'MachiningCosts' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
-        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
+        // index 4 is intentionally repeated: the heading "Lipping Thickness/Lipping Species" is
+        // ONE column for what LeafSetBesPoke() saves as two words (thickness, then species) — see
+        // the words[3]/words[4] merge below — which shifts the leaf-size word into slot 4 for both
+        // "Door Leaf Size" and "Door Dimensions Code" (this category has no separate dimensions
+        // code of its own; every reference sheet from the client shows the leaf size in both).
+        'LeafSetBesPoke' => [0, 1, 2, 3, 4, 4, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin'],
         'default' => [0, 1, 2, 3, 4, 5, 'LMPerDoorType', 'QuantityOfDoorTypes', 'Unit', 'UnitCost', 'TotalCost', 'UnitPriceSell', 'GTSellPrice', 'Margin']
     ];
 
@@ -830,6 +835,15 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
     foreach ($data as $index => $value) {
         $words = explode("|", (string) $value->Description);
         $row = [];
+
+        // Door Details sheet: LeafSetBesPoke() saves lipping thickness and lipping species as two
+        // separate words (e.g. "10mm" then "Oak"), but the sheet has ONE heading for both
+        // ("Lipping Thickness/Lipping Species"). Merge them into word[3] ("10mm/Oak") and shift
+        // the leaf-size word down into slot 4, matching the (index4,index4) mapping above.
+        if ($category === 'LeafSetBesPoke' && isset($words[3], $words[4])) {
+            $words[3] = trim($words[3]) . '/' . trim($words[4]);
+            $words[4] = $words[5] ?? '';
+        }
 
         // Frame sheet: the [Head] row should show the HEAD frame thickness and the [Bottom]
         // row the BOTTOM frame thickness in its Frame Size (depth x thickness x width).
