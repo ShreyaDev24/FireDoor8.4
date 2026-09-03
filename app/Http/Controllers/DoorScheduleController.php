@@ -8890,13 +8890,17 @@ class DoorScheduleController extends Controller
             $tbl = '';
 
             foreach ($aa as $row) {
+
+                    // Count how many doors have this Door Type
+                $doorTypeCount = $aa->where('DoorType', $row->DoorType) ->whereNotNull('doorNumber') ->where('doorNumber', '!=', '') ->count();
+
                 $doorNumber = '';
                 if (!empty($row->doorNumber)) {
                     $doorNumber = '<td><a href="' . ConfigurationURL($q->configurableitems, $row->itemId, $vid) . '">' . $row->doorNumber . '</a></td>';
-                    $delete = '<td><a onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ')" href="javascript:void(0);" class="btn btn-danger">Delete <i class="fa fa-trash"></i></a></td>';
+                    $delete = '<td><a onclick="doorListAjax(' . $row->itemId . ',' . $row->id . ',' . $vid . ',' . $doorTypeCount . ')" href="javascript:void(0);" class="btn btn-danger">Delete Door Type <i class="fa fa-trash"></i></a></td>';
                 } else {
                     $doorNumber = '<td></td>';
-                    $delete = '<td><a onclick="doorListAjax(' . $row->itemId . ',0,' . $vid . ')" href="javascript:void(0);" class="btn btn-danger">Delete <i class="fa fa-trash"></i></a></td>';
+                    $delete = '<td><a onclick="doorListAjax(' . $row->itemId . ',0,' . $vid . ',' . $doorTypeCount . ')" href="javascript:void(0);" class="btn btn-danger">Delete Door Type <i class="fa fa-trash"></i></a></td>';
                 }
 
                 $tbl .=
