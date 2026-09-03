@@ -131,7 +131,7 @@ class CompanyController extends Controller
             $user = new User();
             $flash = "added";
             $this->validate( $request,[
-                'UserEmail'=> "required|email|unique:users",
+                'UserEmail'=> "required|email",
             ]);
             $status_mail = true;
             $length = 10;
