@@ -80,6 +80,14 @@ function nonConfigurableItem($Id,$vId,$userId,$select='',$sum=false,$query='get'
     return $NonConfigurableItems;
 }
 
+function ArchitraveTypeName($ArchitraveType){
+    $ArchitraveType = trim($ArchitraveType);
+
+    if($ArchitraveType == 'Chamford'){
+        $ArchitraveType = 'Chamfered';
+    }
+    return $ArchitraveType;
+}
 
 function itemAdjustCount($Id,$vId): float|int{
     if (!isset($vId) || $vId <= 0) {
@@ -859,6 +867,10 @@ function getBomDoorTypeDetails($id, $version, $doorType, $category): array {
             if (is_int($field)) {
                 // Cache $words[$field] to avoid repetitive access
                 $wordValue = $words[$field] ?? '';
+                if ($field === 2 && $category === 'Architrave') {
+                    // For Architrave, the 3rd column (index 2) should show the frame thickness
+                    $wordValue = ArchitraveTypeName($wordValue);
+                }
                 if (in_array($category, ['MachiningCosts', 'GeneralLabourCosts'])) {
                     $row[] = in_array($field, [2, 3, 4, 5]) ? round(floatval($wordValue), 2) : $wordValue;
                 } else {
