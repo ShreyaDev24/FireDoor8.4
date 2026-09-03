@@ -90,7 +90,7 @@ class ArchitraveOrderSheet implements FromCollection,WithHeadings,WithEvents,Wit
                     $value->DoorType,
                     $value->rWdBRating ? $value->rWdBRating : '',
                     $value->ArchitraveWidth . 'x' . $value->ArchitraveHeight,
-                    $value->ArchitraveType,
+                    ArchitraveTypeName($value->ArchitraveType),
                     $SpeciesName,
                     $value->ArchitraveFinish,
                     $value->ArchitraveSetQty,

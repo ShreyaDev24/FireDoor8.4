@@ -1616,6 +1616,10 @@ class BOMController extends Controller
                 }
             }
 
+            if($value->DoorLeafFinish === 'Laqure_Finish'){
+                $value->DoorLeafFinish = 'Lacquer Finish';
+            }
+
             // Main Leaf Row
             $data[] = '<tr>'
                 . '<td>' . (($value->DoorQuantity) ? $value->DoorQuantity : 1) . '</td>'
@@ -2287,6 +2291,9 @@ class BOMController extends Controller
                 if(!empty($allSettings['VPBead.FD60'])){
                     $VisionPanelWidthFD60 = $allSettings['VPBead.FD60']->Width;
                     $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
+                }
+                if($value->DoorLeafFinish === 'Laqure_Finish'){
+                    $value->DoorLeafFinish = 'Lacquer Finish';
                 }
 
                 $row = '<tr>'

@@ -69,7 +69,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
                     doorcorename($value->configurableitems),
                     $doortype,
                     $words1,
-                    $words2,
+                    ArchitraveTypeName($words2),
                     $words3,
                     $words4,
                     $words5,

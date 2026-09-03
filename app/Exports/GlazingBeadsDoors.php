@@ -106,6 +106,9 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $VisionPanelWidthFD60 = $allSettings['VPBead.FD60']->Width;
                     $VisionPanelHeightFD60 = $allSettings['VPBead.FD60']->Height;
                 }
+                if($value->DoorLeafFinish === 'Laqure_Finish'){
+                    $value->DoorLeafFinish = 'Lacquer Finish';
+                }
                 $data[] = array(
                     doorcorename($value->configurableitems),
                     $value->DoorType,
