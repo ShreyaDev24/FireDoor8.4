@@ -68,7 +68,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
                     $j,
                     $doortype,
                     $words1,
-                    $words2,
+                    ArchitraveTypeName($words2),
                     $words3,
                     $words4,
                     $words5,
@@ -93,7 +93,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
 
         return collect($allData);
     }
-    
+
     public function headings(): array
     {
         $a = [
@@ -122,7 +122,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
         $d = [$b,$a];
         return $d;
     }
-    
+
     public function registerEvents(): array
     {
 
@@ -177,7 +177,7 @@ class Architrave implements FromCollection,WithHeadings,WithEvents,WithTitle,Wit
     {
         return 'Architrave';
     }
-    
+
     public function columnFormats(): array
     {
         $currencyFormats = [

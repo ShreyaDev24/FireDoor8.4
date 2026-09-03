@@ -2509,14 +2509,14 @@
                     <div class="">
                         <div class="tab-content">
                             <div class="card-header">
-                                <h5 class="card-title" style="margin-top: 10px">Accoustics </h5>
+                                <h5 class="card-title" style="margin-top: 10px">Acoustics </h5>
                             </div>
                             <div class="">
                                 <div class="form-row">
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accoustics" class="">Accoustics
+                                            <label for="accoustics" class="">Acoustics
                                             @if(!empty($tooltip->accoustics))
                                             <script type="text/javascript">
                                             document.write(Tooltip('{{$tooltip->accoustics}}'));
@@ -2524,7 +2524,7 @@
                                             @endif
                                             </label>
                                             <select name="accoustics" id="accoustics" class="form-control">
-                                                <option value="">Select Accoustics</option>
+                                                <option value="">Select Acoustics</option>
                                                 @foreach($option_data as $row)
                                                 @if($row->OptionSlug=='Accoustics')
                                                 <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>
@@ -2548,7 +2548,7 @@
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsJambs" class="">Accoustics Jambs
+                                            <label for="accousticsJambs" class="">Acoustics Jambs
                                             @if(!empty($tooltip->accousticsJambs))
                                             <script type="text/javascript">
                                             document.write(Tooltip('{{$tooltip->accousticsJambs}}'));
@@ -2561,7 +2561,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsHead" class="">Accoustics Head
+                                            <label for="accousticsHead" class="">Acoustics Head
                                             @if(!empty($tooltip->accousticsHead))
                                             <script type="text/javascript">
                                             document.write(Tooltip('{{$tooltip->accousticsHead}}'));
@@ -2588,7 +2588,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="accousticsSeal" class="">Accoustics Seal
+                                            <label for="accousticsSeal" class="">Acoustics Seal
                                             @if(!empty($tooltip->accousticsSeal))
                                             <script type="text/javascript">
                                             document.write(Tooltip('{{$tooltip->accousticsSeal}}'));

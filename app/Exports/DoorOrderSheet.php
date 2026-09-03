@@ -127,6 +127,10 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                 $configurableitems = 'MMM';
             }
 
+            if($value->DoorLeafFinish === 'Laqure_Finish'){
+                $value->DoorLeafFinish = 'Lacquer Finish';
+            }
+
             $data[] = array(
                 ($value->DoorQuantity) ? $value->DoorQuantity : 1,
                 $value->plot_ref_no,
