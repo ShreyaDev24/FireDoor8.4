@@ -271,8 +271,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
         };
 
         foreach ($data as $rowIndex => $row) {
-            $c1 = trim((string) ($row[9] ?? ''));   // PRODUCT CODE LEAF 1
-            $c2 = trim((string) ($row[10] ?? ''));  // PRODUCT CODE LEAF 2
+            $c1 = trim((string) ($row[10] ?? ''));  // PRODUCT CODE LEAF 1
+            $c2 = trim((string) ($row[11] ?? ''));  // PRODUCT CODE LEAF 2
             $doorTypeColumn = trim((string) ($row[4] ?? ''));
             $lockType = trim((string) ($rowLockType[$rowIndex] ?? ''));
             $rowInfo  = $rowMeta[$rowIndex] ?? [];
@@ -395,7 +395,7 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
 
         if($this->section != 'Summary'){
             // Merge: main rows + blank separator + summary header + summary rows
-            $merged = array_merge($data, [array_fill(0, 20, '')], [$summaryHeader], $summaryRows);
+            $merged = array_merge($data, [array_fill(0, 24, '')], [$summaryHeader], $summaryRows);
         }else{
             // Merge: main rows + blank separator + summary header + summary rows
             $merged = array_merge([$summaryHeader], $summaryRows);
