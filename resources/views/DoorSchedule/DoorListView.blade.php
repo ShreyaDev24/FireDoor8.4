@@ -76,41 +76,50 @@
     @endif
 
     <script>
-        function doorListAjax(id, itemmasterId='' ,vid){
-            if( !confirm('Are you sure you want to delete?')) {
+        function doorListAjax(id, itemmasterId='' ,vid, doorTypeCount = 0){
+            var message = '';
+
+            if (doorTypeCount == 1) {
+                message = 'Are you sure you want to delete this door?';
+            } else {
+                message = 'Are you sure you want to delete all ' + doorTypeCount + ' doors of this door type?';
+            }
+
+            if (!confirm(message))
+            {
                 return false;
-            }else{
-                var url = $('#url').val();
-                var qId = $('#qId').val();
-                $.ajax({
-                    type: "POST",
-                    url: url,
-                    data: {
-                        _token: $("#_token").val(),
-                        id: id,
-                        qId: qId,
-                        vid: vid,
-                        itemmasterId: itemmasterId
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        if (data.status == "success") {
-                            swal({
-                                title: "success!",
-                                text:  data.message,
-                                type: "success"
-                            }).then(function() {
-                                location.reload();
-                            });
-                        } else {
-                            swal("Oops!", "Something went wrong. Please try again.", "error");
-                        }
-                    },
-                    error: function(data) {
+            }
+
+            var url = $('#url').val();
+            var qId = $('#qId').val();
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    _token: $("#_token").val(),
+                    id: id,
+                    qId: qId,
+                    vid: vid,
+                    itemmasterId: itemmasterId
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.status == "success") {
+                        swal({
+                            title: "success!",
+                            text:  data.message,
+                            type: "success"
+                        }).then(function() {
+                            location.reload();
+                        });
+                    } else {
                         swal("Oops!", "Something went wrong. Please try again.", "error");
                     }
-                });
-            }
+                },
+                error: function(data) {
+                    swal("Oops!", "Something went wrong. Please try again.", "error");
+                }
+            });
         }
     </script>
     @endsection
