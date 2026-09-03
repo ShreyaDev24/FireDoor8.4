@@ -3091,7 +3091,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     }
 
                     $elevTbl .= '<tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $tt->groovesNumber . '</td>
                                 </tr>';
             }else{
@@ -3100,7 +3100,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }
@@ -6912,7 +6912,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                     }
 
                     $elevTbl .= '<tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $tt->groovesNumber . '</td>
                                 </tr>';
             }else{
@@ -6921,7 +6921,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Decorative Groves</td>
+                                    <td class="dicription_grey">Decorative Grooves</td>
                                     <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                 </tr>';
         }

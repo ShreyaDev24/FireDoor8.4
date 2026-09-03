@@ -867,7 +867,7 @@
                            </div>
                            <div class="col-md-3">
                               <div class="position-relative form-group">
-                                <label for="decorativeGroves" class="">Decorative Groves</label>
+                                <label for="decorativeGroves" class="">Decorative Grooves</label>
                                   <select name="decorativeGroves" id="decorativeGroves" class="form-control">
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            <option value="Bespoke">Bespoke</option>
                                                                                                                                                                   <option value="Standard">Standard</option>

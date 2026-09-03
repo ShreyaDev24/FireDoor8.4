@@ -2360,7 +2360,7 @@ class OMMAnualController extends Controller
                                         <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                                     </tr>
                                     <tr>
-                                        <td class="dicription_grey">Decorative Groves</td>
+                                        <td class="dicription_grey">Decorative Grooves</td>
                                         <td class="dicription_blank">' . $DecorativeGroves . '</td>
                                     </tr>
                                     <tr>
