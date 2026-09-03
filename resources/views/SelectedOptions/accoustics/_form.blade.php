@@ -99,7 +99,7 @@
         {{-- Accoustics Image --}}
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label>Accoustics Image</label>
+                <label>Acoustics Image</label>
                 <input type="file"
                     name="file"
                     class="form-control @error('file') is-invalid @enderror">
