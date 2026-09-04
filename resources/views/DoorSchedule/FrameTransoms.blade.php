@@ -47,21 +47,20 @@
     <table>
         <tbody>
             <tr>
-                <th colspan="32">Frames & Transoms BOM</th>
-                <th colspan="32">Frames & Transoms BOM</th>
+                <th colspan="34">Frames & Transoms BOM</th>
             </tr>
             <tr>
-                <th colspan="7">Ref</th>
-                <th colspan="7">Ref</th>
+                <th colspan="5">Ref</th>
+                <th colspan="5">Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th colspan="5">Project</th>
                 <td colspan="5">{{ $quotation->projectname }}</td>
                 <th colspan="5">Prepared By</th>
-                <td colspan="5">{{ $userName }}</td>
+                <td colspan="4">{{ $userName }}</td>
             </tr>
             <tr>
                 <th colspan="5">Revision</th>
-                <td colspan="2">{{ $item[0]->VersionId }}</td>
+                <td colspan="4">{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="3">{{ $today }}</td>
                 <th colspan="5">Main Contractor</th>
@@ -70,12 +69,10 @@
                 <td colspan="5">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="32">Text</th>
-                <th colspan="32">Text</th>
+                <th colspan="34">Text</th>
             </tr>
             <tr>
-                <th colspan="32">Items</th>
-                <th colspan="32">Items</th>
+                <th colspan="34">Items</th>
             </tr>
             @php
                 $i = 0;
