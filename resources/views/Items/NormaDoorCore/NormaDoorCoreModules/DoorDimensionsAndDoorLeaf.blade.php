@@ -40,7 +40,7 @@
                             <select name="doorLeafFinish" id="doorLeafFinish"
                                 class="form-control doorLeafFinishSelect">
                                 <option value="">Select door leaf finish</option>
-                            </select>                         
+                            </select>
                         </div>
                     </div>
 
@@ -151,9 +151,9 @@
                                 value="@if(!empty($Item['SOWallThick'])){{$Item['SOWallThick']}}@endif">
                         </div>
                     </div>
-                   
-                   
-                    
+
+
+
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="doorThickness">Door Thickness (mm)
@@ -163,14 +163,14 @@
                                 </script>
                                 @endif
                             </label>
-                                                        
+
                             <div id="door_thickness_div">
                             <input type="number" readonly name="doorThickness" id="doorThickness" class="form-control"
                                 value="@if(!empty($Item['LeafThickness'])){{$Item['LeafThickness']}}@endif">
                             </div>
                         </div>
                     </div>
-                  
+
                     <!-- <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="doorLeafFacingValue">Brand
@@ -185,7 +185,7 @@
                             </select>
                         </div>
                     </div> -->
-                    
+
                     <div class="col-md-6 SheenLevel" style="display:none;">
                         <div class="position-relative form-group">
                             <label for="">Sheen Level</label>
@@ -200,11 +200,11 @@
                                 document.write(Tooltip('{{$tooltip->doorLeafFinishColor}}'));
                                 </script>
                                 @endif
-                            </label>        
+                            </label>
                             <i class="fa fa-info icon" id="doorLeafFinishColorIcon"></i>
                             <input type="text" @if(empty($Item['DoorLeafFinishColor'])){{'readonly'}}@endif
                                 name="doorLeafFinishColor" id="doorLeafFinishColor" class="form-control"
-                                value="@if(!empty($Item['DoorLeafFinishColor'])){{$Item['DoorLeafFinishColor']}}@endif">                         
+                                value="@if(!empty($Item['DoorLeafFinishColor'])){{$Item['DoorLeafFinishColor']}}@endif">
                         </div>
                     </div> -->
                     <div class="col-md-6">
@@ -220,10 +220,10 @@
                                 <option value="">Select Decorative Grooves</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='Decorative_Groves')
-                                <option value="{{$row->OptionKey}}" 
+                                <option value="{{$row->OptionKey}}"
                                     @if(isset($Item['DecorativeGroves']))
-                                        @if($Item['DecorativeGroves']==$row->OptionKey) 
-                                            {{'selected'}} 
+                                        @if($Item['DecorativeGroves']==$row->OptionKey)
+                                            {{'selected'}}
                                         @endif
                                     @elseif($row->OptionKey == "No")
                                         {{'selected'}}

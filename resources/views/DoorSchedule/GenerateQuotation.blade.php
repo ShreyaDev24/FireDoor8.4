@@ -332,7 +332,7 @@
                                     class="btn btn-primary float-right mx-1">Validate
                                 </a>
                                 <a href="javascript:void(0);" onclick="favoritebtn();" id="Favorite"
-                                    class="btn btn-primary float-right mx-1">Favourite
+                                    class="btn btn-primary float-right mx-1">Insert Favourite
                                 </a>
                             </div>
 
@@ -3188,7 +3188,7 @@
                 //'<a class="dropdown-toggle btn btn-light" type="button" data-toggle="dropdown"><i class="fa fa-ellipsis-h"></i></a>';
                 //innerhtml += '<ul class="dropdown-menu drop_style">';
                 //innerhtml += '<li><a href="' + Editurl + '">Edit</a></li>';
-                //innerhtml += '<li><a href="#">Name Configuration</a></li>';
+                //innerhtml += '<li><a href="#">Add as Favourite</a></li>';
                 //innerhtml += '<li><a href="#">Adjust Price</a></li>';
                 //innerhtml += '<li><a href="#">Comment</a></li>';
                 //innerhtml += '<li><a href="#">Copy</a></li>';
