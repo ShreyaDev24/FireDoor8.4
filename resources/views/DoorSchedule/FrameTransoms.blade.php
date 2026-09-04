@@ -48,8 +48,10 @@
         <tbody>
             <tr>
                 <th colspan="32">Frames & Transoms BOM</th>
+                <th colspan="32">Frames & Transoms BOM</th>
             </tr>
             <tr>
+                <th colspan="7">Ref</th>
                 <th colspan="7">Ref</th>
                 <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
                 <th colspan="5">Project</th>
@@ -69,8 +71,10 @@
             </tr>
             <tr>
                 <th colspan="32">Text</th>
+                <th colspan="32">Text</th>
             </tr>
             <tr>
+                <th colspan="32">Items</th>
                 <th colspan="32">Items</th>
             </tr>
             @php
@@ -111,10 +115,14 @@
                         <th>Transom</th>
                         <th>Mullion</th>
                         <th>Notes</th>
+                        <th>Saddle Required</th>
+                        <th>Saddle Location</th>
                     </tr>
 
                     <tr style="background:#00B0F0">
                         <td><b></b></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>

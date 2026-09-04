@@ -1646,7 +1646,7 @@ class BOMController extends Controller
                 . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                 . '<td></td>'
                 . '<td>' . $value->Saddle . '</td>'
-                . '<td>' . $value->saddleLocation . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                 . '</tr>';
 
             // Overpanel Row
@@ -1684,7 +1684,7 @@ class BOMController extends Controller
                     . '<td>' . $value->IntumescentLeapingSealType . '</td>'
                     . '<td></td>'
                     . '<td>' . $value->Saddle . '</td>'
-                    . '<td>' . $value->saddleLocation . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                     . '</tr>';
             }
         }
@@ -1819,6 +1819,8 @@ class BOMController extends Controller
                 . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
                 . '<td>' . $value->Undercut . '</td>'
                 . '<td></td><td></td><td></td>'
+                . '<td>' . $value->Saddle . '</td>'
+                . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                 . '</tr>';
 
             // --------- Overpanel Rows ---------
@@ -1868,6 +1870,8 @@ class BOMController extends Controller
                     . '<td></td>'
                     . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
                     . '<td></td><td></td><td></td><td></td>'
+                    . '<td>' . $value->Saddle . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                     . '</tr>';
             }
 
@@ -1914,6 +1918,8 @@ class BOMController extends Controller
                     . '<td></td>'
                     . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
                     . '<td></td><td></td><td></td><td></td>'
+                    . '<td>' . $value->Saddle . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                     . '</tr>';
             }
 
@@ -1960,6 +1966,8 @@ class BOMController extends Controller
                     . '<td></td>'
                     . '<td>' . str_replace('_', ' ', $value->FrameFinish) . '</td>'
                     . '<td></td><td></td><td></td><td></td>'
+                    . '<td>' . $value->Saddle . '</td>'
+                    . '<td>' . str_replace('_', ' ', $value->saddleLocation) . '</td>'
                     . '</tr>';
             }
         }

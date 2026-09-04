@@ -208,8 +208,8 @@ class DoorOrderSheet implements FromCollection,WithHeadings,WithEvents,WithTitle
                     $value->IntumescentLeapingSealType,
                     $value->rWdBRating,
                     '',
-                    '',
-                    ''
+                    $value->Saddle,
+                    str_replace('_', ' ', $value->saddleLocation),
                 );
                 $rowLockType[] = $value->LockType ?? '';
                 $rowMeta[] = [
