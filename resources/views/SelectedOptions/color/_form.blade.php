@@ -91,7 +91,7 @@
         <div class="row">
 
             <div class="col-md-4 mb-3">
-                <label>Selected Price</label>
+                <label id="selectedPriceLabel">Sheet Price</label>
 
                 <input type="number" step="0.01" name="price" class="form-control"
                     value="{{ old('price', $item->selectedPrice->SelectedPrice ?? '') }}">

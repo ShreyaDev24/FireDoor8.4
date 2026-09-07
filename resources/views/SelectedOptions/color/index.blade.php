@@ -91,7 +91,7 @@
                             <th>Door Leaf Facing Value</th>
                             <th>Action</th>
                             @if($auth->id != 1)
-                            <th style="min-width:80px;">Price Per Unit</th>
+                            <th style="min-width:80px;">{{ $facing == 'Laminate' ? 'Price per Sheet' : 'Price Per Unit' }}</th>
                             @endif
                         </tr>
                     </thead>

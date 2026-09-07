@@ -84,17 +84,23 @@ class BomDoorTypeExport implements WithMultipleSheets
 
                 $sections = [];
                 foreach ($categories as $category => $config) {
-                    $sections[] = [
+                    $section = [
                         'title' => $config['title'],
                         'headings' => $config['headings'],
                         'data' => getBomDoorTypeDetails($this->id, $this->vid, $door->DoorType, $category)
                     ];
+
+                    if ($category === 'LeafSetBesPoke') {
+                        $section['breakdown'] = getLeafSetBespokeBreakdown($this->id, $this->vid, $door->DoorType);
+                    }
+
+                    $sections[] = $section;
                 }
 
                 $sheet[$door->DoorType] = new DoorTypeSheet($sections, $door->DoorType,$this->id);
             }
         }
-        
+
         // dd($sheet);
         return $sheet;
     }

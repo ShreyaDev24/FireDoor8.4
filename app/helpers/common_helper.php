@@ -2589,7 +2589,7 @@ function getCurrencyRate($QuotationId,$userLoginId=null){
     return $currencyPrice;
 }
 
-function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false): void{
+function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $description, $unit_cost,$lm_per_door_type='',$total_cost='', $quantity_of_door_type = '',$isTotalCounted=false, $breakdown=null): void{
 
     $version_id = QuotationVersion::where('quotation_id', $request->QuotationId)->where('id', $request->version_id)->value('version');
     if(empty($version_id)){
@@ -2704,6 +2704,9 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
     $bom_calculation->GTSellPrice = round((($total * $currencyPrice) /(1 - ($margin/100))),2);
     $bom_calculation->Margin = round($margin,2);
     $bom_calculation->MarginMarkup = $marginData->MarginMarkup;
+    if($breakdown !== null){
+        $bom_calculation->Breakdown = json_encode($breakdown);
+    }
     $bom_calculation->save();
 }
 
@@ -3956,6 +3959,14 @@ function BomCalculationVicaima($request,$userLoginId=null): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = (($door_core1) + ($lm * $thickness_cost)) + $leafandhalfunitcost;
+
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'| - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm2.'|'.$thickness_cost .'| - | - ';
+        }
+
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     } elseif ($request->issingleconfiguration == 4) {
         $doorConfiguration = "Vicaima";
@@ -3983,6 +3994,14 @@ function BomCalculationVicaima($request,$userLoginId=null): void{
         $category = 'LeafSetBesPoke';
         $frame_unit = 'Each';
         $unit_cost = $door_core1 + $door_core2;
+
+        $description .= '|'.$door_core1.'| - | - | - | - ';
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'| - | - | - | - ';
+        }
+
         SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
     }
 
@@ -4431,6 +4450,8 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
 
         $minCost = null;
         $minCostLeafAndAHalf = null;
+        $minCoreCode1 = null;
+        $minCoreCode2 = null;
 
         // Initialize variables to track minimum width and height
         $minWidth1 = PHP_INT_MAX;
@@ -4450,6 +4471,8 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                         // dd($pricesArray);
                         if (isset($pricesArray[$intumescentLeafType])) {
                             $minCost = $pricesArray[$intumescentLeafType];
+                            // Slab/core size the door leaf is being cut from, e.g. "915x2135x44" — for the BOM breakdown only.
+                            $minCoreCode1 = doorCoreSizeLabel($door_core, $request->doorThickness);
                         }
                     }
 
@@ -4465,6 +4488,7 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
                     if (isset($pricesArray2[$intumescentLeafType2])) {
                         $minCostLeafAndAHalf = $pricesArray2[$intumescentLeafType2];
                         // $minCost = $door_core->selected_cost;
+                        $minCoreCode2 = doorCoreSizeLabel($door_core, $request->doorThickness);
                     }
                 }
             }
@@ -4477,58 +4501,88 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
         $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
         $thickness_cost = ($lippingThickness * $request->doorThickness * $unitcost1)/1000000;
         $painted_cost = (($request->leafHeightNoOP * 2) + 50)/1000;
+        // Facing/finish rate per m2 and finish rate per m2, captured for the BOM breakdown only —
+        // does not change $doorLeafFacingCost/$door_cost, which still drive the real Unit Cost below.
+        $facingRatePerM2 = 0;
+        $finishRatePerM2 = 0;
+        $laminateSheetMatch = null;
 
         if($request->doorLeafFacing == 'Kraft_Paper'){
 
             $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing;
+            $facingRatePerM2 = is_numeric($doorLeafFacing) ? (float)$doorLeafFacing : 0;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+            $finishRatePerM2 = is_numeric($doorLeafFinish) ? (float)$doorLeafFinish : 0;
         }elseif($request->doorLeafFacing == 'Veneer'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category (e.g. both
+            // Laminate and Veneer can have a "Ash" row, and MySQL's default collation is
+            // case-insensitive so "ASH"/"Ash" also collide) — must filter by category too, or
+            // ->first() can silently grab a different category's (often £0) price instead.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if($doorLeafFacing->selectedPrice == NULL){
                 $doorLeafFacing->selectedPrice = 0;
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * $doorLeafFinish;
+            $finishRatePerM2 = is_numeric($doorLeafFinish) ? (float)$doorLeafFinish : 0;
         }elseif($request->doorLeafFacing == 'Laminate'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must
+            // filter by category too, or ->first() can silently grab a different category's price.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
             ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
             ->where('selected_color.SelectedUserId',Auth::user()->id)
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+            $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
+
+            // Sheet-based override: if the chosen pattern has sizes registered (see
+            // matchLaminateSheet()), replace the m²-based finish cost with sheet price x2 against
+            // the matched core/blank size. Colours without sizes yet keep the m² calc above.
+            $laminateSheetMatch = matchLaminateSheet($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1);
+            if ($laminateSheetMatch) {
+                $door_cost = $laminateSheetMatch->price * 2;
+                $finishRatePerM2 = 0;
+            }
 
         }elseif($request->doorLeafFacing == 'PVC'){
 
             // $doorLeafFacing = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacingValue)->first()->SelectedOptionCost;
-            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+            // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must
+            // filter by category too, or ->first() can silently grab a different category's price.
+            $doorLeafFacing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
             if(empty($doorLeafFacing->selectedPrice)){
                 $doorLeafFacing->selectedPrice = 0;
             }
 
             $doorLeafFacingCost = $painted_cost * $doorLeafFacing->selectedPrice;
+            $facingRatePerM2 = is_numeric($doorLeafFacing->selectedPrice) ? (float)$doorLeafFacing->selectedPrice : 0;
 
             $doorLeafFinish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
             ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
             ->where('selected_color.SelectedUserId',Auth::user()->id)
             ->get()->first();
             $door_cost = ((($request->leafWidth1 / 1000) * ($request->leafHeightNoOP / 1000)) * 2) * ($doorLeafFinish->SelectedPrice??0);
+            $finishRatePerM2 = is_numeric($doorLeafFinish->SelectedPrice ?? null) ? (float)$doorLeafFinish->SelectedPrice : 0;
         }
 
 
@@ -4545,9 +4599,390 @@ function LeafSetBesPoke($request,$userIds,string $configurationDoor){
             $unit_cost += ($door_core2) + ($lm * $thickness_cost) + ($doorLeafFacingCost + $door_cost);
         }
 
+        $description .= '|'.$door_core1.'|'.$lm.'|'.$thickness_cost.'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|' .$door_cost;
 
-        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost);
+        if($request->doorsetType == 'leaf_and_a_half'){
+
+            $description .= '|'.$door_core2.'|'.$lm.'|'.$thickness_cost .'|'. $request->doorLeafFacing .'-'.$doorLeafFacingCost.'|'.$door_cost;
+
+        }
+
+        // Client-facing "show your work" breakdown for the Door Details BOM sheet: real facing/finish
+        // m2, lipping cross-section, and the matched slab code. Display-only — none of this feeds
+        // $unit_cost above, so existing pricing is untouched.
+        $finishSteps = buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch);
+        $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
+        $laminateSheetOptionsList = $laminateSheetMatch ? laminateSheetOptions($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1) : [];
+
+        $breakdown = [
+            'leaves' => [
+                buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
+            ],
+        ];
+
+        if($request->doorsetType == 'leaf_and_a_half'){
+            $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
+        }
+
+        SaveBOMCalculation($userIds, $request, $category, $frame_unit, $description, $unit_cost, breakdown: $breakdown);
     }
+}
+
+// The finish step(s) for the Prime/Paint/Lacquer breakdown line. Normally just the selected finish
+// (e.g. "Primed", "Lacquer Finish"), each costed at leaf-m2 x its own per-m2 rate. Client rule
+// (2026-09-02): a Kraft Paper door finished "Painted" must be primed first, so that case gets TWO
+// lines — Primed then Painted — each with its own rate, both included in the leaf's total.
+// Laminate colours are named "{height}mm x {width}mm x {thickness}mm - {pattern}" (confirmed
+// against the real Colour List, e.g. "2150mm x 950mm x 0.7mm - Alpino Matte") — the sheet size is
+// baked into the name rather than a separate field. Returns null for colours that don't follow
+// this convention (most brands other than Formica currently don't).
+function parseLaminateSheetSize(string $colorName): ?array{
+    if (preg_match('/^\s*(\d+)\s*mm\s*x\s*(\d+)\s*mm\s*x\s*[\d.]+\s*mm\s*-\s*(.+)$/i', $colorName, $m)) {
+        return [
+            'heightMm' => (int) $m[1],
+            'widthMm' => (int) $m[2],
+            'pattern' => trim($m[3]),
+        ];
+    }
+
+    return null;
+}
+
+// Client rule (2026-09-02): for Laminate, don't price by m² — find every sheet size registered
+// under the SAME pattern (e.g. every "... - Alpino Matte" colour row), pick the smallest one that's
+// at least as big as the door's core/blank size (either orientation, sheet can be rotated), and
+// charge that sheet's price x2 (one sheet per face). Falls back to null (caller keeps the existing
+// m²-based cost) when the selected colour isn't in the "sizeMM x sizeMM x thicknessMM - pattern"
+// format, so brands/colours without sizes yet are completely unaffected.
+function matchLaminateSheet($doorLeafFacingValue, $selectedColorName, $requiredWidth, $requiredHeight): ?object{
+    $parsedSelected = parseLaminateSheetSize((string) $selectedColorName);
+    if (!$parsedSelected || empty($requiredWidth) || empty($requiredHeight)) {
+        return null;
+    }
+
+    $candidates = Color::where('DoorLeafFacing', 'Laminate')
+        ->where('DoorLeafFacingValue', $doorLeafFacingValue)
+        ->get();
+
+    $best = null;
+    $bestArea = null;
+
+    foreach ($candidates as $candidate) {
+        $parsed = parseLaminateSheetSize((string) $candidate->ColorName);
+        if (!$parsed || strcasecmp($parsed['pattern'], $parsedSelected['pattern']) !== 0) {
+            continue;
+        }
+
+        $fitsAsIs = $parsed['widthMm'] >= $requiredWidth && $parsed['heightMm'] >= $requiredHeight;
+        $fitsRotated = $parsed['widthMm'] >= $requiredHeight && $parsed['heightMm'] >= $requiredWidth;
+        if (!$fitsAsIs && !$fitsRotated) {
+            continue;
+        }
+
+        $area = $parsed['widthMm'] * $parsed['heightMm'];
+        if ($best === null || $area < $bestArea) {
+            $selectedColor = SelectedColor::where('SelectedColorId', $candidate->id)->where('SelectedUserId', Auth::user()->id)->first();
+            $price = $selectedColor->SelectedPrice ?? $candidate->ColorCost ?? 0;
+
+            $best = (object) [
+                'colorName' => $candidate->ColorName,
+                'sizeLabel' => $parsed['widthMm'] . 'x' . $parsed['heightMm'],
+                'price' => is_numeric($price) ? (float) $price : 0,
+            ];
+            $bestArea = $area;
+        }
+    }
+
+    return $best;
+}
+
+// Display-only: every registered sheet size for the chosen pattern (e.g. every "... - Alpino
+// Matte" row), smallest first — for the breakdown's "Sheet Sizes" table, matching the client's
+// reference sheet which lists all candidate sizes with the picked one highlighted. Purely
+// additive; never touches the real cost (that stays matchLaminateSheet()'s job).
+function laminateSheetOptions($doorLeafFacingValue, $selectedColorName, $requiredWidth, $requiredHeight): array{
+    $parsedSelected = parseLaminateSheetSize((string) $selectedColorName);
+    if (!$parsedSelected) {
+        return [];
+    }
+
+    $candidates = Color::where('DoorLeafFacing', 'Laminate')
+        ->where('DoorLeafFacingValue', $doorLeafFacingValue)
+        ->get();
+
+    $options = [];
+
+    foreach ($candidates as $candidate) {
+        $parsed = parseLaminateSheetSize((string) $candidate->ColorName);
+        if (!$parsed || strcasecmp($parsed['pattern'], $parsedSelected['pattern']) !== 0) {
+            continue;
+        }
+
+        $selectedColor = SelectedColor::where('SelectedColorId', $candidate->id)->where('SelectedUserId', Auth::user()->id)->first();
+        $price = $selectedColor->SelectedPrice ?? $candidate->ColorCost ?? 0;
+        $price = is_numeric($price) ? (float) $price : 0;
+
+        $fits = ($parsed['widthMm'] >= $requiredWidth && $parsed['heightMm'] >= $requiredHeight)
+            || ($parsed['widthMm'] >= $requiredHeight && $parsed['heightMm'] >= $requiredWidth);
+
+        $options[] = [
+            'sizeLabel' => $parsed['widthMm'] . 'x' . $parsed['heightMm'],
+            'area' => $parsed['widthMm'] * $parsed['heightMm'],
+            'costPerSheet' => round($price, 2),
+            'qty' => 2,
+            'total' => round($price * 2, 2),
+            'fits' => $fits,
+            'isSelected' => false,
+        ];
+    }
+
+    usort($options, static fn($a, $b) => $a['area'] <=> $b['area']);
+
+    foreach ($options as &$option) {
+        if ($option['fits']) {
+            $option['isSelected'] = true;
+            break;
+        }
+    }
+    unset($option);
+
+    return array_map(static function ($option) {
+        unset($option['area'], $option['fits']);
+        return $option;
+    }, $options);
+}
+
+// "Door Core Size" label for the breakdown (e.g. "915x2135x44"). door_dimension.code is the
+// obvious source but is empty for Halspan's whole size range in this DB — selected_mm_width/height
+// (the exact fields already used to match the core) are reliably populated, so build the label
+// from those instead, falling back to `code` only if it's ever actually set.
+function doorCoreSizeLabel($door_core, $doorThickness): ?string{
+    if (!empty($door_core->code)) {
+        return $door_core->code;
+    }
+
+    if (!empty($door_core->selected_mm_width) && !empty($door_core->selected_mm_height)) {
+        return $door_core->selected_mm_width . 'x' . $door_core->selected_mm_height . 'x' . $doorThickness;
+    }
+
+    return null;
+}
+
+function buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch = null): array{
+    // A matched Laminate sheet already carries its own total (price x2) — show that instead of an
+    // m²-based line, since $finishRatePerM2 is forced to 0 by the caller in this case.
+    if ($laminateSheetMatch) {
+        return [[
+            'label' => 'Laminate Sheet (' . $laminateSheetMatch->sizeLabel . ')',
+            'costPerM2' => '',
+            'm2' => '',
+            'total' => round($laminateSheetMatch->price * 2, 2),
+        ]];
+    }
+
+    $steps = [];
+
+    if($request->doorLeafFacing == 'Kraft_Paper' && $request->doorLeafFinish == 'Painted'){
+        $primedRate = @collect($SelectedOption)->where("SelectedOptionKey", 'Primed')->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
+        $steps[] = ['label' => 'Primed', 'costPerM2' => is_numeric($primedRate) ? round((float) $primedRate, 4) : 0];
+    }
+
+    $steps[] = ['label' => str_replace('_', ' ', (string) $request->doorLeafFinish), 'costPerM2' => round($finishRatePerM2, 4)];
+
+    return $steps;
+}
+
+// One leaf's worth of the Door Details breakdown block (core slab, facing, lipping, finish
+// step(s), total). Shared by the live save path and the read-only backfill path so the "m2 area of
+// finishing" formula — (leaf width/1000 + 0.05) x (leaf height/1000 + 0.05) x 2 faces, wastage
+// allowance confirmed against the client's own worked example (930x2062 -> 4.13952 m2) — only
+// exists in one place.
+function buildLeafSetBreakdownEntry($leafWidth, $leafHeight, $coreCost, $coreCode, $facingType, $facingRatePerM2, $lm, $thicknessCost, $unitcost1, $lippingCrossSection, array $finishSteps, array $laminateSheetOptions = []): array{
+    $leafM2 = (($leafWidth / 1000) + 0.05) * (($leafHeight / 1000) + 0.05) * 2;
+    $facingTotal = round($leafM2 * $facingRatePerM2, 2);
+    $lippingTotal = round($lm * $thicknessCost, 2);
+
+    $finishStepsWithTotals = array_map(static function ($step) use ($leafM2) {
+        // A step (e.g. a matched Laminate sheet) may already carry its own total/m2 — only fill
+        // in the m²-based figures when the step didn't set them itself.
+        if (!array_key_exists('total', $step)) {
+            $step['m2'] = round($leafM2, 4);
+            $step['total'] = round($leafM2 * $step['costPerM2'], 2);
+        }
+        return $step;
+    }, $finishSteps);
+
+    $finishTotal = round(array_sum(array_column($finishStepsWithTotals, 'total')), 2);
+
+    return [
+        'coreSizeCode' => $coreCode,
+        'coreQty' => 1,
+        'coreCost' => round($coreCost, 2),
+        'facingType' => $facingType,
+        'facingM2' => round($leafM2, 4),
+        'facingCostPerM2' => round($facingRatePerM2, 4),
+        'facingTotal' => $facingTotal,
+        'lippingLM' => round($lm, 4),
+        'lippingCrossSectionM2PerLM' => round($lippingCrossSection, 6),
+        'lippingCostPerM3' => round($unitcost1, 4),
+        'lippingCostPerLM' => round($thicknessCost, 4),
+        'lippingTotal' => $lippingTotal,
+        'finishSteps' => $finishStepsWithTotals,
+        'finishTotal' => $finishTotal,
+        'laminateSheetOptions' => $laminateSheetOptions,
+        'totalLeafCost' => round($coreCost + $facingTotal + $lippingTotal + $finishTotal, 2),
+    ];
+}
+
+// Same field mapping BOMUpdate() uses to turn a stored Item into a LeafSetBesPoke()-shaped request
+// object — only the subset buildLeafSetBreakdownOnly() actually reads. Shared by the CLI backfill
+// command and the "Validate All" button so there's exactly one place this mapping can drift.
+// NOTE: the `items` table stores these in PascalCase (LeafWidth1, LeafHeight, ...); only the
+// request-shaped object below uses lowerCamel names — see the bom-fake-request-casing lesson,
+// a mismatch here silently returns an empty breakdown instead of throwing.
+function itemToLeafSetBreakdownRequest(\App\Models\Item $item, $configurableitems): object{
+    $request = new \stdClass();
+    $request->issingleconfiguration = $configurableitems;
+    $request->fireRating = $item->FireRating;
+    $request->doorsetType = $item->DoorsetType;
+    $request->intumescentLeafType = $item->IntumescentLeafType;
+    $request->leafWidth1 = $item->LeafWidth1;
+    $request->leafWidth2 = $item->LeafWidth2;
+    $request->leafHeightNoOP = $item->LeafHeight;
+    $request->doorThickness = $item->LeafThickness;
+    $request->doorLeafFacing = $item->DoorLeafFacing;
+    $request->doorLeafFacingValue = $item->DoorLeafFacingValue;
+    $request->doorLeafFinish = $item->DoorLeafFinish;
+    $request->lippingType = $item->LippingType;
+    $request->lippingThickness = $item->LippingThickness;
+    $request->lippingSpecies = $item->LippingSpecies;
+
+    return $request;
+}
+
+// Backfill-only: rebuilds the SAME breakdown LeafSetBesPoke() computes above, for an OLD door
+// whose bom_calculations row predates the Breakdown column. Deliberately does not touch
+// UnitCost/TotalCost/GTSellPrice/Description/pricing in any way — it only returns data for the
+// caller to write into the Breakdown column, so it can never change a door's charged price. Mirrors
+// LeafSetBesPoke()'s formulas; keep both in sync if that function's math changes.
+function buildLeafSetBreakdownOnly($request, $userIds): ?array{
+    if(empty($request->issingleconfiguration) || empty($request->doorLeafFacing) || empty($request->doorLeafFinish)){
+        return null;
+    }
+
+    $configurationDoor = configurationDoor($request->issingleconfiguration);
+
+    if ($request->fireRating == 'FD30' || $request->fireRating == 'FD30s') {
+        $fireRatingVal = 'FD30';
+    } elseif ($request->fireRating == 'FD60' || $request->fireRating == 'FD60s') {
+        $fireRatingVal = 'FD60';
+    } else{
+        $fireRatingVal = 'NFR';
+    }
+
+    $SelectedOption = SelectedOption::wherein('SelectedUserId', $userIds)->where('configurableitems',$request->issingleconfiguration)->get();
+
+    if($request->fireRating === 'NFR' && empty($request->lippingType) && empty($request->lippingThickness) && empty($request->lippingSpecies)){
+        $lippingThickness = 0;
+    } else{
+        $lippingThickness = $request->lippingThickness;
+    }
+
+    $lippingSpeciesNearThickness = getLippingSpeciesNearTheeknessValue($request->lippingThickness);
+    $unitcost = SelectedLippingSpeciesItems::wherein('selected_user_id',$userIds)->where('selected_lipping_species_id',$request->lippingSpecies)->where('selected_thickness','>=',$lippingSpeciesNearThickness)->get()->first();
+    $unitcost1 = empty($unitcost) ? 0 : $unitcost->selected_price;
+
+    $door_core_size = getDoorDimensionData($userIds,$request->issingleconfiguration,$fireRatingVal);
+
+    $minCost = null;
+    $minCostLeafAndAHalf = null;
+    $minCoreCode1 = null;
+    $minCoreCode2 = null;
+    $minWidth1 = PHP_INT_MAX;
+    $minHeight1 = PHP_INT_MAX;
+    $minWidth2 = PHP_INT_MAX;
+    $minHeight2 = PHP_INT_MAX;
+
+    if (!empty($door_core_size)) {
+        foreach ($door_core_size as $door_core) {
+            if ($door_core->selected_mm_width >= $request->leafWidth1 && $door_core->selected_mm_height >= $request->leafHeightNoOP) {
+                if ($door_core->selected_mm_width <= $minWidth1 && $door_core->selected_mm_height <= $minHeight1) {
+                    $minWidth1 = $door_core->selected_mm_width;
+                    $minHeight1 = $door_core->selected_mm_height;
+                    $pricesArray = json_decode((string) $door_core->custome_door_selected_cost, true);
+                    if (isset($pricesArray[$request->intumescentLeafType])) {
+                        $minCost = $pricesArray[$request->intumescentLeafType];
+                        $minCoreCode1 = doorCoreSizeLabel($door_core, $request->doorThickness);
+                    }
+                }
+            }
+
+            if ($door_core->selected_mm_width >= $request->leafWidth2 && $door_core->selected_mm_height >= $request->leafHeightNoOP && ($door_core->selected_mm_width <= $minWidth2 && $door_core->selected_mm_height <= $minHeight2)) {
+                $minWidth2 = $door_core->selected_mm_width;
+                $minHeight2 = $door_core->selected_mm_height;
+                $pricesArray2 = json_decode((string) $door_core->custome_door_selected_cost, true);
+                if (isset($pricesArray2[$request->intumescentLeafType])) {
+                    $minCostLeafAndAHalf = $pricesArray2[$request->intumescentLeafType];
+                    $minCoreCode2 = doorCoreSizeLabel($door_core, $request->doorThickness);
+                }
+            }
+        }
+    }
+
+    $door_core1 = is_numeric($minCost) ? (float) $minCost : 0;
+    $door_core2 = is_numeric($minCostLeafAndAHalf) ? (float) $minCostLeafAndAHalf : 0;
+    $lm = ($request->leafWidth1 + $request->leafWidth1 + $request->leafHeightNoOP + $request->leafHeightNoOP)/1000;
+    $thickness_cost = ($lippingThickness * $request->doorThickness * $unitcost1)/1000000;
+
+    $facingRatePerM2 = 0;
+    $finishRatePerM2 = 0;
+    $laminateSheetMatch = null;
+
+    if($request->doorLeafFacing == 'Kraft_Paper'){
+        $facingRatePerM2 = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFacing)->first()->SelectedOptionCost;
+        $finishRatePerM2 = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
+    } elseif(in_array($request->doorLeafFacing, ['Veneer', 'Laminate', 'PVC'])){
+        // NOTE: door_leaf_facing.Key is only unique WITHIN a doorLeafFacing category — must filter
+        // by category too, or ->first() can silently grab a different category's price.
+        $facing = DoorLeafFacing::join('selected_door_leaf_facing','door_leaf_facing.id','selected_door_leaf_facing.doorLeafFacingId')->wherein('selected_door_leaf_facing.userId', $userIds)->where('door_leaf_facing.'.$configurationDoor,$request->issingleconfiguration)->where('door_leaf_facing.doorLeafFacing',$request->doorLeafFacing)->where('door_leaf_facing.Key',$request->doorLeafFacingValue)->first();
+        $facingRatePerM2 = $facing->selectedPrice ?? 0;
+
+        if($request->doorLeafFacing == 'Veneer'){
+            $finishRatePerM2 = @collect($SelectedOption)->where("SelectedOptionKey", $request->doorLeafFinish)->where("SelectedOptionSlug", "door_leaf_finish")->first()->SelectedOptionCost;
+        } else {
+            $finish = Color::join('selected_color','selected_color.SelectedColorId','color.id')
+                ->where('color.DoorLeafFacing',$request->doorLeafFacing)->where('color.ColorName',$request->doorLeafFinish)
+                ->where('selected_color.SelectedUserId',Auth::user()->id)
+                ->get()->first();
+            $finishRatePerM2 = $finish->SelectedPrice ?? 0;
+
+            if($request->doorLeafFacing == 'Laminate'){
+                $laminateSheetMatch = matchLaminateSheet($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1);
+                if($laminateSheetMatch){
+                    $finishRatePerM2 = 0;
+                }
+            }
+        }
+    }
+
+    $facingRatePerM2 = is_numeric($facingRatePerM2) ? (float) $facingRatePerM2 : 0;
+    $finishRatePerM2 = is_numeric($finishRatePerM2) ? (float) $finishRatePerM2 : 0;
+
+    $lippingCrossSection = ($lippingThickness * $request->doorThickness) / 1000000;
+    $finishSteps = buildLeafSetFinishSteps($request, $SelectedOption, $finishRatePerM2, $laminateSheetMatch);
+    $laminateSheetOptionsList = $laminateSheetMatch ? laminateSheetOptions($request->doorLeafFacingValue, $request->doorLeafFinish, $minWidth1, $minHeight1) : [];
+
+    $breakdown = [
+        'leaves' => [
+            buildLeafSetBreakdownEntry($request->leafWidth1, $request->leafHeightNoOP, $door_core1, $minCoreCode1, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList),
+        ],
+    ];
+
+    if($request->doorsetType == 'leaf_and_a_half'){
+        $breakdown['leaves'][] = buildLeafSetBreakdownEntry($request->leafWidth2, $request->leafHeightNoOP, $door_core2, $minCoreCode2, $request->doorLeafFacing, $facingRatePerM2, $lm, $thickness_cost, $unitcost1, $lippingCrossSection, $finishSteps, $laminateSheetOptionsList);
+    }
+
+    return $breakdown;
 }
 
 function IntumescentExport($request,$userIds,$userLoginId): void{
@@ -4766,6 +5201,27 @@ function configurationDoor($pageId): string{
     }
 
     return $configurableitems;
+}
+
+// Reverse of configurationDoor() — needed because Quotation.configurableitems is empty for a real
+// chunk of existing quotations (a pre-existing data gap, confirmed 2026-09-02: ~183/545), so
+// callers that only have the quotation row can't always get the brand from it. Every saved
+// LeafSetBesPoke row's Description already starts "{doorType} | {brandName}|...", so that's used
+// as the fallback source instead.
+function configurationDoorId(string $brandName): int{
+    $map = [
+        'Streboard' => 1,
+        'Halspan' => 2,
+        'NormaDoorCore' => 3,
+        'VicaimaDoorCore' => 4,
+        'Seadec' => 5,
+        'Deanta' => 6,
+        'Flamebreak' => 7,
+        'Stredor' => 8,
+        'MMM' => 9,
+    ];
+
+    return $map[$brandName] ?? 0;
 }
 
 function fireRatingDoor($firerating): string{
