@@ -148,7 +148,7 @@ class Ironmongery implements FromCollection,WithHeadings,WithEvents,WithTitle,Wi
         'Name',
         'Supplier',
         'Quantity',
-        'Price',
+        'Total Cost',
     ];
 
     // Define an array $b containing a single element 'Ironmongery'
