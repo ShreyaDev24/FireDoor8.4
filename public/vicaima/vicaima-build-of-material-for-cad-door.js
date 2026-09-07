@@ -122,9 +122,9 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'sideLight2GlazingBeadsWidth') {
                     getmsginput = 'SL2 Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
                 } else if(id == 'adjustmentLeafWidth1'){
-                    getmsginput = 'Adjustment Leaf Width 1 maximum of 2mm ';
+                    getmsginput = 'The maximum width this door can be reduced by is 2mm off each side.';
                 } else if(id == 'adjustmentLeafHeightNoOP'){
-                    getmsginput = 'Leaf Height Adjustment maximum of 2mm ';
+                    getmsginput = 'The maximum this door can be reduced by is 2mm off the bottom rail.';
                 }
 
 
