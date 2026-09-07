@@ -11,6 +11,22 @@
     transform: translate3d(-165px, 33px, 0px) !important;
 }
 
+.docs_menu {
+    max-height: 75vh;
+    overflow-y: auto;
+}
+
+.docs_menu li.docs_menu_group {
+    padding: 6px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .4px;
+    color: #303641;
+    background: #ececec;
+    border-bottom: 1px solid #d9d9d9;
+}
+
 .activeNC {
     background: #303641;
     border: 1px solid #303641;
@@ -31,41 +47,52 @@
 
                             <li>
                                 <div class="dropdown">
-                                    <a class="btn btn-light dropdown-toggle" data-toggle="dropdown">MORE</a>
-                                    <ul class="dropdown-menu drop_style">
-                                        <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
-                                        <li><a href="javascript:void(0);" onClick="LabelsOMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Labels</a></li>
-                                        <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
+                                    <a class="btn btn-light dropdown-toggle" data-toggle="dropdown">Order Menu</a>
+                                    <ul class="dropdown-menu drop_style docs_menu">
+                                        <li class="docs_menu_group">Order</li>
                                         <li>
-                                            <a href="{{ url('quotation/assign-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
-                                                Assign Plot Ref/Certification No
-                                            </a>
+                                        <a href="{{ url('quotation/assign-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
+                                            Assign Plot Ref / Certification No
+                                        </a>
                                         </li>
                                         <li>
-                                            <a href="{{ url('quotation/side-screen-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
-                                              Side Screen Assign Plot Ref/ Certification No
-                                            </a>
+                                        <a href="{{ url('quotation/side-screen-certification') }}/{{ $quotationId }}/{{ $quotation->VersionId }}">
+                                          Side Screen Assign Plot Ref / Certification No
+                                        </a>
                                         </li>
+
+                                        <li class="docs_menu_group">Schedules &amp; drawings</li>
                                         <li><a href="javascript:void(0);" onClick="ElevationDrawing();"
-                                                    id="">Generate Elevation Drawing</a></li>
-                                            <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate Bom
-                                                    Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen Bom
-                                                Calculation</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
-                                            <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
-                                            <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
-                                            <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
-                                            <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
-                                        <li><a href="javascript:void(0);" onClick="DoorPickList();">Door Pick list</a></li>
+                                                id="">Generate Elevation Drawing</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExcelExport({{ $quotationId }},{{ $quotation->VersionId }});">Generate Doorset Schedule Excel</a></li>
+
+                                        <li class="docs_menu_group">Bill of materials</li>
+                                        <li><a href="javascript:void(0);" onClick="BomCalculation();">Generate BOM Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportBomCalculation();">Export BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen BOM Calculation</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+
+                                        <li class="docs_menu_group">Production documents</li>
+                                        <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="DoorPickList();">Pick List</a></li>
+                                        <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
+
+                                        <li class="docs_menu_group">Order sheets</li>
+                                        <li><a href="javascript:void(0);" onClick="DoorOrderSheet();">Door Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="FrameTransoms();">Frames & Transoms BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlassOrderSheet();">Glass Order Sheet BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="GlazingBeadsDoors();">Glazing Beads for Doors BOM</a></li>
+                                        <li><a href="javascript:void(0);" onClick="allGlazingBeadsExport();">All Glazing Beads</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExportIronmongery();">Export Ironmongery Excel</a></li>
+                                        <li><a href="javascript:void(0);" onClick="ExcelExportNonConfig();">Export Non-Config Items</a></li>
+
+                                        <li class="docs_menu_group">Despatch &amp; handover</li>
+                                        <li><a href="javascript:void(0);" onClick="LabelsOMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Labels</a></li>
+                                        <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
+
+                                        <li class="docs_menu_group">Manage</li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                     </ul>
                                 </div>
