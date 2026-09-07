@@ -1093,7 +1093,7 @@
                                     <input type='checkbox' class='check-btn'  id='DecorativeGroves' name='DecorativeGroves' @if(!empty($set->DecorativeGroves) && $set->DecorativeGroves== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Decorative Groves</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Decorative Grooves</span></h5>
                                         </div>
                                         <input type="hidden" class="DecorativeGroves" name="type[]" value="DecorativeGroves">
                                         <div class="col-md-6">
@@ -1136,7 +1136,7 @@
                                     <input type='checkbox' class='check-btn'  id='DecorativeGrovesLeaf2' name='DecorativeGrovesLeaf2' @if(!empty($set->DecorativeGrovesLeaf2) && $set->DecorativeGrovesLeaf2== 1){{ 'checked' }}@endif>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <h5 class="fieldset" style="margin-top: 10px"><span>Decorative Groves Leaf2</span></h5>
+                                            <h5 class="fieldset" style="margin-top: 10px"><span>Decorative Grooves Leaf2</span></h5>
                                         </div>
                                         <input type="hidden" class="DecorativeGrovesLeaf2" name="type[]" value="DecorativeGrovesLeaf2">
                                         <div class="col-md-6">

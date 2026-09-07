@@ -371,7 +371,7 @@
                                     </div>
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="decorativeGroves">Decorative Groves
+                                            <label for="decorativeGroves">Decorative Grooves
                                                 <script type="text/javascript">
                                                     document.write(Tooltip('@if(!empty($tooltip->decorativeGroves)){{$tooltip->decorativeGroves}}@endif'));
                                                 </script>
