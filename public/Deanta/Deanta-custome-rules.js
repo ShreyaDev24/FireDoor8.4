@@ -1128,6 +1128,8 @@ function sideLight2Change(){
             $("#sideLight2GlassType").attr({ 'disabled': false, "required": true }).val('');
             $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val('');
+            $("#Sl2BeadThickness").attr({'readonly': false, "required": true});
+            $("#Sl2BeadHeight").attr({'readonly': false, "required": true});
             $(".sidelight2section").attr({ 'disabled': false, "required": true }).val('');
             $("#SL2Width").attr({ 'disabled': false, 'readonly': false, "required": true }).val("");
             $("#SL2Height").attr({ 'disabled': false, 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
@@ -1142,6 +1144,8 @@ function sideLight2Change(){
         $("#sideLight2GlassType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": false }).val('');
         $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": false }).val('');
+        $("#Sl2BeadThickness").attr({'readonly': true, "required": false});
+        $("#Sl2BeadHeight").attr({'readonly': true, "required": false});
         $(".sidelight2section").attr({ 'disabled': true, "required": false }).val('');
         $("#copyOfSideLite1").attr({ 'disabled': true, "required": false }).val('');
         $("#SL2Width").attr({ 'readonly': true, "required": false }).val('');
@@ -1159,6 +1163,8 @@ function copyOfSideLite1Change(){
         $("#SideLight2BeadingType").attr({ 'disabled': true, "required": true }).val($("#SideLight1BeadingType").val());
         $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': true, "required": true }).val($("#SideLight1GlazingBeadSpecies").val());
         $("input[name='SideLight2GlazingBeadSpecies']").val($("input[name='SideLight1GlazingBeadSpecies']").val());
+        $("#Sl2BeadThickness").attr({ 'readonly': true, "required": true }).val($("#SlBeadThickness").val());
+        $("#Sl2BeadHeight").attr({ 'readonly': true, "required": true }).val($("#SlBeadHeight").val());
         $("#SL2Width").attr({ 'readonly': true, "required": true }).val($("#SL1Width").val());
         // $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
         $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#SL1Height").val());
@@ -1186,6 +1192,8 @@ function copyOfSideLite1Change(){
             $("#SideLight2BeadingType").attr({ 'disabled': false, "required": true }).val('');
             $("#SideLight2GlazingBeadSpecies").attr({ 'disabled': false, "required": true }).val('');
             $("input[name='SideLight2GlazingBeadSpecies']").val('');
+            $("#Sl2BeadThickness").attr({ 'readonly': false, "required": true }).val('');
+            $("#Sl2BeadHeight").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Width").attr({ 'readonly': false, "required": true }).val('');
             $("#SL2Height").attr({ 'readonly': true, "required": true }).val($("#leafHeightNoOP").val());
             $("#SL2Depth").attr({ 'readonly': false, "required": true }).val('');

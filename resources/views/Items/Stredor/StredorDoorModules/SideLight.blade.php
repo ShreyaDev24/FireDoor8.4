@@ -619,6 +619,35 @@
 
                     <div class="col-md-6">
                         <div class="position-relative form-group">
+                            <label for="SlBeadThickness">SL2 Bead Depth
+                            @if(!empty($tooltip->Sl2BeadThickness))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->Sl2BeadThickness}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <label for="Sl2Bead_Thickness" style="display: none;">SL2 Bead Depth</label>
+                            <input name="Sl2BeadThickness" id="Sl2BeadThickness" @if(empty(@$Item['Sl2BeadThickness'])) readonly @else required @endif class="form-control Sl2BeadThickness door-configuration SL1"
+                                type="text" value="@if(isset($Item['Sl2BeadThickness'])){{$Item['Sl2BeadThickness']}}@endif">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
+                            <label for="Sl2BeadHeight">SL2 Bead Height
+                            @if(!empty($tooltip->Sl2BeadHeight))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->Sl2BeadHeight}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <label for="Sl2Bead_Height" style="display: none;">SL2 Bead Height</label>
+                            <input @if(empty(@$Item['Sl2BeadHeight'])) readonly @else required @endif name="Sl2BeadHeight" id="Sl2BeadHeight" class="form-control Sl2BeadHeight door-configuration"
+                                type="number" value="@if(isset($Item['Sl2BeadHeight'])){{$Item['Sl2BeadHeight']}}@endif">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="position-relative form-group">
                             <label for="SL2Depth">SL2 Frame Depth
                             @if(!empty($tooltip->SL2Depth))
                             <script type="text/javascript">
