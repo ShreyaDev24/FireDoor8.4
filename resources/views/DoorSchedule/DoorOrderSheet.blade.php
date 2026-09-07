@@ -7,34 +7,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bill Of Material</title>
     <style>
-    @page {
-        size: 1260pt 660pt;
-    }
+        @page {
+            size: 1260pt 660pt; /* Landscape large size */
+            margin: 10pt;
+        }
 
-    table {
-        border: 1px solid black;
-        border-collapse: collapse;
-        width: 100vh;
-    }
+        body {
+            font-size: 9px; /* Smaller font */
+            font-family: Arial, sans-serif;
+        }
 
-    th, td {
-        border: 1px solid black;
-        /* padding: 5px 10px; */
-        padding: 0px;
-        text-align: center;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed; /* Ensures fixed layout for columns */
+        }
 
-    thead th {
-        font-weight: bold;
-    }
+        th, td {
+            border: 1px solid black;
+            padding: 2px 4px; /* Reduce padding */
+            word-wrap: break-word;
+            font-size: 8px; /* Further reduce font in cells */
+        }
 
-    thead {
-        display: table-header-group;
-    }
-    tfoot {
-        display: table-footer-group;
-    }
-</style>
+        th {
+            {{--  background-color: #e0e0e0;  --}}
+            text-align: center;
+        }
+
+        /* Optional: Fixed column widths (adjust values as needed) */
+        td, th {
+            width: 80px; /* or you can use percentages like: width: 3.5%; */
+        }
+    </style>
 
 </head>
 
@@ -42,18 +47,18 @@
     <table style="max-width: 100vw; width: 100%; border-collapse: collapse;">
         <thead>
             <tr>
-                <th colspan="23">Door Order Sheet BOM</th>
+                <th colspan="25">Door Order Sheet BOM</th>
             </tr>
             <tr>
                 <th>Ref</th>
-                <td colspan="5">{{ $quotation->QuotationGenerationId }}</td>
+                <td colspan="7">{{ $quotation->QuotationGenerationId }}</td>
                 <th>Project</th>
                 <td colspan="5">{{ $quotation->projectname }}</td>
                 <th colspan="5">Prepared By</th>
                 <td colspan="6">{{ $userName }}</td>
             </tr>
             <tr>
-                <th colspan="3">Revision</th>
+                <th colspan="5">Revision</th>
                 <td>{{ $item[0]->VersionId }}</td>
                 <th colspan="2">Date</th>
                 <td colspan="3">{{ $today }}</td>
@@ -63,10 +68,10 @@
                 <td colspan="4">{{ $quotation->SalesContact }}</td>
             </tr>
             <tr>
-                <th colspan="23">Text</th>
+                <th colspan="25">Text</th>
             </tr>
             <tr>
-                <th colspan="23">Items</th>
+                <th colspan="25">Items</th>
             </tr>
             <tr>
                 <th>Total Doors</th>
@@ -92,9 +97,13 @@
                 <th>Exposed or Concealed</th>
                 <th>Intumescent Seal Type</th>
                 <th>Notes</th>
+                <th>Saddle Required</th>
+                <th>Saddle Location</th>
             </tr>
             <tr style="background:#00B0F0">
                 <td style="padding:5px 0px;"><b></b></td>
+                <td></td>
+                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>
