@@ -2011,6 +2011,8 @@ function FireRatingChange() {
                 $("#scallopedLippingThickness").empty().append('<option value="8"><option value="8">');
                 $("#grooveDepth").attr("max", 4);
                 $("#opglazingBeadsHeight").attr('min',20);
+                $("#adjustmentLeafWidth1").attr('max',2);
+                $("#adjustmentLeafHeightNoOP").attr('max',2);
             }
 
 
@@ -2019,6 +2021,8 @@ function FireRatingChange() {
                 $("#door_thickness_div").empty().append("<select name='doorThickness' id='doorThickness' class='form-control'><option value='44'>44</option><option value='54'>54</option></select>")
                 $("#grooveDepth").attr("max", 4);
                 $("#opglazingBeadsHeight").attr('min',20);
+                $("#adjustmentLeafWidth1").attr('max',2);
+                $("#adjustmentLeafHeightNoOP").attr('max',2);
             }
 
             if (selectedValue) {
