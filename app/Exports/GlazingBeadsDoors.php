@@ -113,7 +113,6 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     doorcorename($value->configurableitems),
                     $value->DoorType,
                     $value->doorNumber,
-                    $value->DoorType,
                     $value->plot_ref_no,
                     $value->certification_no,
                     $value->SpeciesName,
