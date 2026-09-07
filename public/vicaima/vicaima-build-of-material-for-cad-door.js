@@ -121,6 +121,10 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     getmsginput = 'SL2 Glazing Beads Thickness should be a minimum of ' + getmininputvalue + '.';
                 } else if (id == 'sideLight2GlazingBeadsWidth') {
                     getmsginput = 'SL2 Glazing Beads Height should be a minimum of ' + getmininputvalue + '.';
+                } else if(id == 'adjustmentLeafWidth1'){
+                    getmsginput = 'Adjustment Leaf Width 1 maximum of 2mm ';
+                } else if(id == 'adjustmentLeafHeightNoOP'){
+                    getmsginput = 'Leaf Height Adjustment maximum of 2mm ';
                 }
 
 
