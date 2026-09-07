@@ -544,6 +544,22 @@
 
     frameonoff();
     $(document).on('click', '#frameonoff', function(e) {
+        var checkbox = $(this); // If checkbox is currently checked, clicking it will turn
+        // Frame OFF and all existing frame information will be cleared.
+
+        if (checkbox.prop('checked'))
+        {
+            var confirmOff = confirm( "Are you sure you want to turn Frames on?\n\n" + "Turning Frames on will discard all existing frame information " + "and the frame tabs will need to be repopulated if Frames are turned back on.\n\n" + "Do you want to continue?" );
+
+            if (!confirmOff)
+            {
+                // User selected Cancel. // Restore the checkbox to Frame ON.
+                checkbox.prop('checked', false);
+
+                return false;
+            }
+        }
+
         frameonoff();
     });
     $(document).on('focusout','#leafWidth1,#leafWidth2,#leafHeightNoOP',function(e){
