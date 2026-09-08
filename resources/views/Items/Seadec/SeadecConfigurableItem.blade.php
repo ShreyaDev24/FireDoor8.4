@@ -8,6 +8,77 @@
         right: 0;
         top: 27px;
     }
+
+    /*
+     * Scrollbar owner (Chrome headless inspection): document.scrollingElement (html).
+     * Right-edge scrollbar is the viewport/document scroller (overflow-y: visible +
+     * content taller than viewport) — not #opDiv / #container (overflow hidden/visible,
+     * no scrollbar). Suppress only that document scrollbar. Left .item-form keeps its
+     * own overflow-y scrolling. Do not touch #container / SVG.
+     */
+    html, body {
+        overflow-y: hidden;
+    }
+
+    .item-form {
+        /* Must fit under the fixed header so content is not trapped when html can't scroll.
+           !important beats custom.css .item-form{height:800px !important}. */
+        height: calc(100vh - 130px) !important;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    /*
+     * CAD drawing was getting clipped: CadMaster.blade.php sets #container{height:590px;overflow:hidden}
+     * and custom.css sets #container{height:92.5%!important} which can't resolve against #container's
+     * auto-height ancestors, so no real scrollbox was ever produced. Give #container its own
+     * viewport-relative max-height + scrollbar here (this <style> loads last, so !important wins;
+     * max-height not height, so the box collapses instead of reserving a big empty scrollbar before
+     * anything is drawn). Target #container, NOT #opDiv: the .optionItem click handler below does
+     * $('#opDiv').animate({scrollTop: ...}) using pixel offsets that belong to the left .item-form
+     * tabs; making #opDiv scrollable would make the CAD view jump on every left-tab click.
+     * The <svg> has no width/height attrs (only a viewBox), so with no drawn content it still
+     * defaults to full container width scaled to a tall portrait box and overflows on its own —
+     * hide it while genuinely empty so no phantom scrollbar shows before Render/selections draw it.
+     */
+    #opDiv {
+        margin-top: 70px;
+    }
+
+    #container {
+        max-height: calc(100vh - 130px) !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    #container svg:empty {
+        display: none;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .main-carousel {
+            width: 92%;
+        }
+
+        ul.nav.nav-tabs.border-0 {
+            top: 140px;
+            width: 92%;
+        }
+
+        .item-form {
+            margin-top: 200px;
+            height: calc(100vh - 260px) !important;
+        }
+
+        #opDiv {
+            margin-top: 200px;
+        }
+
+        #container {
+            max-height: calc(100vh - 260px) !important;
+        }
+
+    }
 </style>
 
 <div class="app-main__outer">
