@@ -6,6 +6,16 @@ $(function(){
     let ProjectId = $("#ProjectId1").val();
 
     SendToClient = function(){
+        // Confirmation FIRST
+        var confirmOff = confirm(
+            "Send To Client?\n\n" +
+            "Are you sure you want to send this quotation to the client?"
+        );
+
+        if (!confirmOff) {
+            return false;
+        }
+
         $('.loader').css({'display':'block'});
         let sendToClientUrl = $("#sendToClientUrl").val();
         let CustomerContactId = $("#customer_id").val();

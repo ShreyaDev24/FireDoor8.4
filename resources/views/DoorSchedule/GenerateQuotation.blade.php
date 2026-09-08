@@ -1163,8 +1163,9 @@
                                                     CONVERT TO ORDER
                                                 </a>
                                             @else
-                                                <button type="submit" class="btn btn-dark btn-lg btn-block">CONVERT TO
-                                                    ORDER</button>
+                                                <button type="submit" class="btn btn-dark btn-lg btn-block" onclick="return confirm('Are you sure you want to convert this quotation to an order?\n\nOnce converted to an order, no changes or amendments can be made to the quotation.')">
+                                                    CONVERT TO ORDER
+                                                </button>
                                             @endif
                                         </div>
                                     </form>
@@ -3354,7 +3355,7 @@
                 }
             };
             DeleteQuotation = function() {
-                var r = confirm("Are you sure! you wan't to delete it.");
+                var r = confirm("Are you sure you want to delete this quotation?");
                 if (r == true) {
                     var quotationId = $("#quotationId").val();
                     var VersionId = $("#currentVersion").val();
