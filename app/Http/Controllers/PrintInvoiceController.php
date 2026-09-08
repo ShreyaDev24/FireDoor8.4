@@ -3356,7 +3356,7 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                     <td class="dicription_grey">Perimeter Seal 2</td>
                                     <td class="dicription_blank">' . $perimeterSeal2 . '</td>
                                 </tr>';
-                                if($tt->DoorsetType == 'DD'){
+                                if($tt->DoorsetType == 'DD' || $tt->DoorsetType == 'Leaf and Half'){
                                 $elevTbl .= '<tr>
                                     <td class="dicription_grey">Meeting Stiles</td>
                                     <td class="dicription_blank">' . $AccousticsMeetingStiles . '</td>
