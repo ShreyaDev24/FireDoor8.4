@@ -437,7 +437,7 @@
                                                     <label for="saddleLocation">Saddle Location</label>
                                                     <select id="saddleLocation" name="saddleLocation" class="form-control" @if(isset($Item['Saddle']) && $Item['Saddle'] == "No") {{'disabled'}} @endif>
                                                         <option value="">select Saddle Location</option>
-                                                        <option value="Between_Styles" @if(isset($Item['saddleLocation'])) @if($Item['saddleLocation'] == 'Between_Styles') {{'selected'}} @endif @endif>Between Styles</option>
+                                                        <option value="Between_Styles" @if(isset($Item['saddleLocation'])) @if($Item['saddleLocation'] == 'Between_Styles') {{'selected'}} @endif @endif>Between Stiles</option>
                                                         <option value="Under_Frame" @if(isset($Item['saddleLocation'])) @if($Item['saddleLocation'] == 'Under_Frame') {{'selected'}} @endif @endif>Under Frame</option>
                                                     </select>
                                                 </div>

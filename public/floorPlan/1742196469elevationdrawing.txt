@@ -1657,7 +1657,7 @@ function ElevationDrawing($quatationId,$versionID,$CstCompanyAddressLine1,$Sales
             $SwingType = '';
         }
 
-        // Under the row ‘Decorative Groves’ this should show the width x depth. Example 5mm wide x 2mm deep
+        // Under the row ‘Decorative Grooves’ this should show the width x depth. Example 5mm wide x 2mm deep
         if (!empty($tt->DecorativeGroves)) {
             if (!empty($tt->GrooveWidth)) {
                 $GrooveWidth = $tt->GrooveWidth . 'mm wide';
@@ -1871,7 +1871,7 @@ function ElevationDrawing($quatationId,$versionID,$CstCompanyAddressLine1,$Sales
                                 <td class="dicription_blank">' . $DoorLeafFinish . $DoorLeafFinishColor . '</td>
                             </tr>
                             <tr>
-                                <td class="dicription_grey">Decorative Groves</td>
+                                <td class="dicription_grey">Decorative Grooves</td>
                                 <td class="dicription_blank">' . $DecorativeGroves . '</td>
                             </tr>
                             <tr>

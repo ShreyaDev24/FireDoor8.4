@@ -120,7 +120,7 @@
                                 <input type="checkbox" id="StreboardcheckAll">
                             </th>
                             @endif
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>FireRating</th>
                             <th>MMWidth x MMHeight</th>
                             <th>Action</th>

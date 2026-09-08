@@ -241,7 +241,7 @@ class pdf8 implements ShouldQueue
                                     <td class="dicription_blank">' . $tt->FireRating . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">SO WIdth</td>
+                                    <td class="dicription_grey">SO Width</td>
                                     <td class="dicription_blank">' . $tt->SOWidth . '</td>
                                 </tr>';
 
@@ -275,10 +275,10 @@ class pdf8 implements ShouldQueue
                                 </tr>
                                 <tr>
                                     <td class="dicription_grey">Frame Finish</td>
-                                    <td class="dicription_blank">' . $tt->Finish . '</td>
+                                    <td class="dicription_blank">' . str_replace('Prime', 'Primed', (string) $tt->Finish) . '</td>
                                 </tr>
                                 <tr>
-                                    <td class="dicription_grey">Frame WIdth</td>
+                                    <td class="dicription_grey">Frame Width</td>
                                     <td class="dicription_blank">' . $tt->FrameWidth . '</td>
                                 </tr>';
 

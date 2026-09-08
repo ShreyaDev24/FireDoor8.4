@@ -1437,7 +1437,7 @@
                 @endif
             </tr>
             <tr id="meetingStyle-section" class="@if (isset($Item['MeetingStyle'])){{ 'table_row_show' }}@else{{ 'table_row_hide' }}@endif">
-                <td>Meeting Style</td>
+                <td>Meeting Stile</td>
                 <td id="meetingStyle-selected">@if (isset($Item['MeetingStyle'])){{ $Item['MeetingStyle'] }}@endif</td>
                 {{--  @if (price_view_vlidator() == 1)
                     <td id="meetingStyle-price">

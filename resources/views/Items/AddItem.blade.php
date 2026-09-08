@@ -1298,9 +1298,9 @@
 
                                     <div class="col-md-3">
                                         <div class="position-relative form-group">
-                                            <label for="meetingStyle" class="">Meeting Style</label>
+                                            <label for="meetingStyle" class="">Meeting Stile</label>
                                             <select name="meetingStyle" disabled id="meetingStyle" class="form-control">
-                                                <option value="">Select Meeting Style</option>
+                                                <option value="">Select Meeting Stile</option>
                                                 @foreach($option_data as $row)
                                                 @if($row->OptionSlug=='meeting_style')
                                                 <option value="{{$row->OptionKey}}">{{$row->OptionValue}}</option>

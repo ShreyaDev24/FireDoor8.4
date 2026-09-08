@@ -578,7 +578,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
     {
         $a = [
             'S.No',
-            'Configurableitems',
+            'Door Core',
             'Frame On/Off ',
             'Floor ',
             'Door Number ',
@@ -755,7 +755,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Lipping Type ',
             'Lipping Thickness ',
             'Lipping Species ',
-            'Meeting Style ',
+            'Meeting Stile ',
             'Scalloped Lipping Thickness ',
             'Flat Lipping Thickness ',
             'Rebated Lipping Thickness ',
@@ -783,7 +783,7 @@ class ScheduleOrderVicaima implements FromCollection,WithHeadings,WithEvents
             'Architrave Finish Color ',
             'Architrave Set Qty ',
             'Doorset Price ',
-            'Ironmongary Price ',
+            'Ironmongery Price ',
             'Total price per doorset'
         ];
 

@@ -121,7 +121,7 @@
                             <th><input type="checkbox" id="checkCustomAll"></th>
                             @endif
 
-                            <th>Streboard</th>
+                            <th>Strebord</th>
                             <th>Halspan</th>
                             <th>Flamebreak</th>
                             <th>Stredor</th>

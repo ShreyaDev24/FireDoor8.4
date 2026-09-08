@@ -5278,7 +5278,7 @@ function SelectedArchitraveType($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -5409,7 +5409,7 @@ function door_leaf_facing_value($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -5550,7 +5550,7 @@ function Accoustics($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -5686,7 +5686,7 @@ function Intumescent_Seal_Color($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -6052,7 +6052,7 @@ function leaf1_glazing_systems_custome($authdata,string $optionType,$UserId): st
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Framebreak</th>
                         <th>Stredor</th>
@@ -6461,7 +6461,7 @@ function leaf1_glass_type_custome($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -6724,7 +6724,7 @@ function door_leaf_finish($authdata,string $optionType,$UserId): string{
                                 <div class="control_indicator"></div>
                             </label>
                         </div></th>
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -6888,7 +6888,7 @@ function Architrave_Finish($authdata,string $optionType,$UserId): string{
                                 <div class="control_indicator"></div>
                             </label>
                         </div></th>
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -7034,7 +7034,7 @@ function Door_Leaf_Facing($authdata,string $optionType,$UserId): string{
                                 <div class="control_indicator"></div>
                             </label>
                         </div></th>
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -7363,7 +7363,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -7384,7 +7384,7 @@ function door_dimension_custome($authdata, string $optionType, $UserId): string 
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -7851,7 +7851,7 @@ function intumescentSealArrangementCustome($authdata,string $optionType,$UserId)
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>
@@ -8017,7 +8017,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                  <thead class="text-uppercase table-header-bg">
                      <tr class="text-white">
                          '.$check.'
-                         <th>Streboard</th>
+                         <th>Strebord</th>
                          <th>Halspan</th>
                          <th>Flamebreak</th>
                          <th>Stredor</th>
@@ -8171,7 +8171,7 @@ function Overpanel_Glass_Type($authdata,string $optionType,$UserId): string{
                 <thead class="text-uppercase table-header-bg">
                     <tr class="text-white">
                         '.$check.'
-                        <th>Streboard</th>
+                        <th>Strebord</th>
                         <th>Halspan</th>
                         <th>Flamebreak</th>
                         <th>Stredor</th>

@@ -540,7 +540,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
     {
         $a = [
             'S.No',
-            'Configurableitems',
+            'Door Core',
             'Leaf Type',
             'Frame On/Off ',
             'Floor ',
@@ -714,7 +714,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Lipping Type ',
             'Lipping Thickness ',
             'Lipping Species ',
-            'Meeting Style ',
+            'Meeting Stile ',
             'Scalloped Lipping Thickness ',
             'Flat Lipping Thickness ',
             'Rebated Lipping Thickness ',
@@ -740,7 +740,7 @@ class ScheduleOrderNew implements FromCollection,WithHeadings,WithEvents
             'Architrave Finish Color ',
             'Architrave Set Qty ',
             'Doorset Price ',
-            'Ironmongary Price ',
+            'Ironmongery Price ',
             'Total price per doorset'
         ];
 

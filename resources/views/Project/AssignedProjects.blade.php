@@ -59,7 +59,7 @@
                         <div class="filter_box">
                             <section>
                                 <form>
-                                    <h4>Custom checkbox</h4>
+                                    <h4>Date</h4>
                                     <div class="custom-radio">
                                         <div>
                                             <input autocomplete="off" checked class="radio-custom" id="radio-cust-8"
