@@ -207,7 +207,7 @@ class GlazingBeadsDoors implements FromCollection,WithHeadings,WithEvents,WithTi
                     $value->SL1GlazingBeadSpeciesName,
                     str_replace('_', ' ', $value->BeadingType),
                     str_replace('_', ' ', $value->DoorLeafFinish),
-                    $value->SideLight1GlazingBeadsThickness,
+                    $value->SideLight1GlazingSystemsThickness,
                     $value->SlBeadHeight,
                     // VP Width = SL Width - (Frame Thickness x 2) + MS
                     in_array($value->FireRating, ['FD60s', 'FD60'])
