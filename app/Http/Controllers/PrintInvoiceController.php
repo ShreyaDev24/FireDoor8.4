@@ -3248,7 +3248,15 @@ if($tt->DoorsetType == "SD" &&  $tt->FrameType==null ){
                                 <tr>
                                     <td class="dicription_grey">Intumescent Seal Color</td>
                                     <td class="dicription_blank">' . $IntumescentLeapingSealColor . '</td>
-                                </tr>
+                                </tr>';
+                                if($tt->DoorsetType == 'DD' || $tt->DoorsetType == 'Leaf and Half'){
+                                $elevTbl .= '<tr>
+                                    <td class="dicription_grey">Meeting Edges</td>
+                                    <td class="dicription_blank">' . $tt->intumescentSealMeetingEdges . '</td>
+                                </tr>';
+                                }
+                                $elevTbl .= '
+
                             </tbody>
                         </table>
                         <table id="WithBorder">
