@@ -621,6 +621,8 @@ $(".change-event-calulation").change(function(){
              $("#leaf1VpAreaSizeM2").val(0);
          }
 
+        updateLeaf2VpAreaSize();
+
         var ElementId = $(this).attr("id");
 
         // if($.inArray( ElementId, ["vP1Width","vP1Height1","vP1Height2","vP1Height3","vP1Height4","vP1Height5","lazingIntegrityOrInsulationIntegrity"] ) !== -1){
@@ -857,3 +859,84 @@ function doorDimensionCalculation1(){
     let elements = $(this);
     render(elements);
 }
+
+function parseVpDimension(value) {
+    var n = parseFloat(value);
+    return isNaN(n) ? 0 : n;
+}
+
+function calculateLeafVpArea(width, heightValues, quantity, equalSize, unitMeter) {
+    var w = parseVpDimension(width);
+    var qty = parseInt(quantity, 10);
+    if (isNaN(qty) || qty < 1) {
+        qty = 1;
+    }
+    var area = 0;
+    if (equalSize == "Yes") {
+        area = (w / unitMeter) * (parseVpDimension(heightValues[0]) / unitMeter) * qty;
+    } else {
+        for (var i = 0; i < qty && i < heightValues.length; i++) {
+            area += (w / unitMeter) * (parseVpDimension(heightValues[i]) / unitMeter);
+        }
+    }
+    if (!isFinite(area)) {
+        area = 0;
+    }
+    return area;
+}
+
+function updateLeaf2VpAreaSize() {
+    var unitMeter = 1000;
+    var leaf2Visiblepanel = $("#leaf2VisionPanel").val();
+    if (leaf2Visiblepanel != "Yes") {
+        $("#leaf2VpAreaSizeM2").val(0);
+        return;
+    }
+
+    var vpSameAsLeaf1 = $("#vpSameAsLeaf1").val();
+    var width;
+    var heightValues;
+    var quantity;
+    var equalSize;
+
+    // Existing app copies Leaf 1 dimensions into Leaf 2 when "Is VP same as Leaf 1?" is Yes.
+    // Recalculate from Leaf 1 fields so Leaf 2 area stays in sync if Leaf 1 later changes.
+    if (vpSameAsLeaf1 == "Yes") {
+        width = $("#vP1Width").val();
+        heightValues = [
+            $("#vP1Height1").val(),
+            $("#vP1Height2").val(),
+            $("#vP1Height3").val(),
+            $("#vP1Height4").val(),
+            $("#vP1Height5").val()
+        ];
+        quantity = $("#visionPanelQuantity").val();
+        equalSize = $("#AreVPsEqualSizes").val();
+    } else {
+        width = $("#vP2Width").val();
+        heightValues = [
+            $("#vP2Height1").val(),
+            $("#vP2Height2").val(),
+            $("#vP2Height3").val(),
+            $("#vP2Height4").val(),
+            $("#vP2Height5").val()
+        ];
+        quantity = $("#visionPanelQuantityforLeaf2").val();
+        equalSize = $("#AreVPsEqualSizesForLeaf2").val();
+    }
+
+    if (equalSize == "" || equalSize == "Yes") {
+        equalSize = "Yes";
+    }
+
+    var vpArea = calculateLeafVpArea(width, heightValues, quantity, equalSize, unitMeter);
+    $("#leaf2VpAreaSizeM2").val(vpArea.toFixed(2));
+}
+
+$("#leaf2VisionPanel, #vpSameAsLeaf1, #visionPanelQuantityforLeaf2, #AreVPsEqualSizesForLeaf2, #vP2Width, #vP2Height1, #vP2Height2, #vP2Height3, #vP2Height4, #vP2Height5").on("change keyup", function () {
+    updateLeaf2VpAreaSize();
+});
+
+$(function () {
+    updateLeaf2VpAreaSize();
+});

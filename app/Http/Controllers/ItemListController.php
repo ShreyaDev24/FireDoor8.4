@@ -1172,6 +1172,7 @@ class ItemListController extends Controller
                         'Leaf2VPHeight3'                        => $request->vP2Height3,
                         'Leaf2VPHeight4'                        => $request->vP2Height4,
                         'Leaf2VPHeight5'                        => $request->vP2Height5,
+                        'Leaf2VpAreaSizeM2'                     => $request->leaf2VpAreaSizeM2,
                         'GlassIntegrity'                        => $request->lazingIntegrityOrInsulationIntegrity,
                         'GlassType'                             => $request->glassType,
                         'GlassThickness'                        => $request->glassThickness,
@@ -1482,6 +1483,7 @@ class ItemListController extends Controller
                         $item->Leaf2VPHeight3 = $request->vP2Height3;
                         $item->Leaf2VPHeight4 = $request->vP2Height4;
                         $item->Leaf2VPHeight5 = $request->vP2Height5;
+                        $item->Leaf2VpAreaSizeM2 = $request->leaf2VpAreaSizeM2;
                         $item->GlassIntegrity = $request->lazingIntegrityOrInsulationIntegrity;
                         $item->GlassType = $request->glassType;
                         $item->GlassThickness = $request->glassThickness;

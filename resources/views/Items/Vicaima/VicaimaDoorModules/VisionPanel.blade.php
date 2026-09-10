@@ -579,14 +579,23 @@
                                 value="@if(isset($Item['Leaf2VPHeight5'])){{$Item['Leaf2VPHeight5']}}@endif">
                         </div>
                     </div>
-                    <!-- <div class="col-md-6">
+                    <div class="col-md-6">
                         <div class="position-relative form-group">
-                            <label for="leaf2VpAreaSizeM2" class="">Leaf 2 VP Area Size m2</label>
-                            <input Type="number" min="0" readonly name="leaf2VpAreaSizeM2"
+                            <label for="leaf2VpAreaSizeM2"> Leaf 2 VP Area Size m2
+                            @if(!empty($tooltip->leaf2VpAreaSizeM2))
+                            <script type="text/javascript">
+                            document.write(Tooltip('{{$tooltip->leaf2VpAreaSizeM2}}'));
+                            </script>
+                            @endif
+                            </label>
+                            <input type="number"
+                                min="0"
+                                readonly
+                                name="leaf2VpAreaSizeM2"
                                 id="leaf2VpAreaSizeM2" class="form-control"
-                                value="@if(isset($Item['Leaf2VpAreaSizeM2'])){{$Item['Leaf2VpAreaSizeM2']}}@endif">
-                            </div>
-                    </div> -->
+                                value="@if(isset($Item['Leaf2VPAreaSizem2'])){{$Item['Leaf2VPAreaSizem2']}}@endif">
+                        </div>
+                    </div>
                     <div class="col-md-6">
                         <div class="position-relative form-group">
                             <label for="lazingIntegrityOrInsulationIntegrity">Glass

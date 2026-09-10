@@ -456,6 +456,9 @@
             $("#vP2Height4").val($("#Leaf2VPHeight4-import").data("value"));
             $("#vP2Height5").val($("#Leaf2VPHeight5-import").data("value"));
         }
+        if (typeof updateLeaf2VpAreaSize === "function") {
+            updateLeaf2VpAreaSize();
+        }
         $("#FrameMaterial-value").data("value",$("#FrameMaterial-import").data("value"));
         $("#frameMaterialNew").val($("#FrameMaterial-import").data("value"));
         $("select[name=frameType]").val($("#FrameType-import").data("value")).trigger('change');98
