@@ -152,10 +152,15 @@
                                                 <li><a href="javascript:void(0);" onClick="ScreenBomCalculation();">Screen BOM Calculation</a></li>
                                                 <li><a href="javascript:void(0);" onClick="ExportScreenBomCalculation();">Export Screen BOM Calculation Excel</a></li>
                                                 <li><a href="javascript:void(0);" onClick="ExportDoorTypeBom();">Export Door Type BOM Excel</a></li>
+                                                <li><a
+                                                    href="{{ url('quotation/door-list-show') }}/{{ $quotation->id }}/{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}">Door
+                                                    List</a>
+                                                </li>
 
                                                 <li class="docs_menu_group">Production documents</li>
                                                 <li><a href="javascript:void(0);" onClick="cuttingList();">All Cut List</a></li>
                                                 <li><a href="javascript:void(0);" onClick="ExportSideScreen();">Side Screen Cut List</a></li>
+                                                <li><a href="javascript:void(0);" onClick="HangingDocument();">Worksheet Hanging Document</a></li>
                                                 <li><a href="javascript:void(0);" onClick="PickListExport();">Pick List</a></li>
                                                 <li><a href="javascript:void(0);" onClick="QualityControl();">Quality Control</a></li>
 
@@ -1209,6 +1214,8 @@
     <input type="hidden" id="quotationconfigurableitems" name="quotationconfigurableitems" value="{{ implode(',', $uniqueConfigurableItems ?? []) }}">
     <input type="hidden" id="versionId" name="versionId"
         value="{{ $selectQV['selectVersionID'] > 0 ? $selectQV['selectVersionID'] : 0 }}">
+    <input type="hidden" name="ExportHangingDocumentUrl" id="ExportHangingDocumentUrl"
+        value="{{ url('/quotation/ExportHangingDocument') }}" />
     <div class="col-md-6">
         <input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}" />
         <input type="hidden" id="edit_image" value="{{ url('/quotation/edit-image') }}" />
@@ -2946,6 +2953,17 @@
                 var currentVersion = $("#currentVersion").val();
                 if (currentVersion != 0) {
                     window.location.href = allGlazingBeadsUrl + '/' + quotationId + '/' + currentVersion;
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
+            HangingDocument = function() {
+                var ExportHangingDocumentUrl = $("#ExportHangingDocumentUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    window.location.href = ExportHangingDocumentUrl + '/' + quotationId + '/' + currentVersion;
                 } else {
                     swal("Oops!", "You haven't selected any version yet.", "error");
                 }
