@@ -80,28 +80,34 @@
                             </div>
 
                             <div class="form-row">
+
+                                {{-- Company Code --}}
                                 <div class="col-md-6">
                                     <div class="position-relative form-group">
 
-                                        <label for="SetCurrencyRate">
+                                        <label for="companyCode">
                                             Set Company Code (Door Plug)
                                             <span class="text-danger">*</span>
                                         </label>
 
-                                        <!-- Checkbox -->
-                                        <div class="mb-2">
+                                        {{-- Enable Door Plug --}}
+                                        <div class="form-check mb-2">
                                             <input type="checkbox"
+                                                class="form-check-input"
                                                 id="toggleCompanyCode"
                                                 name="doorPlugActivated"
                                                 value="1"
-                                                {{ ($currency->doorPlugActivated == 1) ? 'checked' : '' }}>
+                                                {{ !empty($currency->doorPlugActivated) && $currency->doorPlugActivated == 1 ? 'checked' : '' }}>
 
-                                            <label for="toggleCompanyCode">Enable Door Plug</label>
+                                            <label class="form-check-label" for="toggleCompanyCode">
+                                                Enable Door Plug
+                                            </label>
                                         </div>
 
-                                        <!-- Input Field -->
+                                        {{-- Company Code --}}
                                         <div class="input-group">
-                                            <input name="companyCode" id="companyCode"
+                                            <input name="companyCode"
+                                                id="companyCode"
                                                 placeholder="Set Company Code"
                                                 type="text"
                                                 class="form-control"
@@ -111,18 +117,51 @@
                                     </div>
                                 </div>
 
+
+                                {{-- Certification --}}
                                 <div class="col-md-12">
                                     <div class="position-relative form-group">
-                                        <button type="submit" id="submit" class="btn-wide btn btn-success"
-                                            style="margin-top: 28px;"> Submit </button>
+
+                                        <label class="d-block mb-2">
+                                            Certification
+                                        </label>
+
+                                        <div class="form-check mb-2">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                name="QMark"
+                                                id="qMark"
+                                                value="1"
+                                                {{ ($currency->QMark ==  1) ? 'checked' : '' }}>
+
+                                            <label class="form-check-label" for="qMark">
+                                                Q-Mark
+                                            </label>
+                                        </div>
+
+                                        <div class="form-check">
+                                            <input type="checkbox"
+                                                class="form-check-input"
+                                                name="Certifire"
+                                                id="certifire"
+                                                value="1"
+                                                {{ ($currency->Certifire ==  1) ? 'checked' : '' }}>
+
+                                            <label class="form-check-label" for="certifire">
+                                                Certifire
+                                            </label>
+                                        </div>
+
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6">
-                                    <div class="position-relative form-group">
-                                        <button type="submit" id="submit" class="btn-wide btn btn-success"
-                                            style="margin-top: 28px;"> SET CURRENCY </button>
-                                    </div>
-                                </div> -->
+
+                            </div>
+
+                            <div class="col-md-12">
+                                <div class="position-relative form-group">
+                                    <button type="submit" id="submit" class="btn-wide btn btn-success"
+                                        style="margin-top: 28px;"> Submit </button>
+                                </div>
                             </div>
                         {{-- </div> --}}
                     <!-- </form> -->

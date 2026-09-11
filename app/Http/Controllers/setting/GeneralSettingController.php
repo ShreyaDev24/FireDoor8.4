@@ -365,6 +365,8 @@ class GeneralSettingController extends Controller
                     $currency->doorPlugActivated = $request->doorPlugActivated ?? 0;
                     $currency->companyCode = $request->companyCode ?? '';
                     $currency->SetCurrencyRate = $request->SetCurrencyRate;
+                    $currency->QMark = $request->QMark ?? 0;
+                    $currency->Certifire = $request->Certifire ?? 0;
                     $currency->updated_at = date('Y-m-d H:i:s');
                     $currency->update();
                 }
