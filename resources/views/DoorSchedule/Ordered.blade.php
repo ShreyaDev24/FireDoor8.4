@@ -94,6 +94,7 @@
                                         <li><a href="javascript:void(0);" onClick="OMmanualQuotation({{ $quotationId }},{{ $quotation->VersionId }},'')" id="">Generate O&M Manual</a></li>
 
                                         <li class="docs_menu_group">Manage</li>
+                                        <li><a href="javascript:void(0);" onClick="ExcelExportNew();">Export</a></li>
                                         <li><a href="javascript:void(0);" onClick="DeleteQuotation();">Delete</a></li>
                                     </ul>
                                 </div>
@@ -499,6 +500,8 @@
         class="btn btn-success btn-show-swal"></button>
 
     <input type="hidden" name="excelexportUrl" id="excelexportUrl" value="{{url('/quotation/excelexport')}}" />
+    <input type="hidden" name="excelexportNewUrl" id="excelexportNewUrl"
+        value="{{ url('/quotation/excelexportNew') }}" />
     <input type="hidden" name="mainformimportUrl" id="mainformimportUrl" value="{{url('quotation/excel-upload/')}}" />
     <input type="hidden" name="generateBOM" id="generateBOM" value="{{ route('generateBOM') }}" />
     <input type="hidden" id="ommanual" value="{{url('order/ommanual')}}" />
@@ -725,6 +728,23 @@
             }
         })
     })
+
+    ExcelExportNew = function() {
+                var excelexportNewUrl = $("#excelexportNewUrl").val();
+                var excelexportVicaimaUrl = $("#excelexportVicaimaUrl").val();
+                var quotationId = $("#quotationId").val();
+                var quotationconfigurableitems = $("#quotationconfigurableitems").val();
+                var currentVersion = $("#currentVersion").val();
+                if (currentVersion != 0) {
+                    if(quotationconfigurableitems == 4 || quotationconfigurableitems == 5 || quotationconfigurableitems == 6 || quotationconfigurableitems == 9){
+                        window.location.href = excelexportVicaimaUrl + '/' + quotationId + '/' + currentVersion;
+                    }else{
+                        window.location.href = excelexportNewUrl + '/' + quotationId + '/' + currentVersion;
+                    }
+                } else {
+                    swal("Oops!", "You haven't selected any version yet.", "error");
+                }
+            };
 
 
 
