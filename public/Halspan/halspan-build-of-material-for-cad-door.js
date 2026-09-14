@@ -19,6 +19,13 @@ Array.prototype.findIndexOf = function (prop) {
     return i;
 }
 
+var isQMarkEnabled = true;
+
+if($('#isQmarkORCertifireEnabled').val() === '1'){
+    isQMarkEnabled = false
+}
+
+
 var price = 0.00;
 function SetBuildOfMaterial(identifier, priceDirectSet = "") {
     // var TagName = identifier.context.tagName;
@@ -130,13 +137,13 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     if (id == 'gap') {
                         getmsginput = 'Gap should be between 2 - 4mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 1 Location should be a minimum of 150mm' : 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 3 Location should be a minimum of 250mm' : 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm';
                     } else if(id == 'hinge4Location'){
-                        getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                        getmsginput = 'Hinge 4 Location should be a minimum of 200mm';
                     } else if(id == 'ScallopedHeight'){
                         getmsginput = 'Scalloped Height should be between ' + getmininputvalue + '-' + getmaxinputvalue + ' mm.';
                     }
@@ -172,11 +179,12 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'RebatedBottomDepth'){
                         getmsginput = 'Rebated Bottom Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 1 Location should be a minimum of 150mm' : 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm `;
+                        getmsginput = isQMarkEnabled ?
+                        `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 250mm` : `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm`;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     }else if (id == 'distanceFromBottomOfDoor') {

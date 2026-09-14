@@ -190,7 +190,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="80"
+                                min="{{ $isQmarkORCertifireEnabled ? 100 : 80 }}"
                                 @if(!isset($Item['DistanceBetweenVPs'])) {{'readonly'}} @endif
                                 name="distanceBetweenVPs"
                                 id="distanceBetweenVPs" class="form-control door-configuration"
@@ -736,7 +736,7 @@
                             @endif
                             </label>
                             <input Type="number" min="0" name="glazingBeadsThickness"
-                                id="glazingBeadsThickness" class="form-control"
+                                id="glazingBeadsThickness" class="form-control" min="{{ $isQmarkORCertifireEnabled ? 25 : 0 }}"
                                 value="@if(isset($Item['GlazingBeadsThickness'])){{$Item['GlazingBeadsThickness']}}@endif">
                         </div>
                     </div>
@@ -764,7 +764,7 @@
                             </script>
                             @endif
                             </label>
-                            <input Type="number" min="0" name="glazingBeadsHeight"
+                            <input Type="number" min="{{ $isQmarkORCertifireEnabled ? 30 : 0 }}" name="glazingBeadsHeight"
                                 id="glazingBeadsHeight" class="form-control"
                                 value="@if(isset($Item['glazingBeadsHeight'])){{$Item['glazingBeadsHeight']}}@endif">
                         </div>

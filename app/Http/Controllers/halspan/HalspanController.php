@@ -155,7 +155,7 @@ class HalspanController extends Controller
         // nested-loop logic, including quantity duplication and ordering.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        $leafTypeIntumescentseal = isQmarkORCertifireEnabled() ? IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->where('leaf_type_value', '44mm')->get() : IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -202,6 +202,8 @@ class HalspanController extends Controller
                 ->get()
                 ->groupBy('folder_id');
 
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $id,
             'Item' => $item,
@@ -225,6 +227,7 @@ class HalspanController extends Controller
            'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'folders' => $folders
         ]);
     }
@@ -367,6 +370,8 @@ class HalspanController extends Controller
                 ->get()
                 ->groupBy('folder_id');
 
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
@@ -390,7 +395,8 @@ class HalspanController extends Controller
             'quotation' => $quotation,
             'LippingName' => $LippingName,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,  // this line is for to send lipping name into edit form
-            'folders' => $folders
+            'folders' => $folders,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled
         ]);
     }
 
