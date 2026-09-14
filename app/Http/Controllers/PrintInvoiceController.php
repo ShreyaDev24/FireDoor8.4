@@ -1055,7 +1055,7 @@ class PrintInvoiceController extends Controller
                 ],
                 2 => [
                     'NFR' => 'Chilt/A01204 Part 1 Revision I',
-                    'FD30' => 'FEA/F97174 Revision J',
+                    'FD30' => 'Chilt/A01204 Part 1 (Revision J)',
                     'FD60' => 'Chilt/A01205 Part 1 Revision K',
                 ],
                 7 => [
