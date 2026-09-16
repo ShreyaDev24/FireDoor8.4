@@ -606,7 +606,7 @@ $(document).ready(function() {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
         }
     });
-    isQMarkEnabled();
+
     selectIronMongery();
     @if(isset($Item['FireRating']))
     FireRatingChange();

@@ -207,7 +207,7 @@
                                 @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="800"' }} @endif
                                 @if(!isset($Item['Leaf1VPWidth'])) {{'readonly'}} @endif
                                 name="vP1Width"
                                 id="vP1Width"
@@ -225,7 +225,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif
                                 @if(!isset($Item['Leaf1VPHeight1'])) {{'readonly'}} @endif
                                 name="vP1Height1"
                                 id="vP1Height1"
@@ -244,7 +244,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif
                                 @if(!isset($Item['Leaf1VPHeight2']) || (isset($Item['AreVPsEqualSizesForLeaf1']) && $Item['AreVPsEqualSizesForLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP1Height2"
                                 id="vP1Height2"
@@ -262,7 +262,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif
                                 @if(!isset($Item['Leaf1VPHeight3']) || (isset($Item['AreVPsEqualSizesForLeaf1']) && $Item['AreVPsEqualSizesForLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP1Height3"
                                 id="vP1Height3"
@@ -280,7 +280,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif
                                 @if(!isset($Item['Leaf1VPHeight4']) || (isset($Item['AreVPsEqualSizesForLeaf1']) && $Item['AreVPsEqualSizesForLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP1Height4"
                                 id="vP1Height4"
@@ -298,7 +298,8 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif3.
+
                                 @if(!isset($Item['Leaf1VPHeight5']) || (isset($Item['AreVPsEqualSizesForLeaf1']) && $Item['AreVPsEqualSizesForLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP1Height5"
                                 id="vP1Height5"
@@ -502,7 +503,7 @@
 
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="619"' }} @endif
                                 @if(!isset($Item['Leaf2VPWidth']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Width"
                                 id="vP2Width"
@@ -521,7 +522,7 @@
 
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1972"' }} @endif
                                 @if(!isset($Item['Leaf2VPHeight1']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Height1"
                                 id="vP2Height1"
@@ -540,7 +541,7 @@
 
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1972"' }} @endif
                                 @if(!isset($Item['Leaf2VPHeight2']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes") || (isset($Item['AreVPsEqualSizesForLeaf2']) && $Item['AreVPsEqualSizesForLeaf2'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Height2"
                                 id="vP2Height2"
@@ -558,7 +559,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1972"' }} @endif
                                 @if(!isset($Item['Leaf2VPHeight3']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes") || (isset($Item['AreVPsEqualSizesForLeaf2']) && $Item['AreVPsEqualSizesForLeaf2'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Height3"
                                 id="vP2Height3"
@@ -576,7 +577,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1972"' }} @endif
                                 @if(!isset($Item['Leaf2VPHeight4']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes") || (isset($Item['AreVPsEqualSizesForLeaf2']) && $Item['AreVPsEqualSizesForLeaf2'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Height4"
                                 id="vP2Height4"
@@ -594,7 +595,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0"
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1972"' }} @endif
                                 @if(!isset($Item['Leaf2VPHeight5']) || (isset($Item['sVPSameAsLeaf1']) && $Item['sVPSameAsLeaf1'] == "Yes") || (isset($Item['AreVPsEqualSizesForLeaf2']) && $Item['AreVPsEqualSizesForLeaf2'] == "Yes")) {{'readonly'}} @endif
                                 name="vP2Height5"
                                 id="vP2Height5"
