@@ -298,7 +298,7 @@
                             @endif
                             </label>
                             <input type="number"
-                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif3.
+                                min="0" @if($isQmarkORCertifireEnabled) {{ 'max="1525"' }} @endif
 
                                 @if(!isset($Item['Leaf1VPHeight5']) || (isset($Item['AreVPsEqualSizesForLeaf1']) && $Item['AreVPsEqualSizesForLeaf1'] == "Yes")) {{'readonly'}} @endif
                                 name="vP1Height5"

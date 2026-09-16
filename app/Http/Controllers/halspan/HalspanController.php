@@ -155,7 +155,7 @@ class HalspanController extends Controller
         // nested-loop logic, including quantity duplication and ordering.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $leafTypeIntumescentseal = isQmarkORCertifireEnabled() ? IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->where('leaf_type_value', '44mm')->get() : IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -203,6 +203,8 @@ class HalspanController extends Controller
                 ->groupBy('folder_id');
 
         $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 0])->get();
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $id,

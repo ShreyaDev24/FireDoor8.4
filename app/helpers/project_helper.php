@@ -213,6 +213,13 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
                 ], "join", "lippingSpecies", "query", [], [
                     ["lipping_species.MaxValues", ">=", 450]
                 ]);
+            }else if (isHalspanFd60QMarkEnabled($configurationDoor, $fireRating)) {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 530]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 530]
+                ]);
             } elseif ($fireRating=="FD30" || $fireRating=="FD30s") {
                 $lippingSpecies = GetOptions([
                     ["lipping_species.Status", "=", 1],
@@ -249,7 +256,7 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     }
 
     if($type == "Other" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
-        if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating)) {
+        if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating) || isHalspanFd60QMarkEnabled($configurationDoor, $fireRating)) {
             $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 650]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 650], ["lipping_species.MaxValues", ">=", 650]]);
         } else {
             $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
@@ -268,22 +275,29 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
         $lippingSpecies = collect($lippingSpecies);
     }
 
-    // if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating)) {
-    //     if ($type == "Frame") {
-    //         $lippingSpecies = $lippingSpecies->filter(function ($item) {
-    //             return !isBannedHalspanFd30FrameSpeciesName($item->SpeciesName ?? '');
-    //         })->values();
-    //     }
-    //     if ($type == "Other") {
-    //         $lippingSpecies = $lippingSpecies->filter(function ($item) {
-    //             $name = (string) ($item->SpeciesName ?? '');
-    //             if (preg_match('/\b(mdf|softwood)\b/i', $name)) {
-    //                 return false;
-    //             }
-    //             return (float) $item->MinValue > 650;
-    //         })->values();
-    //     }
-    // }
+    $isFd30QMarkEnabled = isHalspanFd30QMarkEnabled($configurationDoor, $fireRating);
+    $isFd60QMarkEnabled = isHalspanFd60QMarkEnabled($configurationDoor, $fireRating);
+
+    if ($type == "Frame" && ($isFd30QMarkEnabled || $isFd60QMarkEnabled)) {
+
+        $excludeSpecies = ['Ash', 'Iroko'];
+
+        if ($isFd60QMarkEnabled) {
+            $excludeSpecies[] = 'Beech';
+        }
+
+        $lippingSpecies = $lippingSpecies
+            ->filter(function ($item) use ($excludeSpecies) {
+                foreach ($excludeSpecies as $species) {
+                    if (stripos($item->SpeciesName, $species) !== false) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->values();
+    }
 
     // 🚫 Remove MDF when Double Acting (DA)
     if ($swingType == "DA") {
