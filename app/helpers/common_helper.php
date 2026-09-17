@@ -70,7 +70,7 @@ function isHalspanFd30QMarkEnabled($pageId, $fireRating, $qMark = null): bool
     if (!$enabled) {
         return false;
     }
-    return (int) $pageId === 2 && (string) $fireRating === 'FD30';
+    return (int) $pageId === 2 && ((string) $fireRating === 'FD30' || (string) $fireRating === 'FD30s' ||  (string) $fireRating === 'NFR');
 }
 
 function isHalspanFd60QMarkEnabled($pageId, $fireRating, $qMark = null): bool
@@ -79,7 +79,7 @@ function isHalspanFd60QMarkEnabled($pageId, $fireRating, $qMark = null): bool
     if (!$enabled) {
         return false;
     }
-    return (int) $pageId === 2 && (string) $fireRating === 'FD60';
+    return (int) $pageId === 2 && ((string) $fireRating === 'FD60' || (string) $fireRating === 'FD60s' ||  (string) $fireRating === 'NFR');
 }
 
 function getMyLaborCost($type, $data) {
