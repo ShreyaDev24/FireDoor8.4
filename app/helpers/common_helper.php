@@ -57,10 +57,7 @@ use App\Models\{OverpanelGlassGlazing,SelectedOverpanelGlassGlazing};
 use App\Models\{SelectedScreenGlass,ScreenGlassType,SelectedScreenGlazing,ScreenGlazingType};
 
 function isQmarkORCertifireEnabled(){
-    $ids = CompanyUsers();
-    $SettingCurrency = SettingCurrency::whereIn('UserId', $ids)->first();
-
-    if($SettingCurrency->QMark === 1 || $SettingCurrency->Certifire === 1){
+    if(Auth::user()->QMark === 1 || Auth::user()->Certifire === 1){
         return true;
     } else {
         return false;

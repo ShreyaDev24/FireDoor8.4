@@ -116,45 +116,6 @@
 
                                     </div>
                                 </div>
-
-
-                                {{-- Certification --}}
-                                <div class="col-md-12">
-                                    <div class="position-relative form-group">
-
-                                        <label class="d-block mb-2">
-                                            Certification
-                                        </label>
-
-                                        <div class="form-check mb-2">
-                                            <input type="checkbox"
-                                                class="form-check-input"
-                                                name="QMark"
-                                                id="qMark"
-                                                value="1"
-                                                {{ ($currency->QMark ==  1) ? 'checked' : '' }}>
-
-                                            <label class="form-check-label" for="qMark">
-                                                Q-Mark
-                                            </label>
-                                        </div>
-
-                                        <div class="form-check">
-                                            <input type="checkbox"
-                                                class="form-check-input"
-                                                name="Certifire"
-                                                id="certifire"
-                                                value="1"
-                                                {{ ($currency->Certifire ==  1) ? 'checked' : '' }}>
-
-                                            <label class="form-check-label" for="certifire">
-                                                Certifire
-                                            </label>
-                                        </div>
-
-                                    </div>
-                                </div>
-
                             </div>
 
                             <div class="col-md-12">
