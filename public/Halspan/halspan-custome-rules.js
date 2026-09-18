@@ -463,7 +463,7 @@ function pageIdentity(){
                 $("#vP2Height4").attr('max', '1972');
                 $("#vP2Height5").attr('max', '1972');
             }
-            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s" || $("#fireRating").val() == "NFR"){
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#vP1Width").attr('max', '400');
                 $("#vP1Height1").attr('max', '1248');
                 $("#vP1Height2").attr('max', '1248');
