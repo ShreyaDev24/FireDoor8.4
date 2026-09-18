@@ -19,6 +19,13 @@ Array.prototype.findIndexOf = function (prop) {
     return i;
 }
 
+var isQMarkEnabled = true;
+
+if($('#isQmarkORCertifireEnabled').val() === '1'){
+    isQMarkEnabled = false
+}
+
+
 var price = 0.00;
 function SetBuildOfMaterial(identifier, priceDirectSet = "") {
     // var TagName = identifier.context.tagName;
@@ -132,15 +139,74 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     if (id == 'gap') {
                         getmsginput = 'Gap should be between 2 - 4mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 1 Location should be a minimum of 150mm' : 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 3 Location should be a minimum of 250mm' : 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm';
                     } else if(id == 'hinge4Location'){
-                        getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                        getmsginput = 'Hinge 4 Location should be a minimum of 200mm';
                     } else if(id == 'ScallopedHeight'){
                         getmsginput = 'Scalloped Height should be between ' + getmininputvalue + '-' + getmaxinputvalue + ' mm.';
+                    } else if (id == 'vP1Width') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Width should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height1') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 1 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height2') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 2 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height3') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 3 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height4') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 4 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height5') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 5 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Width') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Width should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height1') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 1 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height2') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 2 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height3') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 3 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height4') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 4 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height5') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 5 should be maximum ' + maxValue + 'mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
@@ -172,11 +238,12 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                     } else if(id == 'RebatedBottomDepth'){
                         getmsginput = 'Rebated Bottom Depth should be a minimum '+getmininputvalue+ 'mm';
                     } else if(id == 'hinge1Location'){
-                        getmsginput = 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm ';
+                        getmsginput = isQMarkEnabled ? 'Hinge 1 Location should be a minimum of 150mm' : 'Hinge 1 Location should be a minimum of 120mm and maximum of 200mm';
                     } else if(id == 'hinge2Location'){
                         getmsginput = 'Hinge 2 Location should be a minimum of 200mm';
                     } else if(id == 'hinge3Location'){
-                        getmsginput = `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm `;
+                        getmsginput = isQMarkEnabled ?
+                        `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 250mm` : `Hinge ${document.getElementById('hing4LocationDiv') && document.getElementById('hing4LocationDiv').classList.contains('d-none')? '3' : '4'} Location should be a minimum of 150mm and maximum of 300mm`;
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
                     }else if (id == 'distanceFromBottomOfDoor') {
@@ -197,6 +264,66 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'SL2 Frame Thickness should be a minimum of 44 mm';
                     } else if(id == 'glazingBeadsThickness'){
                         getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
+                    } else if (id == 'vP1Width') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Width should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height1') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 1 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height2') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 2 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height3') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 3 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height4') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 4 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP1Height5') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 5 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Width') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Width should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height1') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 1 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height2') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 2 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height3') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 3 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height4') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 4 should be maximum ' + maxValue + 'mm.';
+
+                    } else if (id == 'vP2Height5') {
+
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 5 should be maximum ' + maxValue + 'mm.';
+
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

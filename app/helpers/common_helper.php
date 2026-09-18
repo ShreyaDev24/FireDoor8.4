@@ -57,6 +57,31 @@ use App\Models\SideScreenItem;
 use App\Models\{OverpanelGlassGlazing,SelectedOverpanelGlassGlazing};
 use App\Models\{SelectedScreenGlass,ScreenGlassType,SelectedScreenGlazing,ScreenGlazingType};
 
+function isQmarkORCertifireEnabled(){
+    if(Auth::user()->QMark === 1 || Auth::user()->Certifire === 1){
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function isHalspanFd30QMarkEnabled($pageId, $fireRating, $qMark = null): bool
+{
+    $enabled = $qMark === null ? isQmarkORCertifireEnabled() : ((int) $qMark === 1);
+    if (!$enabled) {
+        return false;
+    }
+    return (int) $pageId === 2 && ((string) $fireRating === 'FD30' || (string) $fireRating === 'FD30s' ||  (string) $fireRating === 'NFR');
+}
+
+function isHalspanFd60QMarkEnabled($pageId, $fireRating, $qMark = null): bool
+{
+    $enabled = $qMark === null ? isQmarkORCertifireEnabled() : ((int) $qMark === 1);
+    if (!$enabled) {
+        return false;
+    }
+    return (int) $pageId === 2 && ((string) $fireRating === 'FD60' || (string) $fireRating === 'FD60s' ||  (string) $fireRating === 'NFR');
+}
 
 function getMyLaborCost($type, $data) {
     $res = [];

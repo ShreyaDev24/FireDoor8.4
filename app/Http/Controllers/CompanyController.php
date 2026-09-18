@@ -278,6 +278,8 @@ class CompanyController extends Controller
             $user->UserEmail = $request->UserEmail;
             $user->UserJobtitle = $request->UserJobtitle;
             $user->UserPhone = $request->UserPhone;
+            $user->QMark = $request->QMark;
+            $user->Certifire = $request->Certifire;
             $user->UserType = 2;
             $user->CreatedBy = Auth::user()->id;
 
@@ -641,7 +643,7 @@ class CompanyController extends Controller
     {
         if(Auth::user()->UserType=='1' || Auth::user()->UserType=='2'){
             if(isset($id)){
-                $editdata = Company::join('users','users.id','companies.UserId')->select('users.FirstName','users.LastName', 'users.UserEmail','users.UserPhone','users.UserJobtitle','users.UserImage','companies.*')->where('companies.id',$id)->first();
+                $editdata = Company::join('users','users.id','companies.UserId')->select('users.FirstName','users.LastName', 'users.UserEmail','users.UserPhone','users.UserJobtitle','users.UserImage','users.QMark','users.Certifire','companies.*')->where('companies.id',$id)->first();
                 if(!empty($editdata) && (array)$editdata !== [])
                 {
                     return view('Company.AddCompany',['editdata' => $editdata]);

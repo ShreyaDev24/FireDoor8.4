@@ -224,6 +224,7 @@ html, body {
                 <div class="item-form">
                     <form id="itemForm" enctype="multipart/form-data">
                         <input type="hidden" name="pageIdentity" id="pageIdentity" value="2">
+                        <input type="hidden" id="isQmarkORCertifireEnabled" value="{{ isQmarkORCertifireEnabled() ? '1' : '0' }}">
                         <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
                         <input type="hidden" name="SvgImage" value="" />
                         <input type="hidden" id="savedItemData" value='@json($Item)' />
@@ -372,6 +373,7 @@ html, body {
 <script src="{{url('/')}}/Halspan/halspan-cad-door-configuration.js"></script>
 <script src="{{url('/')}}/Halspan/halspan-build-of-material-for-cad-door.js"></script>
 <script src="{{asset('Halspan/halspan-custome-rules.js')}}"></script>
+<script src="{{asset('Halspan/halspan-fd30-qmark-rules.js')}}"></script>
 <script src="{{asset('Halspan/halspan-change-event-calculation.js')}}"></script>
 <script src="{{asset('js/common.js')}}"></script>
 

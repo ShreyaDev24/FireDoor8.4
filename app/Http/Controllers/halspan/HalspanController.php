@@ -136,9 +136,9 @@ class HalspanController extends Controller
         $checkpoints['BOMSetting'] = ['time' => microtime(true), 'duration' => microtime(true) - $time10, 'label' => 'BOMSetting Query'];
 
         $time11 = microtime(true);
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems', 2)
-            ->where('status', 1)
-            ->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems', 2)
+        //     ->where('status', 1)
+        //     ->get();
         $checkpoints['LeafTypeIntumescent'] = ['time' => microtime(true), 'duration' => microtime(true) - $time11, 'label' => 'LeafTypeIntumescentseal Query'];
 
         // Process ironmongery data
@@ -268,6 +268,10 @@ class HalspanController extends Controller
         Log::info('TOTAL TIME: ' . round($totalTime * 1000, 2) . 'ms');
         Log::info('=== END PERFORMANCE LOG ===');
 
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 0])->get();
+
         return view('Items/Halspan/HalspanDoorConfiguration', [
             "QuotationId" => $id,
             'Item' => $item,
@@ -291,6 +295,7 @@ class HalspanController extends Controller
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'folders' => $folders
         ]);
     }
@@ -591,7 +596,11 @@ class HalspanController extends Controller
 
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 0])->get();
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
@@ -616,6 +625,7 @@ class HalspanController extends Controller
             'quotation' => $quotation,
             'LippingName' => $LippingName,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,  // this line is for to send lipping name into edit form
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'folders' => $folders
         ]);
     }

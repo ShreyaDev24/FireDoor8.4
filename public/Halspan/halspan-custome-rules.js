@@ -468,6 +468,36 @@ function pageIdentity(){
     })
 
     function visionPanelChange(){
+        if(String($('#isQmarkORCertifireEnabled').val()) === '1'){
+            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" || $("#fireRating").val() == "NFR"){
+                $("#vP1Width").attr('max', '800');
+                $("#vP1Height1").attr('max', '1525');
+                $("#vP1Height2").attr('max', '1525');
+                $("#vP1Height3").attr('max', '1525');
+                $("#vP1Height4").attr('max', '1525');
+                $("#vP1Height5").attr('max', '1525');
+                $("#vP2Width").attr('max', '619');
+                $("#vP2Height1").attr('max', '1972');
+                $("#vP2Height2").attr('max', '1972');
+                $("#vP2Height3").attr('max', '1972');
+                $("#vP2Height4").attr('max', '1972');
+                $("#vP2Height5").attr('max', '1972');
+            }
+            if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
+                $("#vP1Width").attr('max', '400');
+                $("#vP1Height1").attr('max', '1248');
+                $("#vP1Height2").attr('max', '1248');
+                $("#vP1Height3").attr('max', '1248');
+                $("#vP1Height4").attr('max', '1248');
+                $("#vP1Height5").attr('max', '1248');
+                $("#vP2Width").attr('max', '400');
+                $("#vP2Height1").attr('max', '1248');
+                $("#vP2Height2").attr('max', '1248');
+                $("#vP2Height3").attr('max', '1248');
+                $("#vP2Height4").attr('max', '1248');
+                $("#vP2Height5").attr('max', '1248');
+            }
+        }
         if($("#leaf1VisionPanel").val()=="Yes"){
             $("#visionPanelQuantity").attr('disabled',false);
             $("#visionPanelQuantity").attr('required',true);

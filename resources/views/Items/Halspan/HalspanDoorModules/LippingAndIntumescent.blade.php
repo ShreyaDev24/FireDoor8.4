@@ -41,6 +41,16 @@
                                                         @foreach(($option_data_grouped['lipping_thickness'] ?? []) as $row)
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['LippingThickness'])) @if($Item['LippingThickness'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
                                                         @endforeach
+                                                        @if ($isQmarkORCertifireEnabled)
+                                                            @for ($i = 20; $i <= 25; $i++)
+                                                                <option value="{{ $i }}"
+                                                                    @if(isset($Item['LippingThickness']) && $Item['LippingThickness'] == $i)
+                                                                        selected
+                                                                    @endif>
+                                                                    {{ $i }}
+                                                                </option>
+                                                            @endfor
+                                                        @endif
                                                     </select>
                                                 </div>
                                             </div>

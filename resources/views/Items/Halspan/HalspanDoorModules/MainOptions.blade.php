@@ -65,7 +65,7 @@
                             <select name="intumescentLeafType" id="intumescentLeafType" class="form-control intumescentLeafchange" required>
                                 <option value="">Select Leaf Type</option>
                                 @foreach($leafTypeIntumescentseal as $row)
-                                    <option value="{{$row->id}}" @if(isset($Item["IntumescentLeafType"]))
+                                    <option value="{{$row->id}}" data-door-thickness="{{$row->door_thickness}}" @if(isset($Item["IntumescentLeafType"]))
                                         @if($Item["IntumescentLeafType"]==$row->id){{'selected'}} @endif
                                         @endif>{{$row->leaf_type_key}} ({{$row->leaf_type_value}})</option>
                                     @endforeach

@@ -621,46 +621,71 @@ $(".change-event-calulation").change(function(){
 
 
 
-        if(leaf1Visiblepanel=="Yes"){
+    if (leaf1Visiblepanel == "Yes") {
 
-            if(leaf1VisblePanelEqullSize=="Yes"){
+        if (leaf1VisblePanelEqullSize == "Yes") {
 
-                    // Equal-size panes share the same width/height, so multiply the
-                    // single-pane area by the number of vision panels.
-                    var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)*parseInt(leaf1VisblePanelQuantity);
+            // Equal-size panes share the same width/height, so multiply the
+            // single-pane area by the number of vision panels.
+            var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter) * parseInt(leaf1VisblePanelQuantity);
 
-            }else{
+        } else {
 
-                    if(leaf1VisblePanelQuantity==1){
-                        var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter);
+            if (leaf1VisblePanelQuantity == 1) {
+                var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter);
 
-                    }else if(leaf1VisblePanelQuantity==2){
+            } else if (leaf1VisblePanelQuantity == 2) {
 
-                        var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight2)/unitMeter);
-                    }else if(leaf1VisblePanelQuantity==3){
+                var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight2) / unitMeter);
+            } else if (leaf1VisblePanelQuantity == 3) {
 
-                        var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight2)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight3)/unitMeter);
-                    }else if(leaf1VisblePanelQuantity==4){
+                var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight2) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight3) / unitMeter);
+            } else if (leaf1VisblePanelQuantity == 4) {
 
-                        var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight2)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight3)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight4)/unitMeter);
-                    }else if(leaf1VisblePanelQuantity==5){
+                var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight2) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight3) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight4) / unitMeter);
+            } else if (leaf1VisblePanelQuantity == 5) {
 
-                        var vpArea = (parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight1)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight2)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight3)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight4)/unitMeter)+(parseInt(leaf1VpWidth)/unitMeter)*(parseInt(leaf1VpHeight5)/unitMeter);
-                    }
+                var vpArea = (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight1) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight2) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight3) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight4) / unitMeter) + (parseInt(leaf1VpWidth) / unitMeter) * (parseInt(leaf1VpHeight5) / unitMeter);
+            }
 
 
-                }
-                // alert(vpArea);
-                $("#leaf1VpAreaSizeM2").val(vpArea.toFixed(2));
-                if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
-                glass_glazing_system()
-                // Sadique Code
-                //    $('#lazingIntegrityOrInsulationIntegrity').val("");
-                //    $('#glassType').val("");
+        }
+        
+        // alert(vpArea);
+        $("#leaf1VpAreaSizeM2").val(vpArea.toFixed(2));
 
-         }else{
-             $("#leaf1VpAreaSizeM2").val(0);
-         }
+        if (String($('#isQmarkORCertifireEnabled').val()) === '1') {
+
+            var fireRating = $("#fireRating").val();
+            var maxVpArea = null;
+
+            if (fireRating == "FD30" || fireRating == "FD30s" || fireRating == "NFR") {
+                maxVpArea = 1.22;
+            } else if (fireRating == "FD60" || fireRating == "FD60s") {
+                maxVpArea = 0.50;
+            }
+
+            if (maxVpArea !== null && vpArea > maxVpArea) {
+
+                swal(
+                    "Error!",
+                    "The maximum vision panel area for " + fireRating + " is " + maxVpArea.toFixed(2) + " m².",
+                    "error"
+                );
+
+                $("#leaf1VpAreaSizeM2").val("");
+                return false;
+            }
+        }
+        if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
+        glass_glazing_system()
+        // Sadique Code
+        //    $('#lazingIntegrityOrInsulationIntegrity').val("");
+        //    $('#glassType').val("");
+
+    } else {
+        $("#leaf1VpAreaSizeM2").val(0);
+    }
 
         var ElementId = $(this).attr("id");
 

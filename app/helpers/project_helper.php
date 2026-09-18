@@ -199,13 +199,28 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     $UserId = CompanyUsers();
     $authdata = Auth::user();
     $lippingSpecies=[];
+    // $qmarkFireRating = $rawFireRating !== null && $rawFireRating !== '' ? $rawFireRating : $fireRating;
 
     $SelectedLippingSpecies = SelectedLippingSpeciesItems::wherein('selected_lipping_species_items.selected_user_id', $UserId)->groupBy("selected_lipping_species_id")->get();
     $SelectedLippingSpeciesIds = array_column($SelectedLippingSpecies->toArray(), "selected_lipping_species_id");
 
     if($type == "Frame"){
         if($configurationDoor == 2 || $configurationDoor == 3 || $configurationDoor == 4 || $configurationDoor == 5 || $configurationDoor == 6 || $configurationDoor == 9){
-            if ($fireRating=="FD30" || $fireRating=="FD30s") {
+            if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating)) {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 450]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 450]
+                ]);
+            }else if (isHalspanFd60QMarkEnabled($configurationDoor, $fireRating)) {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 530]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 530]
+                ]);
+            } elseif ($fireRating=="FD30" || $fireRating=="FD30s") {
                 $lippingSpecies = GetOptions([
                     ["lipping_species.Status", "=", 1],
                     ["lipping_species.MinValue", ">=", 510]
@@ -262,7 +277,11 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     }
 
     if($type == "Other" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
-        $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
+        if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating) || isHalspanFd60QMarkEnabled($configurationDoor, $fireRating)) {
+            $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 650]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 650], ["lipping_species.MaxValues", ">=", 650]]);
+        } else {
+            $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);
+        }
     }
 
     if($fireRating=="NFR" || $type == "Architrave"){
@@ -275,6 +294,30 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     } elseif (is_array($lippingSpecies)) {
         // If it's an array, convert it to a collection
         $lippingSpecies = collect($lippingSpecies);
+    }
+
+    $isFd30QMarkEnabled = isHalspanFd30QMarkEnabled($configurationDoor, $fireRating);
+    $isFd60QMarkEnabled = isHalspanFd60QMarkEnabled($configurationDoor, $fireRating);
+
+    if ($type == "Frame" && ($isFd30QMarkEnabled || $isFd60QMarkEnabled)) {
+
+        $excludeSpecies = ['Ash', 'Iroko'];
+
+        if ($isFd60QMarkEnabled) {
+            $excludeSpecies[] = 'Beech';
+        }
+
+        $lippingSpecies = $lippingSpecies
+            ->filter(function ($item) use ($excludeSpecies) {
+                foreach ($excludeSpecies as $species) {
+                    if (stripos($item->SpeciesName, $species) !== false) {
+                        return false;
+                    }
+                }
+
+                return true;
+            })
+            ->values();
     }
 
     // 🚫 Remove MDF when Double Acting (DA)
