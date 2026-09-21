@@ -278,8 +278,8 @@ class CompanyController extends Controller
             $user->UserEmail = $request->UserEmail;
             $user->UserJobtitle = $request->UserJobtitle;
             $user->UserPhone = $request->UserPhone;
-            $user->QMark = $request->QMark;
-            $user->Certifire = $request->Certifire;
+            $user->QMark = $request->QMark ?? 0;
+            $user->Certifire = $request->Certifire ?? 0;
             $user->UserType = 2;
             $user->CreatedBy = Auth::user()->id;
 
