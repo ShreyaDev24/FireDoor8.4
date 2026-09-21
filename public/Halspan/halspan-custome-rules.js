@@ -5376,6 +5376,10 @@ function VisionPanelValidations(firerating){
         $("#distanceFromBottomOfDoor").attr("min",200);
         $("#distanceFromTheEdgeOfDoor").attr("min",90);
     }
+    if(String($('#isQmarkORCertifireEnabled').val()) === '1'){
+        $("#distanceFromTopOfDoor").attr("min",100);
+        $("#distanceFromTheEdgeOfDoor").attr("min",100);
+    }
 }
 
 // 4th Hinges showing logic
