@@ -2641,15 +2641,15 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
 
     $marginData = BOMSetting::whereIn('UserId', $userIds)->first();
     $margin = 0;
+    $marginMarkup = 'Margin';
     if ($marginData) {
+        $marginMarkup = $marginData->MarginMarkup;
         $isMargin = ($marginData->MarginMarkup == 'Margin');
         if ($category == 'GeneralLabourCosts') {
             $margin = $isMargin ? $marginData->margin_for_labour : $marginData->markup_for_labour;
         } else {
             $margin = $isMargin ? $marginData->margin_for_material : $marginData->markup_for_material;
         }
-    }else{
-        $marginData->MarginMarkup = 'Margin';
     }
 
     $marginDiscount = discountQuotationValue($request->QuotationId,$request->version_id);
@@ -2740,7 +2740,7 @@ function SaveBOMCalculation($userIds, $request, $category, $frame_unit, string $
     $bom_calculation->UnitPriceSell = round((($unit_cost * $currencyPrice) / (1- ($margin/100))),2);
     $bom_calculation->GTSellPrice = round((($total * $currencyPrice) /(1 - ($margin/100))),2);
     $bom_calculation->Margin = round($margin,2);
-    $bom_calculation->MarginMarkup = $marginData->MarginMarkup;
+    $bom_calculation->MarginMarkup = $marginMarkup;
     if($breakdown !== null){
         $bom_calculation->Breakdown = json_encode($breakdown);
     }
