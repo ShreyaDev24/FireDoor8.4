@@ -1037,7 +1037,7 @@ class PrintInvoiceController extends Controller
 
             }
 
-           $certMap = [
+            $certMap = [
                 4 => [
                     'NFR' => 'FEA/F99112 Revision L',
                     'FD30' => 'FEA/F99112 Revision L',
@@ -1076,6 +1076,44 @@ class PrintInvoiceController extends Controller
             ];
 
             $certNo = $certMap[$tt->configurableitems][$FireRatingActualValue] ?? '';
+
+            // Override certificate only when Q-Mark/Certifire is enabled
+            if (isQmarkORCertifireEnabled() === true) {
+
+                $qmarkCertMap = [
+                    // Halspan
+                    2 => [
+                        'NFR' => 'Test cert: CF534',
+                        'FD30' => 'Test cert: CF534',
+                        'FD60' => 'Test cert: CF535',
+                    ],
+
+                    // Strebord
+                    1 => [
+                        'NFR' => 'Test cert: CF807',
+                        'FD30' => 'Test cert: CF807',
+                        'FD60' => 'Test cert: CF808',
+                    ],
+
+                    // Flamebreak
+                    7 => [
+                        'NFR' => 'Test cert: CF5260',
+                        'FD30' => 'Test cert: CF5260',
+                        'FD60' => 'Test cert: CF5261',
+                    ],
+
+                    // Vicaima
+                    4 => [
+                        'NFR' => 'Test cert: CF218',
+                        'FD30' => 'Test cert: CF218',
+                        'FD60' => 'Test cert: CF454',
+                    ],
+                ];
+
+                $certNo = $qmarkCertMap[$tt->configurableitems][$FireRatingActualValue] ?? $certNo;
+            }
+
+
 
             $configurationDoor = configurationDoor($tt->configurableitems);
             $fireRatingDoor = fireRatingDoor($FireRatingActualValue);
