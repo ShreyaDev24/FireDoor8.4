@@ -449,20 +449,7 @@ function pageIdentity(){
 
     function visionPanelChange(){
         if(String($('#isQmarkORCertifireEnabled').val()) === '1'){
-            if($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" || $("#fireRating").val() == "NFR"){
-                $("#vP1Width").attr('max', '800');
-                $("#vP1Height1").attr('max', '1525');
-                $("#vP1Height2").attr('max', '1525');
-                $("#vP1Height3").attr('max', '1525');
-                $("#vP1Height4").attr('max', '1525');
-                $("#vP1Height5").attr('max', '1525');
-                $("#vP2Width").attr('max', '619');
-                $("#vP2Height1").attr('max', '1972');
-                $("#vP2Height2").attr('max', '1972');
-                $("#vP2Height3").attr('max', '1972');
-                $("#vP2Height4").attr('max', '1972');
-                $("#vP2Height5").attr('max', '1972');
-            }
+
             if($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s"){
                 $("#vP1Width").attr('max', '400');
                 $("#vP1Height1").attr('max', '1248');
@@ -1949,6 +1936,7 @@ $(document).ready(function() {
             if (identifier.length && value > 0) {
                 SetBuildOfMaterial(identifier);
             }
+            validateLeaf2VPSize();
             floor_finish_change();
             frameThicknessChange();
             MeetingStyle();
@@ -5688,6 +5676,124 @@ $(document).ready(function () {
         }
     });
 });
+
+$('#vP1Width, #vP1Height1, #vP1Height2, #vP1Height3, #vP1Height4, #vP1Height5').on('input', function () {
+    validateLeaf2VPSize();
+});
+
+function validateLeaf2VPSize() {
+
+    let fireRating = $("#fireRating").val();
+
+    if (
+        String($('#isQmarkORCertifireEnabled').val()) === '1' &&
+        (fireRating === 'FD30' || fireRating === 'FD30s' || fireRating === 'NFR')
+    ) {
+
+        var vpWidth = parseInt($('#vP1Width').val()) || 0;
+
+        var heights = [
+            parseInt($('#vP1Height1').val()) || 0,
+            parseInt($('#vP1Height2').val()) || 0,
+            parseInt($('#vP1Height3').val()) || 0,
+            parseInt($('#vP1Height4').val()) || 0,
+            parseInt($('#vP1Height5').val()) || 0
+        ];
+
+        // Nothing entered yet
+        if (vpWidth <= 0) {
+            return true;
+        }
+
+        /*
+         * Absolute maximum width
+         */
+        if (vpWidth > 800) {
+
+            swal(
+                "Error!",
+                "VP width cannot exceed 800mm.",
+                "error"
+            );
+
+            $('#vP1Width').val('');
+            return false;
+        }
+
+        /*
+         * Check every VP height
+         */
+        for (var i = 0; i < heights.length; i++) {
+
+            var vpHeight = heights[i];
+
+            // Ignore empty height fields
+            if (vpHeight <= 0) {
+                continue;
+            }
+
+            /*
+             * Absolute maximum height
+             */
+            if (vpHeight > 1972) {
+
+                swal(
+                    "Error!",
+                    "VP height cannot exceed 1972mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            /*
+             * If width is greater than 619,
+             * height cannot reach 1972.
+             *
+             * Example:
+             * 620 x 1972 = INVALID
+             * 619 x 1972 = VALID
+             */
+            if (vpHeight > 1525 && vpWidth > 619) {
+
+                swal(
+                    "Error!",
+                    "For VP heights above 1525mm, the maximum permitted width is 619mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            /*
+             * If width is 800,
+             * maximum height is 1525.
+             *
+             * Example:
+             * 800 x 1525 = VALID
+             * 800 x 1526 = INVALID
+             */
+            if (vpWidth > 619 && vpHeight > 1525) {
+
+                swal(
+                    "Error!",
+                    "For a VP width above 619mm, the maximum permitted height is 1525mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return true;
+}
+
 let folderIronmongeryArray = Object.values(folderIronmongeryMap); // Ensure it's array of arrays
 $(document).ready(function () {
     function populateIronmongeryDropdown(folderId, selectedIronmongeryId = null) {

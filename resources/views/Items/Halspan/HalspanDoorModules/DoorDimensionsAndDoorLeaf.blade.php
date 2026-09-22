@@ -152,7 +152,7 @@
                                 max="200"
                             @endif>
                             @else
-                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" min="{{ $isQmarkORCertifireEnabled ? 150 : 120 }}"
+                            <input type="number" name="hinge1Location" id="hinge1Location" class="form-control change-event-calulation" min="{{ $isQmarkORCertifireEnabled ? 150 : 120 }}" value="@if(!empty($hinge_location)){{$hinge_location->hinge1Location}}@endif"
                             @if(!$isQmarkORCertifireEnabled)
                                 max="200"
                             @endif>
@@ -199,7 +199,7 @@
                                 max="300"
                             @endif>
                             @else
-                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" min="{{ $isQmarkORCertifireEnabled ? 250 : 150 }}"
+                            <input type="number" name="hinge3Location" id="hinge3Location" class="form-control change-event-calulation" min="{{ $isQmarkORCertifireEnabled ? 250 : 150 }}" value="@if(!empty($hinge_location)){{$hinge_location->hinge3Location}}@endif"
                             @if(!$isQmarkORCertifireEnabled)
                                 max="300"
                             @endif>
@@ -320,7 +320,7 @@
                                 </script>
                                 @endif
                             </label>
-                            <select name="decorativeGroves" id="decorativeGroves" class="form-control" {{ $isQmarkORCertifireEnabled ? 'readonly' : 'required' }}>
+                            <select name="decorativeGroves" id="decorativeGroves" class="form-control" {{ $isQmarkORCertifireEnabled ? 'readonly disabled' : 'required' }}>
                                 <option value="">Select Decorative Grooves</option>
                                 @foreach(($option_data_grouped['Decorative_Groves'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
@@ -451,7 +451,7 @@
                                 @endif
                             </label>
                             <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
-                            {{ $isQmarkORCertifireEnabled ? 'readonly' : ((isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD') ? 'disabled' : 'required') }}>
+                            {{ $isQmarkORCertifireEnabled ? 'disabled' : ((isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD') ? 'disabled' : 'required') }}>
                                 <option value="">decorative Groove on leaf 2 Active? </option>
                                 @foreach(($option_data_grouped['Decorative_Groves_leaf2'] ?? []) as $row)
                                 <option value="{{$row->OptionKey}}"
