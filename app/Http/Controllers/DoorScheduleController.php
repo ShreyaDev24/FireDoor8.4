@@ -5477,7 +5477,7 @@ class DoorScheduleController extends Controller
         $item = [];
         $UserIds = CompanyUsers();
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status', 1)->get();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
         $LippingSpeciesData = GetOptions(['lipping_species.Status' => 1], "join", "lippingSpecies");
         $SelectedLippingSpeciesData = $LippingSpeciesData;
         $OptionsData = Option::where(['configurableitems' => 1, 'is_deleted' => 0])->wherein('editBy', $UserIds)->get();
@@ -5625,6 +5625,11 @@ class DoorScheduleController extends Controller
 
 // dd($defaultItemsCustom,$quotation->ProjectId);
         $BOMSetting = BOMSetting::where("id", 1)->get()->first();
+
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',1)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',1)->where(['status' => 1, 'certifiedStatus' => 0])->get();
+
         return view('Items/CadConfigurableItem', [
             "QuotationId" => $id,
             'Item' => $item,
@@ -5645,6 +5650,7 @@ class DoorScheduleController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
             'folders' => $folders
@@ -5839,9 +5845,12 @@ class DoorScheduleController extends Controller
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
         $BOMSetting = BOMSetting::where("id", 1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',1)->where('status',1)->get();
 
         // dd(\Config::get('constants.PossibleSelectedOptions'));
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',1)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',1)->where(['status' => 1, 'certifiedStatus' => 0])->get();
 
         return view('Items/CadConfigurableItem', [
             "QuotationId" => $item["QuotationId"],
@@ -5863,6 +5872,7 @@ class DoorScheduleController extends Controller
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'folders' => $folders
         ]);
     }

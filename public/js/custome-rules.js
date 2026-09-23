@@ -2010,6 +2010,18 @@ function copyOfSideLite1Change(isstatus = false){
         }
         IntumescentSeals();
         rebatedWidth();
+
+        if(String($('#isQmarkORCertifireEnabled').val()) === '1' && ($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s")){
+            $('#swingType option[value="DA"]').prop('disabled', true);
+            $('#lippingThickness option[value="5"]').remove();
+            $("#distanceBetweenVPs").attr('min', '120');
+        } else if(String($('#isQmarkORCertifireEnabled').val()) === '1' && ($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" || $("#fireRating").val() == "NFR")){
+                $('#swingType option[value="DA"]').prop('disabled', false);
+                $('#lippingThickness').append(
+                    '<option value="5">5</option>'
+                );
+                $("#distanceBetweenVPs").attr('min', '100');
+            }
     }
 
     function rebatedWidth(){
@@ -5428,6 +5440,200 @@ function VisionPanelValidations(firerating){
             $("#distanceBetweenVPsforLeaf2").removeAttr("min",80);
         }
     }
+    if(String($('#isQmarkORCertifireEnabled').val()) === '1' && (firerating == "FD60" || firerating == "FD60s")){
+        $("#distanceFromTopOfDoor").attr("min",120);
+        $("#distanceFromTheEdgeOfDoor").attr("min",120);
+    }
+}
+
+$('#vP1Width, #vP1Height1, #vP1Height2, #vP1Height3, #vP1Height4, #vP1Height5').on('input', function () {
+    validateLeaf2VPSize();
+});
+
+function validateLeaf2VPSize() {
+
+    let fireRating = $("#fireRating").val();
+
+    if (
+        String($('#isQmarkORCertifireEnabled').val()) === '1' &&
+        (fireRating === 'FD60' || fireRating === 'FD60s')
+    ) {
+
+        var vpWidth = parseInt($('#vP1Width').val()) || 0;
+
+        var heights = [
+            parseInt($('#vP1Height1').val()) || 0,
+            parseInt($('#vP1Height2').val()) || 0,
+            parseInt($('#vP1Height3').val()) || 0,
+            parseInt($('#vP1Height4').val()) || 0,
+            parseInt($('#vP1Height5').val()) || 0
+        ];
+
+        // Nothing entered yet
+        if (vpWidth <= 0) {
+            return true;
+        }
+
+        /*
+         * Absolute maximum width
+         */
+        if (vpWidth > 604) {
+
+            swal(
+                "Error!",
+                "VP width cannot exceed 604mm.",
+                "error"
+            );
+
+            $('#vP1Width').val('');
+            return false;
+        }
+
+        /*
+         * Check every VP height
+         */
+        for (var i = 0; i < heights.length; i++) {
+
+            var vpHeight = heights[i];
+
+            // Ignore empty height fields
+            if (vpHeight <= 0) {
+                continue;
+            }
+
+            /*
+             * Absolute maximum height
+             */
+            if (vpHeight > 1860) {
+
+                swal(
+                    "Error!",
+                    "VP height cannot exceed 1860mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            if (vpHeight > 2201 && vpWidth > 510) {
+
+                swal(
+                    "Error!",
+                    "For VP heights above 2201mm, the maximum permitted width is 510mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            if (vpWidth > 510 && vpHeight > 2201) {
+
+                swal(
+                    "Error!",
+                    "For a VP width above 510mm, the maximum permitted height is 2201mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+        }
+
+        return true;
+
+    }else if (
+        String($('#isQmarkORCertifireEnabled').val()) === '1' &&
+        (fireRating === 'FD30' || fireRating === 'FD30s' || fireRating === 'NFR')
+    ) {
+
+        var vpWidth = parseInt($('#vP1Width').val()) || 0;
+
+        var heights = [
+            parseInt($('#vP1Height1').val()) || 0,
+            parseInt($('#vP1Height2').val()) || 0,
+            parseInt($('#vP1Height3').val()) || 0,
+            parseInt($('#vP1Height4').val()) || 0,
+            parseInt($('#vP1Height5').val()) || 0
+        ];
+
+        // Nothing entered yet
+        if (vpWidth <= 0) {
+            return true;
+        }
+
+        /*
+         * Absolute maximum width
+         */
+        if (vpWidth > 822) {
+
+            swal(
+                "Error!",
+                "VP width cannot exceed 822mm.",
+                "error"
+            );
+
+            $('#vP1Width').val('');
+            return false;
+        }
+
+        /*
+         * Check every VP height
+         */
+        for (var i = 0; i < heights.length; i++) {
+
+            var vpHeight = heights[i];
+
+            // Ignore empty height fields
+            if (vpHeight <= 0) {
+                continue;
+            }
+
+            /*
+             * Absolute maximum height
+             */
+            if (vpHeight > 1840) {
+
+                swal(
+                    "Error!",
+                    "VP height cannot exceed 1840mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            if (vpHeight > 2085 && vpWidth > 725) {
+
+                swal(
+                    "Error!",
+                    "For VP heights above 2085mm, the maximum permitted width is 725mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+
+            if (vpWidth > 725 && vpHeight > 2085) {
+
+                swal(
+                    "Error!",
+                    "For a VP width above 725mm, the maximum permitted height is 2085mm.",
+                    "error"
+                );
+
+                $('#vP1Height' + (i + 1)).val('');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    return true;
 }
 
 // 4th Hinges showing logic

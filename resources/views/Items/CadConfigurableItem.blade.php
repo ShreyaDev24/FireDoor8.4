@@ -219,6 +219,7 @@ html, body {
                 <div class="item-form">
                     <form id="itemForm" enctype="multipart/form-data">
                         <input type="hidden" name="pageIdentity" id="pageIdentity" value="1">
+                        <input type="hidden" id="isQmarkORCertifireEnabled" value="{{ isQmarkORCertifireEnabled() ? '1' : '0' }}">
                         <input type="hidden" name="version_id" value="<?= (!is_null($versionId))?$versionId:0; ?>">
                         <input type="hidden" name="SvgImage" value="" />
 

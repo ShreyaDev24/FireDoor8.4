@@ -297,7 +297,7 @@
                                 </script>
                                 @endif
                             </label>
-                            <select name="decorativeGroves" id="decorativeGroves" class="form-control" required>
+                            <select name="decorativeGroves" id="decorativeGroves" class="form-control" required {{ $isQmarkORCertifireEnabled ? 'readonly disabled' : 'required' }}>
                                 <option value="">Select Decorative Grooves</option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='Decorative_Groves')
@@ -433,8 +433,8 @@
                                 </script>
                                 @endif
                             </label>
-                             <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
-                            @if(isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD'){{ 'disabled' }}@else{{ 'required' }} @endif>
+                            <select name="DecorativeGrovesLeaf2" id="DecorativeGrovesLeaf2" class="form-control"
+                            {{ $isQmarkORCertifireEnabled ? 'disabled' : ((isset($Item['DoorsetType']) && $Item['DoorsetType'] == 'SD') ? 'disabled' : 'required') }}>
                                 <option value="">decorative Groove on leaf 2 Active? </option>
                                 @foreach($option_data as $row)
                                 @if($row->OptionSlug=='Decorative_Groves_leaf2')

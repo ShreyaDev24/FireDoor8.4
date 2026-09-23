@@ -155,7 +155,7 @@ class HalspanController extends Controller
         // nested-loop logic, including quantity duplication and ordering.
         $this->attachIronmongeryAdditionalInfo($setIronmongery, $IronmongeryInfoSet);
 
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
 
@@ -358,7 +358,7 @@ class HalspanController extends Controller
 
 
         $BOMSetting = BOMSetting::where("id",1)->get()->first();
-        $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
+        // $leafTypeIntumescentseal = IntumescentSealLeafType::where('configurableitems',2)->where('status',1)->get();
         $folders = DB::table('folders')
                 ->join('folder_ironmongery_sets', 'folders.id', '=', 'folder_ironmongery_sets.folder_id')
                 ->join('add_ironmongery', 'folder_ironmongery_sets.add_ironmongery_id', '=', 'add_ironmongery.id')
@@ -373,6 +373,8 @@ class HalspanController extends Controller
                 ->groupBy('folder_id');
 
         $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',2)->where(['status' => 1, 'certifiedStatus' => 0])->get();
 
         return view('Items/Halspan/HalspanDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
