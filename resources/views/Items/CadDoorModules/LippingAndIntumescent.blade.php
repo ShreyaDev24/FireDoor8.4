@@ -39,11 +39,25 @@
                                                     <select name="lippingThickness" required @if(isset($Item["FireRating"]) && $Item["FireRating"] != "NFR"){{'required'}} @endif id="lippingThickness"
                                                         class="form-control forcoreWidth1 door-configuration" onchange="$('#lippingSpecies').val('')">
                                                         <option value="">Select leaping thickness</option>
+                                                        @if ($isQmarkORCertifireEnabled)
+                                                            <option value="5" @if(isset($Item['LippingThickness']) && $Item['LippingThickness'] == 5)
+                                                                    selected @endif>5</option>
+                                                        @endif
                                                         @foreach($option_data as $row)
                                                         @if($row->OptionSlug=='lipping_thickness')
                                                         <option value="{{$row->OptionKey}}" @if(isset($Item['LippingThickness'])) @if($Item['LippingThickness'] == $row->OptionKey) {{'selected'}} @endif @endif>{{$row->OptionValue}}</option>
                                                         @endif
                                                         @endforeach
+                                                        @if ($isQmarkORCertifireEnabled)
+                                                            @for ($i = 20; $i <= 25; $i++)
+                                                                <option value="{{ $i }}"
+                                                                    @if(isset($Item['LippingThickness']) && $Item['LippingThickness'] == $i)
+                                                                        selected
+                                                                    @endif>
+                                                                    {{ $i }}
+                                                                </option>
+                                                            @endfor
+                                                        @endif
                                                     </select>
                                                 </div>
                                             </div>

@@ -654,6 +654,31 @@ $(".change-event-calulation").change(function(){
                 }
                 // alert(vpArea);
                 $("#leaf1VpAreaSizeM2").val(vpArea.toFixed(2));
+
+                if (String($('#isQmarkORCertifireEnabled').val()) === '1') {
+
+                    var fireRating = $("#fireRating").val();
+                    var maxVpArea = null;
+
+                    if (fireRating == "FD30" || fireRating == "FD30s" || fireRating == "NFR") {
+                        maxVpArea = 1.51;
+                    } else if (fireRating == "FD60" || fireRating == "FD60s") {
+                        maxVpArea = 1.12;
+                    }
+
+                    if (maxVpArea !== null && vpArea > maxVpArea) {
+
+                        swal(
+                            "Error!",
+                            "The maximum vision panel area for " + fireRating + " is " + maxVpArea.toFixed(2) + " m².",
+                            "error"
+                        );
+
+                        $("#leaf1VpAreaSizeM2").val("");
+                        return false;
+                    }
+                }
+
                 if (overPanel == 'Overpanel' || overPanel == 'Fan_Light' || frameFinish == 'Painted_Finish' || frameFinish == 'Clear_Lacquer' || frameFinish == 'Primed_Only') return;
                 glass_glazing_system()
                 // Sadique Code
