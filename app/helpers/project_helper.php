@@ -2624,7 +2624,7 @@ function doorPlug1_2($FireRating,$IronmongerySet,$Leaf1VisionPanel,$id,$isBorder
      * pull through. So if plug 1 is silver (ironmongery) we suppress plug 2
      * (orange) and only show the silver tree (background colour unchanged).
      */
-    if($innerColor == $silverColor){
+    if($innerColor == $silverColor && $Leaf1VisionPanel == 'No'){
         $outerColor2 = '';
         $innerColor2 = '';
     }
