@@ -700,7 +700,7 @@ class FramesTransoms implements FromCollection, WithEvents, WithTitle
             // Add summary rows
             $totalQty = 0;
             foreach ($summaryData as $row) {
-                $totalQty += $row[6]; // sum qty
+                $totalQty += $row[8]; // sum qty
                 $data[] = array_merge($row, array_fill(0, 34 - count($row), ''));
             }
         }
