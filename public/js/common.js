@@ -1,3 +1,10 @@
+$('#concealedOverheadCloser').on('change', function () {
+
+    if ($(this).is(':checked')) {
+        swal('Warning', 'Check frame head thickness. Do not proceed until the frame head thickness has been verified.');
+    }
+});
+
 $(document).on('click','#Dropseal',function(e){
     floor_finish_change();
 });
