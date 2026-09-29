@@ -233,7 +233,14 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
             }
 
         }elseif($configurationDoor == 7){
-            if ($foursided == 1) {
+            if (isFlamebreakFd30QMarkEnabled($configurationDoor, $fireRating) || isFlamebreakFd60QMarkEnabled($configurationDoor, $fireRating)) {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 500]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 500]
+                ]);
+            } else if ($foursided == 1) {
                 if ($fireRating=="FD30" || $fireRating=="FD30s") {
                     $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MaxValues", ">=", 640]]);
                 } elseif ($fireRating=="FD60" || $fireRating=="FD60s") {
@@ -263,7 +270,7 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     }
 
     if($type == "Other" && ($fireRating == "FD30" || $fireRating == "FD30s" || $fireRating == "FD60" || $fireRating == "FD60s")){
-        if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating) || isHalspanFd60QMarkEnabled($configurationDoor, $fireRating) || isStreboardFd30QMarkEnabled($configurationDoor, $fireRating) || isStreboardFd60QMarkEnabled($configurationDoor, $fireRating)) {
+        if (isHalspanFd30QMarkEnabled($configurationDoor, $fireRating) || isHalspanFd60QMarkEnabled($configurationDoor, $fireRating) || isStreboardFd30QMarkEnabled($configurationDoor, $fireRating) || isStreboardFd60QMarkEnabled($configurationDoor, $fireRating) || isFlamebreakFd30QMarkEnabled($configurationDoor, $fireRating) || isFlamebreakFd60QMarkEnabled($configurationDoor, $fireRating)) {
             $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 650]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 650], ["lipping_species.MaxValues", ">=", 650]]);
         } else {
             $lippingSpecies = GetOptions([["lipping_species.Status", "=", 1], ["lipping_species.MinValue", ">=", 640]], "join", "lippingSpecies", "query",[],[["lipping_species.MinValue", "<=", 640], ["lipping_species.MaxValues", ">=", 640]]);

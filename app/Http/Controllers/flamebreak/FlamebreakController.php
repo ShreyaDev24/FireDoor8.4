@@ -5,6 +5,7 @@ namespace App\Http\Controllers\flamebreak;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\IntumescentSealLeafType;
 use DB;
 use App\Models\{ConfigurableDoorFormula,Option,IntumescentSealColor,ArchitraveType,Color,Company,Tooltip,Quotation,AddIronmongery,BOMSetting,Item,LippingSpecies,SelectedLippingSpeciesItems,SelectedIronmongery,IronmongeryInfoModel,Project,DoorFrameConstruction,User};
 use App\Http\Controllers\Concerns\BuildsIronmongeryAdditionalInfo;
@@ -22,7 +23,7 @@ class FlamebreakController extends Controller
         $OptionsData = Option::where(['configurableitems'=> 7 ,'is_deleted'=>0])->wherein('editBy',$UserIds)->get();
 
         //leafTypeIntumescentseal
-        $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
+        // $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
 
         $intumescentSealArrangement = GetOptions(['setting_intumescentseals2.configurableitems'=> 7], "", "intumescentSealArrangement");
 
@@ -150,6 +151,11 @@ class FlamebreakController extends Controller
                 ->where('folders.user_id',Auth::user()->id)
                 ->get()
                 ->groupBy('folder_id');
+
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',7)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',7)->where(['status' => 1, 'certifiedStatus' => 0])->get();
+
         return view('Items/Flamebreak/FlamebreakDoorConfiguration',[
             "QuotationId" => $id,
             'Item' => $item,
@@ -169,6 +175,7 @@ class FlamebreakController extends Controller
             'setIronmongery' => $setIronmongery,
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,
             'default' => $defaultItemsCustom,
             'hinge_location' => $hinge_location,
@@ -191,7 +198,7 @@ class FlamebreakController extends Controller
         $LippingName = LippingSpecies::where('id', $item['LippingSpecies'])->where('Status',1)->first();
 
         //leafTypeIntumescentseal
-        $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
+        // $leafTypeIntumescentseal = DB::table('intumescent_seal_leaf_type')->where('configurableitems',7)->get();
 
 
         $ConfigurableDoorFormulaData = ConfigurableDoorFormula::where('status',1)->get();
@@ -311,6 +318,10 @@ class FlamebreakController extends Controller
                 ->get()
                 ->groupBy('folder_id');
 
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
+        $leafTypeIntumescentseal = ($isQmarkORCertifireEnabled) ? IntumescentSealLeafType::where('configurableitems',7)->where(['status' => 1, 'certifiedStatus' => 1])->get() : IntumescentSealLeafType::where('configurableitems',7)->where(['status' => 1, 'certifiedStatus' => 0])->get();
+
         return view('Items/Flamebreak/FlamebreakDoorConfiguration',[
             "QuotationId" => $item["QuotationId"],
             'Item' => $item,
@@ -330,6 +341,7 @@ class FlamebreakController extends Controller
             'setIronmongery' => $setIronmongery,
             'BOMSetting' => $BOMSetting,
             'quotation' => $quotation,
+            'isQmarkORCertifireEnabled' => $isQmarkORCertifireEnabled,
             'LippingName' => $LippingName,    // this line is for to send lipping name into edit form
             'leafTypeIntumescentseal' => $leafTypeIntumescentseal,    // this line is for to send lipping name into edit form
             'folders' => $folders
