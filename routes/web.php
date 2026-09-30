@@ -511,7 +511,7 @@ Route::prefix('quotation')->group(function (): void {
     Route::get('/singleconfigurationitem/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'singleconfigurationitem'])->name('quotation/singleconfigurationitem');
 
 
-    Route::get('/add-configuration-cad-item/{id}', [App\Http\Controllers\DoorScheduleController::class,'addConfigurationCadItem'])->name('quotation/add-configuration-cad-item');
+    Route::get('/add-configuration-cad-item/{id}', [App\Http\Controllers\DoorScheduleController::class,'addConfigFurationCadItem'])->name('quotation/add-configuration-cad-item');
     Route::get('/add-configuration-cad-item/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'addConfigurationCadItem'])->name('quotation/add-configuration-cad-item');
     Route::get('/edit-configuration-cad-item/{id}/{vid}', [App\Http\Controllers\DoorScheduleController::class,'editConfigurationCadItem'])->name('quotation/edit-configuration-cad-item');
 

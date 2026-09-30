@@ -101,6 +101,24 @@ function isStreboardFd60QMarkEnabled($pageId, $fireRating, $qMark = null): bool
     return (int) $pageId === 1 && ((string) $fireRating === 'FD60' || (string) $fireRating === 'FD60s' ||  (string) $fireRating === 'NFR');
 }
 
+function isFlamebreakFd30QMarkEnabled($pageId, $fireRating, $qMark = null): bool
+{
+    $enabled = $qMark === null ? isQmarkORCertifireEnabled() : ((int) $qMark === 1);
+    if (!$enabled) {
+        return false;
+    }
+    return (int) $pageId === 7 && ((string) $fireRating === 'FD30' || (string) $fireRating === 'FD30s' ||  (string) $fireRating === 'NFR');
+}
+
+function isFlamebreakFd60QMarkEnabled($pageId, $fireRating, $qMark = null): bool
+{
+    $enabled = $qMark === null ? isQmarkORCertifireEnabled() : ((int) $qMark === 1);
+    if (!$enabled) {
+        return false;
+    }
+    return (int) $pageId === 7 && ((string) $fireRating === 'FD60' || (string) $fireRating === 'FD60s' ||  (string) $fireRating === 'NFR');
+}
+
 function getMyLaborCost($type, $data) {
     $res = [];
     if(!empty($data)){
