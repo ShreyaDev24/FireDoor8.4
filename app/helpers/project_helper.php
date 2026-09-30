@@ -233,12 +233,19 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
             }
 
         }elseif($configurationDoor == 7){
-            if (isFlamebreakFd30QMarkEnabled($configurationDoor, $fireRating) || isFlamebreakFd60QMarkEnabled($configurationDoor, $fireRating)) {
+            if (isFlamebreakFd30QMarkEnabled($configurationDoor, $fireRating)) {
                 $lippingSpecies = GetOptions([
                     ["lipping_species.Status", "=", 1],
                     ["lipping_species.MinValue", ">=", 500]
                 ], "join", "lippingSpecies", "query", [], [
                     ["lipping_species.MaxValues", ">=", 500]
+                ]);
+            } else if (isFlamebreakFd60QMarkEnabled($configurationDoor, $fireRating)) {
+                $lippingSpecies = GetOptions([
+                    ["lipping_species.Status", "=", 1],
+                    ["lipping_species.MinValue", ">=", 640]
+                ], "join", "lippingSpecies", "query", [], [
+                    ["lipping_species.MaxValues", ">=", 640]
                 ]);
             } else if ($foursided == 1) {
                 if ($fireRating=="FD30" || $fireRating=="FD30s") {
@@ -293,8 +300,9 @@ function filterTimberSpecies($type,$configurationDoor="",$fireRating="",$swingTy
     $isStreboardFd60QMarkEnabled = isStreboardFd60QMarkEnabled($configurationDoor, $fireRating);
     $isFd30QMarkEnabled = isHalspanFd30QMarkEnabled($configurationDoor, $fireRating);
     $isFd60QMarkEnabled = isHalspanFd60QMarkEnabled($configurationDoor, $fireRating);
+    $isFlamebreakFd60QMarkEnabled = isFlamebreakFd60QMarkEnabled($configurationDoor, $fireRating);
 
-    if ($type == "Frame" && ($isFd30QMarkEnabled || $isFd60QMarkEnabled || $isStreboardFd30QMarkEnabled || $isStreboardFd60QMarkEnabled)) {
+    if ($type == "Frame" && ($isFd30QMarkEnabled || $isFd60QMarkEnabled || $isStreboardFd30QMarkEnabled || $isStreboardFd60QMarkEnabled || $isFlamebreakFd60QMarkEnabled)) {
 
         $excludeSpecies = ['Ash', 'Iroko'];
 

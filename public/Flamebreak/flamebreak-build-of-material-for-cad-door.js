@@ -86,7 +86,7 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                 } else if (id == 'distanceFromTheEdgeOfDoor') {
                     getmsginput = 'The minimum distance from the edge of the door is ' + getmininputvalue + '.';
                 } else if (id == 'distanceBetweenVPs') {
-                    getmsginput = 'The minimum distance between the VP’s is 80mm';
+                    getmsginput = 'The minimum distance between the VP’s is ' + getmininputvalue + '.mm';
                 } else if (id == 'SL1Width') {
                     getmsginput = 'SL1 Width should not be more than ' + getmaxinputvalue + '.';
                 } else if (id == 'SL2Width') {
@@ -145,6 +145,42 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'Hinge 3 Location should be a minimum of 150mm and maximum of 300mm ';
                     } else if(id == 'hinge4Location'){
                         getmsginput = 'Hinge 3 Location should be a minimum of 200mm';
+                    } else if (id == 'vP1Width') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Width should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP1Height1') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 1 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP1Height2') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 2 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP1Height3') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 3 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP1Height4') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 4 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP1Height5') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 1 Height 5 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Width') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Width should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Height1') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 1 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Height2') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 2 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Height3') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 3 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Height4') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 4 should be maximum ' + maxValue + 'mm.';
+                    } else if (id == 'vP2Height5') {
+                        var maxValue = $('#' + id).attr('max');
+                        getmsginput = 'Vision Panel 2 Height 5 should be maximum ' + maxValue + 'mm.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");
@@ -195,6 +231,8 @@ function SetBuildOfMaterial(identifier, priceDirectSet = "") {
                         getmsginput = 'OP/FL Depth should be more than ' + getmininputvalue + 'mm.';
                     } else if(id == 'glazingBeadsThickness'){
                         getmsginput = 'Glazing Beads Height should be ' + getmininputvalue + '.';
+                    } else if(id == 'glazingBeadsHeight'){
+                        getmsginput = 'Glazing Bead Depth should be ' + getmininputvalue + '.';
                     }
 
                     $("#" + name + "-section").removeClass("table_row_show");

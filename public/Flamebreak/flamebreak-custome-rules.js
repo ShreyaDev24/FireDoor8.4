@@ -1943,18 +1943,55 @@ function copyOfSideLite1Change(isstatus = false){
         IntumescentSeals();
         rebatedWidth();
         if(String($('#isQmarkORCertifireEnabled').val()) === '1' && ($("#fireRating").val() == "FD60" || $("#fireRating").val() == "FD60s")){
-            $('#swingType option[value="DA"]').prop('disabled', false);
-            // $("#distanceBetweenVPs").attr('min', '120');
+            $('#swingType option[value="DA"]').prop('disabled', true);
+            $("#grooveDepth").attr('max', '2');
+            $("#distanceFromTopOfDoor").attr('min', '190');
+            $("#distanceFromTheEdgeOfDoor").attr('min', '150');
+            $("#distanceBetweenVPs").attr('min', '150');
+            $("#glazingBeadsThickness").attr('min', '30');
+            $("#frameThickness").attr('min', '32');
+            $("#glazingBeadsThickness").attr('min', '30');
+
         } else if(String($('#isQmarkORCertifireEnabled').val()) === '1' && ($("#fireRating").val() == "FD30" || $("#fireRating").val() == "FD30s" || $("#fireRating").val() == "NFR")){
             $('#swingType option[value="DA"]').prop('disabled', true);
+            $("#grooveDepth").attr('max', '2');
             $("#distanceFromTopOfDoor").attr('min', '100');
             $("#distanceFromTheEdgeOfDoor").attr('min', '100');
             $("#distanceBetweenVPs").attr('min', '100');
+            $("#glazingBeadsThickness").attr('min', '25');
         }
     }
 
     $('#vP1Width, #vP1Height1, #vP1Height2, #vP1Height3, #vP1Height4, #vP1Height5').on('input', function () {
         validateLeaf2VPSize();
+    });
+
+    function checkDecorativeGrooves() {
+        var leafType = $('#intumescentLeafType').val();
+
+        if (leafType == '26') {
+            // Select "No"
+            $('#decorativeGroves').val('No');
+            $('#DecorativeGrovesLeaf2').val('No');
+
+            // Disable Decorative Grooves
+            $('#decorativeGroves').prop('disabled', true);
+            $('#DecorativeGrovesLeaf2').prop('disabled', true);
+        } else {
+            // Enable Decorative Grooves
+            $('#decorativeGroves').prop('disabled', false);
+            $('#DecorativeGrovesLeaf2').prop('disabled', false);
+        }
+    }
+
+    // When Leaf Type changes
+    $('#intumescentLeafType').on('change', function () {
+        checkDecorativeGrooves();
+    });
+
+    // Run on page load also
+    $(document).ready(function () {
+        checkDecorativeGrooves();
     });
 
     function validateLeaf2VPSize() {
@@ -2003,7 +2040,7 @@ function copyOfSideLite1Change(isstatus = false){
 
                 var vpHeight = heights[i];
 
-                
+
                 // Ignore empty height fields
                 if (vpHeight <= 0) {
                     continue;
@@ -2066,6 +2103,93 @@ function copyOfSideLite1Change(isstatus = false){
             }
 
             return true;
+
+        } else if (String($('#isQmarkORCertifireEnabled').val()) === '1' && (fireRating === 'FD60' || fireRating === 'FD60s')) {
+
+            var vpWidth = parseInt($('#vP1Width').val()) || 0;
+
+            var heights = [
+                parseInt($('#vP1Height1').val()) || 0,
+                parseInt($('#vP1Height2').val()) || 0,
+                parseInt($('#vP1Height3').val()) || 0,
+                parseInt($('#vP1Height4').val()) || 0,
+                parseInt($('#vP1Height5').val()) || 0
+            ];
+
+            // Nothing entered yet
+            if (vpWidth <= 0) {
+                return true;
+            }
+
+            /*
+            * Absolute maximum width
+            */
+            if (vpWidth > 600) {
+
+                swal(
+                    "Error!",
+                    "VP width cannot exceed 600mm.",
+                    "error"
+                );
+
+                $('#vP1Width').val('');
+                return false;
+            }
+
+            /*
+            * Check every VP height
+            */
+            for (var i = 0; i < heights.length; i++) {
+
+                var vpHeight = heights[i];
+
+                // Ignore empty height fields
+                if (vpHeight <= 0) {
+                    continue;
+                }
+
+                /*
+                * Absolute maximum height
+                */
+                if (vpHeight > 650) {
+
+                    swal(
+                        "Error!",
+                        "VP height cannot exceed 650mm.",
+                        "error"
+                    );
+
+                    $('#vP1Height' + (i + 1)).val('');
+                    return false;
+                }
+
+                if (vpHeight > 650 && vpWidth > 600) {
+
+                    swal(
+                        "Error!",
+                        "For VP heights above 650mm, the maximum permitted width is 600mm.",
+                        "error"
+                    );
+
+                    $('#vP1Height' + (i + 1)).val('');
+                    return false;
+                }
+
+                if (vpWidth > 600 && vpHeight > 650) {
+
+                    swal(
+                        "Error!",
+                        "For a VP width above 600mm, the maximum permitted height is 650mm.",
+                        "error"
+                    );
+
+                    $('#vP1Height' + (i + 1)).val('');
+                    return false;
+                }
+            }
+
+            return true;
+
         }
 
         return true;

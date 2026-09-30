@@ -655,7 +655,7 @@ $(".change-event-calulation").change(function(){
                     if (fireRating == "FD30" || fireRating == "FD30s" || fireRating == "NFR") {
                         maxVpArea = 0.91;
                     } else if (fireRating == "FD60" || fireRating == "FD60s") {
-                        maxVpArea = 0.50;
+                        maxVpArea = 0.39;
                     }
 
                     if (maxVpArea !== null && vpArea > maxVpArea) {
