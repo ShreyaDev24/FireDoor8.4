@@ -282,6 +282,7 @@ Route::prefix('contractor')->group(function (): void {
 Route::prefix('company')->group(function (): void {
     Route::get('/add', [App\Http\Controllers\CompanyController::class,'add'])->name('company/add');
     Route::get('/list', [App\Http\Controllers\CompanyController::class,'list'])->name('company/list');
+    Route::post('/update-certification', [App\Http\Controllers\CompanyController::class,'updateCertification'])->name('company.updateCertification');
     Route::get('/assign-form', [App\Http\Controllers\CompanyController::class,'assign_form'])->name('assign-form');
     Route::get('/details/{id}', [App\Http\Controllers\CompanyController::class,'details'])->name('company/details');
     Route::get('/profile', [App\Http\Controllers\CompanyController::class,'profile'])->name('company/profile');

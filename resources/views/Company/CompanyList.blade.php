@@ -33,6 +33,7 @@
                             <th>Phone</th>
                             <th>E-Mail</th>
                             <th>Address</th>
+                            <th>Certification</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -44,6 +45,38 @@
                             <td>{{$row->CompanyPhone}}</td>
                             <td>{{$row->UserEmail}}</td>
                             <td>{{$row->CompanyAddressLine1}} </td>
+                            <td style="width: 180px;">
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        class="form-check-input certification-option"
+                                        name="QMark"
+                                        id="QMark_{{ $row->UserId }}"
+                                        value="1"
+                                        data-user-id="{{ $row->UserId }}"
+                                        data-type="QMark"
+                                        {{ ($row->QMark ?? 0) == 1 ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="QMark_{{ $row->UserId }}">
+                                        QMark
+                                    </label>
+                                </div>
+
+                                <div class="form-check">
+                                    <input type="checkbox"
+                                        class="form-check-input certification-option"
+                                        name="Certifire"
+                                        id="Certifire_{{ $row->UserId }}"
+                                        value="1"
+                                        data-user-id="{{ $row->UserId }}"
+                                        data-type="Certifire"
+                                        {{ ($row->Certifire ?? 0) == 1 ? 'checked' : '' }}>
+
+                                    <label class="form-check-label" for="Certifire_{{ $row->UserId }}">
+                                        Certifire
+                                    </label>
+                                </div>
+
+                            </td>
                             <td style="width: 100px">
                                 <a href="{{url('company/edit/'.$row->id)}}" class="btn btn-success"><i class="fa fa-edit"></i></a>
                                 {{-- ✅ NEW BUTTON --}}
@@ -80,6 +113,74 @@
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
+            });
+            $(document).on('change', '.certification-option', function () {
+
+                let checkbox = $(this);
+
+                let userId = checkbox.data('user-id');
+                let type = checkbox.data('type');
+
+                let value = checkbox.is(':checked') ? 1 : 0;
+
+                $.ajax({
+                    url: "{{ route('company.updateCertification') }}",
+                    type: "POST",
+
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        user_id: userId,
+                        type: type,
+                        value: value
+                    },
+
+                    beforeSend: function () {
+                        checkbox.prop('disabled', true);
+                    },
+
+                    success: function (response) {
+
+                        checkbox.prop('disabled', false);
+
+                        if (response.status) {
+
+                            console.log(
+                                type + ' updated successfully: ' + value
+                            );
+
+                        } else {
+
+                            checkbox.prop('checked', !checkbox.is(':checked'));
+
+                            swal(
+                                "Error!",
+                                response.message || "Unable to update certification.",
+                                "error"
+                            );
+                        }
+                    },
+
+                    error: function (xhr) {
+
+                        checkbox.prop('disabled', false);
+
+                        // Revert checkbox if AJAX failed
+                        checkbox.prop('checked', !checkbox.is(':checked'));
+
+                        let message = "Something went wrong.";
+
+                        if (xhr.responseJSON && xhr.responseJSON.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        swal(
+                            "Error!",
+                            message,
+                            "error"
+                        );
+                    }
+                });
+
             });
             function openSuperAdminModal(userId) {
 
