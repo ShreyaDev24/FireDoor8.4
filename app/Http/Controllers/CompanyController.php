@@ -70,7 +70,34 @@ class CompanyController extends Controller
         }
     }
 
+    public function updateCertification(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|integer|exists:users,id',
+            'type'    => 'required|in:QMark,Certifire',
+            'value'   => 'required|in:0,1',
+        ]);
 
+        $user = User::findOrFail($request->user_id);
+
+        if ($request->type === 'QMark') {
+
+            $user->QMark = (int) $request->value;
+
+        } elseif ($request->type === 'Certifire') {
+
+            $user->Certifire = (int) $request->value;
+        }
+
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Certification updated successfully.',
+            'QMark' => (int) $user->QMark,
+            'Certifire' => (int) $user->Certifire,
+        ]);
+    }
 
     public function details($id)
     {
