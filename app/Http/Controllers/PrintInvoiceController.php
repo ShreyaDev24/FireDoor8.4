@@ -177,6 +177,10 @@ class PrintInvoiceController extends Controller
                     <div><table id="WithBorder" class="tbl2">'. IronmongerySetData($ironData->IronmongeryID) .'</table></div>';
 
                     $doorNumbers = ItemMaster::where('itemID', $ironData->itemId)->pluck('doorNumber')->toArray();
+                    $QuotationGenerationId = null;
+                    if (!empty($quotaion->QuotationGenerationId)) {
+                        $QuotationGenerationId = $quotaion->QuotationGenerationId;
+                    }
 
                     if (!empty($doorNumbers)) {
                         $rows = '';
@@ -191,6 +195,8 @@ class PrintInvoiceController extends Controller
                                 <tr>
                                     <th>
                                         <div id="headText"><b>Ironmongery Data</b></div>
+                                        <div><strong>Quotation No. : '. e($QuotationGenerationId) .'</strong></div>
+                                        <div><strong>Revision No. : '. e($qv->version) .'</strong></div>
                                         <div><strong>Door list that this belongs to:</strong></div>
                                     </th>
                                 </tr>
