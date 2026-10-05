@@ -4766,9 +4766,22 @@ class OptionController extends Controller
     }
 
     public function filter_leaf_type(Request $request){
-         $configurationDoor = configurationDoor($request->configurableitems);
+        $configurationDoor = configurationDoor($request->configurableitems);
+
+        $isQmarkORCertifireEnabled = isQmarkORCertifireEnabled();
+
         if($request->configurableitems != 4 && $request->configurableitems != 5 && $request->configurableitems != 6 && $request->configurableitems != 9){
-            $data['leaftype'] = IntumescentSealLeafType::where('configurableitems',$request->configurableitems)->get();
+                    $leafTypeQuery = IntumescentSealLeafType::where(
+                'configurableitems',
+                $request->configurableitems
+            );
+
+            // Certification filter only for configurable items 1, 2 and 7
+            if ($isQmarkORCertifireEnabled && in_array($request->configurableitems, [1, 2, 7])) {
+                $leafTypeQuery->where('certifiedStatus', 1);
+            }
+
+            $data['leaftype'] = $leafTypeQuery->get();
         } else {
             $data['leaftype'] = LeafType::where('status',1)->where($configurationDoor,$request->configurableitems)->get();
         }

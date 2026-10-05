@@ -21,6 +21,7 @@ class SettingIntumescentSeals2 extends Model
         'Point1width',
         'Point2height',
         'Point2width',
+        'Certification',
         'editBy',
         'FireOnly',
         'MeetingEdges',

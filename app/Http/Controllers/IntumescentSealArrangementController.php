@@ -111,7 +111,9 @@ class IntumescentSealArrangementController extends Controller
             'FireOnly'            => 'required|array',
         ]);
 
-        DB::transaction(function () use ($request) {
+        $certificationFilter = isQmarkORCertifireEnabled() ? 1 : 0;
+
+        DB::transaction(function () use ($request, $certificationFilter) {
 
             $leafTypesString = is_array($request->customeleafTypes)
                 ? implode(',', $request->customeleafTypes)
@@ -133,6 +135,7 @@ class IntumescentSealArrangementController extends Controller
                     'Point2width'       => $request->Point2width,
                     'MeetingEdges'       => $request->MeetingEdges,
                     'FireOnly'          => $fireOnlyValue,
+                    'Certification'     => $certificationFilter,
                     'customeleafTypes'   => $leafTypesString,
                     'editBy'            => auth()->id(),
                 ]);
@@ -218,8 +221,9 @@ class IntumescentSealArrangementController extends Controller
 
 
         $seal = SettingIntumescentSeals2::findOrFail($id);
+        $certificationFilter = isQmarkORCertifireEnabled() ? 1 : 0;
 
-        DB::transaction(function () use ($request, $seal) {
+        DB::transaction(function () use ($request, $seal, $certificationFilter) {
 
             $leafTypesString = is_array($request->customeleafTypes)
                 ? implode(',', $request->customeleafTypes)
@@ -240,6 +244,7 @@ class IntumescentSealArrangementController extends Controller
                 'Point2width'       => $request->Point2width,
                 'MeetingEdges'       => $request->MeetingEdges,
                 'FireOnly'          => $request->FireOnly,
+                'Certification'     => $certificationFilter,
                 'customeleafTypes'   => $leafTypesString,
                 'editBy'            => auth()->id(),
             ]);
