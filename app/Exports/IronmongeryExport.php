@@ -22,14 +22,10 @@ class IronmongeryExport implements WithMultipleSheets
 {
     use Exportable;
 
-    protected $id;
-
-    protected $vid;
-
     protected array $result;
 
-    public function __construct($id,$vid) {
-        $this->result = BOMCAlculationExport($id,$vid);
+    public function __construct(protected $id,protected $vid) {
+        $this->result = BOMCAlculationExport($this->id,$this->vid);
     }
 
     /**
@@ -38,6 +34,7 @@ class IronmongeryExport implements WithMultipleSheets
     public function sheets(): array
     {
         return [
+            'Summary' => new SummaryIronMongery($this->id,$this->vid,$this->result),
             'Ironmongery' => new Ironmongery($this->id,$this->vid,$this->result)
         ];
     }
